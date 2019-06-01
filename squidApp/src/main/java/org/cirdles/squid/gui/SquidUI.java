@@ -116,6 +116,7 @@ public final class SquidUI extends Application {
         String fileSpec = "[Project File: NONE]";
         fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
         primaryStage.setTitle("Squid 3  " + fileSpec);
+        SquidUIController.projectFileName = fileName;
     }
 
     /**

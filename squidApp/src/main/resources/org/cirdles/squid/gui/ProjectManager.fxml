@@ -5,44 +5,47 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainProjectManagerPane" minHeight="640.0" minWidth="1000.0" spacing="10.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+
+<GridPane fx:id="projectManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+   <columnConstraints>
+      <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" />
+      <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="180.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <HBox translateY="-9.0">
+      <HBox GridPane.columnIndex="1">
          <children>
             <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="900.0" text="Project &gt; Data/Manage Spots and Reference Materials &gt; Data/Manage Sample Naming" />
          </children>
       </HBox>
-      <HBox spacing="10.0">
+      <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Label text="Project Name:" />
             <TextField fx:id="projectNameText" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" HBox.hgrow="ALWAYS" />
             <Label text="Analyst Name:" />
             <TextField fx:id="analystNameText" prefHeight="27.0" prefWidth="322.0" promptText="Your name" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <HBox spacing="10.0">
+      <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <children>
-            <Label text="Data source file:" />
-            <TextField fx:id="orignalPrawnFileName" prefHeight="27.0" prefWidth="775.0" promptText="name of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="orignalPrawnFileName" editable="false" prefHeight="27.0" prefWidth="775.0" promptText="name and location of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <VBox VBox.vgrow="ALWAYS">
+      <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
          <children>
-            <Label fx:id="softwareVersionLabel" text="Software Version:" />
-            <Label fx:id="loginCommentLabel" text="Login Comment:" />
-            <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" text="Summary of analyses, duplicates, species, spots">
-               <VBox.margin>
-                  <Insets bottom="15.0" top="15.0" />
-               </VBox.margin>
-            </Label>
-            <Label fx:id="totalAnalysisTimeLabel" text="Total analysis time in hours">
-               <VBox.margin>
-                  <Insets bottom="10.0" />
-               </VBox.margin>
-            </Label>
             <Label text="Notes:" />
             <AnchorPane VBox.vgrow="ALWAYS">
                <children>
@@ -50,12 +53,31 @@
                </children>
             </AnchorPane>
          </children>
-         <VBox.margin>
-            <Insets left="25.0" right="25.0" />
-         </VBox.margin>
+      </VBox>
+      <Label styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
+      <Label text="Data File:" GridPane.rowIndex="3" />
+      <Label fx:id="softwareVersionLabel1" text="Software:" GridPane.rowIndex="4" />
+      <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <children>
+            <Label fx:id="softwareVersionLabel" text="Version:" />
+         </children>
+      </VBox>
+      <Label styleClass="backgroundCalamari" text="Project File:" GridPane.rowIndex="2" />
+      <TextField fx:id="squidFileNameText" editable="false" prefHeight="27.0" prefWidth="323.0" promptText="name and location of project '.squid' file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      <Label text="Session:" GridPane.rowIndex="5" />
+      <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <children>
+            <Label fx:id="loginCommentLabel" text="Login Comment:" />
+            <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" prefHeight="149.0" prefWidth="346.0" text="Summary of analyses, duplicates, species, spots" />
+            <Label fx:id="totalAnalysisTimeLabel" text="Total analysis time in hours">
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
+            </Label>
+         </children>
       </VBox>
    </children>
    <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+      <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
    </padding>
-</VBox>
+</GridPane>

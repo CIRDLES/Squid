@@ -21,11 +21,11 @@
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="720.0" minWidth="1225.0" prefHeight="720.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
   <columnConstraints>
-    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" percentWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
   </columnConstraints>
   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
     <RowConstraints valignment="CENTER" vgrow="NEVER" />
@@ -309,6 +309,6 @@
       </Text>
    </children>
    <padding>
-      <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+      <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
    </padding>
 </GridPane>
