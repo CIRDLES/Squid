@@ -102,7 +102,7 @@ public class TaskDesign implements Serializable {
         this.extPErrU = 0.75;
         this.extPErrTh = 0.75;
 
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName().trim();
+        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimitersEnum.HYPHEN.getName().trim();
 
         this.parentNuclide = "238";
         this.directAltPD = false;

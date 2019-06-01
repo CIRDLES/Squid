@@ -38,14 +38,12 @@ import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
  * FXML Controller class
@@ -72,14 +70,15 @@ public class SessionAuditController implements Initializable {
     private Label summaryLabel;
 
     private boolean hasDuplicates;
-    @FXML
-    private ComboBox<String> delimeterComboBox;
+
     @FXML
     private Label titleLabel;
+    @FXML
+    private ComboBox<String> delimiterComboBox;
 
     public SessionAuditController() {
     }
-    private String sampleNameDelimeter;
+    private String sampleNameDelimiter;
 
     /**
      * Initializes the controller class.
@@ -89,21 +88,21 @@ public class SessionAuditController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        sampleNameDelimeter = squidProject.getDelimiterForUnknownNames();
+        sampleNameDelimiter = squidProject.getDelimiterForUnknownNames();
 
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         setUpPrawnAuditTreeView(false);
 
-        ObservableList<String> delimetersList = FXCollections.observableArrayList(SampleNameDelimetersEnum.names());
-        delimeterComboBox.setItems(delimetersList);
+        ObservableList<String> delimitersList = FXCollections.observableArrayList(SampleNameDelimitersEnum.names());
+        delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(sampleNameDelimeter);
+        delimiterComboBox.getSelectionModel().select(sampleNameDelimiter);
 
-        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
-                sampleNameDelimeter = newvalue.trim();
+                sampleNameDelimiter = newvalue.trim();
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());
                 squidProject.setDelimiterForUnknownNames(newvalue);
                 squidProject.getTask().setChanged(true);
@@ -228,11 +227,11 @@ public class SessionAuditController implements Initializable {
         if (children.size() > 0) {
             if (squidProject.getFiltersForUnknownNames().isEmpty()) {
                 int countOfLetters = 0;
-                if (sampleNameDelimeter.matches("\\d")) {
-                    countOfLetters = Integer.parseInt(sampleNameDelimeter);
+                if (sampleNameDelimiter.matches("\\d")) {
+                    countOfLetters = Integer.parseInt(sampleNameDelimiter);
                     continueExpansion = (children.get(0).getStringValue().length() <= countOfLetters);
                 } else {
-                    continueExpansion = (children.get(0).getNode().getValue().compareTo(sampleNameDelimeter) != 0);
+                    continueExpansion = (children.get(0).getNode().getValue().compareTo(sampleNameDelimiter) != 0);
                 }
                 for (int i = 0; i < children.size(); i++) {
                     if (squidProject.getFilterForRefMatSpotNames().startsWith(children.get(i).getStringValue())) {

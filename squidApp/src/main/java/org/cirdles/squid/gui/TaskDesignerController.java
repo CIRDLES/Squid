@@ -162,7 +162,7 @@ public class TaskDesignerController implements Initializable {
     @FXML
     private Label parentConcLabel;
     @FXML
-    private ComboBox<String> delimeterComboBox;
+    private ComboBox<String> delimiterComboBox;
     @FXML
     private TextField uncorrConstPbUExpressionText;
     @FXML
@@ -338,11 +338,11 @@ public class TaskDesignerController implements Initializable {
         setUpParametersModelsComboBoxes();
 
         // samples
-        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
-        delimeterComboBox.setItems(delimetersList);
+        ObservableList<String> delimitersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimitersEnum.names());
+        delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(taskDesigner.getDelimiterForUnknownNames());
-        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        delimiterComboBox.getSelectionModel().select(taskDesigner.getDelimiterForUnknownNames());
+        delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
                 taskDesigner.setDelimiterForUnknownNames(newvalue);
@@ -637,7 +637,10 @@ public class TaskDesignerController implements Initializable {
         if (tooltip != null) {
             tooltip.hide();
             if (event.isShiftDown()) {
-                tooltip.show(textField, 225, 225);
+                // force calculation of tolltip extents so it locates correctly
+                tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
+                tooltip.hide();
+                tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
             }
         }
     }
