@@ -14,7 +14,7 @@
 
 <GridPane fx:id="projectManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
    <columnConstraints>
-      <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="105.0" minWidth="105.0" prefWidth="105.0" />
+      <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
       <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
    </columnConstraints>
    <rowConstraints>
@@ -24,7 +24,7 @@
       <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="180.0" valignment="TOP" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" valignment="TOP" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <HBox GridPane.columnIndex="1">
@@ -46,7 +46,6 @@
       </HBox>
       <VBox GridPane.columnIndex="1" GridPane.rowIndex="6">
          <children>
-            <Label text="Notes:" />
             <AnchorPane VBox.vgrow="ALWAYS">
                <children>
                   <TextArea fx:id="projectNotesText" promptText="Type here" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
@@ -54,17 +53,17 @@
             </AnchorPane>
          </children>
       </VBox>
-      <Label styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
-      <Label text="Data File:" GridPane.rowIndex="3" />
-      <Label fx:id="softwareVersionLabel1" text="Software:" GridPane.rowIndex="4" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Data File:" GridPane.rowIndex="3" />
+      <Label fx:id="softwareVersionLabel1" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Software:" GridPane.rowIndex="4" />
       <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
             <Label fx:id="softwareVersionLabel" text="Version:" />
          </children>
       </VBox>
-      <Label styleClass="backgroundCalamari" text="Project File:" GridPane.rowIndex="2" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project File:" GridPane.rowIndex="2" />
       <TextField fx:id="squidFileNameText" editable="false" prefHeight="27.0" prefWidth="323.0" promptText="name and location of project '.squid' file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label text="Session:" GridPane.rowIndex="5" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Session:" GridPane.rowIndex="5" />
       <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
          <children>
             <Label fx:id="loginCommentLabel" text="Login Comment:" />
@@ -76,6 +75,7 @@
             </Label>
          </children>
       </VBox>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Notes:" GridPane.rowIndex="6" />
    </children>
    <padding>
       <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
