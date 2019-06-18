@@ -27,9 +27,9 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class Average extends Function {
+public class Sum extends Function {
 
-    private static final long serialVersionUID = -7728410761115586080L;
+    //private static final long serialVersionUID = -7728410761115586080L;
 
     /**
      * Provides the functionality of Excel's average and returns "average" and
@@ -38,16 +38,16 @@ public class Average extends Function {
      * @see
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
      */
-    public Average() {
-        name = "average";
+    public Sum() {
+        name = "sum";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{"average"}};
+        labelsForOutputValues = new String[][]{{"sum"}};
         labelsForInputValues = new String[]{"per-spot expression"};
         summaryCalc = true;
-        definition = "Calculates the sum divided by the count.";
+        definition = "Calculates the sum over selected spots.";
     }
 
     /**
@@ -68,14 +68,12 @@ public class Average extends Function {
         try {
             double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
             double sum = 0.0;
-            double average = 0.0;
             if (xValues.length > 0) {
                 for (int i = 0; i < xValues.length; i++) {
                     sum += xValues[i];
                 }
-                average = sum / xValues.length;
             }
-            retVal = new Object[][]{{average}};
+            retVal = new Object[][]{{sum}};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
         }

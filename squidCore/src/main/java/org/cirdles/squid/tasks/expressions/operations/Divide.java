@@ -56,10 +56,28 @@ public class Divide extends Operation {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         double retVal;
+
         try {
-            retVal = (double) childrenET.get(0).eval(shrimpFractions, task)[0][0]
-                    / (double) childrenET.get(1).eval(shrimpFractions, task)[0][0];
-        } catch (NullPointerException | SquidException e) {            
+            Object numeratorObject = childrenET.get(0).eval(shrimpFractions, task)[0][0];
+            Object denominatorObject = childrenET.get(1).eval(shrimpFractions, task)[0][0];
+
+            double numerator;
+            double denominator;
+
+            if (numeratorObject instanceof Integer) {
+                numerator = ((Integer) numeratorObject).doubleValue();
+            } else {
+                numerator = (double) numeratorObject;
+            }
+            
+            if (denominatorObject instanceof Integer) {
+                denominator = ((Integer) denominatorObject).doubleValue();
+            } else {
+                denominator = (double) denominatorObject;
+            }
+
+            retVal = numerator / denominator;
+        } catch (NullPointerException | SquidException e) {
             retVal = 0.0;
         }
 

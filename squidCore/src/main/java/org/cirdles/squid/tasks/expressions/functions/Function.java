@@ -135,6 +135,7 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
@@ -412,6 +413,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface average() {
         return new Average();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface sum() {
+        return new Sum();
     }
 
     /**

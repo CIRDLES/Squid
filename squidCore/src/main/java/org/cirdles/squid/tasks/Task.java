@@ -1290,15 +1290,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) {
 
-                updateRefMatCalibConstWMeanExpression(PB4COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-                updateRefMatCalibConstWMeanExpression(PB7COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-                updateRefMatCalibConstWMeanExpression(PB8COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-                updateRefMatCalibConstWMeanExpression(PB4COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
-                updateRefMatCalibConstWMeanExpression(PB7COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
+        updateRefMatCalibConstWMeanExpression(PB4COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
+        updateRefMatCalibConstWMeanExpression(PB7COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
+        updateRefMatCalibConstWMeanExpression(PB8COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
+        updateRefMatCalibConstWMeanExpression(PB4COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
+        updateRefMatCalibConstWMeanExpression(PB7COR208_232CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
 
-            this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
-            changed = true;
-            setupSquidSessionSpecsAndReduceAndReport();
+        this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
+        changed = true;
+        setupSquidSessionSpecsAndReduceAndReport();
     }
 
     private void updateRefMatCalibConstWMeanExpression(String wmWxpressionName, boolean squidAllowsAutoExclusionOfSpots) {
@@ -1767,12 +1767,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void evaluateExpressionForSpotSet(
-            ExpressionTreeInterface expressionTree, 
+            ExpressionTreeInterface expressionTree,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
 
         // determine taskType of expressionTree
         // Summary expression test
-        if (((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation()) {
+        // June 2019 added null test for operation that exists when function name is unknown
+        if (((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation()
+                && ((ExpressionTree) expressionTree).getOperation() != null) {
             List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = new ArrayList<>();
             double[][] values;
 
@@ -1792,7 +1794,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 spotSummaryDetails.setSelectedSpots(spotsForExpression);
             }
 
-            if ((expressionTree instanceof ConstantNode) || ((ExpressionTree) expressionTree).getOperation().isScalarResult()) {
+            if (((expressionTree instanceof ConstantNode) || ((ExpressionTree) expressionTree).getOperation().isScalarResult())
+                    && !expressionTree.isRootExpressionTree()) {
                 // create list of one spot, since we only need to look up value once
                 if (spotsForExpression.size() > 0) {
                     spotsUsedForCalculation.add(spotsForExpression.get(0));
