@@ -1671,14 +1671,18 @@ public class ExpressionBuilderController implements Initializable {
         // Math Functions ======================================================
         List<String> mathFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : MATH_FUNCTIONS_MAP.entrySet()) {
-            int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-            StringBuilder args = new StringBuilder();
-            args.append(op.getKey()).append("(");
-            for (int i = 0; i < argumentCount; i++) {
-                args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
+            try {
+                int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+                StringBuilder args = new StringBuilder();
+                args.append(op.getKey()).append("(");
+                for (int i = 0; i < argumentCount; i++) {
+                    args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
+                }
+                
+                mathFunctionStrings.add(args.toString());
+            } catch (Exception e) {
+                // function does not have a class definition
             }
-
-            mathFunctionStrings.add(args.toString());
         }
 
         items = FXCollections.observableArrayList(mathFunctionStrings);

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
@@ -88,6 +89,7 @@ public final class PrawnFileUtilities {
         }
 
         // collect mass variations by time for all runs
+        boolean detectedMassStationCountAnomaly = false;
         int runIndex = 1;
         for (Run run : runs) {
             long runStartTime = timeInMillisecondsOfRun(run);
@@ -97,22 +99,34 @@ public final class PrawnFileUtilities {
                 index = 0;
                 // assume measurements are in same order and length as  runtable mass station
                 for (Measurement measurement : measurements) {
-                    double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
-                    double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
-                    long measurementTime = runStartTime + (long) timeStampSec * 1000l;
-
-                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
-                    massStationDetail.getMeasuredTrimMasses().add(trimMass);
-                    massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
-                    massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
-                    massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
-
-                    index++;
+                    try {
+                        double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
+                        double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
+                        long measurementTime = runStartTime + (long) timeStampSec * 1000l;
+                        
+                        MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
+                        massStationDetail.getMeasuredTrimMasses().add(trimMass);
+                        massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
+                        massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
+                        massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
+                        
+                        index++;
+                    } catch (NumberFormatException  | NullPointerException    numberFormatException) {
+                        // likely not a uniform number of mass stations
+                        // inform user
+                        detectedMassStationCountAnomaly = true;
+                    }
                 }
             }
             runIndex++;
         }
 
+        if (detectedMassStationCountAnomaly){
+            SquidMessageDialog.showWarningDialog(
+                            "Squid3 has detected that there are different mass staion counts among the spot analyses.\n"
+                            + "Please edit your data file to fix this issue.",
+                            null);
+        }
         return mapOfIndexToMassStationDetails;
     }
 }

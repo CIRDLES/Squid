@@ -137,6 +137,7 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("average", "average");
         MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
+        MATH_FUNCTIONS_MAP.put("countif", "countif");
         MATH_FUNCTIONS_MAP.put("tinv", "tinv");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
