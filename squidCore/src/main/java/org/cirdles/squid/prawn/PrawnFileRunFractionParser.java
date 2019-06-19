@@ -198,16 +198,20 @@ public class PrawnFileRunFractionParser {
         } catch (ParseException parseException) {
         }
 
-        // need to find entries due to variation in files
+        // need to search entries due to variation in files
         for (int i = 0; i < runFraction.getSet().getPar().size(); i++) {
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
-                qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
-                qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
-                primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+            try {
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
+                    qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
+                    qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
+                    primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+                }
+            } catch (NumberFormatException numberFormatException) {
+                // keep going
             }
         }
 
