@@ -127,7 +127,7 @@ public final class PrawnFileUtilities {
 
         if (detectedMassStationCountAnomaly) {
             SquidMessageDialog.showWarningDialog(
-                    "Squid3 has detected that there are different mass staion counts among the spot analyses.\n"
+                    "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
                     + "Please edit your data file to fix this issue.",
                     null);
         }
