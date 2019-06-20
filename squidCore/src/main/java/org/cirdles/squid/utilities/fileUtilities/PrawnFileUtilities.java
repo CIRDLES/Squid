@@ -75,12 +75,12 @@ public final class PrawnFileUtilities {
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
             String uThBearingName = UThBearingEnum.N.getName();
-            if (elementLabel.matches("(.*)(238|254|270|u|U)(.*)")){
+            if (elementLabel.matches("(.*)(238|254|270|u|U)(.*)")) {
                 uThBearingName = UThBearingEnum.U.getName();
-            } else if (elementLabel.matches("(.*)(232|248|264|t|T)(.*)")){
+            } else if (elementLabel.matches("(.*)(232|248|264|t|T)(.*)")) {
                 uThBearingName = UThBearingEnum.T.getName();
             }
-            
+
             MassStationDetail massStationDetail
                     = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground, uThBearingName);
 
@@ -98,21 +98,25 @@ public final class PrawnFileUtilities {
                 List<Measurement> measurements = scan.getMeasurement();
                 index = 0;
                 // assume measurements are in same order and length as  runtable mass station
+                if (measurements.size() != entries.size()) {
+                    // inform user
+                    detectedMassStationCountAnomaly = true;
+                }
                 for (Measurement measurement : measurements) {
                     try {
                         double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
                         double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
                         long measurementTime = runStartTime + (long) timeStampSec * 1000l;
-                        
+
                         MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
                         massStationDetail.getMeasuredTrimMasses().add(trimMass);
                         massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
                         massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
                         massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
-                        
+
                         index++;
-                    } catch (NumberFormatException  | NullPointerException    numberFormatException) {
-                        // likely not a uniform number of mass stations
+                    } catch (NumberFormatException | NullPointerException numberFormatException) {
+                        // likely not a uniform number of mass stations but we proceed anyway for now
                         // inform user
                         detectedMassStationCountAnomaly = true;
                     }
@@ -121,11 +125,11 @@ public final class PrawnFileUtilities {
             runIndex++;
         }
 
-        if (detectedMassStationCountAnomaly){
+        if (detectedMassStationCountAnomaly) {
             SquidMessageDialog.showWarningDialog(
-                            "Squid3 has detected that there are different mass staion counts among the spot analyses.\n"
-                            + "Please edit your data file to fix this issue.",
-                            null);
+                    "Squid3 has detected that there are different mass staion counts among the spot analyses.\n"
+                    + "Please edit your data file to fix this issue.",
+                    null);
         }
         return mapOfIndexToMassStationDetails;
     }
