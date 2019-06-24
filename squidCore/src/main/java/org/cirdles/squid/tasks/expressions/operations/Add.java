@@ -55,8 +55,25 @@ public class Add extends Operation {
 
         double retVal;
         try {
-            retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
-                    + (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
+            Object term1Object = childrenET.get(0).eval(shrimpFractions, task)[0][0];
+            Object term2Object = childrenET.get(1).eval(shrimpFractions, task)[0][0];
+
+            double term1;
+            double term2;
+
+            if (term1Object instanceof Integer) {
+                term1 = ((Integer) term1Object).doubleValue();
+            } else {
+                term1 = (double) term1Object;
+            }
+
+            if (term2Object instanceof Integer) {
+                term2 = ((Integer) term2Object).doubleValue();
+            } else {
+                term2 = (double) term2Object;
+            }
+            
+            retVal = term1 + term2;
         } catch (NullPointerException | SquidException e) {
             retVal = 0.0;
         }

@@ -13,32 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.tasks.expressions.operations;
+package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
-import org.cirdles.squid.exceptions.SquidException;
+import org.apache.commons.math3.distribution.TDistribution;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class Subtract extends Operation {
+public class TInv extends Function {
+
+    private static final long serialVersionUID = 1408341634276755722L;
 
     /**
      *
      */
-    public Subtract() {
-        name = "subtract";
+    public TInv() {
+        name = "TInv";
         argumentCount = 2;
-        precedence = 2;
+        precedence = 4;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"Difference"}};
+        labelsForOutputValues = new String[][]{{"TInv"}};
+        labelsForInputValues = new String[]{"probability 0<p<1", "degrees of freedom >= 1"};
+        definition = "Returns the value x for which TDIST(x, df, 2) returns p.";
     }
 
     /**
@@ -54,28 +59,15 @@ public class Subtract extends Operation {
 
         double retVal;
         try {
-            Object term1Object = childrenET.get(0).eval(shrimpFractions, task)[0][0];
-            Object term2Object = childrenET.get(1).eval(shrimpFractions, task)[0][0];
-
-            double term1;
-            double term2;
-
-            if (term1Object instanceof Integer) {
-                term1 = ((Integer) term1Object).doubleValue();
-            } else {
-                term1 = (double) term1Object;
-            }
-
-            if (term2Object instanceof Integer) {
-                term2 = ((Integer) term2Object).doubleValue();
-            } else {
-                term2 = (double) term2Object;
-            }
-
-            retVal = term1 - term2;
-        } catch (SquidException | NullPointerException squidException) {
+            double probability = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
+            double degreesOfFreedom = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0])[0];
+            TDistribution td = new TDistribution(degreesOfFreedom);
+            
+            retVal = td.inverseCumulativeProbability(1.0 - (probability / 2.0));
+        } catch (Exception e) {
             retVal = 0.0;
         }
+
         return new Object[][]{{retVal}};
     }
 
@@ -87,11 +79,13 @@ public class Subtract extends Operation {
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
-                = "<mrow>\n"
-                + toStringAnotherExpression(childrenET.get(0))
-                + "<mo>&nbsp;-&nbsp;</mo>\n"
-                + toStringAnotherExpression(childrenET.get(1))
-                + "</mrow>\n";
+                = "<mrow>"
+                + "<mi>" + name + "</mi>"
+                + "<mfenced>";
+
+        retVal += buildChildrenToMathML(childrenET);
+
+        retVal += "</mfenced></mrow>\n";
 
         return retVal;
     }

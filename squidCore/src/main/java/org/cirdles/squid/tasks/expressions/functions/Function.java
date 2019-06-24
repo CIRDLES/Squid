@@ -135,7 +135,10 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
+        MATH_FUNCTIONS_MAP.put("countif", "countif");
+        MATH_FUNCTIONS_MAP.put("tinv", "tinv");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
@@ -418,8 +421,24 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface sum() {
+        return new Sum();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface count() {
         return new Count();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface tinv() {
+        return new TInv();
     }
 
     public static OperationOrFunctionInterface calculateMeanConcStd() {

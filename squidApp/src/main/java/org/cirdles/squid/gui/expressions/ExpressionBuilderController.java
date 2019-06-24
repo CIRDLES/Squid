@@ -1671,14 +1671,18 @@ public class ExpressionBuilderController implements Initializable {
         // Math Functions ======================================================
         List<String> mathFunctionStrings = new ArrayList<>();
         for (Map.Entry<String, String> op : MATH_FUNCTIONS_MAP.entrySet()) {
-            int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
-            StringBuilder args = new StringBuilder();
-            args.append(op.getKey()).append("(");
-            for (int i = 0; i < argumentCount; i++) {
-                args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
+            try {
+                int argumentCount = Function.operationFactory(op.getValue()).getArgumentCount();
+                StringBuilder args = new StringBuilder();
+                args.append(op.getKey()).append("(");
+                for (int i = 0; i < argumentCount; i++) {
+                    args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
+                }
+                
+                mathFunctionStrings.add(args.toString());
+            } catch (Exception e) {
+                // function does not have a class definition
             }
-
-            mathFunctionStrings.add(args.toString());
         }
 
         items = FXCollections.observableArrayList(mathFunctionStrings);
@@ -2058,17 +2062,21 @@ public class ExpressionBuilderController implements Initializable {
         boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
 
         String[][] labels;
-        OperationOrFunctionInterface op = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation();
-        if (op instanceof Value) {
-            if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ShrimpSpeciesNode) {
-                labels = new String[][]{{"TotalCPS"}};
-            } else if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ConstantNode) {
-                labels = new String[][]{{"Constant"}};
+        try {
+            OperationOrFunctionInterface op = ((ExpressionTree) spotSummary.getExpressionTree()).getOperation();
+            if (op instanceof Value) {
+                if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ShrimpSpeciesNode) {
+                    labels = new String[][]{{"TotalCPS"}};
+                } else if (((ExpressionTree) spotSummary.getExpressionTree()).getLeftET() instanceof ConstantNode) {
+                    labels = new String[][]{{"Constant"}};
+                } else {
+                    labels = new String[][]{{"Value"}};
+                }
             } else {
-                labels = new String[][]{{"Value"}};
+                labels = clone2dArray(op.getLabelsForOutputValues());
             }
-        } else {
-            labels = clone2dArray(op.getLabelsForOutputValues());
+        } catch (Exception e) {
+            labels = new String[][]{{"Missing Function"}};
         }
 
         if (isAge) {
@@ -2095,12 +2103,16 @@ public class ExpressionBuilderController implements Initializable {
         }
         for (int i = 0; i < labels[0].length; i++) {
             sb.append("\t");
-            // show array index in Squid3
-            sb.append("[").append(i).append("] ");
-            sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
-            sb.append(": ");
-            sb.append(Utilities.roundedToSize(
-                    spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
+            if (spotSummary.getValues().length > 0) {
+                // show array index in Squid3
+                sb.append("[").append(i).append("] ");
+                sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
+                sb.append(": ");
+                sb.append(Utilities.roundedToSize(
+                        spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
+            } else {
+                sb.append("Undefined Expression or Function");
+            }
             sb.append("\n");
         }
 

@@ -45,7 +45,6 @@ import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -127,7 +126,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private ImageView squidImageView;
 
-    private static VBox projectManagerUI;
+    private static GridPane projectManagerUI;
 
     private static VBox sessionAuditUI;
     private static ScrollPane massesAuditUI;
@@ -144,6 +143,8 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
+    
+    public static String projectFileName;
 
     @FXML
     private MenuItem importSquid25TaskMenuItem;
@@ -258,8 +259,8 @@ public class SquidUIController implements Initializable {
 
         openRecentSquidProjectMenu.getItems().clear();
         List<String> mruProjectList = squidPersistentState.getMRUProjectList();
-        for (String projectFileName : mruProjectList) {
-            MenuItem menuItem = new MenuItem(projectFileName);
+        for (String aProjectFileName : mruProjectList) {
+            MenuItem menuItem = new MenuItem(aProjectFileName);
             menuItem.setOnAction((ActionEvent t) -> {
                 try {
                     openProject(menuItem.getText());
@@ -549,14 +550,15 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         try {
-            String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
+            projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             openProject(projectFileName);
         } catch (IOException iOException) {
         }
     }
 
-    private void openProject(String projectFileName) throws IOException {
-        if (!"".equals(projectFileName)) {
+    private void openProject(String aProjectFileName) throws IOException {
+        if (!"".equals(aProjectFileName)) {
+            projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {

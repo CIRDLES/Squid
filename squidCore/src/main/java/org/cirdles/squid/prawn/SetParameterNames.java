@@ -125,6 +125,12 @@ public enum SetParameterNames implements Serializable {
      */
     @XmlEnumValue("eisie_date_time")
     EISIE_DATE_TIME("eisie_date_time"),
+    @XmlEnumValue("eisie_cps_all_peaks_cfg")
+    EISIE_CPS_ALL_PEAKS_CFG("eisie_cps_all_peaks_cfg"),
+    @XmlEnumValue("eisie_cps_all_peaks")
+    EISIE_CPS_ALL_PEAKS("eisie_cps_all_peaks"),
+    @XmlEnumValue("eisie_date_time_all_peaks")
+    EISIE_DATE_TIME_ALL_PEAKS("eisie_date_time_all_peaks"),
     /**
      *
      */

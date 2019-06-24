@@ -136,7 +136,7 @@ public enum RunParameterNames implements Serializable {
     @XmlEnumValue("stage_center_right_y")
     stage_center_right_y("stage_center_right_y"),
     @XmlEnumValue("stage_center_right_z")
-    stage_center_right_z("stage_center_right_z"),      
+    stage_center_right_z("stage_center_right_z"),
     /**
      *
      */
@@ -147,7 +147,6 @@ public enum RunParameterNames implements Serializable {
      */
     @XmlEnumValue("stage_map_cal")
     STAGE_MAP_CAL("stage_map_cal"),
-    
     /**
      *
      */
@@ -202,6 +201,20 @@ public enum RunParameterNames implements Serializable {
      */
     @XmlEnumValue("eisie_3_date_time")
     EISIE_3_DATE_TIME("eisie_3_date_time"),
+    @XmlEnumValue("eisie_cps_all_peaks_cfg")
+    EISIE_CPS_ALL_PEAKS_CFG("eisie_cps_all_peaks_cfg"),
+    @XmlEnumValue("eisie_1_cps_all_peaks")
+    EISIE_1_CPS_ALL_PEAKS_CFG("eisie_1_cps_all_peaks"),
+    @XmlEnumValue("eisie_2_cps_all_peaks")
+    EISIE_2_CPS_ALL_PEAKS_CFG("eisie_2_cps_all_peaks"),
+    @XmlEnumValue("eisie_3_cps_all_peaks")
+    EISIE_3_CPS_ALL_PEAKS_CFG("eisie_3_cps_all_peaks"),
+    @XmlEnumValue("eisie_1_date_time_all_peaks")
+    EISIE_1_DATE_TIME_ALL_PEAKS_CFG("eisie_1_date_time_all_peaks"),
+    @XmlEnumValue("eisie_2_date_time_all_peaks")
+    EISIE_2_DATE_TIME_ALL_PEAKS_CFG("eisie_2_date_time_all_peaks"),
+    @XmlEnumValue("eisie_3_date_time_all_peaks")
+    EISIE_3_DATE_TIME_ALL_PEAKS_CFG("eisie_3_date_time_all_peaks"),
     /**
      *
      */

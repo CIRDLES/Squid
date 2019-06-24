@@ -21,11 +21,11 @@
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="720.0" minWidth="1225.0" prefHeight="720.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
   <columnConstraints>
-    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" percentWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
   </columnConstraints>
   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
     <RowConstraints valignment="CENTER" vgrow="NEVER" />
@@ -63,7 +63,7 @@
             <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
          </children>
       </HBox>
-      <Label text="Author:" GridPane.rowIndex="2" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Author &amp; Lab:" GridPane.rowIndex="2" />
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <children>
             <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
@@ -71,7 +71,7 @@
             <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <Label text="Samples:" GridPane.rowIndex="4" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Samples:" GridPane.rowIndex="4" />
       <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
             <Label prefHeight="28.0" prefWidth="234.0" style="-fx-font-size: 14;" text="Select Name Delimiter OR # Chars:  " />
@@ -80,7 +80,7 @@
       </HBox>
       <VBox GridPane.rowIndex="6">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="158.0" text="Parameters:" />
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="158.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
             <Label prefHeight="73.0" prefWidth="160.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Parameter preferences are used for both imported Squid2 tasks and new Squid3 tasks." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
@@ -158,7 +158,7 @@
       </GridPane>
       <VBox GridPane.rowIndex="11">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" text="Directives:" />
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" />
             <Label prefHeight="73.0" prefWidth="156.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
          </children>
       </VBox>
@@ -277,21 +277,21 @@
             </Text>
          </children>
       </GridPane>
-      <Label text="Mass Labels:" GridPane.rowIndex="8" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="8" />
       <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1157.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
          <children>
             <Button fx:id="chooseMassesButton" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
             <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="988.0" style="-fx-background-color: white; -fx-border-color: black;" />
          </children>
       </HBox>
-      <Label text="Ratios:" GridPane.rowIndex="10" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="10" />
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
          <children>
             <Button fx:id="chooseRatiosButton" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
             <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="990.0" style="-fx-background-color: white; -fx-border-color: black;" />
          </children>
       </HBox>
-      <Label text="Type:" GridPane.rowIndex="1" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Type:" GridPane.rowIndex="1" />
       <ToolBar prefHeight="42.0" prefWidth="744.0" styleClass="backgroundCalamari" GridPane.columnIndex="1" GridPane.rowIndex="7">
          <items>
             <Label prefHeight="28.0" prefWidth="188.0" style="-fx-font-size: 14;" text="Reset Masses &amp; Ratios from:" />
@@ -309,6 +309,6 @@
       </Text>
    </children>
    <padding>
-      <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+      <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
    </padding>
 </GridPane>

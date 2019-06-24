@@ -198,16 +198,20 @@ public class PrawnFileRunFractionParser {
         } catch (ParseException parseException) {
         }
 
-        // need to find entries due to variation in files
+        // need to search entries due to variation in files
         for (int i = 0; i < runFraction.getSet().getPar().size(); i++) {
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
-                qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
-                qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
-                primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+            try {
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
+                    qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
+                    qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
+                    primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+                }
+            } catch (NumberFormatException numberFormatException) {
+                // keep going
             }
         }
 
@@ -267,7 +271,7 @@ public class PrawnFileRunFractionParser {
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");
                 // Jan 2019 Handling OP files means that the total counts and SBM are present as single negative integers               
-                
+
                 double median;
                 double totalCountsPeak;
                 double totalCountsSigma;
@@ -276,7 +280,7 @@ public class PrawnFileRunFractionParser {
                     // we are processing OP file per Bodorkos email Oct 11 2018
                     totalCountsPeak = Math.abs(Double.parseDouble(peakMeasurementsRaw[0]));
                     totalCountsSigma = Math.sqrt(totalCountsPeak);
-                    
+
                 } else {
                     double[] peakMeasurements = new double[peakMeasurementsCount];
                     for (int i = 0; i < peakMeasurementsCount; i++) {
@@ -786,6 +790,9 @@ public class PrawnFileRunFractionParser {
                         } catch (Exception e) {
                             reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
                         }
+                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
+                    } else {
+                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
                         reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                     }
                 }

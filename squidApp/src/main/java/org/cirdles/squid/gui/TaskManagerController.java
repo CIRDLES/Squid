@@ -309,7 +309,7 @@ public class TaskManagerController implements Initializable {
         String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
         parentConcExpressionLabel.setText(parentPPM_ExpressionString);
         parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
-                + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
+                + (makeExpression(PARENT_ELEMENT_CONC_CONST, parentPPM_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
         
         updateDirectiveButtons();
     }

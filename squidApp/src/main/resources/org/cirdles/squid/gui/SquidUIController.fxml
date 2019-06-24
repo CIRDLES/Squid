@@ -110,18 +110,16 @@
                                 </Menu>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Custom Report Tables">
+                        <Menu mnemonicParsing="false" text="Default Report Tables">
                             <items>
                                 <Menu mnemonicParsing="false" text="Reference Materials">
                                     <items>
-                                        <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                                         <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
                                         <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" />
                                     </items>
                                 </Menu>
                                 <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
                                     <items>
-                                        <MenuItem disable="true" mnemonicParsing="false" text="Specify Reports Layout" />
                                         <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
                                         <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for use by ET_Redux and Topsoil" />
                                         <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
@@ -129,6 +127,11 @@
                                 </Menu>
                             </items>
                         </Menu>
+                  <Menu mnemonicParsing="false" text="Custom Report Tables">
+                    <items>
+                      <MenuItem disable="true" mnemonicParsing="false" text="Report Layout Manager" />
+                    </items>
+                  </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                 </Menu>

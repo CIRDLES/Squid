@@ -189,7 +189,7 @@ public interface ExpressionTreeInterface {
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof Integer) {
-                retVal[i] = (double) ((Integer) objects[i]);
+                retVal[i] = ((Integer) objects[i]).doubleValue();
             } else {
                 retVal[i] = (double) objects[i];
             }

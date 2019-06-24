@@ -397,93 +397,96 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetailsWM);
 
-        if (spotSummaryDetails.isManualRejectionEnabled()) {
-            TreeItem<SampleTreeNodeInterface> rootItemWM
-                    = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
+        try {
+            if (spotSummaryDetails.isManualRejectionEnabled()) {
+                TreeItem<SampleTreeNodeInterface> rootItemWM
+                        = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
 
-            spotsTreeViewCheckBox.setCellFactory(p -> new CheckBoxTreeCell<>(
-                    (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
-                    new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+                spotsTreeViewCheckBox.setCellFactory(p -> new CheckBoxTreeCell<>(
+                        (TreeItem<SampleTreeNodeInterface> item) -> ((WeightedMeanFractionNode) item.getValue()).getSelectedProperty(),
+                        new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
-                @Override
-                public String toString(TreeItem<SampleTreeNodeInterface> object) {
-                    SampleTreeNodeInterface item = object.getValue();
-                    return item.getNodeName();
-                }
-
-                @Override
-                public TreeItem<SampleTreeNodeInterface> fromString(String string) {
-                    throw new UnsupportedOperationException("Not supported yet.");
-                }
-            }));
-            spotsTreeViewCheckBox.setRoot(rootItemWM);
-            rootItemWM.setExpanded(true);
-            spotsTreeViewCheckBox.setShowRoot(true);
-
-            for (int i = 0; i < fractionNodes.size(); i++) {
-                final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItemWM
-                        = new CheckBoxTreeItem<>(fractionNodes.get(i));
-                rootItemWM.getChildren().add(checkBoxTreeItemWM);
-
-                checkBoxTreeItemWM.setSelected(!spotSummaryDetails.getRejectedIndices()[i]);
-                checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                    ((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                    spotSummaryDetails.setIndexOfRejectedIndices(((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue())
-                            .getIndexOfSpot(), !newValue);
-                    try {
-                        spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
-                    } catch (SquidException squidException) {
+                    @Override
+                    public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                        SampleTreeNodeInterface item = object.getValue();
+                        return item.getNodeName();
                     }
-                    refreshPlot();
-                });
-            }
 
-            vboxTreeHolder.getChildren().clear();
-            spotsTreeViewCheckBox.setPrefHeight(vboxMaster.getPrefHeight());
-            spotsTreeViewCheckBox.setMinHeight(vboxMaster.getHeight());
-            vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
-        } else {
-            TreeItem<String> rootItemWM
-                    = new TreeItem<>(squidProject.getFilterForRefMatSpotNames());
-            spotsTreeViewString.setRoot(rootItemWM);
+                    @Override
+                    public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                }));
+                spotsTreeViewCheckBox.setRoot(rootItemWM);
+                rootItemWM.setExpanded(true);
+                spotsTreeViewCheckBox.setShowRoot(true);
 
-            spotsTreeViewString.setCellFactory(tv -> new TreeCell<String>() {
+                for (int i = 0; i < fractionNodes.size(); i++) {
+                    final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItemWM
+                            = new CheckBoxTreeItem<>(fractionNodes.get(i));
+                    rootItemWM.getChildren().add(checkBoxTreeItemWM);
 
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty || item == null) {
-                        setText("");
-                        setStyle(null);
-                    } else {
-                        if (item.startsWith("*")) {
-                            setText(item.replaceFirst("\\*", ""));
-                            setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
+                    checkBoxTreeItemWM.setSelected(!spotSummaryDetails.getRejectedIndices()[i]);
+                    checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                        ((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                        spotSummaryDetails.setIndexOfRejectedIndices(((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue())
+                                .getIndexOfSpot(), !newValue);
+                        try {
+                            spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
+                        } catch (SquidException squidException) {
+                        }
+                        refreshPlot();
+                    });
+                }
+
+                vboxTreeHolder.getChildren().clear();
+                spotsTreeViewCheckBox.setPrefHeight(vboxMaster.getPrefHeight());
+                spotsTreeViewCheckBox.setMinHeight(vboxMaster.getHeight());
+                vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
+            } else {
+                TreeItem<String> rootItemWM
+                        = new TreeItem<>(squidProject.getFilterForRefMatSpotNames());
+                spotsTreeViewString.setRoot(rootItemWM);
+
+                spotsTreeViewString.setCellFactory(tv -> new TreeCell<String>() {
+
+                    @Override
+                    protected void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            setText("");
+                            setStyle(null);
                         } else {
-                            setText(item);
-                            setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: red;");
+                            if (item.startsWith("*")) {
+                                setText(item.replaceFirst("\\*", ""));
+                                setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
+                            } else {
+                                setText(item);
+                                setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: red;");
+                            }
                         }
                     }
+
+                });
+
+                spotsTreeViewString.setRoot(rootItemWM);
+                rootItemWM.setExpanded(true);
+                spotsTreeViewString.setShowRoot(true);
+
+                for (int i = 0; i < fractionNodes.size(); i++) {
+                    boolean rejected = spotSummaryDetails.getRejectedIndices()[i];
+                    final TreeItem<String> TreeItemWM
+                            = new TreeItem<>((rejected ? "*" : "") + fractionNodes.get(i).getNodeName());
+
+                    rootItemWM.getChildren().add(TreeItemWM);
                 }
 
-            });
-
-            spotsTreeViewString.setRoot(rootItemWM);
-            rootItemWM.setExpanded(true);
-            spotsTreeViewString.setShowRoot(true);
-
-            for (int i = 0; i < fractionNodes.size(); i++) {
-                boolean rejected = spotSummaryDetails.getRejectedIndices()[i];
-                final TreeItem<String> TreeItemWM
-                        = new TreeItem<>((rejected ? "*" : "") + fractionNodes.get(i).getNodeName());
-
-                rootItemWM.getChildren().add(TreeItemWM);
+                vboxTreeHolder.getChildren().clear();
+                spotsTreeViewString.setPrefHeight(vboxMaster.getPrefHeight());
+                spotsTreeViewString.setMinHeight(vboxMaster.getHeight());
+                vboxTreeHolder.getChildren().add(spotsTreeViewString);
             }
-
-            vboxTreeHolder.getChildren().clear();
-            spotsTreeViewString.setPrefHeight(vboxMaster.getPrefHeight());
-            spotsTreeViewString.setMinHeight(vboxMaster.getHeight());
-            vboxTreeHolder.getChildren().add(spotsTreeViewString);
+        } catch (Exception e) {
         }
     }
 
@@ -548,6 +551,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
 
                 showWeightedMeanPlot();
+
         }
     }
 
