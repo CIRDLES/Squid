@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui.plots;
 
-import org.cirdles.squid.gui.plots.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,8 +58,6 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.topsoil.javafx.PlotView;
-import org.cirdles.topsoil.plot.PlotFunction;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
@@ -248,9 +245,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
             myPlot.setData(myData);
-            if (myPlot instanceof AbstractTopsoilPlot) {
-                ((AbstractTopsoilPlot) myPlot).recenter();
-            }
 
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
                 String flavorOfConcordia = plotFlavorOneRadioButton.isSelected() ? "C" : "TW";
@@ -344,10 +338,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
             AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
-
-            if (plot instanceof AbstractTopsoilPlot) {
-                ((AbstractTopsoilPlot) plot).reloadEngine();
-            }
 
             VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
             VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
