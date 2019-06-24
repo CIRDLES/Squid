@@ -245,7 +245,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             }
 
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
-            myPlot.setData(myData);
 
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
                 String flavorOfConcordia = plotFlavorOneRadioButton.isSelected() ? "C" : "TW";
@@ -273,6 +272,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
             }
 
+            myPlot.setData(myData);
+
             // this sample item contains all the spot item checkboxes
             sampleItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
@@ -283,6 +284,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             });
             sampleItem.setIndependent(false);
         }
+        rootPlot.setData(rootData);
 
         fractionNodes = FXCollections.observableArrayList(fractionNodeDetails);
 
