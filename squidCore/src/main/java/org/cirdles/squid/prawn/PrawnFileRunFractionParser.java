@@ -271,7 +271,7 @@ public class PrawnFileRunFractionParser {
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");
                 // Jan 2019 Handling OP files means that the total counts and SBM are present as single negative integers               
-                
+
                 double median;
                 double totalCountsPeak;
                 double totalCountsSigma;
@@ -280,7 +280,7 @@ public class PrawnFileRunFractionParser {
                     // we are processing OP file per Bodorkos email Oct 11 2018
                     totalCountsPeak = Math.abs(Double.parseDouble(peakMeasurementsRaw[0]));
                     totalCountsSigma = Math.sqrt(totalCountsPeak);
-                    
+
                 } else {
                     double[] peakMeasurements = new double[peakMeasurementsCount];
                     for (int i = 0; i < peakMeasurementsCount; i++) {
@@ -790,6 +790,9 @@ public class PrawnFileRunFractionParser {
                         } catch (Exception e) {
                             reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
                         }
+                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
+                    } else {
+                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
                         reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                     }
                 }

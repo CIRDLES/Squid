@@ -129,7 +129,7 @@
                         </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Report Layout Manager" />
+                      <MenuItem disable="true" mnemonicParsing="false" text="Report Layout Manager" />
                     </items>
                   </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
