@@ -30,13 +30,11 @@ public interface PlotDisplayInterface {
      */
     Node displayPlotAsNode();
 
-    void setSelectedAllData(boolean selected);
-    
     void setData(List<Map<String, Object>> data);
     
     void setProperty(String key, Object datum);
 
-    List<Node> toolbarControlsFactory();  
+    List<Node> toolbarControlsFactory();
     
     public String makeAgeString(int index);
 
