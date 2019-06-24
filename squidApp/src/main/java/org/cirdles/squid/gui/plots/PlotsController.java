@@ -58,6 +58,7 @@ import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.topsoil.Variable;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
 import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
@@ -653,7 +654,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             } else {
                 this.datum = prepareTeraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
             }
-            this.datum.put("Selected", shrimpFraction.isSelected());
+            this.datum.put(Variable.SELECTED.getTitle(), shrimpFraction.isSelected());
         }
 
         /**
@@ -686,7 +687,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
             this.selectedProperty = selectedProperty;
             this.shrimpFraction.setSelected(selectedProperty.getValue());
-            this.datum.put("Selected", selectedProperty.getValue());
+            this.datum.put(Variable.SELECTED.getTitle(), selectedProperty.getValue());
         }
 
         @Override
