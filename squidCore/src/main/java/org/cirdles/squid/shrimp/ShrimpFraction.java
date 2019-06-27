@@ -78,6 +78,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
     private boolean selected;
+    
+    private int countOfNonPositiveSBMCounts;
 
     /**
      *
@@ -715,5 +717,19 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    /**
+     * @return the countOfNonPositiveSBMCounts
+     */
+    public int getCountOfNonPositiveSBMCounts() {
+        return countOfNonPositiveSBMCounts;
+    }
+
+    /**
+     * @param countOfNonPositiveSBMCounts the countOfNonPositiveSBMCounts to set
+     */
+    public void setCountOfNonPositiveSBMCounts(int countOfNonPositiveSBMCounts) {
+        this.countOfNonPositiveSBMCounts = countOfNonPositiveSBMCounts;
     }
 }

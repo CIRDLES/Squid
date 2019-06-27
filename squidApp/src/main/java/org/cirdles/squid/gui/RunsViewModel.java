@@ -108,8 +108,8 @@ public class RunsViewModel {
             }
         }
     };
-    
-        static class ShrimpFractionAbbreviatedListCell extends ListCell<PrawnFile.Run> {
+
+    static class ShrimpFractionAbbreviatedListCell extends ListCell<PrawnFile.Run> {
 
         @Override
         protected void updateItem(PrawnFile.Run run, boolean empty) {
@@ -124,6 +124,7 @@ public class RunsViewModel {
             }
         }
     };
+
     /**
      * @return the viewableShrimpRuns
      */

@@ -44,6 +44,7 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -1635,6 +1636,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) {
         shrimpFractions = new ArrayList<>();
+        int countOfShrimpFractionsWithInvalidSBMcounts = 0;
 
         ShrimpFraction shrimpFraction = null;
         for (int f = 0; f < prawnFile.extractCountOfRuns(); f++) {
@@ -1643,15 +1645,28 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     = PRAWN_FILE_RUN_FRACTION_PARSER.processRunFraction(runFraction, squidSessionSpecs);
 
             if (shrimpFraction != null) {
+
                 shrimpFraction.setSpotNumber(f + 1);
                 String nameOfMount = ((PrawnFile) prawnFile).getMount();
                 if (nameOfMount == null) {
                     nameOfMount = "No-Mount-Name";
                 }
                 shrimpFraction.setNameOfMount(nameOfMount);
+                if (shrimpFraction.getCountOfNonPositiveSBMCounts() > 0) {
+                    countOfShrimpFractionsWithInvalidSBMcounts++;
+                }
                 shrimpFractions.add(shrimpFraction);
             }
         }
+
+        // June 2019 per issue #340
+        if (useSBM && (countOfShrimpFractionsWithInvalidSBMcounts > 0)) {
+            SquidMessageDialog.showWarningDialog(
+                    "Squid3 detected that " + countOfShrimpFractionsWithInvalidSBMcounts + " spots contain invalid SBM counts. \n\n"
+                    + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.",
+                    null);
+        }
+
         // prepare for task expressions to be evaluated
         // setup spots
         shrimpFractions.forEach(
