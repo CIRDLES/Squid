@@ -360,10 +360,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public String makeAgeString(int index) {
-        return new BigDecimal(myOnPeakData[index])
-                .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
-                + " ±" + new BigDecimal(onPeakTwoSigma[index])
-                        .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
+        String retVal = "No Age calculated.";
+        try {
+            retVal = new BigDecimal(myOnPeakData[index])
+                    .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
+                    + " ±" + new BigDecimal(onPeakTwoSigma[index])
+                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
+        } catch (Exception e) {
+        }
+        
+        return retVal;
     }
 
     /**
