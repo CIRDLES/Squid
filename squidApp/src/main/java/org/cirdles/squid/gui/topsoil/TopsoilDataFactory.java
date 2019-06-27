@@ -96,6 +96,7 @@ public class TopsoilDataFactory {
             double plotRho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + rho}))[0].clone()[0];
             datum.put(RHO.getTitle(), plotRho);
 
+            datum.put(VISIBLE.getTitle(), true);
             datum.put(SELECTED.getTitle(), true);
 
 //            datum.put("AGE", 0.0);

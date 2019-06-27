@@ -22,7 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
 
-    compile 'com.github.cirdles.topsoil:topsoilApp:3.0.0-alpha4.3'
+    compile 'com.github.cirdles:topsoil:bc264a4413'
 
 }
 
