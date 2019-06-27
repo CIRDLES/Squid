@@ -1,92 +1,168 @@
-/*
- * Copyright 2017 James F. Bowring and CIRDLES.org.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.cirdles.squid.gui.plots.topsoil;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javafx.application.Platform;
-import javafx.concurrent.Worker;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyListProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.plots.PlotDisplayInterface;
-import org.cirdles.topsoil.plot.JavaScriptPlot;
-import org.cirdles.topsoil.plot.Plot;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import org.cirdles.topsoil.Variable;
+import org.cirdles.topsoil.javafx.PlotView;
+import org.cirdles.topsoil.plot.DataEntry;
+import org.cirdles.topsoil.plot.PlotFunction;
+import org.cirdles.topsoil.plot.PlotOption;
+import org.cirdles.topsoil.plot.PlotOptions;
+import org.cirdles.topsoil.plot.PlotType;
 import org.cirdles.topsoil.plot.internal.SVGSaver;
 
-/**
- *
- * @author James F. Bowring
- */
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
 public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
-    protected Plot plot;
+    private PlotView plot;
 
-    protected AbstractTopsoilPlot() {
+    private final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+    public final ObservableList<DataEntry> getData() {
+        return dataEntries.get();
+    }
+    @Override
+    public final void setData(List<Map<String, Object>> data) {
+        List<DataEntry> entries = new ArrayList<>();
+        DataEntry newEntry;
+        for (Map<String, Object> map : data) {
+            newEntry = new DataEntry();
+            for (Map.Entry<String, Object> pair : map.entrySet()) {
+                String key = pair.getKey().toLowerCase();
+                newEntry.put(Variable.variableForKey(key), pair.getValue());
+            }
+            entries.add(newEntry);
+        }
+        dataEntries.setAll(entries);
+    }
+    public final void setDataEntries(List<DataEntry> dataEntries) {
+        this.dataEntries.setAll(dataEntries);
+    }
+
+    private final ReadOnlyMapProperty<PlotOption<?>, Object> options =
+            new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
+    public final Map<PlotOption<?>, Object> getPlotOptions() {
+        return options.get();
+    }
+    public final void setPlotOptions(PlotOptions options) {
+        this.options.putAll(options);
+    }
+    public final void setPlotOptions(Map<String, Object> options) {
+        for (Map.Entry<String, Object> entry : options.entrySet()) {
+            setProperty(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private BooleanProperty isLoading = new SimpleBooleanProperty(false);
+
+    public AbstractTopsoilPlot(String title) {
+        this(
+                title,
+                new ArrayList<ShrimpFractionExpressionInterface>(),
+                SquidLabData.getExistingSquidLabData().getPhysConstDefault()
+        );
+    }
+
+    public AbstractTopsoilPlot(
+            String title,
+            List<ShrimpFractionExpressionInterface> shrimpFractions,
+            ParametersModel physicalConstantsModel) {
+        setupPlot(title, physicalConstantsModel);
+    }
+
+    protected abstract void setupPlot(String title, ParametersModel physicalConstantsModel);
+
+    @Override
+    public void setProperty(String key, Object datum) {
+        PlotOption<?> option = PlotOption.forKey(key);
+        if (option != null) {
+            throw new IllegalArgumentException("String key \"" + key + "\" does not represent a valid PlotOption.");
+        }
+
+        options.put(PlotOption.forKey(key), datum);
+    }
+
+    public <T> void setProperty(PlotOption<T> option, T value) {
+        options.put(option, value);
     }
 
     @Override
-    public abstract void setData(List<Map<String, Object>> data);
-
-    @Override
-    public abstract Node displayPlotAsNode();
-
-    @Override
-    public abstract void setProperty(String key, Object datum);
-
-    @Override
-    public void setSelectedAllData(boolean selected) {
-        for (Map<String, Object> datum : plot.getData()) {
-            datum.replace("Selected", selected);
+    public final Node displayPlotAsNode() {
+        if (plot == null) {
+            plot = new PlotView(PlotType.SCATTER, new PlotOptions(getPlotOptions()), getData());
+            CompletableFuture<Void> loadFuture = plot.getLoadFuture();
+            isLoading.set(! loadFuture.isDone());
+            loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
+            dataEntries.addListener((ListChangeListener<DataEntry>) c -> {
+                plot.setData(dataEntries);
+            });
+            options.addListener((MapChangeListener<PlotOption<?>, Object>) c -> {
+                plot.setOptions(options);
+            });
         }
-
-        plot.setData(plot.getData());
+        return plot;
     }
 
     @Override
     public List<Node> toolbarControlsFactory() {
-        List<Node> controls = new ArrayList<>();
-
-        JavaScriptPlot javaScriptPlot = (JavaScriptPlot) plot;
-
         Text loadingIndicator = new Text("Loading...");
-        javaScriptPlot.getLoadFuture().thenRunAsync(() -> {
-            loadingIndicator.visibleProperty().bind(
-                    javaScriptPlot.getWebEngine().getLoadWorker()
-                            .stateProperty().isEqualTo(Worker.State.RUNNING));
-        },
-                Platform::runLater
-        );
+        loadingIndicator.visibleProperty().bind(isLoading);
 
         Button saveToSVGButton = new Button("Save as SVG");
         saveToSVGButton.setOnAction(mouseEvent -> {
-            new SVGSaver().save(javaScriptPlot.displayAsSVGDocument());
+            if (plot == null) {
+                // Plot has not been displayed
+                return;
+            }
+            FileChooser chooser = new FileChooser();
+            chooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("SVG", "svg"));
+            File file = chooser.showSaveDialog(SquidUI.primaryStageWindow);
+            if (file != null) {
+                new SVGSaver().save(plot.toSVGDocument(), file);
+            }
         });
 
         Button recenterButton = new Button("Re-center");
         recenterButton.setOnAction(mouseEvent -> {
-            javaScriptPlot.recenter();
+            if (plot != null) {
+                plot.call(PlotFunction.Scatter.RECENTER);
+            }
         });
 
-        controls.add(loadingIndicator);
-        controls.add(saveToSVGButton);
-        controls.add(recenterButton);
+        List<Node> controls = new ArrayList<>(Arrays.asList(
+                loadingIndicator,
+                saveToSVGButton,
+                recenterButton
+        ));
 
         return controls;
+    }
+
+    @Override
+    public String makeAgeString(int index) {
+        return "";
     }
 
 }

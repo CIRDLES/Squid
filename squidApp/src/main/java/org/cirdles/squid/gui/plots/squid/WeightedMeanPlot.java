@@ -461,8 +461,4 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         getProperties().put(key, datum);
     }
 
-    @Override
-    public void setSelectedAllData(boolean selected) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

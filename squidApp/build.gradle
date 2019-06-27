@@ -13,7 +13,6 @@
 
 apply plugin: "application"
 
-
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.cirdles.squid.gui.SquidUI'
 }
@@ -23,8 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
 
-    compile 'com.github.BryceBarrett.Topsoil:app:TW-JS-SNAPSHOT'
-    compile 'com.github.BryceBarrett.Topsoil:core:TW-JS-SNAPSHOT'
+    compile 'com.github.cirdles.topsoil:topsoilApp:3.0.0-alpha4.3'
 
 }
 
