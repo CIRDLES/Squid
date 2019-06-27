@@ -181,8 +181,14 @@ public class TaskSquid25 implements Serializable {
 
                 String[] equationNames = lines[firstRow + 27].split("\t");
 
-                // these switches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
+                // June 2019 skip Hidden row 34
                 String[] switchST = lines[firstRow + 28].split("\t");
+                if(switchST[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")){
+                    firstRow ++;
+                }
+                
+                // these switches split into a//n array of length equations mius 1 in Squid2.20 due to missing count entry
+                switchST = lines[firstRow + 28].split("\t");
 
                 String[] switchSA = lines[firstRow + 29].split("\t");
 
