@@ -78,7 +78,7 @@ public class PrawnFileRunFractionParser {
      *
      */
     public PrawnFileRunFractionParser() {
-        dateTimeMilliseconds = 0l;
+        this.dateTimeMilliseconds = 0l;
     }
 
     /**
@@ -115,10 +115,11 @@ public class PrawnFileRunFractionParser {
         prepareRunFractionMetaData(runFraction, squidSessionSpecs);
         if (nScans > 1) {
             parseRunFractionData();
+            int countOfNonPositiveSBMCounts = 0;
             try {
                 calculateTotalPerSpeciesCPS(indexOfBackgroundSpecies);
                 calculateIsotopicRatios(useSBM, userLinFits);
-                calculateInterpolatedPeakHeights();
+                countOfNonPositiveSBMCounts = calculateInterpolatedPeakHeights();
             } catch (Exception e) {
             }
 
@@ -154,6 +155,8 @@ public class PrawnFileRunFractionParser {
                 shrimpFraction.setReducedPkHt(reducedPkHt);
                 shrimpFraction.setReducedPkHtFerr(reducedPkHtFerr);
             }
+            
+            shrimpFraction.setCountOfNonPositiveSBMCounts(countOfNonPositiveSBMCounts);
 
             // determine reference material status
             if (referenceMaterialNameFilter.length() > 0) {
@@ -743,7 +746,11 @@ public class PrawnFileRunFractionParser {
 
     }// end calculateIsotopicRatios
 
-    private void calculateInterpolatedPeakHeights() {
+    private int calculateInterpolatedPeakHeights() {
+        // June 2019 per issue #340 :https://github.com/CIRDLES/Squid/issues/340   
+        // return count of invalid SBM counts
+        int countOfNonPositiveSBMCounts = 0;
+
         // extracted from https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-EqnInterp
         // design decision to pre-compute all to store with shrimpFraction and enable on-tthe-fly tasks
 
@@ -784,20 +791,22 @@ public class PrawnFileRunFractionParser {
                         if (Double.isNaN(pkFractErr)) {
                             pkFractErr = SQUID_ERROR_VALUE;
                         }
-
-                        try {
-                            reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
-                        } catch (Exception e) {
-                            reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
-                        }
-                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                     } else {
-                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
-                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
+                        countOfNonPositiveSBMCounts++;
                     }
+
+                    // in all cases
+                    try {
+                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
+                    } catch (Exception e) {
+                        reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
+                    }
+                    reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                 }
             } // end of scans loop
             // the remainder of the math is done on a per-expression basis
         }
+        return countOfNonPositiveSBMCounts;
     }
+
 }
