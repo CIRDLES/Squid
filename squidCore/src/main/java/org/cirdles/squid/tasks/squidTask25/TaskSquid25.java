@@ -256,6 +256,10 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("(Ma)", "");
         // assume most calls to uncertainty are for percent
         retVal = retVal.replace("[±\"", "[%\"");
+        
+        // June 2019 fix Allen Kennedy's use of bad quotes
+        retVal = retVal.replace("“", "\"");
+        retVal = retVal.replace("”", "\"");
 
         // regex for robreg with four arguments = robreg.*\)
         Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
