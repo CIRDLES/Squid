@@ -190,6 +190,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
                         <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
                     </items>
                 </Menu>
             </menus>
