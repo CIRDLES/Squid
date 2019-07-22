@@ -148,7 +148,6 @@
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                             </items>
                         </Menu>
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
                     </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Archiving">

@@ -1102,10 +1102,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void topsoilAction2(ActionEvent event) {
-    }
-
-    @FXML
     private void expressionBuilderMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(expressionBuilderUI);
         launchExpressionBuilder();
