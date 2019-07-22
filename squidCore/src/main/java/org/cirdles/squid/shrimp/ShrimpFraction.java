@@ -697,7 +697,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
         if (ratio != null) {
-            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+            ratioAndUnct = new double[][]{{ratio.getRatioValUsed(), ratio.getRatioFractErrUsed()}};
         }
 
         return ratioAndUnct;
