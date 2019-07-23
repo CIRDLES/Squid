@@ -78,7 +78,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
 
     private boolean selected;
-    
+
     private int countOfNonPositiveSBMCounts;
 
     /**
@@ -492,6 +492,17 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public double[] getTotalCps() {
         return totalCps.clone();
+    }
+
+    @Override
+    public double[] getNscansTimesCountTimeSec() {
+        int piNscans = timeStampSec.length;
+        double[] product = new double[piNscans];
+        for (int i = 0; i < piNscans; i++) {
+            product[i] = piNscans * countTimeSec[i];
+        }
+
+        return product;
     }
 
     /**

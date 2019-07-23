@@ -2237,7 +2237,7 @@ public class ExpressionBuilderController implements Initializable {
 
             for (int i = 0; i < resultLabels[0].length; i++) {
                 try {
-                    sb.append(String.format("%1$-" + (i >= 2 ? 23 : 20) + "s", resultLabels[0][i]));
+                    sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s", resultLabels[0][i]));
                 } catch (Exception e) {
                 }
             }
@@ -2289,7 +2289,7 @@ public class ExpressionBuilderController implements Initializable {
                         resultsWithPct[2] = calcPercentUnct(results[0]);
                         for (int i = 0; i < resultsWithPct.length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 20) + "s", Utilities.roundedToSize(resultsWithPct[i], sigDigits)));
+                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s", Utilities.roundedToSize(resultsWithPct[i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2316,7 +2316,7 @@ public class ExpressionBuilderController implements Initializable {
 
                         for (int i = 0; i < resultsWithPct.length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 20) + "s",
+                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s",
                                         Utilities.roundedToSize(resultsWithPct[i], sigDigits)));
                             } catch (Exception e) {
                             }
