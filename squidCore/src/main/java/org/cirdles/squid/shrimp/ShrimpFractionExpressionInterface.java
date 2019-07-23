@@ -83,6 +83,8 @@ public interface ShrimpFractionExpressionInterface {
      * @param totalCps the totalCps to set
      */
     public void setTotalCps(double[] totalCps);
+    
+    public double[] getNscansTimesCountTimeSec();
 
     /**
      * @param taskExpressionsEvaluated the taskExpressionsEvaluated to set

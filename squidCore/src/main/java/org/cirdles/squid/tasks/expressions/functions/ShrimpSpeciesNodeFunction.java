@@ -59,18 +59,18 @@ public class ShrimpSpeciesNodeFunction extends Function {
     public Object[][] eval(List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         //TODO refactor duplicate code
         Object[][] results = new Object[][]{{0.0}};
-        
-        if (childrenET.get(0) instanceof ShrimpSpeciesNode){
-        shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
-        shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
 
-        results = shrimpSpeciesNode.eval(shrimpFractions, task);
-        
-        // restore the node to anonymous
-        shrimpSpeciesNode.setMethodNameForShrimpFraction("");
+        if (childrenET.get(0) instanceof ShrimpSpeciesNode) {
+            shrimpSpeciesNode = ((ShrimpSpeciesNode) childrenET.get(0));
+            shrimpSpeciesNode.setMethodNameForShrimpFraction(methodNameForShrimpFraction);
+
+            results = shrimpSpeciesNode.eval(shrimpFractions, task);
+
+            // restore the node to anonymous
+            shrimpSpeciesNode.setMethodNameForShrimpFraction("");
         }
         // added feb 2019 to handle BKG when forced
-        if (results[0] == null){
+        if (results[0] == null) {
             results = new Object[][]{{0.0}};
         }
         return results;

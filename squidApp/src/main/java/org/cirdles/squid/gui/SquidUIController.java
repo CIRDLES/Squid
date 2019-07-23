@@ -143,7 +143,7 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
-    
+
     public static String projectFileName;
 
     @FXML
@@ -1102,10 +1102,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void topsoilAction2(ActionEvent event) {
-    }
-
-    @FXML
     private void expressionBuilderMenuItemAction(ActionEvent event) {
         mainPane.getChildren().remove(expressionBuilderUI);
         launchExpressionBuilder();
@@ -1491,5 +1487,10 @@ public class SquidUIController implements Initializable {
     @FXML
     private void showTaskDesignerAction(ActionEvent event) {
         launchTaskDesigner();
+    }
+
+    @FXML
+    private void enjoySquidMenuItemAction(ActionEvent event) {
+        BrowserControl.showURI("https://www.popsci.com/resizer/BHnnigECLPVEb2Ypab_mQTar8dk=/795x474/arc-anglerfish-arc2-prod-bonnier.s3.amazonaws.com/public/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
     }
 }

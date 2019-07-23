@@ -165,6 +165,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L9678;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 
 /**
@@ -800,6 +802,9 @@ public abstract class BuiltInExpressionsFactory {
                     "100*((1-" + DEFCOM_64 + "*[" + R204206 + "])/(1-" + DEFCOM_64 + "*[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCount8CorrCalib);
         }
+
+        overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom207());
+        overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom208());
 
         return overCountExpressionsOrdered;
     }

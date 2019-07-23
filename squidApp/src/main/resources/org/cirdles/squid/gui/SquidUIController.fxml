@@ -148,7 +148,6 @@
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                             </items>
                         </Menu>
-                        <MenuItem disable="true" mnemonicParsing="false" onAction="#topsoilAction2" text="Make 6 Topsoil plots" visible="false" />
                     </items>
                 </Menu>
                 <Menu disable="true" mnemonicParsing="false" text="Archiving">
@@ -190,6 +189,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
                         <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
                     </items>
                 </Menu>
             </menus>
