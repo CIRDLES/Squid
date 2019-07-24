@@ -126,10 +126,10 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         // first pass
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
         this.task.updateAllExpressions(true);
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     public void initializeTaskAndReduceData() {
@@ -142,7 +142,7 @@ public final class SquidProject implements Serializable {
             // four passes needed for percolating results
             task.updateAllExpressions(true);
             task.setChanged(true);
-            task.setupSquidSessionSpecsAndReduceAndReport();
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
         }
     }
 
@@ -209,7 +209,7 @@ public final class SquidProject implements Serializable {
 
         // first pass
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {

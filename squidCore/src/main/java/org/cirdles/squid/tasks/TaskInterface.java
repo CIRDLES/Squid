@@ -234,7 +234,11 @@ public interface TaskInterface {
      */
     public void setTaskType(TaskTypeEnum type);
 
-    public void setupSquidSessionSpecsAndReduceAndReport();
+    /**
+     *
+     * @param forceReprocess the value of forceReprocess
+     */
+    public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess);
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
@@ -356,7 +360,7 @@ public interface TaskInterface {
     public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions);
 
     public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
-    
+
     public void applyTaskIsotopeLabelsToMassStations();
 
     public void populateTableOfSelectedRatiosFromRatiosList();
@@ -487,7 +491,7 @@ public interface TaskInterface {
         updateAllExpressions(true);
         processAndSortExpressions();
         updateAllExpressions(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
         // prepares for second pass when needed
         setChanged(true);
     }
@@ -667,15 +671,26 @@ public interface TaskInterface {
     public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
 
     public String printExpressionRequiresGraph(Expression exp);
-    
+
     public String printExpressionProvidesGraph(Expression exp);
-    
-     public void generateMapOfUnknownsBySampleNames();
-     
-     public void refreshParametersFromModels();
-     /**
+
+    public void generateMapOfUnknownsBySampleNames();
+
+    public void refreshParametersFromModels();
+
+    /**
      * @return the missingExpressionsByName
      */
     public List<String> getMissingExpressionsByName();
-     
+
+    /**
+     * @return the roundingForSquid3
+     */
+    public boolean isRoundingForSquid3();
+
+    /**
+     * @param roundingForSquid3 the roundingForSquid3 to set
+     */
+    public void setRoundingForSquid3(boolean roundingForSquid3);
+
 }

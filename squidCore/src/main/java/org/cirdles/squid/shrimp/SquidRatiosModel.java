@@ -252,8 +252,8 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         // we choose to store the 1 sigma absolute as ratioFracErr
 
         // first determine if  above Squid25 limits
-        double ratioFraErrFiltered = ((ratioFractErr * 100.0) > SQUID_UPPER_LIMIT_1_SIGMA_PERCENT)
-                ? (SQUID_UPPER_LIMIT_1_SIGMA_PERCENT / 100.0) : ratioFractErr;
+        double ratioFraErrFiltered = ((Math.abs(ratioFractErr) * 100.0) > SQUID_UPPER_LIMIT_1_SIGMA_PERCENT)
+                ? (SQUID_UPPER_LIMIT_1_SIGMA_PERCENT / 100.0) : Math.abs(ratioFractErr);
 
         this.ratioFractErr = ratioFraErrFiltered * ratioVal;
         this.ratioFractErrUsed = ratioFraErrFiltered * ratioVal;

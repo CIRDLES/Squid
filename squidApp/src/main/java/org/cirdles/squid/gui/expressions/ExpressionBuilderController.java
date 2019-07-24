@@ -104,6 +104,7 @@ import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  * FXML Controller class
@@ -430,7 +431,7 @@ public class ExpressionBuilderController implements Initializable {
 
         task = squidProject.getTask();
         // update
-        task.setupSquidSessionSpecsAndReduceAndReport();
+        task.setupSquidSessionSpecsAndReduceAndReport(false);
 
         initPropertyBindings();
         initListViews();
@@ -1794,7 +1795,7 @@ public class ExpressionBuilderController implements Initializable {
                 result = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) {
                     try {
-                        rmPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
+                        rmPeekTextArea.setText(exp.getName() + " = " + squid3RoundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
                     } catch (Exception e) {
                     }
                 }
@@ -1848,7 +1849,7 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Not used";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                     try {
-                        unPeekTextArea.setText(exp.getName() + " = " + Utilities.roundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
+                        unPeekTextArea.setText(exp.getName() + " = " + squid3RoundedToSize((Double) ((ConstantNode) exp.getExpressionTree()).getValue(), 15));
                     } catch (Exception e) {
                     }
                 }
@@ -1938,10 +1939,10 @@ public class ExpressionBuilderController implements Initializable {
                         Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
                         for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
                             if (entry.getKey().getName().equals(etWMChild1.getName())) {
-                                value = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
+                                value = "" + squid3RoundedToSize(entry.getValue()[0][0], 15);
                             }
                             if (entry.getKey().getName().equals(etWMChild2.getName())) {
-                                err = "" + Utilities.roundedToSize(entry.getValue()[0][0], 15);
+                                err = "" + squid3RoundedToSize(entry.getValue()[0][0], 15);
                             }
                         }
                         cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
@@ -2108,7 +2109,7 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("[").append(i).append("] ");
                 sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
                 sb.append(": ");
-                sb.append(Utilities.roundedToSize(
+                sb.append(squid3RoundedToSize(
                         spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
             } else {
                 sb.append("Undefined Expression or Function");
@@ -2255,7 +2256,7 @@ public class ExpressionBuilderController implements Initializable {
                                     = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                             for (int i = 0; i < resultLabels[0].length; i++) {
                                 try {
-                                    sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                    sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
                                 } catch (Exception e) {
                                 }
                             }
@@ -2271,7 +2272,7 @@ public class ExpressionBuilderController implements Initializable {
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-23s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                sb.append(String.format("%1$-23s", squid3RoundedToSize(results[0][i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2289,7 +2290,7 @@ public class ExpressionBuilderController implements Initializable {
                         resultsWithPct[2] = calcPercentUnct(results[0]);
                         for (int i = 0; i < resultsWithPct.length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s", Utilities.roundedToSize(resultsWithPct[i], sigDigits)));
+                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s", squid3RoundedToSize(resultsWithPct[i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2306,18 +2307,18 @@ public class ExpressionBuilderController implements Initializable {
                         double[] resultsWithPct = new double[0];
                         if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
                             resultsWithPct = new double[1];
-                            resultsWithPct[0] = Utilities.roundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                            resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
                         } else if (results[0].length > 1) {
                             resultsWithPct = new double[3];
-                            resultsWithPct[0] = Utilities.roundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                            resultsWithPct[1] = Utilities.roundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                            resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                            resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
                             resultsWithPct[2] = calcPercentUnct(results[0]);
                         }
 
                         for (int i = 0; i < resultsWithPct.length; i++) {
                             try {
                                 sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s",
-                                        Utilities.roundedToSize(resultsWithPct[i], sigDigits)));
+                                        squid3RoundedToSize(resultsWithPct[i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2341,7 +2342,7 @@ public class ExpressionBuilderController implements Initializable {
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTreeSpecies)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2362,7 +2363,7 @@ public class ExpressionBuilderController implements Initializable {
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expSpotField)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
                             try {
-                                sb.append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(results[0][i], sigDigits)));
+                                sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
                             } catch (Exception e) {
                             }
                         }
@@ -2377,7 +2378,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private double calcPercentUnct(double[] valueModel) {
-        return valueModel[1] / valueModel[0] * 100;
+        return Math.abs(valueModel[1] / valueModel[0] * 100.0);
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {

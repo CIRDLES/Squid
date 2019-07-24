@@ -37,8 +37,8 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import org.cirdles.squid.gui.plots.PlotsController;
-import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -1066,7 +1066,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reportsMenuSelectedAction(Event event) {
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @FXML
@@ -1086,7 +1086,7 @@ public class SquidUIController implements Initializable {
 
     private void launchVisualizations() {
         try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/Plots.fxml"));
             topsoilPlotUI.setId("TopsoilPlot");
 
             AnchorPane.setLeftAnchor(topsoilPlotUI, 0.0);
@@ -1333,7 +1333,7 @@ public class SquidUIController implements Initializable {
             squidProject.getTask().updateAllExpressions(true);
             squidProject.getTask().updateAllExpressions(true);
 
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         } else {
             System.out.println("custom expressions folder does not exist");
         }
@@ -1373,7 +1373,7 @@ public class SquidUIController implements Initializable {
                 squidProject.updateFilterForConcRefMatSpotNames("");
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());
                 squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
                 squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 squidProject.autoDivideSamples();
                 squidProject.setProjectName("NEW PROJECT");

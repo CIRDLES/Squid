@@ -36,11 +36,11 @@ import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
 /**
@@ -371,9 +371,9 @@ public class CalamariReportsEngine implements Serializable {
 
             for (int i = 0; i < timeStampSec[scanNum].length; i++) {
                 dataLine.append(", ").append(timeStampSec[scanNum][i]);
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCounts[scanNum][i], 15));
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCountsOneSigmaAbs[scanNum][i], 15));
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCountsSBM[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCounts[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCountsOneSigmaAbs[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCountsSBM[scanNum][i], 15));
                 dataLine.append(", ").append(trimMass[scanNum][i]);
             }
 
@@ -463,9 +463,9 @@ public class CalamariReportsEngine implements Serializable {
                     if (doWriteReportFiles) {
                         // July 2016 case of less than nDodCount = rare
                         if (nDodNum < isotopeRatioModel.getRatEqTime().size()) {
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15));
                         } else {
                             dataLine.append(", ").append("n/a");
                             dataLine.append(", ").append("n/a");
@@ -473,9 +473,9 @@ public class CalamariReportsEngine implements Serializable {
                         }
                     } else {
                         if (nDodNum < isotopeRatioModel.getRatEqTime().size()) {
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15)));
                         } else {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
@@ -491,8 +491,8 @@ public class CalamariReportsEngine implements Serializable {
                     if (doWriteReportFiles) {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
                             dataLine.append(", ").append(String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum]));
-                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
                         } else {
                             dataLine.append(", ").append("n/a");
                             dataLine.append(", ").append("n/a");
@@ -501,8 +501,8 @@ public class CalamariReportsEngine implements Serializable {
                     } else {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum])));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
                         } else {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
@@ -559,12 +559,12 @@ public class CalamariReportsEngine implements Serializable {
                 // April 2017 rounding was performed on calculated numbers
                 if (doWriteReportFiles) {
                     dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
-                    dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatioVal(), 12));
-                    dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12));
                 } else {
                     dataLine.append(", ").append(String.format("%1$-" + 12 + "s", String.valueOf(isotopeRatioModel.getMinIndex())));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatioVal(), 12)));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12)));
                 }
             }
         }
@@ -575,15 +575,15 @@ public class CalamariReportsEngine implements Serializable {
             for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
                 double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
-                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(expressionResults[0], 12));
                     if (expressionResults.length > 1) {
-                        dataLine.append(", ").append(Utilities.roundedToSize(
+                        dataLine.append(", ").append(squid3RoundedToSize(
                                 calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                     }
                 } else {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(expressionResults[0], 12)));
                     if (expressionResults.length > 1) {
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
+                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(
                                 calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
                     }
                 }

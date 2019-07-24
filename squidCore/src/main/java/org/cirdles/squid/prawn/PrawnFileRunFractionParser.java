@@ -33,6 +33,7 @@ import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  * Parses run fractions from Prawn files into
@@ -432,7 +433,7 @@ public class PrawnFileRunFractionParser {
             // this has the effect of setting totalCps[backgroundIndex] to backgroundCps
             //modified April 2017 to round to 12 sig digits using half-up            
             double originalTotalCPS = (sumOfCorrectedPeaks[speciesMeasurementIndex] / nScans) + backgroundCps;
-            totalCps[speciesMeasurementIndex] = Utilities.roundedToSize(originalTotalCPS, 12);
+            totalCps[speciesMeasurementIndex] = squid3RoundedToSize(originalTotalCPS, 12);
         }
     }
 
@@ -495,8 +496,8 @@ public class PrawnFileRunFractionParser {
                         0.5 * (Math.min(timeStampSec[0][NUM], timeStampSec[0][DEN]) + Math.max(timeStampSec[nScans - 1][NUM], timeStampSec[nScans - 1][DEN]))
                     };
 
-                    isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                    isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                    isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                    isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                     ratEqTime.add(ratioInterpTime[0]);
                     ratEqVal.add(ratioVal);
@@ -668,8 +669,8 @@ public class PrawnFileRunFractionParser {
                             ratEqVal.add(ratioVal);
                             ratEqErr.add(ratioFractErr);
 
-                            isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                            isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                            isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                            isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                             break;
                         case 0:
@@ -678,15 +679,15 @@ public class PrawnFileRunFractionParser {
                                 ratioVal = SQUID_TINY_VALUE;
                                 ratioFractErr = 1.0;
                             } else {
-                                ratioFractErr = ratValFerr[0];// this is abs not percent
+                                ratioFractErr = Math.abs(ratValFerr[0]);// this is abs not percent July 2019 added abs call
                             }
 
                             ratEqTime.add(ratioInterpTime[0]);
                             ratEqVal.add(ratioVal);
                             ratEqErr.add(ratioFractErr);
 
-                            isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                            isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                            isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                            isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                             break;
                         default:
@@ -723,8 +724,8 @@ public class PrawnFileRunFractionParser {
                                 isotopicRatioModel.setRatioVal(SQUID_TINY_VALUE);
                                 isotopicRatioModel.setRatioFractErr(1.0);
                             } else {
-                                isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioMean, sigFigs));
-                                isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(Math.max(SQUID_TINY_VALUE,
+                                isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioMean, sigFigs));
+                                isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(Math.max(SQUID_TINY_VALUE,
                                         ratioMeanSig) / Math.abs(ratioMean), sigFigs));
                             }
 
