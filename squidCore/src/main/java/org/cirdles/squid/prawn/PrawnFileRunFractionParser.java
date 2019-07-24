@@ -678,7 +678,7 @@ public class PrawnFileRunFractionParser {
                                 ratioVal = SQUID_TINY_VALUE;
                                 ratioFractErr = 1.0;
                             } else {
-                                ratioFractErr = ratValFerr[0];// this is abs not percent
+                                ratioFractErr = Math.abs(ratValFerr[0]);// this is abs not percent July 2019 added abs call
                             }
 
                             ratEqTime.add(ratioInterpTime[0]);

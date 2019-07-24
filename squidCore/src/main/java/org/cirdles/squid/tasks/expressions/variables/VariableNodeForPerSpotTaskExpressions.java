@@ -134,7 +134,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
                         if (uncertaintyDirective.compareTo("%") == 0) {
                             // index should be 1 from constructor
-                            values[1] = values[1] / values[0] * 100;
+                            values[1] = Math.abs(values[1] / values[0] * 100.0);
                         }
 
                         // july 2018

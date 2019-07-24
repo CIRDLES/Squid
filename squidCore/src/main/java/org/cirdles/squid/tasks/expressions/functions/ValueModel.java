@@ -74,8 +74,8 @@ public class ValueModel extends Function {
             boolean[] unctFlag = convertObjectArrayToBooleans(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double unct = unctCalc[0];
             if (!unctFlag[0]) {
-                // convert to absolute uncertainty
-                unct = unctCalc[0] / 100.0 * valueCalc[0];
+                // July 2019 fixed missing abs value !!!
+                unct = Math.abs(unctCalc[0] / 100.0 * valueCalc[0]);
             }
             retVal = new Object[][]{{valueCalc[0], unct}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

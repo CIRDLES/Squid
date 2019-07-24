@@ -39,7 +39,7 @@ public class BuiltinExpressionsCountCorrection204 {
                 + "(TotalCpsTime([\"204\"]))";
 
         String term2
-                = "[±\"" + BIWT_204_OVR_CTS_FROM_207 + "\"]^2";
+                = "[\"" + BIWT_204_OVR_CTS_FROM_207 + "\"][2]^2";
 
         String term3
                 = "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-"
@@ -80,7 +80,7 @@ public class BuiltinExpressionsCountCorrection204 {
                 + "(TotalCpsTime([\"204\"]))";
 
         String term2
-                = "[±\"" + BIWT_204_OVR_CTS_FROM_208 + "\"]^2";
+                = "[\"" + BIWT_204_OVR_CTS_FROM_208 + "\"][2]^2";
 
         String term3
                 = "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-"

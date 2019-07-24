@@ -2377,7 +2377,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private double calcPercentUnct(double[] valueModel) {
-        return valueModel[1] / valueModel[0] * 100;
+        return Math.abs(valueModel[1] / valueModel[0] * 100.0);
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {
