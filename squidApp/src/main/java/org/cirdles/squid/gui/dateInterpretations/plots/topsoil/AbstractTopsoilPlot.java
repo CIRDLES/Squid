@@ -1,4 +1,4 @@
-package org.cirdles.squid.gui.plots.topsoil;
+package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyListProperty;
@@ -15,7 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import org.cirdles.squid.gui.SquidUI;
-import org.cirdles.squid.gui.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;

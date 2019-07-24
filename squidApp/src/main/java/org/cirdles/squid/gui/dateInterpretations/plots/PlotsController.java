@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.plots;
+package org.cirdles.squid.gui.dateInterpretations.plots;
 
-import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotWetherill;
+import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,15 +53,15 @@ import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.gui.plots.squid.WeightedMeanPlot;
-import org.cirdles.squid.gui.plots.squid.WeightedMeanRefreshInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.topsoil.Variable;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
-import org.cirdles.squid.gui.plots.topsoil.TopsoilPlotTeraWasserburg;
+import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;

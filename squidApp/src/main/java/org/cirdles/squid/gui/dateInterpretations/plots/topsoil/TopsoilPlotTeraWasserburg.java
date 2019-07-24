@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.plots.topsoil;
+package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
