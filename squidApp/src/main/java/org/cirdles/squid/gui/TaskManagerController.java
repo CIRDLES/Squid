@@ -449,24 +449,28 @@ public class TaskManagerController implements Initializable {
     private void yesSBMRadioButtonAction(ActionEvent event) {
         task.setUseSBM(true);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void noSBMRadioButtonActions(ActionEvent event) {
         task.setUseSBM(false);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(true);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(false);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
