@@ -236,7 +236,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().applyDirectives();
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_4Corr_Unknowns.csv");
@@ -256,7 +256,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -276,7 +276,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_8Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -296,7 +296,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
@@ -337,7 +337,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -357,7 +357,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
@@ -398,7 +398,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -418,7 +418,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
@@ -459,7 +459,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -479,7 +479,7 @@ public class PrawnFileHandlerIT {
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());

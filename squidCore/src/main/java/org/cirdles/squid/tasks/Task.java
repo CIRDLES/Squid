@@ -238,6 +238,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, List<String>> providesExpressionsGraph;
     protected Map<String, List<String>> requiresExpressionsGraph;
     protected List<String> missingExpressionsByName;
+    
+    protected boolean roundingForSquid3;
 
     public Task() {
         this("New Task", null, null);
@@ -342,6 +344,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.missingExpressionsByName = new ArrayList<>();
+        
+        this.roundingForSquid3 = false;
 
         generateConstants();
         generateParameters();
@@ -394,7 +398,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         // first pass
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @Override
@@ -702,8 +706,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         buildSquidRatiosModelListFromMassStationDetails();
     }
 
+    /**
+     *
+     * @param forceReprocess the value of forceReprocess
+     */
     @Override
-    public void setupSquidSessionSpecsAndReduceAndReport() {
+    public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess) {
 
         if (changed) {
 
@@ -722,7 +730,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filtersForUnknownNames);
             }
 
-            if (requiresChanges || prawnChanged) {
+            if (requiresChanges || prawnChanged || forceReprocess) {
                 squidSessionModel
                         = new SquidSessionModel(
                                 squidSpeciesModelList,
@@ -882,7 +890,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         populateTableOfSelectedRatiosFromRatiosList();
 
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
         updateAllExpressions(true);
     }
 
@@ -1056,7 +1064,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         setChanged(true);
         if (reprocessExpressions) {
-            setupSquidSessionSpecsAndReduceAndReport();
+            setupSquidSessionSpecsAndReduceAndReport(false);
         }
     }
 
@@ -1072,7 +1080,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         setChanged(true);
         if (reprocessExpressions) {
-            setupSquidSessionSpecsAndReduceAndReport();
+            setupSquidSessionSpecsAndReduceAndReport(false);
         }
     }
 
@@ -1118,7 +1126,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 updateAllExpressions(reprocessExpressions);
                 setChanged(reprocessExpressions);
                 if (reprocessExpressions) {
-                    setupSquidSessionSpecsAndReduceAndReport();
+                    setupSquidSessionSpecsAndReduceAndReport(false);
                 }
             }
         }
@@ -1140,7 +1148,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         updateAllExpressions(reprocessExpressions);
         setChanged(reprocessExpressions);
         if (reprocessExpressions) {
-            setupSquidSessionSpecsAndReduceAndReport();
+            setupSquidSessionSpecsAndReduceAndReport(false);
         } else {
             namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
             buildExpressionDependencyGraphs();
@@ -1274,7 +1282,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
         changed = true;
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     private void updateRefMatCalibConstWMeanExpression(String wmWxpressionName, boolean squidAllowsAutoExclusionOfSpots) {
@@ -1351,7 +1359,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         processAndSortExpressions();
 
         updateAllExpressions(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @Override
@@ -1407,7 +1415,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         changed = true;
         SquidProject.setProjectChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
         updateAllExpressions(true);
     }
 
@@ -1935,7 +1943,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
         updateAllExpressions(true);
     }
 
@@ -1976,7 +1984,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport();
+        setupSquidSessionSpecsAndReduceAndReport(false);
         updateAllExpressions(true);
     }
 
@@ -2930,6 +2938,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             missingExpressionsByName = new ArrayList<>();
         }
         return missingExpressionsByName;
+    }
+
+    /**
+     * @return the roundingForSquid3
+     */
+    public boolean isRoundingForSquid3() {
+        return roundingForSquid3;
+    }
+
+    /**
+     * @param roundingForSquid3 the roundingForSquid3 to set
+     */
+    public void setRoundingForSquid3(boolean roundingForSquid3) {
+        this.roundingForSquid3 = roundingForSquid3;
     }
 
 }

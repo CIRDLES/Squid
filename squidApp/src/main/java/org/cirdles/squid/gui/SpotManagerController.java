@@ -482,7 +482,7 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         }
 
         updateViewRM();
@@ -522,7 +522,7 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         }
 
         updateViewCM();

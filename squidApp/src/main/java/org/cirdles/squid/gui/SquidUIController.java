@@ -1066,7 +1066,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reportsMenuSelectedAction(Event event) {
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @FXML
@@ -1333,7 +1333,7 @@ public class SquidUIController implements Initializable {
             squidProject.getTask().updateAllExpressions(true);
             squidProject.getTask().updateAllExpressions(true);
 
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         } else {
             System.out.println("custom expressions folder does not exist");
         }
@@ -1373,7 +1373,7 @@ public class SquidUIController implements Initializable {
                 squidProject.updateFilterForConcRefMatSpotNames("");
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());
                 squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
                 squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 squidProject.autoDivideSamples();
                 squidProject.setProjectName("NEW PROJECT");

@@ -20,7 +20,10 @@ package org.cirdles.squid.utilities.conversionUtilities;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RoundingUtilities {
+    
+    public static boolean useSigFig15 = false;
+    
     public static double squid3RoundedToSize(double value, int sigFigs){
-        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, sigFigs);
+        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, useSigFig15 ? 15 : sigFigs);
     }
 }

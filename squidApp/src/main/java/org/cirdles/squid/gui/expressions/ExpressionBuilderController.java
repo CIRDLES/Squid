@@ -431,7 +431,7 @@ public class ExpressionBuilderController implements Initializable {
 
         task = squidProject.getTask();
         // update
-        task.setupSquidSessionSpecsAndReduceAndReport();
+        task.setupSquidSessionSpecsAndReduceAndReport(false);
 
         initPropertyBindings();
         initListViews();

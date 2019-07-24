@@ -139,7 +139,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // update 
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));

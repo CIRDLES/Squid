@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="640.0" minWidth="1225.0" prefWidth="1200.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
@@ -57,7 +58,11 @@
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Provenance:" GridPane.rowIndex="4" />
       <TextField fx:id="provenanceTextField" promptText="Provenance" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" GridPane.rowIndex="6" />
+      <VBox GridPane.rowIndex="6">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
+         </children>
+      </VBox>
       <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
         <columnConstraints>
           <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" />
@@ -95,6 +100,12 @@
                      </toggleGroup>
                   </RadioButton>
                   <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSMB" />
+                  <RadioButton fx:id="roundingSquid25" mnemonicParsing="false" onAction="#roundingSquid25Action" prefHeight="30.0" prefWidth="153.0" selected="true" text="Squid2.5 rounding" textFill="#f80202" translateX="100.0">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="roundingToggleGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="roundingSquid3" mnemonicParsing="false" onAction="#roundingSquid3Action" prefHeight="29.0" prefWidth="156.0" text="Squid3 rounding" textFill="#f50303" toggleGroup="$roundingToggleGroup" translateX="100.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
