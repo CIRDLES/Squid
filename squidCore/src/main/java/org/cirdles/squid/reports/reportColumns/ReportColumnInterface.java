@@ -558,7 +558,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
                                         retVal[1] = String.valueOf(Utilities.roundedToSize(
                                                 getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).doubleValue(), roundingCount));
-//                                            = getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).toPlainString().trim();
                                     } catch (Exception e) {
                                     }
                                 } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {

@@ -75,7 +75,8 @@ public class ValueModel extends Function {
             double unct = unctCalc[0];
             if (!unctFlag[0]) {
                 // July 2019 fixed missing abs value !!!
-                unct = Math.abs(unctCalc[0] / 100.0 * valueCalc[0]);
+//                unct = Math.abs(unctCalc[0] / 100.0 * valueCalc[0]);
+                unct =  unctCalc[0] / 100.0 * valueCalc[0];
             }
             retVal = new Object[][]{{valueCalc[0], unct}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {

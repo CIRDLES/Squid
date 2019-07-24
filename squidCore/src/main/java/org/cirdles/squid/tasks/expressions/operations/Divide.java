@@ -23,6 +23,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -84,7 +85,7 @@ public class Divide extends Operation {
         // April 2017 constrain quotient to mimic VBA results for isotopic ratios
         // by providing only 12 significant digits per Simon Bodorkos
         if (childrenET.get(0) instanceof ShrimpSpeciesNode) {
-            retVal = org.cirdles.ludwig.squid25.Utilities.roundedToSize(retVal, 12);
+            retVal = squid3RoundedToSize(retVal, 12);
         }
 
         return new Object[][]{{retVal}};

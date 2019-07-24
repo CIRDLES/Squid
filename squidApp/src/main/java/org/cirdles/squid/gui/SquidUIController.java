@@ -1086,7 +1086,7 @@ public class SquidUIController implements Initializable {
 
     private void launchVisualizations() {
         try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/Plots.fxml"));
             topsoilPlotUI.setId("TopsoilPlot");
 
             AnchorPane.setLeftAnchor(topsoilPlotUI, 0.0);
