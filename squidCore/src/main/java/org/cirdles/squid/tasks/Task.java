@@ -238,7 +238,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, List<String>> providesExpressionsGraph;
     protected Map<String, List<String>> requiresExpressionsGraph;
     protected List<String> missingExpressionsByName;
-    
+
     protected boolean roundingForSquid3;
 
     public Task() {
@@ -344,7 +344,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.missingExpressionsByName = new ArrayList<>();
-        
+
         this.roundingForSquid3 = false;
 
         generateConstants();

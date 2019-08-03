@@ -16,16 +16,23 @@
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
 import java.net.URL;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
+import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 /**
  * FXML Controller class
@@ -37,48 +44,78 @@ public class CountCorrectionsController implements Initializable {
     @FXML
     private VBox vboxMaster;
     @FXML
-    private VBox vboxTreeHolder;
+    private AnchorPane sampleTreeAnchorPane;
+
+    private TreeView<String> spotsTreeViewString = new TreeView<>();
     @FXML
-    private VBox plotVBox;
-    @FXML
-    private AnchorPane plotAndConfigAnchorPane;
-    @FXML
-    private ToolBar plotToolBar;
-    @FXML
-    private RadioButton corr4_RadioButton;
-    @FXML
-    private ToggleGroup correctionToggleGroup;
-    @FXML
-    private RadioButton corr7_RadioButton;
-    @FXML
-    private RadioButton corr8_RadioButton;
-    @FXML
-    private RadioButton plotFlavorOneRadioButton;
-    @FXML
-    private ToggleGroup plotFlavorToggleGroup;
-    @FXML
-    private RadioButton plotFlavorTwoRadioButton;
-    @FXML
-    private CheckBox autoExcludeSpotsCheckBox;
+    private HBox headerHBox;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        // update 
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
-    @FXML
-    private void selectedIsotopeIndexAction(ActionEvent event) {
+        spotsTreeViewString.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        spotsTreeViewString.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
+                .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight()));
+
+        showUnknowns();
+
     }
 
-    @FXML
-    private void plotChooserAction(ActionEvent event) {
-    }
+    private void showUnknowns() {
 
-    @FXML
-    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
+        spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
+
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
+        mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+        // case of sample names chosen
+        if (mapOfSpotsBySampleNames.size() > 1) {
+            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+        }
+
+        TreeItem<String> rootItemWM
+                = new TreeItem<>(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+        spotsTreeViewString.setRoot(rootItemWM);
+
+        spotsTreeViewString.setRoot(rootItemWM);
+
+        rootItemWM.setExpanded(true);
+        spotsTreeViewString.setShowRoot(true);
+
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
+            TreeItem<String> treeItemSample = new TreeItem<>(entry.getKey());
+            for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
+
+                StringBuilder spotDataString = new StringBuilder();
+                double[][] r204_206 = spot.getIsotopicRatioValuesByStringName("204/206");
+                double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot()
+                        .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From207"));
+                double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
+                        .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From208"));
+
+                spotDataString.append(String.format("%1$-" + 24 + "s", spot.getFractionID()));
+                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206[0][0])));
+                spotDataString.append(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1])));
+                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
+                spotDataString.append(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
+                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][0])));
+                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][1])));
+
+                Formatter fmt = new Formatter();
+                fmt.format("% .15g", r204_206_208[0][1]);
+                spotDataString.append(fmt);
+
+                TreeItem<String> treeItemSpot = new TreeItem<>(spotDataString.toString());
+                treeItemSample.getChildren().add(treeItemSpot);
+            }
+            rootItemWM.getChildren().add(treeItemSample);
+        }
+
+        sampleTreeAnchorPane.getChildren().clear();
+        sampleTreeAnchorPane.getChildren().add(spotsTreeViewString);
     }
-    
 }

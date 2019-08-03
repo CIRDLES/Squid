@@ -143,6 +143,7 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
+    public static VBox countCorrectionsUI;
 
     public static String projectFileName;
 
@@ -387,6 +388,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
         mainPane.getChildren().remove(topsoilPlotUI);
+        mainPane.getChildren().remove(countCorrectionsUI);
 
         mainPane.getChildren().remove(taskDesignerUI);
 
@@ -1180,6 +1182,42 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    private void launchCountCorrections() {
+        mainPane.getChildren().remove(countCorrectionsUI);
+        squidProject.getTask().buildSquidSpeciesModelList();
+        // if ratios list not populated or no ref mat chosen show warning
+        if (squidProject.getTask().getSquidRatiosModelList().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "Please use the 'Isotopes & Ratios' menu to manage isotopes so reduction can proceed.\n\n",
+                    primaryStageWindow);
+        } else if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There are no Reference Material spots chosen.\n\n",
+                    primaryStageWindow);
+        } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There is no Reference Material Model chosen.\n\n",
+                    primaryStageWindow);
+        } else {
+            try {
+                countCorrectionsUI = FXMLLoader.load(getClass().getResource("dateInterpretations/countCorrections/CountCorrections.fxml"));
+                countCorrectionsUI.setId("Count Corrections");
+
+                AnchorPane.setLeftAnchor(countCorrectionsUI, 0.0);
+                AnchorPane.setRightAnchor(countCorrectionsUI, 0.0);
+                AnchorPane.setTopAnchor(countCorrectionsUI, 0.0);
+                AnchorPane.setBottomAnchor(countCorrectionsUI, 0.0);
+
+                mainPane.getChildren().add(countCorrectionsUI);
+                countCorrectionsUI.setVisible(false);
+            } catch (IOException | RuntimeException iOException) {
+                System.out.println("countCorrectionsUI >>>>   " + iOException.getMessage());
+            }
+            
+            showUI(countCorrectionsUI);
+        }
+    }
+
     private void launchPlots() {
         mainPane.getChildren().remove(topsoilPlotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
@@ -1492,5 +1530,10 @@ public class SquidUIController implements Initializable {
     @FXML
     private void enjoySquidMenuItemAction(ActionEvent event) {
         BrowserControl.showURI("https://www.popsci.com/resizer/BHnnigECLPVEb2Ypab_mQTar8dk=/795x474/arc-anglerfish-arc2-prod-bonnier.s3.amazonaws.com/public/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
+    }
+
+    @FXML
+    private void countCorrectionsAction(ActionEvent event) {
+        launchCountCorrections();
     }
 }
