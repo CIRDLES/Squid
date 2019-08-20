@@ -79,6 +79,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private boolean selected;
 
+    private int countOfNonPositiveSBMCounts;
+
     /**
      *
      */
@@ -492,6 +494,17 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return totalCps.clone();
     }
 
+    @Override
+    public double[] getNscansTimesCountTimeSec() {
+        int piNscans = timeStampSec.length;
+        double[] product = new double[piNscans];
+        for (int i = 0; i < piNscans; i++) {
+            product[i] = piNscans * countTimeSec[i];
+        }
+
+        return product;
+    }
+
     /**
      * @param totalCps the totalCps to set
      */
@@ -695,7 +708,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
         if (ratio != null) {
-            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+            ratioAndUnct = new double[][]{{ratio.getRatioValUsed(), ratio.getRatioFractErrUsed()}};
         }
 
         return ratioAndUnct;
@@ -715,5 +728,19 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    /**
+     * @return the countOfNonPositiveSBMCounts
+     */
+    public int getCountOfNonPositiveSBMCounts() {
+        return countOfNonPositiveSBMCounts;
+    }
+
+    /**
+     * @param countOfNonPositiveSBMCounts the countOfNonPositiveSBMCounts to set
+     */
+    public void setCountOfNonPositiveSBMCounts(int countOfNonPositiveSBMCounts) {
+        this.countOfNonPositiveSBMCounts = countOfNonPositiveSBMCounts;
     }
 }

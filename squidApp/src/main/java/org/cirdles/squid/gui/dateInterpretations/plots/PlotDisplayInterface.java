@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.plots;
+package org.cirdles.squid.gui.dateInterpretations.plots;
 
 import java.util.List;
 import java.util.Map;
@@ -30,13 +30,11 @@ public interface PlotDisplayInterface {
      */
     Node displayPlotAsNode();
 
-    void setSelectedAllData(boolean selected);
-    
     void setData(List<Map<String, Object>> data);
     
     void setProperty(String key, Object datum);
 
-    List<Node> toolbarControlsFactory();  
+    List<Node> toolbarControlsFactory();
     
     public String makeAgeString(int index);
 

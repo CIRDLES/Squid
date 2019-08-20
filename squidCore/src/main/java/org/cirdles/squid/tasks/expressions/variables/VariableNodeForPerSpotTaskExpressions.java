@@ -23,6 +23,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -134,12 +135,12 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
                         if (uncertaintyDirective.compareTo("%") == 0) {
                             // index should be 1 from constructor
-                            values[1] = values[1] / values[0] * 100;
+                            values[1] = Math.abs(values[1] / values[0] * 100.0);
                         }
 
                         // july 2018
                         if (task.expressionIsNuSwitched(name)) {
-                            values[1] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
+                            values[1] = squid3RoundedToSize(values[1], 12);
                         }
 
                         if (index > 0) {

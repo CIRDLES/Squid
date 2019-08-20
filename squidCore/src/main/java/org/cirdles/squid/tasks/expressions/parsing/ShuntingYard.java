@@ -164,7 +164,7 @@ public class ShuntingYard {
                                     peek = TokenTypes.getType(operatorStack.peek());
                                     if (peek.compareTo(TokenTypes.FUNCTION) == 0) {
                                         func = operatorStack.pop();
-                                        int a = argCount.pop();
+//                                        int a = argCount.pop();
                                         boolean w = wereValues.pop();
                                         if (w) {
                                             // opted to specifiy count of arguments in function definition
@@ -172,11 +172,11 @@ public class ShuntingYard {
 //                                            String funcWithArgCount = func + ":" + String.valueOf(a);
                                             outputQueue.add(func);// temp simplify(funcWithArgCount);
                                         }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
                     lastWasOperationOrFunction = false;
                     break;
                 case NUMBER:
@@ -333,8 +333,8 @@ public class ShuntingYard {
                 retVal = FUNCTION;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]( )*\\[\\d\\]( )*")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
-            } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]") 
-                    && !token.toUpperCase(Locale.ENGLISH).matches("TRUE\\[\\d\\]") 
+            } else if (token.matches("\\w+\\[\\d\\]") && !token.matches("\\d+\\[\\d\\]")
+                    && !token.toUpperCase(Locale.ENGLISH).matches("TRUE\\[\\d\\]")
                     && !token.toUpperCase(Locale.ENGLISH).matches("FALSE\\[\\d\\]")) {
                 retVal = NAMED_EXPRESSION_INDEXED;
             } else if (token.matches("\\[(±?)(%?)\"(.*?)\"\\]")) {

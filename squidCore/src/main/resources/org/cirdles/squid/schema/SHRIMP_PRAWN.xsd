@@ -27,6 +27,7 @@
             Revised: 14.November.2016
             Revised: 23.October.2017
             Revised: 03.July.2018 for SHRIMP SW v4.0 SHR 2
+            Revised: 18.June.2019 for SHRIMP SW v4.0 SHR 2 (revised?)
             
         </xs:documentation>
     </xs:annotation>    
@@ -253,6 +254,20 @@
             <xs:enumeration value="eisie_2_date_time"/>
             <!-- Description-->           
             <xs:enumeration value="eisie_3_date_time"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->           
+            <xs:enumeration value="eisie_cps_all_peaks_cfg"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->           
+            <xs:enumeration value="eisie_1_cps_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_2_cps_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_3_cps_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_1_date_time_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_2_date_time_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_3_date_time_all_peaks"/>
             <!-- Description-->           
             <xs:enumeration value="primary_names"/>
             <!-- Description-->           
@@ -284,6 +299,10 @@
             <xs:enumeration value="right_mount_name"/>
             <!-- Description-->           
             <xs:enumeration value="right_mount_owner"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="raster_time_sec"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="raster_after_burn_time_sec"/>
         </xs:restriction>
     </xs:simpleType>
     
@@ -358,11 +377,18 @@
             <xs:enumeration value="eisie_cps"/>
             <!-- Description-->
             <xs:enumeration value="eisie_date_time"/>
+            <!-- Electron Induced Secondary Ion Emission all peaks configuration: mass station indexes (eg 0 = 1st peak in the run table)June 2019 SHRIMP SW v4.0 SHR 2 -->
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_cps_all_peaks_cfg"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_cps_all_peaks"/>
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <xs:enumeration value="eisie_date_time_all_peaks"/>
             <!-- Description-->
             <xs:enumeration value="lab_temperature_degc"/>
             <!-- From SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="detector_set_zero_cps"/>
-       </xs:restriction>
+        </xs:restriction>
     </xs:simpleType>
     
     <xs:simpleType name="MeasurementParameterNames">

@@ -25,6 +25,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -114,11 +115,10 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 if (values.length > 1) {
                     // to return uncertainty, copy index 1 to index 0
                     // July 2018 force to 12 sig digs - abs value should be already
-                    // org.cirdles.ludwig.squid25.Utilities.roundedToSize(retVal, 12);
                     if (uncertaintyDirective.compareTo("%") == 0) {
-                        values[0] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1] / values[0] * 100, 12);
+                        values[0] = squid3RoundedToSize(values[1] / values[0] * 100, 12);
                     } else if (uncertaintyDirective.compareTo("±") == 0) {
-                        values[0] = org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
+                        values[0] = squid3RoundedToSize(values[1], 12);
                     }
                 } else {
                     // return 0 for uncertainty if none exists

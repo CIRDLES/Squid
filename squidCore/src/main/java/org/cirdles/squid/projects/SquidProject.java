@@ -30,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimetersEnum;
+import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -126,10 +126,10 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         // first pass
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
         this.task.updateAllExpressions(true);
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     public void initializeTaskAndReduceData() {
@@ -142,7 +142,7 @@ public final class SquidProject implements Serializable {
             // four passes needed for percolating results
             task.updateAllExpressions(true);
             task.setChanged(true);
-            task.setupSquidSessionSpecsAndReduceAndReport();
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
         }
     }
 
@@ -209,7 +209,7 @@ public final class SquidProject implements Serializable {
 
         // first pass
         this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport();
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
@@ -347,23 +347,23 @@ public final class SquidProject implements Serializable {
     }
 
     /**
-     * First guess using default delimeter
+     * First guess using default delimiter
      */
     public void autoDivideSamples() {
         this.filtersForUnknownNames = new HashMap<>();
         if (task.getShrimpFractions() != null) {
-            boolean delimiterIsNumber = SampleNameDelimetersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+            boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
             for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
                 // determine flavor
-                int delimeterIndex;
+                int delimiterIndex;
                 if (delimiterIsNumber) {
-                    delimeterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+                    delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
                 } else {
-                    delimeterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+                    delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
                 }
 
-                String sampleName = ((delimeterIndex == -1) || (fraction.getFractionID().length() < (delimeterIndex - 1)))
-                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimeterIndex).toUpperCase(Locale.ENGLISH);
+                String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
+                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
                 if (filtersForUnknownNames.containsKey(sampleName)) {
                     filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
                 } else {
@@ -763,7 +763,7 @@ public final class SquidProject implements Serializable {
      */
     public String getDelimiterForUnknownNames() {
         if (delimiterForUnknownNames == null) {
-            delimiterForUnknownNames = Squid3Constants.SampleNameDelimetersEnum.HYPHEN.getName();
+            delimiterForUnknownNames = Squid3Constants.SampleNameDelimitersEnum.HYPHEN.getName();
         }
         return delimiterForUnknownNames;
     }

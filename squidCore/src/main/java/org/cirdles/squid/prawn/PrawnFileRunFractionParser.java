@@ -33,6 +33,7 @@ import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  * Parses run fractions from Prawn files into
@@ -78,7 +79,7 @@ public class PrawnFileRunFractionParser {
      *
      */
     public PrawnFileRunFractionParser() {
-        dateTimeMilliseconds = 0l;
+        this.dateTimeMilliseconds = 0l;
     }
 
     /**
@@ -115,10 +116,11 @@ public class PrawnFileRunFractionParser {
         prepareRunFractionMetaData(runFraction, squidSessionSpecs);
         if (nScans > 1) {
             parseRunFractionData();
+            int countOfNonPositiveSBMCounts = 0;
             try {
                 calculateTotalPerSpeciesCPS(indexOfBackgroundSpecies);
                 calculateIsotopicRatios(useSBM, userLinFits);
-                calculateInterpolatedPeakHeights();
+                countOfNonPositiveSBMCounts = calculateInterpolatedPeakHeights();
             } catch (Exception e) {
             }
 
@@ -154,6 +156,8 @@ public class PrawnFileRunFractionParser {
                 shrimpFraction.setReducedPkHt(reducedPkHt);
                 shrimpFraction.setReducedPkHtFerr(reducedPkHtFerr);
             }
+            
+            shrimpFraction.setCountOfNonPositiveSBMCounts(countOfNonPositiveSBMCounts);
 
             // determine reference material status
             if (referenceMaterialNameFilter.length() > 0) {
@@ -198,16 +202,20 @@ public class PrawnFileRunFractionParser {
         } catch (ParseException parseException) {
         }
 
-        // need to find entries due to variation in files
+        // need to search entries due to variation in files
         for (int i = 0; i < runFraction.getSet().getPar().size(); i++) {
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
-                qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
-                qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
-            }
-            if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
-                primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+            try {
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Y) == 0) {
+                    qt1Y = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.QT_1_Z) == 0) {
+                    qt1Z = Integer.parseInt(runFraction.getSet().getPar().get(i).getValue());
+                }
+                if (runFraction.getSet().getPar().get(i).getName().compareTo(SetParameterNames.PBM) == 0) {
+                    primaryBeam = Double.parseDouble(runFraction.getSet().getPar().get(i).getValue().replace("nA", ""));
+                }
+            } catch (NumberFormatException numberFormatException) {
+                // keep going
             }
         }
 
@@ -267,7 +275,7 @@ public class PrawnFileRunFractionParser {
                 // handle peakMeasurements measurements
                 String[] peakMeasurementsRaw = measurements.get(speciesMeasurementIndex).getData().get(0).getValue().split(",");
                 // Jan 2019 Handling OP files means that the total counts and SBM are present as single negative integers               
-                
+
                 double median;
                 double totalCountsPeak;
                 double totalCountsSigma;
@@ -276,7 +284,7 @@ public class PrawnFileRunFractionParser {
                     // we are processing OP file per Bodorkos email Oct 11 2018
                     totalCountsPeak = Math.abs(Double.parseDouble(peakMeasurementsRaw[0]));
                     totalCountsSigma = Math.sqrt(totalCountsPeak);
-                    
+
                 } else {
                     double[] peakMeasurements = new double[peakMeasurementsCount];
                     for (int i = 0; i < peakMeasurementsCount; i++) {
@@ -425,7 +433,7 @@ public class PrawnFileRunFractionParser {
             // this has the effect of setting totalCps[backgroundIndex] to backgroundCps
             //modified April 2017 to round to 12 sig digits using half-up            
             double originalTotalCPS = (sumOfCorrectedPeaks[speciesMeasurementIndex] / nScans) + backgroundCps;
-            totalCps[speciesMeasurementIndex] = Utilities.roundedToSize(originalTotalCPS, 12);
+            totalCps[speciesMeasurementIndex] = squid3RoundedToSize(originalTotalCPS, 12);
         }
     }
 
@@ -488,8 +496,8 @@ public class PrawnFileRunFractionParser {
                         0.5 * (Math.min(timeStampSec[0][NUM], timeStampSec[0][DEN]) + Math.max(timeStampSec[nScans - 1][NUM], timeStampSec[nScans - 1][DEN]))
                     };
 
-                    isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                    isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                    isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                    isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                     ratEqTime.add(ratioInterpTime[0]);
                     ratEqVal.add(ratioVal);
@@ -661,8 +669,8 @@ public class PrawnFileRunFractionParser {
                             ratEqVal.add(ratioVal);
                             ratEqErr.add(ratioFractErr);
 
-                            isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                            isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                            isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                            isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                             break;
                         case 0:
@@ -671,15 +679,15 @@ public class PrawnFileRunFractionParser {
                                 ratioVal = SQUID_TINY_VALUE;
                                 ratioFractErr = 1.0;
                             } else {
-                                ratioFractErr = ratValFerr[0];// this is abs not percent
+                                ratioFractErr = Math.abs(ratValFerr[0]);// this is abs not percent July 2019 added abs call
                             }
 
                             ratEqTime.add(ratioInterpTime[0]);
                             ratEqVal.add(ratioVal);
                             ratEqErr.add(ratioFractErr);
 
-                            isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioVal, sigFigs));
-                            isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(ratioFractErr, sigFigs));
+                            isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));
+                            isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(ratioFractErr, sigFigs));
 
                             break;
                         default:
@@ -716,8 +724,8 @@ public class PrawnFileRunFractionParser {
                                 isotopicRatioModel.setRatioVal(SQUID_TINY_VALUE);
                                 isotopicRatioModel.setRatioFractErr(1.0);
                             } else {
-                                isotopicRatioModel.setRatioVal(Utilities.roundedToSize(ratioMean, sigFigs));
-                                isotopicRatioModel.setRatioFractErr(Utilities.roundedToSize(Math.max(SQUID_TINY_VALUE,
+                                isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioMean, sigFigs));
+                                isotopicRatioModel.setRatioFractErr(squid3RoundedToSize(Math.max(SQUID_TINY_VALUE,
                                         ratioMeanSig) / Math.abs(ratioMean), sigFigs));
                             }
 
@@ -739,7 +747,11 @@ public class PrawnFileRunFractionParser {
 
     }// end calculateIsotopicRatios
 
-    private void calculateInterpolatedPeakHeights() {
+    private int calculateInterpolatedPeakHeights() {
+        // June 2019 per issue #340 :https://github.com/CIRDLES/Squid/issues/340   
+        // return count of invalid SBM counts
+        int countOfNonPositiveSBMCounts = 0;
+
         // extracted from https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-EqnInterp
         // design decision to pre-compute all to store with shrimpFraction and enable on-tthe-fly tasks
 
@@ -780,17 +792,22 @@ public class PrawnFileRunFractionParser {
                         if (Double.isNaN(pkFractErr)) {
                             pkFractErr = SQUID_ERROR_VALUE;
                         }
-
-                        try {
-                            reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
-                        } catch (Exception e) {
-                            reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
-                        }
-                        reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
+                    } else {
+                        countOfNonPositiveSBMCounts++;
                     }
+
+                    // in all cases
+                    try {
+                        reducedPkHt[scanNum][pkOrder] = scanPkCts / countTimeSec[pkOrder];
+                    } catch (Exception e) {
+                        reducedPkHt[scanNum][pkOrder] = SQUID_ERROR_VALUE;
+                    }
+                    reducedPkHtFerr[scanNum][pkOrder] = pkFractErr;
                 }
             } // end of scans loop
             // the remainder of the math is done on a per-expression basis
         }
+        return countOfNonPositiveSBMCounts;
     }
+
 }

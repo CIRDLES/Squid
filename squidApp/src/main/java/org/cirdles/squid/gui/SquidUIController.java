@@ -37,15 +37,14 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import org.cirdles.squid.gui.plots.PlotsController;
-import org.cirdles.squid.gui.plots.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -127,7 +126,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private ImageView squidImageView;
 
-    private static VBox projectManagerUI;
+    private static GridPane projectManagerUI;
 
     private static VBox sessionAuditUI;
     private static ScrollPane massesAuditUI;
@@ -144,6 +143,8 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
+
+    public static String projectFileName;
 
     @FXML
     private MenuItem importSquid25TaskMenuItem;
@@ -258,8 +259,8 @@ public class SquidUIController implements Initializable {
 
         openRecentSquidProjectMenu.getItems().clear();
         List<String> mruProjectList = squidPersistentState.getMRUProjectList();
-        for (String projectFileName : mruProjectList) {
-            MenuItem menuItem = new MenuItem(projectFileName);
+        for (String aProjectFileName : mruProjectList) {
+            MenuItem menuItem = new MenuItem(aProjectFileName);
             menuItem.setOnAction((ActionEvent t) -> {
                 try {
                     openProject(menuItem.getText());
@@ -549,14 +550,15 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         try {
-            String projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
+            projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             openProject(projectFileName);
         } catch (IOException iOException) {
         }
     }
 
-    private void openProject(String projectFileName) throws IOException {
-        if (!"".equals(projectFileName)) {
+    private void openProject(String aProjectFileName) throws IOException {
+        if (!"".equals(aProjectFileName)) {
+            projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
@@ -1064,7 +1066,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void reportsMenuSelectedAction(Event event) {
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @FXML
@@ -1084,7 +1086,7 @@ public class SquidUIController implements Initializable {
 
     private void launchVisualizations() {
         try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("plots/Plots.fxml"));
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/Plots.fxml"));
             topsoilPlotUI.setId("TopsoilPlot");
 
             AnchorPane.setLeftAnchor(topsoilPlotUI, 0.0);
@@ -1097,10 +1099,6 @@ public class SquidUIController implements Initializable {
         } catch (IOException | RuntimeException iOException) {
             System.out.println("TopsoilPlotUI >>>>   " + iOException.getMessage());
         }
-    }
-
-    @FXML
-    private void topsoilAction2(ActionEvent event) {
     }
 
     @FXML
@@ -1335,7 +1333,7 @@ public class SquidUIController implements Initializable {
             squidProject.getTask().updateAllExpressions(true);
             squidProject.getTask().updateAllExpressions(true);
 
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         } else {
             System.out.println("custom expressions folder does not exist");
         }
@@ -1375,7 +1373,7 @@ public class SquidUIController implements Initializable {
                 squidProject.updateFilterForConcRefMatSpotNames("");
                 squidProject.updateFiltersForUnknownNames(new HashMap<>());
                 squidProject.getTask().setChanged(true);
-                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport();
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
                 squidPersistentState.updatePrawnFileListMRU(prawnXMLFileNew);
                 squidProject.autoDivideSamples();
                 squidProject.setProjectName("NEW PROJECT");
@@ -1489,5 +1487,10 @@ public class SquidUIController implements Initializable {
     @FXML
     private void showTaskDesignerAction(ActionEvent event) {
         launchTaskDesigner();
+    }
+
+    @FXML
+    private void enjoySquidMenuItemAction(ActionEvent event) {
+        BrowserControl.showURI("https://www.popsci.com/resizer/BHnnigECLPVEb2Ypab_mQTar8dk=/795x474/arc-anglerfish-arc2-prod-bonnier.s3.amazonaws.com/public/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
     }
 }

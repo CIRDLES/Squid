@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.plots.topsoil;
+package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,66 +28,69 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
-import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.plots.PlotDisplayInterface.SigmaPresentationModes.ONE_SIGMA_ABSOLUTE;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
-import org.cirdles.topsoil.isotope.IsotopeSystem;
-import org.cirdles.topsoil.plot.DefaultProperties;
-import org.cirdles.topsoil.plot.PlotProperty;
+import org.cirdles.topsoil.IsotopeSystem;
+import org.cirdles.topsoil.data.Uncertainty;
+import org.cirdles.topsoil.plot.PlotOptions;
 
-import static org.cirdles.topsoil.plot.PlotProperty.*;
+import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
+import static org.cirdles.topsoil.plot.PlotOption.*;
 
 /**
  *
  * @author James F. Bowring
  */
-public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
+public class TopsoilPlotTeraWasserburg extends AbstractTopsoilPlot {
 
-    public TopsoilPlotWetherill() {
+    public TopsoilPlotTeraWasserburg() {
         this("placeholder");
     }
 
-    public TopsoilPlotWetherill(String title) {
-        this(title,
+    public TopsoilPlotTeraWasserburg(String title) {
+        this(
+                title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
-                SquidLabData.getExistingSquidLabData().getPhysConstDefault());
+                SquidLabData.getExistingSquidLabData().getPhysConstDefault()
+        );
     }
 
-    public TopsoilPlotWetherill(
+    public TopsoilPlotTeraWasserburg(
             String title,
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             ParametersModel physicalConstantsModel) {
-        plot = IsotopeSystem.UPB.getPlots()[0].getPlot();
-        setupPlot(title, physicalConstantsModel);
+        super(title, shrimpFractions, physicalConstantsModel);
     }
 
-    private void setupPlot(String title, ParametersModel physicalConstantsModel) {
-        Map<PlotProperty, Object> properties = new DefaultProperties();
+    @Override
+    protected void setupPlot(String title, ParametersModel physicalConstantsModel) {
+        PlotOptions options = PlotOptions.defaultOptions();
 
-        properties.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB.getName());
-        properties.put(X_AXIS, IsotopeSystem.UPB.getHeaders()[0]);
-        properties.put(Y_AXIS, IsotopeSystem.UPB.getHeaders()[1]);
+        options.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB);
+        options.put(X_AXIS, "238U / 206Pb*");
+        options.put(Y_AXIS, "207Pb* / 206Pb*");
 
-        properties.put(TITLE, title);
-        properties.put(WETHERILL_LINE, true);
-        properties.put(POINTS, true);
-        properties.put(ELLIPSES, true);
-        properties.put(ELLIPSES_FILL, "red");
+        options.put(TITLE, title);
+        options.put(CONCORDIA_LINE, true);
+//        options.put(CONCORDIA_ENVELOPE, true);
+        options.put(CONCORDIA_TYPE, org.cirdles.topsoil.plot.feature.Concordia.TERA_WASSERBURG);
+        options.put(POINTS, true);
+        options.put(ELLIPSES, true);
+        options.put(ELLIPSES_FILL, "red");
 
-        properties.put(MCLEAN_REGRESSION, false);
-        properties.put(MCLEAN_REGRESSION_ENVELOPE, false);
+        options.put(MCLEAN_REGRESSION, false);
+        options.put(MCLEAN_REGRESSION_ENVELOPE, false);
 
-        properties.put(UNCERTAINTY, ONE_SIGMA_ABSOLUTE.getSigmaMultiplier());
+        options.put(UNCERTAINTY, Uncertainty.ONE_SIGMA_ABSOLUTE);
 
-        properties.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
-        properties.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());
-        properties.put(LAMBDA_U238, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue());
+        options.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
+        options.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());
+        options.put(LAMBDA_U238, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue());
 
-        plot.setProperties(properties);
+        setPlotOptions(options);
     }
 
     @Override
@@ -96,7 +100,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         CheckBox ellipsesCheckBox = new CheckBox("Centers");
         ellipsesCheckBox.setSelected(true);
         ellipsesCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(POINTS, ellipsesCheckBox.isSelected());
+            setProperty(POINTS, ellipsesCheckBox.isSelected());
         });
 
         ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
@@ -115,7 +119,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SigmaPresentationModes>() {
             @Override
             public void changed(ObservableValue observable, SigmaPresentationModes oldValue, SigmaPresentationModes newValue) {
-                plot.setProperty(UNCERTAINTY, newValue.getSigmaMultiplier());
+                setProperty(UNCERTAINTY, Uncertainty.fromMultiplier(newValue.getSigmaMultiplier()));
             }
         });
 
@@ -124,19 +128,19 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         ellipsesColorPicker.setPrefWidth(100);
         ellipsesColorPicker.setOnAction(mouseEvent -> {
             // to satisfy D3
-            plot.setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
+            setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
         });
 
         CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
         concordiaLineCheckBox.setSelected(true);
         concordiaLineCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(WETHERILL_LINE, concordiaLineCheckBox.isSelected());
+            setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
         });
 
         CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
         regressionUnctEnvelopeCheckBox.setSelected(false);
         regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
-            plot.setProperty(MCLEAN_REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
+            setProperty(MCLEAN_REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
         });
 
         CheckBox regressionCheckBox = new CheckBox("2D Regression");
@@ -144,37 +148,20 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         regressionUnctEnvelopeCheckBox.setDisable(true);
         regressionCheckBox.setOnAction(mouseEvent -> {
             boolean isRegression = regressionCheckBox.isSelected();
-            plot.setProperty(MCLEAN_REGRESSION, isRegression);
+            setProperty(MCLEAN_REGRESSION, isRegression);
             regressionUnctEnvelopeCheckBox.setDisable(!isRegression);
         });
 
-        controls.add(ellipsesCheckBox);
-        controls.add(uncertaintyChoiceBox);
-        controls.add(ellipsesColorPicker);
-        controls.add(concordiaLineCheckBox);
-        controls.add(regressionCheckBox);
-        controls.add(regressionUnctEnvelopeCheckBox);
+        controls.addAll(Arrays.asList(
+                ellipsesCheckBox,
+                uncertaintyChoiceBox,
+                ellipsesColorPicker,
+                concordiaLineCheckBox,
+                regressionCheckBox,
+                regressionUnctEnvelopeCheckBox
+        ));
 
         return controls;
     }
 
-    @Override
-    public void setData(List<Map<String, Object>> data) {
-        plot.setData(data);
-    }
-
-    @Override
-    public Node displayPlotAsNode() {
-        return plot.displayAsNode();
-    }
-
-    @Override
-    public void setProperty(String key, Object datum) {
-//        plot.getProperties().put(key, datum);
-    }
-
-    @Override
-    public String makeAgeString(int index) {
-        return "";
-    }
 }

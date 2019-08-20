@@ -45,7 +45,7 @@ public class Average extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"average"}};
-        labelsForInputValues = new String[]{"numbers"};
+        labelsForInputValues = new String[]{"per-spot expression"};
         summaryCalc = true;
         definition = "Calculates the sum divided by the count.";
     }

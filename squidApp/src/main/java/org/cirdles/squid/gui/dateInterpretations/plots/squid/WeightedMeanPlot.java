@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.plots.squid;
+package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,7 +36,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
-import org.cirdles.squid.gui.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
@@ -360,10 +360,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public String makeAgeString(int index) {
-        return new BigDecimal(myOnPeakData[index])
-                .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
-                + " ±" + new BigDecimal(onPeakTwoSigma[index])
-                        .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
+        String retVal = "No Age calculated.";
+        try {
+            retVal = new BigDecimal(myOnPeakData[index])
+                    .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
+                    + " ±" + new BigDecimal(onPeakTwoSigma[index])
+                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
+        } catch (Exception e) {
+        }
+        
+        return retVal;
     }
 
     /**
@@ -455,8 +461,4 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         getProperties().put(key, datum);
     }
 
-    @Override
-    public void setSelectedAllData(boolean selected) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

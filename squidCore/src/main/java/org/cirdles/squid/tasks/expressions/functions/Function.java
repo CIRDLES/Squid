@@ -121,7 +121,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("StdPb86radCor7per", "stdPb86radCor7per");
         SQUID_FUNCTIONS_MAP.put("Pb86radCor7per", "pb86radCor7per");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
-//        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
+        SQUID_FUNCTIONS_MAP.put("TotalCpsTime", "totalCpsTime");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
@@ -135,7 +135,10 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
+        MATH_FUNCTIONS_MAP.put("countif", "countif");
+        MATH_FUNCTIONS_MAP.put("tinv", "tinv");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
@@ -144,7 +147,9 @@ public abstract class Function
 
         ALIASED_FUNCTIONS_MAP.put("SqBiweight", "Biweight");
         ALIASED_FUNCTIONS_MAP.put("SqWtdAv", "WtdAv");
-        ALIASED_FUNCTIONS_MAP.put("TotalCPS", null);
+        ALIASED_FUNCTIONS_MAP.put("TotalCps", null);
+        // July 2019 for 204 count corrections
+        ALIASED_FUNCTIONS_MAP.put("TotalCpsTime", null);
 
     }
 
@@ -378,10 +383,11 @@ public abstract class Function
     public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
+    
+    public static OperationOrFunctionInterface totalCpsTime() {
+        return new ShrimpSpeciesNodeFunction("getNscansTimesCountTimeSec");
+    }
 
-//    public static OperationOrFunctionInterface lookup() {
-//        return new SpotNodeLookupFunction();
-//    }
     /**
      *
      * @return
@@ -418,8 +424,24 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface sum() {
+        return new Sum();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface count() {
         return new Count();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface tinv() {
+        return new TInv();
     }
 
     public static OperationOrFunctionInterface calculateMeanConcStd() {

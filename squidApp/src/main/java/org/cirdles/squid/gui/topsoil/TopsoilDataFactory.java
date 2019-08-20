@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
@@ -30,7 +31,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
 
-import static org.cirdles.topsoil.variable.Variables.*;
+import static org.cirdles.topsoil.Variable.*;
 
 /**
  *
@@ -85,19 +86,20 @@ public class TopsoilDataFactory {
                     new Class[]{String.class});
 
             double[] xAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + xAxisRatio}))[0].clone();
-            datum.put(X.getName(), xAxisValueAndUnct[0]);
-            datum.put(SIGMA_X.getName(), 1.0 * xAxisValueAndUnct[1]);
+            datum.put(X.getTitle(), xAxisValueAndUnct[0]);
+            datum.put(SIGMA_X.getTitle(), 1.0 * xAxisValueAndUnct[1]);
 
             double[] yAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + yAxisRatio}))[0].clone();
-            datum.put(Y.getName(), yAxisValueAndUnct[0]);
-            datum.put(SIGMA_Y.getName(), 1.0 * yAxisValueAndUnct[1]);
+            datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
+            datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
 
             double plotRho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + rho}))[0].clone()[0];
-            datum.put(RHO.getName(), plotRho);
+            datum.put(RHO.getTitle(), plotRho);
 
-            datum.put("Selected", true);
+            datum.put(VISIBLE.getTitle(), true);
+            datum.put(SELECTED.getTitle(), true);
 
-            datum.put("AGE", 0.0);
+//            datum.put("AGE", 0.0);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
         }
 

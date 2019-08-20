@@ -180,7 +180,7 @@ public class ExpressionParser {
         // so can re-parse later
         if (savedExp == null) {
             savedExp = new ExpressionTree("PARSE_ERROR");
-        }
+        } 
 
         return savedExp;
     }
@@ -243,6 +243,7 @@ public class ExpressionParser {
 
             case NUMBER:
                 retExpTree = new ConstantNode(token, Double.parseDouble(token));
+                retExpTree.setRootExpressionTree(false);
                 break;
 
             case NAMED_CONSTANT:

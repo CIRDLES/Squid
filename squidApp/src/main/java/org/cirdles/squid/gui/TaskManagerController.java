@@ -57,6 +57,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.useSigFig15;
 
 /**
  * FXML Controller class
@@ -139,7 +140,13 @@ public class TaskManagerController implements Initializable {
     @FXML
     private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
-    private ComboBox<String> delimeterComboBox;
+    private ComboBox<String> delimiterComboBox;
+    @FXML
+    private RadioButton roundingSquid25;
+    @FXML
+    private ToggleGroup roundingToggleGroup;
+    @FXML
+    private RadioButton roundingSquid3;
 
     /**
      * Initializes the controller class.
@@ -151,7 +158,9 @@ public class TaskManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
-            task.setupSquidSessionSpecsAndReduceAndReport();
+            roundingSquid3.setSelected(task.isRoundingForSquid3());
+            useSigFig15 = task.isRoundingForSquid3();
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
             populateTaskFields();
             setupListeners();
             setUpParametersModelsComboBoxes();
@@ -224,11 +233,12 @@ public class TaskManagerController implements Initializable {
         });
 
         // samples
-        ObservableList<String> delimetersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimetersEnum.names());
-        delimeterComboBox.setItems(delimetersList);
+        ObservableList<String> delimitersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimitersEnum.names());
+        delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
-        delimeterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
-        delimeterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        delimiterComboBox.getSelectionModel().select(task.getDelimiterForUnknownNames());
+        delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
             public void changed(ObservableValue<? extends String> ov,
                     final String oldValue, final String newValue) {
                 task.setDelimiterForUnknownNames(newValue);
@@ -236,6 +246,22 @@ public class TaskManagerController implements Initializable {
         });
 
         populateDirectives();
+    }
+
+    @FXML
+    private void roundingSquid25Action(ActionEvent event) {
+        useSigFig15 = false;
+        task.setRoundingForSquid3(false);
+        task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
+    }
+
+    @FXML
+    private void roundingSquid3Action(ActionEvent event) {
+        useSigFig15 = true;
+        task.setRoundingForSquid3(true);
+        task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     class MyConverter extends StringConverter<Double> {
@@ -308,8 +334,8 @@ public class TaskManagerController implements Initializable {
         String parentPPM_ExpressionString = (parentPPM == null) ? PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION : parentPPM.getExcelExpressionString();
         parentConcExpressionLabel.setText(parentPPM_ExpressionString);
         parentConcExpressionLabel.setStyle(parentConcExpressionLabel.getStyle()
-                + (makeExpression(PARENT_ELEMENT_CONC_CONST, thU_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
-        
+                + (makeExpression(PARENT_ELEMENT_CONC_CONST, parentPPM_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
+
         updateDirectiveButtons();
     }
 
@@ -391,7 +417,7 @@ public class TaskManagerController implements Initializable {
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setPhysicalConstantsModel(newValue);
                     task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport();
+                    task.setupSquidSessionSpecsAndReduceAndReport(false);
                 });
 
         // CommonPbModels
@@ -403,7 +429,7 @@ public class TaskManagerController implements Initializable {
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     task.setCommonPbModel(newValue);
                     task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport();
+                    task.setupSquidSessionSpecsAndReduceAndReport(false);
                 });
     }
 
@@ -423,24 +449,28 @@ public class TaskManagerController implements Initializable {
     private void yesSBMRadioButtonAction(ActionEvent event) {
         task.setUseSBM(true);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void noSBMRadioButtonActions(ActionEvent event) {
         task.setUseSBM(false);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(true);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
         task.setUserLinFits(false);
         task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(true);
     }
 
     @FXML

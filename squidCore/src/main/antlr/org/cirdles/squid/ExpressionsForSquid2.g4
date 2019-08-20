@@ -133,11 +133,15 @@ FUNCTION :
     S Q W T D A V |
     W T D A V |
     T O T A L C P S |
+    T O T A L C P S T I M E |
     M A X |
     M I N |
     A B S |
     A V E R A G E | 
+    S U M |
     C O U N T |
+    C O U N T I F |
+    T I N V |
     C A L C U L A T E M E A N C O N C S T D |
     W T D M E A N A C A L C |
     V A L U E M O D E L 
