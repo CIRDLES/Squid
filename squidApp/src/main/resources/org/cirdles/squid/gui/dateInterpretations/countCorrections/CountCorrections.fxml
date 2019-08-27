@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.countCorrections.CountCorrectionsController">
+
+<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.countCorrections.CountCorrectionsController">
    <children>
-      <SplitPane dividerPositions="0.2287145242070117" VBox.vgrow="ALWAYS">
-         <items>
-            <VBox fx:id="vboxTreeHolder" />
-            <VBox fx:id="plotVBox">
-               <children>
-                  <AnchorPane fx:id="plotAndConfigAnchorPane" VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
-         </items>
-      </SplitPane>
+      <HBox fx:id="headerHBox" minHeight="25.0" prefHeight="25.0" prefWidth="1200.0" styleClass="backgroundCalamari" />
+      <AnchorPane fx:id="sampleTreeAnchorPane" prefHeight="638.0" prefWidth="1200.0" stylesheets="@../../css/projectManager.css" />
    </children>
 </VBox>

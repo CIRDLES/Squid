@@ -18,6 +18,7 @@ package org.cirdles.squid.tasks.expressions.variables;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -118,7 +119,7 @@ public class VariableNodeForSummary extends ExpressionTree {
         if (detail != null) {
             double[][] valuesAll = clone2dArray(detail.getValues());
 
-            if (uncertaintyDirective.compareTo("%") == 0) {
+            if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                 // index should be 1 from constructor
                 valuesAll[0][1] = Math.abs(valuesAll[0][1] / valuesAll[0][0] * 100.0);
             }
