@@ -30,6 +30,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -180,7 +182,7 @@ public class ExpressionParser {
         // so can re-parse later
         if (savedExp == null) {
             savedExp = new ExpressionTree("PARSE_ERROR");
-        } 
+        }
 
         return savedExp;
     }
@@ -265,15 +267,15 @@ public class ExpressionParser {
             case NAMED_EXPRESSION:
                 // handle special cases of array index references and ± references to uncertainty
                 String uncertaintyDirective = "";
-                if (token.startsWith("[±")) {
-                    uncertaintyDirective = "±";
-                } else if (token.startsWith("[%")) {
+                if (token.startsWith("[" + ABS_UNCERTAINTY_DIRECTIVE)) {
+                    uncertaintyDirective = ABS_UNCERTAINTY_DIRECTIVE;
+                } else if (token.startsWith("[" + PCT_UNCERTAINTY_DIRECTIVE)) {
                     uncertaintyDirective = "%";
                 }
                 String expressionName
                         = token.replace("[\"", "")
-                                .replace("[±\"", "")
-                                .replace("[%\"", "")
+                                .replace("[" + ABS_UNCERTAINTY_DIRECTIVE + "\"", "")
+                                .replace("[" + PCT_UNCERTAINTY_DIRECTIVE + "\"", "")
                                 .replaceAll("\"]( )*", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
 

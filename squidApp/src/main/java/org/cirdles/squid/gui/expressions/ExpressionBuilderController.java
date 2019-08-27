@@ -94,6 +94,7 @@ import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardConte
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -1679,7 +1680,7 @@ public class ExpressionBuilderController implements Initializable {
                 for (int i = 0; i < argumentCount; i++) {
                     args.append("Arg").append(i).append(i < (argumentCount - 1) ? "," : ")");
                 }
-                
+
                 mathFunctionStrings.add(args.toString());
             } catch (Exception e) {
                 // function does not have a class definition
@@ -2169,6 +2170,17 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface expTree) {
+//
+//        // test area
+//        SquidReportColumn testCol = SquidReportColumn.createReportColumn(expTree);
+//        for (ShrimpFractionExpressionInterface spot : spots) {
+//            System.out.println(
+//                    expTree.getName()
+//                    + "   " + spot.getFractionID()
+//                    + "   " + testCol.cellEntryForSpot(spot)
+//                    + "   " + (String) ((testCol.getUncertaintyColumn() != null) ? testCol.getUncertaintyColumn().cellEntryForSpot(spot) : "no unct"));
+//        }
+//        // end test area
         StringBuilder sb = new StringBuilder();
         int sigDigits = 15;
 
@@ -2191,7 +2203,7 @@ public class ExpressionBuilderController implements Initializable {
                     String uncertaintyDirective
                             = ((VariableNodeForSummary) ((ExpressionTree) expTree).getChildrenET().get(0)).getUncertaintyDirective();
                     if (uncertaintyDirective.length() > 0) {
-                        if (uncertaintyDirective.compareTo("±") == 0) {
+                        if (uncertaintyDirective.compareTo(ABS_UNCERTAINTY_DIRECTIVE) == 0) {
                             resultLabels = new String[][]{{contextAge1SigmaAbsName}, {}};
                         } else {
                             resultLabels = new String[][]{{"1\u03C3" + uncertaintyDirective}, {}};

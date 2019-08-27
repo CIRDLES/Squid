@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -133,7 +134,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                     double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
                     if (values.length > 1) {
 
-                        if (uncertaintyDirective.compareTo("%") == 0) {
+                        if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                             // index should be 1 from constructor
                             values[1] = Math.abs(values[1] / values[0] * 100.0);
                         }

@@ -60,6 +60,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -240,6 +241,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<String> missingExpressionsByName;
 
     protected boolean roundingForSquid3;
+    
+    protected List<SquidReportTableInterface> squidReportTables;
 
     public Task() {
         this("New Task", null, null);
@@ -346,6 +349,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.missingExpressionsByName = new ArrayList<>();
 
         this.roundingForSquid3 = false;
+        
+        this.squidReportTables = new ArrayList<>();
 
         generateConstants();
         generateParameters();
