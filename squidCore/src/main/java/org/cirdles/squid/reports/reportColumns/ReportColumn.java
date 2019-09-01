@@ -22,8 +22,6 @@ package org.cirdles.squid.reports.reportColumns;
 
 import static org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract.unicodeConversionsFromXML;
 
-
-
 /**
  * A ReportColumn specifies the information shown in a data table column. Each
  * column is part of a single category of columns. Columns can be ordered within

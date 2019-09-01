@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -209,6 +210,11 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public long getDateTimeMilliseconds() {
         return dateTimeMilliseconds;
+    }
+
+    @Override
+    public String getDateTime() {
+        return CalamariReportsEngine.getFormattedDate(dateTimeMilliseconds);
     }
 
     /**

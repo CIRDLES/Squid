@@ -15,10 +15,42 @@
  */
 package org.cirdles.squid.squidReports.squidReportCategories;
 
+import java.util.LinkedList;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface SquidReportCategoryInterface {
-    
+
+    /**
+     * @return the displayName
+     */
+    public String getDisplayName();
+
+    /**
+     * @param displayName the displayName to set
+     */
+    public void setDisplayName(String displayName);
+
+    /**
+     * @return the categoryColumns
+     */
+    public LinkedList<SquidReportColumnInterface> getCategoryColumns();
+
+    /**
+     * @param categoryColumns the categoryColumns to set
+     */
+    public void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns);
+
+    /**
+     * @return the visible
+     */
+    public boolean isVisible();
+
+    /**
+     * @param visible the visible to set
+     */
+    public void setVisible(boolean visible);
 }

@@ -252,7 +252,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawPeakData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getDeadTimeNanoseconds()));
@@ -303,7 +303,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawSBMData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getSbmZeroCps()));
@@ -365,7 +365,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < timeStampSec.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
@@ -412,7 +412,7 @@ public class CalamariReportsEngine implements Serializable {
         // need to sort by reference material vs unknown
         StringBuilder dataLine = new StringBuilder();
         dataLine.append(shrimpFraction.getFractionID()).append(", ");
-        dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+        dataLine.append(shrimpFraction.getDateTime()).append(", ");
         dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
         double[] totalCps = shrimpFraction.getTotalCps();
@@ -444,14 +444,14 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             if (doWriteReportFiles) {
                 dataLine.append(shrimpFraction.getFractionID()).append(", ");
-                dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+                dataLine.append(shrimpFraction.getDateTime()).append(", ");
                 dataLine.append(String.valueOf(nDodNum + 1)).append(", ");
                 dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
             } else {
                 // format for GUI
                 dataLine
                         .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                        .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                        .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                         .append(String.format("%1$-" + 10 + "s", String.valueOf(nDodNum + 1)))
                         .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
             }
@@ -542,13 +542,13 @@ public class CalamariReportsEngine implements Serializable {
         StringBuilder dataLine = new StringBuilder();
         if (doWriteReportFiles) {
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
         } else {
             // format for GUI
             dataLine
                     .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                    .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                    .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                     .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
         }
 

@@ -1536,4 +1536,9 @@ public class SquidUIController implements Initializable {
     private void countCorrectionsAction(ActionEvent event) {
         launchCountCorrections();
     }
+
+    @FXML
+    private void interactiveDefaultTableRMAction(ActionEvent event) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatTest);
+    }
 }

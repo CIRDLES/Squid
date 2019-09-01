@@ -16,15 +16,23 @@
 package org.cirdles.squid.squidReports.squidReportColumns;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Arrays;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface.formatBigDecimalForPublicationSigDigMode;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
+import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Divide;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -36,11 +44,12 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     //private static final long serialVersionUID = 1474850196549001090L;
 
     // source of spot-specific data for this column
-    private ExpressionTreeInterface expTree;
-    private boolean amIsotopicRatio;
-    // provides for multi-row column headers - 6 rows
-    private String[] columnHeaders;
+    private transient ExpressionTreeInterface expTree;
+    private transient boolean amIsotopicRatio;
+    // provides for multi-row column headers
+    private transient String[] columnHeaders;
 
+    private String expressionName;
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
 
@@ -55,61 +64,102 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private String footnoteSpec;
 
     private SquidReportColumn() {
-        this(null, false, new String[HEADER_ROW_COUNT], "", null, false, "", 0, false, "");
+        this("", "", 0, false, "");
     }
 
-    private SquidReportColumn(ExpressionTreeInterface expTree, boolean amIsotopicRatio) {
-        this(expTree, amIsotopicRatio, new String[HEADER_ROW_COUNT], "", null, false, "", 0, false, "");
+    private SquidReportColumn(String expressionName) {
+        this(expressionName, "", 0, false, "");
     }
 
     private SquidReportColumn(
-            ExpressionTreeInterface expTree,
-            boolean amIsotopicRatio,
-            String[] columnHeaders,
+            String expressionName,
             String units,
-            SquidReportColumnInterface uncertaintyColumn,
-            boolean amUncertaintyColumn,
-            String uncertaintyDirective,
             int countOfSignificantDigits,
             boolean visible,
             String footnoteSpec) {
 
-        this.expTree = expTree;
-        this.amIsotopicRatio = amIsotopicRatio;
-        this.columnHeaders = columnHeaders;
+        this.expTree = null;
+        this.expressionName = expressionName;
         this.units = units;
-        this.uncertaintyColumn = uncertaintyColumn;
-        this.amUncertaintyColumn = amUncertaintyColumn;
-        this.uncertaintyDirective = uncertaintyDirective;
+
+        this.uncertaintyColumn = null;
+        this.amUncertaintyColumn = false;
+        this.uncertaintyDirective = "";
+
         this.countOfSignificantDigits = countOfSignificantDigits;
         this.visible = visible;
         this.footnoteSpec = footnoteSpec;
     }
 
-    public static SquidReportColumn createDefaultReportColumn(){
-        // TODO decide best default
-        return new SquidReportColumn();
+    public static SquidReportColumn createSquidReportColumn(String expressionName) {
+        return new SquidReportColumn(expressionName);
     }
-    
-    public static SquidReportColumn createReportColumn(ExpressionTreeInterface expTree) {
+
+    public static SquidReportColumn createSquidReportColumn(String expressionName, String units) {
+        SquidReportColumn squidReportColumn = new SquidReportColumn(expressionName);
+        squidReportColumn.setUnits(units);
+        return squidReportColumn;
+    }
+
+    public static SquidReportColumn createSquidReportColumn(String expressionName, int countOfSignificantDigits) {
+        SquidReportColumn squidReportColumn = new SquidReportColumn(expressionName);
+        squidReportColumn.setCountOfSignificantDigits(countOfSignificantDigits);
+        return squidReportColumn;
+    }
+
+    @Override
+    public void initReportColumn(TaskInterface task) {
         // extract properties of expTree
-        boolean amIsotopicRatio = false;
+        expTree = task.findNamedExpression(expressionName);
+        if (expTree instanceof SpotFieldNode) {
+            ((Task) task).evaluateTaskExpression(expTree);
+        } else if (expTree instanceof ShrimpSpeciesNode) {
+            // default view of species nodes
+            ((ShrimpSpeciesNode)expTree).setMethodNameForShrimpFraction("getTotalCps");
+            ((Task) task).evaluateTaskExpression(expTree);
+            expressionName = "total_" + expressionName + "_cts_/sec";
+        }
+        
+        amIsotopicRatio = false;
         if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
             // Check for isotopic ratios
             amIsotopicRatio = (((ExpressionTree) expTree).getOperation() instanceof Divide);
         }
 
-        // propose column headers
-        String[] columnHeaders = new String[HEADER_ROW_COUNT];
-        columnHeaders[HEADER_ROW_COUNT - 1] = expTree.getName();
+        // propose column headers by splitting on underscores in name
+        // row 0 is reserved for category displayname
+        // row 1 is reserved for column displayName1
+        // row 2 is reserved for column displayName2
+        // row 3 is reserved for column displayName3
+        // row 4 is reserved for column displayName4
+        // row 5 is reserved for units spec
+        // row 6 is reserved for column footnotes as reference letters
+        // row 7 is reserved for storage of actual footnotes in the correct order
+        // fraction data starts at col 2, row FRACTION_DATA_START_ROW
+        //
+        // filename is stored in 0,1
+        columnHeaders = new String[HEADER_ROW_COUNT];
+        for (int i = 0; i < HEADER_ROW_COUNT; i++) {
+            columnHeaders[i] = "";
+        }
+        String[] headers = expressionName.split("_");
+        int headerRowCount = headers.length;
+        int headerRow = 4;
+        for (int i = headerRowCount; i > 0; i--) {
+            columnHeaders[headerRow] = headers[i - 1];
+            headerRow--;
+        }
+        //columnHeaders[HEADER_ROW_COUNT - 1] = expTree.getName();
 
-        // propose units
-        String units = "";
+        columnHeaders[5] = units;
+        if (columnHeaders[5].length() > 0) {
+            columnHeaders[4] += "(" + units + ")";
+        }
 
         // propose uncertainty column and type if detected in expTree
         // if expTree has uncertaintyDirective, then this column is itself an uncertainty column as defined
         // by the expression; otherwise the uncertainty column can have a directive for how it should be rendered
-        String uncertaintyDirective = ((ExpressionTree) expTree).getUncertaintyDirective();
+        uncertaintyDirective = ((ExpressionTree) expTree).getUncertaintyDirective();
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
                 if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
@@ -119,60 +169,123 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             }
         }
 
-        SquidReportColumnInterface uncertaintyColumn = null;
-        if (uncertaintyDirective.length() == 0) {
-            uncertaintyColumn = new SquidReportColumn(expTree, amIsotopicRatio);
+        uncertaintyColumn = null;
+        if ((uncertaintyDirective.length() == 0)
+                && (!expressionName.toUpperCase().contains("PCT"))
+                && (!expressionName.toUpperCase().contains("ERR"))
+                && !(expTree instanceof SpotFieldNode)
+                && !(expTree instanceof ShrimpSpeciesNode)) {
+            uncertaintyColumn = createSquidReportColumn(expressionName, units);
+            uncertaintyColumn.setExpTree(expTree);
+
             String[] unctColumnHeaders = new String[HEADER_ROW_COUNT];
-            unctColumnHeaders[HEADER_ROW_COUNT - 1] = "unct";
+            for (int i = 0; i < HEADER_ROW_COUNT; i++) {
+                unctColumnHeaders[i] = "";
+            }
+
+            if (expressionName.toUpperCase().contains("AGE")) {
+                uncertaintyColumn.setUncertaintyDirective(ABS_UNCERTAINTY_DIRECTIVE);
+                unctColumnHeaders[4] = "±1σ abs";
+            } else {
+                uncertaintyColumn.setUncertaintyDirective(PCT_UNCERTAINTY_DIRECTIVE);
+                unctColumnHeaders[4] = "±1σ %";
+            }
+
+            unctColumnHeaders[5] = units;
             uncertaintyColumn.setColumnHeaders(unctColumnHeaders);
 
             uncertaintyColumn.setAmUncertaintyColumn(true);
+
             uncertaintyColumn.setVisible(true);
             uncertaintyColumn.setCountOfSignificantDigits(DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS);
-            uncertaintyColumn.setUncertaintyDirective(ABS_UNCERTAINTY_DIRECTIVE);
+            uncertaintyColumn.setAmIsotopicRatio(amIsotopicRatio);
         }
 
-        boolean amUncertaintyColumn = false;
+        amUncertaintyColumn = false;
 
-        int countOfSignificantDigits = DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS;
+        countOfSignificantDigits = (countOfSignificantDigits == 0) ? DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS : countOfSignificantDigits;
 
         boolean visible = true;
 
         // propose footnote from notes field of expTree
-        String footnoteSpec = "";
+        footnoteSpec = "";
+    }
 
-        return new SquidReportColumn(
-                expTree,
-                amIsotopicRatio,
-                columnHeaders,
-                units,
-                uncertaintyColumn,
-                amUncertaintyColumn,
-                uncertaintyDirective,
-                countOfSignificantDigits,
-                visible,
-                footnoteSpec);
+    @Override
+    public boolean hasVisibleUncertaintyColumn() {
+        return (uncertaintyColumn != null && uncertaintyColumn.isVisible());
     }
 
     @Override
     public String cellEntryForSpot(ShrimpFractionExpressionInterface spot) {
-        double[][] results;
-        // TODO: check uncertainty directive
+        String retVal = "not init";
+        if (expTree != null) {
+            double[][] results = new double[][]{{0, 0}, {0, 0}};
+            // TODO: check uncertainty directive
 
-        if (amIsotopicRatio) {
-            results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
-        } else {
-            results = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+            boolean success = true;
+            if (amIsotopicRatio) {
+                try {
+                    results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
+                } catch (Exception e) {
+                    success = false;
+                }
+            } else {
+                try {
+                    results = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                } catch (Exception e) {
+                    success = false;
+                }
+            }
+
+            if (success) {
+                if (amUncertaintyColumn) {
+                    double uncertainty;
+                    try {
+                        if (uncertaintyDirective.compareToIgnoreCase(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
+                            uncertainty = results[0][1] / results[0][0] * 100.0;
+                            retVal = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(uncertainty),
+                                    countOfSignificantDigits);
+                        } else {
+                            uncertainty = results[0][1];
+                            retVal = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(uncertainty).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                    countOfSignificantDigits);
+                        }
+                    } catch (Exception e) {
+                        // no uncertainty - let user know they should hide
+                        retVal = String.format("%1$-23s", "n/a");
+                    }
+                } else {
+                    // first handle special cases
+                    if (expressionName.toUpperCase().contains("DATETIMEMILLISECONDS")) {
+                        retVal = spot.getDateTime();
+                    } else {
+                        retVal = formatBigDecimalForPublicationSigDigMode(
+                                new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                countOfSignificantDigits);
+                    }
+                }
+            } else {
+                retVal = "not found";
+            }
         }
-
-        String retVal;
-        if (amUncertaintyColumn) {
-            retVal = String.format("%1$-23s", squid3RoundedToSize(results[0][1], countOfSignificantDigits));
-        } else {
-            retVal = String.format("%1$-23s", squid3RoundedToSize(results[0][0], countOfSignificantDigits));
-        }
-
         return retVal;
+    }
+
+    /**
+     * @param expTree the expTree to set
+     */
+    public void setExpTree(ExpressionTreeInterface expTree) {
+        this.expTree = expTree;
+    }
+
+    /**
+     * @return the expressionName
+     */
+    public String getExpressionName() {
+        return expressionName;
     }
 
     /**
@@ -285,6 +398,13 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     @Override
     public void setFootnoteSpec(String footnoteSpec) {
         this.footnoteSpec = footnoteSpec;
+    }
+
+    /**
+     * @param amIsotopicRatio the amIsotopicRatio to set
+     */
+    public void setAmIsotopicRatio(boolean amIsotopicRatio) {
+        this.amIsotopicRatio = amIsotopicRatio;
     }
 
 }
