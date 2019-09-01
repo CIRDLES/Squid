@@ -2170,17 +2170,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private String peekDetailsPerSpot(List<ShrimpFractionExpressionInterface> spots, ExpressionTreeInterface expTree) {
-//
-//        // test area
-//        SquidReportColumn testCol = SquidReportColumn.createReportColumn(expTree);
-//        for (ShrimpFractionExpressionInterface spot : spots) {
-//            System.out.println(
-//                    expTree.getName()
-//                    + "   " + spot.getFractionID()
-//                    + "   " + testCol.cellEntryForSpot(spot)
-//                    + "   " + (String) ((testCol.getUncertaintyColumn() != null) ? testCol.getUncertaintyColumn().cellEntryForSpot(spot) : "no unct"));
-//        }
-//        // end test area
+
         StringBuilder sb = new StringBuilder();
         int sigDigits = 15;
 
@@ -2374,9 +2364,13 @@ public class ExpressionBuilderController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expSpotField)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
-                            try {
-                                sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
-                            } catch (Exception e) {
+                            if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
+                                sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
+                            } else {
+                                try {
+                                    sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
+                                } catch (Exception e) {
+                                }
                             }
                         }
                     } catch (Exception e) {

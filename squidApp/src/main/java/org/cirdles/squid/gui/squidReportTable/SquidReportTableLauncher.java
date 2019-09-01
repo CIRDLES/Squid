@@ -5,6 +5,7 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -50,38 +51,44 @@ public class SquidReportTableLauncher {
     }
 
     public void launch(ReportTableTab tab) {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
         try {
-            if (tab == ReportTableTab.refMat) {
-                SquidReportTableController.typeOfController = ReportTableTab.refMat;
-                if(refMatStage.isShowing()) {
-                    refMatStage.close();
-                }
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
-                Scene scene = new Scene(loader.load());
-                refMatStage.setScene(scene);
-                refMatStage.show();
-                refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
-                refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
-                refMatStage.requestFocus();
-            } else {
-                SquidReportTableController.typeOfController = ReportTableTab.unknown;
-                if (unknownsStage.isShowing()) {
-                    unknownsStage.close();
-                }
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
-                Scene scene = new Scene(loader.load());
-                unknownsStage.setScene(scene);
-                unknownsStage.show();
-                unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
-                unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
-                unknownsStage.requestFocus();
+            switch (tab) {
+                case refMat:
+                case refMatTest:
+                    SquidReportTableController.typeOfController = ReportTableTab.refMat;
+                    if (refMatStage.isShowing()) {
+                        refMatStage.close();
+                    }
+                    Scene scene = new Scene(loader.load());
+                    refMatStage.setScene(scene);
+                    refMatStage.show();
+                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
+                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
+                    refMatStage.requestFocus();
+                    break;
+
+                case unknown:
+                    SquidReportTableController.typeOfController = ReportTableTab.unknown;
+                    if (unknownsStage.isShowing()) {
+                        unknownsStage.close();
+                    }
+                    scene = new Scene(loader.load());
+                    unknownsStage.setScene(scene);
+                    unknownsStage.show();
+                    unknownsStage.setX(primaryStage.getX() + (primaryStage.getWidth() - unknownsStage.getWidth()) / 2 - 10);
+                    unknownsStage.setY(primaryStage.getY() + (primaryStage.getHeight() - unknownsStage.getHeight()) / 2 - 5);
+                    unknownsStage.requestFocus();
+                    break;
+
+                default:
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException iOException) {
         }
     }
 
     public enum ReportTableTab {
-        refMat, unknown
+        refMat, unknown, refMatTest
     }
 }

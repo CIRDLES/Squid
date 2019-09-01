@@ -15,7 +15,12 @@
  */
 package org.cirdles.squid.squidReports.squidReportColumns;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -23,22 +28,36 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
  */
 public interface SquidReportColumnInterface {
 
-    String cellEntryForSpot(ShrimpFractionExpressionInterface spot);
+    public void initReportColumn(TaskInterface task);
+
+    public String cellEntryForSpot(ShrimpFractionExpressionInterface spot);
+
+    /**
+     * @param expTree the expTree to set
+     */
+    public void setExpTree(ExpressionTreeInterface expTree);
+
+    /**
+     * @return the expressionName
+     */
+    public String getExpressionName();
 
     /**
      * @return the columnHeaders
      */
-    String[] getColumnHeaders();
+    public String[] getColumnHeaders();
 
     /**
      * @return the footnoteSpec
      */
-    String getFootnoteSpec();
+    public String getFootnoteSpec();
+
+    public boolean hasVisibleUncertaintyColumn();
 
     /**
      * @return the uncertaintyColumn
      */
-    SquidReportColumnInterface getUncertaintyColumn();
+    public SquidReportColumnInterface getUncertaintyColumn();
 
     /**
      * @return the uncertaintyDirective
@@ -63,36 +82,55 @@ public interface SquidReportColumnInterface {
     /**
      * @return the units
      */
-    String getUnits();
+    public String getUnits();
 
     /**
      * @return the visible
      */
-    boolean isVisible();
+    public boolean isVisible();
 
     /**
      * @param columnHeaders the columnHeaders to set
      */
-    void setColumnHeaders(String[] columnHeaders);
+    public void setColumnHeaders(String[] columnHeaders);
 
     /**
      * @param countOfSignificantDigits the countOfSignificantDigits to set
      */
-    void setCountOfSignificantDigits(int countOfSignificantDigits);
+    public void setCountOfSignificantDigits(int countOfSignificantDigits);
 
     /**
      * @param footnoteSpec the footnoteSpec to set
      */
-    void setFootnoteSpec(String footnoteSpec);
+    public void setFootnoteSpec(String footnoteSpec);
 
     /**
      * @param units the units to set
      */
-    void setUnits(String units);
+    public void setUnits(String units);
 
     /**
      * @param visible the visible to set
      */
-    void setVisible(boolean visible);
+    public void setVisible(boolean visible);
+
+    /**
+     * @param amIsotopicRatio the amIsotopicRatio to set
+     */
+    public void setAmIsotopicRatio(boolean amIsotopicRatio);
+
+    static String formatBigDecimalForPublicationSigDigMode(
+            BigDecimal number,
+            int uncertaintySigDigits) {
+
+        if ((number.compareTo(BigDecimal.ZERO) == 0)//
+                || // jan 2011 to trap for absurdly small uncertainties
+                (number.abs().doubleValue() < Math.pow(10, -1 * 15))) {
+            return "0";
+        } else {
+            return number.round(new MathContext(//
+                    uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
+        }
+    }
 
 }

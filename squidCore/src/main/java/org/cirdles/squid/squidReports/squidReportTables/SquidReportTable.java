@@ -16,9 +16,44 @@
 package org.cirdles.squid.squidReports.squidReportTables;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
+import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
 
 /**
  *
@@ -27,7 +62,7 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryI
 public class SquidReportTable implements Serializable, SquidReportTableInterface {
     // private static final long serialVersionUID = 5227409808812622714L;
 
-    public final static int HEADER_ROW_COUNT = 6;
+    public final static int HEADER_ROW_COUNT = 7;
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
 
     // Fields
@@ -42,18 +77,120 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportCategories = reportCategories;
     }
 
-    public static SquidReportTable createDefaultSquidReportTable() {
-        String reportTableName = "Default Squid3 Report Table";
-        LinkedList<SquidReportCategoryInterface> reportCategories = new LinkedList<>();
-
-        reportCategories.add(SquidReportCategory.createDefaultReportCategory());
+    public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
+        String reportTableName = "Default Squid3 Report Table for Reference Materials";
+        LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
 
         return new SquidReportTable(reportTableName, reportCategories);
+    }
+
+    public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
+        LinkedList<SquidReportCategoryInterface> reportCategoriesRefMat = new LinkedList<>();
+
+        SquidReportCategoryInterface spotFundamentals = createDefaultSpotFundamentalsCategory();
+        reportCategoriesRefMat.add(spotFundamentals);
+
+        SquidReportCategoryInterface countsPerSecond = createDefaultCountsPerSecondCategory(task);
+        reportCategoriesRefMat.add(countsPerSecond);
+
+        SquidReportCategoryInterface rawNuclideRatios = createDefaultRawNuclideRatiosCategory(task);
+        reportCategoriesRefMat.add(rawNuclideRatios);
+
+        SquidReportCategoryInterface corrIndependentBuiltIn = createReportCategory("Correction-Independent Built-In");
+        // TODO
+        reportCategoriesRefMat.add(corrIndependentBuiltIn);
+
+        SquidReportCategoryInterface pb204Corr_RM = createReportCategory("204Pb Corrected");
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR206_238CALIB_CONST));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR206_238AGE_RM, "Ma"));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR208_232CALIB_CONST));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR208_232AGE_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + TOTAL_206_238_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + TOTAL_208_232_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + COM206PB_PCT));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + COM208PB_PCT));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + R208PB206PB));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR207_206AGE_RM, "Ma"));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + R207PB_206PB_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + R207PB_235U_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + R206PB_238U_RM));
+        pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + ERR_CORREL_RM));
+        reportCategoriesRefMat.add(pb204Corr_RM);
+
+        SquidReportCategoryInterface pb207Corr_RM = createReportCategory("207Pb Corrected");
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7COR206_238CALIB_CONST));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7COR206_238AGE_RM, "Ma"));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7COR208_232CALIB_CONST));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7COR208_232AGE_RM, "Ma"));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + TOTAL_206_238_RM));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + TOTAL_208_232_RM));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + COM206PB_PCT_RM));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + COM208PB_PCT_RM));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + R208PB206PB_RM));
+        pb207Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB7CORR + R206PB_238U_RM));
+        reportCategoriesRefMat.add(pb207Corr_RM);
+
+        SquidReportCategoryInterface pb208Corr_RM = createReportCategory("208Pb Corrected");
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8COR206_238CALIB_CONST));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8COR206_238AGE_RM, "Ma"));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + TOTAL_206_238_RM));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + COM206PB_PCT_RM));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8COR207_206AGE_RM, "Ma"));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + R207PB_206PB_RM));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + R207PB_235U_RM));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + R206PB_238U_RM));
+        pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + ERR_CORREL_RM));
+        reportCategoriesRefMat.add(pb208Corr_RM);
+
+        return reportCategoriesRefMat;
+    }
+
+    private static SquidReportCategoryInterface createDefaultSpotFundamentalsCategory() {
+        SquidReportCategoryInterface spotFundamentals = createReportCategory("Spot Fundamentals");
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("DateTimeMilliseconds"));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("Hours", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("StageX", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("StageY", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("StageZ", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("Qt1Y", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("Qt1Z", 5));
+        spotFundamentals.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("PrimaryBeam", 5));
+
+        return spotFundamentals;
+    }
+
+    private static SquidReportCategoryInterface createDefaultCountsPerSecondCategory(TaskInterface task) {
+        SquidReportCategoryInterface countsPerSecond = createReportCategory("CPS");
+        // special case of generation
+        String[] isotopeLabels = new String[task.getSquidSpeciesModelList().size()];
+        //task.getMapOfIndexToMassStationDetails().get(1).getIsotopeLabel();
+        for (int i = 0; i < isotopeLabels.length; i++) {
+            isotopeLabels[i] = task.getMapOfIndexToMassStationDetails().get(i).getIsotopeLabel();
+            countsPerSecond.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(isotopeLabels[i]));
+        }
+
+        return countsPerSecond;
+    }
+
+    private static SquidReportCategoryInterface createDefaultRawNuclideRatiosCategory(TaskInterface task) {
+        SquidReportCategoryInterface rawNuclideRatios = createReportCategory("Raw Nuclide Ratios");
+        // special case of generation
+        Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getUnknownSpots().get(0)).getIsotopicRatiosII().iterator();
+        while (squidRatiosIterator.hasNext()) {
+            SquidRatiosModel entry = squidRatiosIterator.next();
+            if (entry.isActive()) {
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                rawNuclideRatios.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(displayNameNoSpaces));
+            }
+        }
+
+        return rawNuclideRatios;
     }
 
     /**
      * @return the reportTableName
      */
+    @Override
     public String getReportTableName() {
         return reportTableName;
     }
@@ -61,6 +198,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     /**
      * @param reportTableName the reportTableName to set
      */
+    @Override
     public void setReportTableName(String reportTableName) {
         this.reportTableName = reportTableName;
     }
@@ -68,6 +206,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     /**
      * @return the reportCategories
      */
+    @Override
     public LinkedList<SquidReportCategoryInterface> getReportCategories() {
         return reportCategories;
     }
@@ -75,6 +214,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     /**
      * @param reportCategories the reportCategories to set
      */
+    @Override
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories) {
         this.reportCategories = reportCategories;
     }

@@ -216,7 +216,10 @@ public abstract class BuiltInExpressionsFactory {
      */
     public static Map<String, ExpressionTreeInterface> generateSpotLookupFields() {
         Map<String, ExpressionTreeInterface> spotLookupFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
+             
+        ExpressionTreeInterface expDateTime = buildSpotNode("getDateTimeMilliseconds");
+        spotLookupFields.put(expDateTime.getName(), expDateTime);
+        
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
 

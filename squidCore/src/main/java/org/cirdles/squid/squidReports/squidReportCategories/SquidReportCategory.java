@@ -17,7 +17,7 @@ package org.cirdles.squid.squidReports.squidReportCategories;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 
 /**
  *
@@ -28,29 +28,33 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
 
     // Fields
     private String displayName;
-    private LinkedList<ReportColumnInterface> categoryColumns;
+    private LinkedList<SquidReportColumnInterface> categoryColumns;
     private boolean visible;
 
     private SquidReportCategory() {
+        this("", null, false);
     }
 
-    private SquidReportCategory(String displayName, LinkedList<ReportColumnInterface> categoryColumns, boolean visible) {
+    private SquidReportCategory(String displayName) {
+        this(displayName, null, false);
+    }
+
+    private SquidReportCategory(String displayName, LinkedList<SquidReportColumnInterface> categoryColumns, boolean visible) {
         this.displayName = displayName;
         this.categoryColumns = categoryColumns;
         this.visible = visible;
     }
 
-    public static SquidReportCategory createDefaultReportCategory(){
-        String displayName = "Default Category";
-        LinkedList<ReportColumnInterface> categoryColumns = new LinkedList<>();
-        
-        
+    public static SquidReportCategory createReportCategory(String displayName) {
+        LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
+
         return new SquidReportCategory(displayName, categoryColumns, true);
     }
 
     /**
      * @return the displayName
      */
+    @Override
     public String getDisplayName() {
         return displayName;
     }
@@ -58,6 +62,7 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     /**
      * @param displayName the displayName to set
      */
+    @Override
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
@@ -65,20 +70,23 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     /**
      * @return the categoryColumns
      */
-    public LinkedList<ReportColumnInterface> getCategoryColumns() {
+    @Override
+    public LinkedList<SquidReportColumnInterface> getCategoryColumns() {
         return categoryColumns;
     }
 
     /**
      * @param categoryColumns the categoryColumns to set
      */
-    public void setCategoryColumns(LinkedList<ReportColumnInterface> categoryColumns) {
+    @Override
+    public void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns) {
         this.categoryColumns = categoryColumns;
     }
 
     /**
      * @return the visible
      */
+    @Override
     public boolean isVisible() {
         return visible;
     }
@@ -86,8 +94,9 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     /**
      * @param visible the visible to set
      */
+    @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
-    
+
 }

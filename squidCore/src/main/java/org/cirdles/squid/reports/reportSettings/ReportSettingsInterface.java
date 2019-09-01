@@ -25,8 +25,6 @@ import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -408,43 +406,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @param version
      */
     void setVersion(int version);
-
-    public default String[][] reportSpotsExperiment(
-            List<ShrimpFractionExpressionInterface> spots) {
-        String[][] retVal = new String[spots.size() + FRACTION_DATA_START_ROW][];
-
-        // column 0 will contain true for included fractions and false for rejected fractions
-        // column 1 will contain aliquot name
-        // last column will flag whether fraction is filtered = true or false
-        int countOfAllColumns = 6;
-
-        for (int i = 0; i < retVal.length; i++) {
-            retVal[i] = new String[countOfAllColumns];
-            for (int j = 0; j < retVal[i].length; j++) {
-                retVal[i][j] = "";
-            }
-        }
-
-        retVal[0][0] = Integer.toString(FRACTION_DATA_START_ROW);
-        int fractionRowCount = FRACTION_DATA_START_ROW;
-
-        for (ShrimpFractionExpressionInterface spot : spots) {
-            retVal[fractionRowCount][0] = "true";//included
-            retVal[fractionRowCount][1] = "aliquotName";
-            
-            retVal[fractionRowCount][2] = spot.getFractionID();
-            retVal[fractionRowCount][countOfAllColumns - 2] = spot.getFractionID();
-            
-            retVal[fractionRowCount][countOfAllColumns - 1] = "false";
-            
-            retVal[fractionRowCount][3] = "12345";
-            
-            fractionRowCount++;
-
-        }
-
-        return retVal;
-    }
 
     public default String[][] reportFractionsByNumberStyle(
             List<ShrimpFractionExpressionInterface> fractions,
