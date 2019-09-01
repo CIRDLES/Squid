@@ -61,6 +61,8 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.topsoil.Variable;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import org.cirdles.squid.gui.dataViews.SampleNode;
+import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
@@ -592,54 +594,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
 
         showWeightedMeanPlot();
-    }
-
-    private interface SampleTreeNodeInterface {
-
-        public String getNodeName();
-
-        public ShrimpFractionExpressionInterface getShrimpFraction();
-
-        /**
-         * @return the selectedProperty
-         */
-        public SimpleBooleanProperty getSelectedProperty();
-
-        /**
-         * @param selectedProperty the selectedProperty to set
-         */
-        public void setSelectedProperty(SimpleBooleanProperty selectedProperty);
-    }
-
-    private class SampleNode implements SampleTreeNodeInterface {
-
-        private final String sampleName;
-        private SimpleBooleanProperty selectedProperty;
-
-        public SampleNode(String sampleName) {
-            this.sampleName = sampleName;
-            this.selectedProperty = new SimpleBooleanProperty(false);
-        }
-
-        @Override
-        public String getNodeName() {
-            return sampleName;
-        }
-
-        @Override
-        public ShrimpFractionExpressionInterface getShrimpFraction() {
-            return null;
-        }
-
-        @Override
-        public SimpleBooleanProperty getSelectedProperty() {
-            return selectedProperty;
-        }
-
-        @Override
-        public void setSelectedProperty(SimpleBooleanProperty selectedProperty) {
-            this.selectedProperty = selectedProperty;
-        }
     }
 
     private class ConcordiaFractionNode implements SampleTreeNodeInterface {

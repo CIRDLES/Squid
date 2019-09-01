@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -263,7 +264,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      * @return the ratioValUsed
      */
     public double getRatioValUsed() {
-        if (ratioValUsed == 0.0){
+        if (ratioValUsed == 0.0) {
             ratioValUsed = ratioVal;
         }
         return ratioValUsed;
@@ -280,7 +281,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      * @return the ratioFractErrUsed
      */
     public double getRatioFractErrUsed() {
-        if (ratioFractErrUsed == 0.0){
+        if (ratioFractErrUsed == 0.0) {
             ratioFractErrUsed = ratioFractErr;
         }
         return ratioFractErrUsed;

@@ -145,6 +145,7 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                             <items>
+                        <MenuItem mnemonicParsing="false" onAction="#countCorrectionsAction" text="204 Count Corrections" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                             </items>
                         </Menu>

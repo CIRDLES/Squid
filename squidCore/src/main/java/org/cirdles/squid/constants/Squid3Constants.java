@@ -298,4 +298,6 @@ public final class Squid3Constants {
         }
     }
 
+    public final static String ABS_UNCERTAINTY_DIRECTIVE  = "±";
+    public final static String PCT_UNCERTAINTY_DIRECTIVE  = "%";
 }

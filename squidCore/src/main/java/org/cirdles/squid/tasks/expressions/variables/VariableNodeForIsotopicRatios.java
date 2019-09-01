@@ -20,6 +20,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -115,9 +117,9 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 if (values.length > 1) {
                     // to return uncertainty, copy index 1 to index 0
                     // July 2018 force to 12 sig digs - abs value should be already
-                    if (uncertaintyDirective.compareTo("%") == 0) {
+                    if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                         values[0] = squid3RoundedToSize(values[1] / values[0] * 100, 12);
-                    } else if (uncertaintyDirective.compareTo("±") == 0) {
+                    } else if (uncertaintyDirective.compareTo(ABS_UNCERTAINTY_DIRECTIVE) == 0) {
                         values[0] = squid3RoundedToSize(values[1], 12);
                     }
                 } else {
