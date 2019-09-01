@@ -39,6 +39,7 @@ import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.squidReportTable.SquidReportSettingsLauncher;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -176,6 +177,7 @@ public class SquidUIController implements Initializable {
 
     public static ParametersLauncher parametersLauncher;
     public static SquidReportTableLauncher squidReportTableLauncher;
+    public static SquidReportSettingsLauncher squidReportSettingsLauncher;
     @FXML
     private MenuItem auditRawDataMenuItem;
     @FXML
@@ -249,6 +251,7 @@ public class SquidUIController implements Initializable {
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
+        squidReportSettingsLauncher = new SquidReportSettingsLauncher(primaryStage);
     }
 
     public static void launchTaskManagerStatic() {
@@ -1540,5 +1543,10 @@ public class SquidUIController implements Initializable {
     @FXML
     private void interactiveDefaultTableRMAction(ActionEvent event) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatTest);
+    }
+
+    @FXML
+    public void squid3ReportSettingsOnAction(ActionEvent actionEvent) {
+        squidReportSettingsLauncher.launch();
     }
 }
