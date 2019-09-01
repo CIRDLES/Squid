@@ -122,7 +122,7 @@ public class SpotFieldNode extends ExpressionTree {
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
-            throw new SquidException("Could not find variable " + fieldName);
+            throw new SquidException("Could not find field name: " + fieldName);
         }
 
         return retVal;

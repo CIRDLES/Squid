@@ -128,6 +128,8 @@ public interface ShrimpFractionExpressionInterface {
      * @return the dateTimeMilliseconds
      */
     public long getDateTimeMilliseconds();
+    
+    public String getDateTime();
 
     /**
      * @return the totalCounts

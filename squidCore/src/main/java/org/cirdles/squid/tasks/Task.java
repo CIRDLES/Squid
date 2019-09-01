@@ -242,7 +242,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected boolean roundingForSquid3;
     
-    protected List<SquidReportTableInterface> squidReportTables;
+    private List<SquidReportTableInterface> squidReportTablesRefMat;
+    private List<SquidReportTableInterface> squidReportTablesUnknown;
 
     public Task() {
         this("New Task", null, null);
@@ -350,7 +351,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.roundingForSquid3 = false;
         
-        this.squidReportTables = new ArrayList<>();
+        this.squidReportTablesRefMat = new ArrayList<>();
+        this.squidReportTablesUnknown = new ArrayList<>();
 
         generateConstants();
         generateParameters();
@@ -450,7 +452,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         taskDesign.setRatioNames(myRatioNames);
 
     }
-
+   
     private void generateConstants() {
         Map<String, ExpressionTreeInterface> constants = BuiltInExpressionsFactory.generateConstants();
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -2957,6 +2959,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setRoundingForSquid3(boolean roundingForSquid3) {
         this.roundingForSquid3 = roundingForSquid3;
+    }
+
+    /**
+     * @return the squidReportTablesRefMat
+     */
+    public List<SquidReportTableInterface> getSquidReportTablesRefMat() {
+        return squidReportTablesRefMat;
+    }
+
+    /**
+     * @param squidReportTablesRefMat the squidReportTablesRefMat to set
+     */
+    public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat) {
+        this.squidReportTablesRefMat = squidReportTablesRefMat;
+    }
+
+    /**
+     * @return the squidReportTablesUnknown
+     */
+    public List<SquidReportTableInterface> getSquidReportTablesUnknown() {
+        return squidReportTablesUnknown;
+    }
+
+    /**
+     * @param squidReportTablesUnknown the squidReportTablesUnknown to set
+     */
+    public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
+        this.squidReportTablesUnknown = squidReportTablesUnknown;
     }
 
 }

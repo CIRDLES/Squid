@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 /**
  * FXML Controller class
@@ -51,22 +53,31 @@ public class SquidReportTableController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
+        switch (typeOfController) {
+            case refMat:
+                ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
+                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
+                break;
+            case refMatTest:
+                SquidReportTableInterface reportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
+                textArray = reportTable.reportSpotsExperiment(reportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
+            case unknown:
+                reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
+                List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();
+                textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
+                break;
+            default:
 
-        if (typeOfController == SquidReportTableLauncher.ReportTableTab.refMat) {
-            ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
-            textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-// test            textArray = reportSettings.reportSpotsExperiment(squidProject.getTask().getReferenceMaterialSpots());
-        } else {
-            ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-            List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();
-            textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
         }
+
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
         reportsTable.refresh();
         boundCol.refresh();
