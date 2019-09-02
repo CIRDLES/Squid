@@ -56,12 +56,24 @@ public class SquidReportTableLauncher {
         try {
             switch (tab) {
                 case refMat:
-                case refMatTest:
                     SquidReportTableController.typeOfController = ReportTableTab.refMat;
                     if (refMatStage.isShowing()) {
                         refMatStage.close();
                     }
                     Scene scene = new Scene(loader.load());
+                    refMatStage.setScene(scene);
+                    refMatStage.show();
+                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
+                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
+                    refMatStage.requestFocus();
+                    break;
+
+                case refMatTest:
+                    SquidReportTableController.typeOfController = ReportTableTab.refMatTest;
+                    if (refMatStage.isShowing()) {
+                        refMatStage.close();
+                    }
+                    scene = new Scene(loader.load());
                     refMatStage.setScene(scene);
                     refMatStage.show();
                     refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
