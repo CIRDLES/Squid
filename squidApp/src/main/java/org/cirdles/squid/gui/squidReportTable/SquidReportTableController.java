@@ -69,6 +69,7 @@ public class SquidReportTableController implements Initializable {
             case refMatTest:
                 SquidReportTableInterface reportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
                 textArray = reportTable.reportSpotsExperiment(reportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
+                break;
             case unknown:
                 reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
                 List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();

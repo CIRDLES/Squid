@@ -16,17 +16,16 @@
 package org.cirdles.squid.squidReports.squidReportTables;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
@@ -54,6 +53,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
  *
@@ -98,7 +98,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
         SquidReportCategoryInterface corrIndependentBuiltIn = createReportCategory("Correction-Independent Built-In");
         // TODO
-        reportCategoriesRefMat.add(corrIndependentBuiltIn);
+//        reportCategoriesRefMat.add(corrIndependentBuiltIn);
 
         SquidReportCategoryInterface pb204Corr_RM = createReportCategory("204Pb Corrected");
         pb204Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4COR206_238CALIB_CONST));
@@ -142,6 +142,17 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + ERR_CORREL_RM));
         reportCategoriesRefMat.add(pb208Corr_RM);
 
+//        SquidReportCategoryInterface custom_RM = createReportCategory("Custom Expressions Ref Mat");
+//        List<Expression> customExpressionsRM = task.getCustomTaskExpressions();
+//        for (Expression exp : customExpressionsRM) {
+//            ExpressionTreeInterface expTree = exp.getExpressionTree();
+//            if ((!expTree.isSquidSwitchSCSummaryCalculation())
+//                    && (expTree.isSquidSwitchSTReferenceMaterialCalculation())) {
+//                custom_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(expTree.getName()));
+//            }    
+//        }
+//        reportCategoriesRefMat.add(custom_RM);
+
         return reportCategoriesRefMat;
     }
 
@@ -163,7 +174,6 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         SquidReportCategoryInterface countsPerSecond = createReportCategory("CPS");
         // special case of generation
         String[] isotopeLabels = new String[task.getSquidSpeciesModelList().size()];
-        //task.getMapOfIndexToMassStationDetails().get(1).getIsotopeLabel();
         for (int i = 0; i < isotopeLabels.length; i++) {
             isotopeLabels[i] = task.getMapOfIndexToMassStationDetails().get(i).getIsotopeLabel();
             countsPerSecond.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(isotopeLabels[i]));
