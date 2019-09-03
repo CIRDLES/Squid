@@ -14,8 +14,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -30,8 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static org.cirdles.squid.gui.SquidUI.HEALTHY;
-import static org.cirdles.squid.gui.SquidUI.UNHEALTHY;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
@@ -87,6 +91,7 @@ public class SquidReportSettingsController implements Initializable {
 
     private TaskInterface task;
     private SquidReportTableInterface squidReportTable;
+    private Expression draggedExpression;
 
     //INIT
     @Override
@@ -97,6 +102,8 @@ public class SquidReportSettingsController implements Initializable {
         squidReportTable = null;
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+        draggedExpression = null;
 
         initListViews();
 
@@ -508,11 +515,44 @@ public class SquidReportSettingsController implements Initializable {
                     }
                 }
             };
-
+            addDraggableFunctionality(cell);
             return cell;
         }
 
 
+    }
+
+    private void addDraggableFunctionality(ListCell<Expression> cell) {
+        cell.setOnDragDetected(event -> {
+            if (!cell.isEmpty()) {
+                Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                ClipboardContent cc = new ClipboardContent();
+                cc.putString(cell.getItem().getName());
+                db.setContent(cc);
+                cell.setCursor(Cursor.CLOSED_HAND);
+            }
+        });
+
+        cell.setOnDragDone((event) -> {
+            cell.setCursor(Cursor.OPEN_HAND);
+        });
+
+        cell.setOnMousePressed((event) -> {
+            if (!cell.isEmpty()) {
+                cell.setCursor(Cursor.CLOSED_HAND);
+            }
+        });
+
+        cell.setOnMouseReleased((event) -> {
+            cell.setCursor(Cursor.OPEN_HAND);
+        });
+
+        cell.setCursor(Cursor.OPEN_HAND);
+
+        cell.setOnMouseClicked((event) -> {
+            //Nothing
+        });
     }
 
     @FXML

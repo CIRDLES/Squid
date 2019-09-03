@@ -1546,7 +1546,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void squid3ReportSettingsOnAction(ActionEvent actionEvent) {
+    public void reportLayoutManagerOnAction(ActionEvent actionEvent) {
         squidReportSettingsLauncher.launch();
     }
 }

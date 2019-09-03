@@ -125,12 +125,11 @@
                                         <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
                                     </items>
                                 </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#squid3ReportSettingsOnAction" text="Squid 3 Report Settings" />
                             </items>
                         </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
                     <items>
-                      <MenuItem disable="true" mnemonicParsing="false" text="Report Layout Manager" />
+                      <MenuItem disable="false" mnemonicParsing="false" text="Report Layout Manager" onAction="#reportLayoutManagerOnAction" />
                         <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />
