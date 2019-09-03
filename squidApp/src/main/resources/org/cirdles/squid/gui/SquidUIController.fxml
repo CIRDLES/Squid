@@ -135,6 +135,11 @@
                             <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />
                           </items>
                         </Menu>
+                        <Menu mnemonicParsing="false" text="Unknowns">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableUnknownAction" text="Beta Interactive Default Table" />
+                           </items>
+                        </Menu>
                     </items>
                   </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />

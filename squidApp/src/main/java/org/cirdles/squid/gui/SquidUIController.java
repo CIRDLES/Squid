@@ -1542,7 +1542,12 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void interactiveDefaultTableRMAction(ActionEvent event) {
-        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatTest);
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatCustom);
+    }
+
+    @FXML
+    private void interactiveDefaultTableUnknownAction(ActionEvent event) {
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknownCustom);
     }
 
     @FXML
