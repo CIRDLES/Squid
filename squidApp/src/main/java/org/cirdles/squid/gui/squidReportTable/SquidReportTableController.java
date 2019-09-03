@@ -53,6 +53,7 @@ public class SquidReportTableController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -66,15 +67,20 @@ public class SquidReportTableController implements Initializable {
                 ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
                 textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
                 break;
-            case refMatTest:
+            case refMatCustom:
                 SquidReportTableInterface reportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
-                textArray = reportTable.reportSpotsExperiment(reportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
+                textArray = reportTable.reportSpotsInCustomTable(reportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
                 break;
             case unknown:
                 reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
                 List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();
                 textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
                 break;
+            case unknownCustom:
+                reportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
+                textArray = reportTable.reportSpotsInCustomTable(reportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
+                break;
+
             default:
 
         }

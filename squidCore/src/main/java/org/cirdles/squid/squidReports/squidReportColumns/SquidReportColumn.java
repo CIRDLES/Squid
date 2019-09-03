@@ -28,6 +28,7 @@ import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
@@ -173,6 +174,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         if ((uncertaintyDirective.length() == 0)
                 && (!expressionName.toUpperCase().contains("PCT"))
                 && (!expressionName.toUpperCase().contains("ERR"))
+                && (!expressionName.toUpperCase().contains("CONCEN"))
+                && (!expressionName.toUpperCase().contains("DISC"))
+                && (!expressionName.toUpperCase().contains("PPM"))
+                && (!expressionName.toUpperCase().contains("CORR"))
+                && (!expressionName.contains(R204PB_206PB))
                 && !(expTree instanceof SpotFieldNode)
                 && !(expTree instanceof ShrimpSpeciesNode)) {
             uncertaintyColumn = createSquidReportColumn(expressionName, units);
