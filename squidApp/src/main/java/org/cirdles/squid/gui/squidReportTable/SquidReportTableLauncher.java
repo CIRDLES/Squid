@@ -53,10 +53,11 @@ public class SquidReportTableLauncher {
     public void launch(ReportTableTab tab) {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
+        SquidReportTableController.typeOfController = tab;
         try {
             switch (tab) {
                 case refMat:
-                    SquidReportTableController.typeOfController = ReportTableTab.refMat;
+                case refMatCustom:
                     if (refMatStage.isShowing()) {
                         refMatStage.close();
                     }
@@ -68,21 +69,8 @@ public class SquidReportTableLauncher {
                     refMatStage.requestFocus();
                     break;
 
-                case refMatTest:
-                    SquidReportTableController.typeOfController = ReportTableTab.refMatTest;
-                    if (refMatStage.isShowing()) {
-                        refMatStage.close();
-                    }
-                    scene = new Scene(loader.load());
-                    refMatStage.setScene(scene);
-                    refMatStage.show();
-                    refMatStage.setX(primaryStage.getX() + (primaryStage.getWidth() - refMatStage.getWidth()) / 2 + 10);
-                    refMatStage.setY(primaryStage.getY() + (primaryStage.getHeight() - refMatStage.getHeight()) / 2 + 5);
-                    refMatStage.requestFocus();
-                    break;
-
                 case unknown:
-                    SquidReportTableController.typeOfController = ReportTableTab.unknown;
+                case unknownCustom:
                     if (unknownsStage.isShowing()) {
                         unknownsStage.close();
                     }
@@ -101,6 +89,6 @@ public class SquidReportTableLauncher {
     }
 
     public enum ReportTableTab {
-        refMat, unknown, refMatTest
+        refMat, unknown, refMatCustom, unknownCustom
     }
 }

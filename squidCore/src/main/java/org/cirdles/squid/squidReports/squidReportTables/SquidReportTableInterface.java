@@ -31,7 +31,7 @@ import org.cirdles.squid.tasks.TaskInterface;
  */
 public interface SquidReportTableInterface {
 
-    public default String[][] reportSpotsExperiment(
+    public default String[][] reportSpotsInCustomTable(
             SquidReportTableInterface squidReportTable,
             TaskInterface task,
             List<ShrimpFractionExpressionInterface> spots) {
@@ -93,19 +93,22 @@ public interface SquidReportTableInterface {
 
         for (ShrimpFractionExpressionInterface spot : spots) {
             retVal[fractionRowCount][0] = "true";//included
-            retVal[fractionRowCount][1] = "aliquotName";
-
             retVal[fractionRowCount][2] = spot.getFractionID();
-            retVal[fractionRowCount][countOfAllColumns - 2] = spot.getFractionID();
+            // detect aliquot
+            if (spot.getSpotNumber() < 0) {
+                retVal[fractionRowCount][1] = spot.getFractionID();
+            } else {
 
-            retVal[fractionRowCount][countOfAllColumns - 1] = "false";
+                retVal[fractionRowCount][countOfAllColumns - 2] = spot.getFractionID();
 
-            columnIndex = 3;
-            for (SquidReportColumnInterface col : columns) {
-                retVal[fractionRowCount][columnIndex] = col.cellEntryForSpot(spot);
-                columnIndex++;
+                retVal[fractionRowCount][countOfAllColumns - 1] = "false";
+
+                columnIndex = 3;
+                for (SquidReportColumnInterface col : columns) {
+                    retVal[fractionRowCount][columnIndex] = col.cellEntryForSpot(spot);
+                    columnIndex++;
+                }
             }
-
             fractionRowCount++;
         }
 

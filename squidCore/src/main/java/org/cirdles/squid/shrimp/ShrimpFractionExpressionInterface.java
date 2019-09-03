@@ -52,6 +52,11 @@ public interface ShrimpFractionExpressionInterface {
      * @return
      */
     public String getFractionID();
+    
+    /**
+     * @return the spotNumber
+     */
+    public int getSpotNumber();
 
     /**
      * @return the timeStampSec
