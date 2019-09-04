@@ -114,7 +114,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.
  */
 public class ExpressionBuilderController implements Initializable {
 
-    // handle for closing stage when Squid closes
+    // handle for closing squidReportSettingsStage when Squid closes
     public static final Stage EXPRESSION_NOTES_STAGE = new Stage();
 
     //BUTTONS

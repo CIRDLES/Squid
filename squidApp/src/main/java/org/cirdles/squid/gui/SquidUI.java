@@ -103,7 +103,7 @@ public final class SquidUI extends Application {
 
         CalamariFileUtilities.initSampleParametersModels();
 
-        // postpone loading to allow for stage creation and use in controller
+        // postpone loading to allow for squidReportSettingsStage creation and use in controller
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
         primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight() + 15);

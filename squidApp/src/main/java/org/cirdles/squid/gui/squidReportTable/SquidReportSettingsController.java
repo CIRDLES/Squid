@@ -22,9 +22,12 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -37,6 +40,7 @@ import java.util.ResourceBundle;
 
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.squidReportTable.SquidReportSettingsLauncher.squidReportSettingsWindow;
 
 /**
  * FXML Controller class
@@ -78,33 +82,32 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private TextField categoryTextField;
     @FXML
-    private ListView<SquidReportCategory> categoryListView;
+    private ListView<SquidReportCategoryInterface> categoryListView;
     @FXML
-    private ListView<SquidReportColumn> columnListView;
+    private ListView<SquidReportColumnInterface> columnListView;
     @FXML
     private TextArea columnDetailsTextArea;
 
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
+    private final ObjectProperty<SquidReportCategoryInterface> selectedCategoroy = new SimpleObjectProperty<>();
+    private final ObjectProperty<SquidReportColumnInterface> selectedColumn = new SimpleObjectProperty<>();
+
     ObservableList<Expression> namedExpressions;
     public static Expression expressionToHighlightOnInit = null;
 
     private TaskInterface task;
     private SquidReportTableInterface squidReportTable;
-    private Expression draggedExpression;
 
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         task = squidProject.getTask();
         //squidReportTable = task.getSquidReportTable();
-        squidReportTable = null;
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
 
-        draggedExpression = null;
-
+        initSelectionActions();
         initListViews();
 
         if (expressionToHighlightOnInit != null) {
@@ -114,7 +117,6 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
     }
-
 
     @FXML
     private void expressionSortToggleAction(ActionEvent event) {
@@ -313,6 +315,60 @@ public class SquidReportSettingsController implements Initializable {
         });
 
         populateExpressionListViews();
+
+        //Squid Report Categories
+        categoryListView.setCellFactory(new SquidReportCategoryInterfaceCellFactory());
+        categoryListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            selectedCategoroy.setValue(newValue);
+        });
+        populateCategoryListView();
+
+        //Squid Report Columns
+        columnListView.setCellFactory(new SquidReportColumnInterfaceCellFactory());
+        columnListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        columnListView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            selectedColumn.setValue(newValue);
+        }));
+    }
+
+    private void initSelectionActions() {
+        selectedCategoroy.addListener(observable -> {
+            populateColumnListView();
+        });
+        selectedColumn.addListener(observable -> {
+            populateColumnDetails();
+        });
+    }
+
+    private void populateCategoryListView() {
+        ObservableList<SquidReportCategoryInterface> obList = FXCollections.observableList(SquidReportTable.createDefaultReportCategoriesUnknown(task));
+        categoryListView.setItems(obList);
+        categoryListView.getSelectionModel().selectFirst();
+    }
+
+    private void populateColumnListView() {
+        if (selectedCategoroy.getValue() != null) {
+            ObservableList<SquidReportColumnInterface> obList = FXCollections.observableList(selectedCategoroy.getValue().getCategoryColumns());
+            columnListView.setItems(obList);
+            columnListView.getSelectionModel().selectFirst();
+        } else {
+            columnListView.setItems(null);
+        }
+    }
+
+    private void populateColumnDetails() {
+        if (selectedColumn.getValue() != null) {
+            String expName = selectedColumn.getValue().getExpressionName();
+            Expression exp = task.getExpressionByName(expName);
+            if (exp != null) {
+                columnDetailsTextArea.setText(exp.getNotes());
+            } else {
+                columnDetailsTextArea.setText("Could not locate expression tree");
+            }
+        } else {
+            columnDetailsTextArea.setText("");
+        }
     }
 
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
@@ -474,6 +530,56 @@ public class SquidReportSettingsController implements Initializable {
 
     }
 
+    private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
+
+        public SquidReportCategoryInterfaceCellFactory() {
+        }
+
+        ;
+
+        @Override
+        public ListCell<SquidReportCategoryInterface> call(ListView<SquidReportCategoryInterface> param) {
+            ListCell<SquidReportCategoryInterface> cell = new ListCell<SquidReportCategoryInterface>() {
+                @Override
+                public void updateItem(SquidReportCategoryInterface category, boolean empty) {
+                    super.updateItem(category, empty);
+                    if (!empty) {
+                        setText(category.getDisplayName());
+                    } else {
+                        setText(null);
+                    }
+                }
+            };
+
+            return cell;
+        }
+    }
+
+    private class SquidReportColumnInterfaceCellFactory implements Callback<ListView<SquidReportColumnInterface>, ListCell<SquidReportColumnInterface>> {
+
+        public SquidReportColumnInterfaceCellFactory() {
+        }
+
+        ;
+
+        @Override
+        public ListCell<SquidReportColumnInterface> call(ListView<SquidReportColumnInterface> param) {
+            ListCell<SquidReportColumnInterface> cell = new ListCell<SquidReportColumnInterface>() {
+                @Override
+                public void updateItem(SquidReportColumnInterface column, boolean empty) {
+                    super.updateItem(column, empty);
+                    if (!empty) {
+                        setText(column.getExpressionName());
+                    } else {
+                        setText(null);
+                    }
+                }
+            };
+
+            return cell;
+        }
+    }
+
     private class ExpressionCellFactory implements Callback<ListView<Expression>, ListCell<Expression>> {
 
         private final boolean showImage;
@@ -557,6 +663,17 @@ public class SquidReportSettingsController implements Initializable {
 
     @FXML
     private void createCategoryOnAction(ActionEvent event) {
+        SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory(categoryTextField.getText());
+
+        if(!categoryListView.getItems().contains(cat)) {
+            categoryListView.getItems().add(cat);
+            int catIndex = categoryListView.getItems().indexOf(cat);
+            categoryListView.getSelectionModel().select(catIndex);
+            categoryListView.scrollTo(catIndex);
+            categoryListView.getFocusModel().focus(catIndex);
+        } else {
+            SquidMessageDialog.showWarningDialog("A category exists with the specified name.", squidReportSettingsWindow);
+        }
 
     }
 
