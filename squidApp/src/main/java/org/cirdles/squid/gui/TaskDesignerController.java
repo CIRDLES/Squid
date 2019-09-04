@@ -106,7 +106,7 @@ public class TaskDesignerController implements Initializable {
 
     private TaskDesign taskDesigner;
 
-    // handle for closing squidReportSettingsStage when Squid closes
+    // handle for closing stage when Squid closes
     public static final Stage ADD_RATIOS_STAGE = new Stage();
 
     @FXML
