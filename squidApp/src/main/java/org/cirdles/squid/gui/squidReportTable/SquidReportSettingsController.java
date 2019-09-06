@@ -26,9 +26,9 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -90,14 +90,12 @@ public class SquidReportSettingsController implements Initializable {
 
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
-    private final ObjectProperty<SquidReportCategoryInterface> selectedCategoroy = new SimpleObjectProperty<>();
+    private final ObjectProperty<SquidReportCategoryInterface> selectedCategory = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportColumnInterface> selectedColumn = new SimpleObjectProperty<>();
 
     ObservableList<Expression> namedExpressions;
     public static Expression expressionToHighlightOnInit = null;
-
     private TaskInterface task;
-    private SquidReportTableInterface squidReportTable;
 
     //INIT
     @Override
@@ -320,7 +318,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.setCellFactory(new SquidReportCategoryInterfaceCellFactory());
         categoryListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            selectedCategoroy.setValue(newValue);
+            selectedCategory.setValue(newValue);
         });
         populateCategoryListView();
 
@@ -333,7 +331,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void initSelectionActions() {
-        selectedCategoroy.addListener(observable -> {
+        selectedCategory.addListener(observable -> {
             populateColumnListView();
         });
         selectedColumn.addListener(observable -> {
@@ -348,8 +346,8 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void populateColumnListView() {
-        if (selectedCategoroy.getValue() != null) {
-            ObservableList<SquidReportColumnInterface> obList = FXCollections.observableList(selectedCategoroy.getValue().getCategoryColumns());
+        if (selectedCategory.getValue() != null) {
+            ObservableList<SquidReportColumnInterface> obList = FXCollections.observableList(selectedCategory.getValue().getCategoryColumns());
             columnListView.setItems(obList);
             columnListView.getSelectionModel().selectFirst();
         } else {
@@ -560,8 +558,6 @@ public class SquidReportSettingsController implements Initializable {
         public SquidReportColumnInterfaceCellFactory() {
         }
 
-        ;
-
         @Override
         public ListCell<SquidReportColumnInterface> call(ListView<SquidReportColumnInterface> param) {
             ListCell<SquidReportColumnInterface> cell = new ListCell<SquidReportColumnInterface>() {
@@ -575,6 +571,60 @@ public class SquidReportSettingsController implements Initializable {
                     }
                 }
             };
+            cell.setOnDragOver(event -> {
+                if (event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                event.consume();
+            });
+            cell.setOnDragDropped(event -> {
+                boolean success = false;
+                if (event.getDragboard() != null && event.getDragboard().hasString()) {
+                    ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
+                    if(event.getTransferMode().equals(TransferMode.COPY)) {
+                        SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
+                        items.add(items.indexOf(cell.getItem()), col);
+                        success = true;
+                    } else  {
+                        items.remove(selectedColumn.getValue());
+                        items.add(items.indexOf(cell.getItem()), selectedColumn.getValue());
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            });
+
+            cell.setOnDragDetected(event -> {
+                selectedColumn.setValue(cell.getItem());
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(cell.getItem().getExpressionName());
+                    db.setContent(cc);
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setCursor(Cursor.OPEN_HAND);
+
+            cell.setOnMouseClicked((event) -> {
+                //Nothing
+            });
 
             return cell;
         }
@@ -665,7 +715,7 @@ public class SquidReportSettingsController implements Initializable {
     private void createCategoryOnAction(ActionEvent event) {
         SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory(categoryTextField.getText());
 
-        if(!categoryListView.getItems().contains(cat)) {
+        if (!categoryListView.getItems().contains(cat)) {
             categoryListView.getItems().add(cat);
             int catIndex = categoryListView.getItems().indexOf(cat);
             categoryListView.getSelectionModel().select(catIndex);
