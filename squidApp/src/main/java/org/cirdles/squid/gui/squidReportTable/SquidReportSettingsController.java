@@ -339,6 +339,7 @@ public class SquidReportSettingsController implements Initializable {
             if (event.getTransferMode().equals(TransferMode.COPY)) {
                 SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
                 items.add(col);
+                columnListView.getSelectionModel().select(col);
                 success = true;
             }
             event.setDropCompleted(success);
@@ -593,16 +594,32 @@ public class SquidReportSettingsController implements Initializable {
                 }
                 event.consume();
             });
+
+            cell.setOnDragEntered(event -> {
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    cell.setOpacity(0.3);
+                }
+            });
+
+            cell.setOnDragExited(event -> {
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    cell.setOpacity(1);
+                }
+            });
+
             cell.setOnDragDropped(event -> {
                 boolean success = false;
                 ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
                 if (event.getTransferMode().equals(TransferMode.COPY)) {
                     SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
-                    if(cell.getItem() != null) {
+                    if (cell.getItem() != null) {
                         items.add(items.indexOf(cell.getItem()), col);
                     } else {
                         items.add(col);
                     }
+                    columnListView.getSelectionModel().select(col);
                     success = true;
                     event.consume();
                 } else {
@@ -612,6 +629,8 @@ public class SquidReportSettingsController implements Initializable {
                             col = items.get(i);
                             items.remove(i);
                             items.add(cell.getIndex(), col);
+                            columnListView.getSelectionModel().select(col);
+                            success = true;
                             event.consume();
                         }
                     }
