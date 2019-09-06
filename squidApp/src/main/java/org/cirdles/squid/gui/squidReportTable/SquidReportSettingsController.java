@@ -328,6 +328,22 @@ public class SquidReportSettingsController implements Initializable {
         columnListView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             selectedColumn.setValue(newValue);
         }));
+        columnListView.setOnDragOver(event -> {
+            if (selectedCategory.getValue() != null && event.getDragboard() != null && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            }
+        });
+        columnListView.setOnDragDropped(event -> {
+            boolean success = false;
+            ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
+            if (event.getTransferMode().equals(TransferMode.COPY)) {
+                SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
+                items.add(col);
+                success = true;
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
     }
 
     private void initSelectionActions() {
@@ -572,26 +588,35 @@ public class SquidReportSettingsController implements Initializable {
                 }
             };
             cell.setOnDragOver(event -> {
-                if (event.getDragboard().hasString()) {
+                if (event.getDragboard().hasString() && event.getGestureSource() != cell) {
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
                 event.consume();
             });
             cell.setOnDragDropped(event -> {
                 boolean success = false;
-                if (event.getDragboard() != null && event.getDragboard().hasString()) {
-                    ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
-                    if(event.getTransferMode().equals(TransferMode.COPY)) {
-                        SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
+                ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
+                if (event.getTransferMode().equals(TransferMode.COPY)) {
+                    SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
+                    if(cell.getItem() != null) {
                         items.add(items.indexOf(cell.getItem()), col);
-                        success = true;
-                    } else  {
-                        items.remove(selectedColumn.getValue());
-                        items.add(items.indexOf(cell.getItem()), selectedColumn.getValue());
+                    } else {
+                        items.add(col);
+                    }
+                    success = true;
+                    event.consume();
+                } else {
+                    SquidReportColumnInterface col = null;
+                    for (int i = 0; col == null && i < items.size(); i++) {
+                        if (items.get(i).getExpressionName().equals(event.getDragboard().getString())) {
+                            col = items.get(i);
+                            items.remove(i);
+                            items.add(cell.getIndex(), col);
+                            event.consume();
+                        }
                     }
                 }
                 event.setDropCompleted(success);
-                event.consume();
             });
 
             cell.setOnDragDetected(event -> {
