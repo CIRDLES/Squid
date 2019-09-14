@@ -16,18 +16,26 @@
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
 import java.net.URL;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -46,9 +54,18 @@ public class CountCorrectionsController implements Initializable {
     @FXML
     private AnchorPane sampleTreeAnchorPane;
 
-    private TreeView<String> spotsTreeViewString = new TreeView<>();
+//    private TreeView<String> spotsTreeViewString = new TreeView<>();
+    private TreeView<TextFlow> spotsTreeViewTextFlow = new TreeView<>();
     @FXML
     private HBox headerHBox;
+    @FXML
+    private RadioButton correctionNoneRB;
+    @FXML
+    private ToggleGroup correctionsToggleGroup;
+    @FXML
+    private RadioButton correction207RB;
+    @FXML
+    private RadioButton correction208RB;
 
     /**
      * Initializes the controller class.
@@ -58,17 +75,26 @@ public class CountCorrectionsController implements Initializable {
         // update 
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
-        spotsTreeViewString.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
-        spotsTreeViewString.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
+        spotsTreeViewTextFlow.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
+        spotsTreeViewTextFlow.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight()));
 
+        switch (squidProject.getTask().getOvercountCorrectionType()) {
+            case NONE:
+                correctionNoneRB.setSelected(true);
+                break;
+            case FR_207:
+                correction207RB.setSelected(true);
+                break;
+            case FR_208:
+                correction208RB.setSelected(true);
+
+        }
         showUnknowns();
 
     }
 
     private void showUnknowns() {
-
-        spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
@@ -77,17 +103,29 @@ public class CountCorrectionsController implements Initializable {
             mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
         }
 
-        TreeItem<String> rootItemWM
-                = new TreeItem<>(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
-        spotsTreeViewString.setRoot(rootItemWM);
+        TextFlow textFlowSampleType = new TextFlow();
+        Text textUnknown = new Text(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+        textUnknown.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+        textFlowSampleType.getChildren().add(textUnknown);
+        TreeItem<TextFlow> rootItemSamples = new TreeItem<>(textFlowSampleType);
 
-        spotsTreeViewString.setRoot(rootItemWM);
+        spotsTreeViewTextFlow.setStyle("-fx-font-size: 10px;");
+        spotsTreeViewTextFlow.setRoot(rootItemSamples);
 
-        rootItemWM.setExpanded(true);
-        spotsTreeViewString.setShowRoot(true);
+        rootItemSamples.setExpanded(true);
+        spotsTreeViewTextFlow.setShowRoot(true);
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
-            TreeItem<String> treeItemSample = new TreeItem<>(entry.getKey());
+//                // experimental formatting
+////                Formatter fmt = new Formatter();
+////                fmt.format("% .15g", r204_206_208[0][1]);
+////                spotDataString.append(fmt);
+
+            TextFlow textFlowSampleInfo = new TextFlow();
+            Text textSample = new Text(entry.getKey());
+            textSample.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+            textFlowSampleInfo.getChildren().add(textSample);
+            TreeItem<TextFlow> treeItemSampleInfo = new TreeItem<>(textFlowSampleInfo);
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
 
                 StringBuilder spotDataString = new StringBuilder();
@@ -105,17 +143,62 @@ public class CountCorrectionsController implements Initializable {
                 spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][0])));
                 spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][1])));
 
-                Formatter fmt = new Formatter();
-                fmt.format("% .15g", r204_206_208[0][1]);
-                spotDataString.append(fmt);
+                TextFlow textFlowI = new TextFlow();
 
-                TreeItem<String> treeItemSpot = new TreeItem<>(spotDataString.toString());
-                treeItemSample.getChildren().add(treeItemSpot);
+                Text textSampleName = new Text(String.format("%1$-" + 24 + "s", spot.getFractionID()));
+                textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+                textFlowI.getChildren().add(textSampleName);
+
+                Text textNoneValue = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206[0][0])));
+                textNoneValue.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(textNoneValue);
+
+                Text textNoneUnct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1])));
+                textNoneUnct.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(textNoneUnct);
+
+                Text text207Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
+                text207Value.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text207Value);
+
+                Text text207Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
+                text207Unct.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text207Unct);
+                
+                Text text208Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
+                text208Value.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text208Value);
+
+                Text text208Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
+                text208Unct.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text208Unct);
+
+
+                TreeItem<TextFlow> treeItemSampleI = new TreeItem<>(textFlowI);
+                treeItemSampleInfo.getChildren().add(treeItemSampleI);
             }
-            rootItemWM.getChildren().add(treeItemSample);
+            rootItemSamples.getChildren().add(treeItemSampleInfo);
         }
 
         sampleTreeAnchorPane.getChildren().clear();
-        sampleTreeAnchorPane.getChildren().add(spotsTreeViewString);
+        sampleTreeAnchorPane.getChildren().add(spotsTreeViewTextFlow);
+    }
+
+    @FXML
+    private void correctionNoneAction(ActionEvent event) {
+        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
+        showUnknowns();
+    }
+
+    @FXML
+    private void correction207Action(ActionEvent event) {
+        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_207);
+        showUnknowns();
+    }
+
+    @FXML
+    private void correction208Action(ActionEvent event) {
+        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_208);
+        showUnknowns();
     }
 }

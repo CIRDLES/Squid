@@ -2335,13 +2335,12 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("\n");
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                    // make copy
-                    ExpressionTreeInterface expTreeSpecies = ShrimpSpeciesNode.buildShrimpSpeciesNode(
-                            ((ShrimpSpeciesNode) expTree).getSquidSpeciesModel(), "getTotalCps");
-                    ((Task) task).evaluateTaskExpression(expTreeSpecies);
+                    // force evaluation with default view of species nodes
+                    ((ShrimpSpeciesNode) expTree).setMethodNameForShrimpFraction("getTotalCps");        
+                    ((Task) task).evaluateTaskExpression(expTree);
                     try {
                         double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTreeSpecies)).toArray(double[][]::new);
+                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
                             try {
                                 sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
@@ -2357,12 +2356,11 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("\n");
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 15 + "s", spot.getFractionID()));
-                    // make copy
-                    ExpressionTreeInterface expSpotField = buildSpotNode("get" + expTree.getName());
-                    ((Task) task).evaluateTaskExpression(expSpotField);
+                    // force evaluation
+                    ((Task) task).evaluateTaskExpression(expTree);
                     try {
                         double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expSpotField)).toArray(double[][]::new);
+                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
                         for (int i = 0; i < results[0].length; i++) {
                             if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
                                 sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));

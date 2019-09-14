@@ -34,8 +34,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
@@ -47,6 +45,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
 
 /**
  *
@@ -409,6 +409,9 @@ public interface TaskInterface {
         setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
 
         List<Expression> customExpressions = getCustomTaskExpressions();
+        // special temporary case Sep 2019
+        customExpressions.remove(buildCountCorrectionExpressionFrom207());
+        customExpressions.remove(buildCountCorrectionExpressionFrom208());
 
         getTaskExpressionsOrdered().clear();
 
@@ -693,4 +696,13 @@ public interface TaskInterface {
      */
     public void setRoundingForSquid3(boolean roundingForSquid3);
 
+    /**
+     * @return the overcountCorrectionType
+     */
+    public Squid3Constants.OvercountCorrectionTypes getOvercountCorrectionType();
+
+    /**
+     * @param overcountCorrectionType the overcountCorrectionType to set
+     */
+    public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 }

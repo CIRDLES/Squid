@@ -41,6 +41,7 @@ import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -213,12 +214,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean showQt1y;
     protected boolean showQt1z;
 
-    private boolean squidAllowsAutoExclusionOfSpots;
+    protected boolean squidAllowsAutoExclusionOfSpots;
 
     // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
-    private double extPErrU;
+    protected double extPErrU;
     // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
-    private double extPErrTh;
+    protected double extPErrTh;
 
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel referenceMaterialModel;
@@ -242,8 +243,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected boolean roundingForSquid3;
     
-    private List<SquidReportTableInterface> squidReportTablesRefMat;
-    private List<SquidReportTableInterface> squidReportTablesUnknown;
+    protected List<SquidReportTableInterface> squidReportTablesRefMat;
+    protected List<SquidReportTableInterface> squidReportTablesUnknown;
+    
+    protected OvercountCorrectionTypes overcountCorrectionType;
+    
+    
 
     public Task() {
         this("New Task", null, null);
@@ -353,6 +358,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         
         this.squidReportTablesRefMat = new ArrayList<>();
         this.squidReportTablesUnknown = new ArrayList<>();
+        
+        this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
 
         generateConstants();
         generateParameters();
@@ -2987,6 +2994,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
         this.squidReportTablesUnknown = squidReportTablesUnknown;
+    }
+
+    /**
+     * @return the overcountCorrectionType
+     */
+    public OvercountCorrectionTypes getOvercountCorrectionType() {
+        return overcountCorrectionType;
+    }
+
+    /**
+     * @param overcountCorrectionType the overcountCorrectionType to set
+     */
+    public void setOvercountCorrectionType(OvercountCorrectionTypes overcountCorrectionType) {
+        this.overcountCorrectionType = overcountCorrectionType;
     }
 
 }
