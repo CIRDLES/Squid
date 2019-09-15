@@ -82,44 +82,66 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private int countOfNonPositiveSBMCounts;
 
+    // sept 2019 to accommodate the customization of individual sample spots
+    // common lead ratios
+    private double com_206Pb204Pb;
+    private double com_207Pb206Pb;
+    private double com_208Pb206Pb;
+    private double com_206Pb208Pb;
+    private double com_207Pb204Pb;
+    private double com_208Pb204Pb;
+
     /**
      *
      */
     public ShrimpFraction() {
-        fractionID = "NONE";
-        spotNumber = -1;
-        nameOfMount = "NONE";
-        dateTimeMilliseconds = 0l;
-        hours = 0.0;
-        deadTimeNanoseconds = 0;
-        sbmZeroCps = 0;
-        countTimeSec = new double[0];
-        namesOfSpecies = new String[0];
-        peakMeasurementsCount = 0;
-        isotopicRatiosII = new TreeSet<>();
-        rawPeakData = new int[0][0];
-        rawSBMData = new int[0][0];
-        totalCounts = new double[0][0];
-        totalCountsSBM = new double[0][0];
-        timeStampSec = new double[0][0];
-        trimMass = new double[0][0];
-        totalCps = new double[0];
-        netPkCps = new double[0][0];
-        pkFerr = new double[0][0];
-        referenceMaterial = false;
-        concentrationReferenceMaterial = false;
+        this.fractionID = "NONE";
+        this.spotNumber = -1;
+        this.nameOfMount = "NONE";
+        this.dateTimeMilliseconds = 0l;
+        this.hours = 0.0;
+        this.deadTimeNanoseconds = 0;
+        this.sbmZeroCps = 0;
+        this.stageX = 0;
+        this.stageY = 0;
+        this.stageZ = 0;
+        this.qt1Y = 0;
+        this.qt1Z = 0;
+        this.primaryBeam = 0;
+        this.countTimeSec = new double[0];
+        this.namesOfSpecies = new String[0];
+        this.peakMeasurementsCount = 0;
+        this.isotopicRatiosII = new TreeSet<>();
+        this.rawPeakData = new int[0][0];
+        this.rawSBMData = new int[0][0];
+        this.totalCounts = new double[0][0];
+        this.totalCountsSBM = new double[0][0];
+        this.timeStampSec = new double[0][0];
+        this.trimMass = new double[0][0];
+        this.totalCps = new double[0];
+        this.netPkCps = new double[0][0];
+        this.pkFerr = new double[0][0];
+        this.referenceMaterial = false;
+        this.concentrationReferenceMaterial = false;
 
-        reducedPkHt = new double[0][0];
-        reducedPkHtFerr = new double[0][0];
+        this.reducedPkHt = new double[0][0];
+        this.reducedPkHtFerr = new double[0][0];
 
-        pkInterpScanArray = new double[0];
+        this.pkInterpScanArray = new double[0];
 
-        taskExpressionsForScansEvaluated = new ArrayList<>();
+        this.taskExpressionsForScansEvaluated = new ArrayList<>();
 
-        taskExpressionsEvaluationsPerSpot = new HashMap<>();
+        this.taskExpressionsEvaluationsPerSpot = new HashMap<>();
 
         this.selected = true;
+        this.countOfNonPositiveSBMCounts = 0;
 
+        this.com_206Pb204Pb = 0.0;
+        this.com_207Pb206Pb = 0.0;
+        this.com_208Pb206Pb = 0.0;
+        this.com_206Pb208Pb = 0.0;
+        this.com_207Pb204Pb = 0.0;
+        this.com_208Pb204Pb = 0.0;
     }
 
     /**
@@ -748,5 +770,91 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setCountOfNonPositiveSBMCounts(int countOfNonPositiveSBMCounts) {
         this.countOfNonPositiveSBMCounts = countOfNonPositiveSBMCounts;
+    }
+
+    /**
+     * @return the com_206Pb204Pb
+     */
+    @Override
+    public double getCom_206Pb204Pb() {
+        return com_206Pb204Pb;
+    }
+
+    /**
+     * @param com_206Pb204Pb the com_206Pb204Pb to set
+     */
+    @Override
+    public void setCom_206Pb204Pb(double com_206Pb204Pb) {
+        this.com_206Pb204Pb = com_206Pb204Pb;
+    }
+
+    /**
+     * @return the com_207Pb206Pb
+     */
+    public double getCom_207Pb206Pb() {
+        return com_207Pb206Pb;
+    }
+
+    /**
+     * @param com_207Pb206Pb the com_207Pb206Pb to set
+     */
+    public void setCom_207Pb206Pb(double com_207Pb206Pb) {
+        this.com_207Pb206Pb = com_207Pb206Pb;
+    }
+
+    /**
+     * @return the com_208Pb206Pb
+     */
+    public double getCom_208Pb206Pb() {
+        return com_208Pb206Pb;
+    }
+
+    /**
+     * @param com_208Pb206Pb the com_208Pb206Pb to set
+     */
+    public void setCom_208Pb206Pb(double com_208Pb206Pb) {
+        this.com_208Pb206Pb = com_208Pb206Pb;
+    }
+
+    /**
+     * @return the com_206Pb208Pb
+     */
+    public double getCom_206Pb208Pb() {
+        return com_206Pb208Pb;
+    }
+
+    /**
+     * @param com_206Pb208Pb the com_206Pb208Pb to set
+     */
+    public void setCom_206Pb208Pb(double com_206Pb208Pb) {
+        this.com_206Pb208Pb = com_206Pb208Pb;
+    }
+
+    /**
+     * @return the com_207Pb204Pb
+     */
+    public double getCom_207Pb204Pb() {
+        return com_207Pb204Pb;
+    }
+
+    /**
+     * @param com_207Pb204Pb the com_207Pb204Pb to set
+     */
+    public void setCom_207Pb204Pb(double com_207Pb204Pb) {
+        this.com_207Pb204Pb = com_207Pb204Pb;
+    }
+
+    /**
+     * @return the com_208Pb204Pb
+     */
+    public double getCom_208Pb204Pb() {
+        return com_208Pb204Pb;
+    }
+
+    /**
+     * @param com_208Pb204Pb the com_208Pb204Pb to set
+     */
+    public void setCom_208Pb204Pb(double com_208Pb204Pb) {
+        this.com_208Pb204Pb = com_208Pb204Pb;
     }
 }

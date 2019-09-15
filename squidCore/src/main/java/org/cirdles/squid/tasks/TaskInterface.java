@@ -705,4 +705,6 @@ public interface TaskInterface {
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
+    
+    public void updateAllSpotsWithCurrentCommonPbModel();
 }

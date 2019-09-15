@@ -24,8 +24,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_64;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_74;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
@@ -77,8 +75,10 @@ public class Pb46cor7 extends Function {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
 
-            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
-            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_74).getValues()[0][0];
+            //double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
+            double sComm_64 = shrimpFractions.get(0).getCom_206Pb204Pb();
+//            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_74).getValues()[0][0];
+            double sComm_74 = shrimpFractions.get(0).getCom_207Pb204Pb();
 
             double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
             double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];

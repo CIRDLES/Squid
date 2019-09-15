@@ -104,6 +104,11 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_206B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
@@ -242,13 +247,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<String> missingExpressionsByName;
 
     protected boolean roundingForSquid3;
-    
+
     protected List<SquidReportTableInterface> squidReportTablesRefMat;
     protected List<SquidReportTableInterface> squidReportTablesUnknown;
-    
+
     protected OvercountCorrectionTypes overcountCorrectionType;
-    
-    
 
     public Task() {
         this("New Task", null, null);
@@ -355,10 +358,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.missingExpressionsByName = new ArrayList<>();
 
         this.roundingForSquid3 = false;
-        
+
         this.squidReportTablesRefMat = new ArrayList<>();
         this.squidReportTablesUnknown = new ArrayList<>();
-        
+
         this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
 
         generateConstants();
@@ -459,7 +462,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         taskDesign.setRatioNames(myRatioNames);
 
     }
-   
+
     private void generateConstants() {
         Map<String, ExpressionTreeInterface> constants = BuiltInExpressionsFactory.generateConstants();
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -758,6 +761,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 try {
                     shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+                    updateAllSpotsWithCurrentCommonPbModel();
                 } catch (Exception e) {
                 }
             }
@@ -808,6 +812,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
+    @Override
+    public void updateAllSpotsWithCurrentCommonPbModel() {
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            spot.setCom_206Pb204Pb(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue());
+            spot.setCom_207Pb206Pb(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue());
+            spot.setCom_208Pb206Pb(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
+            
+            spot.setCom_207Pb204Pb(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue());
+            spot.setCom_208Pb204Pb(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue());
+            spot.setCom_206Pb208Pb(1.0 / commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
+        }
+    }
+
     public void updateParametersFromModels() {
         boolean doUpdateAll
                 = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
@@ -822,6 +839,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 addExpression(exp, false);
                 updateAffectedExpressions(exp, false);
             }
+            // Sept 2019: assign values to individual spots
+            updateAllSpotsWithCurrentCommonPbModel();
+
             commonPbModelChanged = false;
         }
 
