@@ -140,13 +140,13 @@ public class ReportSpecificationsUPbReferenceMaterials15Dig extends ReportSpecif
         {"4-corr", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + TOTAL_208_232_RM, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
-        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM206PB_PCT, "",
+        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM206PB_PCT_RM, "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM208PB_PCT, "",
+        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM208PB_PCT_RM, "",
             "", "true", "false", "15", "", "", "false", "false"
         },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB206PB, "PCT",
+        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB206PB_RM, "PCT",
             "", "true", "false", "15", "true", "", "false", "false"
         },
         {"4-corr", "207Pb", "206Pb", "age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR207_206AGE_RM, "ABS",

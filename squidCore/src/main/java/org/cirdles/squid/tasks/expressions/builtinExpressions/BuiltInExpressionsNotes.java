@@ -160,13 +160,19 @@ public class BuiltInExpressionsNotes {
                 "Reference 238U/235U of Isotopic RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(AV_PARENT_ELEMENT_CONC_CONST,
-                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");
+                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");       
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB_RM,
+                "RM spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB,
-                "RM and Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
-        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
-                "RM and Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
+                "Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");      
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT_RM,
+                "RM spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
+         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
+                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");      
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT_RM,
+                "RM spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT,
-                "RM and Sample spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
+                "Sample spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_64,
                 "Assumed 206Pb/204Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");

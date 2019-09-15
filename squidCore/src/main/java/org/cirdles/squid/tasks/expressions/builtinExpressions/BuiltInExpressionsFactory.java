@@ -662,8 +662,8 @@ public abstract class BuiltInExpressionsFactory {
 
             Expression expression4corrSQUID_TH_U_EQN_NAME = buildExpression(PB4CORR + TH_U_EXP_RM,
                     "ValueModel("
-                    + "[\"" + PB4CORR + R208PB206PB + "\"]*" + exp238 + "/" + exp232 + ","
-                    + "SQRT([%\"" + PB4CORR + R208PB206PB + "\"]^2+"
+                    + "[\"" + PB4CORR + R208PB206PB_RM + "\"]*" + exp238 + "/" + exp232 + ","
+                    + "SQRT([%\"" + PB4CORR + R208PB206PB_RM + "\"]^2+"
                     + "[%\"" + PB4COR206_238CALIB_CONST + "\"]^2+"
                     + "[%\"" + PB4COR208_232CALIB_CONST + "\"]^2),"
                     + "false)", true, false, false);
@@ -857,9 +857,10 @@ public abstract class BuiltInExpressionsFactory {
          *
          */
         // for ref materials
-        Expression expression4corCom206 = buildExpression(PB4CORR + COM206PB_PCT,
-                "100*" + DEFCOM_64 + "*[" + R204206 + "]", true, true, false);
-        perSpotPbCorrectionsOrdered.add(expression4corCom206);
+        // sept 2019 - remove double duty RU expressions - 3 cases below
+        Expression expression4corCom206RM = buildExpression(PB4CORR + COM206PB_PCT_RM,
+                "100*" + DEFCOM_64 + "*[" + R204206 + "]", true, false, false);
+        perSpotPbCorrectionsOrdered.add(expression4corCom206RM);
 
         Expression expression7corCom206RM = buildExpression(PB7CORR + COM206PB_PCT_RM,
                 "100*" + DEFCOM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
@@ -869,15 +870,19 @@ public abstract class BuiltInExpressionsFactory {
                 "100*" + DEFCOM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"]", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206RM);
 
-        Expression expression4corCom208 = buildExpression(PB4CORR + COM208PB_PCT,
-                "100*" + DEFCOM_84 + "/[" + R208206 + "]*[" + R204206 + "]", true, true, false);
-        perSpotPbCorrectionsOrdered.add(expression4corCom208);
+        Expression expression4corCom208RM = buildExpression(PB4CORR + COM208PB_PCT_RM,
+                "100*" + DEFCOM_84 + "/[" + R208206 + "]*[" + R204206 + "]", true, false, false);
+        perSpotPbCorrectionsOrdered.add(expression4corCom208RM);
 
         Expression expression7corCom208RM = buildExpression(PB7CORR + COM208PB_PCT_RM,
                 "100*" + DEFCOM_84 + "/[" + R208206 + "]*[\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom208RM);
 
         // for samples
+        Expression expression4corCom206 = buildExpression(PB4CORR + COM206PB_PCT,
+                "100*" + DEFCOM_64 + "*[" + R204206 + "]", false, true, false);
+        perSpotPbCorrectionsOrdered.add(expression4corCom206);
+        
         Expression expression7corCom206 = buildExpression(PB7CORR + COM206PB_PCT,
                 "100*" + DEFCOM_64 + "*[\"" + PB7CORR + R204PB_206PB + "\"]", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom206);
@@ -885,6 +890,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression expression8corCom206 = buildExpression(PB8CORR + COM206PB_PCT,
                 "100*" + DEFCOM_64 + "*[\"" + PB8CORR + R204PB_206PB + "\"]", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206);
+        
+        Expression expression4corCom208 = buildExpression(PB4CORR + COM208PB_PCT,
+                "100*" + DEFCOM_84 + "/[" + R208206 + "]*[" + R204206 + "]", false, true, false);
+        perSpotPbCorrectionsOrdered.add(expression4corCom208);
 
         Expression expression7corCom208 = buildExpression(PB7CORR + COM208PB_PCT,
                 "100*" + DEFCOM_84 + "/[" + R208206 + "]*[\"" + PB7CORR + R204PB_206PB + "\"]", false, true, false);
@@ -893,6 +902,18 @@ public abstract class BuiltInExpressionsFactory {
         // The next step is to calculate all the applicable radiogenic 208Pb/206Pb values. 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr 208Pb*/206Pb*  *** Start
         // ref material and sample version
+        // Sept 2019 split apart
+        Expression expression4corr208Pb206PbRM = buildExpression(PB4CORR + R208PB206PB_RM,
+                "ValueModel("
+                + "([" + R208206 + "]/[" + R204206 + "]-" + DEFCOM_84 + ")/(1/[" + R204206 + "]-" + DEFCOM_64 + "),"
+                + "100*sqrt((([%" + R208206 + "]/100*[" + R208206 + "])^2+"
+                + "(([" + R208206 + "]/[" + R204206 + "]-" + DEFCOM_84 + ")/(1/[" + R204206 + "]-" + DEFCOM_64 + ")"
+                + "*" + DEFCOM_64 + "-" + DEFCOM_84 + ")^2*([%" + R204206 + "]/100*[" + R204206 + "])^2)"
+                + "/(1-" + DEFCOM_64 + "*[" + R204206 + "])^2)/"
+                + "abs(([" + R208206 + "]/[" + R204206 + "]-" + DEFCOM_84 + ")/(1/[" + R204206 + "]-" + DEFCOM_64 + ")),"
+                + "false)", true, false, false);
+        perSpotPbCorrectionsOrdered.add(expression4corr208Pb206PbRM);
+        
         Expression expression4corr208Pb206Pb = buildExpression(PB4CORR + R208PB206PB,
                 "ValueModel("
                 + "([" + R208206 + "]/[" + R204206 + "]-" + DEFCOM_84 + ")/(1/[" + R204206 + "]-" + DEFCOM_64 + "),"
@@ -901,7 +922,7 @@ public abstract class BuiltInExpressionsFactory {
                 + "*" + DEFCOM_64 + "-" + DEFCOM_84 + ")^2*([%" + R204206 + "]/100*[" + R204206 + "])^2)"
                 + "/(1-" + DEFCOM_64 + "*[" + R204206 + "])^2)/"
                 + "abs(([" + R208206 + "]/[" + R204206 + "]-" + DEFCOM_84 + ")/(1/[" + R204206 + "]-" + DEFCOM_64 + ")),"
-                + "false)", true, true, false);
+                + "false)", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression4corr208Pb206Pb);
 
         // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 4-corr 208Pb*/206Pb*  *** End
