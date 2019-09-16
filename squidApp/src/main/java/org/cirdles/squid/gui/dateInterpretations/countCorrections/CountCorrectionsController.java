@@ -54,7 +54,6 @@ public class CountCorrectionsController implements Initializable {
     @FXML
     private AnchorPane sampleTreeAnchorPane;
 
-//    private TreeView<String> spotsTreeViewString = new TreeView<>();
     private TreeView<TextFlow> spotsTreeViewTextFlow = new TreeView<>();
     @FXML
     private HBox headerHBox;
@@ -128,20 +127,11 @@ public class CountCorrectionsController implements Initializable {
             TreeItem<TextFlow> treeItemSampleInfo = new TreeItem<>(textFlowSampleInfo);
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
 
-                StringBuilder spotDataString = new StringBuilder();
                 double[][] r204_206 = spot.getIsotopicRatioValuesByStringName("204/206");
                 double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From207"));
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From208"));
-
-                spotDataString.append(String.format("%1$-" + 24 + "s", spot.getFractionID()));
-                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206[0][0])));
-                spotDataString.append(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1])));
-                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
-                spotDataString.append(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
-                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][0])));
-                spotDataString.append(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][1])));
 
                 TextFlow textFlowI = new TextFlow();
 
@@ -153,7 +143,7 @@ public class CountCorrectionsController implements Initializable {
                 textNoneValue.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(textNoneValue);
 
-                Text textNoneUnct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1])));
+                Text textNoneUnct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1] / r204_206[0][0] * 100.0)));
                 textNoneUnct.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(textNoneUnct);
 
@@ -161,15 +151,15 @@ public class CountCorrectionsController implements Initializable {
                 text207Value.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(text207Value);
 
-                Text text207Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
+                Text text207Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1] / r204_206_207[0][0] * 100.0)));
                 text207Unct.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(text207Unct);
                 
-                Text text208Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
+                Text text208Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][0])));
                 text208Value.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(text208Value);
 
-                Text text208Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1])));
+                Text text208Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_208[0][1] / r204_206_207[0][0] * 100.0)));
                 text208Unct.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
                 textFlowI.getChildren().add(text208Unct);
 
