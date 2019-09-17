@@ -1,125 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<SplitPane fx:id="mainPane" dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="702.0"
-           prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css"
-           xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
-    <items>
-        <VBox styleClass="backgroundCalamari">
-            <children>
-                <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="275.0" spacing="10.0"
-                      style="-fx-background-color: #eefbfb;">
-                    <children>
-                        <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expressions by:"
-                               translateY="2.0"/>
-                        <RadioButton id="NAME" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                     selected="true" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Name"
-                                     translateY="5.0">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="expressionsSortToggleGroup"/>
-                            </toggleGroup>
-                        </RadioButton>
-                        <RadioButton id="EXEC" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                     style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Exec"
-                                     toggleGroup="$expressionsSortToggleGroup" translateY="5.0"/>
-                        <RadioButton id="TARGET" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                     style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Target"
-                                     toggleGroup="$expressionsSortToggleGroup" translateY="5.0"/>
-                    </children>
-                    <padding>
-                        <Insets bottom="10.0" left="5.0"/>
-                    </padding>
-                </HBox>
-                <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
-                    <panes>
-                        <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false"
-                                    layoutY="1.0"
-                                    style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                    text="Custom Expressions">
-                            <content>
-                                <ListView fx:id="customExpressionsListView"/>
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0"
-                                    style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                    text="NU-switched Expressions with Uncts">
-                            <content>
-                                <ListView fx:id="nuSwitchedExpressionsListView"/>
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0"
-                                    style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                    text="Built-In Expressions">
-                            <content>
-                                <ListView fx:id="builtInExpressionsListView"/>
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false"
-                                    prefHeight="324.0" prefWidth="265.0"
-                                    style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;"
-                                    text="Reference Material Values (see Task Mgr)">
-                            <content>
-                                <ListView fx:id="referenceMaterialsListView"/>
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0"
-                                    prefHeight="324.0" prefWidth="265.0"
-                                    style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                    text="Parameters (see Task Mgr)">
-                            <content>
-                                <ListView fx:id="parametersListView"/>
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0"
-                                    style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;"
-                                    text="Unhealthy Expressions / Mismatched Targets ">
-                            <content>
-                                <ListView fx:id="brokenExpressionsListView"/>
-                            </content>
-                        </TitledPane>
-                    </panes>
-                    <opaqueInsets>
-                        <Insets/>
-                    </opaqueInsets>
-                </Accordion>
-            </children>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </VBox>
-        <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
-            <items>
-                <TitledPane animated="false" text="Categories">
-                    <content>
-                        <VBox prefHeight="200.0" prefWidth="100.0">
-                            <children>
-                                <HBox prefHeight="100.0" prefWidth="200.0">
-                                    <children>
-                                        <TextField fx:id="categoryTextField" promptText="Enter Category Name Here"
-                                                   HBox.hgrow="ALWAYS"/>
-                                        <Button mnemonicParsing="false" onAction="#createCategoryOnAction"
-                                                text="Create Category"/>
-                                    </children>
-                                </HBox>
-                                <ListView fx:id="categoryListView" prefHeight="200.0" prefWidth="200.0"/>
-                            </children>
-                        </VBox>
-                    </content>
-                </TitledPane>
-                <TitledPane fx:id="colunmnsTitledPane" animated="false" text="Columns">
-                    <content>
-                        <ListView fx:id="columnListView" prefHeight="200.0" prefWidth="200.0"/>
-                    </content>
-                </TitledPane>
-                <TitledPane animated="false" text="Column Details">
-                    <content>
-                        <TextArea fx:id="columnDetailsTextArea" prefHeight="200.0" prefWidth="200.0"/>
-                    </content>
-                </TitledPane>
-            </items>
-        </SplitPane>
-    </items>
-</SplitPane>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
+   <children>
+      <HBox alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ChoiceBox prefWidth="300.0" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+               </HBox.margin>
+            </ChoiceBox>
+            <Button mnemonicParsing="false" text="New" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Edit" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Save" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Cancel" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Delete" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Export" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" text="Import" HBox.hgrow="ALWAYS">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <SplitPane fx:id="mainPane" dividerPositions="0.5" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
+          <items>
+              <VBox styleClass="backgroundCalamari">
+                  <children>
+                      <HBox alignment="TOP_CENTER" prefHeight="27.0" prefWidth="275.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
+                          <children>
+                              <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expressions by:" translateY="2.0" />
+                              <RadioButton id="NAME" mnemonicParsing="false" onAction="#expressionSortToggleAction" selected="true" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Name" translateY="5.0">
+                                  <toggleGroup>
+                                      <ToggleGroup fx:id="expressionsSortToggleGroup" />
+                                  </toggleGroup>
+                              </RadioButton>
+                              <RadioButton id="EXEC" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Exec" toggleGroup="$expressionsSortToggleGroup" translateY="5.0" />
+                              <RadioButton id="TARGET" mnemonicParsing="false" onAction="#expressionSortToggleAction" style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Target" toggleGroup="$expressionsSortToggleGroup" translateY="5.0" />
+                          </children>
+                          <padding>
+                              <Insets bottom="10.0" left="5.0" />
+                          </padding>
+                      </HBox>
+                      <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
+                          <panes>
+                              <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
+                                  <content>
+                                      <ListView fx:id="customExpressionsListView" />
+                                  </content>
+                              </TitledPane>
+                              <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="NU-switched Expressions with Uncts">
+                                  <content>
+                                      <ListView fx:id="nuSwitchedExpressionsListView" />
+                                  </content>
+                              </TitledPane>
+                              <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Built-In Expressions">
+                                  <content>
+                                      <ListView fx:id="builtInExpressionsListView" />
+                                  </content>
+                              </TitledPane>
+                              <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
+                                  <content>
+                                      <ListView fx:id="referenceMaterialsListView" />
+                                  </content>
+                              </TitledPane>
+                              <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Parameters (see Task Mgr)">
+                                  <content>
+                                      <ListView fx:id="parametersListView" />
+                                  </content>
+                              </TitledPane>
+                              <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;" text="Unhealthy Expressions / Mismatched Targets ">
+                                  <content>
+                                      <ListView fx:id="brokenExpressionsListView" />
+                                  </content>
+                              </TitledPane>
+                          </panes>
+                          <opaqueInsets>
+                              <Insets />
+                          </opaqueInsets>
+                      </Accordion>
+                  </children>
+                  <padding>
+                      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  </padding>
+              </VBox>
+              <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+                  <items>
+                      <TitledPane animated="false" text="Categories">
+                          <content>
+                              <VBox prefHeight="200.0" prefWidth="100.0">
+                                  <children>
+                                      <HBox prefHeight="100.0" prefWidth="200.0">
+                                          <children>
+                                              <TextField fx:id="categoryTextField" promptText="Enter Category Name Here" HBox.hgrow="ALWAYS" />
+                                              <Button mnemonicParsing="false" onAction="#createCategoryOnAction" text="Create Category" />
+                                          </children>
+                                      </HBox>
+                                      <ListView fx:id="categoryListView" prefHeight="200.0" prefWidth="200.0" />
+                                  </children>
+                              </VBox>
+                          </content>
+                      </TitledPane>
+                      <TitledPane fx:id="colunmnsTitledPane" animated="false" text="Columns">
+                          <content>
+                              <ListView fx:id="columnListView" prefHeight="200.0" prefWidth="200.0" />
+                          </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Column Details">
+                          <content>
+                              <TextArea fx:id="columnDetailsTextArea" prefHeight="200.0" prefWidth="200.0" />
+                          </content>
+                      </TitledPane>
+                  </items>
+              </SplitPane>
+          </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

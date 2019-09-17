@@ -31,6 +31,7 @@ import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterf
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.net.URL;
@@ -375,9 +376,9 @@ public class SquidReportSettingsController implements Initializable {
     private void populateColumnDetails() {
         if (selectedColumn.getValue() != null) {
             String expName = selectedColumn.getValue().getExpressionName();
-            Expression exp = task.getExpressionByName(expName);
+            ExpressionTreeInterface exp = task.findNamedExpression(expName);
             if (exp != null) {
-                columnDetailsTextArea.setText(exp.getNotes());
+                columnDetailsTextArea.setText("");
             } else {
                 columnDetailsTextArea.setText("Could not locate expression tree");
             }

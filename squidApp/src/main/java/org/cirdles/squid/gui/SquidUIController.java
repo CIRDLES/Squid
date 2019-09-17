@@ -141,6 +141,8 @@ public class SquidUIController implements Initializable {
 
     private static SplitPane expressionBuilderUI;
 
+    private static AnchorPane squidReportSettingsUI;
+
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
@@ -387,6 +389,8 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(ratiosManagerUI);
 
         mainPane.getChildren().remove(expressionBuilderUI);
+
+        mainPane.getChildren().remove(squidReportSettingsUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
@@ -1552,6 +1556,22 @@ public class SquidUIController implements Initializable {
 
     @FXML
     public void reportLayoutManagerOnAction(ActionEvent actionEvent) {
-        squidReportSettingsLauncher.launch();
+        mainPane.getChildren().remove(squidReportSettingsUI);
+        try {
+            squidReportSettingsUI = FXMLLoader.load(getClass().getResource("squidReportTable/SquidReportSettings.fxml"));
+            squidReportSettingsUI.setId("SquidReportSettings");
+
+            AnchorPane.setLeftAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setRightAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setTopAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setBottomAnchor(squidReportSettingsUI, 0.0);
+
+            mainPane.getChildren().add(squidReportSettingsUI);
+            squidReportSettingsUI.setVisible(false);
+
+        } catch (IOException ex) {
+            Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showUI(squidReportSettingsUI);
     }
 }
