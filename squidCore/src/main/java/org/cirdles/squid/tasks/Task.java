@@ -818,10 +818,37 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.setCom_206Pb204Pb(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue());
             spot.setCom_207Pb206Pb(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue());
             spot.setCom_208Pb206Pb(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
-            
+
             spot.setCom_207Pb204Pb(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue());
             spot.setCom_208Pb204Pb(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue());
             spot.setCom_206Pb208Pb(1.0 / commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
+        }
+    }
+
+    public void updateAllUnknownSpotsWithOriginal204_206() {
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            ratio204_206.restoreRatioValueAndUnct();
+        }
+    }
+    
+    public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207() {
+        ExpressionTreeInterface countCorrectionExpression204From207 = namedExpressionsMap.get("CountCorrectionExpression204From207");
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From207);
+            ratio204_206.setRatioValUsed(r204_206_207[0][0]);
+            ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
+        }
+    }
+    
+    public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208() {
+        ExpressionTreeInterface countCorrectionExpression204From208 = namedExpressionsMap.get("CountCorrectionExpression204From208");
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From208);
+            ratio204_206.setRatioValUsed(r204_206_207[0][0]);
+            ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
         }
     }
 
@@ -1577,20 +1604,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private ExpressionTreeInterface buildRatioExpression(String ratioName) {
         // format of ratioName is "nnn/mmm"
-        ExpressionTreeInterface ratioExpression = null;
+        ExpressionTreeInterface ratioExpressionTree = null;
         if ((findNumerator(ratioName) != null) && (findDenominator(ratioName) != null)) {
-            ratioExpression
+            ratioExpressionTree
                     = new ExpressionTree(
                             ratioName,
                             ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
                             ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
                             Operation.divide());
 
-            ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
-            ratioExpression.setSquidSwitchSTReferenceMaterialCalculation(true);
-            ratioExpression.setSquidSwitchSAUnknownCalculation(true);
+            ((ExpressionTreeWithRatiosInterface) ratioExpressionTree).getRatiosOfInterest().add(ratioName);
+            ratioExpressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+            ratioExpressionTree.setSquidSwitchSAUnknownCalculation(true);
         }
-        return ratioExpression;
+        return ratioExpressionTree;
     }
 
     @Override

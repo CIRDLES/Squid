@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
 import java.net.URL;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -29,18 +30,17 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.SquidUI;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.Task;
 
 /**
  * FXML Controller class
@@ -89,11 +89,11 @@ public class CountCorrectionsController implements Initializable {
                 correction208RB.setSelected(true);
 
         }
-        showUnknowns();
+        showUnknownsWithOvercountCorrections();
 
     }
 
-    private void showUnknowns() {
+    private void showUnknownsWithOvercountCorrections() {
 
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
@@ -115,11 +115,6 @@ public class CountCorrectionsController implements Initializable {
         spotsTreeViewTextFlow.setShowRoot(true);
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
-//                // experimental formatting
-////                Formatter fmt = new Formatter();
-////                fmt.format("% .15g", r204_206_208[0][1]);
-////                spotDataString.append(fmt);
-
             TextFlow textFlowSampleInfo = new TextFlow();
             Text textSample = new Text(entry.getKey());
             textSample.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
@@ -135,34 +130,30 @@ public class CountCorrectionsController implements Initializable {
 
                 TextFlow textFlowI = new TextFlow();
 
-                Text textSampleName = new Text(String.format("%1$-" + 24 + "s", spot.getFractionID()));
+                Text textSampleName = new Text(String.format("%1$-" + 28 + "s", spot.getFractionID()));
                 textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
                 textFlowI.getChildren().add(textSampleName);
 
-                Text textNoneValue = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206[0][0])));
-                textNoneValue.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(textNoneValue);
+                // no correction
+                Formatter formatter = new Formatter();
+                formatter.format("% 24.14E   % 20.14f         ", r204_206[0][0], r204_206[0][1] / r204_206[0][0] * 100.0);
+                Text textNone = new Text(formatter.toString());
+                textNone.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(textNone);
 
-                Text textNoneUnct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206[0][1] / r204_206[0][0] * 100.0)));
-                textNoneUnct.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(textNoneUnct);
+                // 207 correction
+                formatter = new Formatter();
+                formatter.format("% 24.14E   % 20.14f         ", r204_206_207[0][0], r204_206_207[0][1] / r204_206_207[0][0] * 100.0);
+                Text text207 = new Text(formatter.toString());
+                text207.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text207);
 
-                Text text207Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_207[0][0])));
-                text207Value.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(text207Value);
-
-                Text text207Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_207[0][1] / r204_206_207[0][0] * 100.0)));
-                text207Unct.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(text207Unct);
-                
-                Text text208Value = new Text(String.format("%1$-" + 24 + "s", String.valueOf(r204_206_208[0][0])));
-                text208Value.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(text208Value);
-
-                Text text208Unct = new Text(String.format("%1$-" + 35 + "s", String.valueOf(r204_206_208[0][1] / r204_206_207[0][0] * 100.0)));
-                text208Unct.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
-                textFlowI.getChildren().add(text208Unct);
-
+                // 208 correction
+                formatter = new Formatter();
+                formatter.format("% 24.14E   % 20.14f         ", r204_206_208[0][0], r204_206_208[0][1] / r204_206_208[0][0] * 100.0);
+                Text text208 = new Text(formatter.toString());
+                text208.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textFlowI.getChildren().add(text208);
 
                 TreeItem<TextFlow> treeItemSampleI = new TreeItem<>(textFlowI);
                 treeItemSampleInfo.getChildren().add(treeItemSampleI);
@@ -177,18 +168,27 @@ public class CountCorrectionsController implements Initializable {
     @FXML
     private void correctionNoneAction(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
-        showUnknowns();
+        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOriginal204_206();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        SquidProject.setProjectChanged(true);
+        showUnknownsWithOvercountCorrections();
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_207);
-        showUnknowns();
+        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        SquidProject.setProjectChanged(true);
+        showUnknownsWithOvercountCorrections();
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_208);
-        showUnknowns();
+        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        SquidProject.setProjectChanged(true);
+        showUnknownsWithOvercountCorrections();
     }
 }

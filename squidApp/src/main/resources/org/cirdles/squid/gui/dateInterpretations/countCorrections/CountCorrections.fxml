@@ -12,14 +12,14 @@
    <children>
       <HBox fx:id="headerHBox" minHeight="25.0" prefHeight="25.0" prefWidth="1200.0" spacing="35.0" styleClass="backgroundCalamari">
          <children>
-            <Label style="-fx-font-family: SansSerif; -fx-font-size: 14;" text="     204 Overcount Corrections:" translateY="-2.0" />
-            <RadioButton fx:id="correctionNoneRB" mnemonicParsing="false" onAction="#correctionNoneAction" selected="true" text="Original 204/206         ±1σ %                         ">
+            <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="     204 Overcount Corrections:" translateY="-2.0" />
+            <RadioButton fx:id="correctionNoneRB" mnemonicParsing="false" onAction="#correctionNoneAction" selected="true" style="-fx-text-fill: #c53d13#c53d13;" text="Original 204/206         ±1σ %                         ">
                <toggleGroup>
                   <ToggleGroup fx:id="correctionsToggleGroup" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="correction207RB" layoutX="222.0" layoutY="13.0" mnemonicParsing="false" onAction="#correction207Action" text="Corrected from 207         ±1σ %                        " toggleGroup="$correctionsToggleGroup" />
-            <RadioButton fx:id="correction208RB" layoutX="534.0" layoutY="13.0" mnemonicParsing="false" onAction="#correction208Action" text="Corrected from 208         ±1σ %" toggleGroup="$correctionsToggleGroup" />
+            <RadioButton fx:id="correction207RB" layoutX="222.0" layoutY="13.0" mnemonicParsing="false" onAction="#correction207Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 207         ±1σ %                        " toggleGroup="$correctionsToggleGroup" />
+            <RadioButton fx:id="correction208RB" layoutX="534.0" layoutY="13.0" mnemonicParsing="false" onAction="#correction208Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 208         ±1σ %" toggleGroup="$correctionsToggleGroup" />
          </children>
          <padding>
             <Insets top="3.0" />
