@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -262,5 +263,9 @@ public interface ShrimpFractionExpressionInterface {
      * @param com_208Pb204Pb the com_208Pb204Pb to set
      */
     public void setCom_208Pb204Pb(double com_208Pb204Pb);
+
+    public ParametersModel getCommonLeadModel();
+
+    public void setCommonLeadModel(ParametersModel commonLeadModel);
 
 }

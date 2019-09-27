@@ -815,13 +815,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void updateAllSpotsWithCurrentCommonPbModel() {
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
-            spot.setCom_206Pb204Pb(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue());
-            spot.setCom_207Pb206Pb(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue());
-            spot.setCom_208Pb206Pb(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
-
-            spot.setCom_207Pb204Pb(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue());
-            spot.setCom_208Pb204Pb(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue());
-            spot.setCom_206Pb208Pb(1.0 / commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
+            spot.setCommonLeadModel(commonPbModel);
         }
     }
 
@@ -831,7 +825,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ratio204_206.restoreRatioValueAndUnct();
         }
     }
-    
+
     public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207() {
         ExpressionTreeInterface countCorrectionExpression204From207 = namedExpressionsMap.get("CountCorrectionExpression204From207");
         for (ShrimpFractionExpressionInterface spot : unknownSpots) {
@@ -841,7 +835,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
         }
     }
-    
+
     public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208() {
         ExpressionTreeInterface countCorrectionExpression204From208 = namedExpressionsMap.get("CountCorrectionExpression204From208");
         for (ShrimpFractionExpressionInterface spot : unknownSpots) {

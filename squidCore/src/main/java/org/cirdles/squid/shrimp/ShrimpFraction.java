@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -82,14 +83,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private int countOfNonPositiveSBMCounts;
 
-    // sept 2019 to accommodate the customization of individual sample spots
-    // common lead ratios
-    private double com_206Pb204Pb;
-    private double com_207Pb206Pb;
-    private double com_208Pb206Pb;
-    private double com_206Pb208Pb;
-    private double com_207Pb204Pb;
-    private double com_208Pb204Pb;
+    // sept 2019 to accommodate the customization of individual sample spots  
+    private CommonLeadSpecsForSpot commonLeadSpecsForSpot;
 
     /**
      *
@@ -135,13 +130,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         this.selected = true;
         this.countOfNonPositiveSBMCounts = 0;
-
-        this.com_206Pb204Pb = 0.0;
-        this.com_207Pb206Pb = 0.0;
-        this.com_208Pb206Pb = 0.0;
-        this.com_206Pb208Pb = 0.0;
-        this.com_207Pb204Pb = 0.0;
-        this.com_208Pb204Pb = 0.0;
+        
+        this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
     }
 
     /**
@@ -781,7 +771,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_206Pb204Pb() {
-        return com_206Pb204Pb;
+        return commonLeadSpecsForSpot.getCom_206Pb204Pb();
     }
 
     /**
@@ -789,76 +779,104 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_206Pb204Pb(double com_206Pb204Pb) {
-        this.com_206Pb204Pb = com_206Pb204Pb;
+        commonLeadSpecsForSpot.setCom_206Pb204Pb(com_206Pb204Pb);
     }
 
     /**
      * @return the com_207Pb206Pb
      */
+    @Override
     public double getCom_207Pb206Pb() {
-        return com_207Pb206Pb;
+        return commonLeadSpecsForSpot.getCom_207Pb206Pb();
     }
 
     /**
      * @param com_207Pb206Pb the com_207Pb206Pb to set
      */
+    @Override
     public void setCom_207Pb206Pb(double com_207Pb206Pb) {
-        this.com_207Pb206Pb = com_207Pb206Pb;
+        commonLeadSpecsForSpot.setCom_207Pb206Pb(com_207Pb206Pb);
     }
 
     /**
      * @return the com_208Pb206Pb
      */
+    @Override
     public double getCom_208Pb206Pb() {
-        return com_208Pb206Pb;
+        return commonLeadSpecsForSpot.getCom_208Pb206Pb();
     }
 
     /**
      * @param com_208Pb206Pb the com_208Pb206Pb to set
      */
+    @Override
     public void setCom_208Pb206Pb(double com_208Pb206Pb) {
-        this.com_208Pb206Pb = com_208Pb206Pb;
+        commonLeadSpecsForSpot.setCom_208Pb206Pb(com_208Pb206Pb);
     }
 
     /**
      * @return the com_206Pb208Pb
      */
+    @Override
     public double getCom_206Pb208Pb() {
-        return com_206Pb208Pb;
+        return commonLeadSpecsForSpot.getCom_206Pb208Pb();
     }
 
     /**
      * @param com_206Pb208Pb the com_206Pb208Pb to set
      */
+    @Override
     public void setCom_206Pb208Pb(double com_206Pb208Pb) {
-        this.com_206Pb208Pb = com_206Pb208Pb;
+        commonLeadSpecsForSpot.setCom_206Pb208Pb(com_206Pb208Pb);
     }
 
     /**
      * @return the com_207Pb204Pb
      */
+    @Override
     public double getCom_207Pb204Pb() {
-        return com_207Pb204Pb;
+        return commonLeadSpecsForSpot.getCom_207Pb204Pb();
     }
 
     /**
      * @param com_207Pb204Pb the com_207Pb204Pb to set
      */
+    @Override
     public void setCom_207Pb204Pb(double com_207Pb204Pb) {
-        this.com_207Pb204Pb = com_207Pb204Pb;
+        commonLeadSpecsForSpot.setCom_207Pb204Pb(com_207Pb204Pb);
     }
 
     /**
      * @return the com_208Pb204Pb
      */
+    @Override
     public double getCom_208Pb204Pb() {
-        return com_208Pb204Pb;
+        return commonLeadSpecsForSpot.getCom_208Pb204Pb();
     }
 
     /**
      * @param com_208Pb204Pb the com_208Pb204Pb to set
      */
+    @Override
     public void setCom_208Pb204Pb(double com_208Pb204Pb) {
-        this.com_208Pb204Pb = com_208Pb204Pb;
+        commonLeadSpecsForSpot.setCom_208Pb204Pb(com_208Pb204Pb);
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public ParametersModel getCommonLeadModel(){
+        return commonLeadSpecsForSpot.getCommonLeadModel();
+    }
+    
+    /**
+     * 
+     * @param commonLeadModel 
+     */
+    @Override
+    public void setCommonLeadModel(ParametersModel commonLeadModel){
+        commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
     }
 }
