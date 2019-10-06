@@ -879,4 +879,15 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     public void setCommonLeadModel(ParametersModel commonLeadModel){
         commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
     }
+
+    /**
+     * @return the commonLeadSpecsForSpot
+     */
+    @Override
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot;
+    }
 }

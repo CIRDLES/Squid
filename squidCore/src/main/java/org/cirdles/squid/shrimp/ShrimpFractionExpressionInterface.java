@@ -267,5 +267,10 @@ public interface ShrimpFractionExpressionInterface {
     public ParametersModel getCommonLeadModel();
 
     public void setCommonLeadModel(ParametersModel commonLeadModel);
+    
+    /**
+     * @return the commonLeadSpecsForSpot
+     */
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot();
 
 }

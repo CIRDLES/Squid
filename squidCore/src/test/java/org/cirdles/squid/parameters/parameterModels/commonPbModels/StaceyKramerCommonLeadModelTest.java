@@ -59,10 +59,12 @@ public class StaceyKramerCommonLeadModelTest {
         System.out.println("staceyKramerSingleStagePbR");
         ParametersModel physicalConstantsModel
                 = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
+        StaceyKramerCommonLeadModel.updatePhysicalConstants(physicalConstantsModel);
+        StaceyKramerCommonLeadModel.updateU_Ratio(137.88);
         double targetAge = 3.7E9;
         double[] expResult = new double[]{11.152, 12.998, 31.23};
         double[] result
-                = StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(physicalConstantsModel, targetAge);
+                = StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(targetAge);
         assertArrayEquals(expResult, result, SQUID_EPSILON);
 
     }

@@ -887,7 +887,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                //updateAffectedExpressions(exp, false);
             }
             referenceMaterialModelChanged = false;
         }
@@ -1783,6 +1782,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (Expression expression : taskExpressionsOrdered) {
             evaluateTaskExpression(expression.getExpressionTree());
+        }
+    }
+
+    public void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        // prep spots
+//        spotsForExpression.forEach((spot) -> {
+//            spot.getTaskExpressionsForScansEvaluated().clear();
+//        });
+
+        for (Expression expression : taskExpressionsOrdered) {
+            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+            if (expressionTree.amHealthy()) {
+                if (((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
+                    // now evaluate expressionTree
+                    try {
+                        evaluateExpressionForSpotSet(expressionTree, spotsForExpression);
+                    } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
+                    }
+                }
+            }
         }
     }
 

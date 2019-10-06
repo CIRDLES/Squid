@@ -15,9 +15,7 @@
  */
 package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
-import org.cirdles.squid.Squid;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 
 /**
@@ -32,49 +30,46 @@ public class StaceyKramerCommonLeadModel {
     private static final double SK_MU = 9.74;
     private static final double SK_KAPPA_MU = 3.78;
     private static final double SK_START_AGE = 3.7E9;
-    private static final double U_RATIO = 137.88;
+    private static double U_RATIO = 137.88;
+
+    private static double lambda238 = 0.0;
+    private static double lambda235 = 0.0;
+    private static double lambd232 = 0.0;
+
+    public static void updatePhysicalConstants(ParametersModel physicalConstantsModel) {
+        lambda238 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue();
+        lambda235 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue();
+        lambd232 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_232.getName()).getValue().doubleValue();
+    }
+
+    public static void updateU_Ratio(double u_ratio) {
+        U_RATIO = u_ratio;
+    }
 
     /**
      * Output is a 3-element vector of model [206Pb/204Pb, 207Pb/204Pb,
      * 208Pb/204Pb] corresponding to TargetAge, as per Stacey & Kramers (1975).
      *
-     * @param physicalConstantsModel
-     * @param age
-     * @return
+     * @param targetAge the value of targetAge
+     * @return the double[]
      */
-    public static double[] staceyKramerSingleStagePbR(
-            ParametersModel physicalConstantsModel,
-            double targetAge) {
-
-        double lambda238
-                = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue();
-        double lambda235
-                = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue();
-        double lambd232
-                = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_232.getName()).getValue().doubleValue();
+    public static double[] staceyKramerSingleStagePbR(double targetAge) {
 
         double[] PbLambda = new double[]{lambda238, lambda235, lambd232};
-
         double[] ParRat = new double[]{1.0, U_RATIO, (1.0 / SK_KAPPA_MU)};
-
         double[] PbR0 = new double[]{SK_ALPHA0, SK_BETA0, SK_GAMMA0};
-
         double[] MuIsh = new double[]{SK_MU, (SK_MU / U_RATIO), (SK_MU * SK_KAPPA_MU)};
-
         double[] PbExp = new double[]{Math.exp(SK_START_AGE * lambda238),
             Math.exp(SK_START_AGE * lambda235),
             Math.exp(SK_START_AGE * lambd232)};
-
         double[] eTerm = new double[3];
         double[] singleStagePbR = new double[3];
 
         for (int i = 0; i < 3; i++) {
-
             eTerm[i] = targetAge * PbLambda[i];
             singleStagePbR[i] = PbR0[i] + MuIsh[i] * (PbExp[i] - Math.exp(eTerm[i]));
-
         }
-
+        
         return singleStagePbR;
     }
 }

@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
@@ -192,14 +193,36 @@ public class CommonLeadSpecsForSpot implements Serializable {
     public void setCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;
         if (methodSelected == METHOD_COMMON_LEAD_MODEL) {
-            setCom_206Pb204Pb(commonPbModel.getDatumByName(R206_204B).getValue().doubleValue());
-            setCom_207Pb206Pb(commonPbModel.getDatumByName(R207_206B).getValue().doubleValue());
-            setCom_208Pb206Pb(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
-
-            setCom_207Pb204Pb(commonPbModel.getDatumByName(R207_204B).getValue().doubleValue());
-            setCom_208Pb204Pb(commonPbModel.getDatumByName(R208_204B).getValue().doubleValue());
-            setCom_206Pb208Pb(1.0 / commonPbModel.getDatumByName(R208_206B).getValue().doubleValue());
+            updateCommonLeadRatiosFromModel();
         }
     }
+
+    public void updateCommonLeadRatiosFromModel() {
+        setCom_206Pb204Pb(commonLeadModel.getDatumByName(R206_204B).getValue().doubleValue());
+        setCom_207Pb206Pb(commonLeadModel.getDatumByName(R207_206B).getValue().doubleValue());
+        setCom_208Pb206Pb(commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+
+        setCom_207Pb204Pb(commonLeadModel.getDatumByName(R207_204B).getValue().doubleValue());
+        setCom_208Pb204Pb(commonLeadModel.getDatumByName(R208_204B).getValue().doubleValue());
+        setCom_206Pb208Pb(1.0 / commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+    }
+    
+    /**
+     *
+     * @param targetAge the value of targetAge
+     */
+    public void updateCommonLeadRatiosFromSK(double targetAge) {
+        double[] staceyKramerSingleStagePbR = 
+                StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(targetAge);
+        
+        setCom_206Pb204Pb(staceyKramerSingleStagePbR[0]);
+        setCom_207Pb206Pb(staceyKramerSingleStagePbR[1]);
+        setCom_208Pb206Pb(staceyKramerSingleStagePbR[2]);
+
+        setCom_207Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[1]);
+        setCom_208Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[2]);
+        setCom_206Pb208Pb(1.0 /staceyKramerSingleStagePbR[2]);
+    }
+
 
 }
