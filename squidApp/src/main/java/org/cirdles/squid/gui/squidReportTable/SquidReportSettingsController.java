@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
@@ -88,7 +89,24 @@ public class SquidReportSettingsController implements Initializable {
     private ListView<SquidReportColumnInterface> columnListView;
     @FXML
     private TextArea columnDetailsTextArea;
-
+    @FXML
+    private Button newButton;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Button copyButton;
+    @FXML
+    private Button renameButton;
+    @FXML
+    private Button restoreButton;
+    @FXML
+    private Button deleteButton;
+    @FXML
+    private Button exportButton;
+    @FXML
+    private Button importButton;
+    @FXML
+    private TitledPane colunmnsTitledPane;
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportCategoryInterface> selectedCategory = new SimpleObjectProperty<>();
@@ -98,10 +116,17 @@ public class SquidReportSettingsController implements Initializable {
     public static Expression expressionToHighlightOnInit = null;
     private TaskInterface task;
 
+    private boolean isEditing;
+    @FXML
+    private HBox buttonHBox;
+
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
+        isEditing = false;
+
         //squidReportTable = task.getSquidReportTable();
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
@@ -115,6 +140,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
+        buttonHBox.getChildren().removeAll(saveButton, restoreButton);
     }
 
     @FXML
@@ -544,6 +570,19 @@ public class SquidReportSettingsController implements Initializable {
         String flag = ((RadioButton) expressionsSortToggleGroup.getSelectedToggle()).getId();
         orderExpressionListsByFlag(flag);
 
+    }
+
+    @FXML
+    private void toggleEditViewOnAction(ActionEvent event) {
+        if (isEditing) {
+            isEditing = false;
+            buttonHBox.getChildren().removeAll(restoreButton, saveButton);
+            buttonHBox.getChildren().addAll(newButton, copyButton, renameButton, deleteButton, exportButton, importButton);
+        } else {
+            isEditing = true;
+            buttonHBox.getChildren().removeAll(newButton, copyButton, renameButton, deleteButton, exportButton, importButton);
+            buttonHBox.getChildren().addAll(saveButton, restoreButton);
+        }
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
