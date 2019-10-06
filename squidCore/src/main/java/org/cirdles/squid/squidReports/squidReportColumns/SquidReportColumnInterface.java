@@ -115,9 +115,20 @@ public interface SquidReportColumnInterface {
     public void setVisible(boolean visible);
 
     /**
+     *
+     * @param uncertaintyColumn the uncertaintyColumn to set
+     */
+    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
+
+    /**
      * @param amIsotopicRatio the amIsotopicRatio to set
      */
     public void setAmIsotopicRatio(boolean amIsotopicRatio);
+
+    /**
+     * @return the countOfSignificantDigits
+     */
+    public int getCountOfSignificantDigits();
 
     static String formatBigDecimalForPublicationSigDigMode(
             BigDecimal number,
