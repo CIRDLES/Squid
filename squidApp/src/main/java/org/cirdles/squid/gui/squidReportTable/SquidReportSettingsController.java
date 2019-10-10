@@ -30,6 +30,7 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryI
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -37,11 +38,13 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.SquidUIController.squidReportTableLauncher;
 import static org.cirdles.squid.gui.squidReportTable.SquidReportSettingsLauncher.squidReportSettingsWindow;
 
 /**
@@ -585,12 +588,22 @@ public class SquidReportSettingsController implements Initializable {
         }
     }
 
+    private SquidReportTableInterface createSquidReportTable() {
+        SquidReportTableInterface table = SquidReportTable.createDefaultSquidReportTableRefMat(task);
+        table.setReportCategories(new LinkedList<>(categoryListView.getItems()));
+        return table;
+    }
+
+    @FXML
+    public void viewOnAction(ActionEvent actionEvent) {
+        SquidReportTableInterface table = createSquidReportTable();
+        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatCustom, table);
+    }
+
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
 
         public SquidReportCategoryInterfaceCellFactory() {
-        }
-
-        ;
+        };
 
         @Override
         public ListCell<SquidReportCategoryInterface> call(ListView<SquidReportCategoryInterface> param) {

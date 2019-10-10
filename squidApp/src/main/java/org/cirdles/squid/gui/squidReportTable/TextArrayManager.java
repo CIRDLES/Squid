@@ -41,7 +41,8 @@ public class TextArrayManager {
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
 
-        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown) {
+        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown ||
+                controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
             initializeAliquots();
             initializeSortPolicies();
         }
@@ -114,7 +115,7 @@ public class TextArrayManager {
 
         TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][3]);
         for (int i = 3; i < array[0].length - 1; i++) {
-            if (!array[0][i].equals(header.getText())) {
+            if (!array[0][i].equals(header.getText()) && !array[0][i].isEmpty()) {
                 table.getColumns().add(header);
                 header = new TableColumn<>(array[0][i].trim());
             }

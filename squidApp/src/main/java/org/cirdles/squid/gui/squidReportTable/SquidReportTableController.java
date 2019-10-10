@@ -18,6 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -26,8 +28,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 /**
  * FXML Controller class
@@ -50,6 +50,7 @@ public class SquidReportTableController implements Initializable {
     private boolean isSetUpScroller;
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
+    public static SquidReportTableInterface squidReportTable;
 
     /**
      * Initializes the controller class.
@@ -68,8 +69,10 @@ public class SquidReportTableController implements Initializable {
                 textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
                 break;
             case refMatCustom:
-                SquidReportTableInterface reportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
-                textArray = reportTable.reportSpotsInCustomTable(reportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
+                if (squidReportTable == null) {
+                    SquidReportTableInterface squidReportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
+                }
+                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
                 break;
             case unknown:
                 reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
@@ -77,8 +80,10 @@ public class SquidReportTableController implements Initializable {
                 textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
                 break;
             case unknownCustom:
-                reportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
-                textArray = reportTable.reportSpotsInCustomTable(reportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
+                if (squidReportTable == null) {
+                    squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
+                }
+                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
                 break;
 
             default:
