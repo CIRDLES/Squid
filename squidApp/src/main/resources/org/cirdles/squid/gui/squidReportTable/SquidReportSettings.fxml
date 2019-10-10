@@ -20,12 +20,12 @@
    <children>
       <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button mnemonicParsing="false" text="RefMat" HBox.hgrow="ALWAYS">
+            <Button fx:id="refMatUnknownToggleButton" mnemonicParsing="false" onAction="#refMatUnknownToggleButton" text="Unknown" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </Button>
-            <ChoiceBox prefWidth="300.0" HBox.hgrow="ALWAYS">
+            <ChoiceBox fx:id="reportTableCB" prefWidth="300.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>

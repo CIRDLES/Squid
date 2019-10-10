@@ -23,6 +23,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -54,6 +55,10 @@ import static org.cirdles.squid.gui.squidReportTable.SquidReportSettingsLauncher
  */
 public class SquidReportSettingsController implements Initializable {
 
+    @FXML
+    public ChoiceBox<SquidReportTableInterface> reportTableCB;
+    @FXML
+    public Button refMatUnknownToggleButton;
     @FXML
     private SplitPane mainPane;
     @FXML
@@ -110,6 +115,8 @@ public class SquidReportSettingsController implements Initializable {
     private Button importButton;
     @FXML
     private TitledPane colunmnsTitledPane;
+    @FXML
+    private HBox buttonHBox;
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportCategoryInterface> selectedCategory = new SimpleObjectProperty<>();
@@ -120,15 +127,14 @@ public class SquidReportSettingsController implements Initializable {
     private TaskInterface task;
 
     private boolean isEditing;
-    @FXML
-    private HBox buttonHBox;
-
+    private boolean isRefMat;
 
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
         isEditing = false;
+        isRefMat = true;
 
         //squidReportTable = task.getSquidReportTable();
         // update
@@ -136,6 +142,7 @@ public class SquidReportSettingsController implements Initializable {
 
         initSelectionActions();
         initListViews();
+        initReportTableCB();
 
         if (expressionToHighlightOnInit != null) {
             selectInAllPanes(expressionToHighlightOnInit, true);
@@ -144,6 +151,30 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+    }
+
+    private void initReportTableCB() {
+        reportTableCB.setConverter(new StringConverter<SquidReportTableInterface>() {
+            @Override
+            public String toString(SquidReportTableInterface object) {
+                return object.getReportTableName();
+            }
+
+            @Override
+            public SquidReportTableInterface fromString(String string) {
+                return null;
+            }
+        });
+        reportTableCB.getSelectionModel().selectedItemProperty().addListener(param -> {
+            populateCategoryListView();
+        });
+        populateSquidReportTableChoiceBox();
+        reportTableCB.getSelectionModel().selectFirst();
+    }
+
+    private void populateSquidReportTableChoiceBox() {
+        reportTableCB.getItems().setAll(FXCollections.observableArrayList((isRefMat) ? task.getSquidReportTablesRefMat()
+                : task.getSquidReportTablesUnknown()));
     }
 
     @FXML
@@ -525,22 +556,24 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (exp.amHealthy() && exp.isSquidSwitchNU()
-                    && !exp.aliasedExpression()) {
-                sortedNUSwitchedExpressionsList.add(exp);
-            } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
-                sortedReferenceMaterialValuesList.add(exp);
-            } else if (exp.isParameterValue() && exp.amHealthy()) {
-                sortedParameterValuesList.add(exp);
-            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
-                    && exp.amHealthy()
-                    && !exp.isSquidSwitchNU()
-                    && !exp.aliasedExpression()) {
-                sortedBuiltInExpressionsList.add(exp);
-            } else if (exp.isCustom() && exp.amHealthy()) {
-                sortedCustomExpressionsList.add(exp);
-            } else if (!exp.amHealthy()) {
-                sortedBrokenExpressionsList.add(exp);
+            if (exp.isReferenceMaterialValue() == isRefMat) {
+                if (exp.amHealthy() && exp.isSquidSwitchNU()
+                        && !exp.aliasedExpression()) {
+                    sortedNUSwitchedExpressionsList.add(exp);
+                } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
+                    sortedReferenceMaterialValuesList.add(exp);
+                } else if (exp.isParameterValue() && exp.amHealthy()) {
+                    sortedParameterValuesList.add(exp);
+                } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
+                        && exp.amHealthy()
+                        && !exp.isSquidSwitchNU()
+                        && !exp.aliasedExpression()) {
+                    sortedBuiltInExpressionsList.add(exp);
+                } else if (exp.isCustom() && exp.amHealthy()) {
+                    sortedCustomExpressionsList.add(exp);
+                } else if (!exp.amHealthy()) {
+                    sortedBrokenExpressionsList.add(exp);
+                }
             }
         }
 
@@ -597,13 +630,30 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public void viewOnAction(ActionEvent actionEvent) {
         SquidReportTableInterface table = createSquidReportTable();
-        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatCustom, table);
+        SquidReportTableLauncher.ReportTableTab tab = (isRefMat) ? SquidReportTableLauncher.ReportTableTab.refMatCustom
+                : SquidReportTableLauncher.ReportTableTab.unknownCustom;
+        squidReportTableLauncher.launch(tab, table);
+    }
+
+    @FXML
+    public void refMatUnknownToggleButton(ActionEvent actionEvent) {
+        if (isRefMat) {
+            isRefMat = false;
+            refMatUnknownToggleButton.setText("RefMat");
+        } else {
+            isRefMat = true;
+            refMatUnknownToggleButton.setText("Unknown");
+        }
+        populateSquidReportTableChoiceBox();
+        populateExpressionListViews();
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
 
         public SquidReportCategoryInterfaceCellFactory() {
-        };
+        }
+
+        ;
 
         @Override
         public ListCell<SquidReportCategoryInterface> call(ListView<SquidReportCategoryInterface> param) {
