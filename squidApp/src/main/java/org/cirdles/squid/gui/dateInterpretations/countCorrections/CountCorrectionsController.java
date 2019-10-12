@@ -168,27 +168,27 @@ public class CountCorrectionsController implements Initializable {
     @FXML
     private void correctionNoneAction(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
-        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOriginal204_206();
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOriginal204_206();
         SquidProject.setProjectChanged(true);
+        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
         showUnknownsWithOvercountCorrections();
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_207);
-        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
         SquidProject.setProjectChanged(true);
+        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
         showUnknownsWithOvercountCorrections();
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_208);
-        ((Task)squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
         SquidProject.setProjectChanged(true);
+        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
         showUnknownsWithOvercountCorrections();
     }
 }

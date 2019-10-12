@@ -273,4 +273,5 @@ public interface ShrimpFractionExpressionInterface {
      */
     public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot();
 
+    public String getSelectedAgeExpressionName();
 }

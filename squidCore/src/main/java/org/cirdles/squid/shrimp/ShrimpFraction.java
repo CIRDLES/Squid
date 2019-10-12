@@ -890,4 +890,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         }
         return commonLeadSpecsForSpot;
     }
+    
+    @Override
+    public String getSelectedAgeExpressionName(){
+        return commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
+    }
 }

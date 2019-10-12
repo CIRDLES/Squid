@@ -54,6 +54,9 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_CUSTOM_COMMON_LEAD;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -104,11 +107,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_206B;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
@@ -131,6 +129,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
@@ -1785,12 +1784,43 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    public void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {
-        // prep spots
-//        spotsForExpression.forEach((spot) -> {
-//            spot.getTaskExpressionsForScansEvaluated().clear();
-//        });
+    public void setUnknownGroupCommonLeadMethod(List<ShrimpFractionExpressionInterface> spotsForExpression, int methodFlag) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
+        }
+    }
+    
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
+        }
+    }
 
+    public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            List<ShrimpFractionExpressionInterface> spotList = new ArrayList<>();
+            spotList.add(spot);
+
+            if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_STACEY_KRAMER) {
+                ExpressionTreeInterface selectedAgeExpression
+                        = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
+                // run SK 5 times per Ludwig
+                for (int i = 0; i < 5; i++) {
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
+                            spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
+                    // update
+                    evaluateExpressionsForSampleGroup(spotList);
+                }
+            } else if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_COMMON_LEAD_MODEL) {
+                spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                evaluateExpressionsForSampleGroup(spotList);
+            } else if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_CUSTOM_COMMON_LEAD) {
+                    // todo
+            }
+        }
+    }
+
+    private void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {
         for (Expression expression : taskExpressionsOrdered) {
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             if (expressionTree.amHealthy()) {
