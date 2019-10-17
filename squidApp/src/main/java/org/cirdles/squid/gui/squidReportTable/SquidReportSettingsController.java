@@ -60,6 +60,8 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public Button refMatUnknownToggleButton;
     @FXML
+    public Button viewButton;
+    @FXML
     private SplitPane mainPane;
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
@@ -126,15 +128,22 @@ public class SquidReportSettingsController implements Initializable {
     public static Expression expressionToHighlightOnInit = null;
     private TaskInterface task;
 
-    private boolean isEditing;
     private boolean isRefMat;
+    private ObjectProperty<Boolean> isEditing = new SimpleObjectProperty<>();
+    private ObjectProperty<Boolean> isDefault = new SimpleObjectProperty<>();
 
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
-        isEditing = false;
+        initTask();
+
         isRefMat = true;
+
+        initReportTableCB();
+
+        initEditing();
+        initDefault();
 
         //squidReportTable = task.getSquidReportTable();
         // update
@@ -142,7 +151,6 @@ public class SquidReportSettingsController implements Initializable {
 
         initSelectionActions();
         initListViews();
-        initReportTableCB();
 
         if (expressionToHighlightOnInit != null) {
             selectInAllPanes(expressionToHighlightOnInit, true);
@@ -151,6 +159,39 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+    }
+
+    private void processButtons() {
+        if (isEditing.getValue()) {
+            buttonHBox.getChildren().setAll(viewButton, saveButton, restoreButton);
+        } else if (isDefault.getValue()) {
+            buttonHBox.getChildren().setAll(refMatUnknownToggleButton, reportTableCB, viewButton, newButton, copyButton,
+                    exportButton, importButton);
+        } else {
+            buttonHBox.getChildren().setAll(refMatUnknownToggleButton, reportTableCB, viewButton, newButton, copyButton,
+                    renameButton, deleteButton, exportButton, importButton);
+        }
+    }
+
+    private void initEditing() {
+        isEditing.setValue(false);
+        isEditing.addListener(ob -> processButtons());
+    }
+
+    private void initDefault() {
+        isDefault.setValue(false);
+        isDefault.addListener(ob -> processButtons());
+    }
+
+    private void initTask() {
+        List<SquidReportTableInterface> refMatTables = task.getSquidReportTablesRefMat();
+        if (refMatTables.isEmpty()) {
+            refMatTables.add(SquidReportTable.createDefaultSquidReportTableRefMat(task));
+        }
+        List<SquidReportTableInterface> unknownTables = task.getSquidReportTablesUnknown();
+        if (unknownTables.isEmpty()) {
+            unknownTables.add(SquidReportTable.createDefaultSquidReportTableUnknown(task));
+        }
     }
 
     private void initReportTableCB() {
@@ -173,8 +214,9 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void populateSquidReportTableChoiceBox() {
-        reportTableCB.getItems().setAll(FXCollections.observableArrayList((isRefMat) ? task.getSquidReportTablesRefMat()
+        reportTableCB.getItems().setAll(FXCollections.observableArrayList(isRefMat ? task.getSquidReportTablesRefMat()
                 : task.getSquidReportTablesUnknown()));
+        reportTableCB.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -402,6 +444,7 @@ public class SquidReportSettingsController implements Initializable {
                 items.add(col);
                 columnListView.getSelectionModel().select(col);
                 success = true;
+                isEditing.setValue(true);
             }
             event.setDropCompleted(success);
             event.consume();
@@ -608,19 +651,6 @@ public class SquidReportSettingsController implements Initializable {
 
     }
 
-    @FXML
-    private void toggleEditViewOnAction(ActionEvent event) {
-        if (isEditing) {
-            isEditing = false;
-            buttonHBox.getChildren().removeAll(restoreButton, saveButton);
-            buttonHBox.getChildren().addAll(newButton, copyButton, renameButton, deleteButton, exportButton, importButton);
-        } else {
-            isEditing = true;
-            buttonHBox.getChildren().removeAll(newButton, copyButton, renameButton, deleteButton, exportButton, importButton);
-            buttonHBox.getChildren().addAll(saveButton, restoreButton);
-        }
-    }
-
     private SquidReportTableInterface createSquidReportTable() {
         SquidReportTableInterface table = SquidReportTable.createDefaultSquidReportTableRefMat(task);
         table.setReportCategories(new LinkedList<>(categoryListView.getItems()));
@@ -725,6 +755,7 @@ public class SquidReportSettingsController implements Initializable {
                     columnListView.getSelectionModel().select(col);
                     success = true;
                     event.consume();
+                    isEditing.setValue(true);
                 } else {
                     SquidReportColumnInterface col = null;
                     for (int i = 0; col == null && i < items.size(); i++) {
@@ -735,6 +766,7 @@ public class SquidReportSettingsController implements Initializable {
                             columnListView.getSelectionModel().select(col);
                             success = true;
                             event.consume();
+                            isEditing.setValue(true);
                         }
                     }
                 }
@@ -868,6 +900,7 @@ public class SquidReportSettingsController implements Initializable {
             categoryListView.getSelectionModel().select(catIndex);
             categoryListView.scrollTo(catIndex);
             categoryListView.getFocusModel().focus(catIndex);
+            isEditing.setValue(true);
         } else {
             SquidMessageDialog.showWarningDialog("A category exists with the specified name.", squidReportSettingsWindow);
         }
