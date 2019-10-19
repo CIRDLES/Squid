@@ -259,13 +259,13 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface expCom_86 = buildSpotNode("getCom_208Pb206Pb");
         spotLookupFields.put(expCom_86.getName(), expCom_86);
-        
+
         ExpressionTreeInterface expCom_68 = buildSpotNode("getCom_206Pb208Pb");
         spotLookupFields.put(expCom_68.getName(), expCom_68);
-        
+
         ExpressionTreeInterface expCom_74 = buildSpotNode("getCom_207Pb204Pb");
         spotLookupFields.put(expCom_74.getName(), expCom_74);
-        
+
         ExpressionTreeInterface expCom_84 = buildSpotNode("getCom_208Pb204Pb");
         spotLookupFields.put(expCom_84.getName(), expCom_84);
 
@@ -1506,6 +1506,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression expressionNetAlpha = buildExpression(DEFRAD_206PB204PB,
                 TOTAL_206_204 + "-" + COM_64, false, true, false);
         samRadiogenicCols.add(expressionNetAlpha);
+        
+//        Expression expressionNetAlpha = buildExpression(DEFRAD_206PB204PB,
+//                "IF((" + TOTAL_206_204 + "-" + COM_64 + ")<0.0, 0.0," + TOTAL_206_204 + "-" + COM_64 + ")", false, true, false);
+//        samRadiogenicCols.add(expressionNetAlpha);
 
         Expression expressionBeta = buildExpression(TOTAL_207_204,
                 "[" + R207206 + "]/[" + R204206 + "]", false, true, false);
@@ -1514,6 +1518,9 @@ public abstract class BuiltInExpressionsFactory {
         Expression expressionNetBeta = buildExpression(DEFRAD_207PB204PB,
                 TOTAL_207_204 + "-" + COM_74, false, true, false);
         samRadiogenicCols.add(expressionNetBeta);
+//        Expression expressionNetBeta = buildExpression(DEFRAD_207PB204PB,
+//                "IF((" + TOTAL_207_204 + "-" + COM_74 + ")<0.0, 0.0," + TOTAL_207_204 + "-" + COM_74 + ")", false, true, false);
+//        samRadiogenicCols.add(expressionNetBeta);
 
         Expression expressionGamma = buildExpression(TOTAL_208_204,
                 "[" + R208206 + "]/[" + R204206 + "]", false, true, false);
@@ -1522,6 +1529,9 @@ public abstract class BuiltInExpressionsFactory {
         Expression expressionNetGamma = buildExpression(DEFRAD_208PB204PB,
                 TOTAL_208_204 + "-" + COM_84, false, true, false);
         samRadiogenicCols.add(expressionNetGamma);
+//        Expression expressionNetGamma = buildExpression(DEFRAD_208PB204PB,
+//                "IF((" + TOTAL_208_204 + "-" + COM_84 + ")<0.0, 0.0," + TOTAL_208_204 + "-" + COM_84 + ")", false, true, false);
+//        samRadiogenicCols.add(expressionNetGamma);
 
         Expression expressionRadd6 = buildExpression(RAD_206PB204PB_FACTOR,
                 DEFRAD_206PB204PB + "/" + TOTAL_206_204, false, true, false);

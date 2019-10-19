@@ -26,6 +26,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -36,6 +39,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
@@ -66,6 +70,8 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class CommonLeadAssignmentController implements Initializable {
+
+    private static boolean suppressChangeAction = false;
 
     @FXML
     private VBox vboxMaster;
@@ -162,6 +168,7 @@ public class CommonLeadAssignmentController implements Initializable {
                 treeItemSampleInfo.getChildren().add(treeItemSpotInfo);
             }
 
+            suppressChangeAction = true;
             // set radio button based on first spot
             switch (((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getCommonLeadSpecsForSpot().getMethodSelected()) {
                 case METHOD_COMMON_LEAD_MODEL:
@@ -178,6 +185,8 @@ public class CommonLeadAssignmentController implements Initializable {
             // set selected age radio button based on first spot
             String selectedAge = (((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getSelectedAgeExpressionName());
             ((RadioButton) ((CommonLeadSampleToolBar) treeItemSampleInfo.getValue()).lookup("#" + selectedAge)).setSelected(true);
+
+            suppressChangeAction = false;
 
             toolBarSampleType.addSpotDependency(toolBarSampleName);
             rootItemSamples.getChildren().add(treeItemSampleInfo);
@@ -276,9 +285,10 @@ public class CommonLeadAssignmentController implements Initializable {
             } else {
                 // we have a ratio
                 formatter.format("%7.4f", value);
-                fontIsBold = true;
+                fontIsBold = value > 0.0;
             }
 
+            // selected age in bold
             Label alabel = new Label(label);
             alabel.getStyleClass().clear();
             alabel.setFont(Font.font("Monospaced", fontIsBold ? FontWeight.BOLD : FontWeight.MEDIUM, 8));
@@ -290,6 +300,10 @@ public class CommonLeadAssignmentController implements Initializable {
             Label aValue = new Label(formatter.toString());
             aValue.getStyleClass().clear();
             aValue.setFont(Font.font("Monospaced", fontIsBold ? FontWeight.BOLD : FontWeight.MEDIUM, 12));
+            if ((value <= 0.0)|| Double.isNaN(value)) {
+                aValue.setTextFill(Paint.valueOf("red"));
+                aValue.setFont(Font.font("Monospaced", FontWeight.BOLD, 12));
+            }
             aValue.setPrefWidth(100);
             aValue.setMinWidth(USE_PREF_SIZE);
             aValue.setPrefHeight(20);
@@ -299,7 +313,7 @@ public class CommonLeadAssignmentController implements Initializable {
             Label bValue = new Label(unct > 0.0 ? ABS_UNCERTAINTY_DIRECTIVE + " " + formatter.format("%10.7f", unct / 1e6).toString() : "");
             bValue.getStyleClass().clear();
             bValue.setFont(Font.font("Monospaced", fontIsBold ? FontWeight.BOLD : FontWeight.MEDIUM, 12));
-            bValue.setPrefWidth(100);
+            bValue.setPrefWidth(102);
             bValue.setMinWidth(USE_PREF_SIZE);
             bValue.setPrefHeight(20);
             bValue.setMinHeight(USE_PREF_SIZE);
@@ -350,6 +364,8 @@ public class CommonLeadAssignmentController implements Initializable {
         protected RadioButton chooseModelRB;
         @FXML
         protected RadioButton chooseSKRB;
+        @FXML
+        protected RadioButton chooseCustomRB;
 
         @FXML
         protected ComboBox<ParametersModel> commonLeadModels;
@@ -357,11 +373,18 @@ public class CommonLeadAssignmentController implements Initializable {
         @FXML
         protected VBox nodNameVbox;
         @FXML
-        protected VBox commonLeadModelsRBsVbox;
+        protected VBox commonLeadModelsRBVbox;
         @FXML
         protected VBox commonLeadModelsVbox;
         @FXML
-        protected VBox staceyKramerRBsVbox;
+        protected VBox staceyKramerRBVbox;
+        @FXML
+        protected VBox customModelRBVbox;
+        @FXML
+        protected VBox customModelButtonVbox;
+
+        @FXML
+        protected Button customButton;
 
         protected List<ShrimpFractionExpressionInterface> sampleGroup;
 
@@ -376,14 +399,14 @@ public class CommonLeadAssignmentController implements Initializable {
             nodeName = new TextField(sampleGroupName);
             nodeName.getStyleClass().clear();
             nodeName.setFont(Font.font("Monospaced", FontWeight.BOLD, 12));
-            nodeName.setPrefWidth(75);
+            nodeName.setPrefWidth(65);
             nodeName.setMinWidth(USE_PREF_SIZE);
             nodeName.setPrefHeight(20);
             nodeName.setMinHeight(USE_PREF_SIZE);
             nodNameVbox.getChildren().add(nodeName);
             getChildren().add(nodNameVbox);
 
-            commonLeadModelsRBsVbox = new VBox();
+            commonLeadModelsRBVbox = new VBox();
             chooseModelRB = new RadioButton();
             chooseModelRB.setId("model");
             chooseModelRB.setPrefWidth(27);
@@ -395,7 +418,7 @@ public class CommonLeadAssignmentController implements Initializable {
             chooseModelRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
+                    if (newValue && !suppressChangeAction) {
                         if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
                                 treeItem.getChooseModelRB().setSelected(newValue);
@@ -412,8 +435,8 @@ public class CommonLeadAssignmentController implements Initializable {
                     }
                 }
             });
-            commonLeadModelsRBsVbox.getChildren().add(chooseModelRB);
-            getChildren().add(commonLeadModelsRBsVbox);
+            commonLeadModelsRBVbox.getChildren().add(chooseModelRB);
+            getChildren().add(commonLeadModelsRBVbox);
 
             commonLeadModelsVbox = new VBox();
             commonLeadModels = new ComboBox<>();
@@ -426,8 +449,35 @@ public class CommonLeadAssignmentController implements Initializable {
             commonLeadModelsVbox.getChildren().add(commonLeadModels);
             this.getChildren().add(commonLeadModelsVbox);
 
+            // custom
+//            customModelRBVbox = new VBox();
+//            chooseCustomRB = new RadioButton();
+//            chooseCustomRB.setId("model");
+//            chooseCustomRB.setPrefWidth(27);
+//            chooseCustomRB.setMinWidth(USE_PREF_SIZE);
+//            chooseCustomRB.setPrefHeight(25);
+//            chooseCustomRB.setMinHeight(USE_PREF_SIZE);
+//            chooseCustomRB.setTranslateX(10);
+//            chooseCustomRB.setToggleGroup(methodRB_ToggleGroup);
+//            customModelRBVbox.getChildren().add(chooseCustomRB);
+//            getChildren().add(customModelRBVbox);
+//
+//            customModelButtonVbox = new VBox();
+//            customButton = new Button("Custom");
+//            customButton.setStyle(customButton.getStyle() + "-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+//            customButton.setPrefWidth(55);
+//            customButton.setMinWidth(USE_PREF_SIZE);
+//            customButton.setPrefHeight(22);
+//            customButton.setMinHeight(USE_PREF_SIZE);
+//            customButton.setAlignment(Pos.CENTER);
+//            //customButton.setTranslateY(-3);	
+//            //customButton.setPadding(new Insets(5, -2, 5, -2));
+//
+//            customModelButtonVbox.getChildren().add(customButton);
+//            getChildren().add(customModelButtonVbox);
+
             // stacey Kramer
-            staceyKramerRBsVbox = new VBox();
+            staceyKramerRBVbox = new VBox();
             chooseSKRB = new RadioButton("SK");
             chooseSKRB.setId("SK");
             chooseSKRB.setPrefWidth(35);
@@ -439,7 +489,7 @@ public class CommonLeadAssignmentController implements Initializable {
             chooseSKRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
+                    if (newValue && !suppressChangeAction) {
                         if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
                                 treeItem.getChooseSKRB().setSelected(newValue);
@@ -456,11 +506,11 @@ public class CommonLeadAssignmentController implements Initializable {
                     }
                 }
             });
-            staceyKramerRBsVbox.getChildren().add(chooseSKRB);
-            getChildren().add(staceyKramerRBsVbox);
+            staceyKramerRBVbox.getChildren().add(chooseSKRB);
+            getChildren().add(staceyKramerRBVbox);
 
             HBox ageChoosersHBox = new HBox();
-            ageChoosersHBox.setTranslateX(90);
+            ageChoosersHBox.setTranslateX(100);//15);
 
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(SampleAgeTypesEnum.PB4COR206_238AGE, PB4CORR));
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(SampleAgeTypesEnum.PB4COR208_232AGE, PB4CORR));
@@ -480,7 +530,7 @@ public class CommonLeadAssignmentController implements Initializable {
             ageRB.setId(sampleAgeType.getExpressionName());
             ageRB.setToggleGroup(ageRB_ToggleGroup);
             ageRB.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
-            ageRB.setPrefWidth(108);
+            ageRB.setPrefWidth(107);
             ageRB.setMinWidth(USE_PREF_SIZE);
             ageRB.setPrefHeight(25);
             ageRB.setMinHeight(USE_PREF_SIZE);
@@ -488,7 +538,7 @@ public class CommonLeadAssignmentController implements Initializable {
             ageRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (newValue) {
+                    if (newValue && !suppressChangeAction) {
                         if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
                                 ((RadioButton) ((CommonLeadSampleToolBar) treeItem).lookup("#" + sampleAgeType.getExpressionName())).setSelected(true);

@@ -69,7 +69,7 @@ public class StaceyKramerCommonLeadModel {
             eTerm[i] = targetAge * PbLambda[i];
             singleStagePbR[i] = PbR0[i] + MuIsh[i] * (PbExp[i] - Math.exp(eTerm[i]));
         }
-        
+      
         return singleStagePbR;
     }
 }

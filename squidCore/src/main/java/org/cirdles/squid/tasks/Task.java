@@ -1789,7 +1789,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
         }
     }
-    
+
     public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
@@ -1801,21 +1801,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             List<ShrimpFractionExpressionInterface> spotList = new ArrayList<>();
             spotList.add(spot);
 
-            if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_STACEY_KRAMER) {
-                ExpressionTreeInterface selectedAgeExpression
-                        = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
-                // run SK 5 times per Ludwig
-                for (int i = 0; i < 5; i++) {
-                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
-                            spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
-                    // update
+            switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
+                case METHOD_STACEY_KRAMER:
+                    // per Bodorkos Oct 2019 first restore original age values
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
                     evaluateExpressionsForSampleGroup(spotList);
-                }
-            } else if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_COMMON_LEAD_MODEL) {
-                spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
-                evaluateExpressionsForSampleGroup(spotList);
-            } else if (spot.getCommonLeadSpecsForSpot().getMethodSelected() == METHOD_CUSTOM_COMMON_LEAD) {
-                    // todo
+                    ExpressionTreeInterface selectedAgeExpression
+                            = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
+                    // run SK 5 times per Ludwig
+                    for (int i = 0; i < 5; i++) {
+                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
+                                spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
+                        // update
+                        evaluateExpressionsForSampleGroup(spotList);
+                    }
+                    break;
+                case METHOD_COMMON_LEAD_MODEL:
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                    evaluateExpressionsForSampleGroup(spotList);
+                    break;
+                // todo
+                case METHOD_CUSTOM_COMMON_LEAD:
+                    break;
+                default:
+                    break;
             }
         }
     }

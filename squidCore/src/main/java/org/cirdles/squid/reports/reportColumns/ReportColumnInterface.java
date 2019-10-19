@@ -431,7 +431,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
-
+                        if (Double.isNaN(doubleValue)){retVal[0] = "NaN";}
                         if (isNumeric) {
                             retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
@@ -461,7 +461,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
-
+                        if (Double.isNaN(doubleValue)){retVal[0] = "NaN";}
                         if (isNumeric) {
                             retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
@@ -489,7 +489,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                 new Class[]{String.class});
 
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
-
+                        
+                        if (Double.isNaN(vm[0])){retVal[0] = "NaN";}
                         if (isNumeric) {
                             retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
                         } else if (isDisplayedWithArbitraryDigitCount()) {

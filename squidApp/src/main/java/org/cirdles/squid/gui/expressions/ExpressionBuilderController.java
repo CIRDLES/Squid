@@ -47,7 +47,6 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
-import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.constants.Squid3Constants.*;
 import org.cirdles.squid.exceptions.SquidException;
@@ -94,7 +93,6 @@ import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardConte
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -103,7 +101,6 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
-import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -2256,11 +2253,16 @@ public class ExpressionBuilderController implements Initializable {
 
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                        Formatter formatter = new Formatter();
-                        for (int i = 0; i < resultLabels[0].length; i++) {
-                            formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(results[0][i], sigDigits));
+
+                        if (Double.isNaN(results[0][0])) {
+                            sb.append("NaN");
+                        } else {
+                            Formatter formatter = new Formatter();
+                            for (int i = 0; i < resultLabels[0].length; i++) {
+                                formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(results[0][i], sigDigits));
+                            }
+                            sb.append(formatter.toString());
                         }
-                        sb.append(formatter.toString());
 //                        
 //                        
 //                        try {
@@ -2282,11 +2284,16 @@ public class ExpressionBuilderController implements Initializable {
                         sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                        Formatter formatter = new Formatter();
-                        for (int i = 0; i < results[0].length; i++) {
-                            formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(results[0][i], sigDigits));
+
+                        if (Double.isNaN(results[0][0])) {
+                            sb.append("NaN");
+                        } else {
+                            Formatter formatter = new Formatter();
+                            for (int i = 0; i < results[0].length; i++) {
+                                formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(results[0][i], sigDigits));
+                            }
+                            sb.append(formatter.toString());
                         }
-                        sb.append(formatter.toString());
 
 //                        for (int i = 0; i < results[0].length; i++) {
 //                            try {
@@ -2303,9 +2310,13 @@ public class ExpressionBuilderController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
 
-                        Formatter formatter = new Formatter();
-                        formatter.format("% 20.14E   % 20.14E   % 20.14f   ", results[0][0], results[0][1], calcPercentUnct(results[0]));
-                        sb.append(formatter.toString());
+                        if (Double.isNaN(results[0][0])) {
+                            sb.append("NaN");
+                        } else {
+                            Formatter formatter = new Formatter();
+                            formatter.format("% 20.14E   % 20.14E   % 20.14f   ", results[0][0], results[0][1], calcPercentUnct(results[0]));
+                            sb.append(formatter.toString());
+                        }
 
                         sb.append("\n");
                     }
@@ -2317,22 +2328,30 @@ public class ExpressionBuilderController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
-                        double[] resultsWithPct = new double[0];
-                        if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
-                            resultsWithPct = new double[1];
-                            resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                        } else if (results[0].length > 1) {
-                            resultsWithPct = new double[3];
-                            resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                            resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                            resultsWithPct[2] = calcPercentUnct(results[0]);
-                        }
+                        if (Double.isNaN(results[0][0])) {
+                            sb.append("NaN");
+                        } else {
+                            double[] resultsWithPct = new double[0];
+                            if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
+                                resultsWithPct = new double[1];
+                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                            } else if (results[0].length > 1) {
+                                resultsWithPct = new double[3];
+                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                resultsWithPct[2] = calcPercentUnct(results[0]);
+                            }
 
-                        Formatter formatter = new Formatter();
-                        for (int i = 0; i < resultsWithPct.length; i++) {
-                            formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
+                            Formatter formatter = new Formatter();
+                            if (Double.isNaN(results[0][0])) {
+                                sb.append("NaN");
+                            } else {
+                                for (int i = 0; i < resultsWithPct.length; i++) {
+                                    formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
+                                }
+                                sb.append(formatter.toString());
+                            }
                         }
-                        sb.append(formatter.toString());
 
 //                        for (int i = 0; i < resultsWithPct.length; i++) {
 //                            try {
@@ -2358,10 +2377,14 @@ public class ExpressionBuilderController implements Initializable {
 
                     double[][] results
                             = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                    Formatter formatter = new Formatter();
+                    if (Double.isNaN(results[0][0])) {
+                        sb.append("NaN");
+                    } else {
+                        Formatter formatter = new Formatter();
 
-                    formatter.format("%1$-20s   ", squid3RoundedToSize(results[0][0], sigDigits));
-                    sb.append(formatter.toString());
+                        formatter.format("%1$-20s   ", squid3RoundedToSize(results[0][0], sigDigits));
+                        sb.append(formatter.toString());
+                    }
 
 //                    try {
 //                        double[][] results
@@ -2387,14 +2410,19 @@ public class ExpressionBuilderController implements Initializable {
                     try {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                        Formatter formatter = new Formatter();
-                        if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
-                            sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
-                        } else {
-                            formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
-                        }
 
-                        sb.append(formatter.toString());
+                        if (Double.isNaN(results[0][0])) {
+                            sb.append("NaN");
+                        } else {
+                            Formatter formatter = new Formatter();
+                            if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
+                                sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
+                            } else {
+                                formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
+                            }
+
+                            sb.append(formatter.toString());
+                        }
 
                     } catch (Exception e) {
                     }
