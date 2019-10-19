@@ -1,0 +1,228 @@
+/*
+ * Copyright 2019 James F. Bowring and CIRDLES.org.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.cirdles.squid.shrimp;
+
+import java.io.Serializable;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_204B;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_206B;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+
+/**
+ *
+ * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
+ */
+public class CommonLeadSpecsForSpot implements Serializable {
+
+    private static final long serialVersionUID = -3180471908770010857L;
+
+    public static final int METHOD_COMMON_LEAD_MODEL = 0;
+    public static final int METHOD_STACEY_KRAMER = 1;
+    public static final int METHOD_CUSTOM_COMMON_LEAD = 2;
+
+    private double com_206Pb204Pb;
+    private double com_207Pb206Pb;
+    private double com_208Pb206Pb;
+    private double com_206Pb208Pb;
+    private double com_207Pb204Pb;
+    private double com_208Pb204Pb;
+
+    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = custom
+    private int methodSelected;
+
+    private SampleAgeTypesEnum sampleAgeType;
+
+    private ParametersModel commonLeadModel;
+
+    public CommonLeadSpecsForSpot() {
+        this.com_206Pb204Pb = 0.0;
+        this.com_207Pb206Pb = 0.0;
+        this.com_208Pb206Pb = 0.0;
+        this.com_206Pb208Pb = 0.0;
+        this.com_207Pb204Pb = 0.0;
+        this.com_208Pb204Pb = 0.0;
+
+        this.methodSelected = METHOD_COMMON_LEAD_MODEL;
+
+        this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
+
+        this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
+    }
+
+    /**
+     * @return the com_206Pb204Pb
+     */
+    public double getCom_206Pb204Pb() {
+        return com_206Pb204Pb;
+    }
+
+    /**
+     * @param com_206Pb204Pb the com_206Pb204Pb to set
+     */
+    public void setCom_206Pb204Pb(double com_206Pb204Pb) {
+        this.com_206Pb204Pb = com_206Pb204Pb;
+    }
+
+    /**
+     * @return the com_207Pb206Pb
+     */
+    public double getCom_207Pb206Pb() {
+        return com_207Pb206Pb;
+    }
+
+    /**
+     * @param com_207Pb206Pb the com_207Pb206Pb to set
+     */
+    public void setCom_207Pb206Pb(double com_207Pb206Pb) {
+        this.com_207Pb206Pb = com_207Pb206Pb;
+    }
+
+    /**
+     * @return the com_208Pb206Pb
+     */
+    public double getCom_208Pb206Pb() {
+        return com_208Pb206Pb;
+    }
+
+    /**
+     * @param com_208Pb206Pb the com_208Pb206Pb to set
+     */
+    public void setCom_208Pb206Pb(double com_208Pb206Pb) {
+        this.com_208Pb206Pb = com_208Pb206Pb;
+    }
+
+    /**
+     * @return the com_206Pb208Pb
+     */
+    public double getCom_206Pb208Pb() {
+        return com_206Pb208Pb;
+    }
+
+    /**
+     * @param com_206Pb208Pb the com_206Pb208Pb to set
+     */
+    public void setCom_206Pb208Pb(double com_206Pb208Pb) {
+        this.com_206Pb208Pb = com_206Pb208Pb;
+    }
+
+    /**
+     * @return the com_207Pb204Pb
+     */
+    public double getCom_207Pb204Pb() {
+        return com_207Pb204Pb;
+    }
+
+    /**
+     * @param com_207Pb204Pb the com_207Pb204Pb to set
+     */
+    public void setCom_207Pb204Pb(double com_207Pb204Pb) {
+        this.com_207Pb204Pb = com_207Pb204Pb;
+    }
+
+    /**
+     * @return the com_208Pb204Pb
+     */
+    public double getCom_208Pb204Pb() {
+        return com_208Pb204Pb;
+    }
+
+    /**
+     * @param com_208Pb204Pb the com_208Pb204Pb to set
+     */
+    public void setCom_208Pb204Pb(double com_208Pb204Pb) {
+        this.com_208Pb204Pb = com_208Pb204Pb;
+    }
+
+    /**
+     * @return the methodSelected
+     */
+    public int getMethodSelected() {
+        return methodSelected;
+    }
+
+    /**
+     * @param methodSelected the methodSelected to set
+     */
+    public void setMethodSelected(int methodSelected) {
+        this.methodSelected = methodSelected;
+    }
+
+    /**
+     * @return the sampleAgeType
+     */
+    public SampleAgeTypesEnum getSampleAgeType() {
+        return sampleAgeType;
+    }
+
+    /**
+     * @param sampleAgeType the sampleAgeType to set
+     */
+    public void setSampleAgeType(SampleAgeTypesEnum sampleAgeType) {
+        this.sampleAgeType = sampleAgeType;
+    }
+
+    /**
+     * @return the commonLeadModel
+     */
+    public ParametersModel getCommonLeadModel() {
+        return commonLeadModel;
+    }
+
+    /**
+     * @param commonPbModel
+     * @param commonLeadModel the commonLeadModel to set
+     */
+    public void setCommonLeadModel(ParametersModel commonPbModel) {
+        this.commonLeadModel = commonPbModel;
+        if (methodSelected == METHOD_COMMON_LEAD_MODEL) {
+            updateCommonLeadRatiosFromModel();
+        }
+    }
+
+    public void updateCommonLeadRatiosFromModel() {
+        setCom_206Pb204Pb(commonLeadModel.getDatumByName(R206_204B).getValue().doubleValue());
+        setCom_207Pb206Pb(commonLeadModel.getDatumByName(R207_206B).getValue().doubleValue());
+        setCom_208Pb206Pb(commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+
+        setCom_207Pb204Pb(commonLeadModel.getDatumByName(R207_204B).getValue().doubleValue());
+        setCom_208Pb204Pb(commonLeadModel.getDatumByName(R208_204B).getValue().doubleValue());
+        setCom_206Pb208Pb(1.0 / commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+    }
+    
+    /**
+     *
+     * @param targetAge the value of targetAge
+     */
+    public void updateCommonLeadRatiosFromSK(double targetAge) {
+        double[] staceyKramerSingleStagePbR = 
+                StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(targetAge);
+        
+        setCom_206Pb204Pb(staceyKramerSingleStagePbR[0]);
+        setCom_207Pb206Pb(staceyKramerSingleStagePbR[1]);
+        setCom_208Pb206Pb(staceyKramerSingleStagePbR[2]);
+
+        setCom_207Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[1]);
+        setCom_208Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[2]);
+        setCom_206Pb208Pb(1.0 /staceyKramerSingleStagePbR[2]);
+    }
+
+
+}
