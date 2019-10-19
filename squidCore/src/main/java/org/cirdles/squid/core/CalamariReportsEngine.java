@@ -560,11 +560,11 @@ public class CalamariReportsEngine implements Serializable {
                 if (doWriteReportFiles) {
                     dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
                     dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12));
-                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12));
                 } else {
                     dataLine.append(", ").append(String.format("%1$-" + 12 + "s", String.valueOf(isotopeRatioModel.getMinIndex())));
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12)));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12)));
                 }
             }
         }

@@ -27,6 +27,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_64;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_68;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_74;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_76;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_84;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_86;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_206PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_208PB;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
@@ -160,26 +166,44 @@ public class BuiltInExpressionsNotes {
                 "Reference 238U/235U of Isotopic RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(AV_PARENT_ELEMENT_CONC_CONST,
-                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");
+                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");       
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB_RM,
+                "RM spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB,
-                "RM and Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
-        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
-                "RM and Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
+                "Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");      
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT_RM,
+                "RM spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
+         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
+                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");      
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT_RM,
+                "RM spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT,
-                "RM and Sample spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
+                "Sample spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_64,
                 "Assumed 206Pb/204Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_64,
+                "Assigned 206Pb/204Pb of common Pb customized for each Sample and defaulting to DefCom_206Pb204Pb for each RM.");
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_68,
                 "Assumed 206Pb/208Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_68,
+                "Assigned 206Pb/208Pb of common Pb customized for each Sample and defaulting to DefCom_206Pb208Pb for each RM.");
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_74,
                 "Assumed 207Pb/204Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_74,
+                "Assigned 207Pb/204Pb of common Pb customized for each Sample and defaulting to DefCom_207Pb204Pb for each RM.");
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_76,
                 "Assumed 207Pb/206Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_76,
+                "Assigned 207Pb/206Pb of common Pb customized for each Sample and defaulting to DefCom_207Pb206Pb for each RM.");
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_84,
                 "Assumed 208Pb/204Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_84,
+                "Assigned 208Pb/204Pb of common Pb customized for each Sample and defaulting to DefCom_208Pb204Pb for each RM.");
         BUILTIN_EXPRESSION_NOTES.put(DEFCOM_86,
                 "Assumed 208Pb/206Pb of default common Pb, as applied to RM and (as first approximation of common Pb) to Samples.");
+        BUILTIN_EXPRESSION_NOTES.put(COM_86,
+                "Assigned 208Pb/206Pb of common Pb customized for each Sample and defaulting to DefCom_208Pb206Pb for each RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(LAMBDA230,
                 "Decay constant for 230Th.");
