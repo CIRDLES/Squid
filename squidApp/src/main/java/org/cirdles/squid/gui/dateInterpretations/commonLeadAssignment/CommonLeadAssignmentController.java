@@ -53,7 +53,6 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_CUSTOM_COMMON_LEAD;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
@@ -63,6 +62,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
 
 /**
  * FXML Controller class
@@ -177,10 +177,15 @@ public class CommonLeadAssignmentController implements Initializable {
                 case METHOD_STACEY_KRAMER:
                     treeItemSampleInfo.getValue().getChooseSKRB().setSelected(true);
                     break;
-                case METHOD_CUSTOM_COMMON_LEAD:
+                case METHOD_STACEY_KRAMER_BY_GROUP:
+                    treeItemSampleInfo.getValue().getChooseSKStarRB().setSelected(true);
                     break;
                 default:
             }
+            // update text for SK age
+            treeItemSampleInfo.getValue().getSkStarValueTextField().setText(
+                    Double.toString(((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue())
+                            .getSpot().getCommonLeadSpecsForSpot().getSampleAgeSK() / 1.0e6));
 
             // set selected age radio button based on first spot
             String selectedAge = (((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getSelectedAgeExpressionName());
@@ -207,6 +212,16 @@ public class CommonLeadAssignmentController implements Initializable {
          * @return the chooseModelRB
          */
         public RadioButton getChooseSKRB();
+
+        /**
+         * @return the chooseSKStarRB
+         */
+        public RadioButton getChooseSKStarRB();
+
+        /**
+         * @return the skStarValueTextField
+         */
+        public TextField getSkStarValueTextField();
 
         public void addSpotDependency(CommonLeadSampleTreeInterface commonLeadToolBar);
     }
@@ -300,7 +315,7 @@ public class CommonLeadAssignmentController implements Initializable {
             Label aValue = new Label(formatter.toString());
             aValue.getStyleClass().clear();
             aValue.setFont(Font.font("Monospaced", fontIsBold ? FontWeight.BOLD : FontWeight.MEDIUM, 12));
-            if ((value <= 0.0)|| Double.isNaN(value)) {
+            if ((value <= 0.0) || Double.isNaN(value)) {
                 aValue.setTextFill(Paint.valueOf("red"));
                 aValue.setFont(Font.font("Monospaced", FontWeight.BOLD, 12));
             }
@@ -348,6 +363,16 @@ public class CommonLeadAssignmentController implements Initializable {
             return spot;
         }
 
+        @Override
+        public RadioButton getChooseSKStarRB() {
+            return null;
+        }
+
+        @Override
+        public TextField getSkStarValueTextField() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
     }
 
     private class CommonLeadSampleToolBar extends HBox implements CommonLeadSampleTreeInterface {
@@ -365,7 +390,7 @@ public class CommonLeadAssignmentController implements Initializable {
         @FXML
         protected RadioButton chooseSKRB;
         @FXML
-        protected RadioButton chooseCustomRB;
+        protected RadioButton chooseSKStarRB;
 
         @FXML
         protected ComboBox<ParametersModel> commonLeadModels;
@@ -379,12 +404,12 @@ public class CommonLeadAssignmentController implements Initializable {
         @FXML
         protected VBox staceyKramerRBVbox;
         @FXML
-        protected VBox customModelRBVbox;
+        protected VBox skStarVBox;
         @FXML
         protected VBox customModelButtonVbox;
 
         @FXML
-        protected Button customButton;
+        protected TextField skStarValueTextField;
 
         protected List<ShrimpFractionExpressionInterface> sampleGroup;
 
@@ -449,37 +474,86 @@ public class CommonLeadAssignmentController implements Initializable {
             commonLeadModelsVbox.getChildren().add(commonLeadModels);
             this.getChildren().add(commonLeadModelsVbox);
 
-            // custom
-//            customModelRBVbox = new VBox();
-//            chooseCustomRB = new RadioButton();
-//            chooseCustomRB.setId("model");
-//            chooseCustomRB.setPrefWidth(27);
-//            chooseCustomRB.setMinWidth(USE_PREF_SIZE);
-//            chooseCustomRB.setPrefHeight(25);
-//            chooseCustomRB.setMinHeight(USE_PREF_SIZE);
-//            chooseCustomRB.setTranslateX(10);
-//            chooseCustomRB.setToggleGroup(methodRB_ToggleGroup);
-//            customModelRBVbox.getChildren().add(chooseCustomRB);
-//            getChildren().add(customModelRBVbox);
-//
-//            customModelButtonVbox = new VBox();
-//            customButton = new Button("Custom");
-//            customButton.setStyle(customButton.getStyle() + "-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-//            customButton.setPrefWidth(55);
-//            customButton.setMinWidth(USE_PREF_SIZE);
-//            customButton.setPrefHeight(22);
-//            customButton.setMinHeight(USE_PREF_SIZE);
-//            customButton.setAlignment(Pos.CENTER);
-//            //customButton.setTranslateY(-3);	
-//            //customButton.setPadding(new Insets(5, -2, 5, -2));
-//
-//            customModelButtonVbox.getChildren().add(customButton);
-//            getChildren().add(customModelButtonVbox);
+            // SK* = 1 age per group
+            skStarVBox = new VBox();
+            chooseSKStarRB = new RadioButton("SK*");
+            chooseSKStarRB.setId("SK*");
+            chooseSKStarRB.setFont(Font.font("Monospaced", FontWeight.BOLD, 11));
+            chooseSKStarRB.setPrefWidth(38);
+            chooseSKStarRB.setMinWidth(USE_PREF_SIZE);
+            chooseSKStarRB.setPrefHeight(25);
+            chooseSKStarRB.setMinHeight(USE_PREF_SIZE);
+            chooseSKStarRB.setTranslateX(10);
+            chooseSKStarRB.setToggleGroup(methodRB_ToggleGroup);
+            chooseSKStarRB.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (newValue && !suppressChangeAction) {
+                        if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                treeItem.getChooseSKStarRB().setSelected(newValue);
+                            }
+                        } else {
+                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_STACEY_KRAMER_BY_GROUP);
+                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                ((CommonLeadSpotDisplay) treeItem).displayData();
+                            }
+                        }
+                        SquidProject.setProjectChanged(true);
+                    }
+                }
+            });
+            skStarVBox.getChildren().add(chooseSKStarRB);
+            getChildren().add(skStarVBox);
+
+            customModelButtonVbox = new VBox();
+            skStarValueTextField = new TextField();
+            skStarValueTextField.setStyle("-fx-font-size: 11px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+            skStarValueTextField.setPromptText("Age Ma");
+            skStarValueTextField.setTranslateX(10);
+            skStarValueTextField.setPrefWidth(45);
+            skStarValueTextField.setMinWidth(USE_PREF_SIZE);
+            skStarValueTextField.setPrefHeight(25);
+            skStarValueTextField.setMinHeight(USE_PREF_SIZE);
+            skStarValueTextField.setAlignment(Pos.CENTER);
+            skStarValueTextField.textProperty().addListener(new ChangeListener<String>() {
+                @Override
+                public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                    if ((newValue.compareToIgnoreCase(oldValue) != 0) && !suppressChangeAction) {
+                        if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                treeItem.getSkStarValueTextField().setText(newValue);
+                            }
+                        } else {
+                            try {
+                                // set to annum
+                                ((Task) squidProject.getTask()).setUnknownGroupAgeSK(sampleGroup, Double.parseDouble(newValue.trim()) * 1.0e6);
+                            } catch (NumberFormatException numberFormatException) {
+                            }
+
+                            if (chooseSKStarRB.isSelected()) {
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+
+                                for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                    ((CommonLeadSpotDisplay) treeItem).displayData();
+                                }
+                            }
+                        }
+                        SquidProject.setProjectChanged(true);
+                    }
+                }
+            });
+
+            customModelButtonVbox.getChildren().add(skStarValueTextField);
+            getChildren().add(customModelButtonVbox);
 
             // stacey Kramer
             staceyKramerRBVbox = new VBox();
             chooseSKRB = new RadioButton("SK");
             chooseSKRB.setId("SK");
+            chooseSKRB.setFont(Font.font("Monospaced", FontWeight.BOLD, 11));
             chooseSKRB.setPrefWidth(35);
             chooseSKRB.setMinWidth(USE_PREF_SIZE);
             chooseSKRB.setPrefHeight(25);
@@ -510,7 +584,7 @@ public class CommonLeadAssignmentController implements Initializable {
             getChildren().add(staceyKramerRBVbox);
 
             HBox ageChoosersHBox = new HBox();
-            ageChoosersHBox.setTranslateX(100);//15);
+            ageChoosersHBox.setTranslateX(15);//15);
 
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(SampleAgeTypesEnum.PB4COR206_238AGE, PB4CORR));
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(SampleAgeTypesEnum.PB4COR208_232AGE, PB4CORR));
@@ -573,6 +647,21 @@ public class CommonLeadAssignmentController implements Initializable {
         @Override
         public RadioButton getChooseSKRB() {
             return chooseSKRB;
+        }
+
+        /**
+         * @return the chooseSKStarRB
+         */
+        @Override
+        public RadioButton getChooseSKStarRB() {
+            return chooseSKStarRB;
+        }
+
+        /**
+         * @return the skStarValueTextField
+         */
+        public TextField getSkStarValueTextField() {
+            return skStarValueTextField;
         }
 
         @Override

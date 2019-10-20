@@ -36,7 +36,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
     public static final int METHOD_COMMON_LEAD_MODEL = 0;
     public static final int METHOD_STACEY_KRAMER = 1;
-    public static final int METHOD_CUSTOM_COMMON_LEAD = 2;
+    public static final int METHOD_STACEY_KRAMER_BY_GROUP = 2;
 
     private double com_206Pb204Pb;
     private double com_207Pb206Pb;
@@ -45,10 +45,11 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private double com_207Pb204Pb;
     private double com_208Pb204Pb;
 
-    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = custom
+    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group
     private int methodSelected;
 
     private SampleAgeTypesEnum sampleAgeType;
+    private double sampleAgeSK;
 
     private ParametersModel commonLeadModel;
 
@@ -63,6 +64,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.methodSelected = METHOD_COMMON_LEAD_MODEL;
 
         this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
+        this.sampleAgeSK = 0.0;
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
     }
@@ -180,6 +182,20 @@ public class CommonLeadSpecsForSpot implements Serializable {
     }
 
     /**
+     * @return the sampleAgeSK
+     */
+    public double getSampleAgeSK() {
+        return sampleAgeSK;
+    }
+
+    /**
+     * @param sampleAgeSK the sampleAgeSK to set
+     */
+    public void setSampleAgeSK(double sampleAgeSK) {
+        this.sampleAgeSK = sampleAgeSK;
+    }
+
+    /**
      * @return the commonLeadModel
      */
     public ParametersModel getCommonLeadModel() {
@@ -222,6 +238,10 @@ public class CommonLeadSpecsForSpot implements Serializable {
         setCom_207Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[1]);
         setCom_208Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[2]);
         setCom_206Pb208Pb(1.0 /staceyKramerSingleStagePbR[2]);
+    }
+    
+    public void updateCommonLeadRatiosFromAgeSK() {
+        updateCommonLeadRatiosFromSK(sampleAgeSK);
     }
 
 

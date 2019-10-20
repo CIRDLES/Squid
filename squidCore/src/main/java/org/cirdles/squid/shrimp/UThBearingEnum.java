@@ -41,7 +41,7 @@ public enum UThBearingEnum {
  
    public static UThBearingEnum getByName(String name) {
        for (UThBearingEnum uth : UThBearingEnum.values()) {
-           if (uth.name.equals(name)) {
+           if (uth.name.compareTo(name) == 0) {
                return uth;
            }
        }
