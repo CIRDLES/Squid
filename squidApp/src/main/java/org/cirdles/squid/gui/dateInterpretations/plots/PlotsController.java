@@ -252,26 +252,29 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 String flavorOfConcordia = plotFlavorOneRadioButton.isSelected() ? "C" : "TW";
                 SampleTreeNodeInterface fractionNode
                         = new ConcordiaFractionNode(flavorOfConcordia, spot, correction);
-                fractionNodeDetails.add(fractionNode);
+                if (((ConcordiaFractionNode) fractionNode).isValid()) {
 
-                // handles each spot
-                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
-                        = new CheckBoxTreeItem<>(fractionNode);
-                sampleItem.getChildren().add(checkBoxTreeSpotItem);
+                    fractionNodeDetails.add(fractionNode);
 
-                checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                        ((ConcordiaFractionNode) checkBoxTreeSpotItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
-                        myPlot.setData(myData);
-                    }
-                });
-                checkBoxTreeSpotItem.setIndependent(false);
-                checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
+                    // handles each spot
+                    CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
+                            = new CheckBoxTreeItem<>(fractionNode);
+                    sampleItem.getChildren().add(checkBoxTreeSpotItem);
 
-                myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
-                // this contains all samples at the tree top
-                rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                    checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                            ((ConcordiaFractionNode) checkBoxTreeSpotItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                            myPlot.setData(myData);
+                        }
+                    });
+                    checkBoxTreeSpotItem.setIndependent(false);
+                    checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
+
+                    myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                    // this contains all samples at the tree top
+                    rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                }
             }
 
             myPlot.setData(myData);
@@ -610,7 +613,13 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             } else {
                 this.datum = prepareTeraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
             }
-            this.datum.put(Variable.SELECTED.getTitle(), shrimpFraction.isSelected());
+            if (datum != null) {
+                this.datum.put(Variable.SELECTED.getTitle(), shrimpFraction.isSelected());
+            }
+        }
+
+        public boolean isValid() {
+            return datum != null;
         }
 
         /**

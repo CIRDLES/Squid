@@ -55,7 +55,6 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_CUSTOM_COMMON_LEAD;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
@@ -135,6 +134,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilder
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
 
 /**
  *
@@ -1795,6 +1795,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
         }
     }
+    
+    public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
+        }
+    }
 
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
@@ -1808,8 +1814,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     evaluateExpressionsForSampleGroup(spotList);
                     ExpressionTreeInterface selectedAgeExpression
                             = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
-                    // run SK 5 times per Ludwig
-                    for (int i = 0; i < 5; i++) {
+                    // run SK 3 times per Ludwig
+                    for (int i = 0; i < 3; i++) {
                         spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
                                 spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
                         // update
@@ -1821,7 +1827,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     evaluateExpressionsForSampleGroup(spotList);
                     break;
                 // todo
-                case METHOD_CUSTOM_COMMON_LEAD:
+                case METHOD_STACEY_KRAMER_BY_GROUP:
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromAgeSK();
+                    // update
+                    evaluateExpressionsForSampleGroup(spotList);
                     break;
                 default:
                     break;
