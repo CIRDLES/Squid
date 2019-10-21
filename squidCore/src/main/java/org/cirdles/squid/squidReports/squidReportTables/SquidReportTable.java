@@ -97,6 +97,10 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportCategories = reportCategories;
     }
 
+    public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
+        return new SquidReportTable(reportTableName, new LinkedList<>());
+    }
+
     public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
         String reportTableName = "Default Squid3 Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
