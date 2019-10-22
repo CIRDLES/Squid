@@ -145,7 +145,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                 </Menu>
-                <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
+                <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
@@ -156,6 +156,7 @@
                         <Menu mnemonicParsing="false" text="Unknowns">
                             <items>
                         <MenuItem mnemonicParsing="false" onAction="#countCorrectionsAction" text="204 Count Corrections" />
+                        <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="Assign Common Lead Ratios" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                             </items>
                         </Menu>

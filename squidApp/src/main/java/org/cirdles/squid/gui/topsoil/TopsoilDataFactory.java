@@ -79,6 +79,7 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, String xAxisRatio, String yAxisRatio, String rho) {
 
         Map<String, Object> datum = new HashMap<>();
+        boolean badData = true;
 
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
@@ -86,10 +87,12 @@ public class TopsoilDataFactory {
                     new Class[]{String.class});
 
             double[] xAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + xAxisRatio}))[0].clone();
+            badData = badData && Double.isNaN(xAxisValueAndUnct[0]);
             datum.put(X.getTitle(), xAxisValueAndUnct[0]);
             datum.put(SIGMA_X.getTitle(), 1.0 * xAxisValueAndUnct[1]);
 
             double[] yAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + yAxisRatio}))[0].clone();
+            badData = badData && Double.isNaN(yAxisValueAndUnct[0]);
             datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
             datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
 
@@ -103,6 +106,6 @@ public class TopsoilDataFactory {
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
         }
 
-        return datum;
+        return badData ? null : datum;
     }
 }
