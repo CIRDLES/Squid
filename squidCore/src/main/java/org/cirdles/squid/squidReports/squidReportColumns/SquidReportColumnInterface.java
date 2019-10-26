@@ -21,12 +21,13 @@ import java.math.RoundingMode;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface SquidReportColumnInterface {
+public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
     public void initReportColumn(TaskInterface task);
 

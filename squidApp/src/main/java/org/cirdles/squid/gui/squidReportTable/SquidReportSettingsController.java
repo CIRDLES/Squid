@@ -12,20 +12,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
@@ -37,16 +38,14 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.SquidUIController.squidReportTableLauncher;
-import static org.cirdles.squid.gui.squidReportTable.SquidReportSettingsLauncher.squidReportSettingsWindow;
 
 /**
  * FXML Controller class
@@ -144,6 +143,7 @@ public class SquidReportSettingsController implements Initializable {
 
         initEditing();
         initDefault();
+        initCategoryTextField();
 
         //squidReportTable = task.getSquidReportTable();
         // update
@@ -159,6 +159,13 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+    }
+
+    private void initCategoryTextField() {
+        categoryTextField.setOnKeyPressed(val -> {
+            if(val.getCode() == KeyCode.ENTER)
+                createCategory();
+        });
     }
 
     private void processButtons() {
@@ -206,7 +213,10 @@ public class SquidReportSettingsController implements Initializable {
                 return null;
             }
         });
-        reportTableCB.getSelectionModel().selectedItemProperty().addListener(param -> populateCategoryListView());
+        reportTableCB.getSelectionModel().selectedItemProperty().addListener(param -> {
+            populateCategoryListView();
+            categoryListView.getSelectionModel().selectFirst();
+        });
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
     }
@@ -214,7 +224,6 @@ public class SquidReportSettingsController implements Initializable {
     private void populateSquidReportTableChoiceBox() {
         reportTableCB.getItems().setAll(FXCollections.observableArrayList(isRefMat ? task.getSquidReportTablesRefMat()
                 : task.getSquidReportTablesUnknown()));
-        reportTableCB.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -422,6 +431,7 @@ public class SquidReportSettingsController implements Initializable {
             selectedCategory.setValue(newValue);
         });
         populateCategoryListView();
+        categoryListView.getSelectionModel().selectFirst();
 
         //Squid Report Columns
         columnListView.setCellFactory(new SquidReportColumnInterfaceCellFactory());
@@ -451,27 +461,26 @@ public class SquidReportSettingsController implements Initializable {
 
     private void initSelectionActions() {
         selectedCategory.addListener(observable -> {
-            populateColumnListView();
+            if (selectedCategory.getValue() != null) {
+                populateColumnListView();
+                columnListView.getSelectionModel().selectFirst();
+            }
         });
         selectedColumn.addListener(observable -> {
-            populateColumnDetails();
+            if (selectedColumn.getValue() != null) {
+                populateColumnDetails();
+            }
         });
     }
 
     private void populateCategoryListView() {
         ObservableList<SquidReportCategoryInterface> obList = FXCollections.observableArrayList(reportTableCB.getSelectionModel().getSelectedItem().getReportCategories());
         categoryListView.setItems(obList);
-        categoryListView.getSelectionModel().selectFirst();
     }
 
     private void populateColumnListView() {
-        if (selectedCategory.getValue() != null) {
-            ObservableList<SquidReportColumnInterface> obList = FXCollections.observableList(selectedCategory.getValue().getCategoryColumns());
-            columnListView.setItems(obList);
-            columnListView.getSelectionModel().selectFirst();
-        } else {
-            columnListView.setItems(null);
-        }
+        ObservableList<SquidReportColumnInterface> obList = FXCollections.observableList(selectedCategory.getValue().getCategoryColumns());
+        columnListView.setItems(obList);
     }
 
     private void populateColumnDetails() {
@@ -597,7 +606,8 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() != isRefMat) {
+            if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() != isRefMat ||
+                    exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() == isRefMat) {
                 if (exp.amHealthy() && exp.isSquidSwitchNU()
                         && !exp.aliasedExpression()) {
                     sortedNUSwitchedExpressionsList.add(exp);
@@ -666,6 +676,7 @@ public class SquidReportSettingsController implements Initializable {
     private SquidReportTableInterface createSquidReportTable() {
         SquidReportTableInterface table = SquidReportTable.createDefaultSquidReportTableRefMat(task);
         table.setReportCategories(new LinkedList<>(categoryListView.getItems()));
+        table.setReportTableName(reportTableCB.getSelectionModel().getSelectedItem().getReportTableName());
         return table;
     }
 
@@ -687,6 +698,7 @@ public class SquidReportSettingsController implements Initializable {
             refMatUnknownToggleButton.setText("Unknown");
         }
         populateSquidReportTableChoiceBox();
+        reportTableCB.getSelectionModel().selectFirst();
         populateExpressionListViews();
     }
 
@@ -696,6 +708,7 @@ public class SquidReportSettingsController implements Initializable {
         dialog.setTitle("Squid Report Setting Name");
         dialog.setHeaderText("Enter a name for the Report Setting");
         dialog.setContentText("Name:");
+
         dialog.showAndWait().ifPresent(name -> {
 
             if (getNamesOfTables().contains(name)) {
@@ -711,6 +724,21 @@ public class SquidReportSettingsController implements Initializable {
 
     @FXML
     private void copyOnAction(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("name goes here");
+        dialog.setTitle("Squid Report Setting Name");
+        dialog.setHeaderText("Enter a name for the Report Setting Copy");
+        dialog.setContentText("Name:");
+        dialog.showAndWait().ifPresent(name -> {
+
+            if (getNamesOfTables().contains(name)) {
+                SquidMessageDialog.showWarningDialog("A Squid Report Setting with the name you entered already exists. Aborting.", primaryStageWindow);
+            } else {
+                SquidReportTableInterface copy = createSquidReportTable();
+                reportTableCB.getItems().add(copy);
+                reportTableCB.getSelectionModel().select(copy);
+                isEditing.setValue(true);
+            }
+        });
     }
 
     @FXML
@@ -720,8 +748,6 @@ public class SquidReportSettingsController implements Initializable {
         dialog.setHeaderText("Enter a new name for the Report Setting");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
-
-
             if (getNamesOfTables().contains(name)) {
                 SquidMessageDialog.showWarningDialog("A Squid Report Setting with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
@@ -734,6 +760,7 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void restoreOnAction(ActionEvent event) {
         populateCategoryListView();
+        categoryListView.getSelectionModel().selectFirst();
         isEditing.setValue(false);
     }
 
@@ -741,14 +768,84 @@ public class SquidReportSettingsController implements Initializable {
     private void deleteOnAction(ActionEvent event) {
         getTables().remove(reportTableCB.getSelectionModel().getSelectedItem());
         populateSquidReportTableChoiceBox();
+        reportTableCB.getSelectionModel().selectFirst();
     }
 
     @FXML
     private void exportOnAction(ActionEvent event) {
+        try {
+            File file = FileHandler.selectSquidReportSettingsXMLFile(primaryStageWindow);
+            if (file != null) {
+                reportTableCB.getSelectionModel().getSelectedItem().serializeXMLObject(file.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
     }
 
     @FXML
     private void importOnAction(ActionEvent event) {
+        File file = null;
+        try {
+            file = FileHandler.selectSquidReportSettingsXMLFile(primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+        }
+        if (file != null) {
+            SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
+            final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
+            if (table != null) {
+                final List<SquidReportTableInterface> tables = getTables();
+                if (tables.contains(table)) {
+                    ButtonType replace = new ButtonType("Replace");
+                    ButtonType rename = new ButtonType("Rename");
+                    Alert alert = new Alert(Alert.AlertType.WARNING,
+                            "A Squid Report Setting already exists with this name. What do you want to do?",
+                            replace,
+                            rename,
+                            ButtonType.CANCEL
+                    );
+                    alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                    alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                    alert.showAndWait().ifPresent((t) -> {
+                        if (t.equals(replace)) {
+
+                        } else if (t.equals(rename)) {
+                            TextInputDialog dialog = new TextInputDialog(table.getReportTableName());
+                            dialog.setTitle("Rename");
+                            dialog.setHeaderText("Rename " + table.getReportTableName());
+                            dialog.setContentText("Enter the new squid report settings name:");
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
+                            }
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    table.setReportTableName(newValue);
+                                    okBtn.setDisable(tables.contains(table) || newValue.isEmpty());
+                                });
+                            }
+                            dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                            dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            Optional<String> result = dialog.showAndWait();
+                            if (result.isPresent()) {
+                                table.setReportTableName(result.get());
+                                tables.add(table);
+                                populateSquidReportTableChoiceBox();
+                                reportTableCB.getSelectionModel().select(table);
+                            }
+                        }
+                    });
+                } else {
+                    tables.add(table);
+                    populateSquidReportTableChoiceBox();
+                    reportTableCB.getSelectionModel().select(table);
+                }
+            }
+        }
     }
 
     @FXML
@@ -762,8 +859,7 @@ public class SquidReportSettingsController implements Initializable {
         }
         int location = list.indexOf(table);
         if (location > 0) {
-            list.remove(location);
-            list.add(location, table);
+            list.set(location, table);
         } else {
             list.add(table);
         }
@@ -774,8 +870,6 @@ public class SquidReportSettingsController implements Initializable {
 
         public SquidReportCategoryInterfaceCellFactory() {
         }
-
-        ;
 
         @Override
         public ListCell<SquidReportCategoryInterface> call(ListView<SquidReportCategoryInterface> param) {
@@ -790,7 +884,78 @@ public class SquidReportSettingsController implements Initializable {
                     }
                 }
             };
+            cell.setOnDragOver(event -> {
+                if (event.getDragboard().hasString() && event.getGestureSource() != cell) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            });
 
+            cell.setOnDragEntered(event -> {
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    cell.setOpacity(0.3);
+                }
+            });
+
+            cell.setOnDragExited(event -> {
+                if (event.getGestureSource() != cell &&
+                        event.getDragboard().hasString()) {
+                    cell.setOpacity(1);
+                }
+            });
+
+            cell.setOnDragDropped(event -> {
+                boolean success = false;
+                ObservableList<SquidReportCategoryInterface> items = categoryListView.getItems();
+
+                SquidReportCategoryInterface cat = null;
+                for (int i = 0; cat == null && i < items.size(); i++) {
+                    if (items.get(i).getDisplayName().equals(event.getDragboard().getString())) {
+                        cat = items.get(i);
+                        items.remove(i);
+                        items.add(cell.getIndex(), cat);
+                        categoryListView.getSelectionModel().select(cat);
+                        success = true;
+                        event.consume();
+                        isEditing.setValue(true);
+                    }
+                }
+
+                event.setDropCompleted(success);
+            });
+
+            cell.setOnDragDetected(event -> {
+                selectedCategory.setValue(cell.getItem());
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(cell.getItem().getDisplayName());
+                    db.setContent(cc);
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setCursor(Cursor.OPEN_HAND);
+
+            cell.setOnMouseClicked((event) -> {
+                //Nothing
+            });
             return cell;
         }
     }
@@ -942,48 +1107,48 @@ public class SquidReportSettingsController implements Initializable {
                     }
                 }
             };
-            addDraggableFunctionality(cell);
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(cell.getItem().getName());
+                    db.setContent(cc);
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setCursor(Cursor.OPEN_HAND);
+
+            cell.setOnMouseClicked((event) -> {
+                //Nothing
+            });
             return cell;
         }
 
 
     }
 
-    private void addDraggableFunctionality(ListCell<Expression> cell) {
-        cell.setOnDragDetected(event -> {
-            if (!cell.isEmpty()) {
-                Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-                db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
-                ClipboardContent cc = new ClipboardContent();
-                cc.putString(cell.getItem().getName());
-                db.setContent(cc);
-                cell.setCursor(Cursor.CLOSED_HAND);
-            }
-        });
-
-        cell.setOnDragDone((event) -> {
-            cell.setCursor(Cursor.OPEN_HAND);
-        });
-
-        cell.setOnMousePressed((event) -> {
-            if (!cell.isEmpty()) {
-                cell.setCursor(Cursor.CLOSED_HAND);
-            }
-        });
-
-        cell.setOnMouseReleased((event) -> {
-            cell.setCursor(Cursor.OPEN_HAND);
-        });
-
-        cell.setCursor(Cursor.OPEN_HAND);
-
-        cell.setOnMouseClicked((event) -> {
-            //Nothing
-        });
-    }
-
     @FXML
     private void createCategoryOnAction(ActionEvent event) {
+        createCategory();
+    }
+
+    private void createCategory() {
         SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory(categoryTextField.getText());
 
         if (!categoryListView.getItems().contains(cat)) {
@@ -993,10 +1158,10 @@ public class SquidReportSettingsController implements Initializable {
             categoryListView.scrollTo(catIndex);
             categoryListView.getFocusModel().focus(catIndex);
             isEditing.setValue(true);
+            categoryTextField.setText("");
         } else {
-            SquidMessageDialog.showWarningDialog("A category exists with the specified name.", squidReportSettingsWindow);
+            SquidMessageDialog.showWarningDialog("A category exists with the specified name.", primaryStageWindow);
         }
-
     }
 
 }

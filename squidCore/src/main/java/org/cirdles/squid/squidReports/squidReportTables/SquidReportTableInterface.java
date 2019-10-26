@@ -24,12 +24,13 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryI
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface SquidReportTableInterface {
+public interface SquidReportTableInterface extends XMLSerializerInterface {
 
     public default String[][] reportSpotsInCustomTable(
             SquidReportTableInterface squidReportTable,
