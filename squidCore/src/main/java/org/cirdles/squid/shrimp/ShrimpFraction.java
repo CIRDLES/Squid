@@ -732,6 +732,18 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return ratioAndUnct;
     }
     
+    // used to display original values on 204-correction tab for unknowns interpretatons
+    public double[][] getOriginalIsotopicRatioValuesByStringName(String name) {
+        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
+
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
+        if (ratio != null) {
+            ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
+        }
+
+        return ratioAndUnct;
+    }
+    
     public SquidRatiosModel getRatioByName(String name){
         return SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
     }
