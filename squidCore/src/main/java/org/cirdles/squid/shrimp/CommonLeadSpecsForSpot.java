@@ -214,35 +214,36 @@ public class CommonLeadSpecsForSpot implements Serializable {
     }
 
     public void updateCommonLeadRatiosFromModel() {
-        setCom_206Pb204Pb(commonLeadModel.getDatumByName(R206_204B).getValue().doubleValue());
-        setCom_207Pb206Pb(commonLeadModel.getDatumByName(R207_206B).getValue().doubleValue());
-        setCom_208Pb206Pb(commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+        com_206Pb204Pb = commonLeadModel.getDatumByName(R206_204B).getValue().doubleValue();
+        com_207Pb204Pb = commonLeadModel.getDatumByName(R207_204B).getValue().doubleValue();
+        com_208Pb204Pb = commonLeadModel.getDatumByName(R208_204B).getValue().doubleValue();
 
-        setCom_207Pb204Pb(commonLeadModel.getDatumByName(R207_204B).getValue().doubleValue());
-        setCom_208Pb204Pb(commonLeadModel.getDatumByName(R208_204B).getValue().doubleValue());
-        setCom_206Pb208Pb(1.0 / commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue());
+        com_207Pb206Pb = commonLeadModel.getDatumByName(R207_206B).getValue().doubleValue();
+        com_208Pb206Pb = commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue();
+        com_206Pb208Pb = 1.0 / commonLeadModel.getDatumByName(R208_206B).getValue().doubleValue();
     }
-    
+
     /**
      *
      * @param targetAge the value of targetAge
      */
     public void updateCommonLeadRatiosFromSK(double targetAge) {
-        double[] staceyKramerSingleStagePbR = 
-                StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(targetAge);
-        
-        setCom_206Pb204Pb(staceyKramerSingleStagePbR[0]);
-        setCom_207Pb206Pb(staceyKramerSingleStagePbR[1]);
-        setCom_208Pb206Pb(staceyKramerSingleStagePbR[2]);
+        // Output is a 3-element vector of model [206Pb/204Pb, 207Pb/204Pb,
+        // 208Pb/204Pb] corresponding to TargetAge, as per Stacey & Kramers (1975).
+        double[] staceyKramerSingleStagePbR
+                = StaceyKramerCommonLeadModel.staceyKramerSingleStagePbR(targetAge);
 
-        setCom_207Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[1]);
-        setCom_208Pb204Pb(staceyKramerSingleStagePbR[0] * staceyKramerSingleStagePbR[2]);
-        setCom_206Pb208Pb(1.0 /staceyKramerSingleStagePbR[2]);
+        com_206Pb204Pb = staceyKramerSingleStagePbR[0];
+        com_207Pb204Pb = staceyKramerSingleStagePbR[1];
+        com_208Pb204Pb = staceyKramerSingleStagePbR[2];
+
+        com_207Pb206Pb = com_207Pb204Pb / com_206Pb204Pb;
+        com_208Pb206Pb = com_208Pb204Pb / com_206Pb204Pb;
+        com_206Pb208Pb = 1.0 / com_208Pb206Pb;
     }
-    
+
     public void updateCommonLeadRatiosFromAgeSK() {
         updateCommonLeadRatiosFromSK(sampleAgeSK);
     }
-
 
 }

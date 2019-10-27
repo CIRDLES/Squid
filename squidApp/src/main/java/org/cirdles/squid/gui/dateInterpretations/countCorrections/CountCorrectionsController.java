@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
@@ -35,12 +36,17 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
 /**
  * FXML Controller class
@@ -65,6 +71,10 @@ public class CountCorrectionsController implements Initializable {
     private RadioButton correction207RB;
     @FXML
     private RadioButton correction208RB;
+    @FXML
+    private Label biweight207Label;
+    @FXML
+    private Label biweight208Label;
 
     /**
      * Initializes the controller class.
@@ -89,7 +99,34 @@ public class CountCorrectionsController implements Initializable {
                 correction208RB.setSelected(true);
 
         }
+
+        setUpHeader();
         showUnknownsWithOvercountCorrections();
+
+    }
+
+    public void setUpHeader() {
+        SpotSummaryDetails spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_207);
+        double biWeight = spotSummaryDetails.getValues()[0][0];
+        double conf95 = spotSummaryDetails.getValues()[0][2];
+
+        Formatter formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+
+        spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
+        biWeight = spotSummaryDetails.getValues()[0][0];
+        conf95 = spotSummaryDetails.getValues()[0][2];
+
+        formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
 
     }
 
@@ -122,7 +159,7 @@ public class CountCorrectionsController implements Initializable {
             TreeItem<TextFlow> treeItemSampleInfo = new TreeItem<>(textFlowSampleInfo);
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
 
-                double[][] r204_206 = spot.getIsotopicRatioValuesByStringName("204/206");
+                double[][] r204_206 = ((ShrimpFraction) spot).getOriginalIsotopicRatioValuesByStringName("204/206");
                 double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From207"));
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
@@ -165,13 +202,29 @@ public class CountCorrectionsController implements Initializable {
         sampleTreeAnchorPane.getChildren().add(spotsTreeViewTextFlow);
     }
 
+    private void updateColumnBold(boolean isOrig, boolean is207, boolean is208) {
+        TreeItem<TextFlow> rootItemSamples = spotsTreeViewTextFlow.getRoot();
+        for (TreeItem<TextFlow> treeItemSampleI : rootItemSamples.getChildren()) {
+            List<TreeItem<TextFlow>> treeSampleItems = treeItemSampleI.getChildren();
+            for (TreeItem<TextFlow> treeSpotItem : treeSampleItems) {
+                TextFlow textFlow = treeSpotItem.getValue();
+                Text text = (Text) textFlow.getChildren().get(1);
+                text.setFont(Font.font("Monospaced", isOrig ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text = (Text) textFlow.getChildren().get(2);
+                text.setFont(Font.font("Monospaced", is207 ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text = (Text) textFlow.getChildren().get(3);
+                text.setFont(Font.font("Monospaced", is208 ? FontWeight.BOLD : FontWeight.THIN, 10));
+            }
+        }
+    }
+
     @FXML
     private void correctionNoneAction(ActionEvent event) {
         squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
         ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOriginal204_206();
         SquidProject.setProjectChanged(true);
         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
-        showUnknownsWithOvercountCorrections();
+        updateColumnBold(true, false, false);
     }
 
     @FXML
@@ -180,7 +233,7 @@ public class CountCorrectionsController implements Initializable {
         ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
         SquidProject.setProjectChanged(true);
         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
-        showUnknownsWithOvercountCorrections();
+        updateColumnBold(false, true, false);
     }
 
     @FXML
@@ -189,6 +242,6 @@ public class CountCorrectionsController implements Initializable {
         ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
         SquidProject.setProjectChanged(true);
         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
-        showUnknownsWithOvercountCorrections();
+        updateColumnBold(false, false, true);
     }
 }
