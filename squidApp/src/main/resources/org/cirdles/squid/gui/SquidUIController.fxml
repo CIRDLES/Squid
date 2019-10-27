@@ -158,7 +158,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#countCorrectionsAction" text="204 Count Corrections" />
                         <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="Assign Common Lead Ratios" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
-                        <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
+                        <MenuItem disable="true" mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
                             </items>
                         </Menu>
                     </items>

@@ -30,15 +30,17 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -48,9 +50,9 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
-import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
@@ -69,6 +71,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
@@ -76,7 +79,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  * FXML Controller class
@@ -251,10 +257,10 @@ public class CommonLeadAssignmentController implements Initializable {
     private Label makeRedLabel(String label, int width, boolean fontIsBold, int fontSize, double verticalTranslate) {
         Label myLabel = makeLabel(label, width, fontIsBold, fontSize, verticalTranslate);
         myLabel.setTextFill(Color.RED);
-        
+
         return myLabel;
     }
-    
+
     private Label makeLabel(String label, int width, boolean fontIsBold, int fontSize, double verticalTranslate) {
         Label aLabel = new Label(label);
         aLabel.getStyleClass().clear();
@@ -513,7 +519,9 @@ public class CommonLeadAssignmentController implements Initializable {
                             mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
 
                             try {
-                                ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])).setText(generateWeightedMeanText(sampleGroupName));
+                                updateWeightedMeanLabel(
+                                        ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                        sampleGroupName);
                             } catch (Exception e) {
                             }
 
@@ -566,7 +574,9 @@ public class CommonLeadAssignmentController implements Initializable {
                             mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
 
                             try {
-                                ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])).setText(generateWeightedMeanText(sampleGroupName));
+                                updateWeightedMeanLabel(
+                                        ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                        sampleGroupName);
                             } catch (Exception e) {
                             }
 
@@ -613,7 +623,9 @@ public class CommonLeadAssignmentController implements Initializable {
                                 mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
 
                                 try {
-                                    ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])).setText(generateWeightedMeanText(sampleGroupName));
+                                    updateWeightedMeanLabel(
+                                            ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                            sampleGroupName);
                                 } catch (Exception e) {
                                 }
 
@@ -657,7 +669,9 @@ public class CommonLeadAssignmentController implements Initializable {
                             mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
 
                             try {
-                                ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])).setText(generateWeightedMeanText(sampleGroupName));
+                                updateWeightedMeanLabel(
+                                        ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                        sampleGroupName);
                             } catch (Exception e) {
                             }
 
@@ -701,23 +715,23 @@ public class CommonLeadAssignmentController implements Initializable {
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB4COR208_232AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
-                
+
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB4COR207_206AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
-                
+
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB7COR206_238AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
-                
+
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB7COR208_232AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
-                
+
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB8COR206_238AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
-                
+
                 weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB8COR207_206AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
@@ -734,16 +748,86 @@ public class CommonLeadAssignmentController implements Initializable {
 
         }
 
-        private String generateWeightedMeanText(String sampleGroupName) {
-            String retVal = "n/a";
-
+        private void updateWeightedMeanLabel(Label wmLabel, String sampleGroupName) {
             SpotSummaryDetails spotSummaryDetails = mapOfWeightedMeansBySampleNames.get(sampleGroupName);
             Formatter formatter = new Formatter();
             formatter.format("%5.1f", spotSummaryDetails.getValues()[0][0] / 1e6);
             formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.1f", spotSummaryDetails.getValues()[0][1] / 1e6).toString();
-            retVal = "WM: " + formatter.toString();
+            wmLabel.setText("WM: " + formatter.toString());
 
-            return retVal;
+            // tool tip
+            OperationOrFunctionInterface op = ((ExpressionTree) spotSummaryDetails.getExpressionTree()).getOperation();
+            String[][] labels = clone2dArray(op.getLabelsForOutputValues());
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Weighted Mean with auto-reject for Sample ").append(sampleGroupName).append("\n");
+            for (int i = 0; i < labels[0].length; i++) {
+                sb.append("\t");
+                if (spotSummaryDetails.getValues().length > 0) {
+                    // show array index in Squid3
+                    sb.append("[").append(i).append("] ");
+                    sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
+                    sb.append(": ");
+                    sb.append(squid3RoundedToSize(spotSummaryDetails.getValues()[0][i] / (i < 5 ? 1.0e6 : 1.0), 5));
+                } else {
+                    sb.append("Undefined Expression or Function");
+                }
+                sb.append("\n");
+            }
+
+            if (labels.length > 1) {
+                sb.append("\t");
+                sb.append("    ");
+                sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
+                sb.append(": ");
+                // print list
+                if (spotSummaryDetails.getValues()[1].length == 0) {
+                    sb.append("None");
+                } else {
+                    for (int j = 0; j < spotSummaryDetails.getValues()[1].length; j++) {
+                        sb.append((int) (spotSummaryDetails.getValues()[1][j])).append(" ");
+                    }
+                }
+                sb.append("\n");
+            }
+
+            if (labels.length > 2) {
+                sb.append("\t");
+                sb.append("    ");
+                sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
+                sb.append(": ");
+                // print list
+                if (spotSummaryDetails.getValues()[2].length == 0) {
+                    sb.append("None");
+                } else {
+                    for (int j = 0; j < spotSummaryDetails.getValues()[2].length; j++) {
+                        sb.append((int) (spotSummaryDetails.getValues()[2][j])).append(" ");
+                    }
+                }
+                sb.append("\n");
+            }
+
+            Tooltip toolTip = new Tooltip(sb.toString());
+            toolTip.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+            wmLabel.setTooltip(toolTip);
+
+            // https://coderanch.com/t/622070/java/control-Tooltip-visible-time-duration
+            wmLabel.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent event) {
+                    Point2D p = wmLabel.localToScreen(wmLabel.getLayoutBounds().getMaxX(), wmLabel.getLayoutBounds().getMaxY());
+                    toolTip.show(wmLabel, p.getX(), p.getY());
+                }
+            });
+            wmLabel.setOnMouseExited(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent event) {
+                    toolTip.hide();
+                }
+            });
+
         }
 
         /**
@@ -786,12 +870,16 @@ public class CommonLeadAssignmentController implements Initializable {
 
                     if (newValue) {
                         try {
-                            ((Label) weightedMeansHBox.lookup("#" + sampleAgeType.getExpressionName())).setText(generateWeightedMeanText(sampleGroupName));
+                            updateWeightedMeanLabel(
+                                    ((Label) weightedMeansHBox.lookup("#" + sampleAgeType.getExpressionName())),
+                                    sampleGroupName);
                         } catch (Exception e) {
                         }
                     } else if (!newValue) {
                         try {
-                            ((Label) weightedMeansHBox.lookup("#" + sampleAgeType.getExpressionName())).setText("");
+                            Label label = ((Label) weightedMeansHBox.lookup("#" + sampleAgeType.getExpressionName()));
+                            label.setText("");
+                            label.getTooltip().setText("not calculated");
                         } catch (Exception e) {
                         }
                     }
