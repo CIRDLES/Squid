@@ -44,11 +44,19 @@ public class BuiltInExpressionsDataDictionary {
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
-    public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
-    public static final String DEFCOM_74 = "DefCom_207Pb204Pb";
+    public static final String COM_64 = "Com_206Pb204Pb";
     public static final String DEFCOM_76 = "DefCom_207Pb206Pb";
-    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";
+    public static final String COM_76 = "Com_207Pb206Pb";
     public static final String DEFCOM_86 = "DefCom_208Pb206Pb";
+    public static final String COM_86 = "Com_208Pb206Pb";
+    
+    public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
+    public static final String COM_68 = "Com_206Pb208Pb";
+    public static final String DEFCOM_74 = "DefCom_207Pb204Pb";   
+    public static final String COM_74 = "Com_207Pb204Pb";   
+    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";
+    public static final String COM_84 = "Com_208Pb204Pb";
+    
 
     public static final String REF_U_CONC_PPM = "Ref_U_Concen";
     public static final String REF_TH_CONC_PPM = "Ref_Th_Concen";

@@ -75,9 +75,9 @@ public final class PrawnFileUtilities {
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
             String uThBearingName = UThBearingEnum.N.getName();
-            if (elementLabel.matches("(.*)(238|254|270|u|U)(.*)")) {
+            if (elementLabel.matches("(.*)(238|254|270|U)(.*)")) {
                 uThBearingName = UThBearingEnum.U.getName();
-            } else if (elementLabel.matches("(.*)(232|248|264|t|T)(.*)")) {
+            } else if (elementLabel.matches("(.*)(232|248|264|Th)(.*)")) {
                 uThBearingName = UThBearingEnum.T.getName();
             }
 

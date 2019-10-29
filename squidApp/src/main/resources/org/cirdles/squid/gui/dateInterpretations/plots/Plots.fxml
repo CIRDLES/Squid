@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.plots.PlotsController">
+<VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.plots.PlotsController">
    <children>
       <SplitPane dividerPositions="0.2287145242070117" VBox.vgrow="ALWAYS">
          <items>

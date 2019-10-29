@@ -18,8 +18,6 @@ package org.cirdles.squid.squidReports.squidReportColumns;
 import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
-import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -28,7 +26,6 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -56,7 +53,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private String expressionName;
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
-
 
     // optional uncertainty column
     private SquidReportColumnInterface uncertaintyColumn;

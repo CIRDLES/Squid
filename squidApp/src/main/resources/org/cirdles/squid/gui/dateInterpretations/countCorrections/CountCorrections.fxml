@@ -1,13 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox fx:id="vboxMaster" minHeight="640.0" minWidth="1200.0" stylesheets="@../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.countCorrections.CountCorrectionsController">
    <children>
-      <HBox fx:id="headerHBox" minHeight="25.0" prefHeight="25.0" prefWidth="1200.0" styleClass="backgroundCalamari" />
+      <HBox fx:id="headerHBox" minHeight="50.0" prefHeight="50.0" prefWidth="1200.0" spacing="35.0" styleClass="backgroundCalamari">
+         <children>
+            <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="     204 Overcount Corrections:" translateY="-2.0" />
+            <VBox>
+               <children>
+                  <Label prefHeight="24.0" prefWidth="286.0" style="-fx-text-fill: #c53d13#c53d13 #c53d13; -fx-font-size: 13;" />
+                  <RadioButton fx:id="correctionNoneRB" mnemonicParsing="false" onAction="#correctionNoneAction" selected="true" style="-fx-text-fill: #c53d13#c53d13;" text="Original 204/206         ±1σ %                         ">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="correctionsToggleGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label fx:id="biweight207Label" prefHeight="24.0" prefWidth="286.0" style="-fx-text-fill: #c53d13#c53d13 #c53d13; -fx-font-size: 13;" text="Label" />
+                  <RadioButton fx:id="correction207RB" mnemonicParsing="false" onAction="#correction207Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 207         ±1σ %                        " toggleGroup="$correctionsToggleGroup" />
+               </children>
+            </VBox>
+            <VBox>
+               <children>
+                  <Label fx:id="biweight208Label" prefHeight="24.0" prefWidth="286.0" style="-fx-text-fill: #c53d13#c53d13 #c53d13; -fx-font-size: 13;" text="Label" />
+                  <RadioButton fx:id="correction208RB" mnemonicParsing="false" onAction="#correction208Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 208         ±1σ %" toggleGroup="$correctionsToggleGroup" />
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets top="3.0" />
+         </padding></HBox>
       <AnchorPane fx:id="sampleTreeAnchorPane" prefHeight="638.0" prefWidth="1200.0" stylesheets="@../../css/projectManager.css" />
    </children>
 </VBox>
