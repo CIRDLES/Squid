@@ -101,7 +101,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
@@ -135,6 +134,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
 /**
  *
@@ -1795,7 +1796,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
         }
     }
-    
+
     public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
@@ -1803,6 +1804,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             List<ShrimpFractionExpressionInterface> spotList = new ArrayList<>();
             spotList.add(spot);
@@ -1836,6 +1838,29 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     break;
             }
         }
+    }
+
+    public SpotSummaryDetails evaluateSelectedAgeWeightedMeanForUnknownGroup(
+            String groupName,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        SpotSummaryDetails spotSummaryDetails = null;
+
+        String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
+
+        // calculate weighted mean of selected age
+        Expression expressionSelectedAgeWM = buildExpression(selectedAgeExpressionName + "_WM_" + groupName,
+                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],FALSE,FALSE)", false, true, true);
+
+        updateSingleExpression(expressionSelectedAgeWM);
+
+        try {
+            //taskExpressionsEvaluationsPerSpotSet.remove(expressionSelectedAgeWM.getExpressionTree().getName());
+            evaluateExpressionForSpotSet(expressionSelectedAgeWM.getExpressionTree(), spotsForExpression);
+            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionSelectedAgeWM.getExpressionTree().getName());
+        } catch (SquidException squidException) {
+        }
+
+        return spotSummaryDetails;
     }
 
     private void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {

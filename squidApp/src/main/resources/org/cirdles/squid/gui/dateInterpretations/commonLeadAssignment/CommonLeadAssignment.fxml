@@ -16,5 +16,10 @@
             <Insets top="3.0" />
          </padding></HBox>
       <AnchorPane fx:id="sampleTreeAnchorPane" prefHeight="638.0" prefWidth="1200.0" />
+      <HBox fx:id="footerHBox" layoutX="10.0" layoutY="10.0" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1200.0" spacing="17.0" styleClass="backgroundCalamari">
+         <padding>
+            <Insets top="3.0" />
+         </padding>
+      </HBox>
    </children>
 </VBox>

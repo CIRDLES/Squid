@@ -56,10 +56,13 @@ public class StaceyKramerCommonLeadModel {
     public static double[] staceyKramerSingleStagePbR(double targetAge) {
 
         double[] PbLambda = new double[]{lambda238, lambda235, lambd232};
-        double[] ParRat = new double[]{1.0, U_RATIO, (1.0 / SK_KAPPA_MU)};
         double[] PbR0 = new double[]{SK_ALPHA0, SK_BETA0, SK_GAMMA0};
-        double[] MuIsh = new double[]{SK_MU, (SK_MU / U_RATIO), (SK_MU * SK_KAPPA_MU)};
-        double[] PbExp = new double[]{Math.exp(SK_START_AGE * lambda238),
+        double[] MuIsh = new double[]{
+            SK_MU, 
+            (SK_MU / U_RATIO), 
+            (SK_MU * SK_KAPPA_MU)};
+        double[] PbExp = new double[]{
+            Math.exp(SK_START_AGE * lambda238),
             Math.exp(SK_START_AGE * lambda235),
             Math.exp(SK_START_AGE * lambd232)};
         double[] eTerm = new double[3];
@@ -69,7 +72,7 @@ public class StaceyKramerCommonLeadModel {
             eTerm[i] = targetAge * PbLambda[i];
             singleStagePbR[i] = PbR0[i] + MuIsh[i] * (PbExp[i] - Math.exp(eTerm[i]));
         }
-      
+
         return singleStagePbR;
     }
 }
