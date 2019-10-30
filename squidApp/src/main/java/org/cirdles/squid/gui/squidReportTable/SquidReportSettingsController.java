@@ -63,6 +63,12 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public Button viewButton;
     @FXML
+    public ListView<String> ratioExpressionsListView;
+    @FXML
+    public ListView<String> isotopesExpressionsListView;
+    @FXML
+    public ListView<String> spotMetaDataExpressionsListView;
+    @FXML
     private SplitPane mainPane;
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
@@ -426,6 +432,71 @@ public class SquidReportSettingsController implements Initializable {
 
         populateExpressionListViews();
 
+        //RATIOS
+        ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        ratioExpressionsListView.setCellFactory(new StringCellFactory());
+        ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue != null) {
+                    Expression exp = new Expression(
+                            task.getNamedExpressionsMap().get(newValue), "[\"" + newValue + "\"]",
+                            false, false, false);
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    selectedExpression.set(exp);
+
+                    selectInAllPanes(exp, false);
+                }
+            }
+        });
+
+        populateRatiosListView();
+
+        //ISOTOPES
+        isotopesExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        isotopesExpressionsListView.setCellFactory(new StringCellFactory());
+        isotopesExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        isotopesExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue != null) {
+                    Expression exp = new Expression(
+                            task.getNamedExpressionsMap().get(newValue), "TotalCPS([\"" + newValue + "\"])",
+                            false, false, false);
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    selectInAllPanes(exp, false);
+                }
+            }
+        });
+
+        populateIsotopesListView();
+
+        //Spot Meta Data
+        spotMetaDataExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        spotMetaDataExpressionsListView.setCellFactory(new StringCellFactory());
+        spotMetaDataExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        spotMetaDataExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (newValue != null) {
+                    Expression exp = new Expression(task.getNamedExpressionsMap().get(newValue),
+                            newValue, false, false, false);
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    selectedExpression.set(exp);
+                    selectInAllPanes(exp, false);
+                }
+            }
+        });
+
+        populateSpotMetaDataListView();
+
         //Squid Report Categories
         categoryListView.setCellFactory(new SquidReportCategoryInterfaceCellFactory());
         categoryListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -473,6 +544,27 @@ public class SquidReportSettingsController implements Initializable {
                 populateColumnDetails();
             }
         });
+    }
+
+    private void populateRatiosListView() {
+        final ObservableList<String> obList = FXCollections.observableArrayList();
+        task.getSquidRatiosModelList().forEach(item -> obList.add(item.getRatioName()));
+        obList.sort(new IntuitiveStringComparator<>());
+        ratioExpressionsListView.setItems(obList);
+    }
+
+    private void populateIsotopesListView() {
+        final ObservableList<String> obList = FXCollections.observableArrayList();
+        task.getSquidSpeciesModelList().forEach(item -> obList.add(item.getIsotopeName()));
+        obList.sort(new IntuitiveStringComparator<>());
+        isotopesExpressionsListView.setItems(obList);
+    }
+
+    private void populateSpotMetaDataListView() {
+        final ObservableList<String> obList = FXCollections.observableArrayList();
+        task.getNamedSpotLookupFieldsMap().forEach((key, value) -> obList.add(value.getName()));
+        obList.sort(new IntuitiveStringComparator<>());
+        spotMetaDataExpressionsListView.setItems(obList);
     }
 
     private void populateCategoryListView() {
@@ -694,14 +786,17 @@ public class SquidReportSettingsController implements Initializable {
     public void refMatUnknownToggleButton(ActionEvent actionEvent) {
         if (isRefMat) {
             isRefMat = false;
-            refMatUnknownToggleButton.setText("RefMat");
+            refMatUnknownToggleButton.setText("Unknown");
         } else {
             isRefMat = true;
-            refMatUnknownToggleButton.setText("Unknown");
+            refMatUnknownToggleButton.setText("RefMat");
         }
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
         populateExpressionListViews();
+        populateIsotopesListView();
+        populateRatiosListView();
+        populateSpotMetaDataListView();
     }
 
     @FXML
@@ -1092,6 +1187,62 @@ public class SquidReportSettingsController implements Initializable {
                 //Nothing
             });
 
+            return cell;
+        }
+    }
+
+    private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
+        public StringCellFactory() {
+
+        }
+
+        @Override
+        public ListCell<String> call(ListView<String> param) {
+            ListCell<String> cell = new ListCell<String>() {
+                @Override
+                public void updateItem(String string, boolean empty) {
+                    super.updateItem(string, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(string);
+                        setGraphic(null);
+                    }
+
+                }
+
+            };
+            cell.setOnDragDetected(event -> {
+                if (!cell.isEmpty()) {
+                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
+                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.putString(cell.getItem());
+                    db.setContent(cc);
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnDragDone((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setOnMousePressed((event) -> {
+                if (!cell.isEmpty()) {
+                    cell.setCursor(Cursor.CLOSED_HAND);
+                }
+            });
+
+            cell.setOnMouseReleased((event) -> {
+                cell.setCursor(Cursor.OPEN_HAND);
+            });
+
+            cell.setCursor(Cursor.OPEN_HAND);
+
+            cell.setOnMouseClicked((event) -> {
+                //Nothing
+            });
             return cell;
         }
     }

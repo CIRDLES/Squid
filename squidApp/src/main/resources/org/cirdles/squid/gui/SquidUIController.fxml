@@ -129,7 +129,7 @@
                         </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
                     <items>
-                      <MenuItem disable="false" mnemonicParsing="false" text="Report Layout Manager" onAction="#reportLayoutManagerOnAction" />
+                      <MenuItem disable="false" mnemonicParsing="false" text="Report Builder" onAction="#reportLayoutManagerOnAction" />
                         <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />
