@@ -70,20 +70,19 @@ public class SquidReportTableController implements Initializable {
                 break;
             case refMatCustom:
                 if (squidReportTable == null) {
-                    SquidReportTableInterface squidReportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
+                    squidReportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
                 }
                 textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
                 break;
             case unknown:
                 reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-                List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySampleName();
-                textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
+                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
                 break;
             case unknownCustom:
                 if (squidReportTable == null) {
                     squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
                 }
-                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
+                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getUnknownSpots());
                 break;
 
             default:
