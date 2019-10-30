@@ -12,7 +12,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
@@ -20,7 +19,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -163,7 +165,7 @@ public class SquidReportSettingsController implements Initializable {
 
     private void initCategoryTextField() {
         categoryTextField.setOnKeyPressed(val -> {
-            if(val.getCode() == KeyCode.ENTER)
+            if (val.getCode() == KeyCode.ENTER)
                 createCategory();
         });
     }
@@ -907,14 +909,18 @@ public class SquidReportSettingsController implements Initializable {
 
             cell.setOnDragDropped(event -> {
                 boolean success = false;
-                ObservableList<SquidReportCategoryInterface> items = categoryListView.getItems();
 
+                ObservableList<SquidReportCategoryInterface> items = categoryListView.getItems();
                 SquidReportCategoryInterface cat = null;
                 for (int i = 0; cat == null && i < items.size(); i++) {
                     if (items.get(i).getDisplayName().equals(event.getDragboard().getString())) {
                         cat = items.get(i);
                         items.remove(i);
-                        items.add(cell.getIndex(), cat);
+                        if (cell.isEmpty()) {
+                            items.add(cat);
+                        } else {
+                            items.add(cell.getIndex(), cat);
+                        }
                         categoryListView.getSelectionModel().select(cat);
                         success = true;
                         event.consume();
@@ -942,7 +948,17 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnMousePressed((event) -> {
-                if (!cell.isEmpty()) {
+                if (cell.isEmpty()) {
+                } else if (event.isSecondaryButtonDown()) {
+                    ContextMenu contextMenu = new ContextMenu();
+                    MenuItem deleteItem = new MenuItem("Delete");
+                    deleteItem.setOnAction(action -> {
+                        categoryListView.getItems().remove(cell.getItem());
+                    });
+                    contextMenu.getItems().addAll(deleteItem);
+
+                    contextMenu.show(cell, event.getScreenX(), event.getScreenY());
+                } else {
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
@@ -1019,7 +1035,11 @@ public class SquidReportSettingsController implements Initializable {
                         if (items.get(i).getExpressionName().equals(event.getDragboard().getString())) {
                             col = items.get(i);
                             items.remove(i);
-                            items.add(cell.getIndex(), col);
+                            if (cell.isEmpty()) {
+                                items.add(col);
+                            } else {
+                                items.add(cell.getIndex(), col);
+                            }
                             columnListView.getSelectionModel().select(col);
                             success = true;
                             event.consume();
@@ -1047,7 +1067,17 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnMousePressed((event) -> {
-                if (!cell.isEmpty()) {
+                if (cell.isEmpty()) {
+                } else if (event.isSecondaryButtonDown()) {
+                    ContextMenu contextMenu = new ContextMenu();
+                    MenuItem deleteItem = new MenuItem("Delete");
+                    deleteItem.setOnAction(action -> {
+                        columnListView.getItems().remove(cell.getItem());
+                    });
+                    contextMenu.getItems().addAll(deleteItem);
+
+                    contextMenu.show(cell, event.getScreenX(), event.getScreenY());
+                } else {
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }
             });
