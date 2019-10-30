@@ -606,8 +606,8 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() != isRefMat ||
-                    exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() == isRefMat) {
+            if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation() && (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() != isRefMat ||
+                    exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() == isRefMat)) {
                 if (exp.amHealthy() && exp.isSquidSwitchNU()
                         && !exp.aliasedExpression()) {
                     sortedNUSwitchedExpressionsList.add(exp);
