@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -106,9 +105,20 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new SquidReportCategoryXMLConverter());
-        xstream.alias("Squid Report Category", SquidReportCategory.class);
+        xstream.alias("SquidReportCategory", SquidReportCategory.class);
 
         xstream.registerConverter(new SquidReportColumnXMLConverter());
-        xstream.alias("Squid Report Column", SquidReportColumn.class);
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+    }
+
+    public SquidReportCategory clone() {
+        SquidReportCategoryInterface cat = new SquidReportCategory(displayName);
+        LinkedList<SquidReportColumnInterface> cols = new LinkedList<>();
+        for (SquidReportColumnInterface col : categoryColumns) {
+            cols.add(col.clone());
+        }
+        cat.setCategoryColumns(cols);
+        cat.setVisible(visible);
+        return (SquidReportCategory) cat;
     }
 }

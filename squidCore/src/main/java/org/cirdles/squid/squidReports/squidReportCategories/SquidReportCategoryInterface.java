@@ -54,4 +54,6 @@ public interface SquidReportCategoryInterface extends XMLSerializerInterface {
      * @param visible the visible to set
      */
     public void setVisible(boolean visible);
+
+    public SquidReportCategory clone();
 }

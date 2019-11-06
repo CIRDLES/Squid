@@ -20,7 +20,11 @@ public class SquidReportColumnXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("uncertaintyColumn");
-        context.convertAnother(col.getUncertaintyColumn());
+        if (col.getUncertaintyColumn() != null) {
+            context.convertAnother(col.getUncertaintyColumn());
+        } else {
+            writer.setValue("null");
+        }
         writer.endNode();
 
         writer.startNode("amUncertaintyColumn");
@@ -55,9 +59,11 @@ public class SquidReportColumnXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        SquidReportColumnInterface uncertaintyColumn = SquidReportColumn.createSquidReportColumn("");
-        uncertaintyColumn = (SquidReportColumnInterface) context.convertAnother(uncertaintyColumn, SquidReportColumn.class);
-        col.setUncertaintyColumn(uncertaintyColumn);
+        if (!reader.getValue().equals("null")) {
+            SquidReportColumnInterface uncertaintyColumn = SquidReportColumn.createSquidReportColumn("");
+            uncertaintyColumn = (SquidReportColumnInterface) context.convertAnother(uncertaintyColumn, SquidReportColumn.class);
+            col.setUncertaintyColumn(uncertaintyColumn);
+        }
         reader.moveUp();
 
         reader.moveDown();

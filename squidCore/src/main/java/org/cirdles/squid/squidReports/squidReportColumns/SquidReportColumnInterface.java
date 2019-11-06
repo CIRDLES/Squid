@@ -145,4 +145,6 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
         }
     }
 
+    public SquidReportColumn clone();
+
 }

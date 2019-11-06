@@ -29,7 +29,6 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -52,31 +51,33 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     // Fields
     private String reportTableName;
     private LinkedList<SquidReportCategoryInterface> reportCategories;
+    private boolean isDefault;
 
     private SquidReportTable() {
     }
 
-    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories) {
+    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault) {
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
+        this.isDefault = isDefault;
     }
 
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
-        return new SquidReportTable(reportTableName, new LinkedList<>());
+        return new SquidReportTable(reportTableName, new LinkedList<>(), false);
     }
 
     public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
         String reportTableName = "Default Squid3 Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
 
-        return new SquidReportTable(reportTableName, reportCategories);
+        return new SquidReportTable(reportTableName, reportCategories, true);
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) {
         String reportTableName = "Default Squid3 Report Table for Unknowns";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknown(task);
 
-        return new SquidReportTable(reportTableName, reportCategories);
+        return new SquidReportTable(reportTableName, reportCategories, true);
     }
 
     public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
@@ -299,15 +300,42 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportCategories = reportCategories;
     }
 
+    public void setIsDefault(boolean isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new SquidReportTableXMLConverter());
-        xstream.alias("Squid Report Table", SquidReportTable.class);
+        xstream.alias("SquidReportTable", SquidReportTable.class);
 
         xstream.registerConverter(new SquidReportCategoryXMLConverter());
-        xstream.alias("Squid Report Category", SquidReportCategory.class);
+        xstream.alias("SquidReportCategory", SquidReportCategory.class);
 
         xstream.registerConverter(new SquidReportColumnXMLConverter());
-        xstream.alias("Squid Report Column", SquidReportColumn.class);
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+    }
+
+    public boolean equals(Object ob) {
+        return ob != null &&
+                ob instanceof SquidReportTable &&
+                ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
+    }
+
+    public SquidReportTable clone() {
+        SquidReportTable table = createEmptySquidReportTable(reportTableName);
+
+        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
+        for(SquidReportCategoryInterface cat : reportCategories) {
+            cats.add(cat.clone());
+        }
+        table.setReportCategories(cats);
+        table.setIsDefault(isDefault);
+
+        return table;
     }
 }

@@ -432,6 +432,18 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new SquidReportColumnXMLConverter());
-        xstream.alias("Squid Report Column", SquidReportColumn.class);
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+    }
+
+    public SquidReportColumn clone() {
+        SquidReportColumnInterface col = createSquidReportColumn(expressionName);
+        col.setUnits(units);
+        col.setUncertaintyColumn(uncertaintyColumn);
+        col.setAmUncertaintyColumn(amUncertaintyColumn);
+        col.setUncertaintyDirective(uncertaintyDirective);
+        col.setCountOfSignificantDigits(countOfSignificantDigits);
+        col.setVisible(visible);
+        col.setFootnoteSpec(footnoteSpec);
+        return (SquidReportColumn) col;
     }
 }

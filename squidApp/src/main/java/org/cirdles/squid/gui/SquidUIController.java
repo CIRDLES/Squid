@@ -1130,7 +1130,7 @@ public class SquidUIController implements Initializable {
 
     private String showLongfilePath(String path) {
         String retVal = "";
-        String[] pathParts = path.split(File.separator);
+        String[] pathParts = path.split("\\\\");
         for (int i = 0; i < pathParts.length; i++) {
             retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
             for (int j = 0; j < i; j++) {

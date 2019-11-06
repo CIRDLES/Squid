@@ -28,11 +28,15 @@ public class SquidReportTableXMLConverter implements Converter {
             writer.endNode();
         }
         writer.endNode();
+
+        writer.startNode("isDefault");
+        writer.setValue(Boolean.toString(table.isDefault()));
+        writer.endNode();
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-        SquidReportTableInterface table = SquidReportTable.createDefaultSquidReportTableRefMat(new Task());
+        SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable("");
 
         reader.moveDown();
         table.setReportTableName(reader.getValue());
@@ -46,6 +50,10 @@ public class SquidReportTableXMLConverter implements Converter {
             table.getReportCategories().add(cat);
             reader.moveUp();
         }
+        reader.moveUp();
+
+        reader.moveDown();
+        table.setIsDefault(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 
         return table;

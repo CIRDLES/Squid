@@ -17,15 +17,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -76,13 +75,13 @@ public class SquidReportTableController implements Initializable {
                 break;
             case unknown:
                 reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getUnknownSpots(), false);
+                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.makeListOfUnknownsBySampleName(), false);
                 break;
             case unknownCustom:
                 if (squidReportTable == null) {
                     squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
                 }
-                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getUnknownSpots());
+                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
                 break;
 
             default:
