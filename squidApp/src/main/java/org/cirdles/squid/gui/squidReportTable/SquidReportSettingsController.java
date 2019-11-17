@@ -227,11 +227,6 @@ public class SquidReportSettingsController implements Initializable {
             if (reportTableCB.getSelectionModel().getSelectedItem() != null) {
                 isDefault.setValue(reportTableCB.getSelectionModel().getSelectedItem().isDefault());
                 populateCategoryListView();
-                if (categoryListView.getItems().isEmpty()) {
-                    columnListView.setItems(FXCollections.observableArrayList());
-                } else {
-                    categoryListView.getSelectionModel().selectFirst();
-                }
             }
         });
         populateSquidReportTableChoiceBox();
@@ -511,12 +506,52 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedCategory.setValue(newValue);
         });
+        /*
+        AtomicDouble scrollAmount = new AtomicDouble(0.0);
+        Thread catScrollThread = new Thread(() -> {
+            final ScrollBar catScrollBar = (ScrollBar) categoryListView.lookup(".scroll-bar:vertical");
+            if (catScrollBar != null) {
+                while (true) {
+                    double newScrollValue = catScrollBar.getValue() + scrollAmount.get() * .1;
+                    if (newScrollValue > catScrollBar.getMax()) {
+                        newScrollValue = catScrollBar.getMax();
+                    } else if (newScrollValue < catScrollBar.getMin()) {
+                        newScrollValue = catScrollBar.getMin();
+                    }
+                    categoryListView.scrollTo(categoryListView.getItems().size() - 1);
+                    try {
+                        Thread.sleep(1000000);
+                    } catch (InterruptedException e) {
+                    }
+                }
+            }
+        });
+        catScrollThread.setPriority(Thread.MAX_PRIORITY);
+        categoryListView.addEventHandler(MouseEvent.ANY, event -> {
+            double location = event.getY();
+            double height = categoryListView.getHeight();
+            if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
+                catScrollThread.interrupt();
+                System.out.println("interrupted");
+            } else if (location < height / 4) {
+                scrollAmount.set(-(height / 4 - location));
+                if (!catScrollThread.isAlive()) {
+                    catScrollThread.start();
+                    System.out.println("started");
+                }
+            } else if (location > height * .75) {
+                scrollAmount.set(location - height * .75);
+                if (!catScrollThread.isAlive()) {
+                    catScrollThread.start();
+                    System.out.println("started");
+                }
+            } else {
+                catScrollThread.interrupt();
+                System.out.println("interrupted");
+            }
+        });
+        */
         populateCategoryListView();
-        if(categoryListView.getItems().size() > 0) {
-            categoryListView.getSelectionModel().selectFirst();
-        } else {
-            columnListView.setItems(FXCollections.observableArrayList());
-        }
 
         //Squid Report Columns
         columnListView.setCellFactory(new SquidReportColumnInterfaceCellFactory());
@@ -581,11 +616,16 @@ public class SquidReportSettingsController implements Initializable {
 
     private void populateCategoryListView() {
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
-        for(SquidReportCategoryInterface cat : reportTableCB.getSelectionModel().getSelectedItem().getReportCategories()) {
+        for (SquidReportCategoryInterface cat : reportTableCB.getSelectionModel().getSelectedItem().getReportCategories()) {
             cats.add(cat.clone());
         }
         ObservableList<SquidReportCategoryInterface> obList = FXCollections.observableArrayList(cats);
         categoryListView.setItems(obList);
+        if (categoryListView.getItems().isEmpty()) {
+            columnListView.setItems(FXCollections.observableArrayList());
+        } else {
+            categoryListView.getSelectionModel().selectFirst();
+        }
     }
 
     private void populateColumnListView() {
@@ -843,7 +883,6 @@ public class SquidReportSettingsController implements Initializable {
         dialog.setHeaderText("Enter a name for the Report Setting Copy");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
-
             if (getNamesOfTables().contains(name)) {
                 SquidMessageDialog.showWarningDialog("A Squid Report Setting with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
@@ -876,11 +915,6 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void restoreOnAction(ActionEvent event) {
         populateCategoryListView();
-        if(categoryListView.getItems().isEmpty()) {
-            columnListView.setItems(FXCollections.observableArrayList());
-        } else {
-            categoryListView.getSelectionModel().selectFirst();
-        }
         isEditing.setValue(false);
     }
 
@@ -917,20 +951,34 @@ public class SquidReportSettingsController implements Initializable {
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
                 final List<SquidReportTableInterface> tables = getTables();
-                if (tables.contains(table)) {
+                int indexOfSameNameTable = tables.indexOf(table);
+                if (indexOfSameNameTable >= 0) {
+                    SquidReportTableInterface sameNameTable = tables.get(indexOfSameNameTable);
+
                     ButtonType replace = new ButtonType("Replace");
                     ButtonType rename = new ButtonType("Rename");
-                    Alert alert = new Alert(Alert.AlertType.WARNING,
-                            "A Squid Report Setting already exists with this name. What do you want to do?",
-                            replace,
-                            rename,
-                            ButtonType.CANCEL
-                    );
+                    Alert alert;
+                    if (sameNameTable.isDefault()) {
+                        alert = new Alert(Alert.AlertType.WARNING,
+                                "A Squid Report Setting already exists with this name. What do you want to do?",
+                                rename,
+                                ButtonType.CANCEL
+                        );
+                    } else {
+                        alert = new Alert(Alert.AlertType.WARNING,
+                                "A Squid Report Setting already exists with this name. What do you want to do?",
+                                replace,
+                                rename,
+                                ButtonType.CANCEL
+                        );
+                    }
                     alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
                     alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
                     alert.showAndWait().ifPresent((t) -> {
                         if (t.equals(replace)) {
-
+                            tables.set(indexOfSameNameTable, table);
+                            populateSquidReportTableChoiceBox();
+                            reportTableCB.getSelectionModel().select(table);
                         } else if (t.equals(rename)) {
                             TextInputDialog dialog = new TextInputDialog(table.getReportTableName());
                             dialog.setTitle("Rename");
@@ -952,14 +1000,15 @@ public class SquidReportSettingsController implements Initializable {
                             dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
                             dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
                             Optional<String> result = dialog.showAndWait();
-                            boolean containsTable = tables.contains(table);
-                            if (result.isPresent() && !containsTable) {
+                            if (result.isPresent()) {
                                 table.setReportTableName(result.get());
-                                tables.add(table);
-                                populateSquidReportTableChoiceBox();
-                                reportTableCB.getSelectionModel().select(table);
-                            } else if (containsTable) {
-                                SquidMessageDialog.showWarningDialog("A Squid Report Setting already exists with this name.", primaryStageWindow);
+                                if (tables.contains(table)) {
+                                    SquidMessageDialog.showWarningDialog("A Squid Report Setting already exists with this name.", primaryStageWindow);
+                                } else {
+                                    tables.add(table);
+                                    populateSquidReportTableChoiceBox();
+                                    reportTableCB.getSelectionModel().select(table);
+                                }
                             }
                         }
                     });
