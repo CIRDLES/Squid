@@ -145,6 +145,7 @@ public class SquidUIController implements Initializable {
     public static Node topsoilPlotUI;
     public static VBox countCorrectionsUI;
     public static VBox commonLeadAssignmentUI;
+    public static VBox weightedMeansUI;
 
     public static String projectFileName;
 
@@ -391,6 +392,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(topsoilPlotUI);
         mainPane.getChildren().remove(countCorrectionsUI);
         mainPane.getChildren().remove(commonLeadAssignmentUI);
+        mainPane.getChildren().remove(weightedMeansUI);
 
         mainPane.getChildren().remove(taskDesignerUI);
 
@@ -1215,12 +1217,12 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("countCorrectionsUI >>>>   " + iOException.getMessage());
             }
-            
+
             showUI(countCorrectionsUI);
         }
     }
-    
-     private void launchCommonLeadAssignment() {
+
+    private void launchCommonLeadAssignment() {
         mainPane.getChildren().remove(commonLeadAssignmentUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1239,7 +1241,7 @@ public class SquidUIController implements Initializable {
         } else {
             try {
                 commonLeadAssignmentUI = FXMLLoader.load(getClass().getResource("dateInterpretations/commonLeadAssignment/CommonLeadAssignment.fxml"));
-                commonLeadAssignmentUI.setId("Count Corrections");
+                commonLeadAssignmentUI.setId("Common Lead Assignment");
 
                 AnchorPane.setLeftAnchor(commonLeadAssignmentUI, 0.0);
                 AnchorPane.setRightAnchor(commonLeadAssignmentUI, 0.0);
@@ -1251,11 +1253,46 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("commonLeadAssignmentUI >>>>   " + iOException.getMessage());
             }
-            
+
             showUI(commonLeadAssignmentUI);
         }
     }
 
+    private void launchWeightedMeans() {
+        mainPane.getChildren().remove(weightedMeansUI);
+        squidProject.getTask().buildSquidSpeciesModelList();
+        // if ratios list not populated or no ref mat chosen show warning
+        if (squidProject.getTask().getSquidRatiosModelList().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "Please use the 'Isotopes & Ratios' menu to manage isotopes so reduction can proceed.\n\n",
+                    primaryStageWindow);
+        } else if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There are no Reference Material spots chosen.\n\n",
+                    primaryStageWindow);
+        } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
+            SquidMessageDialog.showInfoDialog(
+                    "There is no Reference Material Model chosen.\n\n",
+                    primaryStageWindow);
+        } else {
+            try {
+                weightedMeansUI = FXMLLoader.load(getClass().getResource("dateInterpretations/weightedMeans/WeightedMeans.fxml"));
+                weightedMeansUI.setId("WeightedMeans");
+
+                AnchorPane.setLeftAnchor(weightedMeansUI, 0.0);
+                AnchorPane.setRightAnchor(weightedMeansUI, 0.0);
+                AnchorPane.setTopAnchor(weightedMeansUI, 0.0);
+                AnchorPane.setBottomAnchor(weightedMeansUI, 0.0);
+
+                mainPane.getChildren().add(weightedMeansUI);
+                weightedMeansUI.setVisible(false);
+            } catch (IOException | RuntimeException iOException) {
+                System.out.println("weightedMeansUI >>>>   " + iOException.getMessage());
+            }
+
+            showUI(weightedMeansUI);
+        }
+    }
 
     private void launchPlots() {
         mainPane.getChildren().remove(topsoilPlotUI);
@@ -1589,5 +1626,10 @@ public class SquidUIController implements Initializable {
     @FXML
     private void assignCommonLeadRatiosAction(ActionEvent event) {
         launchCommonLeadAssignment();
+    }
+
+    @FXML
+    private void weightedMeansAction(ActionEvent event) {
+        launchWeightedMeans();
     }
 }
