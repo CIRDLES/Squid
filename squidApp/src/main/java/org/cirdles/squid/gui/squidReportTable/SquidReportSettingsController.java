@@ -81,6 +81,10 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public ListView<String> spotMetaDataExpressionsListView;
     @FXML
+    public ChoiceBox<String> spotsChoiceBox;
+    @FXML
+    public HBox expressionsHbox;
+    @FXML
     private SplitPane mainPane;
     @FXML
     private ToggleGroup expressionsSortToggleGroup;
@@ -164,6 +168,7 @@ public class SquidReportSettingsController implements Initializable {
         initCategoryTextField();
 
         initReportTableCB();
+        initSpotChoiceBox();
 
         //squidReportTable = task.getSquidReportTable();
         // update
@@ -179,6 +184,7 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+        expressionsHbox.getChildren().remove(spotsChoiceBox);
     }
 
     private void initCategoryTextField() {
@@ -605,6 +611,14 @@ public class SquidReportSettingsController implements Initializable {
                 populateColumnDetails();
             }
         });
+    }
+
+    private void initSpotChoiceBox() {
+        ObservableList<String> spots = FXCollections.observableArrayList();
+        task.getMapOfUnknownsBySampleNames().keySet().forEach(val -> spots.add(val));
+        spotsChoiceBox.setItems(spots);
+        spotsChoiceBox.getSelectionModel().select("UNKNOWNS");
+        spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> populateExpressionListViews());
     }
 
     private void populateRatiosListView() {
@@ -1083,7 +1097,17 @@ public class SquidReportSettingsController implements Initializable {
 
     //POPULATE LISTS
     private void populateExpressionListViews() {
-        namedExpressions = FXCollections.observableArrayList(task.getTaskExpressionsOrdered());
+        namedExpressions = FXCollections.observableArrayList();
+        String spot = spotsChoiceBox.getSelectionModel().getSelectedItem();
+        task.getTaskExpressionsOrdered().forEach(exp -> {
+            if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
+                    && ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
+                    || (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && !isRefMat)
+                    && (spot.compareToIgnoreCase("unknowns") == 0
+                    || spot.compareToIgnoreCase(exp.getExpressionTree().getUnknownsGroupSampleName()) == 0))) {
+                namedExpressions.add(exp);
+            }
+        });
 
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
@@ -1093,25 +1117,22 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
-            if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation() && (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() != isRefMat ||
-                    exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() == isRefMat)) {
-                if (exp.amHealthy() && exp.isSquidSwitchNU()
-                        && !exp.aliasedExpression()) {
-                    sortedNUSwitchedExpressionsList.add(exp);
-                } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
-                    sortedReferenceMaterialValuesList.add(exp);
-                } else if (exp.isParameterValue() && exp.amHealthy()) {
-                    sortedParameterValuesList.add(exp);
-                } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
-                        && exp.amHealthy()
-                        && !exp.isSquidSwitchNU()
-                        && !exp.aliasedExpression()) {
-                    sortedBuiltInExpressionsList.add(exp);
-                } else if (exp.isCustom() && exp.amHealthy()) {
-                    sortedCustomExpressionsList.add(exp);
-                } else if (!exp.amHealthy()) {
-                    sortedBrokenExpressionsList.add(exp);
-                }
+            if (exp.amHealthy() && exp.isSquidSwitchNU()
+                    && !exp.aliasedExpression()) {
+                sortedNUSwitchedExpressionsList.add(exp);
+            } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
+                sortedReferenceMaterialValuesList.add(exp);
+            } else if (exp.isParameterValue() && exp.amHealthy()) {
+                sortedParameterValuesList.add(exp);
+            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
+                    && exp.amHealthy()
+                    && !exp.isSquidSwitchNU()
+                    && !exp.aliasedExpression()) {
+                sortedBuiltInExpressionsList.add(exp);
+            } else if (exp.isCustom() && exp.amHealthy()) {
+                sortedCustomExpressionsList.add(exp);
+            } else if (!exp.amHealthy()) {
+                sortedBrokenExpressionsList.add(exp);
             }
         }
 
@@ -1176,13 +1197,15 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    public void refMatUnknownToggleButton(ActionEvent actionEvent) {
+    public void refMatUnknownToggleButtonOnAction(ActionEvent actionEvent) {
         if (isRefMat) {
             isRefMat = false;
             refMatUnknownToggleButton.setText("Unknown");
+            expressionsHbox.getChildren().add(spotsChoiceBox);
         } else {
             isRefMat = true;
             refMatUnknownToggleButton.setText("RefMat");
+            expressionsHbox.getChildren().remove(spotsChoiceBox);
         }
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
