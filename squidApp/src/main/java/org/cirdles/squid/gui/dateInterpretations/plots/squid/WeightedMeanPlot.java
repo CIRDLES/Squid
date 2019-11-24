@@ -20,6 +20,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -73,8 +75,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         super(bounds, 0, 0);
 
-        graphWidth = 700;
-        graphHeight = 300;
         leftMargin = 150;
         topMargin = 200;
 
@@ -93,6 +93,46 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         setupSpotInWMContextMenu();
 
         this.setOnMouseClicked(new MouseClickEventHandler());
+
+        widthProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() > 100) {
+                    bounds.setWidth(newValue.intValue());
+                    width = (int) bounds.getWidth();
+                    graphWidth = (int) width - 2 * leftMargin;
+                    displayPlotAsNode();
+                }
+            }
+        });
+
+        heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() > 100) {
+                    bounds.setHeight(newValue.intValue());
+                    height = (int) bounds.getHeight();
+                    graphHeight = (int) height -  topMargin - topMargin / 2;
+                    displayPlotAsNode();
+                }
+            }
+        });
+    }
+
+    // https://dlsc.com/2014/04/10/javafx-tip-1-resizable-canvas/
+    @Override
+    public boolean isResizable() {
+        return true;
+    }
+
+    @Override
+    public double prefHeight(double width) {
+        return this.getHeight();
+    }
+
+    @Override
+    public double prefWidth(double height) {
+        return this.getWidth();
     }
 
     private boolean extractFractionDetails() {
@@ -368,7 +408,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
         } catch (Exception e) {
         }
-        
+
         return retVal;
     }
 
