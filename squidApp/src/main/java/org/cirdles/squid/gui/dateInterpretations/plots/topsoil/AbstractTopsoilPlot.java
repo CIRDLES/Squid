@@ -40,9 +40,11 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     private PlotView plot;
 
     private final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+
     public final ObservableList<DataEntry> getData() {
         return dataEntries.get();
     }
+
     @Override
     public final void setData(List<Map<String, Object>> data) {
         List<DataEntry> entries = new ArrayList<>();
@@ -57,18 +59,22 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         }
         dataEntries.setAll(entries);
     }
+
     public final void setDataEntries(List<DataEntry> dataEntries) {
         this.dataEntries.setAll(dataEntries);
     }
 
-    private final ReadOnlyMapProperty<PlotOption<?>, Object> options =
-            new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
+    private final ReadOnlyMapProperty<PlotOption<?>, Object> options
+            = new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
+
     public final Map<PlotOption<?>, Object> getPlotOptions() {
         return options.get();
     }
+
     public final void setPlotOptions(PlotOptions options) {
         this.options.putAll(options);
     }
+
     public final void setPlotOptions(Map<String, Object> options) {
         for (Map.Entry<String, Object> entry : options.entrySet()) {
             setProperty(entry.getKey(), entry.getValue());
@@ -113,7 +119,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         if (plot == null) {
             plot = new PlotView(PlotType.SCATTER, new PlotOptions(getPlotOptions()), getData());
             CompletableFuture<Void> loadFuture = plot.getLoadFuture();
-            isLoading.set(! loadFuture.isDone());
+            isLoading.set(!loadFuture.isDone());
             loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
             dataEntries.addListener((ListChangeListener<DataEntry>) c -> {
                 plot.setData(dataEntries);
@@ -124,7 +130,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         }
         return plot;
     }
-
+    
     @Override
     public List<Node> toolbarControlsFactory() {
         Text loadingIndicator = new Text("Loading...");
