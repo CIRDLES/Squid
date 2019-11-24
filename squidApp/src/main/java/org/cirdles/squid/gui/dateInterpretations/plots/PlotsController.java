@@ -33,9 +33,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
@@ -43,6 +46,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -61,6 +65,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.topsoil.Variable;
 import org.controlsfx.control.CheckTreeView;
 import static org.cirdles.squid.gui.SquidUI.SPOT_TREEVIEW_CSS_STYLE_SPECS;
+import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
@@ -74,6 +79,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_U_PB;
+import org.cirdles.topsoil.javafx.PlotView;
 
 /**
  *
@@ -119,9 +125,15 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @FXML
     private ToggleGroup plotFlavorToggleGroup;
     @FXML
-    private VBox vboxTreeHolder;
-    @FXML
     private CheckBox autoExcludeSpotsCheckBox;
+    @FXML
+    private ScrollPane plotScrollPane;
+    @FXML
+    private HBox controlPanel;
+    @FXML
+    private ScrollPane spotListScrollPane;
+    @FXML
+    private AnchorPane spotListAnchorPane;
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
@@ -145,6 +157,12 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
+
+        plotVBox.prefWidthProperty().bind(plotScrollPane.widthProperty());
+        plotVBox.prefHeightProperty().bind(plotScrollPane.heightProperty());
+
+        spotListAnchorPane.prefHeightProperty().bind(spotListScrollPane.heightProperty());
+        spotListAnchorPane.prefWidthProperty().bind(spotListScrollPane.widthProperty());
 
         corr4_RadioButton.setUserData(PB4CORR);
         corr7_RadioButton.setUserData(PB7CORR);
@@ -309,10 +327,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             }
         }));
 
-        vboxTreeHolder.getChildren().clear();
-        spotsTreeViewCheckBox.setPrefHeight(vboxMaster.getPrefHeight());
-        spotsTreeViewCheckBox.setMinHeight(vboxMaster.getHeight());
-        vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
+        spotListAnchorPane.getChildren().clear();
+        spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
+        spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
 
         // dec 2018 improvement suggested by Nicole Rayner to use checkboxes to select members
         // thus selecting tree item displays it and checkbox (see above) for a sample will
@@ -340,20 +358,40 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @Override
     public void refreshPlot() {
         try {
-            topsoilPlotNode = plot.displayPlotAsNode();
-            plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
-            AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
-            AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+            if (plot instanceof WeightedMeanPlot) {
+                topsoilPlotNode = plot.displayPlotAsNode();
+                plotAndConfigAnchorPane.getChildren().setAll(((Canvas) plot));
+
+                AnchorPane.setLeftAnchor(((Canvas) plot), 0.0);
+                AnchorPane.setRightAnchor(((Canvas) plot), 0.0);
+                AnchorPane.setTopAnchor(((Canvas) plot), 0.0);
+                AnchorPane.setBottomAnchor(((Canvas) plot), 0.0);
+
+                VBox.setVgrow(((Canvas) plot), Priority.ALWAYS);
+
+                ((Canvas) plot).widthProperty().bind(plotScrollPane.widthProperty());
+                ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty().subtract(controlPanel.getPrefHeight()));
+
+            } else {
+
+                topsoilPlotNode = plot.displayPlotAsNode();
+                plotAndConfigAnchorPane.getChildren().setAll(topsoilPlotNode);
+
+                AnchorPane.setLeftAnchor(topsoilPlotNode, 0.0);
+                AnchorPane.setRightAnchor(topsoilPlotNode, 0.0);
+                AnchorPane.setTopAnchor(topsoilPlotNode, 0.0);
+                AnchorPane.setBottomAnchor(topsoilPlotNode, 0.0);
+
+                VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
+            }
 
             VBox.setVgrow(plotAndConfigAnchorPane, Priority.ALWAYS);
-            VBox.setVgrow(topsoilPlotNode, Priority.ALWAYS);
             VBox.setVgrow(plotVBox, Priority.NEVER);//ALWAYS);
 
             plotToolBar.getItems().clear();
             plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
             plotToolBar.setPadding(Insets.EMPTY);
+
         } catch (Exception e) {
         }
     }
@@ -447,10 +485,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     });
                 }
 
-                vboxTreeHolder.getChildren().clear();
-                spotsTreeViewCheckBox.setPrefHeight(vboxMaster.getPrefHeight());
-                spotsTreeViewCheckBox.setMinHeight(vboxMaster.getHeight());
-                vboxTreeHolder.getChildren().add(spotsTreeViewCheckBox);
+                spotListAnchorPane.getChildren().clear();
+                spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
+                spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
+                spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
             } else {
                 TreeItem<String> rootItemWM
                         = new TreeItem<>(squidProject.getFilterForRefMatSpotNames());
@@ -489,10 +527,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     rootItemWM.getChildren().add(TreeItemWM);
                 }
 
-                vboxTreeHolder.getChildren().clear();
-                spotsTreeViewString.setPrefHeight(vboxMaster.getPrefHeight());
-                spotsTreeViewString.setMinHeight(vboxMaster.getHeight());
-                vboxTreeHolder.getChildren().add(spotsTreeViewString);
+                spotListAnchorPane.getChildren().clear();
+                spotsTreeViewString.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
+                spotsTreeViewString.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
+                spotListAnchorPane.getChildren().add(spotsTreeViewString);
             }
         } catch (Exception e) {
         }
