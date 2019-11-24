@@ -1266,7 +1266,10 @@ public class SquidReportSettingsController implements Initializable {
             if (getNamesOfTables().contains(name)) {
                 SquidMessageDialog.showWarningDialog("A Squid Report Setting with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
+                int selectedIndex = reportTableCB.getSelectionModel().getSelectedIndex();
                 reportTableCB.getSelectionModel().getSelectedItem().setReportTableName(name);
+                populateSquidReportTableChoiceBox();
+                reportTableCB.getSelectionModel().select(selectedIndex);
             }
         });
     }
