@@ -154,7 +154,6 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
                 Bindings.not(regressionCheckBox.selectedProperty())
         );
 
-
         controls.add(ellipsesCheckBox);
         controls.add(uncertaintyChoiceBox);
         controls.add(ellipsesColorPicker);

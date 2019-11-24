@@ -36,6 +36,7 @@ public class SquidReportTableLauncher {
         refMatStage.setWidth(1000);
         refMatStage.setMinHeight(375);
         refMatStage.setHeight(600);
+
         unknownsStage.setMinWidth(500);
         unknownsStage.setWidth(1000);
         unknownsStage.setMinHeight(375);
@@ -43,10 +44,12 @@ public class SquidReportTableLauncher {
 
         refMatStage.setOnCloseRequest(e -> {
             refMatStage.hide();
+            refMatStage.setScene(null);
             e.consume();
         });
         unknownsStage.setOnCloseRequest(e -> {
             unknownsStage.hide();
+            unknownsStage.setScene(null);
             e.consume();
         });
     }
