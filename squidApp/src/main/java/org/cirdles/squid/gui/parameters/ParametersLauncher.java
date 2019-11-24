@@ -33,6 +33,7 @@ public class ParametersLauncher {
 
         squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
             squidLabDataStage.hide();
+            squidLabDataStage.setScene(null);
             e.consume();
         });
     }
