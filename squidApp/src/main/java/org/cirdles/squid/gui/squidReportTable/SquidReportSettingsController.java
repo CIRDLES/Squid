@@ -1507,7 +1507,42 @@ public class SquidReportSettingsController implements Initializable {
                     deleteItem.setOnAction(action -> {
                         categoryListView.getItems().remove(cell.getItem());
                     });
-                    contextMenu.getItems().addAll(deleteItem);
+
+                    MenuItem renameItem = new MenuItem(("Rename"));
+                    renameItem.setOnAction(action -> {
+                        TextInputDialog dialog = new TextInputDialog(cell.getText());
+                        dialog.setTitle("Rename");
+                        dialog.setHeaderText("Rename " + cell.getText());
+                        dialog.setContentText("Enter the new category name:");
+
+                        List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
+                        categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
+
+                        Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                        TextField newName = null;
+                        for (Node n : dialog.getDialogPane().getChildren()) {
+                            if (n instanceof TextField) {
+                                newName = (TextField) n;
+                            }
+                        }
+                        if (okBtn != null && newName != null) {
+                            newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                okBtn.setDisable(catNames.contains(newValue) || newValue.isEmpty());
+                            });
+                        }
+                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                        Optional<String> result = dialog.showAndWait();
+                        if (result.isPresent()) {
+                            if (catNames.contains(result.get())) {
+                                SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
+                            } else {
+                                cell.getItem().setDisplayName(result.get());
+                                categoryListView.refresh();
+                            }
+                        }
+                    });
+                    contextMenu.getItems().addAll(renameItem, deleteItem);
 
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
                 } else {
@@ -1787,18 +1822,25 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void createCategory() {
-        SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory(categoryTextField.getText());
+        String catName = categoryTextField.getText();
 
-        if (!categoryListView.getItems().contains(cat)) {
-            categoryListView.getItems().add(cat);
-            int catIndex = categoryListView.getItems().indexOf(cat);
-            categoryListView.getSelectionModel().select(catIndex);
-            categoryListView.scrollTo(catIndex);
-            categoryListView.getFocusModel().focus(catIndex);
-            isEditing.setValue(true);
-            categoryTextField.setText("");
+        if (catName.isEmpty()) {
+            SquidMessageDialog.showWarningDialog("Please enter a non-empty name.", primaryStageWindow);
         } else {
-            SquidMessageDialog.showWarningDialog("A category exists with the specified name.", primaryStageWindow);
+            List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
+            categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
+            if (catNames.contains(catName)) {
+                SquidMessageDialog.showWarningDialog("A category exists with the specified name.", primaryStageWindow);
+            } else {
+                SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory(catName);
+                categoryListView.getItems().add(cat);
+                int catIndex = categoryListView.getItems().indexOf(cat);
+                categoryListView.getSelectionModel().select(catIndex);
+                categoryListView.scrollTo(catIndex);
+                categoryListView.getFocusModel().focus(catIndex);
+                isEditing.setValue(true);
+                categoryTextField.setText("");
+            }
         }
     }
 
