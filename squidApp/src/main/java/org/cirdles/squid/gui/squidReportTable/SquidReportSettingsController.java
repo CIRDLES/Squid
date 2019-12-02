@@ -71,8 +71,6 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public ChoiceBox<SquidReportTableInterface> reportTableCB;
     @FXML
-    public Button refMatUnknownToggleButton;
-    @FXML
     public Button viewButton;
     @FXML
     public ListView<String> ratioExpressionsListView;
@@ -85,9 +83,13 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public HBox expressionsHbox;
     @FXML
-    private SplitPane mainPane;
+    public ToggleGroup refMatUnknownsToggleGroup;
     @FXML
-    private ToggleGroup expressionsSortToggleGroup;
+    public RadioButton unknownsRadioButton;
+    @FXML
+    public RadioButton refMatRadioButton;
+    @FXML
+    private SplitPane mainPane;
     @FXML
     private Accordion expressionsAccordion;
     @FXML
@@ -196,12 +198,12 @@ public class SquidReportSettingsController implements Initializable {
 
     private void processButtons() {
         if (isEditing.getValue()) {
-            buttonHBox.getChildren().setAll(viewButton, saveButton, restoreButton);
+            buttonHBox.getChildren().setAll(saveButton, restoreButton);
         } else if (isDefault.getValue()) {
-            buttonHBox.getChildren().setAll(refMatUnknownToggleButton, reportTableCB, viewButton, newButton, copyButton,
+            buttonHBox.getChildren().setAll(newButton, copyButton,
                     exportButton, importButton);
         } else {
-            buttonHBox.getChildren().setAll(refMatUnknownToggleButton, reportTableCB, viewButton, newButton, copyButton,
+            buttonHBox.getChildren().setAll(newButton, copyButton,
                     renameButton, deleteButton, exportButton, importButton);
         }
     }
@@ -253,96 +255,6 @@ public class SquidReportSettingsController implements Initializable {
 
     private void populateSquidReportTableChoiceBox() {
         reportTableCB.getItems().setAll(FXCollections.observableArrayList(getTables()));
-    }
-
-    @FXML
-    private void expressionSortToggleAction(ActionEvent event) {
-        String flag = ((RadioButton) event.getSource()).getId();
-        orderExpressionListsByFlag(flag);
-    }
-
-    private void orderExpressionListsByFlag(String flag) {
-        orderListViewByFlag(customExpressionsListView, flag);
-        orderListViewByFlag(nuSwitchedExpressionsListView, flag);
-        orderListViewByFlag(builtInExpressionsListView, flag);
-        orderListViewByFlag(brokenExpressionsListView, flag);
-
-        // special cases
-        orderListViewByFlag(referenceMaterialsListView, "NAME");
-        orderListViewByFlag(parametersListView, "NAME");
-    }
-
-    private void orderListViewByFlag(ListView<Expression> listView, String flag) {
-        ObservableList<Expression> items = listView.getItems();
-        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
-
-        switch (flag) {
-            case "EXEC":
-                listView.setItems(items.sorted((exp1, exp2) -> {
-                    if ((exp1.amHealthy() && exp2.amHealthy()) || (!exp1.amHealthy() && !exp2.amHealthy())) {
-                        return namedExpressions.indexOf(exp1) - namedExpressions.indexOf(exp2);
-                    } else if (!exp1.amHealthy() && exp2.amHealthy()) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }));
-                break;
-
-            case "TARGET":
-                // order by ConcRefMat then RU then R then U
-                listView.setItems(items.sorted((exp1, exp2) -> {
-                    // ConcRefMat
-                    if (exp1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                            && !exp2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                        return -1;
-                        // ConcRefMat
-                    } else if (!exp1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                        return 1;
-                        //RU
-                    } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
-                        // RU
-                    } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                            && (!exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            || !exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation())) {
-                        return -1;
-                        // R
-                    } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && !exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && !exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
-                        // R
-                    } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && !exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                            && !exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return -1;
-                        // U
-                    } else if (!exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                            && !exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                            && exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
-                    } else {
-                        return 1;
-                    }
-
-                }));
-                break;
-
-            default://"NAME":
-                listView.setItems(items.sorted((exp1, exp2) -> {
-                    return exp1.getName().toLowerCase().compareTo(exp2.getName().toLowerCase());
-                }));
-                break;
-        }
     }
 
     private void customizeBrokenExpressionsTitledPane() {
@@ -1160,11 +1072,6 @@ public class SquidReportSettingsController implements Initializable {
         items = FXCollections.observableArrayList(sortedParameterValuesList);
         parametersListView.setItems(null);
         parametersListView.setItems(items);
-
-        // sort everyone
-        String flag = ((RadioButton) expressionsSortToggleGroup.getSelectedToggle()).getId();
-        orderExpressionListsByFlag(flag);
-
     }
 
     private List<String> getNamesOfTables() {
@@ -1194,25 +1101,6 @@ public class SquidReportSettingsController implements Initializable {
         SquidReportTableLauncher.ReportTableTab tab = (isRefMat) ? SquidReportTableLauncher.ReportTableTab.refMatCustom
                 : SquidReportTableLauncher.ReportTableTab.unknownCustom;
         squidReportTableLauncher.launch(tab, table);
-    }
-
-    @FXML
-    public void refMatUnknownToggleButtonOnAction(ActionEvent actionEvent) {
-        if (isRefMat) {
-            isRefMat = false;
-            refMatUnknownToggleButton.setText("Unknown");
-            expressionsHbox.getChildren().add(spotsChoiceBox);
-        } else {
-            isRefMat = true;
-            refMatUnknownToggleButton.setText("RefMat");
-            expressionsHbox.getChildren().remove(spotsChoiceBox);
-        }
-        populateSquidReportTableChoiceBox();
-        reportTableCB.getSelectionModel().selectFirst();
-        populateExpressionListViews();
-        populateIsotopesListView();
-        populateRatiosListView();
-        populateSpotMetaDataListView();
     }
 
     @FXML
@@ -1418,6 +1306,23 @@ public class SquidReportSettingsController implements Initializable {
             reportTableCB.getSelectionModel().select(table);
             isEditing.setValue(false);
         }
+    }
+
+    @FXML
+    public void toggleRefMatUnknownsAction(ActionEvent actionEvent) {
+        if (unknownsRadioButton.isSelected()) {
+            isRefMat = false;
+            expressionsHbox.getChildren().add(3, spotsChoiceBox);
+        } else {
+            isRefMat = true;
+            expressionsHbox.getChildren().remove(spotsChoiceBox);
+        }
+        populateSquidReportTableChoiceBox();
+        reportTableCB.getSelectionModel().selectFirst();
+        populateExpressionListViews();
+        populateIsotopesListView();
+        populateRatiosListView();
+        populateSpotMetaDataListView();
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {

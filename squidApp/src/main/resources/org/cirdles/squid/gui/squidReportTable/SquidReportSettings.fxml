@@ -10,23 +10,6 @@
         <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
               AnchorPane.topAnchor="0.0">
             <children>
-                <Button fx:id="refMatUnknownToggleButton" minWidth="110.4" mnemonicParsing="false"
-                        onAction="#refMatUnknownToggleButtonOnAction" prefWidth="110.4" text="RefMat"
-                        HBox.hgrow="ALWAYS">
-                    <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </HBox.margin>
-                </Button>
-                <ChoiceBox fx:id="reportTableCB" minWidth="300.0" HBox.hgrow="NEVER" maxWidth="-Infinity">
-                    <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </HBox.margin>
-                </ChoiceBox>
-                <Button fx:id="viewButton" minWidth="85.0" mnemonicParsing="false" onAction="#viewOnAction" text="View">
-                    <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </HBox.margin>
-                </Button>
                 <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New"
                         HBox.hgrow="ALWAYS">
                     <HBox.margin>
@@ -90,25 +73,35 @@
             <items>
                 <VBox styleClass="backgroundCalamari">
                     <children>
-                        <HBox fx:id="expressionsHbox" alignment="TOP_CENTER" prefHeight="27.0" prefWidth="275.0"
+                        <HBox fx:id="expressionsHbox" alignment="CENTER" prefHeight="27.0" prefWidth="275.0"
                               spacing="10.0" style="-fx-background-color: #eefbfb;">
                             <children>
-                                <ChoiceBox fx:id="spotsChoiceBox" maxWidth="-Infinity" minWidth="100.0"/>
-                                <Label style="-fx-font-size: 12; -fx-font-family: SansSerif;" text="Expressions by:"
-                                       translateY="2.0"/>
-                                <RadioButton id="NAME" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                             selected="true" style="-fx-font-size: 11; -fx-font-family: SansSerif;"
-                                             text="Name" translateY="5.0">
+                                <RadioButton fx:id="refMatRadioButton" minWidth="50.0" mnemonicParsing="false"
+                                             onAction="#toggleRefMatUnknownsAction" text="Ref">
                                     <toggleGroup>
-                                        <ToggleGroup fx:id="expressionsSortToggleGroup"/>
+                                        <ToggleGroup fx:id="refMatUnknownsToggleGroup"/>
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton id="EXEC" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                             style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Exec"
-                                             toggleGroup="$expressionsSortToggleGroup" translateY="5.0"/>
-                                <RadioButton id="TARGET" mnemonicParsing="false" onAction="#expressionSortToggleAction"
-                                             style="-fx-font-size: 11; -fx-font-family: SansSerif;" text="Target"
-                                             toggleGroup="$expressionsSortToggleGroup" translateY="5.0"/>
+                                <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false"
+                                             onAction="#toggleRefMatUnknownsAction" text="Un"
+                                             toggleGroup="$refMatUnknownsToggleGroup"/>
+                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0"
+                                           HBox.hgrow="NEVER">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </ChoiceBox>
+                                <ChoiceBox fx:id="spotsChoiceBox" maxWidth="-Infinity" minWidth="100.0">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </ChoiceBox>
+                                <Button fx:id="viewButton" minWidth="85.0" mnemonicParsing="false"
+                                        onAction="#viewOnAction" text="View">
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </Button>
                             </children>
                             <padding>
                                 <Insets bottom="10.0" left="5.0"/>
