@@ -31,11 +31,11 @@ public interface PlotDisplayInterface {
     Node displayPlotAsNode();
 
     void setData(List<Map<String, Object>> data);
-    
+
     void setProperty(String key, Object datum);
 
     List<Node> toolbarControlsFactory();
-    
+
     public String makeAgeString(int index);
 
     static enum SigmaPresentationModes {
@@ -65,6 +65,5 @@ public interface PlotDisplayInterface {
             return sigmaMultiplier;
         }
     }
-    
 
 }

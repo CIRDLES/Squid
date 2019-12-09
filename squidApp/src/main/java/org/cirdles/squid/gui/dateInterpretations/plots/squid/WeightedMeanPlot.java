@@ -39,6 +39,7 @@ import javafx.scene.text.Text;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
@@ -49,7 +50,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInterface {
 
     private String plotTitle = "NONE";
-    private final SpotSummaryDetails spotSummaryDetails;
+    private SpotSummaryDetails spotSummaryDetails;
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
     private List<Double> ages;
     private List<Double> ageTwoSigma;
@@ -57,7 +58,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private double[] weightedMeanStats;
     private double[] onPeakTwoSigma;
     private boolean[] rejectedIndices;
-    private final String ageLookupString;
+    private String ageLookupString;
 
     private final double standardAge;
 
@@ -112,7 +113,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 if (newValue.intValue() > 100) {
                     bounds.setHeight(newValue.intValue());
                     height = (int) bounds.getHeight();
-                    graphHeight = (int) height -  topMargin - topMargin / 2;
+                    graphHeight = (int) height - topMargin - topMargin / 2;
                     displayPlotAsNode();
                 }
             }
@@ -164,7 +165,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
 
             spotContextMenu.hide();
-            if (spotSummaryDetails.isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
+            if (getSpotSummaryDetails().isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
                 try {
                     spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
                             mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
@@ -203,19 +204,27 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
 
-        g2d.setFill(Paint.valueOf("Red"));
+        g2d.setFill(Paint.valueOf("RED"));
 
         g2d.fillText(plotTitle, 45, 45);
 
-        g2d.setFill(Paint.valueOf("Red"));
+        g2d.setFill(Paint.valueOf("RED"));
 
-        int rightOfText = 450;
         Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String) (ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            text = new Text("Wtd Mean of " + ageLookupString);
+        }
+        int rightOfText = 450;
+
         text.setFont(Font.font("SansSerif", 15));
 
         int textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), rightOfText - textWidth, 75);
-        g2d.fillText(Double.toString(weightedMeanStats[0]), rightOfText + 10, 75);
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            g2d.fillText(Double.toString(weightedMeanStats[0] / 1e6) + " Ma", rightOfText + 10, 75);
+        } else {
+            g2d.fillText(Double.toString(weightedMeanStats[0]), rightOfText + 10, 75);
+        }
 
         text.setText("1%\u03C3 error of mean");
         textWidth = (int) text.getLayoutBounds().getWidth();
@@ -240,9 +249,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setLineWidth(2.0);
         for (int i = 0; i < myOnPeakData.length; i++) {
             if (rejectedIndices[i]) {
-                g2d.setStroke(Paint.valueOf("Blue"));
+                g2d.setStroke(Paint.valueOf("BLUE"));
             } else {
-                g2d.setStroke(Paint.valueOf("Red"));
+                g2d.setStroke(Paint.valueOf("RED"));
             }
             g2d.strokeLine(
                     mapX(myOnPeakNormalizedAquireTimes[i]),
@@ -271,50 +280,52 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // standard age
         g2d.setLineWidth(1.0);
-        g2d.setStroke(Paint.valueOf("Green"));
+        g2d.setStroke(Paint.valueOf("GREEN"));
         g2d.strokeLine(
                 mapX(minX), mapY(standardAge), mapX(maxX), mapY(standardAge));
 
-        // border and fill
-        g2d.setLineWidth(0.5);
-        g2d.setStroke(Paint.valueOf("Black"));
-        g2d.strokeRect(
-                mapX(minX),
-                mapY(ticsY[ticsY.length - 1].doubleValue()),
-                graphWidth,
-                Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
-        g2d.setFill(new Color(1, 1, 224 / 255, 0.1));
-        g2d.fillRect(
-                mapX(minX),
-                mapY(ticsY[ticsY.length - 1].doubleValue()),
-                graphWidth,
-                Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
-
-        g2d.setFill(Paint.valueOf("Black"));
+        g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
         text.setText("2\u03C3 error bars");
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 0);
 
-        // ticsY         
-        float verticalTextShift = 3.2f;
-        g2d.setFont(Font.font("SansSerif", 10));
-        if (ticsY != null) {
-            for (int i = 0; i < ticsY.length; i++) {
-                g2d.strokeLine(
-                        mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
+        if (ticsY.length > 1) {
+            // border and fill
+            g2d.setLineWidth(0.5);
+            g2d.setStroke(Paint.valueOf("BLACK"));
+            g2d.strokeRect(
+                    mapX(minX),
+                    mapY(ticsY[ticsY.length - 1].doubleValue()),
+                    graphWidth,
+                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+            g2d.setFill(new Color(1, 1, 224 / 255, 0.1));
+            g2d.fillRect(
+                    mapX(minX),
+                    mapY(ticsY[ticsY.length - 1].doubleValue()),
+                    graphWidth,
+                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+            g2d.setFill(Paint.valueOf("BLACK"));
 
-                // left side
-                g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
-                        (float) mapX(minX) - 25f,
-                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
-                // right side
-                g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
-                        (float) mapX(maxX) + 5f,
-                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+            // ticsY         
+            float verticalTextShift = 3.2f;
+            g2d.setFont(Font.font("SansSerif", 10));
+            if (ticsY != null) {
+                for (int i = 0; i < ticsY.length; i++) {
+                    g2d.strokeLine(
+                            mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
+
+                    // left side
+                    g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
+                            (float) mapX(minX) - 25f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                    // right side
+                    g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
+                            (float) mapX(maxX) + 5f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                }
             }
         }
-
         // ticsX 
         if (ticsX != null) {
             for (int i = 0; i < ticsX.length - 1; i++) {
@@ -338,7 +349,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFont(Font.font("SansSerif", 15));
 
         // Y - label
-        text.setText("Ref Mat Age (Ma)");
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            text.setText("Age (Ma)");
+        } else {
+            text.setText("Ref Mat Age (Ma)");
+        }
+        
         g2d.rotate(-90);
         g2d.fillText(text.getText(), -400, 100);
         g2d.rotate(90);
@@ -382,9 +398,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     12,
                     Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             if (rejectedIndices[indexOfSelectedSpot]) {
-                g2d.setFill(Paint.valueOf("Blue"));
+                g2d.setFill(Paint.valueOf("BLUE"));
             } else {
-                g2d.setFill(Paint.valueOf("Red"));
+                g2d.setFill(Paint.valueOf("RED"));
             }
 
             Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
@@ -400,15 +416,18 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public String makeAgeString(int index) {
+        return makeAgeString(myOnPeakData[index], onPeakTwoSigma[index]);
+    }
+
+    public static String makeAgeString(double age, double twoSigmaUncert) {
         String retVal = "No Age calculated.";
         try {
-            retVal = new BigDecimal(myOnPeakData[index])
+            retVal = "  " + new BigDecimal(age)
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
-                    + " ±" + new BigDecimal(onPeakTwoSigma[index])
+                    + " ±" + new BigDecimal(twoSigmaUncert)
                             .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
         } catch (Exception e) {
         }
-
         return retVal;
     }
 
@@ -452,7 +471,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
 
         // check for no data
-        if (ticsY != null) {
+        if ((ticsY != null) && (ticsY.length > 1)) {
             // force y to tics
             minY = ticsY[0].doubleValue();
             maxY = ticsY[ticsY.length - 1].doubleValue();
@@ -499,6 +518,27 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     @Override
     public void setProperty(String key, Object datum) {
         getProperties().put(key, datum);
+    }
+
+    /**
+     * @return the spotSummaryDetails
+     */
+    public SpotSummaryDetails getSpotSummaryDetails() {
+        return spotSummaryDetails;
+    }
+
+    /**
+     * @param spotSummaryDetails the spotSummaryDetails to set
+     */
+    public void setSpotSummaryDetails(SpotSummaryDetails spotSummaryDetails) {
+        this.spotSummaryDetails = spotSummaryDetails;
+    }
+
+    /**
+     * @param ageLookupString the ageLookupString to set
+     */
+    public void setAgeLookupString(String ageLookupString) {
+        this.ageLookupString = ageLookupString;
     }
 
 }

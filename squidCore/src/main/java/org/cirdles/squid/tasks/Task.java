@@ -1847,9 +1847,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
 
-        // calculate weighted mean of selected age
+        // calculate weighted mean of selected age without auto-rejection
         Expression expressionSelectedAgeWM = buildExpression(selectedAgeExpressionName + "_WM_" + groupName,
-                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],FALSE,FALSE)", false, true, true);
+                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],TRUE,FALSE)", false, true, true);
 
         updateSingleExpression(expressionSelectedAgeWM);
 
