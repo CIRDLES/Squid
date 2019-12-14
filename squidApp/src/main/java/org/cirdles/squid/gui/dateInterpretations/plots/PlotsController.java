@@ -19,7 +19,6 @@ import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotWether
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +87,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     private static PlotDisplayInterface plot;
     private static Node topsoilPlotNode;
+    private static TreeItem<SampleTreeNodeInterface> currentlyPlottedSampleTreeNode = null;
 
     @FXML
     private VBox vboxMaster;
@@ -410,8 +410,22 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @Override
     public void toggleSpotExclusionWM(int index) {
-        ((CheckBoxTreeItem) spotsTreeViewCheckBox.getRoot().getChildren().get(index))
-                .setSelected(spotSummaryDetails.getRejectedIndices()[index]);
+////        ((CheckBoxTreeItem) spotsTreeViewCheckBox.getRoot().getChildren().get(index))
+////                .setSelected(spotSummaryDetails.getRejectedIndices()[index]);
+
+        if (currentlyPlottedSampleTreeNode != null) {
+            ((CheckBoxTreeItem) currentlyPlottedSampleTreeNode.getChildren().get(index))
+                    .setSelected(!((CheckBoxTreeItem) currentlyPlottedSampleTreeNode.getChildren().get(index)).isSelected());
+        }
+
+//        if (currentlyPlottedSampleTreeNode != null) {
+//            currentlyPlottedSampleTreeNode.getChildren().get(index).getValue().toggleSelectedProperty();
+//        }
+////        spotSummaryDetails.setIndexOfRejectedIndices(index, !spotSummaryDetails.getRejectedIndices()[index]);
+////        try {
+////            spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
+////        } catch (SquidException squidException) {
+////        }
     }
 
     @Override
@@ -478,6 +492,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 spotsTreeViewCheckBox.setRoot(rootItemWM);
                 rootItemWM.setExpanded(true);
                 spotsTreeViewCheckBox.setShowRoot(true);
+                currentlyPlottedSampleTreeNode = rootItemWM;
 
                 for (int i = 0; i < fractionNodes.size(); i++) {
                     final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItemWM
@@ -612,12 +627,21 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         = new WeightedMeanFractionNode(shrimpFractionsDetails.get(i), i);
                 fractionNodeDetailsWM.add(fractionNodeWM);
             }
-            
+
+            // sort the fractions based on age
             Collections.sort(fractionNodeDetailsWM, (SampleTreeNodeInterface fraction1, SampleTreeNodeInterface fraction2) -> {
                 double age1 = fraction1.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
                 double age2 = fraction2.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-                
-                return Double.compare(age1, age2);
+
+                // original aquire time order
+                int retVal = 0;
+                if (spotSummaryDetailsWM.getPreferredViewSortOrder() == -1) {
+                    retVal = Double.compare(age1, age2);
+                }
+                if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
+                    retVal = Double.compare(age2, age1);
+                }
+                return retVal;
             });
 
             ObservableList<SampleTreeNodeInterface> fractionNodesWM = FXCollections.observableArrayList(fractionNodeDetailsWM);
@@ -627,7 +651,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         = new CheckBoxTreeItem<>(fractionNodesWM.get(i));
                 sampleItem.getChildren().add(checkBoxTreeItemWM);
 
-                checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM.getRejectedIndices()[i]);
+                checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM
+                        .getRejectedIndices()[((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue())
+                                .getIndexOfSpot()]);
 
                 checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
                     ((WeightedMeanFractionNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
@@ -667,9 +693,12 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             @Override
             public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
                 // sample only
-                if ((newValue.getParent() != null) && (newValue.getValue() instanceof SampleNode)) {
+                if (newValue.getParent() == null) {
+                    currentlyPlottedSampleTreeNode = null;
+                } else if (newValue.getValue() instanceof SampleNode) {
                     plot = ((SampleNode) newValue.getValue()).getSamplePlotWM();
                     spotSummaryDetails = ((WeightedMeanPlot) plot).getSpotSummaryDetails();
+                    currentlyPlottedSampleTreeNode = newValue;
                     refreshPlot();
                 }
             }

@@ -38,6 +38,8 @@ public class SpotSummaryDetails implements Serializable {
     private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
     private boolean manualRejectionEnabled;
+    // -1 = desc, 0 = original (aquire time), +1 = asc;
+    private byte preferredViewSortOrder;
 
     private SpotSummaryDetails() {
         this(null);
@@ -59,6 +61,7 @@ public class SpotSummaryDetails implements Serializable {
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
+        this.preferredViewSortOrder = 0;
     }
 
     public double[][] eval(TaskInterface task) throws SquidException{
@@ -157,6 +160,20 @@ public class SpotSummaryDetails implements Serializable {
      */
     public void setManualRejectionEnabled(boolean manualRejectionEnabled) {
         this.manualRejectionEnabled = manualRejectionEnabled;
+    }
+
+    /**
+     * @return the preferredViewSortOrder
+     */
+    public byte getPreferredViewSortOrder() {
+        return preferredViewSortOrder;
+    }
+
+    /**
+     * @param preferredViewSortOrder the preferredViewSortOrder to set
+     */
+    public void setPreferredViewSortOrder(byte preferredViewSortOrder) {
+        this.preferredViewSortOrder = preferredViewSortOrder;
     }
 
 }

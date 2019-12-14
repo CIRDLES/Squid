@@ -18,6 +18,8 @@ package org.cirdles.squid.gui.dateInterpretations.plots;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
@@ -348,13 +350,30 @@ public class ModifiedCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
 
         VBox ageTool = new VBox(0);
         Button sortAgeButton = new Button("Sort");
+        ComboBox<SampleAgeTypesEnum> ageComboBox = new ComboBox<>();
         sortAgeButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         sortAgeButton.setPrefWidth(50);
         sortAgeButton.setMinWidth(USE_PREF_SIZE);
         sortAgeButton.setPrefHeight(20);
         sortAgeButton.setMinHeight(USE_PREF_SIZE);
+        sortAgeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String selectedAge = ageComboBox.getSelectionModel().getSelectedItem().getExpressionName();
+                byte savedPreferredViewSortOrder = sample.getSpotSummaryDetailsWM().getPreferredViewSortOrder();
+                byte preferredViewSortOrder = -1;
+                if (savedPreferredViewSortOrder == -1) {
+                    preferredViewSortOrder = 1;
+                } else if (savedPreferredViewSortOrder == 1) {
+                    preferredViewSortOrder = 0;
+                }
+                sample.getSpotSummaryDetailsWM().setPreferredViewSortOrder(preferredViewSortOrder);
 
-        ComboBox<SampleAgeTypesEnum> ageComboBox = new ComboBox<>();
+                sortFractionCheckboxesByValue(selectedAge, preferredViewSortOrder);
+                ((SampleNode) sample).getPlotsController().refreshPlot();
+            }
+        });
+
         ageComboBox.setItems(FXCollections.observableArrayList(SampleAgeTypesEnum.values()));
         SampleAgeTypesEnum chosenAge = ((SampleNode) sample).getSpotSummaryDetailsWM().getSelectedSpots().get(0).getCommonLeadSpecsForSpot().getSampleAgeType();
         ageComboBox.getSelectionModel().select(chosenAge);
@@ -365,26 +384,22 @@ public class ModifiedCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
 
                     ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sample.getSpotSummaryDetailsWM().getSelectedSpots(), newValue);
                     ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sample.getSpotSummaryDetailsWM().getSelectedSpots());
-                    
-                    boolean [] savedRejectedIndices = sample.getSpotSummaryDetailsWM().getRejectedIndices();
-                    
+
+                    boolean[] savedRejectedIndices = sample.getSpotSummaryDetailsWM().getRejectedIndices();
+                    byte savedPreferredViewSortOrder = sample.getSpotSummaryDetailsWM().getPreferredViewSortOrder();
+
                     SpotSummaryDetails spotSummaryDetailsWM
                             = ((Task) squidProject.getTask())
                                     .evaluateSelectedAgeWeightedMeanForUnknownGroup(sample.getNodeName(), sample.getSpotSummaryDetailsWM().getSelectedSpots());
                     spotSummaryDetailsWM.setManualRejectionEnabled(true);
                     spotSummaryDetailsWM.setRejectedIndices(savedRejectedIndices);
+                    spotSummaryDetailsWM.setPreferredViewSortOrder(savedPreferredViewSortOrder);
 
                     PlotDisplayInterface myPlot = ((SampleNode) sample).getSamplePlotWM();
                     ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                     ((WeightedMeanPlot) myPlot).setAgeLookupString(selectedAge);
 
-                    FXCollections.sort(this.getTreeItem().getChildren(), (TreeItem node1, TreeItem node2) -> {
-                        double age1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                .getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-                        double age2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                .getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-                        return Double.compare(age1, age2);
-                    });
+                    sortFractionCheckboxesByValue(selectedAge, savedPreferredViewSortOrder);
                     ((SampleNode) sample).getPlotsController().refreshPlot();
                 });
 
@@ -393,5 +408,30 @@ public class ModifiedCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
         toolBox.getChildren().addAll(sampleNameTool, selectionTool, ageTool);
 
         return toolBox;
+    }
+
+    private void sortFractionCheckboxesByValue(String selectedAge, byte savedPreferredViewSortOrder) {
+        FXCollections.sort(this.getTreeItem().getChildren(), (TreeItem node1, TreeItem node2) -> {
+            int retVal = 0;
+            if (savedPreferredViewSortOrder == 0) {
+                // original aquire time order           
+                long acquireTime1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction().getDateTimeMilliseconds();
+                long acquireTime2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction().getDateTimeMilliseconds();
+                retVal = Long.compare(acquireTime1, acquireTime2);
+            } else {
+                double age1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
+                double age2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
+
+                if (savedPreferredViewSortOrder == -1) {
+                    retVal = Double.compare(age1, age2);
+                }
+                if (savedPreferredViewSortOrder == 1) {
+                    retVal = Double.compare(age2, age1);
+                }
+            }
+            return retVal;
+        });
     }
 }

@@ -18,6 +18,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
@@ -26,6 +27,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
@@ -52,6 +54,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private String plotTitle = "NONE";
     private SpotSummaryDetails spotSummaryDetails;
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
+    private List<ShrimpFractionExpressionInterface> storedShrimpFractions;
     private List<Double> ages;
     private List<Double> ageTwoSigma;
     private List<Double> hours;
@@ -59,8 +62,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private double[] onPeakTwoSigma;
     private boolean[] rejectedIndices;
     private String ageLookupString;
+    private boolean hideRejectedSpots;
 
-    private final double standardAge;
+    private final double referenceMaterialAge;
 
     private int indexOfSelectedSpot;
     private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
@@ -71,7 +75,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             String plotTitle,
             SpotSummaryDetails spotSummaryDetails,
             String ageLookupString,
-            double standardAge,
+            double referenceMaterialAge,
             WeightedMeanRefreshInterface weightedMeanRefreshInterface) {
 
         super(bounds, 0, 0);
@@ -85,10 +89,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.ageLookupString = ageLookupString;
         extractFractionDetails();
 
-        this.standardAge = standardAge;
+        this.referenceMaterialAge = referenceMaterialAge;
         this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
+        this.hideRejectedSpots = false;
+
         setOpacity(1.0);
 
         setupSpotInWMContextMenu();
@@ -137,19 +143,52 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     private boolean extractFractionDetails() {
-        shrimpFractions = spotSummaryDetails.getSelectedSpots();
-        boolean retVal = shrimpFractions.size() > 0;
+        storedShrimpFractions = spotSummaryDetails.getSelectedSpots();
+        shrimpFractions = new ArrayList<>();
 
+        boolean[] storedRejectedIndices = spotSummaryDetails.getRejectedIndices();
+        rejectedIndices = new boolean[storedRejectedIndices.length];
+
+        boolean retVal = storedShrimpFractions.size() > 0;
         if (retVal) {
-            rejectedIndices = spotSummaryDetails.getRejectedIndices();
+            for (ShrimpFractionExpressionInterface sf : storedShrimpFractions) {
+                shrimpFractions.add(sf);
+            }
+            // determine sort order for viewing
+            byte viewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
+            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+                double age1 = fraction1.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
+                double age2 = fraction2.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
+
+                // original acquire time order
+                int retComp = 0;
+                if (viewSortOrder == -1) {
+                    retComp = Double.compare(age1, age2);
+                }
+                if (viewSortOrder == 1) {
+                    retComp = Double.compare(age2, age1);
+                }
+                return retComp;
+            });
+
+            for (int i = 0; i < shrimpFractions.size(); i++) {
+                boolean rejected = storedRejectedIndices[storedShrimpFractions.indexOf(shrimpFractions.get(i))];
+                rejectedIndices[i] = rejected;
+            }
 
             ages = new ArrayList<>();
             ageTwoSigma = new ArrayList<>();
             hours = new ArrayList<>();
+
+            double index = 0;
             for (ShrimpFractionExpressionInterface sf : shrimpFractions) {
                 ages.add(sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0]);
                 ageTwoSigma.add(2.0 * sf.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][1]);
-                hours.add(sf.getHours());
+                if (viewSortOrder == 0) {
+                    hours.add(sf.getHours());
+                } else {
+                    hours.add(index++);
+                }
             }
 
             weightedMeanStats = spotSummaryDetails.getValues()[0];
@@ -278,11 +317,24 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
         }
 
+        // plot either the reference material age or the weighted mean
         // standard age
         g2d.setLineWidth(1.0);
         g2d.setStroke(Paint.valueOf("GREEN"));
-        g2d.strokeLine(
-                mapX(minX), mapY(standardAge), mapX(maxX), mapY(standardAge));
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            g2d.strokeLine(
+                    mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));
+            // show plus minus 2 sigma
+            g2d.setFill(new Color(153 / 255, 1, 204 / 255, 0.2));
+            g2d.fillRect(
+                    mapX(minX),
+                    mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1]),
+                    graphWidth,
+                    Math.abs(mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1])
+                            - mapY(weightedMeanStats[0] - 2.0 * weightedMeanStats[1])));
+        } else {
+            g2d.strokeLine(mapX(minX), mapY(referenceMaterialAge), mapX(maxX), mapY(referenceMaterialAge));
+        }
 
         g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
@@ -354,7 +406,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         } else {
             text.setText("Ref Mat Age (Ma)");
         }
-        
+
         g2d.rotate(-90);
         g2d.fillText(text.getText(), -400, 100);
         g2d.rotate(90);
@@ -464,8 +516,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         maxY = -Double.MAX_VALUE;
 
         for (int i = 0; i < myOnPeakData.length; i++) {
-            minY = Math.min(minY, myOnPeakData[i] - onPeakTwoSigma[i]);
-            maxY = Math.max(maxY, myOnPeakData[i] + onPeakTwoSigma[i]);
+            if (!hideRejectedSpots || !rejectedIndices[i]) {
+                minY = Math.min(minY, myOnPeakData[i] - onPeakTwoSigma[i]);
+                maxY = Math.max(maxY, myOnPeakData[i] + onPeakTwoSigma[i]);
+            }
         }
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
