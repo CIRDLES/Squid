@@ -44,6 +44,7 @@ public class ShuntingYard {
         infixList.add("1");
         infixList.add("*");
         infixList.add("[");
+        infixList.add("±");
         infixList.add("\"");
         infixList.add("Hfsens");
         infixList.add("\"");;

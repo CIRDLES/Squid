@@ -1358,7 +1358,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // Aug 2018 change logic to clear the spots list now that task manager has checkbox for auto reject
         SpotSummaryDetails spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(listedExp.getName());
         if (spotSummaryDetails != null) {
-            spotSummaryDetails.resetRejectedIndices();
+            spotSummaryDetails.rejectNone();
         }
     }
 
@@ -1847,9 +1847,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
 
-        // calculate weighted mean of selected age
+        // calculate weighted mean of selected age without auto-rejection
         Expression expressionSelectedAgeWM = buildExpression(selectedAgeExpressionName + "_WM_" + groupName,
-                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],FALSE,FALSE)", false, true, true);
+                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],TRUE,FALSE)", false, true, true);
 
         updateSingleExpression(expressionSelectedAgeWM);
 
