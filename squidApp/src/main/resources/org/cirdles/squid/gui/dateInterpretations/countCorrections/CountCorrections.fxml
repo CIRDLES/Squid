@@ -13,20 +13,20 @@
       <HBox fx:id="headerHBox" minHeight="50.0" prefHeight="50.0" prefWidth="1200.0" spacing="35.0" styleClass="backgroundCalamari">
          <children>
             <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="     204 Overcount Corrections:" translateY="-2.0" />
-            <VBox>
+            <VBox prefHeight="47.0" prefWidth="235.0">
                <children>
                   <Label prefHeight="24.0" prefWidth="286.0" style="-fx-text-fill: #c53d13#c53d13 #c53d13; -fx-font-size: 13;" />
-                  <RadioButton fx:id="correctionNoneRB" mnemonicParsing="false" onAction="#correctionNoneAction" selected="true" style="-fx-text-fill: #c53d13#c53d13;" text="Original 204/206         ±1σ %                         ">
+                  <RadioButton fx:id="correctionNoneRB" mnemonicParsing="false" onAction="#correctionNoneAction" selected="true" style="-fx-text-fill: #c53d13#c53d13;" text="Original 204/206         ±1σ %     ">
                      <toggleGroup>
                         <ToggleGroup fx:id="correctionsToggleGroup" />
                      </toggleGroup>
                   </RadioButton>
                </children>
             </VBox>
-            <VBox>
+            <VBox prefHeight="47.0" prefWidth="260.0">
                <children>
                   <Label fx:id="biweight207Label" prefHeight="24.0" prefWidth="286.0" style="-fx-text-fill: #c53d13#c53d13 #c53d13; -fx-font-size: 13;" text="Label" />
-                  <RadioButton fx:id="correction207RB" mnemonicParsing="false" onAction="#correction207Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 207         ±1σ %                        " toggleGroup="$correctionsToggleGroup" />
+                  <RadioButton fx:id="correction207RB" mnemonicParsing="false" onAction="#correction207Action" style="-fx-text-fill: #c53d13#c53d13;" text="Corrected from 207         ±1σ %    " toggleGroup="$correctionsToggleGroup" />
                </children>
             </VBox>
             <VBox>

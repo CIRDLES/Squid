@@ -44,5 +44,20 @@ public enum SampleAgeTypesEnum implements Serializable {
         return expressionName;
     }
 
+    public static String[] getNames() {
+        String[] retVal = new String[7];
+        int index = 0;
+        for (SampleAgeTypesEnum sat : SampleAgeTypesEnum.values()) {
+            retVal[index++] = sat.getExpressionName();
+        }
+
+        return retVal;
+    }
+
+    @Override
+    public String toString() {
+        return expressionName;
+    }
+    
     
 }
