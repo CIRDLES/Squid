@@ -24,6 +24,10 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
  */
 public interface SampleTreeNodeInterface {
 
+    /**
+     *
+     * @return the java.lang.String
+     */
     public String getNodeName();
 
     public ShrimpFractionExpressionInterface getShrimpFraction();

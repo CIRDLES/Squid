@@ -18,6 +18,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
+import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
@@ -155,18 +157,39 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 shrimpFractions.add(sf);
             }
             // determine sort order for viewing
-            byte viewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
+            int viewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
             Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                double age1 = fraction1.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
-                double age2 = fraction2.getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
-
-                // original acquire time order
+                // original aquire time order  
                 int retComp = 0;
-                if (viewSortOrder == -1) {
-                    retComp = Double.compare(age1, age2);
+                double valueFromNode1 = 0.0;
+                double valueFromNode2 = 0.0;
+                if (viewSortOrder != 0) {
+                    String sortFlavor = spotSummaryDetails.getSortFlavor();
+                    switch (sortFlavor) {
+                        case "AGE":
+                            valueFromNode1 = fraction1
+                                    .getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
+                            valueFromNode2 = fraction2
+                                    .getTaskExpressionsEvaluationsPerSpotByField(ageLookupString)[0][0];
+                            break;
+                        case "RATIO":
+                            double[][] resultsFromNode1
+                                    = Arrays.stream(fraction1
+                                            .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedRatioName())).toArray(double[][]::new);
+                            valueFromNode1 = resultsFromNode1[0][0];
+                            double[][] resultsFromNode2
+                                    = Arrays.stream(fraction2
+                                            .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedRatioName())).toArray(double[][]::new);
+                            valueFromNode2 = resultsFromNode2[0][0];
+                            break;
+                    }
                 }
+
                 if (viewSortOrder == 1) {
-                    retComp = Double.compare(age2, age1);
+                    retComp = Double.compare(valueFromNode1, valueFromNode2);
+                }
+                if (viewSortOrder == -1) {
+                    retComp = Double.compare(valueFromNode2, valueFromNode1);
                 }
                 return retComp;
             });
@@ -270,10 +293,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.fillText(text.getText(), rightOfText - textWidth, 95);
         g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + 10, 95);
 
-        text.setText("1\u03C3  external spot-to-spot error");
-        textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), rightOfText - textWidth, 115);
-        g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + 10, 115);
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN) == 0) {
+            text.setText("1\u03C3  external spot-to-spot error");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 115);
+            g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + 10, 115);
+        }
 
         text.setText("MSWD");
         textWidth = (int) text.getLayoutBounds().getWidth();
@@ -412,7 +437,14 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.rotate(90);
 
         // X- label
-        text.setText("Hours");
+        if (spotSummaryDetails.getPreferredViewSortOrder() == 0) {
+            text.setText("Hours");
+        } else {
+            StringBuilder description = new StringBuilder("Sorted by: ");
+            description.append(spotSummaryDetails.getSortFlavor()).append(" ");
+            description.append((spotSummaryDetails.getPreferredViewSortOrder() == 1) ? "ascending" : "descending");
+            text.setText(description.toString());
+        }
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 35);
 

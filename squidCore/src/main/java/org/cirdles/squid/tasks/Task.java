@@ -1358,7 +1358,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // Aug 2018 change logic to clear the spots list now that task manager has checkbox for auto reject
         SpotSummaryDetails spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(listedExp.getName());
         if (spotSummaryDetails != null) {
-            spotSummaryDetails.resetRejectedIndices();
+            spotSummaryDetails.rejectNone();
         }
     }
 

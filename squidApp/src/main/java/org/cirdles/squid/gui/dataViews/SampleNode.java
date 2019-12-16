@@ -40,6 +40,10 @@ public class SampleNode implements SampleTreeNodeInterface {
         this.plotsController = null;
     }
 
+    /**
+     *
+     * @return the java.lang.String
+     */
     @Override
     public String getNodeName() {
         return sampleName;

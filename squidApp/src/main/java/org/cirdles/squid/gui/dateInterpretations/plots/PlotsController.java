@@ -18,6 +18,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -410,22 +411,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @Override
     public void toggleSpotExclusionWM(int index) {
-////        ((CheckBoxTreeItem) spotsTreeViewCheckBox.getRoot().getChildren().get(index))
-////                .setSelected(spotSummaryDetails.getRejectedIndices()[index]);
-
         if (currentlyPlottedSampleTreeNode != null) {
             ((CheckBoxTreeItem) currentlyPlottedSampleTreeNode.getChildren().get(index))
                     .setSelected(!((CheckBoxTreeItem) currentlyPlottedSampleTreeNode.getChildren().get(index)).isSelected());
         }
-
-//        if (currentlyPlottedSampleTreeNode != null) {
-//            currentlyPlottedSampleTreeNode.getChildren().get(index).getValue().toggleSelectedProperty();
-//        }
-////        spotSummaryDetails.setIndexOfRejectedIndices(index, !spotSummaryDetails.getRejectedIndices()[index]);
-////        try {
-////            spotSummaryDetails.setValues(spotSummaryDetails.eval(squidProject.getTask()));
-////        } catch (SquidException squidException) {
-////        }
     }
 
     @Override
@@ -672,14 +661,30 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             sampleItem.setIndependent(true);
         }
 
-        ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new ModifiedCheckBoxTreeCell<>(
+        ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new CustomWeightedMeanCheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> ((SampleNode) item.getValue()).getSelectedProperty(),
                 new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
 
             @Override
             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                 SampleTreeNodeInterface item = object.getValue();
-                return (object.getParent() == null) ? "" : (item instanceof SampleNode) ? "Show WM" : item.getNodeName();
+                String nodeStringWM = "";
+                if (item instanceof WeightedMeanFractionNode) {
+                    // determine string based on sortFlavor
+                    String sortFlavor = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSortFlavor();
+                    if (sortFlavor.compareToIgnoreCase("AGE") == 0) {
+                        nodeStringWM = item.getNodeName();
+                    } else if (sortFlavor.compareToIgnoreCase("RATIO") == 0) {
+                        String ratioName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedRatioName();
+                        double[][] ratioValues
+                                = Arrays.stream(item.getShrimpFraction()
+                                        .getIsotopicRatioValuesByStringName(ratioName)).toArray(double[][]::new);
+                        nodeStringWM = item.getShrimpFraction().getFractionID()
+                                + "  " + ratioValues[0][0] + " ±" + ratioValues[0][1];
+                    }
+
+                }
+                return (object.getParent() == null) ? "" : (item instanceof SampleNode) ? "" : nodeStringWM;
             }
 
             @Override
@@ -873,6 +878,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             this.datum.put(Variable.SELECTED.getTitle(), selectedProperty.getValue());
         }
 
+        /**
+         *
+         * @return the java.lang.String
+         */
         @Override
         public String getNodeName() {
             return shrimpFraction.getFractionID();// + " AGE = " + datum.get("AGE");
@@ -916,6 +925,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             this.shrimpFraction.setSelected(selectedProperty.getValue());
         }
 
+        /**
+         *
+         * @return the fraction name with age data appended
+         */
         @Override
         public String getNodeName() {
             String retVal = shrimpFraction.getFractionID();
