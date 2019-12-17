@@ -1630,6 +1630,9 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void weightedMeansAction(ActionEvent event) {
-        launchWeightedMeans();
+        PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
+        PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_SAMPLE;
+        launchPlots();
+        // launchWeightedMeans();
     }
 }

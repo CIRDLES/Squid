@@ -38,6 +38,11 @@ public class SpotSummaryDetails implements Serializable {
     private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
     private boolean manualRejectionEnabled;
+    // -1 = desc, 0 = original (aquire time), +1 = asc;
+    private int preferredViewSortOrder;
+    private double minProbabilityWM;
+    private String selectedRatioName;
+    private String sortFlavor;
 
     private SpotSummaryDetails() {
         this(null);
@@ -59,6 +64,10 @@ public class SpotSummaryDetails implements Serializable {
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
+        this.preferredViewSortOrder = 0;
+        this.minProbabilityWM = 0.3;
+        this.selectedRatioName = "204/206";
+        this.sortFlavor = "AGE";
     }
 
     public double[][] eval(TaskInterface task) throws SquidException{
@@ -78,7 +87,7 @@ public class SpotSummaryDetails implements Serializable {
             }
         }
         return activeSpots;
-    }
+    }   
 
     /**
      * @return the values
@@ -133,8 +142,15 @@ public class SpotSummaryDetails implements Serializable {
         this.rejectedIndices = rejectedIndices.clone();
     }
     
-    public void resetRejectedIndices(){
+    public void rejectNone(){
         rejectedIndices = new boolean[selectedSpots.size()];
+    }
+    
+    public void rejectAll(){
+        rejectedIndices = new boolean[selectedSpots.size()];
+        for (int i = 0; i < rejectedIndices.length; i ++){
+            rejectedIndices[i] = true;
+        }
     }
     
     public boolean[] getRejectedIndices(){
@@ -157,6 +173,62 @@ public class SpotSummaryDetails implements Serializable {
      */
     public void setManualRejectionEnabled(boolean manualRejectionEnabled) {
         this.manualRejectionEnabled = manualRejectionEnabled;
+    }
+
+    /**
+     * @return the preferredViewSortOrder
+     */
+    public int getPreferredViewSortOrder() {
+        return preferredViewSortOrder;
+    }
+
+    /**
+     * @param preferredViewSortOrder the preferredViewSortOrder to set
+     */
+    public void setPreferredViewSortOrder(int preferredViewSortOrder) {
+        this.preferredViewSortOrder = preferredViewSortOrder;
+    }
+
+    /**
+     * @return the minProbabilityWM
+     */
+    public double getMinProbabilityWM() {
+        return minProbabilityWM;
+    }
+
+    /**
+     * @param minProbabilityWM the minProbabilityWM to set
+     */
+    public void setMinProbabilityWM(double minProbabilityWM) {
+        this.minProbabilityWM = minProbabilityWM;
+    }
+
+    /**
+     * @return the selectedRatioName
+     */
+    public String getSelectedRatioName() {
+        return selectedRatioName;
+    }
+
+    /**
+     * @param selectedRatioName the selectedRatioName to set
+     */
+    public void setSelectedRatioName(String selectedRatioName) {
+        this.selectedRatioName = selectedRatioName;
+    }
+
+    /**
+     * @return the sortFlavor
+     */
+    public String getSortFlavor() {
+        return sortFlavor;
+    }
+
+    /**
+     * @param sortFlavor the sortFlavor to set
+     */
+    public void setSortFlavor(String sortFlavor) {
+        this.sortFlavor = sortFlavor;
     }
 
 }
