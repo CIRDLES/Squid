@@ -17,11 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 import java.net.URL;
 import java.util.*;
@@ -50,6 +48,8 @@ public class SquidReportTableController implements Initializable {
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
     public static SquidReportTableInterface squidReportTable;
+    //filter by spot for unknownCustom, 0 for ALL/UNKNOWNS
+    public static String unknownSpot = "UNKNOWNS";
 
     /**
      * Initializes the controller class.
@@ -81,7 +81,18 @@ public class SquidReportTableController implements Initializable {
                 if (squidReportTable == null) {
                     squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
                 }
-                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.makeListOfUnknownsBySampleName());
+                List<ShrimpFractionExpressionInterface> spots = squidProject.makeListOfUnknownsBySampleName();
+                if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
+                    for (int i = 0; i < spots.size(); i++) {
+                        ShrimpFractionExpressionInterface spot = spots.get(i);
+                        if (!spot.getFractionID().startsWith(unknownSpot)) {
+                            spots.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), spots);
+                unknownSpot = "UNKNOWNS";
                 break;
 
             default:

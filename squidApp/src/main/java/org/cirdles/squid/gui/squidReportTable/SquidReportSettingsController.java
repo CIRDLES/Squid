@@ -1014,9 +1014,7 @@ public class SquidReportSettingsController implements Initializable {
         task.getTaskExpressionsOrdered().forEach(exp -> {
             if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                     && ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
-                    || (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && !isRefMat)
-                    && (spot.compareToIgnoreCase("unknowns") == 0
-                    || spot.compareToIgnoreCase(exp.getExpressionTree().getUnknownsGroupSampleName()) == 0))) {
+                    || (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && !isRefMat))) {
                 namedExpressions.add(exp);
             }
         });
@@ -1098,8 +1096,14 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public void viewOnAction(ActionEvent actionEvent) {
         SquidReportTableInterface table = createSquidReportTable();
-        SquidReportTableLauncher.ReportTableTab tab = (isRefMat) ? SquidReportTableLauncher.ReportTableTab.refMatCustom
-                : SquidReportTableLauncher.ReportTableTab.unknownCustom;
+        SquidReportTableLauncher.ReportTableTab tab;
+        if(isRefMat) {
+            tab = SquidReportTableLauncher.ReportTableTab.refMatCustom;
+        } else {
+            tab = SquidReportTableLauncher.ReportTableTab.unknownCustom;
+            SquidReportTableController.unknownSpot = spotsChoiceBox.getValue();
+
+        }
         squidReportTableLauncher.launch(tab, table);
     }
 

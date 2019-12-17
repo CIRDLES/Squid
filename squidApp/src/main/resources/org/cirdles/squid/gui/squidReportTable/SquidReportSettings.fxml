@@ -77,7 +77,7 @@
                               spacing="10.0" style="-fx-background-color: #eefbfb;">
                             <children>
                                 <RadioButton fx:id="refMatRadioButton" minWidth="50.0" mnemonicParsing="false"
-                                             onAction="#toggleRefMatUnknownsAction" text="Ref">
+                                             onAction="#toggleRefMatUnknownsAction" text="Ref" selected="true">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="refMatUnknownsToggleGroup"/>
                                     </toggleGroup>
