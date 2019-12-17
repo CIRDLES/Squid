@@ -219,7 +219,7 @@ public class TaskManagerController implements Initializable {
         SpinnerValueFactory<Double> valueFactoryU
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
-        assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
+        assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, 
                 Double oldValue, Double newValue) -> {
             task.setExtPErrU(newValue);
         });
