@@ -28,7 +28,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
@@ -40,12 +39,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
-import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -65,6 +64,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private boolean[] rejectedIndices;
     private String ageLookupString;
     private boolean hideRejectedSpots;
+    private int countOfIncluded;
 
     private final double referenceMaterialAge;
 
@@ -194,9 +194,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 return retComp;
             });
 
+            countOfIncluded = 0;
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 boolean rejected = storedRejectedIndices[storedShrimpFractions.indexOf(shrimpFractions.get(i))];
                 rejectedIndices[i] = rejected;
+                countOfIncluded = countOfIncluded + (rejected ? 0 : 1);
             }
 
             ages = new ArrayList<>();
@@ -261,7 +263,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        g2d.setFont(Font.font("SansSerif", 15));
+        g2d.setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, 15));
 
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(0.5);
@@ -272,43 +274,77 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.setFill(Paint.valueOf("RED"));
 
-        Text text = new Text("Wtd Mean of Ref Mat Pb/" + ((String) (ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-            text = new Text("Wtd Mean of " + ageLookupString);
-        }
-        int rightOfText = 450;
-
+        Text text = new Text();
         text.setFont(Font.font("SansSerif", 15));
+        int rightOfText = 450;
+        int textWidth = 0;
+        int offset = 10;
 
-        int textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), rightOfText - textWidth, 75);
         if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-            g2d.fillText(Double.toString(weightedMeanStats[0] / 1e6) + " Ma", rightOfText + 10, 75);
+            // section for sample wms
+            text.setText("Wtd Mean of " + ageLookupString);
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 75);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[0] / 1e6, 5) + " Ma", rightOfText + offset, 75);
+
+            text.setText("1-sigmaAbs");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 95);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[1] / 1e6, 5) + " Ma", rightOfText + offset, 95);
+
+            text.setText("err 68");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 115);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / 1e6, 5) + "", rightOfText + offset, 115);
+
+            text.setText("err 95");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 135);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / 1e6, 5) + "", rightOfText + offset, 135);
+
+            text.setText("MSWD");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 155);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[4], 5) + "", rightOfText + offset, 155);
+
+            text.setText("Prob. of fit");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 175);
+            g2d.fillText(squid3RoundedToSize(weightedMeanStats[5], 5) + "", rightOfText + offset, 175);
+            
+            text.setText("n");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 195);
+            g2d.fillText(String.valueOf(countOfIncluded), rightOfText + offset, 195);
+
         } else {
-            g2d.fillText(Double.toString(weightedMeanStats[0]), rightOfText + 10, 75);
-        }
 
-        text.setText("1%\u03C3 error of mean");
-        textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), rightOfText - textWidth, 95);
-        g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + 10, 95);
+            text.setText("Wtd Mean of Ref Mat Pb/" + ((String) (ageLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 75);
+            g2d.fillText(Double.toString(weightedMeanStats[0]), rightOfText + offset, 75);
 
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN) == 0) {
+            text.setText("1%\u03C3 error of mean");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 95);
+            g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + offset, 95);
+
             text.setText("1\u03C3  external spot-to-spot error");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, 115);
-            g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + 10, 115);
+            g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + offset, 115);
+
+            text.setText("MSWD");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 135);
+            g2d.fillText(Double.toString(weightedMeanStats[4]), rightOfText + offset, 135);
+
+            text.setText("Prob. of fit");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.fillText(text.getText(), rightOfText - textWidth, 155);
+            g2d.fillText(Double.toString(weightedMeanStats[5]), rightOfText + offset, 155);
+
         }
-
-        text.setText("MSWD");
-        textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), rightOfText - textWidth, 135);
-        g2d.fillText(Double.toString(weightedMeanStats[4]), rightOfText + 10, 135);
-
-        text.setText("Prob. of fit");
-        textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), rightOfText - textWidth, 155);
-        g2d.fillText(Double.toString(weightedMeanStats[5]), rightOfText + 10, 155);
 
         g2d.setLineWidth(2.0);
         for (int i = 0; i < myOnPeakData.length; i++) {

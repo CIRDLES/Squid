@@ -52,6 +52,7 @@ import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -195,7 +196,8 @@ public class CommonLeadAssignmentController implements Initializable {
             TreeItem<CommonLeadSampleTreeInterface> treeItemSampleInfo = new TreeItem<>(toolBarSampleName);
 
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
-                CommonLeadSampleTreeInterface treeItemSpotDisplay = new CommonLeadSpotDisplay(spot);
+                int indexOfSpot = entry.getValue().indexOf(spot);
+                CommonLeadSampleTreeInterface treeItemSpotDisplay = new CommonLeadSpotDisplay(spot, entry.getKey(), indexOfSpot);
                 TreeItem<CommonLeadSampleTreeInterface> treeItemSpotInfo = new TreeItem<>(treeItemSpotDisplay);
                 toolBarSampleName.addSpotDependency(treeItemSpotDisplay);
 
@@ -302,14 +304,18 @@ public class CommonLeadAssignmentController implements Initializable {
     private class CommonLeadSpotDisplay extends HBox implements CommonLeadSampleTreeInterface {
 
         private ShrimpFractionExpressionInterface spot;
+        private String sampleName;
+        private int indexOfSpot;
 
         @FXML
         protected Label nodeName;
 
-        public CommonLeadSpotDisplay(ShrimpFractionExpressionInterface spot) {
+        public CommonLeadSpotDisplay(ShrimpFractionExpressionInterface spot, String sampleName, int indexOfSpot) {
             super(5);
 
             this.spot = spot;
+            this.sampleName = sampleName;
+            this.indexOfSpot = indexOfSpot;
 
             nodeName = new Label(spot.getFractionID());
             nodeName.getStyleClass().clear();
@@ -368,7 +374,8 @@ public class CommonLeadAssignmentController implements Initializable {
                 // we have an age
                 formatter.format("%5.1f", value / 1e6);
                 formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.1f", unct / 1e6).toString();
-                fontIsBold = spot.getSelectedAgeExpressionName().compareTo(label) == 0;
+                boolean spotIsRejected = mapOfWeightedMeansBySampleNames.get(sampleName).getRejectedIndices()[indexOfSpot];
+                fontIsBold = (spot.getSelectedAgeExpressionName().compareTo(label) == 0) && !spotIsRejected;
             } else {
                 // we have a ratio
                 formatter.format("%7.4f", value);
@@ -760,49 +767,17 @@ public class CommonLeadAssignmentController implements Initializable {
             String[][] labels = clone2dArray(op.getLabelsForOutputValues());
 
             StringBuilder sb = new StringBuilder();
-            sb.append("Weighted Mean with auto-reject for Sample ").append(sampleGroupName).append("\n");
-            for (int i = 0; i < labels[0].length; i++) {
+            sb.append("Weighted Mean for Sample ").append(sampleGroupName).append("\n");
+            for (int i = 0; i < labels[0].length - 1; i++) {
                 sb.append("\t");
                 if (spotSummaryDetails.getValues().length > 0) {
                     // show array index in Squid3
                     sb.append("[").append(i).append("] ");
                     sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
                     sb.append(": ");
-                    sb.append(squid3RoundedToSize(spotSummaryDetails.getValues()[0][i] / (i < 5 ? 1.0e6 : 1.0), 5));
+                    sb.append(squid3RoundedToSize(spotSummaryDetails.getValues()[0][i] / (i < 4 ? 1.0e6 : 1.0), 5));
                 } else {
                     sb.append("Undefined Expression or Function");
-                }
-                sb.append("\n");
-            }
-
-            if (labels.length > 1) {
-                sb.append("\t");
-                sb.append("    ");
-                sb.append(String.format("%1$-" + 16 + "s", labels[1][0]));
-                sb.append(": ");
-                // print list
-                if (spotSummaryDetails.getValues()[1].length == 0) {
-                    sb.append("None");
-                } else {
-                    for (int j = 0; j < spotSummaryDetails.getValues()[1].length; j++) {
-                        sb.append((int) (spotSummaryDetails.getValues()[1][j])).append(" ");
-                    }
-                }
-                sb.append("\n");
-            }
-
-            if (labels.length > 2) {
-                sb.append("\t");
-                sb.append("    ");
-                sb.append(String.format("%1$-" + 16 + "s", labels[2][0]));
-                sb.append(": ");
-                // print list
-                if (spotSummaryDetails.getValues()[2].length == 0) {
-                    sb.append("None");
-                } else {
-                    for (int j = 0; j < spotSummaryDetails.getValues()[2].length; j++) {
-                        sb.append((int) (spotSummaryDetails.getValues()[2][j])).append(" ");
-                    }
                 }
                 sb.append("\n");
             }
@@ -855,11 +830,22 @@ public class CommonLeadAssignmentController implements Initializable {
                                 ((RadioButton) ((CommonLeadSampleToolBar) treeItem).lookup("#" + sampleAgeType.getExpressionName())).setSelected(true);
                             }
                         } else {
+                            // get some settings from current wm
+                            SpotSummaryDetails currentSpotSummaryDetails = mapOfWeightedMeansBySampleNames.get(sampleGroupName);
+                            
                             ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleGroup, sampleAgeType);
                             ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetails
+                            SpotSummaryDetails spotSummaryDetailsWM
                                     = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+                            spotSummaryDetailsWM.setManualRejectionEnabled(true);
+                            spotSummaryDetailsWM.setRejectedIndices(currentSpotSummaryDetails.getRejectedIndices().clone());
+                            spotSummaryDetailsWM.setPreferredViewSortOrder(currentSpotSummaryDetails.getPreferredViewSortOrder());
+                            spotSummaryDetailsWM.setMinProbabilityWM(currentSpotSummaryDetails.getMinProbabilityWM());
+                            try {
+                                spotSummaryDetailsWM.setValues(spotSummaryDetailsWM.eval(squidProject.getTask()));
+                            } catch (SquidException squidException) {
+                            }
+                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetailsWM);
 
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
                                 ((CommonLeadSpotDisplay) treeItem).displayData();
