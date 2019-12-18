@@ -1183,7 +1183,7 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void exportOnAction(ActionEvent event) {
         try {
-            File file = FileHandler.selectSquidReportSettingsXMLFile(primaryStageWindow);
+            File file = FileHandler.saveSquidReportSettingsXMLFile(createSquidReportTable(), primaryStageWindow);
             if (file != null) {
                 reportTableCB.getSelectionModel().getSelectedItem().serializeXMLObject(file.getAbsolutePath());
             }

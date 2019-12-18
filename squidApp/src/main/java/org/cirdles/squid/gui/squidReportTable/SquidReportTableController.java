@@ -48,7 +48,6 @@ public class SquidReportTableController implements Initializable {
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
     public static SquidReportTableInterface squidReportTable;
-    //filter by spot for unknownCustom, 0 for ALL/UNKNOWNS
     public static String unknownSpot = "UNKNOWNS";
 
     /**

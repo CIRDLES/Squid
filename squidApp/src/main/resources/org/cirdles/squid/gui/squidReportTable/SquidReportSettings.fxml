@@ -1,190 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
     <children>
-        <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-              AnchorPane.topAnchor="0.0">
+        <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New"
-                        HBox.hgrow="ALWAYS">
+                <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="saveButton" minWidth="85.0" mnemonicParsing="false" onAction="#saveOnAction" text="Save"
-                        HBox.hgrow="ALWAYS">
+                <Button fx:id="saveButton" minWidth="85.0" mnemonicParsing="false" onAction="#saveOnAction" text="Save" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="copyButton" minWidth="85.0" mnemonicParsing="false" onAction="#copyOnAction" text="Copy"
-                        HBox.hgrow="ALWAYS">
+                <Button fx:id="copyButton" minWidth="85.0" mnemonicParsing="false" onAction="#copyOnAction" text="Copy" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="renameButton" minWidth="105.0" mnemonicParsing="false" onAction="#renameOnAction"
-                        text="Rename">
+                <Button fx:id="renameButton" minWidth="105.0" mnemonicParsing="false" onAction="#renameOnAction" text="Rename">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction"
-                        text="Restore" HBox.hgrow="ALWAYS">
+                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction" text="Restore" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="deleteButton" minWidth="95.0" mnemonicParsing="false" onAction="#deleteOnAction"
-                        text="Delete" HBox.hgrow="ALWAYS">
+                <Button fx:id="deleteButton" minWidth="95.0" mnemonicParsing="false" onAction="#deleteOnAction" text="Delete" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="exportButton" minWidth="95.0" mnemonicParsing="false" onAction="#exportOnAction"
-                        text="Export" HBox.hgrow="ALWAYS">
+                <Button fx:id="exportButton" minWidth="95.0" mnemonicParsing="false" onAction="#exportOnAction" text="Export" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets left="20.0" right="20.0"/>
+                        <Insets left="20.0" right="20.0" />
                     </padding>
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="importButton" minWidth="95.0" mnemonicParsing="false" onAction="#importOnAction"
-                        text="Import" HBox.hgrow="ALWAYS">
+                <Button fx:id="importButton" minWidth="95.0" mnemonicParsing="false" onAction="#importOnAction" text="Import" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets left="20.0" right="20.0"/>
+                        <Insets left="20.0" right="20.0" />
                     </padding>
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
             </children>
         </HBox>
-        <SplitPane fx:id="mainPane" dividerPositions="0.5" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                   styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css"
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                   AnchorPane.topAnchor="55.0">
+        <SplitPane fx:id="mainPane" dividerPositions="0.5" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
             <items>
                 <VBox styleClass="backgroundCalamari">
                     <children>
-                        <HBox fx:id="expressionsHbox" alignment="CENTER" prefHeight="27.0" prefWidth="275.0"
-                              spacing="10.0" style="-fx-background-color: #eefbfb;">
+                        <HBox fx:id="expressionsHbox" alignment="CENTER" prefHeight="27.0" prefWidth="275.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
                             <children>
-                                <RadioButton fx:id="refMatRadioButton" minWidth="50.0" mnemonicParsing="false"
-                                             onAction="#toggleRefMatUnknownsAction" text="Ref" selected="true">
+                                <RadioButton fx:id="refMatRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" selected="true" text="Ref">
                                     <toggleGroup>
-                                        <ToggleGroup fx:id="refMatUnknownsToggleGroup"/>
+                                        <ToggleGroup fx:id="refMatUnknownsToggleGroup" />
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false"
-                                             onAction="#toggleRefMatUnknownsAction" text="Un"
-                                             toggleGroup="$refMatUnknownsToggleGroup"/>
-                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0"
-                                           HBox.hgrow="NEVER">
+                                <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" text="Un" toggleGroup="$refMatUnknownsToggleGroup" />
+                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" HBox.hgrow="NEVER">
                                     <HBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                     </HBox.margin>
                                 </ChoiceBox>
                                 <ChoiceBox fx:id="spotsChoiceBox" maxWidth="-Infinity" minWidth="100.0">
                                     <HBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                     </HBox.margin>
                                 </ChoiceBox>
-                                <Button fx:id="viewButton" minWidth="85.0" mnemonicParsing="false"
-                                        onAction="#viewOnAction" text="View">
+                                <Button fx:id="viewButton" minWidth="85.0" mnemonicParsing="false" onAction="#viewOnAction" text="View">
                                     <HBox.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                     </HBox.margin>
                                 </Button>
                             </children>
                             <padding>
-                                <Insets bottom="10.0" left="5.0"/>
+                                <Insets bottom="10.0" left="5.0" />
                             </padding>
                         </HBox>
                         <Accordion fx:id="expressionsAccordion" VBox.vgrow="SOMETIMES">
                             <panes>
-                                <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false"
-                                            layoutY="1.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Custom Expressions">
+                                <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
                                     <content>
-                                        <ListView fx:id="customExpressionsListView"/>
+                                        <ListView fx:id="customExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="NU-switched Expressions with Uncts">
+                                <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="NU-switched Expressions with Uncts">
                                     <content>
-                                        <ListView fx:id="nuSwitchedExpressionsListView"/>
+                                        <ListView fx:id="nuSwitchedExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0"
-                                            layoutY="1.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Built-In Expressions">
+                                <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Built-In Expressions">
                                     <content>
-                                        <ListView fx:id="builtInExpressionsListView"/>
+                                        <ListView fx:id="builtInExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Ratios with Uncertainties">
+                                <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
                                     <content>
-                                        <ListView fx:id="ratioExpressionsListView"/>
+                                        <ListView fx:id="ratioExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="79.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Isotopes (Species)">
+                                <TitledPane animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Species)">
                                     <content>
-                                        <ListView fx:id="isotopesExpressionsListView"/>
+                                        <ListView fx:id="isotopesExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Spot Metadata Fields">
+                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields">
                                     <content>
-                                        <ListView fx:id="spotMetaDataExpressionsListView"/>
+                                        <ListView fx:id="spotMetaDataExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false"
-                                            prefHeight="324.0" prefWidth="265.0"
-                                            style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;"
-                                            text="Reference Material Values (see Task Mgr)">
+                                <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
                                     <content>
-                                        <ListView fx:id="referenceMaterialsListView"/>
+                                        <ListView fx:id="referenceMaterialsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0"
-                                            prefHeight="324.0" prefWidth="265.0"
-                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
-                                            text="Parameters (see Task Mgr)">
+                                <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Parameters (see Task Mgr)">
                                     <content>
-                                        <ListView fx:id="parametersListView"/>
+                                        <ListView fx:id="parametersListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0"
-                                            layoutY="37.0"
-                                            style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;"
-                                            text="Unhealthy Expressions / Mismatched Targets ">
+                                <TitledPane fx:id="brokenExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="37.0" style="-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;" text="Unhealthy Expressions / Mismatched Targets ">
                                     <content>
-                                        <ListView fx:id="brokenExpressionsListView"/>
+                                        <ListView fx:id="brokenExpressionsListView" />
                                     </content>
                                 </TitledPane>
                             </panes>
                             <opaqueInsets>
-                                <Insets/>
+                                <Insets />
                             </opaqueInsets>
                         </Accordion>
                     </children>
                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                     </padding>
                 </VBox>
                 <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL">
@@ -195,25 +164,23 @@
                                     <children>
                                         <HBox>
                                             <children>
-                                                <TextField fx:id="categoryTextField"
-                                                           promptText="Enter Category Name Here" HBox.hgrow="ALWAYS"/>
-                                                <Button mnemonicParsing="false" onAction="#createCategoryOnAction"
-                                                        text="Create Category"/>
+                                                <TextField fx:id="categoryTextField" promptText="Enter Category Name Here" HBox.hgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#createCategoryOnAction" text="Create Category" />
                                             </children>
                                         </HBox>
-                                        <ListView fx:id="categoryListView"/>
+                                        <ListView fx:id="categoryListView" />
                                     </children>
                                 </VBox>
                             </content>
                         </TitledPane>
                         <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" text="Columns">
                             <content>
-                                <ListView fx:id="columnListView"/>
+                                <ListView fx:id="columnListView" />
                             </content>
                         </TitledPane>
                         <TitledPane animated="false" collapsible="false" text="Column Details">
                             <content>
-                                <TextArea fx:id="columnDetailsTextArea"/>
+                                <TextArea fx:id="columnDetailsTextArea" />
                             </content>
                         </TitledPane>
                     </items>
