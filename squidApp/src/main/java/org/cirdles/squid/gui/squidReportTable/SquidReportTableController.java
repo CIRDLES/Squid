@@ -61,43 +61,10 @@ public class SquidReportTableController implements Initializable {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-        switch (typeOfController) {
-            case refMat:
-                ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
-                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-                break;
-            case refMatCustom:
-                if (squidReportTable == null) {
-                    squidReportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
-                }
-                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
-                break;
-            case unknown:
-                reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.makeListOfUnknownsBySampleName(), false);
-                break;
-            case unknownCustom:
-                if (squidReportTable == null) {
-                    squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
-                }
-                List<ShrimpFractionExpressionInterface> spots = squidProject.makeListOfUnknownsBySampleName();
-                if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
-                    for (int i = 0; i < spots.size(); i++) {
-                        ShrimpFractionExpressionInterface spot = spots.get(i);
-                        if (!spot.getFractionID().startsWith(unknownSpot)) {
-                            spots.remove(i);
-                            i--;
-                        }
-                    }
-                }
-                textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), spots);
-                unknownSpot = "UNKNOWNS";
-                break;
-
-            default:
-
+        textArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        if(typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
+            unknownSpot = "UNKNOWNS";
         }
-
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
         reportsTable.refresh();
         boundCol.refresh();

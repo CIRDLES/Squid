@@ -28,6 +28,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
+import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -88,6 +89,8 @@ public class SquidReportSettingsController implements Initializable {
     public RadioButton unknownsRadioButton;
     @FXML
     public RadioButton refMatRadioButton;
+    @FXML
+    public Button exportCSVButton;
     @FXML
     private SplitPane mainPane;
     @FXML
@@ -1328,6 +1331,44 @@ public class SquidReportSettingsController implements Initializable {
         populateIsotopesListView();
         populateRatiosListView();
         populateSpotMetaDataListView();
+    }
+
+    @FXML
+    public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
+        SquidReportTableInterface reportTable = createSquidReportTable();
+        String baseFileName = reportTable.getReportTableName() + ".csv";
+        String[][] textArray;
+        if (isRefMat) {
+            textArray = SquidReportTableHelperMethods.processReportTextArray(
+                    SquidReportTableLauncher.ReportTableTab.refMatCustom,
+                    reportTable,
+                    null);
+        } else {
+            textArray = SquidReportTableHelperMethods.processReportTextArray(
+                    SquidReportTableLauncher.ReportTableTab.unknownCustom,
+                    reportTable,
+                    spotsChoiceBox.getValue());
+        }
+        int startIndex = Integer.parseInt(textArray[0][0]);
+        textArray[startIndex - 1][2] = "Fractions";
+        textArray[startIndex - 1][textArray[startIndex].length - 2] = "Fractions";
+        for(int i = 0; i < textArray.length; i++) {
+            String[] row = textArray[i];
+            textArray[i] = Arrays.copyOfRange(row, 2, row.length - 1);
+        }
+        File reportTableFile = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
+
+        if (reportTableFile != null) {
+            SquidMessageDialog.showInfoDialog(
+                    "File saved as:\n\n"
+                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                    primaryStageWindow);
+        } else {
+            SquidMessageDialog.showInfoDialog(
+                    "An Error Occurred.\n",
+                    primaryStageWindow);
+        }
+
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {

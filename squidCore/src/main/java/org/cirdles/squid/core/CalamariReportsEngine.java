@@ -970,6 +970,24 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
+    public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + baseReportTableName);
+        ReportSerializerToCSV.writeCSVReport(true, reportTableFile, report);
+
+        return reportTableFile;
+    }
+
     public File writeTaskSummaryFile() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()

@@ -1128,7 +1128,7 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
-    private String showLongfilePath(String path) {
+    public static String showLongfilePath(String path) {
         String retVal = "";
         String[] pathParts = path.split("\\\\");
         for (int i = 0; i < pathParts.length; i++) {
