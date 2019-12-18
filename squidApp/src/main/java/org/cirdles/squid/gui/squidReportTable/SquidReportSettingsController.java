@@ -1088,7 +1088,9 @@ public class SquidReportSettingsController implements Initializable {
 
     private SquidReportTableInterface createSquidReportTable() {
         SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable("");
-        table.setReportCategories(new LinkedList<>(categoryListView.getItems()));
+        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
+        categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
+        table.setReportCategories(new LinkedList<>(cats));
         table.setReportTableName(reportTableCB.getSelectionModel().getSelectedItem().getReportTableName());
         return table;
     }
@@ -1097,12 +1099,11 @@ public class SquidReportSettingsController implements Initializable {
     public void viewOnAction(ActionEvent actionEvent) {
         SquidReportTableInterface table = createSquidReportTable();
         SquidReportTableLauncher.ReportTableTab tab;
-        if(isRefMat) {
+        if (isRefMat) {
             tab = SquidReportTableLauncher.ReportTableTab.refMatCustom;
         } else {
             tab = SquidReportTableLauncher.ReportTableTab.unknownCustom;
             SquidReportTableController.unknownSpot = spotsChoiceBox.getValue();
-
         }
         squidReportTableLauncher.launch(tab, table);
     }
