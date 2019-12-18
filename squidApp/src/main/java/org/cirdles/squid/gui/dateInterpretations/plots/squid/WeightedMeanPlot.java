@@ -571,7 +571,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         setDisplayOffsetY(0.0);
         setDisplayOffsetX(0.0);
 
-        // X-axis is hours
+        // X-axis is hours or counts depending on sorting order
         minX = myOnPeakNormalizedAquireTimes[0];
         maxX = myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1];
         ticsX = TicGeneratorForAxes.generateTics(minX, maxX, (int) (graphWidth / 50.0));
