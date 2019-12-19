@@ -983,7 +983,7 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         File reportTableFile = new File(reportsPath + baseReportTableName);
-        ReportSerializerToCSV.writeCSVReport(true, reportTableFile, report);
+        ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report);
 
         return reportTableFile;
     }

@@ -1336,7 +1336,10 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
         SquidReportTableInterface reportTable = createSquidReportTable();
-        String baseFileName = reportTable.getReportTableName() + ".csv";
+        String baseFileName =
+                (squidProject.getProjectName() + "_" + reportTable.getReportTableName())
+                        .replaceAll("\\s", "_")
+                        + ".csv";
         String[][] textArray;
         if (isRefMat) {
             textArray = SquidReportTableHelperMethods.processReportTextArray(
@@ -1349,6 +1352,7 @@ public class SquidReportSettingsController implements Initializable {
                     reportTable,
                     spotsChoiceBox.getValue());
         }
+        /*
         int startIndex = Integer.parseInt(textArray[0][0]);
         textArray[startIndex - 1][2] = "Fractions";
         textArray[startIndex - 1][textArray[startIndex].length - 2] = "Fractions";
@@ -1356,7 +1360,9 @@ public class SquidReportSettingsController implements Initializable {
             String[] row = textArray[i];
             textArray[i] = Arrays.copyOfRange(row, 2, row.length - 1);
         }
-        File reportTableFile = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
+        */
+        File reportTableFile =
+                squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
 
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(

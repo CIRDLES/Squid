@@ -66,6 +66,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
@@ -1130,7 +1131,8 @@ public class SquidUIController implements Initializable {
 
     public static String showLongfilePath(String path) {
         String retVal = "";
-        String[] pathParts = path.split("\\\\");
+        String fileSeparatorPattern = Pattern.quote(File.separator);
+        String[] pathParts = path.split(fileSeparatorPattern);
         for (int i = 0; i < pathParts.length; i++) {
             retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
             for (int j = 0; j < i; j++) {
