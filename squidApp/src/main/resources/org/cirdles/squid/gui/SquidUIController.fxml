@@ -112,17 +112,17 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Default Report Tables">
                             <items>
-                                <Menu mnemonicParsing="false" text="Reference Materials">
+                                  <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Reference Materials - per Squid2.*" />
+                                  <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Unknowns - per Squid 2.*" />
+                                  <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Unknowns - by Sample for use by ET_Redux and Topsoil" />
+                                <Menu mnemonicParsing="false" text="Reference Materials" visible="false">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" visible="false" />
                                     </items>
                                 </Menu>
-                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
+                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns" visible="false">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
-                                        <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for use by ET_Redux and Topsoil" />
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" visible="false" />
                                     </items>
                                 </Menu>
                             </items>
