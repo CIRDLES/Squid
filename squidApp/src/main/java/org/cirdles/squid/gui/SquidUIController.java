@@ -66,6 +66,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
@@ -140,6 +141,8 @@ public class SquidUIController implements Initializable {
 
     private static SplitPane expressionBuilderUI;
 
+    private static AnchorPane squidReportSettingsUI;
+
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
     public static Node topsoilPlotUI;
@@ -173,9 +176,6 @@ public class SquidUIController implements Initializable {
     private Label korean;
     @FXML
     private MenuItem choosePrawnFileMenuItem;
-
-    public static ParametersLauncher parametersLauncher;
-    public static SquidReportTableLauncher squidReportTableLauncher;
     @FXML
     private MenuItem auditRawDataMenuItem;
     @FXML
@@ -192,6 +192,9 @@ public class SquidUIController implements Initializable {
     private SeparatorMenuItem dataSeparatorMenuItem;
     @FXML
     private Menu manageInterpretationsMenu;
+
+    public static ParametersLauncher parametersLauncher;
+    public static SquidReportTableLauncher squidReportTableLauncher;
 
     /**
      * Initializes the controller class.
@@ -386,6 +389,8 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(ratiosManagerUI);
 
         mainPane.getChildren().remove(expressionBuilderUI);
+
+        mainPane.getChildren().remove(squidReportSettingsUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
         mainPane.getChildren().remove(reducedDataReportManagerUI);
@@ -1124,9 +1129,10 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
-    private String showLongfilePath(String path) {
+    public static String showLongfilePath(String path) {
         String retVal = "";
-        String[] pathParts = path.split(File.separator);
+        String fileSeparatorPattern = Pattern.quote(File.separator);
+        String[] pathParts = path.split(fileSeparatorPattern);
         for (int i = 0; i < pathParts.length; i++) {
             retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
             for (int j = 0; j < i; j++) {
@@ -1621,6 +1627,27 @@ public class SquidUIController implements Initializable {
     @FXML
     private void interactiveDefaultTableUnknownAction(ActionEvent event) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknownCustom);
+    }
+
+    @FXML
+    public void reportLayoutManagerOnAction(ActionEvent actionEvent) {
+        mainPane.getChildren().remove(squidReportSettingsUI);
+        try {
+            squidReportSettingsUI = FXMLLoader.load(getClass().getResource("squidReportTable/SquidReportSettings.fxml"));
+            squidReportSettingsUI.setId("SquidReportSettings");
+
+            AnchorPane.setLeftAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setRightAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setTopAnchor(squidReportSettingsUI, 0.0);
+            AnchorPane.setBottomAnchor(squidReportSettingsUI, 0.0);
+
+            mainPane.getChildren().add(squidReportSettingsUI);
+            squidReportSettingsUI.setVisible(false);
+
+        } catch (IOException ex) {
+            Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        showUI(squidReportSettingsUI);
     }
 
     @FXML

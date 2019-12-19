@@ -15,12 +15,15 @@
  */
 package org.cirdles.squid.squidReports.squidReportCategories;
 
+import com.thoughtworks.xstream.XStream;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
+
 import java.io.Serializable;
 import java.util.LinkedList;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SquidReportCategory implements Serializable, SquidReportCategoryInterface {
@@ -99,4 +102,23 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         this.visible = visible;
     }
 
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new SquidReportCategoryXMLConverter());
+        xstream.alias("SquidReportCategory", SquidReportCategory.class);
+
+        xstream.registerConverter(new SquidReportColumnXMLConverter());
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+    }
+
+    public SquidReportCategory clone() {
+        SquidReportCategoryInterface cat = new SquidReportCategory(displayName);
+        LinkedList<SquidReportColumnInterface> cols = new LinkedList<>();
+        for (SquidReportColumnInterface col : categoryColumns) {
+            cols.add(col.clone());
+        }
+        cat.setCategoryColumns(cols);
+        cat.setVisible(visible);
+        return (SquidReportCategory) cat;
+    }
 }

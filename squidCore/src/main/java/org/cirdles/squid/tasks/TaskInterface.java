@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks;
 
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
@@ -696,6 +697,11 @@ public interface TaskInterface {
      */
     public void setRoundingForSquid3(boolean roundingForSquid3);
 
+    public List<SquidReportTableInterface> getSquidReportTablesRefMat();
+    public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat);
+    public List<SquidReportTableInterface> getSquidReportTablesUnknown();
+    public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown);
+
     /**
      * @return the overcountCorrectionType
      */
@@ -705,6 +711,6 @@ public interface TaskInterface {
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
-    
+
     public void updateAllSpotsWithCurrentCommonPbModel();
 }

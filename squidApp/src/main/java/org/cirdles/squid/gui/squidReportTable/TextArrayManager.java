@@ -41,7 +41,8 @@ public class TextArrayManager {
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
 
-        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown) {
+        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown ||
+                controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
             initializeAliquots();
             initializeSortPolicies();
         }
@@ -58,9 +59,11 @@ public class TextArrayManager {
 
     private void initializeAliquots() {
         aliquots.clear();
-        String currentAliquot = "";
-        for (int i = Integer.parseInt(array[0][0]); i < array.length; i++) {
-            if (!currentAliquot.equals(array[i][1])) {
+        int i = Integer.parseInt(array[0][0]);
+        String currentAliquot = array[i][1];
+        aliquots.add(currentAliquot);
+        for (i = ++i; i < array.length; i++) {
+            if (!array[i][1].isEmpty() && !currentAliquot.equals(array[i][1])) {
                 aliquots.add(array[i][1]);
                 currentAliquot = array[i][1];
             }
@@ -99,9 +102,9 @@ public class TextArrayManager {
     private void initializeSortPolicies() {
         Callback<TableView<ObservableList<String>>, Boolean> sortPolicy = t -> {
             Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
-                    t.getComparator() == null || (r1.get(0) != r2.get(0)) ||
-                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ? 0
-                            : t.getComparator().compare(r1, r2);
+                    t.getComparator() == null || r1.get(0) != r2.get(0) ||
+                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ?
+                            0 : t.getComparator().compare(r1, r2);
             FXCollections.sort(table.getItems(), rowComparator);
             return true;
         };
@@ -114,7 +117,7 @@ public class TextArrayManager {
 
         TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][3]);
         for (int i = 3; i < array[0].length - 1; i++) {
-            if (!array[0][i].equals(header.getText())) {
+            if (!array[0][i].equals(header.getText()) && !array[0][i].isEmpty()) {
                 table.getColumns().add(header);
                 header = new TableColumn<>(array[0][i].trim());
             }
@@ -174,8 +177,19 @@ public class TextArrayManager {
             }
             if (Boolean.parseBoolean(array[i][0]) == true) {
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for (int j = 1; j < array[0].length - 1; j++) {
-                    row.add(array[i][j]);
+                if (controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
+                    if(aliquot == null || !array[i][1].isEmpty()) {
+                        aliquot = array[i][1];
+                    }
+                    row.add(aliquot);
+                    for (int j = 2; j < array[0].length - 1; j++) {
+                        row.add(array[i][j]);
+                    }
+
+                } else {
+                    for (int j = 1; j < array[0].length - 1; j++) {
+                        row.add(array[i][j]);
+                    }
                 }
                 data.add(row);
             }

@@ -20,6 +20,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +54,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -372,14 +374,14 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     VBox.setVgrow(((Canvas) plot), Priority.ALWAYS);
 
                     ((Canvas) plot).widthProperty().bind(plotScrollPane.widthProperty());
-                    if (plotTypeSelected.compareTo(PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-                        ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty());
 
+                    if (plotTypeSelected.compareTo(PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+                        plotVBox.getChildren().remove(plotToolBar);
+                        ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty());
                         spotsTreeViewCheckBox.refresh();
                     } else {
                         ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty().subtract(controlPanel.getPrefHeight()));
                     }
-
                 } else {
 
                     topsoilPlotNode = plot.displayPlotAsNode();
@@ -406,6 +408,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             plotAndConfigAnchorPane.getChildren().clear();
             plotToolBar.getItems().clear();
             controlPanel.getChildren().clear();
+
+            plotVBox.getChildren().remove(plotToolBar);
+            plotVBox.getChildren().remove(controlPanel);
         }
     }
 
@@ -625,10 +630,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 // original aquire time order
                 int retVal = 0;
                 if (spotSummaryDetailsWM.getPreferredViewSortOrder() == -1) {
-                    retVal = Double.compare(age1, age2);
+                    retVal = Double.compare(age2, age1);
                 }
                 if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
-                    retVal = Double.compare(age2, age1);
+                    retVal = Double.compare(age1, age2);
                 }
                 return retVal;
             });
@@ -679,8 +684,16 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         double[][] ratioValues
                                 = Arrays.stream(item.getShrimpFraction()
                                         .getIsotopicRatioValuesByStringName(ratioName)).toArray(double[][]::new);
-                        nodeStringWM = item.getShrimpFraction().getFractionID()
-                                + "  " + ratioValues[0][0] + " ±" + ratioValues[0][1];
+//                      //  Formatter formatter = new Formatter();
+//                        formatter.format("% 24.6E   %  12.3f", ratioValues[0][0], ratioValues[0][1]);
+//                        String ratioValueString = formatter.toString();
+//                        nodeStringWM = item.getShrimpFraction().getFractionID() + ratioValueString;
+////                                + "  " + ratioValues[0][0] + " ±" + ratioValues[0][1];
+
+                        Formatter formatter = new Formatter();
+                        formatter.format("%5.5E", ratioValues[0][0]);
+                        formatter.format("  " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5E", ratioValues[0][1]).toString();
+                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + formatter.toString();
                     }
 
                 }
