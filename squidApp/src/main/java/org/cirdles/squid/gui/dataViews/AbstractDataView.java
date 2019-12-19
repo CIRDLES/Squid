@@ -184,6 +184,7 @@ public abstract class AbstractDataView extends Canvas {
     public void refreshPanel(boolean doReScale, boolean inLiveMode) {
         try {
             preparePanel();
+            repaint();
         } catch (Exception e) {
         }
     }
