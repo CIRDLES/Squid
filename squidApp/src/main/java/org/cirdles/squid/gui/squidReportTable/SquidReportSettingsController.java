@@ -57,10 +57,12 @@ import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.*;
+import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.SquidUIController.squidReportTableLauncher;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 
 /**
  * FXML Controller class
@@ -189,13 +191,15 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
-        settingsAndSpotsCB.getChildren().remove(spotsChoiceBox);
+        //  settingsAndSpotsCB.getChildren().remove(spotsChoiceBox);
+        spotsChoiceBox.setVisible(false);
     }
 
     private void initCategoryTextField() {
         categoryTextField.setOnKeyPressed(val -> {
-            if (val.getCode() == KeyCode.ENTER)
+            if (val.getCode() == KeyCode.ENTER) {
                 createCategory();
+            }
         });
     }
 
@@ -343,7 +347,6 @@ public class SquidReportSettingsController implements Initializable {
                 if (newValue != null) {
 
                     selectedExpression.set(newValue);
-
 
                     selectInAllPanes(newValue, false);
                 }
@@ -499,7 +502,7 @@ public class SquidReportSettingsController implements Initializable {
                 System.out.println("interrupted");
             }
         });
-        */
+         */
         populateCategoryListView();
 
         //Squid Report Columns
@@ -927,7 +930,6 @@ public class SquidReportSettingsController implements Initializable {
         return Math.abs(valueModel[1] / valueModel[0] * 100.0);
     }
 
-
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
         //If nothing is selected or the selected value is not the new one
         if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null
@@ -1028,7 +1030,7 @@ public class SquidReportSettingsController implements Initializable {
     //POPULATE LISTS
     private void populateExpressionListViews() {
         namedExpressions = FXCollections.observableArrayList();
-        String spot = spotsChoiceBox.getSelectionModel().getSelectedItem();
+//        String spot = spotsChoiceBox.getSelectionModel().getSelectedItem();
         task.getTaskExpressionsOrdered().forEach(exp -> {
             if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                     && ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
@@ -1185,7 +1187,6 @@ public class SquidReportSettingsController implements Initializable {
         });
     }
 
-
     @FXML
     private void restoreOnAction(ActionEvent event) {
         populateCategoryListView();
@@ -1329,17 +1330,29 @@ public class SquidReportSettingsController implements Initializable {
             reportTableCB.getSelectionModel().select(table);
             isEditing.setValue(false);
         }
+        
+        if (squidProject != null) {
+            try {
+                ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
+            } catch (IOException iOException) {
+            }
+        }
     }
 
     @FXML
     public void toggleRefMatUnknownsAction(ActionEvent actionEvent) {
-        if (unknownsRadioButton.isSelected()) {
-            isRefMat = false;
-            settingsAndSpotsCB.getChildren().add(1, spotsChoiceBox);
-        } else {
-            isRefMat = true;
-            settingsAndSpotsCB.getChildren().remove(1);
-        }
+//        if (unknownsRadioButton.isSelected()) {
+//            isRefMat = false;
+////            settingsAndSpotsCB.getChildren().add(1, spotsChoiceBox);
+//            spotsChoiceBox.setVisible(true);
+//        } else {
+//            isRefMat = true;
+////            settingsAndSpotsCB.getChildren().remove(1);
+//        }
+        
+        isRefMat = !unknownsRadioButton.isSelected();
+        spotsChoiceBox.setVisible(!isRefMat);
+        
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
         populateExpressionListViews();
@@ -1374,13 +1387,13 @@ public class SquidReportSettingsController implements Initializable {
                     .replaceAll("\\s", "_")
                     + ".csv";
         }
-        File reportTableFile =
-                squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
+        File reportTableFile
+                = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
 
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                    + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
@@ -1416,15 +1429,15 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnDragEntered(event -> {
-                if (event.getGestureSource() != cell &&
-                        event.getDragboard().hasString()) {
+                if (event.getGestureSource() != cell
+                        && event.getDragboard().hasString()) {
                     cell.setOpacity(0.3);
                 }
             });
 
             cell.setOnDragExited(event -> {
-                if (event.getGestureSource() != cell &&
-                        event.getDragboard().hasString()) {
+                if (event.getGestureSource() != cell
+                        && event.getDragboard().hasString()) {
                     cell.setOpacity(1);
                 }
             });
@@ -1559,15 +1572,15 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnDragEntered(event -> {
-                if (event.getGestureSource() != cell &&
-                        event.getDragboard().hasString()) {
+                if (event.getGestureSource() != cell
+                        && event.getDragboard().hasString()) {
                     cell.setOpacity(0.3);
                 }
             });
 
             cell.setOnDragExited(event -> {
-                if (event.getGestureSource() != cell &&
-                        event.getDragboard().hasString()) {
+                if (event.getGestureSource() != cell
+                        && event.getDragboard().hasString()) {
                     cell.setOpacity(1);
                 }
             });
@@ -1654,6 +1667,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
+
         public StringCellFactory() {
 
         }
@@ -1782,7 +1796,6 @@ public class SquidReportSettingsController implements Initializable {
             });
             return cell;
         }
-
 
     }
 
