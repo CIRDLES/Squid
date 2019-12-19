@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 /**
  *
@@ -129,6 +130,21 @@ public class ReportSerializerToCSV {
         outputWriter.flush();
         outputWriter.close();
 
+    }
+
+    public static void writeSquid3CustomCSVReport(File csvFile, String[][] reportFractions) {
+        reportFractions[4][2] = "Fractions";
+        reportFractions[4][reportFractions[4].length - 2] = "Fractions";
+        for(int i = 0; i < reportFractions.length; i++) {
+            String[] row = reportFractions[i];
+            reportFractions[i] = Arrays.copyOfRange(row, 2, row.length - 1);
+        }
+
+        for(int j = 2; j < reportFractions[4].length - 1; j++) {
+            reportFractions[4][j] = replaceUnicodes(reportFractions[4][j]);
+        }
+
+        writeCSVReport(true, csvFile, reportFractions);
     }
 
     private static String replaceUnicodes(String text) {

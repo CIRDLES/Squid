@@ -82,8 +82,6 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public ChoiceBox<String> spotsChoiceBox;
     @FXML
-    public HBox expressionsHbox;
-    @FXML
     public ToggleGroup refMatUnknownsToggleGroup;
     @FXML
     public RadioButton unknownsRadioButton;
@@ -91,6 +89,8 @@ public class SquidReportSettingsController implements Initializable {
     public RadioButton refMatRadioButton;
     @FXML
     public Button exportCSVButton;
+    @FXML
+    public HBox settingsAndSpotsCB;
     @FXML
     private SplitPane mainPane;
     @FXML
@@ -189,7 +189,7 @@ public class SquidReportSettingsController implements Initializable {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
         buttonHBox.getChildren().removeAll(saveButton, restoreButton);
-        expressionsHbox.getChildren().remove(spotsChoiceBox);
+        settingsAndSpotsCB.getChildren().remove(spotsChoiceBox);
     }
 
     private void initCategoryTextField() {
@@ -202,12 +202,26 @@ public class SquidReportSettingsController implements Initializable {
     private void processButtons() {
         if (isEditing.getValue()) {
             buttonHBox.getChildren().setAll(saveButton, restoreButton);
+            unknownsRadioButton.setDisable(true);
+            refMatRadioButton.setDisable(true);
         } else if (isDefault.getValue()) {
             buttonHBox.getChildren().setAll(newButton, copyButton,
                     exportButton, importButton);
+            unknownsRadioButton.setDisable(false);
+            refMatRadioButton.setDisable(false);
         } else {
             buttonHBox.getChildren().setAll(newButton, copyButton,
                     renameButton, deleteButton, exportButton, importButton);
+            unknownsRadioButton.setDisable(false);
+            refMatRadioButton.setDisable(false);
+        }
+    }
+
+    private void processReportTableChoiceBoxes() {
+        if (isEditing.getValue()) {
+            reportTableCB.setDisable(true);
+        } else {
+            reportTableCB.setDisable(false);
         }
     }
 
@@ -215,6 +229,7 @@ public class SquidReportSettingsController implements Initializable {
         isEditing.setValue(false);
         isEditing.addListener(ob -> {
             processButtons();
+            processReportTableChoiceBoxes();
         });
     }
 
@@ -1320,10 +1335,10 @@ public class SquidReportSettingsController implements Initializable {
     public void toggleRefMatUnknownsAction(ActionEvent actionEvent) {
         if (unknownsRadioButton.isSelected()) {
             isRefMat = false;
-            expressionsHbox.getChildren().add(3, spotsChoiceBox);
+            settingsAndSpotsCB.getChildren().add(1, spotsChoiceBox);
         } else {
             isRefMat = true;
-            expressionsHbox.getChildren().remove(spotsChoiceBox);
+            settingsAndSpotsCB.getChildren().remove(1);
         }
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
@@ -1336,31 +1351,29 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
         SquidReportTableInterface reportTable = createSquidReportTable();
-        String baseFileName =
-                (squidProject.getProjectName() + "_" + reportTable.getReportTableName())
-                        .replaceAll("\\s", "_")
-                        + ".csv";
+        String baseFileName;
         String[][] textArray;
         if (isRefMat) {
             textArray = SquidReportTableHelperMethods.processReportTextArray(
                     SquidReportTableLauncher.ReportTableTab.refMatCustom,
                     reportTable,
                     null);
+            baseFileName = (squidProject.getProjectName() + "_"
+                    + "RefMat" + "_"
+                    + reportTable.getReportTableName())
+                    .replaceAll("\\s", "_")
+                    + ".csv";
         } else {
             textArray = SquidReportTableHelperMethods.processReportTextArray(
                     SquidReportTableLauncher.ReportTableTab.unknownCustom,
                     reportTable,
                     spotsChoiceBox.getValue());
+            baseFileName = (squidProject.getProjectName() + "_"
+                    + spotsChoiceBox.getValue() + "_"
+                    + reportTable.getReportTableName())
+                    .replaceAll("\\s", "_")
+                    + ".csv";
         }
-        /*
-        int startIndex = Integer.parseInt(textArray[0][0]);
-        textArray[startIndex - 1][2] = "Fractions";
-        textArray[startIndex - 1][textArray[startIndex].length - 2] = "Fractions";
-        for(int i = 0; i < textArray.length; i++) {
-            String[] row = textArray[i];
-            textArray[i] = Arrays.copyOfRange(row, 2, row.length - 1);
-        }
-        */
         File reportTableFile =
                 squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
 
