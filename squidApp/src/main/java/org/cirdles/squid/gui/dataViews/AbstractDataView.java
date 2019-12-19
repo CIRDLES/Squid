@@ -141,8 +141,8 @@ public abstract class AbstractDataView extends Canvas {
 
         drawBorder(g2d);
     }
-    
-    public void repaint(){
+
+    public void repaint() {
         paint(this.getGraphicsContext2D());
     }
 
@@ -154,7 +154,7 @@ public abstract class AbstractDataView extends Canvas {
         // draw border
         g2d.setStroke(Paint.valueOf("BLACK"));
         g2d.setLineWidth(1);
-        g2d.strokeRect(1, 1, width-1, height-1);
+        g2d.strokeRect(1, 1, width - 1, height - 1);
 
     }
 
@@ -291,10 +291,10 @@ public abstract class AbstractDataView extends Canvas {
      * @return
      */
     protected double convertMouseXToValue(double x) {
-        double convertedX = (((double) (x - leftMargin - 1)) / (double) graphWidth) //
+        double convertedX = (((double) (x - leftMargin + 2)) / (double) graphWidth) //
                 * getRangeX_Display()//
                 + getMinX_Display();
-        
+
         return convertedX;
     }
 
@@ -306,5 +306,12 @@ public abstract class AbstractDataView extends Canvas {
     protected double convertMouseYToValue(double y) {
         return -1 * (((y - topMargin - 1) * getRangeY_Display() / graphHeight) //
                 - getMaxY_Display());
+    }
+
+    protected boolean mouseInHouse(javafx.scene.input.MouseEvent evt) {
+        return ((evt.getX() >= leftMargin)
+                && (evt.getY() >= topMargin)
+                && (evt.getY() < graphHeight + topMargin - 2)
+                && (evt.getX() < (graphWidth + leftMargin - 2)));
     }
 }

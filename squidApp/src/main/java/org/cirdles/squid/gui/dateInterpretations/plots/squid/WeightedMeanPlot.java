@@ -26,7 +26,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -82,7 +84,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         super(bounds, 0, 0);
 
-        leftMargin = 150;
+        leftMargin = 100;
         topMargin = 200;
 
         this.plotTitle = plotTitle;
@@ -102,6 +104,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         setupSpotInWMContextMenu();
 
         this.setOnMouseClicked(new MouseClickEventHandler());
+        this.setOnMouseMoved(new MouseMovedHandler());
 
         widthProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -222,6 +225,17 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return retVal;
     }
 
+    private class MouseMovedHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent event) {
+            if (mouseInHouse(event)) {
+                ((Canvas) event.getSource()).getParent().getScene().setCursor(Cursor.CROSSHAIR);
+            } else {
+                ((Canvas) event.getSource()).getParent().getScene().setCursor(Cursor.DEFAULT);
+            }
+        }
+    }
+
     private class MouseClickEventHandler implements EventHandler<MouseEvent> {
 
         @Override
@@ -245,10 +259,18 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         double convertedX = convertMouseXToValue(x);
         int index = -1;
         // look up index
-        for (int i = 0; i < myOnPeakNormalizedAquireTimes.length; i++) {
-            if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[i]) < 0.5)) {
+        for (int i = 0; i < myOnPeakNormalizedAquireTimes.length - 1; i++) {
+            if ((convertedX >= myOnPeakNormalizedAquireTimes[i])
+                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])){
                 index = i;
                 break;
+            }
+            
+            // handle case of last age
+            if (index == -1){
+                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)){
+                    index = myOnPeakNormalizedAquireTimes.length -1;
+                } 
             }
         }
 
@@ -311,7 +333,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, 175);
             g2d.fillText(squid3RoundedToSize(weightedMeanStats[5], 5) + "", rightOfText + offset, 175);
-            
+
             text.setText("n");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, 195);
@@ -401,7 +423,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
         text.setText("2\u03C3 error bars");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin - 0);
+        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin +10);
 
         if (ticsY.length > 1) {
             // border and fill
@@ -469,7 +491,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         g2d.rotate(-90);
-        g2d.fillText(text.getText(), -400, 100);
+        g2d.fillText(text.getText(), -400, leftMargin - 50);
         g2d.rotate(90);
 
         // X- label
@@ -513,9 +535,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             // gray spot rectangle
             g2d.setFill(Color.rgb(0, 0, 0, 0.2));
             g2d.fillRect(
-                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 6,
+                    mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 3,
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
-                    12,
+                    6,
                     Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             if (rejectedIndices[indexOfSelectedSpot]) {
                 g2d.setFill(Paint.valueOf("BLUE"));
