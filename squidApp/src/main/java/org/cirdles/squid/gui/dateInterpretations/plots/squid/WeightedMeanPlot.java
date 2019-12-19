@@ -65,7 +65,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private double[] onPeakTwoSigma;
     private boolean[] rejectedIndices;
     private String ageLookupString;
-    private boolean hideRejectedSpots;
     private int countOfIncluded;
 
     private final double referenceMaterialAge;
@@ -73,6 +72,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private int indexOfSelectedSpot;
     private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
+
+    private boolean doPlotRejectedSpots;
 
     public WeightedMeanPlot(
             Rectangle bounds,
@@ -84,7 +85,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         super(bounds, 0, 0);
 
-        leftMargin = 100;
+        leftMargin = 75;
         topMargin = 200;
 
         this.plotTitle = plotTitle;
@@ -97,7 +98,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
-        this.hideRejectedSpots = false;
+        this.doPlotRejectedSpots = true;
 
         setOpacity(1.0);
 
@@ -226,6 +227,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     private class MouseMovedHandler implements EventHandler<MouseEvent> {
+
         @Override
         public void handle(MouseEvent event) {
             if (mouseInHouse(event)) {
@@ -240,15 +242,19 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         @Override
         public void handle(MouseEvent mouseEvent) {
-            indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+            if (mouseInHouse(mouseEvent)) {
+                indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
 
-            spotContextMenu.hide();
-            if (getSpotSummaryDetails().isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
-                try {
-                    spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                            mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
-                } catch (Exception e) {
+                spotContextMenu.hide();
+                if (getSpotSummaryDetails().isManualRejectionEnabled() && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
+                    try {
+                        spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                                mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
+                    } catch (Exception e) {
+                    }
                 }
+            } else {
+                indexOfSelectedSpot = -1;
             }
 
             repaint();
@@ -261,16 +267,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         // look up index
         for (int i = 0; i < myOnPeakNormalizedAquireTimes.length - 1; i++) {
             if ((convertedX >= myOnPeakNormalizedAquireTimes[i])
-                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])){
+                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])) {
                 index = i;
                 break;
             }
-            
+
             // handle case of last age
-            if (index == -1){
-                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)){
-                    index = myOnPeakNormalizedAquireTimes.length -1;
-                } 
+            if (index == -1) {
+                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
+                    index = myOnPeakNormalizedAquireTimes.length - 1;
+                }
             }
         }
 
@@ -375,29 +381,38 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             } else {
                 g2d.setStroke(Paint.valueOf("RED"));
             }
-            g2d.strokeLine(
-                    mapX(myOnPeakNormalizedAquireTimes[i]),
-                    mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
-                    mapX(myOnPeakNormalizedAquireTimes[i]),
-                    mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
-            // - 2 sigma tic
-            g2d.strokeLine(
-                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
-                    mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
-                    mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
-                    mapY(myOnPeakData[i] - onPeakTwoSigma[i]));
-            // age tic
-            g2d.strokeLine(
-                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
-                    mapY(myOnPeakData[i]),
-                    mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
-                    mapY(myOnPeakData[i]));
-            // + 2 sigma tic
-            g2d.strokeLine(
-                    mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
-                    mapY(myOnPeakData[i] + onPeakTwoSigma[i]),
-                    mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
-                    mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
+            if (doPlotRejectedSpots || !rejectedIndices[i]) {
+                g2d.strokeLine(
+                        mapX(myOnPeakNormalizedAquireTimes[i]),
+                        mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
+                        mapX(myOnPeakNormalizedAquireTimes[i]),
+                        mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
+                // - 2 sigma tic
+                g2d.strokeLine(
+                        mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
+                        mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        mapY(myOnPeakData[i] - onPeakTwoSigma[i]));
+                // age tic
+                g2d.strokeLine(
+                        mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        mapY(myOnPeakData[i]),
+                        mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        mapY(myOnPeakData[i]));
+                // + 2 sigma tic
+                g2d.strokeLine(
+                        mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        mapY(myOnPeakData[i] + onPeakTwoSigma[i]),
+                        mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
+            } else {
+                // leave a marker on bottom axis
+                g2d.strokeLine(
+                        mapX(myOnPeakNormalizedAquireTimes[i]),
+                        mapY(ticsY[0].doubleValue()) - 1,
+                        mapX(myOnPeakNormalizedAquireTimes[i]),
+                        mapY(ticsY[0].doubleValue()) + 1);
+            }
         }
 
         // plot either the reference material age or the weighted mean
@@ -423,7 +438,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFont(Font.font("Monospaced", FontWeight.BOLD, 14));
         text.setText("2\u03C3 error bars");
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin +10);
+        g2d.fillText(text.getText(), leftMargin + graphWidth - textWidth, topMargin + 10);
 
         if (ticsY.length > 1) {
             // border and fill
@@ -567,7 +582,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             retVal = "  " + new BigDecimal(age)
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString()
                     + " ±" + new BigDecimal(twoSigmaUncert)
-                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + "Ma";
+                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toPlainString() + " Ma";
         } catch (Exception e) {
         }
         return retVal;
@@ -606,7 +621,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         maxY = -Double.MAX_VALUE;
 
         for (int i = 0; i < myOnPeakData.length; i++) {
-            if (!hideRejectedSpots || !rejectedIndices[i]) {
+            if (doPlotRejectedSpots || !rejectedIndices[i]) {
                 minY = Math.min(minY, myOnPeakData[i] - onPeakTwoSigma[i]);
                 maxY = Math.max(maxY, myOnPeakData[i] + onPeakTwoSigma[i]);
             }
@@ -636,6 +651,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
         });
         spotContextMenu.getItems().addAll(menuItem1);
+
+        MenuItem menuItem2 = new MenuItem("Toggle Plot Rejected Spots");
+        menuItem2.setOnAction((evt) -> {
+            doPlotRejectedSpots = !doPlotRejectedSpots;
+            refreshPanel(false, false);
+        });
+        spotContextMenu.getItems().addAll(menuItem2);
     }
 
     @Override

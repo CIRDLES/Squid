@@ -564,7 +564,7 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
                 sample.getSpotSummaryDetailsWM().setSortFlavor("RATIO");
                 sortFractionCheckboxesByValue(
                         "RATIO",
-                        ageComboBox.getSelectionModel().getSelectedItem().getExpressionName(),
+                        ratioComboBox.getSelectionModel().getSelectedItem(),
                         sample.getSpotSummaryDetailsWM().getPreferredViewSortOrder());
                 ((SampleNode) sample).getPlotsController().refreshPlot();
             }
