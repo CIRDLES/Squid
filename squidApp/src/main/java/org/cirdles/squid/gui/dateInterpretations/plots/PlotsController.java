@@ -625,10 +625,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 // original aquire time order
                 int retVal = 0;
                 if (spotSummaryDetailsWM.getPreferredViewSortOrder() == -1) {
-                    retVal = Double.compare(age1, age2);
+                    retVal = Double.compare(age2, age1);
                 }
                 if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
-                    retVal = Double.compare(age2, age1);
+                    retVal = Double.compare(age1, age2);
                 }
                 return retVal;
             });
