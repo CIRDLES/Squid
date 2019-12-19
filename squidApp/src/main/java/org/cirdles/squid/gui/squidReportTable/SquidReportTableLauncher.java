@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 
@@ -54,9 +55,13 @@ public class SquidReportTableLauncher {
     }
 
     public void launch(ReportTableTab tab) {
+        launch(tab, null);
+    }
 
+    public void launch(ReportTableTab tab, SquidReportTableInterface table) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidReportTable.fxml"));
         SquidReportTableController.typeOfController = tab;
+        SquidReportTableController.squidReportTable = table;
         try {
             switch (tab) {
                 case refMat:

@@ -63,7 +63,10 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableXMLConverter;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -1689,6 +1692,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
+
+        xstream.registerConverter(new SquidReportTableXMLConverter());
+        xstream.registerConverter(new SquidReportCategoryXMLConverter());
+        xstream.registerConverter(new SquidReportColumnXMLConverter());
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);

@@ -15,19 +15,11 @@
  */
 package org.cirdles.squid.squidReports.squidReportColumns;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Arrays;
+import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
-import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import static org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface.formatBigDecimalForPublicationSigDigMode;
-import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS;
-import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
@@ -35,8 +27,18 @@ import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Arrays;
+
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface.formatBigDecimalForPublicationSigDigMode;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SquidReportColumn implements Serializable, SquidReportColumnInterface {
@@ -114,11 +116,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             ((Task) task).evaluateTaskExpression(expTree);
         } else if (expTree instanceof ShrimpSpeciesNode) {
             // default view of species nodes
-            ((ShrimpSpeciesNode)expTree).setMethodNameForShrimpFraction("getTotalCps");
+            ((ShrimpSpeciesNode) expTree).setMethodNameForShrimpFraction("getTotalCps");
             ((Task) task).evaluateTaskExpression(expTree);
             expressionName = "total_" + expressionName + "_cts_/sec";
         }
-        
+
         amIsotopicRatio = false;
         if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
             // Check for isotopic ratios
@@ -349,6 +351,14 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     }
 
     /**
+     * @return the countOfSignificantDigits
+     */
+    @Override
+    public int getCountOfSignificantDigits() {
+        return countOfSignificantDigits;
+    }
+
+    /**
      * @return the amUncertaintyColumn
      */
     @Override
@@ -411,4 +421,29 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         this.amIsotopicRatio = amIsotopicRatio;
     }
 
+    /**
+     * @param uncertaintyColumn the uncertaintyColumn to set
+     */
+    @Override
+    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn) {
+        this.uncertaintyColumn = uncertaintyColumn;
+    }
+
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new SquidReportColumnXMLConverter());
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+    }
+
+    public SquidReportColumn clone() {
+        SquidReportColumnInterface col = createSquidReportColumn(expressionName);
+        col.setUnits(units);
+        col.setUncertaintyColumn(uncertaintyColumn);
+        col.setAmUncertaintyColumn(amUncertaintyColumn);
+        col.setUncertaintyDirective(uncertaintyDirective);
+        col.setCountOfSignificantDigits(countOfSignificantDigits);
+        col.setVisible(visible);
+        col.setFootnoteSpec(footnoteSpec);
+        return (SquidReportColumn) col;
+    }
 }

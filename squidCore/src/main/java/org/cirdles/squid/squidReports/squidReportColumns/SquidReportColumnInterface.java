@@ -21,12 +21,13 @@ import java.math.RoundingMode;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface SquidReportColumnInterface {
+public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
     public void initReportColumn(TaskInterface task);
 
@@ -115,9 +116,20 @@ public interface SquidReportColumnInterface {
     public void setVisible(boolean visible);
 
     /**
+     *
+     * @param uncertaintyColumn the uncertaintyColumn to set
+     */
+    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
+
+    /**
      * @param amIsotopicRatio the amIsotopicRatio to set
      */
     public void setAmIsotopicRatio(boolean amIsotopicRatio);
+
+    /**
+     * @return the countOfSignificantDigits
+     */
+    public int getCountOfSignificantDigits();
 
     static String formatBigDecimalForPublicationSigDigMode(
             BigDecimal number,
@@ -132,5 +144,7 @@ public interface SquidReportColumnInterface {
                     uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
         }
     }
+
+    public SquidReportColumn clone();
 
 }

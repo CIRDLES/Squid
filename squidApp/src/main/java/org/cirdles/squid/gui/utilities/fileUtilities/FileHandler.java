@@ -21,6 +21,7 @@ import javafx.stage.Window;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.tasks.expressions.functions.Exp;
@@ -371,6 +372,23 @@ public class FileHandler {
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
+    }
+
+    public static File saveSquidReportSettingsXMLFile(SquidReportTableInterface table, Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid Report Settings XML File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));
+        fileChooser.setInitialFileName(table.getReportTableName() + ".xml");
+
+        return fileChooser.showSaveDialog(ownerWindow);
+    }
+
+    public static File selectSquidReportSettingsXMLFile(Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid Report Settings XML File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));
+
+        return fileChooser.showOpenDialog(ownerWindow);
     }
 
     /*

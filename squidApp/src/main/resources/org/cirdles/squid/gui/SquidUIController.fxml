@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="750.0" minWidth="1230.0" prefHeight="750.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="750.0" minWidth="1230.0" prefHeight="750.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -129,7 +129,7 @@
                         </Menu>
                   <Menu mnemonicParsing="false" text="Custom Report Tables">
                     <items>
-                      <MenuItem disable="true" mnemonicParsing="false" text="Report Layout Manager" />
+                      <MenuItem disable="false" mnemonicParsing="false" text="Report Builder" onAction="#reportLayoutManagerOnAction" />
                         <Menu mnemonicParsing="false" text="Reference Materials">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />

@@ -17,12 +17,13 @@ package org.cirdles.squid.squidReports.squidReportCategories;
 
 import java.util.LinkedList;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface SquidReportCategoryInterface {
+public interface SquidReportCategoryInterface extends XMLSerializerInterface {
 
     /**
      * @return the displayName
@@ -53,4 +54,6 @@ public interface SquidReportCategoryInterface {
      * @param visible the visible to set
      */
     public void setVisible(boolean visible);
+
+    public SquidReportCategory clone();
 }
