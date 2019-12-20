@@ -117,10 +117,6 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private ListView<Expression> parametersListView;
     @FXML
-    private TitledPane brokenExpressionsTitledPane;
-    @FXML
-    private ListView<Expression> brokenExpressionsListView;
-    @FXML
     private TextField categoryTextField;
     @FXML
     private ListView<SquidReportCategoryInterface> categoryListView;
@@ -278,34 +274,7 @@ public class SquidReportSettingsController implements Initializable {
         reportTableCB.getItems().setAll(FXCollections.observableArrayList(getTables()));
     }
 
-    private void customizeBrokenExpressionsTitledPane() {
-        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())) {
-            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: black; -fx-font-family: SansSerif;");
-        } else {
-            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;");
-        }
-    }
-
     private void initListViews() {
-        //EXPRESSIONS
-        brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
-        brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        //Listener to update the filter tab when a new value is selected in the broken expression category
-        brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
-            @Override
-            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if (newValue != null) {
-
-                    selectedExpression.set(newValue);
-
-                    selectInAllPanes(newValue, false);
-                }
-                customizeBrokenExpressionsTitledPane();
-            }
-        });
-        customizeBrokenExpressionsTitledPane();
-
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -950,26 +919,6 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
-        //If nothing is selected or the selected value is not the new one
-        if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null
-                || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
-            //Clear selection
-            brokenExpressionsListView.getSelectionModel().clearSelection();
-            //If the new value is on this pane then select it
-            if (brokenExpressionsListView.getItems().contains(exp)) {
-
-                brokenExpressionsListView.getSelectionModel().select(exp);
-                brokenExpressionsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
-            }
-        } else {
-            if (scrollIfAlreadySelected) {
-                brokenExpressionsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
-            }
-        }
-
-        //Same thing for the other panes
         if (nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null
                 || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
@@ -1061,7 +1010,6 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
-        List<Expression> sortedBrokenExpressionsList = new ArrayList<>();
         List<Expression> sortedReferenceMaterialValuesList = new ArrayList<>();
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
@@ -1080,8 +1028,6 @@ public class SquidReportSettingsController implements Initializable {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (exp.isCustom() && exp.amHealthy()) {
                 sortedCustomExpressionsList.add(exp);
-            } else if (!exp.amHealthy()) {
-                sortedBrokenExpressionsList.add(exp);
             }
         }
 
@@ -1096,11 +1042,6 @@ public class SquidReportSettingsController implements Initializable {
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         customExpressionsListView.setItems(null);
         customExpressionsListView.setItems(items);
-
-        items = FXCollections.observableArrayList(sortedBrokenExpressionsList);
-        brokenExpressionsListView.setItems(null);
-        brokenExpressionsListView.setItems(items);
-        customizeBrokenExpressionsTitledPane();
 
         items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
         referenceMaterialsListView.setItems(null);
