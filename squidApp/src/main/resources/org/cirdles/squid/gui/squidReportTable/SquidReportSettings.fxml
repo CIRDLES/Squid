@@ -258,7 +258,8 @@
                             <content>
                                 <VBox>
                                     <children>
-                                        <TextArea fx:id="columnDetailsTextArea"/>
+                                        <TextArea fx:id="columnDetailsTextArea" editable="false"
+                                                  id="squidReportSettingsColumnDetailsTextArea"/>
                                     </children>
                                 </VBox>
                             </content>

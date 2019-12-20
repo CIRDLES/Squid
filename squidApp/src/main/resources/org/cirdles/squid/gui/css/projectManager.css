@@ -289,3 +289,9 @@
 .table-view .table-column{
     -fx-alignment:center;
 }
+
+#squidReportSettingsColumnDetailsTextArea {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 10pt;
+    -fx-font-color: rgb(43, 32, 32);
+}
