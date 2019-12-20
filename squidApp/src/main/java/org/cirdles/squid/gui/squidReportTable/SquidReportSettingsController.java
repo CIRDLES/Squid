@@ -5,6 +5,7 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -49,6 +50,7 @@ import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,12 +59,9 @@ import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.*;
-import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.gui.SquidUIController.squidReportTableLauncher;
+import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
-import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 
 /**
  * FXML Controller class
@@ -537,12 +536,16 @@ public class SquidReportSettingsController implements Initializable {
             if (selectedCategory.getValue() != null) {
                 populateColumnListView();
                 columnListView.getSelectionModel().selectFirst();
+            } else {
+                columnDetailsTextArea.setText("No Column Selected");
             }
         });
         selectedColumn.addListener(observable -> {
-            if (selectedColumn.getValue() != null) {
+            //if (selectedColumn.getValue() != null) {
                 populateColumnDetails();
-            }
+            //} else {
+            //    columnDetailsTextArea.setText("No column selected");
+            //}
         });
     }
 
@@ -551,7 +554,13 @@ public class SquidReportSettingsController implements Initializable {
         task.getMapOfUnknownsBySampleNames().keySet().forEach(val -> spots.add(val));
         spotsChoiceBox.setItems(spots);
         spotsChoiceBox.getSelectionModel().select("UNKNOWNS");
-        spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> populateExpressionListViews());
+        spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> {
+            //if(selectedColumn.getValue() != null) {
+            Platform.runLater(() -> populateColumnDetails());
+            /*} else {
+                columnDetailsTextArea.setText("No column selected");
+            }*/
+        });
     }
 
     private void populateRatiosListView() {
@@ -630,6 +639,16 @@ public class SquidReportSettingsController implements Initializable {
                 } else {
                     List<ShrimpFractionExpressionInterface> unSpots
                             = task.getMapOfUnknownsBySampleNames().get(exp.getUnknownsGroupSampleName());
+                    String spot = spotsChoiceBox.getValue();
+                    if (spot.compareToIgnoreCase("UNKNOWNS") != 0) {
+                        List<ShrimpFractionExpressionInterface> spotsToBeUsed = new ArrayList<>();
+                        unSpots.forEach(unSpot -> {
+                            if (unSpot.getFractionID().startsWith(spot)) {
+                                spotsToBeUsed.add(unSpot);
+                            }
+                        });
+                        unSpots = spotsToBeUsed;
+                    }
                     if (exp instanceof ConstantNode) {
                         result = "Not used";
                         if (exp.isSquidSwitchSAUnknownCalculation()) {
@@ -1330,7 +1349,7 @@ public class SquidReportSettingsController implements Initializable {
             reportTableCB.getSelectionModel().select(table);
             isEditing.setValue(false);
         }
-        
+
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
@@ -1349,10 +1368,10 @@ public class SquidReportSettingsController implements Initializable {
 //            isRefMat = true;
 ////            settingsAndSpotsCB.getChildren().remove(1);
 //        }
-        
+
         isRefMat = !unknownsRadioButton.isSelected();
         spotsChoiceBox.setVisible(!isRefMat);
-        
+
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
         populateExpressionListViews();
@@ -1393,7 +1412,7 @@ public class SquidReportSettingsController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
