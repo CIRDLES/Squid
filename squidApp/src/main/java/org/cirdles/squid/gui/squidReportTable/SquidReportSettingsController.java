@@ -185,7 +185,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-        buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+        //buttonHBox.getChildren().removeAll(saveButton, restoreButton);
         //  settingsAndSpotsCB.getChildren().remove(spotsChoiceBox);
         spotsChoiceBox.setVisible(false);
     }
@@ -200,19 +200,29 @@ public class SquidReportSettingsController implements Initializable {
 
     private void processButtons() {
         if (isEditing.getValue()) {
-            buttonHBox.getChildren().setAll(saveButton, restoreButton);
-            unknownsRadioButton.setDisable(true);
-            refMatRadioButton.setDisable(true);
+            //buttonHBox.getChildren().setAll(saveButton, restoreButton);
+            //unknownsRadioButton.setDisable(true);
+            //refMatRadioButton.setDisable(true);
+            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, unknownsRadioButton, refMatRadioButton).
+                    parallelStream().forEach(button -> button.setDisable(true));
+            Arrays.asList(saveButton, restoreButton).forEach(button -> button.setDisable(false));
         } else if (isDefault.getValue()) {
-            buttonHBox.getChildren().setAll(newButton, copyButton,
-                    exportButton, importButton);
-            unknownsRadioButton.setDisable(false);
-            refMatRadioButton.setDisable(false);
+            //buttonHBox.getChildren().setAll(newButton, copyButton,
+            //      exportButton, importButton);
+            //unknownsRadioButton.setDisable(false);
+            //refMatRadioButton.setDisable(false);
+            Arrays.asList(saveButton, restoreButton, renameButton, deleteButton).
+                    parallelStream().forEach(button -> button.setDisable(true));
+            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+                    parallelStream().forEach(button -> button.setDisable(false));
         } else {
-            buttonHBox.getChildren().setAll(newButton, copyButton,
-                    renameButton, deleteButton, exportButton, importButton);
-            unknownsRadioButton.setDisable(false);
-            refMatRadioButton.setDisable(false);
+            //buttonHBox.getChildren().setAll(newButton, copyButton,
+            //        renameButton, deleteButton, exportButton, importButton);
+            //unknownsRadioButton.setDisable(false);
+            //refMatRadioButton.setDisable(false);
+            Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
+            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
+                    parallelStream().forEach(button -> button.setDisable(false));
         }
     }
 
@@ -511,7 +521,7 @@ public class SquidReportSettingsController implements Initializable {
         });
         selectedColumn.addListener(observable -> {
             //if (selectedColumn.getValue() != null) {
-                populateColumnDetails();
+            populateColumnDetails();
             //} else {
             //    columnDetailsTextArea.setText("No column selected");
             //}
@@ -1342,8 +1352,8 @@ public class SquidReportSettingsController implements Initializable {
                     reportTable,
                     spotsChoiceBox.getValue());
             baseFileName = (squidProject.getProjectName() + "_"
-                    + spotsChoiceBox.getValue() + "_"
-                    + reportTable.getReportTableName())
+                    + reportTable.getReportTableName() + "_"
+                    + spotsChoiceBox.getValue())
                     .replaceAll("\\s", "_")
                     + ".csv";
         }
