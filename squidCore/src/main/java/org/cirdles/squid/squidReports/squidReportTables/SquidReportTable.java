@@ -42,8 +42,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SquidReportTable implements Serializable, SquidReportTableInterface {
-    // private static final long serialVersionUID = 5227409808812622714L;
 
+    private static final long serialVersionUID = 1685572683987304408L;
 
     public final static int HEADER_ROW_COUNT = 7;
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
@@ -321,16 +321,16 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     public boolean equals(Object ob) {
-        return ob != null &&
-                ob instanceof SquidReportTable &&
-                ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
+        return ob != null
+                && ob instanceof SquidReportTable
+                && ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
     }
 
     public SquidReportTable clone() {
         SquidReportTable table = createEmptySquidReportTable(reportTableName);
 
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
-        for(SquidReportCategoryInterface cat : reportCategories) {
+        for (SquidReportCategoryInterface cat : reportCategories) {
             cats.add(cat.clone());
         }
         table.setReportCategories(cats);
