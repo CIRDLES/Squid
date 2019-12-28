@@ -15,7 +15,9 @@
  */
 package org.cirdles.squid.squidReports.squidReportCategories;
 
+import static java.nio.file.Paths.get;
 import java.util.LinkedList;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
@@ -56,4 +58,16 @@ public interface SquidReportCategoryInterface extends XMLSerializerInterface {
     public void setVisible(boolean visible);
 
     public SquidReportCategory clone();
+
+    public default SquidReportColumnInterface findColumnByName(String columnName) {
+        SquidReportColumnInterface retVal = null;
+        for (SquidReportColumnInterface src : getCategoryColumns()) {
+            if (src.getExpressionName().compareToIgnoreCase(columnName) == 0) {
+                retVal = src;
+                break;
+            }
+        }
+
+        return retVal;
+    }
 }

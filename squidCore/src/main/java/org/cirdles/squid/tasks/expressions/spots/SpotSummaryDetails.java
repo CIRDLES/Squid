@@ -65,7 +65,7 @@ public class SpotSummaryDetails implements Serializable {
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
         this.preferredViewSortOrder = 0;
-        this.minProbabilityWM = 0.3;
+        this.minProbabilityWM = 0.0;
         this.selectedRatioName = "204/206";
         this.sortFlavor = "AGE";
     }
