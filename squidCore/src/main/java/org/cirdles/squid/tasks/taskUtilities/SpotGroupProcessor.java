@@ -59,17 +59,19 @@ public class SpotGroupProcessor {
             countOfAcceptedSpots += spotSummaryDetailsWM.getRejectedIndices()[i] ? 0 : 1;
         }
 
+        ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
+        
         boolean doContinue = true;
         while (doContinue && (countOfAcceptedSpots > 2)) {
 
             List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = spotSummaryDetailsWM.retrieveActiveSpots();
-            ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
+            
 
             try {
                 double[][] values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, task));
 
                 // check probability
-                if (values[0][5] <= minCoherentProbability) {
+                if (values[0][5] < minCoherentProbability) {
                     // try to reject a spot
                     double[] agesOfSelectedSpots = new double[spotsUsedForCalculation.size()];
 

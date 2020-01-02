@@ -35,6 +35,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
@@ -80,6 +81,8 @@ public class SamplesPlottingNode extends HBox {
 
     private final ComboBox<SquidReportCategoryInterface> categoryComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionComboBox;
+
+    private ToggleGroup sortingToggleGroup;
 
     public SamplesPlottingNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
@@ -209,11 +212,8 @@ public class SamplesPlottingNode extends HBox {
             double age1 = fraction1.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
             double age2 = fraction2.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
 
-            // original aquire time order
+            // // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
             int retVal = 0;
-            if (spotSummaryDetailsWM.getPreferredViewSortOrder() == -1) {
-                retVal = Double.compare(age2, age1);
-            }
             if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
                 retVal = Double.compare(age1, age2);
             }
@@ -253,6 +253,8 @@ public class SamplesPlottingNode extends HBox {
         }
 
         // sample always defaults to Ages Category because WM is of primary interest
+        // need to force change detection to ages
+        categoryComboBox.getSelectionModel().select(1);
         categoryComboBox.getSelectionModel().selectFirst();
 
         plotsController.refreshPlot();
@@ -287,6 +289,9 @@ public class SamplesPlottingNode extends HBox {
                 // special case when Ages is picked, we look up stored WM for age name in sample
                 if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
                     // restore age wm
+                    // recover rejected indices
+                    boolean[] savedRejectedIndices = sampleNode.getSpotSummaryDetailsWM().getRejectedIndices();
+                    ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(savedRejectedIndices);
                     sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
                     PlotsController.plot = sampleNodeSelectedAgeWMPlot;
 
@@ -306,14 +311,13 @@ public class SamplesPlottingNode extends HBox {
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
                 if (newValue != null) {
                     String selectedExpression = newValue.getExpressionName();
+                    int currentSortOrder = (Integer) sortingToggleGroup.getSelectedToggle().getUserData();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
-                        // TODO: TEST FOR AGES vs others
 
                         ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
                         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
 
                         boolean[] savedRejectedIndices = sampleNode.getSpotSummaryDetailsWM().getRejectedIndices();
-                        int savedPreferredViewSortOrder = sampleNode.getSpotSummaryDetailsWM().getPreferredViewSortOrder();
                         double savedMinProbabilityWM = sampleNode.getSpotSummaryDetailsWM().getMinProbabilityWM();
 
                         SpotSummaryDetails spotSummaryDetailsWM
@@ -321,14 +325,14 @@ public class SamplesPlottingNode extends HBox {
                                         .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.setRejectedIndices(savedRejectedIndices);
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(savedPreferredViewSortOrder);
+                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
                         spotSummaryDetailsWM.setMinProbabilityWM(savedMinProbabilityWM);
 
                         PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
-                        sampleNode.getSpotSummaryDetailsWM().setSortFlavor("AGE");
-                        sortFractionCheckboxesByValue("AGE", selectedExpression, savedPreferredViewSortOrder);
+                        spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
+                        sortFractionCheckboxesByValue(selectedExpression, currentSortOrder);
                         PlotsController.plot = myPlot;
                         ((SampleNode) sampleNode).getPlotsController().refreshPlot();
                     } else {
@@ -339,8 +343,15 @@ public class SamplesPlottingNode extends HBox {
                                                 selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails().getRejectedIndices());
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails().getPreferredViewSortOrder());
+                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
                         spotSummaryDetailsWM.setMinProbabilityWM(((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails().getMinProbabilityWM());
+
+                        if (currentSortOrder == 2) {
+                            spotSummaryDetailsWM.setSelectedExpressionName(
+                                    sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName());
+                        } else {
+                            spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
+                        }
 
                         PlotDisplayInterface myPlot = new WeightedMeanPlot(
                                 new Rectangle(1000, 600),
@@ -350,6 +361,7 @@ public class SamplesPlottingNode extends HBox {
                                 0.0,
                                 plotsController);
 
+                        sortFractionCheckboxesByValue(spotSummaryDetailsWM.getSelectedExpressionName(), spotSummaryDetailsWM.getPreferredViewSortOrder());
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
                         ((SampleNode) sampleNode).getPlotsController().refreshPlot();
@@ -419,7 +431,7 @@ public class SamplesPlottingNode extends HBox {
         probLabel.textProperty().setValue(
                 String.format("%.2f", newValue));
         sampleNode.getSpotSummaryDetailsWM().setMinProbabilityWM(newValue);
-        SpotSummaryDetails spotSummaryDetailsWM = sampleNode.getSpotSummaryDetailsWM();
+        SpotSummaryDetails spotSummaryDetailsWM = ((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails();
         SpotGroupProcessor.findCoherentGroupOfSpotsForWeightedMean(
                 squidProject.getTask(), spotSummaryDetailsWM, newValue);
 
@@ -428,28 +440,77 @@ public class SamplesPlottingNode extends HBox {
             ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
                     !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
         }
-
         plotsController.refreshPlot();
     }
 
     private VBox sortedVBox() {
-        VBox sortedToolBox = new VBox(2);
+        VBox sortedToolBox = new VBox(-2);
 
-        CheckBox sortedByCheckbox = new CheckBox("Spots Sorted by Domain Ascending:");
-        formatNode(sortedByCheckbox, 225);
+        sortingToggleGroup = new ToggleGroup();
+        sortingToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                RadioButton rb = (RadioButton) sortingToggleGroup.getSelectedToggle();
+                if (sampleNode != null) {
+                    if (rb.getUserData().equals(2)) {
+                        sampleNode.getSpotSummaryDetailsWM().setPreferredViewSortOrder(1);
+                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(
+                                sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName());
+                    } else {
+                        sampleNode.getSpotSummaryDetailsWM().setPreferredViewSortOrder((Integer) rb.getUserData());
+                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(
+                                expressionComboBox.getSelectionModel().getSelectedItem().getExpressionName());
+                    }
 
-        HBox sortingHBox = new HBox(5);
-        ComboBox<String> categorySortComboBox = new ComboBox<>();
-        formatNode(categorySortComboBox, 120);
-        categorySortComboBox.setPromptText("Category");
+                    sortFractionCheckboxesByValue(
+                            sampleNode.getSpotSummaryDetailsWM().getSelectedExpressionName(),
+                            sampleNode.getSpotSummaryDetailsWM().getPreferredViewSortOrder());
+                    plotsController.refreshPlot();
+                }
+            }
+        });
 
-        ComboBox<String> expressionSortComboBox = new ComboBox<>();
-        formatNode(expressionSortComboBox, 200);
-        expressionSortComboBox.setPromptText("Expression");
+        HBox sortingHBoxA = new HBox(5);
+        Label sortedByLabel = new Label("Sorted Ascending by:");
+        formatNode(sortedByLabel, 125);
 
-        sortingHBox.getChildren().addAll(categorySortComboBox, expressionSortComboBox);
+        sortingHBoxA.getChildren().addAll(sortedByLabel);
 
-        sortedToolBox.getChildren().addAll(sortedByCheckbox, sortingHBox);
+        HBox sortingHBoxB = new HBox(5);
+        Label dummyLabel1 = new Label("");
+        formatNode(dummyLabel1, 20);
+
+        RadioButton sortByOrderRadioButton = new RadioButton("Normalized Time");
+        formatNode(sortByOrderRadioButton, 125);
+        sortByOrderRadioButton.setSelected(true);
+        sortByOrderRadioButton.setToggleGroup(sortingToggleGroup);
+        sortByOrderRadioButton.setUserData(-1);
+
+        RadioButton sortByHoursRadioButton = new RadioButton("Time");
+        formatNode(sortByHoursRadioButton, 65);
+        sortByHoursRadioButton.setToggleGroup(sortingToggleGroup);
+        sortByHoursRadioButton.setUserData(0);
+
+        sortingHBoxB.getChildren().addAll(dummyLabel1, sortByOrderRadioButton, sortByHoursRadioButton);
+
+        HBox sortingHBoxC = new HBox(5);
+
+        Label dummyLabel2 = new Label("");
+        formatNode(dummyLabel2, 20);
+
+        RadioButton sortByExpressionRadioButton = new RadioButton("Current Expression");
+        formatNode(sortByExpressionRadioButton, 140);
+        sortByExpressionRadioButton.setToggleGroup(sortingToggleGroup);
+        sortByExpressionRadioButton.setUserData(1);
+
+        RadioButton sortByAgeRadioButton = new RadioButton("Current Age");
+        formatNode(sortByAgeRadioButton, 120);
+        sortByAgeRadioButton.setToggleGroup(sortingToggleGroup);
+        sortByAgeRadioButton.setUserData(2);
+
+        sortingHBoxC.getChildren().addAll(dummyLabel2, sortByExpressionRadioButton, sortByAgeRadioButton);
+
+        sortedToolBox.getChildren().addAll(sortingHBoxA, sortingHBoxB, sortingHBoxC);
 
         return sortedToolBox;
     }
@@ -506,42 +567,41 @@ public class SamplesPlottingNode extends HBox {
         control.setMinHeight(USE_PREF_SIZE);
     }
 
-    private void sortFractionCheckboxesByValue(String flavor, String selectedFieldName, int savedPreferredViewSortOrder) {
+    /**
+     *
+     * @param selectedFieldName the value of selectedFieldName
+     * @param savedPreferredViewSortOrder the value of
+     * savedPreferredViewSortOrder
+     */
+    private void sortFractionCheckboxesByValue(String selectedFieldName, int savedPreferredViewSortOrder) {
         FXCollections.sort(sampleItem.getChildren(), (TreeItem node1, TreeItem node2) -> {
-            // original aquire time order  
+            // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
             int retVal = 0;
-            if (savedPreferredViewSortOrder == 0) {
+            if (savedPreferredViewSortOrder < 1) {
                 long acquireTime1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction().getDateTimeMilliseconds();
                 long acquireTime2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction().getDateTimeMilliseconds();
                 retVal = Long.compare(acquireTime1, acquireTime2);
             } else {
                 double valueFromNode1 = 0.0;
                 double valueFromNode2 = 0.0;
-                switch (flavor) {
-                    case "AGE":
-                        valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                        valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                        break;
-                    case "RATIO":
-                        double[][] resultsFromNode1
-                                = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                        valueFromNode1 = resultsFromNode1[0][0];
-                        double[][] resultsFromNode2
-                                = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                        valueFromNode2 = resultsFromNode2[0][0];
-                        break;
+                if (selectedFieldName.startsWith("/", 3)) {
+                    // Ratio case
+                    double[][] resultsFromNode1
+                            = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                    valueFromNode1 = resultsFromNode1[0][0];
+                    double[][] resultsFromNode2
+                            = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                    valueFromNode2 = resultsFromNode2[0][0];
+                } else {
+                    valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                    valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
                 }
 
-                if (savedPreferredViewSortOrder == 1) {
-                    retVal = Double.compare(valueFromNode1, valueFromNode2);
-                }
-                if (savedPreferredViewSortOrder == -1) {
-                    retVal = Double.compare(valueFromNode2, valueFromNode1);
-                }
+                retVal = Double.compare(valueFromNode1, valueFromNode2);
             }
             return retVal;
         });

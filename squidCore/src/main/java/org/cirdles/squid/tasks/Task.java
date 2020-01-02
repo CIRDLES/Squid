@@ -1866,21 +1866,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
         
         return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
-
-//        // calculate weighted mean of selected age without auto-rejection
-//        Expression expressionSelectedAgeWM = buildExpression(selectedAgeExpressionName + "_WM_" + groupName,
-//                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],TRUE,FALSE)", false, true, true);
-//
-//        updateSingleExpression(expressionSelectedAgeWM);
-//
-//        try {
-//            //taskExpressionsEvaluationsPerSpotSet.remove(expressionSelectedAgeWM.getExpressionTree().getName());
-//            evaluateExpressionForSpotSet(expressionSelectedAgeWM.getExpressionTree(), spotsForExpression);
-//            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionSelectedAgeWM.getExpressionTree().getName());
-//        } catch (SquidException squidException) {
-//        }
-//
-//        return spotSummaryDetails;
     }
 
     public SpotSummaryDetails evaluateSelectedExpressionWeightedMeanForUnknownGroup(
