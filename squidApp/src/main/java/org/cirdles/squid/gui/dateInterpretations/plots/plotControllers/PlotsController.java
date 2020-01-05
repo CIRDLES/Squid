@@ -166,7 +166,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         plotVBox.prefWidthProperty().bind(plotScrollPane.widthProperty());
         plotVBox.prefHeightProperty().bind(plotScrollPane.heightProperty());
 
-       spotListAnchorPane.prefHeightProperty().bind(spotListScrollPane.heightProperty());
+        spotListAnchorPane.prefHeightProperty().bind(spotListScrollPane.heightProperty());
         spotListAnchorPane.prefWidthProperty().bind(spotListScrollPane.widthProperty());
 
         corr4_RadioButton.setUserData(PB4CORR);
@@ -573,19 +573,30 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                 SampleTreeNodeInterface item = object.getValue();
                 String nodeStringWM = "";
+                String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                 if (item instanceof WeightedMeanSpotNode) {
                     // determine string based on sortFlavor
-                    String sortFlavor = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSortFlavor();
-                    if (sortFlavor.compareToIgnoreCase("AGE") == 0) {
+//                    String sortFlavor = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSortFlavor();
+                    if (expressionName.contains("Age")) {
                         nodeStringWM = item.getNodeName();
-                    } else if (sortFlavor.compareToIgnoreCase("RATIO") == 0) {
-                        String ratioName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedRatioName();
-                        double[][] ratioValues
-                                = Arrays.stream(item.getShrimpFraction()
-                                        .getIsotopicRatioValuesByStringName(ratioName)).toArray(double[][]::new);
+                    } else  {
+////                        String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
+                        double[][] expressionValues;
+                        if (expressionName.startsWith("/", 3)) {
+                            // ratio case
+                            expressionValues
+                                    = Arrays.stream(item.getShrimpFraction()
+                                            .getIsotopicRatioValuesByStringName(expressionName)).toArray(double[][]::new);
+                        } else {
+                            expressionValues = item.getShrimpFraction()
+                                    .getTaskExpressionsEvaluationsPerSpotByField(expressionName);
+                        }
+
                         Formatter formatter = new Formatter();
-                        formatter.format("%5.5E", ratioValues[0][0]);
-                        formatter.format("  " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5E", ratioValues[0][1]).toString();
+                        formatter.format("%5.5E", expressionValues[0][0]);
+                        if (expressionValues[0].length > 1) {
+                            formatter.format("  " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5E", expressionValues[0][1]).toString();
+                        }
                         nodeStringWM = item.getShrimpFraction().getFractionID() + " " + formatter.toString();
                     }
 
@@ -775,7 +786,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
          */
         @Override
         public String getNodeName() {
-            return shrimpFraction.getFractionID();// + " AGE = " + datum.get("AGE");
+            return shrimpFraction.getFractionID();
         }
     }
 

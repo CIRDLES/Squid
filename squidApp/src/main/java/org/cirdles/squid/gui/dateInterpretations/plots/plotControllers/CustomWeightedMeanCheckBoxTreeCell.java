@@ -442,7 +442,6 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
                 }
                 sample.getSpotSummaryDetailsWM().setPreferredViewSortOrder(preferredViewSortOrder);
                 ((Button) e.getSource()).setText("Sort " + SORT_NEXT_LABELS.get(preferredViewSortOrder));
-                sample.getSpotSummaryDetailsWM().setSortFlavor("AGE");
                 sortFractionCheckboxesByValue("AGE", selectedAge, preferredViewSortOrder);
                 ((SampleNode) sample).getPlotsController().refreshPlot();
             }
@@ -479,7 +478,6 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
                     PlotDisplayInterface myPlot = ((SampleNode) sample).getSamplePlotWM();
                     ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                     ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedAge);
-                    sample.getSpotSummaryDetailsWM().setSortFlavor("AGE");
                     sortFractionCheckboxesByValue("AGE", selectedAge, savedPreferredViewSortOrder);
                     ((SampleNode) sample).getPlotsController().refreshPlot();
                 });
@@ -493,7 +491,7 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
         chooseAgeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                sample.getSpotSummaryDetailsWM().setSortFlavor("AGE");
+
                 sortFractionCheckboxesByValue(
                         "AGE",
                         ageComboBox.getSelectionModel().getSelectedItem().getExpressionName(),
@@ -527,7 +525,6 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
                 }
                 sample.getSpotSummaryDetailsWM().setPreferredViewSortOrder(preferredViewSortOrder);
                 ((Button) e.getSource()).setText("Sort " + SORT_NEXT_LABELS.get(preferredViewSortOrder));
-                sample.getSpotSummaryDetailsWM().setSortFlavor("RATIO");
                 sortFractionCheckboxesByValue("RATIO", selectedRatioName, preferredViewSortOrder);
                 ((SampleNode) sample).getPlotsController().refreshPlot();
             }
@@ -539,13 +536,12 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
         ratioComboBox.setPrefHeight(20);
         ratioComboBox.setMinHeight(USE_PREF_SIZE);
         ratioComboBox.setItems(FXCollections.observableArrayList(squidProject.getTask().getRatioNames()));
-        String chosenRatioName = ((SampleNode) sample).getSpotSummaryDetailsWM().getSelectedRatioName();
+        String chosenRatioName = ((SampleNode) sample).getSpotSummaryDetailsWM().getSelectedExpressionName();
         ratioComboBox.getSelectionModel().select(chosenRatioName);
         ratioComboBox.valueProperty()
                 .addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
                     String selectedRatio = newValue;
-                    sample.getSpotSummaryDetailsWM().setSelectedRatioName(selectedRatio);
-                    sample.getSpotSummaryDetailsWM().setSortFlavor("RATIO");
+                    sample.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedRatio);
                     sortFractionCheckboxesByValue("RATIO", selectedRatio, sample.getSpotSummaryDetailsWM().getPreferredViewSortOrder());
                     ((SampleNode) sample).getPlotsController().refreshPlot();
                 });
@@ -559,7 +555,6 @@ public class CustomWeightedMeanCheckBoxTreeCell<T> extends CheckBoxTreeCell<T> {
         chooseRatioButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                sample.getSpotSummaryDetailsWM().setSortFlavor("RATIO");
                 sortFractionCheckboxesByValue(
                         "RATIO",
                         ratioComboBox.getSelectionModel().getSelectedItem(),
