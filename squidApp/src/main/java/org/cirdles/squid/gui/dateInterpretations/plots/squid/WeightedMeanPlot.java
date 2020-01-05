@@ -363,7 +363,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             text.setText("n");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, 195);
-            g2d.fillText(String.valueOf(countOfIncluded), rightOfText + offset, 195);
+            g2d.fillText(String.valueOf(countOfIncluded) + " of " + String.valueOf(shrimpFractions.size()), rightOfText + offset, 195);
 
         } else {
 

@@ -1877,6 +1877,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
                 "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        
+        expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
 
         updateSingleExpression(expressionWM);
 

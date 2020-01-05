@@ -15,19 +15,25 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ComboBox;
@@ -48,7 +54,10 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.SquidUIController;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
@@ -60,6 +69,7 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.SpotGroupProcessor;
@@ -481,7 +491,7 @@ public class SamplesPlottingNode extends HBox {
         formatNode(dummyLabel1, 20);
 
         RadioButton sortByOrderRadioButton = new RadioButton("Normalized Time");
-        formatNode(sortByOrderRadioButton, 125);
+        formatNode(sortByOrderRadioButton, 140);
         sortByOrderRadioButton.setSelected(true);
         sortByOrderRadioButton.setToggleGroup(sortingToggleGroup);
         sortByOrderRadioButton.setUserData(-1);
@@ -523,40 +533,73 @@ public class SamplesPlottingNode extends HBox {
         saveWMStatsLabel.setAlignment(Pos.CENTER_RIGHT);
         formatNode(saveWMStatsLabel, 125);
 
-        ToggleGroup saveAsToggleGroup = new ToggleGroup();
+        Button saveToNewFileButton = new Button("New");
+        formatNode(saveToNewFileButton, 50);
+        saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    writeWeightedMeanReport(false);
+                } catch (IOException ex) {
+                    Logger.getLogger(SamplesPlottingNode.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
-        RadioButton saveToFileRadioButton = new RadioButton("New");
-        saveToFileRadioButton.setSelected(true);
-        formatNode(saveToFileRadioButton, 50);
-        saveToFileRadioButton.setToggleGroup(saveAsToggleGroup);
+        Button appendToFileButton = new Button("Append");
+        formatNode(appendToFileButton, 75);
+        appendToFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        appendToFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    writeWeightedMeanReport(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(SamplesPlottingNode.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
-        RadioButton appendToFileRadioButton = new RadioButton("Append");
-        formatNode(appendToFileRadioButton, 65);
-        appendToFileRadioButton.setToggleGroup(saveAsToggleGroup);
-
-        saveDataHBox.getChildren().addAll(saveWMStatsLabel, saveToFileRadioButton, appendToFileRadioButton);
+        saveDataHBox.getChildren().addAll(saveWMStatsLabel, saveToNewFileButton, appendToFileButton);
 
         HBox saveImageHBox = new HBox(5);
         Label saveImageLabel = new Label("Save WM Image as:");
         saveImageLabel.setAlignment(Pos.CENTER_RIGHT);
         formatNode(saveImageLabel, 125);
 
-        ToggleGroup saveImageAsToggleGroup = new ToggleGroup();
+        Button saveAsSVGFileButton = new Button("SVG");
+        formatNode(saveAsSVGFileButton, 50);
+        saveAsSVGFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveAsSVGFileButton.setDisable(true);
 
-        RadioButton saveAsSVGRadioButton = new RadioButton("SVG");
-        saveAsSVGRadioButton.setSelected(true);
-        formatNode(saveAsSVGRadioButton, 50);
-        saveAsSVGRadioButton.setToggleGroup(saveImageAsToggleGroup);
+        Button saveAsPDFFileButton = new Button("PDF");
+        formatNode(saveAsPDFFileButton, 50);
+        saveAsPDFFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveAsPDFFileButton.setDisable(true);
 
-        RadioButton saveAsPDFRadioButton = new RadioButton("PDF");
-        formatNode(saveAsPDFRadioButton, 50);
-        saveAsPDFRadioButton.setToggleGroup(saveImageAsToggleGroup);
-
-        saveImageHBox.getChildren().addAll(saveImageLabel, saveAsSVGRadioButton, saveAsPDFRadioButton);
+        saveImageHBox.getChildren().addAll(saveImageLabel, saveAsSVGFileButton, saveAsPDFFileButton);
 
         saveAsToolBox.getChildren().addAll(saveDataHBox, saveImageHBox);
 
         return saveAsToolBox;
+    }
+
+    private void writeWeightedMeanReport(boolean doAppend) throws IOException {
+        String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
+        String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
+        File reportFile
+                = squidProject.getPrawnFileHandler().getReportsEngine()
+                        .writeSquidWeightedMeanReportToFile(report, reportFileName, doAppend);
+        if (reportFile != null) {
+            SquidMessageDialog.showInfoDialog("File saved as:\n\n"
+                    + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
+                    primaryStageWindow);
+        } else {
+            SquidMessageDialog.showInfoDialog(
+                    "Report file does not exist.\n",
+                    primaryStageWindow);
+        }
     }
 
     private void formatNode(Control control, int width) {
