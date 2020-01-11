@@ -167,7 +167,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     }
 
     @Override
-    public String makeAgeString(int index) {
+    public String makeAgeOrValueString(int index) {
         return "";
     }
 

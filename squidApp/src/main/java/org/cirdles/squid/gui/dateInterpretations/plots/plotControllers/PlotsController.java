@@ -379,6 +379,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                     if (plotTypeSelected.compareTo(PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
                         plotVBox.getChildren().remove(plotToolBar);
+                        plotVBox.getChildren().remove(controlPanel);
                         ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty());
                         spotsTreeViewCheckBox.refresh();
                     } else {
@@ -575,12 +576,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 String nodeStringWM = "";
                 String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                 if (item instanceof WeightedMeanSpotNode) {
-                    // determine string based on sortFlavor
-//                    String sortFlavor = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSortFlavor();
                     if (expressionName.contains("Age")) {
                         nodeStringWM = item.getNodeName();
                     } else  {
-////                        String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                         double[][] expressionValues;
                         if (expressionName.startsWith("/", 3)) {
                             // ratio case
@@ -593,9 +591,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         }
 
                         Formatter formatter = new Formatter();
-                        formatter.format("%5.5E", expressionValues[0][0]);
+                        formatter.format("%5.3E", expressionValues[0][0]);
                         if (expressionValues[0].length > 1) {
-                            formatter.format("  " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5E", expressionValues[0][1]).toString();
+                            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", expressionValues[0][1]).toString();
                         }
                         nodeStringWM = item.getShrimpFraction().getFractionID() + " " + formatter.toString();
                     }
