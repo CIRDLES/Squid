@@ -37,8 +37,8 @@ public class SquidMessageDialog extends Alert {
         setContentText(message);
         setHeaderText(headerText);
         initStyle(StageStyle.DECORATED);        
-        getDialogPane().setPrefSize(500, 450);
-        getDialogPane().setStyle(getDialogPane().getStyle() + ";-fx-font-family: SansSerif Bold;-fx-font-size: 16");
+        getDialogPane().setPrefSize(650, 550);
+        getDialogPane().setStyle(getDialogPane().getStyle() + ";-fx-font-family: SansSerif Bold;-fx-font-size: 15");
 
     }
 

@@ -543,7 +543,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                 specs[0], // displayname1
                 specs[1], // displayname2
                 specs[2], // displayname3
-                specs[3].contains("delta") ? specs[3].replace("delta", "\u1E9F") : specs[3], // displayname4
+                specs[3],//.contains("delta") ? specs[3].replace("delta", "\u1E9F") : specs[3], // displayname4
                 index, // positionIndex
                 specs[4], // units
                 specs[5], // retrieveMethodName

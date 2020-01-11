@@ -13,7 +13,7 @@ public class OPFileRunFractionParser {
     public static List<OPFraction> parseOPFile(File file) {
         List<OPFraction> opList = new ArrayList<>();
         try {
-            InputStreamReader fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8); //new FileInputStream(file);
+            InputStreamReader fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             Scanner scanner = new Scanner(fis);
 
             while (scanner.hasNextLine()) {

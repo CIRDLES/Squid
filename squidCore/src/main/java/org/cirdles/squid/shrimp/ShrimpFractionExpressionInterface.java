@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
@@ -54,6 +55,11 @@ public interface ShrimpFractionExpressionInterface {
     public String getFractionID();
 
     /**
+     * @return the spotNumber
+     */
+    public int getSpotNumber();
+
+    /**
      * @return the timeStampSec
      */
     public double[][] getTimeStampSec();
@@ -83,7 +89,7 @@ public interface ShrimpFractionExpressionInterface {
      * @param totalCps the totalCps to set
      */
     public void setTotalCps(double[] totalCps);
-    
+
     public double[] getNscansTimesCountTimeSec();
 
     /**
@@ -128,6 +134,8 @@ public interface ShrimpFractionExpressionInterface {
      * @return the dateTimeMilliseconds
      */
     public long getDateTimeMilliseconds();
+
+    public String getDateTime();
 
     /**
      * @return the totalCounts
@@ -196,4 +204,74 @@ public interface ShrimpFractionExpressionInterface {
      */
     public void setSelected(boolean selected);
 
+    /**
+     * @return the com_64
+     */
+    public double getCom_206Pb204Pb();
+
+    /**
+     * @param com_64 the com_64 to set
+     */
+    public void setCom_206Pb204Pb(double com_64);
+
+    /**
+     * @return the com_207Pb206Pb
+     */
+    public double getCom_207Pb206Pb();
+
+    /**
+     * @param com_207Pb206Pb the com_207Pb206Pb to set
+     */
+    public void setCom_207Pb206Pb(double com_207Pb206Pb);
+
+    /**
+     * @return the com_208Pb206Pb
+     */
+    public double getCom_208Pb206Pb();
+
+    /**
+     * @param com_208Pb206Pb the com_208Pb206Pb to set
+     */
+    public void setCom_208Pb206Pb(double com_208Pb206Pb);
+
+    /**
+     * @return the com_206Pb208Pb
+     */
+    public double getCom_206Pb208Pb();
+
+    /**
+     * @param com_206Pb208Pb the com_206Pb208Pb to set
+     */
+    public void setCom_206Pb208Pb(double com_206Pb208Pb);
+
+    /**
+     * @return the com_207Pb204Pb
+     */
+    public double getCom_207Pb204Pb();
+
+    /**
+     * @param com_207Pb204Pb the com_207Pb204Pb to set
+     */
+    public void setCom_207Pb204Pb(double com_207Pb204Pb);
+
+    /**
+     * @return the com_208Pb204Pb
+     */
+    public double getCom_208Pb204Pb();
+
+    /**
+     * @param com_208Pb204Pb the com_208Pb204Pb to set
+     */
+    public void setCom_208Pb204Pb(double com_208Pb204Pb);
+
+    public ParametersModel getCommonLeadModel();
+
+    public void setCommonLeadModel(ParametersModel commonLeadModel);
+    
+    /**
+     * @return the commonLeadSpecsForSpot
+     */
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot();
+
+    public String getSelectedAgeExpressionName();
 }

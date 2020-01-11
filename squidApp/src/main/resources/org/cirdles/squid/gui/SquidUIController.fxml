@@ -43,8 +43,8 @@
                 </Menu>
                 <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Data">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
                         <MenuItem mnemonicParsing="false" onAction="#auditSessionMenuItemAction" text="Manage Sample Naming" />
+                        <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
                         <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
                         <SeparatorMenuItem fx:id="dataSeparatorMenuItem" mnemonicParsing="false" />
                         <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn File ..." />
@@ -94,6 +94,7 @@
                 </Menu>
                 <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
                     <items>
+                <MenuItem disable="false" mnemonicParsing="false" onAction="#reportLayoutManagerOnAction" text="Report Builder" />
                         <Menu mnemonicParsing="false" text="Quick View Report Tables">
                             <items>
                                 <Menu mnemonicParsing="false" text="Reference Materials">
@@ -112,30 +113,39 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Default Report Tables">
                             <items>
-                                <Menu mnemonicParsing="false" text="Reference Materials">
+                                  <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Reference Materials - per Squid2.*" />
+                                  <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Unknowns - per Squid 2.*" />
+                                  <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Unknowns - by Sample for use by ET_Redux and Topsoil" />
+                                <Menu mnemonicParsing="false" text="Reference Materials" visible="false">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Report Table - per Squid2.*" />
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" visible="false" />
                                     </items>
                                 </Menu>
-                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns">
+                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns" visible="false">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Report Table - per Squid 2.*" />
-                                        <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Report Table - by Sample for use by ET_Redux and Topsoil" />
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" />
+                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" visible="false" />
                                     </items>
                                 </Menu>
                             </items>
                         </Menu>
-                  <Menu mnemonicParsing="false" text="Custom Report Tables">
+                  <Menu mnemonicParsing="false" text="Custom Report Tables" visible="false">
                     <items>
-                      <MenuItem disable="true" mnemonicParsing="false" text="Report Layout Manager" />
+                        <Menu mnemonicParsing="false" text="Reference Materials">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />
+                          </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Unknowns">
+                           <items>
+                              <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableUnknownAction" text="Beta Interactive Default Table" />
+                           </items>
+                        </Menu>
                     </items>
                   </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                     </items>
                 </Menu>
-                <Menu fx:id="manageVisualizationsMenu" mnemonicParsing="false" text="Visualizations">
+                <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
@@ -145,7 +155,10 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                             <items>
+                        <MenuItem mnemonicParsing="false" onAction="#countCorrectionsAction" text="204 Count Corrections" />
+                        <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="Assign Common Lead Ratios" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
+                        <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
                             </items>
                         </Menu>
                     </items>

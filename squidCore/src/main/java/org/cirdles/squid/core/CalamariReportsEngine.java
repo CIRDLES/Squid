@@ -15,15 +15,20 @@
  */
 package org.cirdles.squid.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import static java.nio.file.StandardOpenOption.APPEND;
 import java.text.SimpleDateFormat;
 import static java.util.Arrays.asList;
@@ -39,6 +44,7 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
@@ -252,7 +258,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawPeakData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getDeadTimeNanoseconds()));
@@ -303,7 +309,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawSBMData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getSbmZeroCps()));
@@ -365,7 +371,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < timeStampSec.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
@@ -412,7 +418,7 @@ public class CalamariReportsEngine implements Serializable {
         // need to sort by reference material vs unknown
         StringBuilder dataLine = new StringBuilder();
         dataLine.append(shrimpFraction.getFractionID()).append(", ");
-        dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+        dataLine.append(shrimpFraction.getDateTime()).append(", ");
         dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
         double[] totalCps = shrimpFraction.getTotalCps();
@@ -444,14 +450,14 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             if (doWriteReportFiles) {
                 dataLine.append(shrimpFraction.getFractionID()).append(", ");
-                dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+                dataLine.append(shrimpFraction.getDateTime()).append(", ");
                 dataLine.append(String.valueOf(nDodNum + 1)).append(", ");
                 dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
             } else {
                 // format for GUI
                 dataLine
                         .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                        .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                        .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                         .append(String.format("%1$-" + 10 + "s", String.valueOf(nDodNum + 1)))
                         .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
             }
@@ -542,13 +548,13 @@ public class CalamariReportsEngine implements Serializable {
         StringBuilder dataLine = new StringBuilder();
         if (doWriteReportFiles) {
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
         } else {
             // format for GUI
             dataLine
                     .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                    .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                    .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                     .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
         }
 
@@ -560,11 +566,11 @@ public class CalamariReportsEngine implements Serializable {
                 if (doWriteReportFiles) {
                     dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
                     dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12));
-                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12));
                 } else {
                     dataLine.append(", ").append(String.format("%1$-" + 12 + "s", String.valueOf(isotopeRatioModel.getMinIndex())));
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12)));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12)));
                 }
             }
         }
@@ -970,6 +976,24 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
+    public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + baseReportTableName);
+        ReportSerializerToCSV.writeSquid3CustomCSVReport(reportTableFile, report);
+
+        return reportTableFile;
+    }
+
     public File writeTaskSummaryFile() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
@@ -990,6 +1014,41 @@ public class CalamariReportsEngine implements Serializable {
             outputWriter.write(squidProject.getTask().printTaskSummary());
             outputWriter.flush();
             outputWriter.close();
+
+        } catch (IOException iOException) {
+        }
+
+        return reportTableFile;
+    }
+
+    public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
+            throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = null;
+        Path reportPath = Paths.get(reportsPath + baseReportTableName);
+        if (!doAppend && reportPath.toFile().exists()){
+            reportPath.toFile().delete();
+        }
+        try {
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath, 
+                    (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
+            if (!doAppend){
+                out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
+            }
+            out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+            out.flush();
+            out.close();
+            reportTableFile = reportPath.toFile();
 
         } catch (IOException iOException) {
         }

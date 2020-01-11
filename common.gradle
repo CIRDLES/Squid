@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.2.6'
+String mavenVersion = '1.4.1'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -90,4 +90,7 @@ if (JavaVersion.current().isJava8Compatible()) {
             options.addStringOption('Xdoclint:none', '-quiet')
         }
     }
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }

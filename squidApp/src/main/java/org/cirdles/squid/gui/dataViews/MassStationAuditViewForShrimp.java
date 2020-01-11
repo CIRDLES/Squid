@@ -208,10 +208,23 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         int index = -1;
         // look up index
         for (int i = 0; i < myOnPeakNormalizedAquireTimes.length - 1; i++) {
-            if ((convertedX < myOnPeakNormalizedAquireTimes[i])) {
+            if ((convertedX >= myOnPeakNormalizedAquireTimes[i])
+                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])){
                 index = i;
                 break;
             }
+            
+            // handle case of last age
+            if (index == -1){
+                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)){
+                    index = myOnPeakNormalizedAquireTimes.length -1;
+                } 
+            }
+            
+//            if ((convertedX < myOnPeakNormalizedAquireTimes[i])) {
+//                index = i;
+//                break;
+//            }
         }
 
         // determine spot number

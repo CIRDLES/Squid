@@ -190,6 +190,8 @@ public interface ExpressionTreeInterface {
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof Integer) {
                 retVal[i] = ((Integer) objects[i]).doubleValue();
+            } else if (objects[i] instanceof Long) {
+                retVal[i] = ((Long) objects[i]).doubleValue();
             } else {
                 retVal[i] = (double) objects[i];
             }

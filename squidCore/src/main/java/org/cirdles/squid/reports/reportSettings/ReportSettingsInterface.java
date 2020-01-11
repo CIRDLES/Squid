@@ -25,8 +25,6 @@ import com.thoughtworks.xstream.security.NullPermission;
 import com.thoughtworks.xstream.security.PrimitiveTypePermission;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -409,7 +407,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      */
     void setVersion(int version);
 
-    public default String[][] reportFractionsByNumberStyle(//
+    public default String[][] reportFractionsByNumberStyle(
             List<ShrimpFractionExpressionInterface> fractions,
             boolean numberStyleIsNumeric) {
 

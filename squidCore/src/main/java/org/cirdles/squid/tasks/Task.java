@@ -41,6 +41,7 @@ import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -53,6 +54,8 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -60,6 +63,10 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableXMLConverter;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -97,7 +104,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
@@ -124,11 +130,15 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
 /**
  *
@@ -212,12 +222,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected boolean showQt1y;
     protected boolean showQt1z;
 
-    private boolean squidAllowsAutoExclusionOfSpots;
+    protected boolean squidAllowsAutoExclusionOfSpots;
 
     // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
-    private double extPErrU;
+    protected double extPErrU;
     // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
-    private double extPErrTh;
+    protected double extPErrTh;
 
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel referenceMaterialModel;
@@ -238,8 +248,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected Map<String, List<String>> providesExpressionsGraph;
     protected Map<String, List<String>> requiresExpressionsGraph;
     protected List<String> missingExpressionsByName;
-    
+
     protected boolean roundingForSquid3;
+
+    protected List<SquidReportTableInterface> squidReportTablesRefMat;
+    protected List<SquidReportTableInterface> squidReportTablesUnknown;
+
+    protected OvercountCorrectionTypes overcountCorrectionType;
 
     public Task() {
         this("New Task", null, null);
@@ -344,8 +359,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.providesExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.requiresExpressionsGraph = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.missingExpressionsByName = new ArrayList<>();
-        
+
         this.roundingForSquid3 = false;
+
+        this.squidReportTablesRefMat = new ArrayList<>();
+        this.squidReportTablesUnknown = new ArrayList<>();
+
+        this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
 
         generateConstants();
         generateParameters();
@@ -744,6 +764,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
                 try {
                     shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+                    updateAllSpotsWithCurrentCommonPbModel();
                 } catch (Exception e) {
                 }
             }
@@ -794,6 +815,40 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
+    @Override
+    public void updateAllSpotsWithCurrentCommonPbModel() {
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            spot.setCommonLeadModel(commonPbModel);
+        }
+    }
+
+    public void updateAllUnknownSpotsWithOriginal204_206() {
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            ratio204_206.restoreRatioValueAndUnct();
+        }
+    }
+
+    public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207() {
+        ExpressionTreeInterface countCorrectionExpression204From207 = namedExpressionsMap.get("CountCorrectionExpression204From207");
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From207);
+            ratio204_206.setRatioValUsed(r204_206_207[0][0]);
+            ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
+        }
+    }
+
+    public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208() {
+        ExpressionTreeInterface countCorrectionExpression204From208 = namedExpressionsMap.get("CountCorrectionExpression204From208");
+        for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+            SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+            double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From208);
+            ratio204_206.setRatioValUsed(r204_206_207[0][0]);
+            ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
+        }
+    }
+
     public void updateParametersFromModels() {
         boolean doUpdateAll
                 = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
@@ -808,6 +863,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 addExpression(exp, false);
                 updateAffectedExpressions(exp, false);
             }
+            // Sept 2019: assign values to individual spots
+            updateAllSpotsWithCurrentCommonPbModel();
+
             commonPbModelChanged = false;
         }
 
@@ -832,7 +890,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 Expression exp = updatedReferenceMaterialExpressionsIterator.next();
                 removeExpression(exp, false);
                 addExpression(exp, false);
-                //updateAffectedExpressions(exp, false);
             }
             referenceMaterialModelChanged = false;
         }
@@ -1304,7 +1361,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // Aug 2018 change logic to clear the spots list now that task manager has checkbox for auto reject
         SpotSummaryDetails spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(listedExp.getName());
         if (spotSummaryDetails != null) {
-            spotSummaryDetails.resetRejectedIndices();
+            spotSummaryDetails.rejectNone();
         }
     }
 
@@ -1543,20 +1600,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private ExpressionTreeInterface buildRatioExpression(String ratioName) {
         // format of ratioName is "nnn/mmm"
-        ExpressionTreeInterface ratioExpression = null;
+        ExpressionTreeInterface ratioExpressionTree = null;
         if ((findNumerator(ratioName) != null) && (findDenominator(ratioName) != null)) {
-            ratioExpression
+            ratioExpressionTree
                     = new ExpressionTree(
                             ratioName,
                             ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
                             ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
                             Operation.divide());
 
-            ((ExpressionTreeWithRatiosInterface) ratioExpression).getRatiosOfInterest().add(ratioName);
-            ratioExpression.setSquidSwitchSTReferenceMaterialCalculation(true);
-            ratioExpression.setSquidSwitchSAUnknownCalculation(true);
+            ((ExpressionTreeWithRatiosInterface) ratioExpressionTree).getRatiosOfInterest().add(ratioName);
+            ratioExpressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+            ratioExpressionTree.setSquidSwitchSAUnknownCalculation(true);
         }
-        return ratioExpression;
+        return ratioExpressionTree;
     }
 
     @Override
@@ -1635,6 +1692,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
+
+        xstream.registerConverter(new SquidReportTableXMLConverter());
+        xstream.registerConverter(new SquidReportCategoryXMLConverter());
+        xstream.registerConverter(new SquidReportColumnXMLConverter());
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
@@ -1728,6 +1789,121 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (Expression expression : taskExpressionsOrdered) {
             evaluateTaskExpression(expression.getExpressionTree());
+        }
+    }
+
+    public void setUnknownGroupCommonLeadMethod(List<ShrimpFractionExpressionInterface> spotsForExpression, int methodFlag) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
+        }
+    }
+
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
+        }
+    }
+
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) {
+        SampleAgeTypesEnum sampleAgeType = null;
+        for (SampleAgeTypesEnum sat : SampleAgeTypesEnum.values()) {
+            if (sat.getExpressionName().compareTo(sampleAgeName) == 0) {
+                sampleAgeType = sat;
+                break;
+            }
+        }
+        setUnknownGroupSelectedAge(spotsForExpression, sampleAgeType);
+    }
+
+    public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
+        }
+    }
+
+    public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        // first iterate the spots and perform individual evaluations
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            List<ShrimpFractionExpressionInterface> spotList = new ArrayList<>();
+            spotList.add(spot);
+
+            switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
+                case METHOD_STACEY_KRAMER:
+                    // per Bodorkos Oct 2019 first restore original age values
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                    evaluateExpressionsForSampleGroup(spotList);
+                    ExpressionTreeInterface selectedAgeExpression
+                            = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
+                    // run SK 3 times per Ludwig
+                    for (int i = 0; i < 3; i++) {
+                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
+                                spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
+                        // update
+                        evaluateExpressionsForSampleGroup(spotList);
+                    }
+                    break;
+                case METHOD_COMMON_LEAD_MODEL:
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                    evaluateExpressionsForSampleGroup(spotList);
+                    break;
+                // todo
+                case METHOD_STACEY_KRAMER_BY_GROUP:
+                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromAgeSK();
+                    // update
+                    evaluateExpressionsForSampleGroup(spotList);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public SpotSummaryDetails evaluateSelectedAgeWeightedMeanForUnknownGroup(
+            String groupName,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        SpotSummaryDetails spotSummaryDetails = null;
+
+        String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
+        
+        return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
+    }
+
+    public SpotSummaryDetails evaluateSelectedExpressionWeightedMeanForUnknownGroup(
+            String expressionName,
+            String groupName,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        SpotSummaryDetails spotSummaryDetails = null;
+
+        // calculate weighted mean of selected expressionName without auto-rejection
+        Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
+                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        
+        expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
+
+        updateSingleExpression(expressionWM);
+
+        try {
+            //taskExpressionsEvaluationsPerSpotSet.remove(expressionSelectedAgeWM.getExpressionTree().getName());
+            evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
+            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
+        } catch (SquidException squidException) {
+        }
+
+        return spotSummaryDetails;
+    }
+
+    private void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        for (Expression expression : taskExpressionsOrdered) {
+            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+            if (expressionTree.amHealthy()) {
+                if (((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
+                    // now evaluate expressionTree
+                    try {
+                        evaluateExpressionForSpotSet(expressionTree, spotsForExpression);
+                    } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
+                    }
+                }
+            }
         }
     }
 
@@ -2952,6 +3128,48 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setRoundingForSquid3(boolean roundingForSquid3) {
         this.roundingForSquid3 = roundingForSquid3;
+    }
+
+    /**
+     * @return the squidReportTablesRefMat
+     */
+    public List<SquidReportTableInterface> getSquidReportTablesRefMat() {
+        return squidReportTablesRefMat;
+    }
+
+    /**
+     * @param squidReportTablesRefMat the squidReportTablesRefMat to set
+     */
+    public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat) {
+        this.squidReportTablesRefMat = squidReportTablesRefMat;
+    }
+
+    /**
+     * @return the squidReportTablesUnknown
+     */
+    public List<SquidReportTableInterface> getSquidReportTablesUnknown() {
+        return squidReportTablesUnknown;
+    }
+
+    /**
+     * @param squidReportTablesUnknown the squidReportTablesUnknown to set
+     */
+    public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
+        this.squidReportTablesUnknown = squidReportTablesUnknown;
+    }
+
+    /**
+     * @return the overcountCorrectionType
+     */
+    public OvercountCorrectionTypes getOvercountCorrectionType() {
+        return overcountCorrectionType;
+    }
+
+    /**
+     * @param overcountCorrectionType the overcountCorrectionType to set
+     */
+    public void setOvercountCorrectionType(OvercountCorrectionTypes overcountCorrectionType) {
+        this.overcountCorrectionType = overcountCorrectionType;
     }
 
 }

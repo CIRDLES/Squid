@@ -44,11 +44,19 @@ public class BuiltInExpressionsDataDictionary {
 
     // **********************  COMMON LEAD *************************************
     public static final String DEFCOM_64 = "DefCom_206Pb204Pb";
-    public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
-    public static final String DEFCOM_74 = "DefCom_207Pb204Pb";
+    public static final String COM_64 = "Com_206Pb204Pb";
     public static final String DEFCOM_76 = "DefCom_207Pb206Pb";
-    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";
+    public static final String COM_76 = "Com_207Pb206Pb";
     public static final String DEFCOM_86 = "DefCom_208Pb206Pb";
+    public static final String COM_86 = "Com_208Pb206Pb";
+    
+    public static final String DEFCOM_68 = "DefCom_206Pb208Pb";
+    public static final String COM_68 = "Com_206Pb208Pb";
+    public static final String DEFCOM_74 = "DefCom_207Pb204Pb";   
+    public static final String COM_74 = "Com_207Pb204Pb";   
+    public static final String DEFCOM_84 = "DefCom_208Pb204Pb";
+    public static final String COM_84 = "Com_208Pb204Pb";
+    
 
     public static final String REF_U_CONC_PPM = "Ref_U_Concen";
     public static final String REF_TH_CONC_PPM = "Ref_Th_Concen";
@@ -113,6 +121,27 @@ public class BuiltInExpressionsDataDictionary {
     public static final String R208PB206PB_RM = "208Pb206Pb_RM";
     public static final String R208PB206PB = "208Pb206Pb";
 
+    public static final List<String> CORRECTED_RATIOS_EXPRESSION_NAMES = new ArrayList<>();
+    static {
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R206PB_238U);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R207PB_206PB);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R207PB_235U);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R208PB206PB);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R208PB_232TH);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB4CORR + R238U_206PB);
+        
+//        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB7CORR + R204PB_206PB); - no unct calculated
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB7CORR + R206PB_238U);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB7CORR + R208PB206PB);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB7CORR + R208PB_232TH);
+        
+//        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB8CORR + R204PB_206PB); - no unct calculated
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB8CORR + R206PB_238U);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB8CORR + R207PB_206PB);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB8CORR + R207PB_235U);
+        CORRECTED_RATIOS_EXPRESSION_NAMES.add(PB8CORR + R238U_206PB);
+        
+    }
     // ********************** COMMON LEAD **************************************   
     public static final String COM206PB_PCT_RM = "Com206Pb_Pct_RM";
     public static final String COM206PB_PCT = "Com206Pb_Pct";
@@ -235,4 +264,11 @@ public class BuiltInExpressionsDataDictionary {
     public static final String RAD_206PB204PB_FACTOR = "Rad_206Pb204Pb_Factor";
     public static final String RAD_208PB204PB_FACTOR = "Rad_208Pb204Pb_Factor";
 
+    public static final List<String> COMPOSITION_EXPRESSION_NAMES = new ArrayList<>();
+    static {
+        // no uncertainties for ppm?
+        COMPOSITION_EXPRESSION_NAMES.add(U_CONCEN_PPM);
+        COMPOSITION_EXPRESSION_NAMES.add(TH_CONCEN_PPM);
+        COMPOSITION_EXPRESSION_NAMES.add(TH_U_EXP);
+    }
 }

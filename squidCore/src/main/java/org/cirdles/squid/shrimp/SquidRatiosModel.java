@@ -237,7 +237,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     /**
      * @return the ratioFractErr
      */
-    public double getRatioFractErrAsOneSigmaPercent() {
+    public double getRatioFractErrUsedAsOneSigmaPercent() {
 //        return ratioFractErr / ratioVal * 100.0;
         // use of getters provides backward compatibility
         return getRatioFractErrUsed() / getRatioValUsed() * 100.0;
@@ -263,7 +263,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      * @return the ratioValUsed
      */
     public double getRatioValUsed() {
-        if (ratioValUsed == 0.0){
+        if (ratioValUsed == 0.0) {
             ratioValUsed = ratioVal;
         }
         return ratioValUsed;
@@ -280,7 +280,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      * @return the ratioFractErrUsed
      */
     public double getRatioFractErrUsed() {
-        if (ratioFractErrUsed == 0.0){
+        if (ratioFractErrUsed == 0.0) {
             ratioFractErrUsed = ratioFractErr;
         }
         return ratioFractErrUsed;
@@ -291,6 +291,13 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      */
     public void setRatioFractErrUsed(double ratioFractErrUsed) {
         this.ratioFractErrUsed = ratioFractErrUsed;
+    }
+    /**
+     * Restores original ratio and uncertainty to fields used by expression evaluator
+     */
+    public void restoreRatioValueAndUnct(){
+        this.ratioValUsed = ratioVal;
+        this.ratioFractErrUsed = ratioFractErr;
     }
 
     /**
