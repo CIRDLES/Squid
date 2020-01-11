@@ -15,15 +15,20 @@
  */
 package org.cirdles.squid.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import static java.nio.file.StandardOpenOption.APPEND;
 import java.text.SimpleDateFormat;
 import static java.util.Arrays.asList;
@@ -39,6 +44,7 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
+import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
@@ -1008,6 +1014,41 @@ public class CalamariReportsEngine implements Serializable {
             outputWriter.write(squidProject.getTask().printTaskSummary());
             outputWriter.flush();
             outputWriter.close();
+
+        } catch (IOException iOException) {
+        }
+
+        return reportTableFile;
+    }
+
+    public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
+            throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = null;
+        Path reportPath = Paths.get(reportsPath + baseReportTableName);
+        if (!doAppend && reportPath.toFile().exists()){
+            reportPath.toFile().delete();
+        }
+        try {
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath, 
+                    (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
+            if (!doAppend){
+                out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
+            }
+            out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+            out.flush();
+            out.close();
+            reportTableFile = reportPath.toFile();
 
         } catch (IOException iOException) {
         }

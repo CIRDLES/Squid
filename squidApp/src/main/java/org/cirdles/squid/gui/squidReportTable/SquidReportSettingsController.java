@@ -5,6 +5,7 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -49,6 +50,7 @@ import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,12 +59,9 @@ import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.*;
-import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.gui.SquidUIController.squidReportTableLauncher;
+import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
-import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 
 /**
  * FXML Controller class
@@ -117,10 +116,6 @@ public class SquidReportSettingsController implements Initializable {
     private TitledPane parametersTitledPane;
     @FXML
     private ListView<Expression> parametersListView;
-    @FXML
-    private TitledPane brokenExpressionsTitledPane;
-    @FXML
-    private ListView<Expression> brokenExpressionsListView;
     @FXML
     private TextField categoryTextField;
     @FXML
@@ -190,7 +185,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-        buttonHBox.getChildren().removeAll(saveButton, restoreButton);
+        //buttonHBox.getChildren().removeAll(saveButton, restoreButton);
         //  settingsAndSpotsCB.getChildren().remove(spotsChoiceBox);
         spotsChoiceBox.setVisible(false);
     }
@@ -205,19 +200,29 @@ public class SquidReportSettingsController implements Initializable {
 
     private void processButtons() {
         if (isEditing.getValue()) {
-            buttonHBox.getChildren().setAll(saveButton, restoreButton);
-            unknownsRadioButton.setDisable(true);
-            refMatRadioButton.setDisable(true);
+            //buttonHBox.getChildren().setAll(saveButton, restoreButton);
+            //unknownsRadioButton.setDisable(true);
+            //refMatRadioButton.setDisable(true);
+            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, unknownsRadioButton, refMatRadioButton).
+                    parallelStream().forEach(button -> button.setDisable(true));
+            Arrays.asList(saveButton, restoreButton).forEach(button -> button.setDisable(false));
         } else if (isDefault.getValue()) {
-            buttonHBox.getChildren().setAll(newButton, copyButton,
-                    exportButton, importButton);
-            unknownsRadioButton.setDisable(false);
-            refMatRadioButton.setDisable(false);
+            //buttonHBox.getChildren().setAll(newButton, copyButton,
+            //      exportButton, importButton);
+            //unknownsRadioButton.setDisable(false);
+            //refMatRadioButton.setDisable(false);
+            Arrays.asList(saveButton, restoreButton, renameButton, deleteButton).
+                    parallelStream().forEach(button -> button.setDisable(true));
+            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+                    parallelStream().forEach(button -> button.setDisable(false));
         } else {
-            buttonHBox.getChildren().setAll(newButton, copyButton,
-                    renameButton, deleteButton, exportButton, importButton);
-            unknownsRadioButton.setDisable(false);
-            refMatRadioButton.setDisable(false);
+            //buttonHBox.getChildren().setAll(newButton, copyButton,
+            //        renameButton, deleteButton, exportButton, importButton);
+            //unknownsRadioButton.setDisable(false);
+            //refMatRadioButton.setDisable(false);
+            Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
+            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
+                    parallelStream().forEach(button -> button.setDisable(false));
         }
     }
 
@@ -279,34 +284,7 @@ public class SquidReportSettingsController implements Initializable {
         reportTableCB.getItems().setAll(FXCollections.observableArrayList(getTables()));
     }
 
-    private void customizeBrokenExpressionsTitledPane() {
-        if ((brokenExpressionsListView.getItems() == null) || (brokenExpressionsListView.getItems().isEmpty())) {
-            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: black; -fx-font-family: SansSerif;");
-        } else {
-            brokenExpressionsTitledPane.setStyle("-fx-font-size: 12; -fx-text-fill: red; -fx-font-family: SansSerif;");
-        }
-    }
-
     private void initListViews() {
-        //EXPRESSIONS
-        brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
-        brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        //Listener to update the filter tab when a new value is selected in the broken expression category
-        brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
-            @Override
-            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if (newValue != null) {
-
-                    selectedExpression.set(newValue);
-
-                    selectInAllPanes(newValue, false);
-                }
-                customizeBrokenExpressionsTitledPane();
-            }
-        });
-        customizeBrokenExpressionsTitledPane();
-
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
         nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -537,12 +515,16 @@ public class SquidReportSettingsController implements Initializable {
             if (selectedCategory.getValue() != null) {
                 populateColumnListView();
                 columnListView.getSelectionModel().selectFirst();
+            } else {
+                columnDetailsTextArea.setText("No Column Selected");
             }
         });
         selectedColumn.addListener(observable -> {
-            if (selectedColumn.getValue() != null) {
-                populateColumnDetails();
-            }
+            //if (selectedColumn.getValue() != null) {
+            populateColumnDetails();
+            //} else {
+            //    columnDetailsTextArea.setText("No column selected");
+            //}
         });
     }
 
@@ -551,7 +533,13 @@ public class SquidReportSettingsController implements Initializable {
         task.getMapOfUnknownsBySampleNames().keySet().forEach(val -> spots.add(val));
         spotsChoiceBox.setItems(spots);
         spotsChoiceBox.getSelectionModel().select("UNKNOWNS");
-        spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> populateExpressionListViews());
+        spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> {
+            //if(selectedColumn.getValue() != null) {
+            Platform.runLater(() -> populateColumnDetails());
+            /*} else {
+                columnDetailsTextArea.setText("No column selected");
+            }*/
+        });
     }
 
     private void populateRatiosListView() {
@@ -630,6 +618,16 @@ public class SquidReportSettingsController implements Initializable {
                 } else {
                     List<ShrimpFractionExpressionInterface> unSpots
                             = task.getMapOfUnknownsBySampleNames().get(exp.getUnknownsGroupSampleName());
+                    String spot = spotsChoiceBox.getValue();
+                    if (spot.compareToIgnoreCase("UNKNOWNS") != 0) {
+                        List<ShrimpFractionExpressionInterface> spotsToBeUsed = new ArrayList<>();
+                        unSpots.forEach(unSpot -> {
+                            if (unSpot.getFractionID().startsWith(spot)) {
+                                spotsToBeUsed.add(unSpot);
+                            }
+                        });
+                        unSpots = spotsToBeUsed;
+                    }
                     if (exp instanceof ConstantNode) {
                         result = "Not used";
                         if (exp.isSquidSwitchSAUnknownCalculation()) {
@@ -931,26 +929,6 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {
-        //If nothing is selected or the selected value is not the new one
-        if (brokenExpressionsListView.getSelectionModel().getSelectedItem() == null
-                || !brokenExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
-            //Clear selection
-            brokenExpressionsListView.getSelectionModel().clearSelection();
-            //If the new value is on this pane then select it
-            if (brokenExpressionsListView.getItems().contains(exp)) {
-
-                brokenExpressionsListView.getSelectionModel().select(exp);
-                brokenExpressionsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
-            }
-        } else {
-            if (scrollIfAlreadySelected) {
-                brokenExpressionsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(brokenExpressionsTitledPane);
-            }
-        }
-
-        //Same thing for the other panes
         if (nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem() == null
                 || !nuSwitchedExpressionsListView.getSelectionModel().getSelectedItem().equals(exp)) {
             nuSwitchedExpressionsListView.getSelectionModel().clearSelection();
@@ -1042,7 +1020,6 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
-        List<Expression> sortedBrokenExpressionsList = new ArrayList<>();
         List<Expression> sortedReferenceMaterialValuesList = new ArrayList<>();
         List<Expression> sortedParameterValuesList = new ArrayList<>();
 
@@ -1061,8 +1038,6 @@ public class SquidReportSettingsController implements Initializable {
                 sortedBuiltInExpressionsList.add(exp);
             } else if (exp.isCustom() && exp.amHealthy()) {
                 sortedCustomExpressionsList.add(exp);
-            } else if (!exp.amHealthy()) {
-                sortedBrokenExpressionsList.add(exp);
             }
         }
 
@@ -1077,11 +1052,6 @@ public class SquidReportSettingsController implements Initializable {
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         customExpressionsListView.setItems(null);
         customExpressionsListView.setItems(items);
-
-        items = FXCollections.observableArrayList(sortedBrokenExpressionsList);
-        brokenExpressionsListView.setItems(null);
-        brokenExpressionsListView.setItems(items);
-        customizeBrokenExpressionsTitledPane();
 
         items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
         referenceMaterialsListView.setItems(null);
@@ -1330,7 +1300,7 @@ public class SquidReportSettingsController implements Initializable {
             reportTableCB.getSelectionModel().select(table);
             isEditing.setValue(false);
         }
-        
+
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
@@ -1349,10 +1319,10 @@ public class SquidReportSettingsController implements Initializable {
 //            isRefMat = true;
 ////            settingsAndSpotsCB.getChildren().remove(1);
 //        }
-        
+
         isRefMat = !unknownsRadioButton.isSelected();
         spotsChoiceBox.setVisible(!isRefMat);
-        
+
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
         populateExpressionListViews();
@@ -1382,8 +1352,8 @@ public class SquidReportSettingsController implements Initializable {
                     reportTable,
                     spotsChoiceBox.getValue());
             baseFileName = (squidProject.getProjectName() + "_"
-                    + spotsChoiceBox.getValue() + "_"
-                    + reportTable.getReportTableName())
+                    + reportTable.getReportTableName() + "_"
+                    + spotsChoiceBox.getValue())
                     .replaceAll("\\s", "_")
                     + ".csv";
         }
@@ -1393,7 +1363,7 @@ public class SquidReportSettingsController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(

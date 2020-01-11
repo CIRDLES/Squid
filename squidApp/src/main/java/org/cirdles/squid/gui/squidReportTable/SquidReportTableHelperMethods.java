@@ -34,15 +34,7 @@ public class SquidReportTableHelperMethods {
                     squidReportTable = SquidReportTable.createDefaultSquidReportTableUnknown(squidProject.getTask());
                 }
                 List<ShrimpFractionExpressionInterface> spots = squidProject.makeListOfUnknownsBySampleName();
-                if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
-                    for (int i = 0; i < spots.size(); i++) {
-                        ShrimpFractionExpressionInterface spot = spots.get(i);
-                        if (!spot.getFractionID().startsWith(unknownSpot)) {
-                            spots.remove(i);
-                            i--;
-                        }
-                    }
-                }
+                filterShrimpFractionsBySpot(spots, unknownSpot);
                 textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), spots);
                 break;
 
@@ -50,5 +42,17 @@ public class SquidReportTableHelperMethods {
         }
 
         return textArray;
+    }
+
+    public static void filterShrimpFractionsBySpot(List<ShrimpFractionExpressionInterface> spots, String unknownSpot) {
+        if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
+            for (int i = 0; i < spots.size(); i++) {
+                ShrimpFractionExpressionInterface spot = spots.get(i);
+                if (!spot.getFractionID().startsWith(unknownSpot)) {
+                    spots.remove(i);
+                    i--;
+                }
+            }
+        }
     }
 }

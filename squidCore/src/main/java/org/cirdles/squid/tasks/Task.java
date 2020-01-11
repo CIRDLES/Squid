@@ -1804,6 +1804,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) {
+        SampleAgeTypesEnum sampleAgeType = null;
+        for (SampleAgeTypesEnum sat : SampleAgeTypesEnum.values()) {
+            if (sat.getExpressionName().compareTo(sampleAgeName) == 0) {
+                sampleAgeType = sat;
+                break;
+            }
+        }
+        setUnknownGroupSelectedAge(spotsForExpression, sampleAgeType);
+    }
+
     public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
@@ -1853,17 +1864,28 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SpotSummaryDetails spotSummaryDetails = null;
 
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
+        
+        return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
+    }
 
-        // calculate weighted mean of selected age without auto-rejection
-        Expression expressionSelectedAgeWM = buildExpression(selectedAgeExpressionName + "_WM_" + groupName,
-                "WtdMeanACalc([\"" + selectedAgeExpressionName + "\"],[%\"" + selectedAgeExpressionName + "\"],TRUE,FALSE)", false, true, true);
+    public SpotSummaryDetails evaluateSelectedExpressionWeightedMeanForUnknownGroup(
+            String expressionName,
+            String groupName,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) {
+        SpotSummaryDetails spotSummaryDetails = null;
 
-        updateSingleExpression(expressionSelectedAgeWM);
+        // calculate weighted mean of selected expressionName without auto-rejection
+        Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
+                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        
+        expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
+
+        updateSingleExpression(expressionWM);
 
         try {
             //taskExpressionsEvaluationsPerSpotSet.remove(expressionSelectedAgeWM.getExpressionTree().getName());
-            evaluateExpressionForSpotSet(expressionSelectedAgeWM.getExpressionTree(), spotsForExpression);
-            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionSelectedAgeWM.getExpressionTree().getName());
+            evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
+            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
         } catch (SquidException squidException) {
         }
 

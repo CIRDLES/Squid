@@ -37,8 +37,8 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
-import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController;
-import org.cirdles.squid.gui.dateInterpretations.plots.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
+import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.PlotTypes;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -1097,7 +1097,7 @@ public class SquidUIController implements Initializable {
 
     private void launchVisualizations() {
         try {
-            topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/Plots.fxml"));
+            topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/plotControllers/Plots.fxml"));
             topsoilPlotUI.setId("TopsoilPlot");
 
             AnchorPane.setLeftAnchor(topsoilPlotUI, 0.0);

@@ -55,8 +55,11 @@ public class TicGeneratorForAxes {
 
         ticRange = niceNum(axisMax - axisMin, true);
         d = niceNum(ticRange / (numberTics - 1), false);
-        ticMin = Math.floor(Math.ceil(axisMin) / d) * d;
-        ticMax = Math.ceil(Math.ceil(axisMax) / d) * d;
+        // the following changes did not work and I reverted on Dec 27 2019
+//        ticMin = Math.floor(Math.ceil(axisMin) / d) * d;
+//        ticMax = Math.ceil(Math.ceil(axisMax) / d) * d;
+        ticMin = Math.floor(axisMin / d) * d;
+        ticMax = Math.ceil(axisMax / d) * d;
 
         nfrac = (int) Math.max(-Math.floor(Math.log10(d)), 0);
 

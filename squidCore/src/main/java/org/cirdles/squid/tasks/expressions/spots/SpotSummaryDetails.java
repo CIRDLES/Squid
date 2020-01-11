@@ -38,11 +38,10 @@ public class SpotSummaryDetails implements Serializable {
     private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
     private boolean manualRejectionEnabled;
-    // -1 = desc, 0 = original (aquire time), +1 = asc;
+    // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
     private int preferredViewSortOrder;
     private double minProbabilityWM;
-    private String selectedRatioName;
-    private String sortFlavor;
+    private String selectedExpressionName;
 
     private SpotSummaryDetails() {
         this(null);
@@ -64,13 +63,12 @@ public class SpotSummaryDetails implements Serializable {
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
-        this.preferredViewSortOrder = 0;
-        this.minProbabilityWM = 0.3;
-        this.selectedRatioName = "204/206";
-        this.sortFlavor = "AGE";
+        this.preferredViewSortOrder = -1;
+        this.minProbabilityWM = 0.0;
+        this.selectedExpressionName = "204/206";
     }
 
-    public double[][] eval(TaskInterface task) throws SquidException{
+    public double[][] eval(TaskInterface task) throws SquidException {
         return convertObjectArrayToDoubles(expressionTree.eval(retrieveActiveSpots(), task));
     }
 
@@ -87,7 +85,7 @@ public class SpotSummaryDetails implements Serializable {
             }
         }
         return activeSpots;
-    }   
+    }
 
     /**
      * @return the values
@@ -141,26 +139,26 @@ public class SpotSummaryDetails implements Serializable {
     public void setRejectedIndices(boolean[] rejectedIndices) {
         this.rejectedIndices = rejectedIndices.clone();
     }
-    
-    public void rejectNone(){
+
+    public void rejectNone() {
         rejectedIndices = new boolean[selectedSpots.size()];
     }
-    
-    public void rejectAll(){
+
+    public void rejectAll() {
         rejectedIndices = new boolean[selectedSpots.size()];
-        for (int i = 0; i < rejectedIndices.length; i ++){
+        for (int i = 0; i < rejectedIndices.length; i++) {
             rejectedIndices[i] = true;
         }
     }
-    
-    public boolean[] getRejectedIndices(){
+
+    public boolean[] getRejectedIndices() {
         return this.rejectedIndices.clone();
     }
-    
-    public void setIndexOfRejectedIndices(int index, boolean value){
+
+    public void setIndexOfRejectedIndices(int index, boolean value) {
         rejectedIndices[index] = value;
     }
-    
+
     /**
      * @return the manualRejectionEnabled
      */
@@ -204,31 +202,16 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     * @return the selectedRatioName
+     * @return the selectedExpressionName
      */
-    public String getSelectedRatioName() {
-        return selectedRatioName;
+    public String getSelectedExpressionName() {
+        return selectedExpressionName;
     }
 
     /**
-     * @param selectedRatioName the selectedRatioName to set
+     * @param selectedExpressionName the selectedExpressionName to set
      */
-    public void setSelectedRatioName(String selectedRatioName) {
-        this.selectedRatioName = selectedRatioName;
+    public void setSelectedExpressionName(String selectedExpressionName) {
+        this.selectedExpressionName = selectedExpressionName;
     }
-
-    /**
-     * @return the sortFlavor
-     */
-    public String getSortFlavor() {
-        return sortFlavor;
-    }
-
-    /**
-     * @param sortFlavor the sortFlavor to set
-     */
-    public void setSortFlavor(String sortFlavor) {
-        this.sortFlavor = sortFlavor;
-    }
-
 }

@@ -42,7 +42,8 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SquidReportColumn implements Serializable, SquidReportColumnInterface {
-    //private static final long serialVersionUID = 1474850196549001090L;
+
+    private static final long serialVersionUID = -4256285353332428810L;
 
     // source of spot-specific data for this column
     private transient ExpressionTreeInterface expTree;
@@ -446,4 +447,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         col.setFootnoteSpec(footnoteSpec);
         return (SquidReportColumn) col;
     }
+
+    @Override
+    public String toString() {
+        return expressionName;
+    }
+    
+    
 }
