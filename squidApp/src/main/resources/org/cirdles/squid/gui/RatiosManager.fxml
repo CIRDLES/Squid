@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="640.0" minWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.RatiosManagerController">
    <content>
       <VBox spacing="5.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
          <children>

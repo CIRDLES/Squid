@@ -55,6 +55,8 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
  */
 public class CountCorrectionsController implements Initializable {
 
+    private static int fontSize = 12;
+
     @FXML
     private VBox vboxMaster;
     @FXML
@@ -97,12 +99,10 @@ public class CountCorrectionsController implements Initializable {
                 break;
             case FR_208:
                 correction208RB.setSelected(true);
-
         }
 
         setUpHeader();
         showUnknownsWithOvercountCorrections();
-
     }
 
     public void setUpHeader() {
@@ -127,7 +127,6 @@ public class CountCorrectionsController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
-
     }
 
     private void showUnknownsWithOvercountCorrections() {
@@ -141,11 +140,11 @@ public class CountCorrectionsController implements Initializable {
 
         TextFlow textFlowSampleType = new TextFlow();
         Text textUnknown = new Text(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
-        textUnknown.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+        textUnknown.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
         textFlowSampleType.getChildren().add(textUnknown);
         TreeItem<TextFlow> rootItemSamples = new TreeItem<>(textFlowSampleType);
 
-        spotsTreeViewTextFlow.setStyle("-fx-font-size: 10px;");
+        spotsTreeViewTextFlow.setStyle("-fx-font-size: 12px;");
         spotsTreeViewTextFlow.setRoot(rootItemSamples);
 
         rootItemSamples.setExpanded(true);
@@ -154,7 +153,7 @@ public class CountCorrectionsController implements Initializable {
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
             TextFlow textFlowSampleInfo = new TextFlow();
             Text textSample = new Text(entry.getKey());
-            textSample.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+            textSample.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
             textFlowSampleInfo.getChildren().add(textSample);
             TreeItem<TextFlow> treeItemSampleInfo = new TreeItem<>(textFlowSampleInfo);
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
@@ -168,30 +167,30 @@ public class CountCorrectionsController implements Initializable {
                 TextFlow textFlowI = new TextFlow();
 
                 Text textSampleName = new Text(String.format("%1$-" + 28 + "s", spot.getFractionID()));
-                textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
+                textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
                 textFlowI.getChildren().add(textSampleName);
 
                 // no correction
                 Formatter formatter = new Formatter();
                 //formatter.format("% 12.8f   % 12.2f         ", r204_206[0][0], Math.abs(r204_206[0][1] / r204_206[0][0] * 100.0));
-                formatter.format("% 24.6E   % 12.3f         ", r204_206[0][0], Math.abs(r204_206[0][1] / r204_206[0][0] * 100.0));
+                formatter.format("% 12.6E   % 12.3f         ", r204_206[0][0], Math.abs(r204_206[0][1] / r204_206[0][0] * 100.0));
                 Text textNone = new Text(formatter.toString());
-                textNone.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                textNone.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 textFlowI.getChildren().add(textNone);
 
                 // 207 correction
                 formatter = new Formatter();
                 //formatter.format("% 24.14E   % 20.14f         ", r204_206_207[0][0], Math.abs(r204_206_207[0][1] / r204_206_207[0][0] * 100.0));
-                formatter.format("% 24.6E   % 12.3f         ", r204_206_207[0][0], Math.abs(r204_206_207[0][1] / r204_206_207[0][0] * 100.0));
+                formatter.format("% 12.6E   % 12.3f         ", r204_206_207[0][0], Math.abs(r204_206_207[0][1] / r204_206_207[0][0] * 100.0));
                 Text text207 = new Text(formatter.toString());
-                text207.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text207.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 textFlowI.getChildren().add(text207);
 
                 // 208 correction
                 formatter = new Formatter();
-                formatter.format("% 24.6E   % 12.3f         ", r204_206_208[0][0], Math.abs(r204_206_208[0][1] / r204_206_208[0][0] * 100.0));
+                formatter.format("% 12.6E   % 12.3f         ", r204_206_208[0][0], Math.abs(r204_206_208[0][1] / r204_206_208[0][0] * 100.0));
                 Text text208 = new Text(formatter.toString());
-                text208.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text208.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 textFlowI.getChildren().add(text208);
 
                 TreeItem<TextFlow> treeItemSampleI = new TreeItem<>(textFlowI);
@@ -211,11 +210,11 @@ public class CountCorrectionsController implements Initializable {
             for (TreeItem<TextFlow> treeSpotItem : treeSampleItems) {
                 TextFlow textFlow = treeSpotItem.getValue();
                 Text text = (Text) textFlow.getChildren().get(1);
-                text.setFont(Font.font("Monospaced", isOrig ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text.setFont(Font.font("Monospaced", isOrig ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 text = (Text) textFlow.getChildren().get(2);
-                text.setFont(Font.font("Monospaced", is207 ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text.setFont(Font.font("Monospaced", is207 ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 text = (Text) textFlow.getChildren().get(3);
-                text.setFont(Font.font("Monospaced", is208 ? FontWeight.BOLD : FontWeight.THIN, 10));
+                text.setFont(Font.font("Monospaced", is208 ? FontWeight.BOLD : FontWeight.THIN, fontSize));
             }
         }
     }
