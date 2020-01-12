@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="750.0" minWidth="1230.0" prefHeight="750.0" prefWidth="1230.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="700.0" minWidth="1250.0" prefHeight="700.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
