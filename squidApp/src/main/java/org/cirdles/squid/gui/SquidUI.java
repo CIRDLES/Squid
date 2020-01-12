@@ -53,7 +53,7 @@ public final class SquidUI extends Application {
     public static final String PEEK_LIST_CSS_STYLE_SPECS
             = "-fx-font-size: 11px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
     public static final String COLORPICKER_CSS_STYLE_SPECS
-            = "-fx-font-size: 8px; -fx-font-family: 'Monospaced';";
+            = "-fx-font-size: 12px; -fx-font-family: 'Monospaced';";
     public static final String SPOT_TREEVIEW_CSS_STYLE_SPECS
             = "-fx-font-size: 12px; -fx-font-weight: bold; -fx-font-family: 'Monospaced';";
 
