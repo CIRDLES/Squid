@@ -273,7 +273,7 @@ public class SquidReportSettingsController implements Initializable {
             }
         }
         if (!containsFilterReport) {
-            SquidReportTableInterface filterReport = SquidReportTable.createDefaultSquidReportTableUnknown(task);
+            SquidReportTableInterface filterReport = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(task);
             filterReport.setReportTableName("Squid Filter Report");
             filterReport.setIsDefault(false);
             unknownTables.add(filterReport);
