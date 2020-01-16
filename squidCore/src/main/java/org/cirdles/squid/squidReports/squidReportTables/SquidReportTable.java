@@ -80,6 +80,13 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return new SquidReportTable(reportTableName, reportCategories, true);
     }
 
+    public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task) {
+        String reportTableName = "Squid3 Report Table for Filtering Weighted Means of Unknowns";
+        LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknownSquidFilter(task);
+
+        return new SquidReportTable(reportTableName, reportCategories, false);
+    }
+
     public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
         LinkedList<SquidReportCategoryInterface> reportCategoriesRefMat = new LinkedList<>();
 
@@ -165,7 +172,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
         SquidReportCategoryInterface corrIndependentData = createReportCategory("Correction-Independent Data");
         // TODO
-//        reportCategoriesUnknown.add(corrIndependentData);
+//        reportCategoriesUnknownSquidFilter.add(corrIndependentData);
 
         SquidReportCategoryInterface pb204Corr = createReportCategory("204Pb Corrected");
         pb204Corr.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB4CORR + COM206PB_PCT));
@@ -225,6 +232,15 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         reportCategoriesUnknown.add(custom);
 
         return reportCategoriesUnknown;
+    }
+
+    private static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesUnknownSquidFilter(TaskInterface task) {
+        LinkedList<SquidReportCategoryInterface> reportCategoriesUnknownSquidFilter = new LinkedList<>();
+        for (SquidReportCategory src : SquidReportCategory.defaultSquidReportCategories) {
+            reportCategoriesUnknownSquidFilter.add(src);
+        }
+
+        return reportCategoriesUnknownSquidFilter;
     }
 
     private static SquidReportCategoryInterface createDefaultSpotFundamentalsCategory() {
