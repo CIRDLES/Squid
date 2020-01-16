@@ -77,7 +77,7 @@ public class Divide extends Operation {
                 denominator = (double) denominatorObject;
             }
 
-            retVal = numerator / denominator;
+            retVal = numerator / denominator;            
         } catch (NullPointerException | SquidException e) {
             retVal = 0.0;
         }

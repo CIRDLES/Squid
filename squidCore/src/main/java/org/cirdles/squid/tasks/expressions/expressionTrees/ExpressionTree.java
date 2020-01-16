@@ -40,6 +40,7 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -221,6 +222,14 @@ public class ExpressionTree
                 }
             }
         }
+        // Jan 2020 added in missing check for divide by zero
+        if (operation instanceof Divide) {
+            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Double)) {
+                if (((Double) ((ConstantNode) childrenET.get(1)).getValue()) == 0) {
+                    retVal = false;
+                }
+            }
+        }
         return retVal;
     }
 
@@ -392,9 +401,9 @@ public class ExpressionTree
         }
 
         if (isSquidSwitchSCSummaryCalculation()) {
-            targetPhrase = "SUMMARY(" 
-                    + (referenceMaterialCalc? "R" : "")
-                    + (squidSwitchSAUnknownCalculation? "U" : "")
+            targetPhrase = "SUMMARY("
+                    + (referenceMaterialCalc ? "R" : "")
+                    + (squidSwitchSAUnknownCalculation ? "U" : "")
                     + "):";
         }
 
