@@ -224,8 +224,14 @@ public class SquidReportSettingsController implements Initializable {
             //unknownsRadioButton.setDisable(false);
             //refMatRadioButton.setDisable(false);
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
-            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
+            Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
+            if(!isRefMat &&
+                    reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches("Squid Filter Report")) {
+                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
+            } else {
+                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(false));
+            }
         }
     }
 
@@ -258,6 +264,19 @@ public class SquidReportSettingsController implements Initializable {
         List<SquidReportTableInterface> unknownTables = task.getSquidReportTablesUnknown();
         if (unknownTables.isEmpty()) {
             unknownTables.add(SquidReportTable.createDefaultSquidReportTableUnknown(task));
+        }
+        boolean containsFilterReport = false;
+        for (SquidReportTableInterface table : unknownTables) {
+            if (table.getReportTableName().matches("Squid Filter Report")) {
+                containsFilterReport = true;
+                break;
+            }
+        }
+        if (!containsFilterReport) {
+            SquidReportTableInterface filterReport = SquidReportTable.createDefaultSquidReportTableUnknown(task);
+            filterReport.setReportTableName("Squid Filter Report");
+            filterReport.setIsDefault(false);
+            unknownTables.add(filterReport);
         }
     }
 
@@ -1080,11 +1099,9 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private List<String> getNamesOfTables() {
-        List<SquidReportTableInterface> tables = isRefMat ? task.getSquidReportTablesRefMat() : task.getSquidReportTablesUnknown();
+        List<SquidReportTableInterface> tables = getTables();
         List<String> namesOfTables = new ArrayList<>(tables.size());
-        for (SquidReportTableInterface table : tables) {
-            namesOfTables.add(table.getReportTableName());
-        }
+        tables.forEach(table -> namesOfTables.add(table.getReportTableName()));
         return namesOfTables;
     }
 
