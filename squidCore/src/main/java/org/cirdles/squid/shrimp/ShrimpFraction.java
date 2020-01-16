@@ -783,6 +783,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_206Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_206Pb204Pb();
     }
 
@@ -791,6 +794,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_206Pb204Pb(double com_206Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_206Pb204Pb(com_206Pb204Pb);
     }
 
@@ -799,6 +805,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_207Pb206Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_207Pb206Pb();
     }
 
@@ -807,6 +816,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_207Pb206Pb(double com_207Pb206Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_207Pb206Pb(com_207Pb206Pb);
     }
 
@@ -815,6 +827,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_208Pb206Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_208Pb206Pb();
     }
 
@@ -823,6 +838,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_208Pb206Pb(double com_208Pb206Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_208Pb206Pb(com_208Pb206Pb);
     }
 
@@ -831,6 +849,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_206Pb208Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_206Pb208Pb();
     }
 
@@ -839,6 +860,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_206Pb208Pb(double com_206Pb208Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_206Pb208Pb(com_206Pb208Pb);
     }
 
@@ -847,6 +871,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_207Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_207Pb204Pb();
     }
 
@@ -855,6 +882,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_207Pb204Pb(double com_207Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_207Pb204Pb(com_207Pb204Pb);
     }
 
@@ -863,6 +893,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double getCom_208Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCom_208Pb204Pb();
     }
 
@@ -871,6 +904,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCom_208Pb204Pb(double com_208Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCom_208Pb204Pb(com_208Pb204Pb);
     }
     
@@ -880,6 +916,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public ParametersModel getCommonLeadModel(){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getCommonLeadModel();
     }
     
@@ -889,6 +928,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public void setCommonLeadModel(ParametersModel commonLeadModel){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
     }
 
@@ -905,6 +947,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     
     @Override
     public String getSelectedAgeExpressionName(){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
         return commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
     }
 }
