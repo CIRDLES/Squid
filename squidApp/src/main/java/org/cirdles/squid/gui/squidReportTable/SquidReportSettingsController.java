@@ -153,9 +153,12 @@ public class SquidReportSettingsController implements Initializable {
     public static Expression expressionToHighlightOnInit = null;
     private TaskInterface task;
 
-    private boolean isRefMat;
     private ObjectProperty<Boolean> isEditing = new SimpleObjectProperty<>();
     private ObjectProperty<Boolean> isDefault = new SimpleObjectProperty<>();
+
+    private boolean isRefMat;
+    private static SquidReportTableInterface selectedRefMatReportSetting = null;
+    private static SquidReportTableInterface selectedUnknownReportSetting = null;
 
     //INIT
     @Override
@@ -221,8 +224,14 @@ public class SquidReportSettingsController implements Initializable {
             //unknownsRadioButton.setDisable(false);
             //refMatRadioButton.setDisable(false);
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
-            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
+            Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
+            if(!isRefMat &&
+                    reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches("Squid Filter Report")) {
+                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
+            } else {
+                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(false));
+            }
         }
     }
 
@@ -256,6 +265,19 @@ public class SquidReportSettingsController implements Initializable {
         if (unknownTables.isEmpty()) {
             unknownTables.add(SquidReportTable.createDefaultSquidReportTableUnknown(task));
         }
+        boolean containsFilterReport = false;
+        for (SquidReportTableInterface table : unknownTables) {
+            if (table.getReportTableName().matches("Squid Filter Report")) {
+                containsFilterReport = true;
+                break;
+            }
+        }
+        if (!containsFilterReport) {
+            SquidReportTableInterface filterReport = SquidReportTable.createDefaultSquidReportTableUnknown(task);
+            filterReport.setReportTableName("Squid Filter Report");
+            filterReport.setIsDefault(false);
+            unknownTables.add(filterReport);
+        }
     }
 
     private void initReportTableCB() {
@@ -274,10 +296,24 @@ public class SquidReportSettingsController implements Initializable {
             if (reportTableCB.getSelectionModel().getSelectedItem() != null) {
                 isDefault.setValue(reportTableCB.getSelectionModel().getSelectedItem().isDefault());
                 populateCategoryListView();
+                if (isRefMat) {
+                    selectedRefMatReportSetting = reportTableCB.getSelectionModel().getSelectedItem();
+                } else {
+                    selectedUnknownReportSetting = reportTableCB.getSelectionModel().getSelectedItem();
+                }
             }
         });
         populateSquidReportTableChoiceBox();
-        reportTableCB.getSelectionModel().selectFirst();
+        selectSquidReportTableByPriors();
+    }
+
+    private void selectSquidReportTableByPriors() {
+        SquidReportTableInterface selectedReportSetting = (isRefMat) ? selectedRefMatReportSetting : selectedUnknownReportSetting;
+        if (selectedReportSetting != null) {
+            reportTableCB.getSelectionModel().select(selectedReportSetting);
+        } else {
+            reportTableCB.getSelectionModel().selectFirst();
+        }
     }
 
     private void populateSquidReportTableChoiceBox() {
@@ -1063,11 +1099,9 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private List<String> getNamesOfTables() {
-        List<SquidReportTableInterface> tables = isRefMat ? task.getSquidReportTablesRefMat() : task.getSquidReportTablesUnknown();
+        List<SquidReportTableInterface> tables = getTables();
         List<String> namesOfTables = new ArrayList<>(tables.size());
-        for (SquidReportTableInterface table : tables) {
-            namesOfTables.add(table.getReportTableName());
-        }
+        tables.forEach(table -> namesOfTables.add(table.getReportTableName()));
         return namesOfTables;
     }
 
@@ -1324,7 +1358,7 @@ public class SquidReportSettingsController implements Initializable {
         spotsChoiceBox.setVisible(!isRefMat);
 
         populateSquidReportTableChoiceBox();
-        reportTableCB.getSelectionModel().selectFirst();
+        selectSquidReportTableByPriors();
         populateExpressionListViews();
         populateIsotopesListView();
         populateRatiosListView();
@@ -1341,20 +1375,21 @@ public class SquidReportSettingsController implements Initializable {
                     SquidReportTableLauncher.ReportTableTab.refMatCustom,
                     reportTable,
                     null);
-            baseFileName = (squidProject.getProjectName() + "_"
-                    + "RefMat" + "_"
+            baseFileName = (squidProject.getProjectName()
+                    + "_RefMat_"
                     + reportTable.getReportTableName())
-                    .replaceAll("\\s", "_")
+                    .replaceAll("\\s+", "_")
                     + ".csv";
         } else {
             textArray = SquidReportTableHelperMethods.processReportTextArray(
                     SquidReportTableLauncher.ReportTableTab.unknownCustom,
                     reportTable,
                     spotsChoiceBox.getValue());
-            baseFileName = (squidProject.getProjectName() + "_"
+            baseFileName = (squidProject.getProjectName()
+                    + "_Unknowns_"
                     + reportTable.getReportTableName() + "_"
-                    + spotsChoiceBox.getValue())
-                    .replaceAll("\\s", "_")
+                    + ((spotsChoiceBox.getValue().compareToIgnoreCase("unknowns") == 0) ? "ALL" : spotsChoiceBox.getValue()))
+                    .replaceAll("\\s+", "_")
                     + ".csv";
         }
         File reportTableFile
@@ -1459,6 +1494,7 @@ public class SquidReportSettingsController implements Initializable {
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(action -> {
                         categoryListView.getItems().remove(cell.getItem());
+                        isEditing.setValue(true);
                     });
 
                     MenuItem renameItem = new MenuItem(("Rename"));
@@ -1613,6 +1649,7 @@ public class SquidReportSettingsController implements Initializable {
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(action -> {
                         columnListView.getItems().remove(cell.getItem());
+                        isEditing.setValue(true);
                     });
                     contextMenu.getItems().addAll(deleteItem);
 
