@@ -70,11 +70,11 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
     public String getNodeName() {
         String retVal = shrimpFraction.getFractionID();
         if (shrimpFraction.isReferenceMaterial()) {
-            retVal += ((plot == null) ? "" : "  " + plot.makeAgeString(indexOfSpot));
+            retVal += ((plot == null) ? "" : "  " + plot.makeAgeOrValueString(indexOfSpot));
         } 
         else {
             double[] age = shrimpFraction.getTaskExpressionsEvaluationsPerSpotByField(shrimpFraction.getSelectedAgeExpressionName())[0];
-            retVal += "  " + WeightedMeanPlot.makeAgeString(age[0], age[1]);
+            retVal += "  " + WeightedMeanPlot.makeAgeOrValueString(age[0], age[1]);
         }
         return retVal;
     }
