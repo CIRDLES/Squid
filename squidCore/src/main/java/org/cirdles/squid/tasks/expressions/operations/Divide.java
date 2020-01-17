@@ -70,14 +70,21 @@ public class Divide extends Operation {
             } else {
                 numerator = (double) numeratorObject;
             }
-            
+
             if (denominatorObject instanceof Integer) {
                 denominator = ((Integer) denominatorObject).doubleValue();
             } else {
                 denominator = (double) denominatorObject;
             }
 
-            retVal = numerator / denominator;            
+            // Jan 2020 add force to zero if denominator is 0
+            // division by zero is also caught in ExpressTree isHealothy()
+            if (denominator == 0) {
+                retVal = 0;
+            } else {
+                retVal = numerator / denominator;
+            }
+
         } catch (NullPointerException | SquidException e) {
             retVal = 0.0;
         }

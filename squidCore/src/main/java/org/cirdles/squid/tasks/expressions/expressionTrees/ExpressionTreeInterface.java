@@ -192,6 +192,8 @@ public interface ExpressionTreeInterface {
                 retVal[i] = ((Integer) objects[i]).doubleValue();
             } else if (objects[i] instanceof Long) {
                 retVal[i] = ((Long) objects[i]).doubleValue();
+            } else if (objects[i] instanceof Boolean) {
+                retVal[i] = 0.0;
             } else {
                 retVal[i] = (double) objects[i];
             }
