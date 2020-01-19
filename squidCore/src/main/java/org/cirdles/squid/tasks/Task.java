@@ -1797,6 +1797,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
         }
     }
+    
+    public void setUnknownGroupCommonLeadModel(List<ShrimpFractionExpressionInterface> spotsForExpression, ParametersModel commonLeadModel) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.setCommonLeadModel(commonLeadModel);
+        }
+    }
 
     public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {

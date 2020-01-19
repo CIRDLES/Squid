@@ -36,10 +36,12 @@ import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.If;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -221,6 +223,25 @@ public class ExpressionTree
                 }
             }
         }
+        // Jan 2020 added in missing check for divide by zero
+        if (operation instanceof Divide) {
+            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Double)) {
+                if (((Double) ((ConstantNode) childrenET.get(1)).getValue()) == 0) {
+                    retVal = false;
+                }
+            }
+        }
+
+        // Jan 2020 added in missing check for badly constructed if
+        if (operation instanceof If) {
+            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Boolean)) {
+                retVal = false;
+            }
+            if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
+                retVal = false;
+            }
+        }
+
         return retVal;
     }
 
@@ -349,6 +370,7 @@ public class ExpressionTree
             audit.append("Op ").append(operation.getName()).append(" requires/provides: ")
                     .append(requiredChildren).append(" / ").append(suppliedChildren).append(" arguments.");
 
+            int count = 0;
             for (ExpressionTreeInterface child : getChildrenET()) {
                 if (child instanceof ConstantNode) {
                     if (((ConstantNode) child).isMissingExpression()) {
@@ -363,6 +385,28 @@ public class ExpressionTree
                         audit.append("\n    Expression '").append((String) ((ShrimpSpeciesNode) child).getName()).append("' is not a valid argument.");
                     }
                 }
+
+                // Jan 2020 refinement
+                if (count == 1) {
+                    if (operation instanceof Divide) {
+                        if ((child instanceof ConstantNode) && (((ConstantNode) child).getValue() instanceof Double)) {
+                            if (((Double) ((ConstantNode) child).getValue()) == 0) {
+                                audit.append("\n    ** NOTE: Division by Zero! **");
+                            }
+                        }
+                    }
+                }
+
+                // Jan 2020 refinement
+                if ((count > 0) && (child instanceof ConstantNode)) {
+                    if (((ExpressionTree) child.getParentET()).getOperation() instanceof If) {
+                        if (((ConstantNode) child).getValue() instanceof Boolean) {
+                            audit.append("\n    ** NOTE: Boolean Operand Not Allowed **");
+                        }
+                    }
+                }
+
+                count++;
             }
 
             audit.append("\n    returns ").append(operation.printOutputValues());
@@ -392,9 +436,9 @@ public class ExpressionTree
         }
 
         if (isSquidSwitchSCSummaryCalculation()) {
-            targetPhrase = "SUMMARY(" 
-                    + (referenceMaterialCalc? "R" : "")
-                    + (squidSwitchSAUnknownCalculation? "U" : "")
+            targetPhrase = "SUMMARY("
+                    + (referenceMaterialCalc ? "R" : "")
+                    + (squidSwitchSAUnknownCalculation ? "U" : "")
                     + "):";
         }
 
