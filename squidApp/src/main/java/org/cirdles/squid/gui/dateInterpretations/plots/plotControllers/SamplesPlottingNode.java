@@ -342,7 +342,7 @@ public class SamplesPlottingNode extends HBox {
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
-                        sortFractionCheckboxesByValue(selectedExpression, currentSortOrder);
+                        sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
                         
                         if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
@@ -359,7 +359,7 @@ public class SamplesPlottingNode extends HBox {
                                         .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
                                                 selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());                        
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
-                        spotSummaryDetailsWM.rejectNone();//setRejectedIndices(((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails().getRejectedIndices());
+                        spotSummaryDetailsWM.rejectNone();
                         spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
                         spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
                         
@@ -378,13 +378,11 @@ public class SamplesPlottingNode extends HBox {
                                 0.0,
                                 plotsController);
                         
-                        sortFractionCheckboxesByValue(spotSummaryDetailsWM.getSelectedExpressionName(), spotSummaryDetailsWM.getPreferredViewSortOrder());
+                        sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
 
-                        //probabilitySlider.valueProperty().setValue(probabilitySlider.getValue());
                         updateSampleFromSlider(probabilitySlider.getValue());
-                        //((SampleNode) sampleNode).getPlotsController().refreshPlot();
                     }
                 }
             }
@@ -494,9 +492,7 @@ public class SamplesPlottingNode extends HBox {
                                 expressionComboBox.getSelectionModel().getSelectedItem().getExpressionName());
                     }
                     
-                    sortFractionCheckboxesByValue(
-                            sampleNode.getSpotSummaryDetailsWM().getSelectedExpressionName(),
-                            sampleNode.getSpotSummaryDetailsWM().getPreferredViewSortOrder());
+                    sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
                     plotsController.refreshPlot();
                 }
             }
@@ -634,11 +630,11 @@ public class SamplesPlottingNode extends HBox {
 
     /**
      *
-     * @param selectedFieldName the value of selectedFieldName
-     * @param savedPreferredViewSortOrder the value of
-     * savedPreferredViewSortOrder
+     * @param spotSummaryDetails the value of spotSummaryDetails
      */
-    private void sortFractionCheckboxesByValue(String selectedFieldName, int savedPreferredViewSortOrder) {
+    private void sortFractionCheckboxesByValue(SpotSummaryDetails spotSummaryDetails) {
+        String selectedFieldName = spotSummaryDetails.getSelectedExpressionName();
+        int savedPreferredViewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
         FXCollections.sort(sampleItem.getChildren(), (TreeItem node1, TreeItem node2) -> {
             // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
             int retVal = 0;
