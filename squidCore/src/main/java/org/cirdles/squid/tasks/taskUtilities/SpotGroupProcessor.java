@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.tasks.taskUtilities;
 
+import java.util.Arrays;
 import java.util.List;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.exceptions.SquidException;
@@ -49,58 +50,74 @@ public class SpotGroupProcessor {
 
         // make all spots selected then perform coherency standard
         // we don't care here if too few are chosen even though Ludwig's code does
-        // TODO: currently our WM math requires 3 spots minimum - may consider returning simple avg for 1 or 2 spots?
+        // TODO: currently our WM math requires 2 spots minimum - may consider returning simple avg for 1 or 2 spots?
         spotSummaryDetailsWM.rejectNone();
-
+        
         int countOfAcceptedSpots = 0;
         for (int i = 0; i < spotSummaryDetailsWM.getRejectedIndices().length; i++) {
-            // reject spot if value (age) is less than or equal to the 1-sigma abs unct > 
-            spotSummaryDetailsWM.getRejectedIndices()[i] = (spotSummaryDetailsWM.getValues()[0][0] <= spotSummaryDetailsWM.getValues()[0][1]);
+            // reject spot if value is less than or equal to the 1-sigma abs unct > 
+            spotSummaryDetailsWM.getRejectedIndices()[i] = (spotSummaryDetailsWM.getValues()[0][0] <= Math.abs(spotSummaryDetailsWM.getValues()[0][1]));
             countOfAcceptedSpots += spotSummaryDetailsWM.getRejectedIndices()[i] ? 0 : 1;
         }
-
-        ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
         
+        ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
+        String selectedExpressionName = spotSummaryDetailsWM.getSelectedExpressionName();
+        List<ShrimpFractionExpressionInterface> spotsUsedForCalculation;
+        
+        double[][] values = new double[3][7];
         boolean doContinue = true;
         while (doContinue && (countOfAcceptedSpots > 2)) {
-
-            List<ShrimpFractionExpressionInterface> spotsUsedForCalculation = spotSummaryDetailsWM.retrieveActiveSpots();
             
-
+            spotsUsedForCalculation = spotSummaryDetailsWM.retrieveActiveSpots();
+            
             try {
-                double[][] values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, task));
+                values = convertObjectArrayToDoubles(expressionTree.eval(spotSummaryDetailsWM.retrieveActiveSpots(), task));
 
                 // check probability
                 if (values[0][5] < minCoherentProbability) {
                     // try to reject a spot
-                    double[] agesOfSelectedSpots = new double[spotsUsedForCalculation.size()];
+                    double[] valuesOfSelectedSpots = new double[spotsUsedForCalculation.size()];
 
                     // accumulate values from active spots
                     int indexOfAccumulator = 0;
                     int indexOfSpots = 0;
                     for (ShrimpFractionExpressionInterface spot : spotSummaryDetailsWM.getSelectedSpots()) {
                         if (!spotSummaryDetailsWM.getRejectedIndices()[indexOfSpots]) {
-                            double[] ageResults = spot.getTaskExpressionsEvaluationsPerSpotByField(
-                                    spot.getSelectedAgeExpressionName())[0];
-                            agesOfSelectedSpots[indexOfAccumulator] = ageResults[0];
+                            double[] valueAndUnctOfSelectedSpot;
+                            if (selectedExpressionName.startsWith("/", 3)) {
+                                // case of raw ratios
+                                valueAndUnctOfSelectedSpot = Arrays.stream(spot
+                                        .getIsotopicRatioValuesByStringName(selectedExpressionName)).toArray(double[][]::new)[0];
+                            } else {
+                                valueAndUnctOfSelectedSpot = spot.getTaskExpressionsEvaluationsPerSpotByField(
+                                        selectedExpressionName)[0];
+                            }
+                            valuesOfSelectedSpots[indexOfAccumulator] = valueAndUnctOfSelectedSpot[0];
                             indexOfAccumulator++;
                         }
                         indexOfSpots++;
                     }
 
                     // seek next spot to reject
-                    double median = Utilities.median(agesOfSelectedSpots);
+                    double median = Utilities.median(valuesOfSelectedSpots);
                     double currentMaxResidual = 0;
                     int indexToReject = -1;
                     indexOfSpots = 0;
                     for (ShrimpFractionExpressionInterface spot : spotSummaryDetailsWM.getSelectedSpots()) {
                         // if spot not rejected, check its residual
                         if (!spotSummaryDetailsWM.getRejectedIndices()[indexOfSpots]) {
-                            double[] ageResults = spot.getTaskExpressionsEvaluationsPerSpotByField(
-                                    spot.getSelectedAgeExpressionName())[0];
-                            double ageOfSelectedSpot = ageResults[0];
-                            double oneSigmaAbsUnctAgeOfSelectedSpot = ageResults[1];
-                            double wtdResidual = Math.abs((ageOfSelectedSpot - median) / oneSigmaAbsUnctAgeOfSelectedSpot);
+                            double[] valueAndUnctOfSelectedSpot;
+                            if (selectedExpressionName.startsWith("/", 3)) {
+                                // case of raw ratios
+                                valueAndUnctOfSelectedSpot = Arrays.stream(spot
+                                        .getIsotopicRatioValuesByStringName(selectedExpressionName)).toArray(double[][]::new)[0];
+                            } else {
+                                valueAndUnctOfSelectedSpot = spot.getTaskExpressionsEvaluationsPerSpotByField(
+                                        selectedExpressionName)[0];
+                            }
+                            double valueOfSelectedSpot = valueAndUnctOfSelectedSpot[0];
+                            double oneSigmaAbsUnctOfSelectedSpot = valueAndUnctOfSelectedSpot[1];
+                            double wtdResidual = Math.abs((valueOfSelectedSpot - median) / oneSigmaAbsUnctOfSelectedSpot);
                             if (wtdResidual > currentMaxResidual) {
                                 currentMaxResidual = wtdResidual;
                                 indexToReject = indexOfSpots;
@@ -108,7 +125,7 @@ public class SpotGroupProcessor {
                         }
                         indexOfSpots++;
                     }
-
+                    
                     if (indexToReject > -1) {
                         // reject and repeat
                         spotSummaryDetailsWM.setIndexOfRejectedIndices(indexToReject, true);
@@ -125,6 +142,12 @@ public class SpotGroupProcessor {
                 // TODO: throw and provide feedback
                 doContinue = false;
             }
+        } // end of while
+        // store current weighted mean
+        try {
+            values = convertObjectArrayToDoubles(expressionTree.eval(spotSummaryDetailsWM.retrieveActiveSpots(), task));
+        } catch (SquidException squidException) {
         }
+        spotSummaryDetailsWM.setValues(values);
     }
 }
