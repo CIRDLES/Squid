@@ -17,6 +17,7 @@
 package org.cirdles.squid.gui;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -35,16 +36,18 @@ import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
-import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
+import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -73,10 +76,6 @@ import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-
-import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
-import org.cirdles.squid.tasks.Task;
-
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
@@ -91,6 +90,8 @@ public class SquidUIController implements Initializable {
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
     public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
+    @FXML
+    private Menu projectMenu;
     @FXML
     private Menu openRecentOPFileMenu;
     @FXML
@@ -195,6 +196,7 @@ public class SquidUIController implements Initializable {
 
     public static ParametersLauncher parametersLauncher;
     public static SquidReportTableLauncher squidReportTableLauncher;
+    public static HighlightMainMenu menuHighlighter;
 
     /**
      * Initializes the controller class.
@@ -211,6 +213,8 @@ public class SquidUIController implements Initializable {
         mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
+
+        menuHighlighter = new HighlightMainMenu();
 
         PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
 
@@ -365,6 +369,7 @@ public class SquidUIController implements Initializable {
 
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
+            menuHighlighter.highlight(projectMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("ProjectManager >>>>   " + iOException.getMessage());
         }
@@ -389,7 +394,6 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(ratiosManagerUI);
 
         mainPane.getChildren().remove(expressionBuilderUI);
-
         mainPane.getChildren().remove(squidReportSettingsUI);
 
         mainPane.getChildren().remove(reductionManagerUI);
@@ -442,7 +446,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -495,7 +499,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected file:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -506,9 +510,9 @@ public class SquidUIController implements Initializable {
 
         SquidMessageDialog.showInfoDialog(
                 "To join two Prawn XML files, be sure they are in the same folder, \n\tand then in the next dialog, choose both files."
-                + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
-                + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
-                + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
+                        + "\n\nNotes: \n\t1) Joining will be done by comparing the timestamps of the first run in \n\t    each file to determine the order of join."
+                        + "\n\n\t2) The joined file will be written to disk and then read back in as a \n\t    check.  The name of the new file"
+                        + " will appear in the project manager's \n\t    text box for the Prawn XML file name.",
                 primaryStageWindow);
 
         try {
@@ -530,7 +534,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open and join the selected files:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
 
@@ -694,6 +698,9 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(sessionAuditUI);
             sessionAuditUI.setVisible(false);
+
+
+            menuHighlighter.highlight(managePrawnFileMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("SessionAudit >>>>   " + iOException.getMessage());
         }
@@ -711,6 +718,8 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(massesAuditUI);
             massesAuditUI.setVisible(false);
+
+            menuHighlighter.highlight(managePrawnFileMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("MassesAudit >>>>   " + iOException.getMessage());
         }
@@ -728,6 +737,8 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(spotManagerUI);
             spotManagerUI.setVisible(false);
+
+            menuHighlighter.highlight(managePrawnFileMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("SpotManager >>>>   " + iOException.getMessage());
         }
@@ -737,7 +748,7 @@ public class SquidUIController implements Initializable {
         // present warning if needed
         if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
-                    + "Sample names using the Data menu.\n",
+                            + "Sample names using the Data menu.\n",
                     null);
         }
 
@@ -758,6 +769,7 @@ public class SquidUIController implements Initializable {
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageInterpretationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
+            menuHighlighter.highlight(manageTasksMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("TaskManager >>>>   " + iOException.getMessage());
         }
@@ -775,6 +787,8 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(isotopesManagerUI);
             isotopesManagerUI.setVisible(false);
+
+            menuHighlighter.highlight(manageRatiosMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
         }
@@ -799,6 +813,7 @@ public class SquidUIController implements Initializable {
 
             showUI(ratiosManagerUI);
 
+            menuHighlighter.highlight(manageRatiosMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("RatioManager >>>>   " + iOException.getMessage());
         }
@@ -823,6 +838,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(expressionBuilderUI);
             expressionBuilderUI.setVisible(false);
 
+            menuHighlighter.highlight(manageExpressionsMenu);
         } catch (IOException ex) {
             Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -843,6 +859,7 @@ public class SquidUIController implements Initializable {
 
             showUI(reducedDataReportManagerUI);
 
+            menuHighlighter.highlight(manageReportsMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
         }
@@ -862,6 +879,7 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(taskDesignerUI);
             showUI(taskDesignerUI);
 
+            menuHighlighter.highlight(manageTasksMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("TaskDesigner >>>>   " + iOException.getMessage());
         }
@@ -1149,7 +1167,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
 
             //BrowserControl.showURI(reportTableFile.getCanonicalPath());
@@ -1166,7 +1184,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
             //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
@@ -1182,7 +1200,7 @@ public class SquidUIController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
 //            BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
@@ -1508,7 +1526,7 @@ public class SquidUIController implements Initializable {
 
             SquidMessageDialog.showWarningDialog(
                     "Squid encountered an error while trying to open the selected Prawn File:\n\n"
-                    + message,
+                            + message,
                     primaryStageWindow);
         }
     }
@@ -1597,9 +1615,9 @@ public class SquidUIController implements Initializable {
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the Task Designer specifies "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
-                    + ".",
+                            + " masses, but the Task Designer specifies "
+                            + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                            + ".",
                     null);
         }
     }
@@ -1632,6 +1650,11 @@ public class SquidUIController implements Initializable {
     @FXML
     public void reportLayoutManagerOnAction(ActionEvent actionEvent) {
         mainPane.getChildren().remove(squidReportSettingsUI);
+        launchReportLayoutManager();
+        showUI(squidReportSettingsUI);
+    }
+
+    private void launchReportLayoutManager() {
         try {
             squidReportSettingsUI = FXMLLoader.load(getClass().getResource("squidReportTable/SquidReportSettings.fxml"));
             squidReportSettingsUI.setId("SquidReportSettings");
@@ -1644,10 +1667,11 @@ public class SquidUIController implements Initializable {
             mainPane.getChildren().add(squidReportSettingsUI);
             squidReportSettingsUI.setVisible(false);
 
+            menuHighlighter.highlight(manageReportsMenu);
+
         } catch (IOException ex) {
             Logger.getLogger(SquidUIController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        showUI(squidReportSettingsUI);
     }
 
     @FXML
@@ -1661,5 +1685,41 @@ public class SquidUIController implements Initializable {
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_SAMPLE;
         launchPlots();
         // launchWeightedMeans();
+    }
+
+    private class HighlightMainMenu {
+
+        private Menu highlightedMenu;
+
+        public HighlightMainMenu() {
+            this(null);
+        }
+
+        public HighlightMainMenu(Menu highlightedMenu) {
+            this.highlightedMenu = highlightedMenu;
+
+        }
+
+        public void highlight(Menu item) {
+            deHighlight(highlightedMenu);
+
+            if (item != null) {
+                item.getStyleClass().add("highlightedMenu");
+            }
+            highlightedMenu = item;
+        }
+
+        public void deHighlight(Menu item) {
+            if (item != null) {
+                ObservableList<String> styles = item.getStyleClass();
+                for (int i = 0; i < styles.size(); i++) {
+                    String currStyle = styles.get(i);
+                    if (currStyle.compareTo("highlightedMenu") == 0) {
+                        styles.remove(i);
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

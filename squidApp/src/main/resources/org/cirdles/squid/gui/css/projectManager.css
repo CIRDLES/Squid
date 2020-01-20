@@ -295,3 +295,7 @@
     -fx-font-size: 10pt;
     -fx-font-color: rgb(43, 32, 32);
 }
+
+.highlightedMenu {
+    -fx-background-color: Secondary;
+}
