@@ -7,9 +7,15 @@ and open the template in the editor.
     Created on : Jul 24, 2018, 6:44:46 PM
     Author     : ryanb
 */
+{
+    Primary: #cfd8dc;
+    P-Light: #efefef;
+    Secondary: #FB6D42
+}
+
 
 .root {
-    -fx-background-color: #666666;
+    -fx-background-color: P-Light;
 }
 
 .table-view .table-cell {
@@ -22,19 +28,11 @@ and open the template in the editor.
     -fx-font-size: 9pt;
 }
 
-.tab-pane {
-    -fx-background-color: ghostwhite;
-}
-
-.tab-pane .tab-pane {
-    -fx-background-color: lightgray;
-}
-
 .menu-bar {
-    -fx-background-color: orange;
-    -fx-border-color: #f0cd90;
-    -fx-border-width: 2;
-    -fx-text-fill: ghostwhite;
+    -fx-background-color: Secondary;
+    -fx-border-color: Secondary;
+    -fx-border-width: 0;
+    -fx-text-fill: Black;
 }
 
 #physConstReferencesPane {
@@ -47,23 +45,61 @@ and open the template in the editor.
 }
 
 .button {
-    -fx-background-color: darkorange;
+    -fx-background-color: Secondary;
     -fx-font-family: "SansSerif";
     -fx-font-size: 11pt;
-    -fx-text-fill: ghostwhite;
+    -fx-text-fill: Black;
 }
 
-.tab:selected {
-    -fx-background-color: orangered;
+.button:hover {
+    -fx-background-color: derive(-fx-focus-color, 40%);
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:top {
+    -fx-border-color: #a3a7a8;
+    -fx-border-radius: 5 5 0 0;
+    -fx-background-color: white;
+    -fx-pref-height: 40px;
+    -fx-background-insets: 0;
+}
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected:top {
+    -fx-border-color: Secondary #a3a7a8 #a3a7a8 #a3a7a8;
+    -fx-border-width: 5 1 1 1;
+    -fx-border-radius: 5 5 0 0;
+    -fx-background-color: white;
+    -fx-pref-height: 40px;
+    -fx-background-insets: 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: Secondary
+}
+
+
+.tab-pane > .tab-header-area > .headers-region > .tab:selected > .tab-container > .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: Secondary;
     -fx-font-weight: bold;
 }
 
-.tab {
-    -fx-background-color: orange;
+.tab-pane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: Secondary;
+    -fx-font-weight: bold;
+}
+
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: white;
+    -fx-border-color: #a3a7a8;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-insets: 0;
+    -fx-pref-height: 45px;
 }
 
 #labNameLabel {
-    -fx-text-fill: ghostwhite;
+    -fx-text-fill: DarkSlateGray;
 }
 
 #apparentDates *.text {

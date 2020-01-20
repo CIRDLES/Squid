@@ -205,6 +205,7 @@ public class CommonLeadAssignmentController implements Initializable {
             }
 
             suppressChangeAction = true;
+
             // set radio button based on first spot
             switch (((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getCommonLeadSpecsForSpot().getMethodSelected()) {
                 case METHOD_COMMON_LEAD_MODEL:
@@ -218,6 +219,11 @@ public class CommonLeadAssignmentController implements Initializable {
                     break;
                 default:
             }
+
+            // update combobox
+            treeItemSampleInfo.getValue().getCommonLeadModels().getSelectionModel().select(
+                    ((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getCommonLeadModel());
+
             // update text for SK age
             treeItemSampleInfo.getValue().getSkStarValueTextField().setText(
                     Double.toString(((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue())
@@ -282,6 +288,11 @@ public class CommonLeadAssignmentController implements Initializable {
          * @return the chooseModelRB
          */
         public RadioButton getChooseModelRB();
+
+        /**
+         * @return the commonLeadModels
+         */
+        public ComboBox<ParametersModel> getCommonLeadModels();
 
         /**
          * @return the chooseModelRB
@@ -430,7 +441,12 @@ public class CommonLeadAssignmentController implements Initializable {
 
         @Override
         public TextField getSkStarValueTextField() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return null;
+        }
+
+        @Override
+        public ComboBox<ParametersModel> getCommonLeadModels() {
+            return null;
         }
 
     }
@@ -453,7 +469,7 @@ public class CommonLeadAssignmentController implements Initializable {
         protected RadioButton chooseSKStarRB;
 
         @FXML
-        protected ComboBox<ParametersModel> commonLeadModels;
+        private ComboBox<ParametersModel> commonLeadModels;
 
         @FXML
         protected VBox nodNameVbox;
@@ -537,6 +553,9 @@ public class CommonLeadAssignmentController implements Initializable {
                             }
                         }
                         SquidProject.setProjectChanged(true);
+                        getCommonLeadModels().setDisable(false);
+                    } else {
+                        getCommonLeadModels().setDisable(true && !suppressChangeAction);
                     }
                 }
             });
@@ -551,6 +570,26 @@ public class CommonLeadAssignmentController implements Initializable {
             commonLeadModels.setConverter(new ParameterModelStringConverter());
             commonLeadModels.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
             commonLeadModels.getSelectionModel().select(squidProject.getTask().getCommonPbModel());
+            commonLeadModels.valueProperty().addListener((ObservableValue<? extends ParametersModel> observableModel, ParametersModel oldModel, ParametersModel newModel) -> {
+                if (chooseModelRB.isSelected()) {
+                    ((Task) squidProject.getTask()).setUnknownGroupCommonLeadModel(sampleGroup, newModel);
+                    ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                    SpotSummaryDetails spotSummaryDetails
+                            = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                    mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
+                    try {
+                        updateWeightedMeanLabel(
+                                ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                sampleGroupName);
+                    } catch (Exception e) {
+                    }
+                    for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                        ((CommonLeadSpotDisplay) treeItem).displayData();
+                    }
+                    SquidProject.setProjectChanged(true);
+                }
+            });
             commonLeadModelsVbox.getChildren().add(commonLeadModels);
             this.getChildren().add(commonLeadModelsVbox);
 
@@ -832,7 +871,7 @@ public class CommonLeadAssignmentController implements Initializable {
                         } else {
                             // get some settings from current wm
                             SpotSummaryDetails currentSpotSummaryDetails = mapOfWeightedMeansBySampleNames.get(sampleGroupName);
-                            
+
                             ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleGroup, sampleAgeType);
                             ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
                             SpotSummaryDetails spotSummaryDetailsWM
@@ -882,6 +921,13 @@ public class CommonLeadAssignmentController implements Initializable {
 
         public RadioButton getChooseModelRB() {
             return chooseModelRB;
+        }
+
+        /**
+         * @return the commonLeadModels
+         */
+        public ComboBox<ParametersModel> getCommonLeadModels() {
+            return commonLeadModels;
         }
 
         /**

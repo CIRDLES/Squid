@@ -44,7 +44,7 @@ public class If extends Function {
         labelsForOutputValues = new String[][]{{"Conditional"}};
         labelsForInputValues = new String[]{"condition", "expressionIfTrue", "expressionIfFalse"};
         definition = "Checks whether a condition is met,\n "
-                    + "and returns one value if true, another if false" ;
+                    + "and returns one double value if true, another double value if false" ;
     }
 
     /**
