@@ -613,6 +613,7 @@ public class SquidUIController implements Initializable {
         confirmSaveOnProjectClose();
         removeAllManagers();
         SquidUI.updateStageTitle("");
+        menuHighlighter.deHighlight();
     }
 
     @FXML
@@ -1315,6 +1316,8 @@ public class SquidUIController implements Initializable {
             }
 
             showUI(weightedMeansUI);
+
+            menuHighlighter.highlight(manageInterpretationsMenu);
         }
     }
 
@@ -1337,6 +1340,7 @@ public class SquidUIController implements Initializable {
         } else {
             launchVisualizations();
             showUI(topsoilPlotUI);
+            menuHighlighter.highlight(manageInterpretationsMenu);
         }
     }
 
@@ -1701,12 +1705,16 @@ public class SquidUIController implements Initializable {
         }
 
         public void highlight(Menu item) {
-            deHighlight(highlightedMenu);
+            deHighlight();
 
             if (item != null) {
                 item.getStyleClass().add("highlightedMenu");
             }
             highlightedMenu = item;
+        }
+
+        public void deHighlight() {
+            deHighlight(highlightedMenu);
         }
 
         public void deHighlight(Menu item) {
