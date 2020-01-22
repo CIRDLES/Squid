@@ -20,6 +20,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToBooleans;
 
@@ -44,7 +45,7 @@ public class If extends Function {
         labelsForOutputValues = new String[][]{{"Conditional"}};
         labelsForInputValues = new String[]{"condition", "expressionIfTrue", "expressionIfFalse"};
         definition = "Checks whether a condition is met,\n "
-                    + "and returns one double value if true, another double value if false" ;
+                + "and returns one double value if true, another double value if false";
     }
 
     /**
@@ -63,12 +64,20 @@ public class If extends Function {
 
         try {
             if (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) {
-                retVal = childrenET.get(1).eval(shrimpFractions, task);
+                if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Boolean)) {
+                    retVal = new Object[][]{{0}};
+                } else {
+                    retVal = childrenET.get(1).eval(shrimpFractions, task);
+                }
             } else {
-                retVal = childrenET.get(2).eval(shrimpFractions, task);
+                if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
+                    retVal = new Object[][]{{0}};
+                } else {
+                    retVal = childrenET.get(2).eval(shrimpFractions, task);
+                }
             }
         } catch (SquidException squidException) {
-            retVal = new Object[][]{{}};
+            retVal = new Object[][]{{0}};
         }
 
         return retVal;
