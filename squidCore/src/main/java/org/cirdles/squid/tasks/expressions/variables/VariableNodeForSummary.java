@@ -18,12 +18,14 @@ package org.cirdles.squid.tasks.expressions.variables;
 import com.thoughtworks.xstream.XStream;
 import java.util.List;
 import java.util.Map;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -32,6 +34,7 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
+    private boolean showIndex;
 
     /**
      *
@@ -59,6 +62,10 @@ public class VariableNodeForSummary extends ExpressionTree {
         if (uncertaintyDirective.length() > 0) {
             this.index = 1;
         }
+        this.showIndex = index > 0;
+
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     @Override
@@ -107,21 +114,27 @@ public class VariableNodeForSummary extends ExpressionTree {
 
         Map<String, SpotSummaryDetails> detailsMap = task.getTaskExpressionsEvaluationsPerSpotSet();
         SpotSummaryDetails detail = detailsMap.get(name);
-        double[][] valuesAll = detail.getValues().clone();
+        double[][] values;
 
-        if (uncertaintyDirective.compareTo("%") == 0) {
-            // index should be 1 from constructor
-            valuesAll[0][1] = valuesAll[0][1] / valuesAll[0][0] * 100;
-        }
+        if (detail != null) {
+            double[][] valuesAll = clone2dArray(detail.getValues());
 
-        double[][] values = valuesAll.clone();
-
-        if (index > 0) {
-            // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
-            values = new double[1][valuesAll[0].length - index];
-            for (int i = index; i < valuesAll[0].length; i++) {
-                values[0][i - index] = valuesAll[0][i];
+            if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
+                // index should be 1 from constructor
+                valuesAll[0][1] = Math.abs(valuesAll[0][1] / valuesAll[0][0] * 100.0);
             }
+
+            values = clone2dArray(valuesAll);
+
+            if (index > 0) {
+                // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
+                values = new double[1][valuesAll[0].length - index];
+                for (int i = index; i < valuesAll[0].length; i++) {
+                    values[0][i - index] = valuesAll[0][i];
+                }
+            }
+        } else {
+            values = new double[][]{{0.0, 0.0}, {0.0, 0.0}};
         }
 
         Object[][] retVal = convertArrayToObjects(values);
@@ -137,7 +150,8 @@ public class VariableNodeForSummary extends ExpressionTree {
     public String toStringMathML() {
         String retVal
                 = "<mtext>\n"
-                + name + "[" + index + "]"
+                + name
+                + (showIndex ? ("[" + index + "]") : "")
                 + "</mtext>\n";
 
         if (uncertaintyDirective.length() > 0) {

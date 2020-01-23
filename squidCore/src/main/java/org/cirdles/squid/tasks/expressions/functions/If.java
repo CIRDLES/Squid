@@ -17,6 +17,7 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -29,6 +30,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class If extends Function {
 
+    private static final long serialVersionUID = -40046344284456075L;
+
     /**
      *
      */
@@ -39,11 +42,14 @@ public class If extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Conditional"}};
-        labelsForInputValues = new String[]{"condition","expressionIfTrue","expressionIfFalse"};
+        labelsForInputValues = new String[]{"condition", "expressionIfTrue", "expressionIfFalse"};
+        definition = "Checks whether a condition is met,\n "
+                    + "and returns one double value if true, another double value if false" ;
     }
 
     /**
      * If expects child 0 as boolean and child 1 and 2 as double
+     *
      * @param childrenET the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task
@@ -54,13 +60,14 @@ public class If extends Function {
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
         Object[][] retVal;
-        try {     
-            if (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]){
+
+        try {
+            if (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) {
                 retVal = childrenET.get(1).eval(shrimpFractions, task);
             } else {
-                 retVal = childrenET.get(2).eval(shrimpFractions, task);
-            }           
-        } catch (Exception e) {
+                retVal = childrenET.get(2).eval(shrimpFractions, task);
+            }
+        } catch (SquidException squidException) {
             retVal = new Object[][]{{}};
         }
 
@@ -79,9 +86,7 @@ public class If extends Function {
                 + "<mi>if</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

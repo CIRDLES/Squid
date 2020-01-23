@@ -3,13 +3,13 @@
 }
 
 .table-view {
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Monospaced";
     -fx-font-size: 15;
     -fx-text-fill: black;
 }
 
 .table-view .table-column {
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Monospaced";
     -fx-font-size: 14;
     -fx-alignment: center-right;
 }

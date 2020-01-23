@@ -75,10 +75,10 @@ public abstract class ReportSpecificationsAbstract {
         {"", "", "Stage", "Z", "", "getStageZ", "<INT>", "",
             "", "true", "true", "0", "", "", "false", "false"
         },
-        {"", "", "", "Qt1y", "", "getQtlY", "<INT>", "",
+        {"", "", "", "Qt1y", "", "getQt1Y", "<INT>", "",
             "", "true", "true", "0", "", "", "false", "false"
         },
-        {"", "", "", "Qt1z", "", "getQtlZ", "<INT>", "",
+        {"", "", "", "Qt1z", "", "getQt1Z", "<INT>", "",
             "", "true", "true", "0", "", "", "false", "false"
         },
         {"", "Primary", "beam", "(na)", "", "getPrimaryBeam", "<DOUBLE>", "",

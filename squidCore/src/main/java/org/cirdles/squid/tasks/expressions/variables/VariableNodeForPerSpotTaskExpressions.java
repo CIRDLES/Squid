@@ -19,10 +19,12 @@ import com.thoughtworks.xstream.XStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -91,8 +93,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     public boolean isValid() {
         return (name.length() > 0);
     }
-    
-        @Override
+
+    @Override
     public boolean usesOtherExpression() {
         return true;
     }
@@ -132,14 +134,14 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                     double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
                     if (values.length > 1) {
 
-                        if (uncertaintyDirective.compareTo("%") == 0) {
+                        if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                             // index should be 1 from constructor
-                            values[1] = values[1] / values[0] * 100;
+                            values[1] = Math.abs(values[1] / values[0] * 100.0);
                         }
-                        
+
                         // july 2018
-                        if (task.expressionIsNuSwitched(name)){
-                            values[1]= org.cirdles.ludwig.squid25.Utilities.roundedToSize(values[1], 12);
+                        if (task.expressionIsNuSwitched(name)) {
+                            values[1] = squid3RoundedToSize(values[1], 12);
                         }
 
                         if (index > 0) {
@@ -147,6 +149,11 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                             for (int j = index; j < values.length; j++) {
                                 values[j - index] = values[j];
                             }
+                        }
+                    } else {
+                        // return 0 for uncertainty if none exists
+                        if (uncertaintyDirective.length() > 0) {
+                            values[0] = 0.0;
                         }
                     }
 
@@ -158,6 +165,10 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
             }
         } else {
             healthy = false;
+            double[] values = new double[]{0.0, 0.0};
+            for (int i = 0; i < shrimpFractions.size(); i++) {
+                retVal[i] = convertArrayToObjects(values);
+            }
         }
 
         return retVal;

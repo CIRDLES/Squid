@@ -17,7 +17,7 @@ package org.cirdles.squid.tasks.evaluationEngines;
 
 import java.io.Serializable;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.ludwig.squid25.Utilities;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  *
@@ -60,8 +60,8 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
         this.ratEqTime = ratEqTime.clone();
         this.ratEqErr = ratEqErr.clone();
 
-        this.ratioVal = Utilities.roundedToSize(ratioVal, sigDigs);
-        this.ratioFractErr = Utilities.roundedToSize(ratioFractErr, sigDigs);
+        this.ratioVal = squid3RoundedToSize(ratioVal, sigDigs);
+        this.ratioFractErr = squid3RoundedToSize(ratioFractErr, sigDigs);
     }
 
     /**

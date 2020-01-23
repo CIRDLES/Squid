@@ -25,8 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -46,8 +49,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private int stageX;
     private int stageY;
     private int stageZ;
-    private int qtlY;
-    private int qtlZ;
+    private int qt1Y;
+    private int qt1Z;
     private double primaryBeam;
     private double[] countTimeSec;
     private String[] namesOfSpecies;
@@ -78,44 +81,57 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private boolean selected;
 
+    private int countOfNonPositiveSBMCounts;
+
+    // sept 2019 to accommodate the customization of individual sample spots  
+    private CommonLeadSpecsForSpot commonLeadSpecsForSpot;
+
     /**
      *
      */
     public ShrimpFraction() {
-        fractionID = "NONE";
-        spotNumber = -1;
-        nameOfMount = "NONE";
-        dateTimeMilliseconds = 0l;
-        hours = 0.0;
-        deadTimeNanoseconds = 0;
-        sbmZeroCps = 0;
-        countTimeSec = new double[0];
-        namesOfSpecies = new String[0];
-        peakMeasurementsCount = 0;
-        isotopicRatiosII = new TreeSet<>();
-        rawPeakData = new int[0][0];
-        rawSBMData = new int[0][0];
-        totalCounts = new double[0][0];
-        totalCountsSBM = new double[0][0];
-        timeStampSec = new double[0][0];
-        trimMass = new double[0][0];
-        totalCps = new double[0];
-        netPkCps = new double[0][0];
-        pkFerr = new double[0][0];
-        referenceMaterial = false;
-        concentrationReferenceMaterial = false;
+        this.fractionID = "NONE";
+        this.spotNumber = -1;
+        this.nameOfMount = "NONE";
+        this.dateTimeMilliseconds = 0l;
+        this.hours = 0.0;
+        this.deadTimeNanoseconds = 0;
+        this.sbmZeroCps = 0;
+        this.stageX = 0;
+        this.stageY = 0;
+        this.stageZ = 0;
+        this.qt1Y = 0;
+        this.qt1Z = 0;
+        this.primaryBeam = 0;
+        this.countTimeSec = new double[0];
+        this.namesOfSpecies = new String[0];
+        this.peakMeasurementsCount = 0;
+        this.isotopicRatiosII = new TreeSet<>();
+        this.rawPeakData = new int[0][0];
+        this.rawSBMData = new int[0][0];
+        this.totalCounts = new double[0][0];
+        this.totalCountsSBM = new double[0][0];
+        this.timeStampSec = new double[0][0];
+        this.trimMass = new double[0][0];
+        this.totalCps = new double[0];
+        this.netPkCps = new double[0][0];
+        this.pkFerr = new double[0][0];
+        this.referenceMaterial = false;
+        this.concentrationReferenceMaterial = false;
 
-        reducedPkHt = new double[0][0];
-        reducedPkHtFerr = new double[0][0];
+        this.reducedPkHt = new double[0][0];
+        this.reducedPkHtFerr = new double[0][0];
 
-        pkInterpScanArray = new double[0];
+        this.pkInterpScanArray = new double[0];
 
-        taskExpressionsForScansEvaluated = new ArrayList<>();
+        this.taskExpressionsForScansEvaluated = new ArrayList<>();
 
-        taskExpressionsEvaluationsPerSpot = new HashMap<>();
+        this.taskExpressionsEvaluationsPerSpot = new HashMap<>();
 
         this.selected = true;
-
+        this.countOfNonPositiveSBMCounts = 0;
+        
+        this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
     }
 
     /**
@@ -208,6 +224,11 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return dateTimeMilliseconds;
     }
 
+    @Override
+    public String getDateTime() {
+        return CalamariReportsEngine.getFormattedDate(dateTimeMilliseconds);
+    }
+
     /**
      * @param dateTimeMilliseconds the dateTimeMilliseconds to set
      */
@@ -289,32 +310,32 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * @return the qtlY
+     * @return the qt1Y
      */
-    public int getQtlY() {
-        return qtlY;
+    public int getQt1Y() {
+        return qt1Y;
     }
 
     /**
-     * @param qtlY the qtlY to set
+     * @param qt1Y the qt1Y to set
      */
-    public void setQtlY(int qtlY) {
-        this.qtlY = qtlY;
+    public void setQt1Y(int qt1Y) {
+        this.qt1Y = qt1Y;
     }
 
     /**
-     * @return the qtlZ
+     * @return the qt1Z
      */
     @Override
-    public int getQtlZ() {
-        return qtlZ;
+    public int getQt1Z() {
+        return qt1Z;
     }
 
     /**
-     * @param qtlZ the qtlZ to set
+     * @param qt1Z the qt1Z to set
      */
-    public void setQtlZ(int qtlZ) {
-        this.qtlZ = qtlZ;
+    public void setQt1Z(int qt1Z) {
+        this.qt1Z = qt1Z;
     }
 
     /**
@@ -386,28 +407,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the rawPeakData
      */
     public int[][] getRawPeakData() {
-        return rawPeakData.clone();
+        return clone2dArray(rawPeakData);
     }
 
     /**
      * @param rawPeakData the rawPeakData to set
      */
     public void setRawPeakData(int[][] rawPeakData) {
-        this.rawPeakData = rawPeakData.clone();
+        this.rawPeakData = clone2dArray(rawPeakData);
     }
 
     /**
      * @return the rawSBMData
      */
     public int[][] getRawSBMData() {
-        return rawSBMData.clone();
+        return clone2dArray(rawSBMData);
     }
 
     /**
      * @param rawSBMData the rawSBMData to set
      */
     public void setRawSBMData(int[][] rawSBMData) {
-        this.rawSBMData = rawSBMData.clone();
+        this.rawSBMData = clone2dArray(rawSBMData);
     }
 
     /**
@@ -415,14 +436,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTotalCounts() {
-        return totalCounts.clone();
+        return clone2dArray(totalCounts);
     }
 
     /**
      * @param totalCounts the totalCounts to set
      */
     public void setTotalCounts(double[][] totalCounts) {
-        this.totalCounts = totalCounts.clone();
+        this.totalCounts = clone2dArray(totalCounts);
     }
 
     /**
@@ -430,28 +451,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTotalCountsOneSigmaAbs() {
-        return totalCountsOneSigmaAbs.clone();
+        return clone2dArray(totalCountsOneSigmaAbs);
     }
 
     /**
      * @param totalCountsOneSigmaAbs the totalCountsOneSigmaAbs to set
      */
     public void setTotalCountsOneSigmaAbs(double[][] totalCountsOneSigmaAbs) {
-        this.totalCountsOneSigmaAbs = totalCountsOneSigmaAbs.clone();
+        this.totalCountsOneSigmaAbs = clone2dArray(totalCountsOneSigmaAbs);
     }
 
     /**
      * @return the totalCountsSBM
      */
     public double[][] getTotalCountsSBM() {
-        return totalCountsSBM.clone();
+        return clone2dArray(totalCountsSBM);
     }
 
     /**
      * @param totalCountsSBM the totalCountsSBM to set
      */
     public void setTotalCountsSBM(double[][] totalCountsSBM) {
-        this.totalCountsSBM = totalCountsSBM.clone();
+        this.totalCountsSBM = clone2dArray(totalCountsSBM);
     }
 
     /**
@@ -459,28 +480,28 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getTimeStampSec() {
-        return timeStampSec.clone();
+        return clone2dArray(timeStampSec);
     }
 
     /**
      * @param timeStampSec the timeStampSec to set
      */
     public void setTimeStampSec(double[][] timeStampSec) {
-        this.timeStampSec = timeStampSec.clone();
+        this.timeStampSec = clone2dArray(timeStampSec);
     }
 
     /**
      * @return the trimMass
      */
     public double[][] getTrimMass() {
-        return trimMass.clone();
+        return clone2dArray(trimMass);
     }
 
     /**
      * @param trimMass the trimMass to set
      */
     public void setTrimMass(double[][] trimMass) {
-        this.trimMass = trimMass.clone();
+        this.trimMass = clone2dArray(trimMass);
     }
 
     /**
@@ -489,6 +510,17 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public double[] getTotalCps() {
         return totalCps.clone();
+    }
+
+    @Override
+    public double[] getNscansTimesCountTimeSec() {
+        int piNscans = timeStampSec.length;
+        double[] product = new double[piNscans];
+        for (int i = 0; i < piNscans; i++) {
+            product[i] = piNscans * countTimeSec[i];
+        }
+
+        return product;
     }
 
     /**
@@ -504,14 +536,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getNetPkCps() {
-        return netPkCps.clone();
+        return clone2dArray(netPkCps);
     }
 
     /**
      * @param aNetPkCps the netPkCps to set
      */
     public void setNetPkCps(double[][] aNetPkCps) {
-        netPkCps = aNetPkCps.clone();
+        netPkCps = clone2dArray(aNetPkCps);
     }
 
     /**
@@ -519,14 +551,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getPkFerr() {
-        return pkFerr.clone();
+        return clone2dArray(pkFerr);
     }
 
     /**
      * @param aPkFerr the pkFerr to set
      */
     public void setPkFerr(double[][] aPkFerr) {
-        pkFerr = aPkFerr.clone();
+        pkFerr = clone2dArray(aPkFerr);
     }
 
     /**
@@ -595,14 +627,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getReducedPkHt() {
-        return reducedPkHt.clone();
+        return clone2dArray(reducedPkHt);
     }
 
     /**
      * @param reducedPkHt the reducedPkHt to set
      */
     public void setReducedPkHt(double[][] reducedPkHt) {
-        this.reducedPkHt = reducedPkHt.clone();
+        this.reducedPkHt = clone2dArray(reducedPkHt);
     }
 
     /**
@@ -610,14 +642,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     @Override
     public double[][] getReducedPkHtFerr() {
-        return reducedPkHtFerr.clone();
+        return clone2dArray(reducedPkHtFerr);
     }
 
     /**
      * @param reducedPkHtFerr the reducedPkHtFerr to set
      */
     public void setReducedPkHtFerr(double[][] reducedPkHtFerr) {
-        this.reducedPkHtFerr = reducedPkHtFerr.clone();
+        this.reducedPkHtFerr = clone2dArray(reducedPkHtFerr);
     }
 
     /**
@@ -694,10 +726,26 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
         SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
         if (ratio != null) {
+            ratioAndUnct = new double[][]{{ratio.getRatioValUsed(), ratio.getRatioFractErrUsed()}};
+        }
+
+        return ratioAndUnct;
+    }
+    
+    // used to display original values on 204-correction tab for unknowns interpretatons
+    public double[][] getOriginalIsotopicRatioValuesByStringName(String name) {
+        double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
+
+        SquidRatiosModel ratio = SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
+        if (ratio != null) {
             ratioAndUnct = new double[][]{{ratio.getRatioVal(), ratio.getRatioFractErr()}};
         }
 
         return ratioAndUnct;
+    }
+    
+    public SquidRatiosModel getRatioByName(String name){
+        return SquidRatiosModel.findSquidRatiosModelByName(isotopicRatiosII, name);
     }
 
     /**
@@ -714,5 +762,194 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    /**
+     * @return the countOfNonPositiveSBMCounts
+     */
+    public int getCountOfNonPositiveSBMCounts() {
+        return countOfNonPositiveSBMCounts;
+    }
+
+    /**
+     * @param countOfNonPositiveSBMCounts the countOfNonPositiveSBMCounts to set
+     */
+    public void setCountOfNonPositiveSBMCounts(int countOfNonPositiveSBMCounts) {
+        this.countOfNonPositiveSBMCounts = countOfNonPositiveSBMCounts;
+    }
+
+    /**
+     * @return the com_206Pb204Pb
+     */
+    @Override
+    public double getCom_206Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_206Pb204Pb();
+    }
+
+    /**
+     * @param com_206Pb204Pb the com_206Pb204Pb to set
+     */
+    @Override
+    public void setCom_206Pb204Pb(double com_206Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_206Pb204Pb(com_206Pb204Pb);
+    }
+
+    /**
+     * @return the com_207Pb206Pb
+     */
+    @Override
+    public double getCom_207Pb206Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_207Pb206Pb();
+    }
+
+    /**
+     * @param com_207Pb206Pb the com_207Pb206Pb to set
+     */
+    @Override
+    public void setCom_207Pb206Pb(double com_207Pb206Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_207Pb206Pb(com_207Pb206Pb);
+    }
+
+    /**
+     * @return the com_208Pb206Pb
+     */
+    @Override
+    public double getCom_208Pb206Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_208Pb206Pb();
+    }
+
+    /**
+     * @param com_208Pb206Pb the com_208Pb206Pb to set
+     */
+    @Override
+    public void setCom_208Pb206Pb(double com_208Pb206Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_208Pb206Pb(com_208Pb206Pb);
+    }
+
+    /**
+     * @return the com_206Pb208Pb
+     */
+    @Override
+    public double getCom_206Pb208Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_206Pb208Pb();
+    }
+
+    /**
+     * @param com_206Pb208Pb the com_206Pb208Pb to set
+     */
+    @Override
+    public void setCom_206Pb208Pb(double com_206Pb208Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_206Pb208Pb(com_206Pb208Pb);
+    }
+
+    /**
+     * @return the com_207Pb204Pb
+     */
+    @Override
+    public double getCom_207Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_207Pb204Pb();
+    }
+
+    /**
+     * @param com_207Pb204Pb the com_207Pb204Pb to set
+     */
+    @Override
+    public void setCom_207Pb204Pb(double com_207Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_207Pb204Pb(com_207Pb204Pb);
+    }
+
+    /**
+     * @return the com_208Pb204Pb
+     */
+    @Override
+    public double getCom_208Pb204Pb() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCom_208Pb204Pb();
+    }
+
+    /**
+     * @param com_208Pb204Pb the com_208Pb204Pb to set
+     */
+    @Override
+    public void setCom_208Pb204Pb(double com_208Pb204Pb) {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCom_208Pb204Pb(com_208Pb204Pb);
+    }
+    
+    /**
+     * 
+     * @return 
+     */
+    @Override
+    public ParametersModel getCommonLeadModel(){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getCommonLeadModel();
+    }
+    
+    /**
+     * 
+     * @param commonLeadModel 
+     */
+    @Override
+    public void setCommonLeadModel(ParametersModel commonLeadModel){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
+    }
+
+    /**
+     * @return the commonLeadSpecsForSpot
+     */
+    @Override
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() {
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot;
+    }
+    
+    @Override
+    public String getSelectedAgeExpressionName(){
+        if (commonLeadSpecsForSpot == null){
+            this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+        }
+        return commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
     }
 }

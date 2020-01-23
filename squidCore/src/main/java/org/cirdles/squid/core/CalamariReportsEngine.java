@@ -15,13 +15,20 @@
  */
 package org.cirdles.squid.core;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import static java.nio.file.StandardOpenOption.APPEND;
 import java.text.SimpleDateFormat;
 import static java.util.Arrays.asList;
@@ -34,14 +41,12 @@ import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
 /**
@@ -58,7 +63,7 @@ public class CalamariReportsEngine implements Serializable {
     private String reportNamePrefix;
 
     private File folderToWriteCalamariReports;
-    private String nameOfPrawnXMLFile;
+    private String nameOfPrawnSourceFile;
 
     private File ionIntegrations_PerScan;
     private File sBMIntegrations_PerScan;
@@ -94,7 +99,7 @@ public class CalamariReportsEngine implements Serializable {
         this.reportNamePrefix = "";
 
         this.folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
-        this.nameOfPrawnXMLFile = "";
+        this.nameOfPrawnSourceFile = "";
 
         this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         this.unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
@@ -166,10 +171,10 @@ public class CalamariReportsEngine implements Serializable {
                 = "_" + (shrimpFractionUnknown.isUseSBM() ? "SBM" : "NOSBM")
                 + "_" + (shrimpFractionUnknown.isUserLinFits() ? "LINREG" : "SPOTAV");
 
-        if (nameOfPrawnXMLFile.length() >= DEFAULT_PRAWNFILE_NAME.length()) {
-            reportNamePrefix = nameOfPrawnXMLFile.substring(0, DEFAULT_PRAWNFILE_NAME.length()) + "_" + reportParameterValues + "_";
+        if (nameOfPrawnSourceFile.length() >= DEFAULT_PRAWNFILE_NAME.length()) {
+            reportNamePrefix = nameOfPrawnSourceFile.substring(0, DEFAULT_PRAWNFILE_NAME.length()) + "_" + reportParameterValues + "_";
         } else {
-            reportNamePrefix = nameOfPrawnXMLFile + "_" + reportParameterValues + "_";
+            reportNamePrefix = nameOfPrawnSourceFile + "_" + reportParameterValues + "_";
         }
 
         if (doWriteReportFiles) {
@@ -177,7 +182,7 @@ public class CalamariReportsEngine implements Serializable {
                     = folderToWriteCalamariReports.getCanonicalPath()
                     + File.separator + "PROJECT-" + squidProject.getProjectName()
                     + File.separator + "TASK-" + squidProject.getTask().getName()
-                    + File.separator + "PRAWN-" + nameOfPrawnXMLFile
+                    + File.separator + "PRAWN-" + nameOfPrawnSourceFile
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
@@ -253,7 +258,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawPeakData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getDeadTimeNanoseconds()));
@@ -304,7 +309,7 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < rawSBMData.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
             dataLine.append(String.valueOf(shrimpFraction.getSbmZeroCps()));
@@ -366,15 +371,15 @@ public class CalamariReportsEngine implements Serializable {
         for (int scanNum = 0; scanNum < timeStampSec.length; scanNum++) {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(String.valueOf(scanNum + 1)).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
             for (int i = 0; i < timeStampSec[scanNum].length; i++) {
                 dataLine.append(", ").append(timeStampSec[scanNum][i]);
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCounts[scanNum][i], 15));
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCountsOneSigmaAbs[scanNum][i], 15));
-                dataLine.append(", ").append(Utilities.roundedToSize(totalCountsSBM[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCounts[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCountsOneSigmaAbs[scanNum][i], 15));
+                dataLine.append(", ").append(squid3RoundedToSize(totalCountsSBM[scanNum][i], 15));
                 dataLine.append(", ").append(trimMass[scanNum][i]);
             }
 
@@ -413,7 +418,7 @@ public class CalamariReportsEngine implements Serializable {
         // need to sort by reference material vs unknown
         StringBuilder dataLine = new StringBuilder();
         dataLine.append(shrimpFraction.getFractionID()).append(", ");
-        dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+        dataLine.append(shrimpFraction.getDateTime()).append(", ");
         dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
         double[] totalCps = shrimpFraction.getTotalCps();
@@ -445,14 +450,14 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             if (doWriteReportFiles) {
                 dataLine.append(shrimpFraction.getFractionID()).append(", ");
-                dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+                dataLine.append(shrimpFraction.getDateTime()).append(", ");
                 dataLine.append(String.valueOf(nDodNum + 1)).append(", ");
                 dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
             } else {
                 // format for GUI
                 dataLine
                         .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                        .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                        .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                         .append(String.format("%1$-" + 10 + "s", String.valueOf(nDodNum + 1)))
                         .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
             }
@@ -464,9 +469,9 @@ public class CalamariReportsEngine implements Serializable {
                     if (doWriteReportFiles) {
                         // July 2016 case of less than nDodCount = rare
                         if (nDodNum < isotopeRatioModel.getRatEqTime().size()) {
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15));
                         } else {
                             dataLine.append(", ").append("n/a");
                             dataLine.append(", ").append("n/a");
@@ -474,9 +479,9 @@ public class CalamariReportsEngine implements Serializable {
                         }
                     } else {
                         if (nDodNum < isotopeRatioModel.getRatEqTime().size()) {
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqTime().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqVal().get(nDodNum), 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatEqErr().get(nDodNum), 15)));
                         } else {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
@@ -492,8 +497,8 @@ public class CalamariReportsEngine implements Serializable {
                     if (doWriteReportFiles) {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
                             dataLine.append(", ").append(String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum]));
-                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
-                            dataLine.append(", ").append(Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
+                            dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
                         } else {
                             dataLine.append(", ").append("n/a");
                             dataLine.append(", ").append("n/a");
@@ -502,8 +507,8 @@ public class CalamariReportsEngine implements Serializable {
                     } else {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum])));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
                         } else {
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", "n/a"));
@@ -543,13 +548,13 @@ public class CalamariReportsEngine implements Serializable {
         StringBuilder dataLine = new StringBuilder();
         if (doWriteReportFiles) {
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
-            dataLine.append(getFormattedDate(shrimpFraction.getDateTimeMilliseconds())).append(", ");
+            dataLine.append(shrimpFraction.getDateTime()).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
         } else {
             // format for GUI
             dataLine
                     .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
-                    .append(String.format("%1$-" + 20 + "s", getFormattedDate(shrimpFraction.getDateTimeMilliseconds())))
+                    .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
                     .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
         }
 
@@ -560,12 +565,12 @@ public class CalamariReportsEngine implements Serializable {
                 // April 2017 rounding was performed on calculated numbers
                 if (doWriteReportFiles) {
                     dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
-                    dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatioVal(), 12));
-                    dataLine.append(", ").append(Utilities.roundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12));
                 } else {
                     dataLine.append(", ").append(String.format("%1$-" + 12 + "s", String.valueOf(isotopeRatioModel.getMinIndex())));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatioVal(), 12)));
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(isotopeRatioModel.getRatioFractErrAsOneSigmaPercent(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12)));
                 }
             }
         }
@@ -576,15 +581,15 @@ public class CalamariReportsEngine implements Serializable {
             for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
                 double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
-                    dataLine.append(", ").append(Utilities.roundedToSize(expressionResults[0], 12));
+                    dataLine.append(", ").append(squid3RoundedToSize(expressionResults[0], 12));
                     if (expressionResults.length > 1) {
-                        dataLine.append(", ").append(Utilities.roundedToSize(
+                        dataLine.append(", ").append(squid3RoundedToSize(
                                 calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12));
                     }
                 } else {
-                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(expressionResults[0], 12)));
+                    dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(expressionResults[0], 12)));
                     if (expressionResults.length > 1) {
-                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", Utilities.roundedToSize(
+                        dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(
                                 calculatePercentUncertainty(expressionResults[0], expressionResults[1]), 12)));
                     }
                 }
@@ -971,6 +976,24 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
+    public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + baseReportTableName);
+        ReportSerializerToCSV.writeSquid3CustomCSVReport(reportTableFile, report);
+
+        return reportTableFile;
+    }
+
     public File writeTaskSummaryFile() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
@@ -987,10 +1010,45 @@ public class CalamariReportsEngine implements Serializable {
         PrintWriter outputWriter;
 
         try {
-            outputWriter = new PrintWriter(new FileWriter(reportTableFile));
+            outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));          
             outputWriter.write(squidProject.getTask().printTaskSummary());
             outputWriter.flush();
             outputWriter.close();
+
+        } catch (IOException iOException) {
+        }
+
+        return reportTableFile;
+    }
+
+    public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
+            throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = null;
+        Path reportPath = Paths.get(reportsPath + baseReportTableName);
+        if (!doAppend && reportPath.toFile().exists()){
+            reportPath.toFile().delete();
+        }
+        try {
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath, 
+                    (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
+            if (!doAppend){
+                out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
+            }
+            out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+            out.flush();
+            out.close();
+            reportTableFile = reportPath.toFile();
 
         } catch (IOException iOException) {
         }
@@ -1014,10 +1072,10 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
-     * @param nameOfPrawnXMLFile the nameOfPrawnXMLFile to set
+     * @param nameOfPrawnSourceFile the nameOfPrawnSourceFile to set
      */
-    public void setNameOfPrawnXMLFile(String nameOfPrawnXMLFile) {
-        this.nameOfPrawnXMLFile = nameOfPrawnXMLFile;
+    public void setNameOfPrawnSourceFile(String nameOfPrawnSourceFile) {
+        this.nameOfPrawnSourceFile = nameOfPrawnSourceFile;
     }
 
     /**

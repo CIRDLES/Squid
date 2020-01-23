@@ -43,6 +43,7 @@ public class Abs extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"absolute"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns the absolute value of a number.";
     }
 
     /**
@@ -80,9 +81,7 @@ public class Abs extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

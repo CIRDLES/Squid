@@ -21,8 +21,9 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import org.cirdles.squid.core.PrawnFileHandler;
+import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
@@ -40,9 +41,15 @@ public class CalamariFileUtilities {
     private static File exampleFolder;
     private static File schemaFolder;
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+    public static File SQUID_PARAMETER_MODELS_FOLDER = new File("SquidParameterModels");
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
+    private static File XSLTMLFolder;
+
+    static {
+        SQUID_PARAMETER_MODELS_FOLDER.mkdir();
+    }
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
@@ -81,12 +88,47 @@ public class CalamariFileUtilities {
         }
     }
 
+    public static void initXSLTML() {
+        ResourceExtractor extractor = new ResourceExtractor(ExpressionPublisher.class);
+
+        Path listOfXSLTMLFiles = extractor.extractResourceAsPath("listOfXSLTMLFiles.txt");
+        if (listOfXSLTMLFiles != null) {
+            XSLTMLFolder = new File("XSLTML");
+            try {
+                if (XSLTMLFolder.exists()) {
+                    FileUtilities.recursiveDelete(XSLTMLFolder.toPath());
+                }
+                if (XSLTMLFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfXSLTMLFiles, ISO_8859_1);
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        // test for empty string
+                        if (fileNames.get(i).trim().length() > 0) {
+                            File resource = extractor.extractResourceAsFile(fileNames.get(i));
+                            File file = new File(XSLTMLFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+
+                            if (resource.renameTo(file)) {
+                                System.out.println("XSLTML File added: " + fileNames.get(i));
+                            } else {
+                                System.out.println("XSLTML File failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+                iOException.printStackTrace();
+            }
+
+        }
+
+    }
+
     public static void initSampleParametersModels() {
+
         ResourceExtractor physConstResourceExtractor = new ResourceExtractor(PhysicalConstantsModel.class);
 
-        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSamplePhysicalConstantsModels.txt");
+        Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSquidPhysicalConstantsModels.txt");
         if (listOfPhysicalConstants != null) {
-            physicalConstantsFolder = new File("SamplePhysicalConstantsModels");
+            physicalConstantsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidPhysicalConstantsModels");
             try {
                 if (physicalConstantsFolder.exists()) {
                     FileUtilities.recursiveDelete(physicalConstantsFolder.toPath());
@@ -115,9 +157,9 @@ public class CalamariFileUtilities {
 
         ResourceExtractor refMatResourceExtractor = new ResourceExtractor(ReferenceMaterialModel.class);
 
-        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSampleReferenceMaterials.txt");
+        Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSquidReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
-            referenceMaterialsFolder = new File("SampleReferenceMaterialModels");
+            referenceMaterialsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidReferenceMaterialModels");
             try {
                 if (referenceMaterialsFolder.exists()) {
                     FileUtilities.recursiveDelete(referenceMaterialsFolder.toPath());
@@ -146,9 +188,9 @@ public class CalamariFileUtilities {
 
         ResourceExtractor commonPbResourceExtractor = new ResourceExtractor(CommonPbModel.class);
 
-        Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSampleCommonPbModels.txt");
+        Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSquidCommonPbModels.txt");
         if (listOfCommonPbModels != null) {
-            commonPbModelsFolder = new File("SampleCommonPbModels");
+            commonPbModelsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidCommonPbModels");
             try {
                 if (commonPbModelsFolder.exists()) {
                     FileUtilities.recursiveDelete(commonPbModelsFolder.toPath());
@@ -237,7 +279,7 @@ public class CalamariFileUtilities {
         }
     }
 
-    public static void initCalamariReportsFolder(PrawnFileHandler prawnFileHandler) {
+    public static void initCalamariReportsFolder(PrawnXMLFileHandler prawnFileHandler) {
         prawnFileHandler.getReportsEngine()
                 .setFolderToWriteCalamariReports(Squid.DEFAULT_SQUID3_REPORTS_FOLDER);
 

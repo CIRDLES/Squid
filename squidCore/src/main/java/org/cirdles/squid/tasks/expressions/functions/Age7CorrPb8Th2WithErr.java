@@ -18,18 +18,14 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_76_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -68,6 +64,12 @@ public class Age7CorrPb8Th2WithErr extends Function {
             + "Total 208/232, Total 208/232 1\u03C3 %, "
             + "Total 208/206, Total 208/206 1\u03C3 %,"
             + "\"Total 207/206, Total 207/206 1\u03C3 %"};
+        definition = "Combines LudwigLibrary's Age7CorrPb8Th2 and AgeErr7CorrPb8Th2.\n"
+                + DEF_TAB + "Age7CorrPb8Th2: Returns the 208Pb/232Th age, assuming\n"
+                + DEF_TAB + "the true 206/204 is that required to force 206/238-207/235 concordance.\n"
+                + DEF_TAB + "AgeErr7CorrPb8Th2: Returns the error of the 208Pb/232Th age.\n"
+                + DEF_TAB + "The error iscalculated numerically,\n"
+                + DEF_TAB + "by successive perturbation of the input errors.";
     }
 
     /**
@@ -98,14 +100,17 @@ public class Age7CorrPb8Th2WithErr extends Function {
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(6).eval(shrimpFractions, task)[0]);
             double[] totPb76percentErr = convertObjectArrayToDoubles(childrenET.get(7).eval(shrimpFractions, task)[0]);
 
-            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
-            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_76_NAME).getValues()[0][0];
-            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_86_NAME).getValues()[0][0];
-            
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
-            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+//            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
+            double sComm_64 = shrimpFractions.get(0).getCom_206Pb204Pb();
+//            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_76).getValues()[0][0];
+            double sComm_76 = shrimpFractions.get(0).getCom_207Pb206Pb();
+//            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_86).getValues()[0][0];
+            double sComm_86 = shrimpFractions.get(0).getCom_208Pb206Pb();
+
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA232).getValues()[0][0];
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] age7CorrPb8Th2WithErr = org.cirdles.ludwig.squid25.PbUTh_2.age7CorrPb8Th2WithErr(totPb206U238[0],
                     totPb206U238percentErr[0],
@@ -115,7 +120,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
                     totPb86percentErr[0],
                     totPb76[0],
                     totPb76percentErr[0],
-                    sComm_64, sComm_76, sComm_86, lambda232, lambda235, lambda238, PRESENT_R238_235S);
+                    sComm_64, sComm_76, sComm_86, lambda232, lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{age7CorrPb8Th2WithErr[0], age7CorrPb8Th2WithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
@@ -136,9 +141,7 @@ public class Age7CorrPb8Th2WithErr extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

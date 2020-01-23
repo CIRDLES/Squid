@@ -19,6 +19,7 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -101,6 +102,12 @@ public interface ExpressionTreeInterface {
     public boolean isSquidSwitchSTReferenceMaterialCalculation();
 
     /**
+     *
+     * @param origin
+     */
+    public void copySettings(ExpressionTreeInterface origin);
+
+    /**
      * @param squidSwitchSTReferenceMaterialCalculation the
      * squidSwitchSTReferenceMaterialCalculation to set
      */
@@ -110,6 +117,16 @@ public interface ExpressionTreeInterface {
      * @return the squidSwitchSAUnknownCalculation
      */
     public boolean isSquidSwitchSAUnknownCalculation();
+
+    /**
+     * @return the unknownsGroupSampleName
+     */
+    public String getUnknownsGroupSampleName();
+
+    /**
+     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
+     */
+    public void setUnknownsGroupSampleName(String unknownsGroupSampleName);
 
     /**
      * @param squidSwitchSAUnknownCalculation the
@@ -172,7 +189,11 @@ public interface ExpressionTreeInterface {
         double[] retVal = new double[objects.length];
         for (int i = 0; i < objects.length; i++) {
             if (objects[i] instanceof Integer) {
-                retVal[i] = (double) ((Integer) objects[i]);
+                retVal[i] = ((Integer) objects[i]).doubleValue();
+            } else if (objects[i] instanceof Long) {
+                retVal[i] = ((Long) objects[i]).doubleValue();
+            } else if (objects[i] instanceof Boolean) {
+                retVal[i] = 0.0;
             } else {
                 retVal[i] = (double) objects[i];
             }
@@ -273,4 +294,47 @@ public interface ExpressionTreeInterface {
             }
         }
     }
+
+    public default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
+        if (!amAnonymous()
+                && !(this instanceof ConstantNode)
+                && !(this instanceof VariableNodeForIsotopicRatios)) {
+            String audit = ((ExpressionTreeBuilderInterface) this).auditTargetCompatibility();
+            if (!argumentAudit.contains(audit)) {
+                argumentAudit.add(audit);
+            }
+        }
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            child.auditExpressionTreeTargetMatching(argumentAudit);
+        }
+    }
+
+    public default int auditTargetMatchingII(int targetBits) {
+        int audit = targetBits;
+        if (!amAnonymous()
+                && !(this instanceof ConstantNode)
+                && !(this instanceof VariableNodeForIsotopicRatios)) {
+            audit = audit & this.makeTargetBits();
+        }
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+            audit = audit & child.auditTargetMatchingII(audit);
+        }
+
+        return audit;
+    }
+
+    /**
+     *
+     * @return targetBits = 2 for both (11), 1 for RM (01), 2 for U (10)
+     */
+    public default int makeTargetBits() {
+        int targetBits
+                = ((isSquidSwitchSTReferenceMaterialCalculation() || isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
+                + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
+        targetBits
+                = (isSquidSwitchSCSummaryCalculation() ? 3 : targetBits);
+        return targetBits;
+    }
+
+    public boolean amAnonymous();
 }

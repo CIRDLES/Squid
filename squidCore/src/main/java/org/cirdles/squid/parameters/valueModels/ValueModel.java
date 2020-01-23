@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -80,7 +81,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
     public BigDecimal getOneSigmaABS() {
         BigDecimal retVal;
-        if (uncertaintyType.toUpperCase().equals("PCT")) {
+        if (uncertaintyType.toUpperCase(Locale.ENGLISH).equals("PCT")) {
             retVal = oneSigma.multiply(value, new MathContext(15, RoundingMode.HALF_UP)).movePointLeft(2);
         } else {
             retVal = oneSigma;
@@ -90,9 +91,9 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
     public BigDecimal getOneSigmaPCT() {
         BigDecimal retVal;
-        if (uncertaintyType.toUpperCase().equals("PCT")) {
+        if (uncertaintyType.toUpperCase(Locale.ENGLISH).equals("PCT")) {
             retVal = oneSigma;
-        } else if (value.equals(BigDecimal.ZERO)) {
+        } else if (value.doubleValue() == 0.0) {
             retVal = BigDecimal.ZERO;
         } else {
             retVal = oneSigma.divide(value, new MathContext(15, RoundingMode.HALF_UP)).movePointRight(2);

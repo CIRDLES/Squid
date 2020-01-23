@@ -30,7 +30,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 public class ConstantNode extends ExpressionTree {
 
     private static final long serialVersionUID = -2914393295564269277L;
-    public static final String MISSING_EXPRESSION_STRING = "Missing Expression";
+    public static final String MISSING_EXPRESSION_STRING = "Missing_Expression";
 
     private Object value;
 
@@ -52,6 +52,9 @@ public class ConstantNode extends ExpressionTree {
             value = ((int) value) * 1.0;
         }
         this.value = value;
+        
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     @Override

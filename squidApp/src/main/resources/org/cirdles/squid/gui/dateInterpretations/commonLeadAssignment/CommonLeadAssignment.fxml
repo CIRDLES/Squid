@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="vboxMaster" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.commonLeadAssignment.CommonLeadAssignmentController">
+   <children>
+      <HBox fx:id="headerHBox" minHeight="25.0" prefHeight="25.0" prefWidth="1200.0" spacing="35.0" styleClass="backgroundCalamari">
+         <children>
+            <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="   Common Lead Assignment" translateY="-2.0" />
+         </children>
+         <padding>
+            <Insets top="3.0" />
+         </padding></HBox>
+      <AnchorPane fx:id="sampleTreeAnchorPane" prefHeight="638.0" prefWidth="1200.0" />
+      <HBox fx:id="footerHBox" layoutX="10.0" layoutY="10.0" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1200.0" spacing="17.0" styleClass="backgroundCalamari">
+         <padding>
+            <Insets top="3.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

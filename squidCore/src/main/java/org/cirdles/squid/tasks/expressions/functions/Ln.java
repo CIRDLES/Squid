@@ -43,6 +43,7 @@ public class Ln extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"natLog"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns the natural logarithm of a number";
     }
 
     /**
@@ -78,9 +79,7 @@ public class Ln extends Function {
                 + "<mi>ln</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

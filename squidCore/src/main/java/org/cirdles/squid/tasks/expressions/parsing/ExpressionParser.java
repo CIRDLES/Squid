@@ -30,6 +30,8 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -59,8 +61,8 @@ public class ExpressionParser {
     private Map<String, ExpressionTreeInterface> namedExpressionsMap;
     private boolean eqnSwitchNU;
 
-    public ExpressionParser() {
-        this.namedExpressionsMap = new HashMap<>();
+    private ExpressionParser() {
+        this(new HashMap<>());
     }
 
     public ExpressionParser(Map<String, ExpressionTreeInterface> namedExpressionsMap) {
@@ -216,7 +218,12 @@ public class ExpressionParser {
         return expParent;
     }
 
-    private ExpressionTreeInterface walkTree(String token, ExpressionTreeInterface myExp) {
+    private ExpressionTreeInterface walkTree(String myToken, ExpressionTreeInterface myExp) {
+        String token = myToken.trim();
+        // remove spaces from token if not of the form '["name"]' since we allow spaces in names
+        if (!token.startsWith("[")) {
+            token = token.replaceAll(" ", "");
+        }
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
         int index = 0;
@@ -238,6 +245,7 @@ public class ExpressionParser {
 
             case NUMBER:
                 retExpTree = new ConstantNode(token, Double.parseDouble(token));
+                retExpTree.setRootExpressionTree(false);
                 break;
 
             case NAMED_CONSTANT:
@@ -250,7 +258,8 @@ public class ExpressionParser {
             case NAMED_EXPRESSION_INDEXED:
                 // form is ["XXX"][n], remove indexing and capture value of index
                 // the single integer index is next to last character
-                // we are not supporting for ratios for now as they are show as ratios in MathML
+                // we are not supporting for ratios for now as they are shown as ratios in MathML
+                token = token.replaceAll("\\]( )*", "\\]");
                 String indexString = token.substring(token.length() - 2, token.length() - 1);
                 index = Integer.parseInt(indexString);
                 token = token.replaceFirst("\\[\\d\\]", "");
@@ -258,12 +267,16 @@ public class ExpressionParser {
             case NAMED_EXPRESSION:
                 // handle special cases of array index references and ± references to uncertainty
                 String uncertaintyDirective = "";
-                if (token.startsWith("[±")) {
-                    uncertaintyDirective = "±";
-                } else if (token.startsWith("[%")) {
+                if (token.startsWith("[" + ABS_UNCERTAINTY_DIRECTIVE)) {
+                    uncertaintyDirective = ABS_UNCERTAINTY_DIRECTIVE;
+                } else if (token.startsWith("[" + PCT_UNCERTAINTY_DIRECTIVE)) {
                     uncertaintyDirective = "%";
                 }
-                String expressionName = token.replace("[\"", "").replace("[±\"", "").replace("[%\"", "").replace("\"]", "");
+                String expressionName
+                        = token.replace("[\"", "")
+                                .replace("[" + ABS_UNCERTAINTY_DIRECTIVE + "\"", "")
+                                .replace("[" + PCT_UNCERTAINTY_DIRECTIVE + "\"", "")
+                                .replaceAll("\"]( )*", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
 
                 if (retExpTreeKnown == null) {
@@ -274,13 +287,14 @@ public class ExpressionParser {
                     if (expressionName.length() > 2) {
                         String lastTwo = expressionName.substring(expressionName.length() - 2);
                         if (ShuntingYard.isNumber(lastTwo)) {
-                            // index = first digit - 1 (converting from vertical 1-based excel to horiz 0-based java
+                            // index = first digit minus 1 (converting from vertical 1-based excel to horiz 0-based java
                             index = Integer.parseInt(lastTwo.substring(0, 1)) - 1;
                             String baseExpressionName = expressionName.substring(0, expressionName.length() - 2);
                             if (index >= 0) {
                                 retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
                                 if (retExpTreeKnown != null) {
                                     retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                    retExpTree.copySettings(retExpTreeKnown);
                                 }
                             }
                         }
@@ -302,17 +316,23 @@ public class ExpressionParser {
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getLeftET(),
                             (ShrimpSpeciesNode) ((ExpressionTree) retExpTreeKnown).getRightET(),
                             uncertaintyDirective);
+                    retExpTree.copySettings(retExpTreeKnown);
 
-                } else if ((retExpTreeKnown instanceof ShrimpSpeciesNode)
-                        || (retExpTreeKnown instanceof SpotFieldNode)) {
+                } else if (retExpTreeKnown instanceof ShrimpSpeciesNode) {
+                    // make copy
+                    retExpTree = ShrimpSpeciesNode.buildShrimpSpeciesNode(
+                            ((ShrimpSpeciesNode) retExpTreeKnown).getSquidSpeciesModel(), "getTotalCps");
+
+                } else if (retExpTreeKnown instanceof SpotFieldNode) {
                     retExpTree = retExpTreeKnown;
                     retExpTree.setUncertaintyDirective(uncertaintyDirective);
 
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                     retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
-
+                    retExpTree.copySettings(retExpTreeKnown);
                 } else {
                     retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
+                    retExpTree.copySettings(retExpTreeKnown);
                 }
                 break;
 

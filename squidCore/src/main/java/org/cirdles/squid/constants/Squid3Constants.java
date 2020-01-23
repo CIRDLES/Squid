@@ -17,6 +17,7 @@ package org.cirdles.squid.constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 
 /**
  *
@@ -102,29 +103,25 @@ public final class Squid3Constants {
 
     public static final String DUPLICATE_STRING = "-DUP-";
 
-    public static final String SQUID_DEFAULT_BACKGROUND_ISOTOPE_LABEL = "BKG";
-
-    // holding spot until models are implemented
-    public static final double LAMBDA232 = 4.9475E-11;
-    public static final double LAMBDA235 = 9.8485E-10;
-    public static final double LAMBDA238 = 1.55125E-10;
-    public static final double PRESENT_R238_235S = 137.88;
-    
-    public static final double SCOMM_64 = 17.821;
-    public static final double SCOMM_74 = 15.5773361;
-    public static final double SCOMM_84 = 37.5933995;
-    public static final double SCOMM_76 = 0.8741;
-    public static final double SCOMM_86 = 2.1095;
-
     public enum IndexIsoptopesEnum {
-        PB_204("204"),
-        PB_207("207"),
-        PB_208("208");
+        PB_204("PB_204", "204"),
+        PB_207("PB_207", "207"),
+        PB_208("PB_208", "208");
 
+        private final String name;
         private final String isotope;
 
-        private IndexIsoptopesEnum(String isotope) {
+        private IndexIsoptopesEnum(String name, String isotope) {
+            this.name = name;
             this.isotope = isotope;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public String getName() {
+            return name;
         }
 
         /**
@@ -135,9 +132,39 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + "-corr ";
+            return isotope.substring(2, 3) + COR_PREFIX;
+        }
+    }
+
+    public enum TaskTypeEnum {
+        GEOCHRON("GEOCHRON"),
+        GENERAL("GENERAL");
+
+        private final String name;
+
+        private TaskTypeEnum(String name) {
+            this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+    }
+
+    public enum ConcentrationTypeEnum {
+        URANIUM("Uranium"),
+        THORIUM("Thorium"),
+        NONE("NONE");
+
+        private final String name;
+
+        private ConcentrationTypeEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     /**
@@ -194,30 +221,39 @@ public final class Squid3Constants {
         return UnitConversions.get(unit);
     }
 
-    public static enum SampleNameDelimetersEnum {
+    public static enum SampleNameDelimitersEnum {
 
-        HYPHEN("-"),
-        DOT("."),
-        UNDERSCORE("_"),
-        COLON(":"),
-        ONE("1"),
-        TWO("2"),
-        THREE("3"),
-        FOUR("4"),
-        FIVE("5"),
-        SIX("6"),
-        SEVEN("7"),
-        EIGHT("8"),
-        NINE("9");
+        HYPHEN("-", false),
+        DOT(".", false),
+        UNDERSCORE("_", false),
+        COLON(":", false),
+        ONE("1", true),
+        TWO("2", true),
+        THREE("3", true),
+        FOUR("4", true),
+        FIVE("5", true),
+        SIX("6", true),
+        SEVEN("7", true),
+        EIGHT("8", true),
+        NINE("9", true);
 
         private final String name;
+        private final boolean number;
 
-        private SampleNameDelimetersEnum(String name) {
+        private SampleNameDelimitersEnum(String name, boolean isNumeric) {
             this.name = name;
+            this.number = isNumeric;
         }
 
         public String getName() {
             return name;
+        }
+
+        /**
+         * @return the number
+         */
+        public boolean isNumber() {
+            return number;
         }
 
         public static String[] names() {
@@ -228,9 +264,9 @@ public final class Squid3Constants {
             return names;
         }
 
-        public static SampleNameDelimetersEnum getByName(String name) {
-            SampleNameDelimetersEnum retVal = null;
-            for (SampleNameDelimetersEnum delim : SampleNameDelimetersEnum.values()) {
+        public static SampleNameDelimitersEnum getByName(String name) {
+            SampleNameDelimitersEnum retVal = null;
+            for (SampleNameDelimitersEnum delim : SampleNameDelimitersEnum.values()) {
                 if (delim.name.equals(name)) {
                     retVal = delim;
                 }
@@ -239,10 +275,35 @@ public final class Squid3Constants {
         }
     }
 
-    public final static String SUPERSCRIPT_R_FOR_REFMAT = "\u1D3F";
+    public final static String SUPERSCRIPT_R_FOR_REFMAT = "ᴿ";//\u1D3F";
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
-    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "\u1D41";
-    public final static String SUPERSCRIPT_DASH_FOR_DASH = "\u02C9";
-    
+    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
+    public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
+    // http://science.sciencemag.org/content/335/6076/1610
+    public final static double REF_238U235U_DEFAULT = 137.818;
+
+    public static enum SpotTypes {
+        REFERENCE_MATERIAL("REFERENCE MATERIALS"),
+        UNKNOWN("UNKNOWNS");
+
+        private String plotType;
+
+        private SpotTypes(String plotType) {
+            this.plotType = plotType;
+        }
+
+        public String getPlotType() {
+            return plotType;
+        }
+    }
+
+    public final static String ABS_UNCERTAINTY_DIRECTIVE = "±";
+    public final static String PCT_UNCERTAINTY_DIRECTIVE = "%";
+
+    public static enum OvercountCorrectionTypes {
+        NONE,
+        FR_207,
+        FR_208;
+    }
 }

@@ -18,11 +18,10 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_86_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -89,10 +88,11 @@ public class Age8corrWithErr extends Function {
             double[] th2U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
             double[] th2U8err = convertObjectArrayToDoubles(childrenET.get(5).eval(shrimpFractions, task)[0]);
             
-            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_86_NAME).getValues()[0][0];
+//            double sComm_86 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_86).getValues()[0][0];
+            double sComm_86 = shrimpFractions.get(0).getCom_208Pb206Pb();
 
-            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_232.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            double lambda232 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA232).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] age8corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age8corrWithErr(
                     totPb6U8[0],
@@ -123,9 +123,7 @@ public class Age8corrWithErr extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

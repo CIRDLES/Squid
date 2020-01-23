@@ -47,6 +47,8 @@ public class SpotFieldNode extends ExpressionTree {
         this.name = fieldName;
         this.methodNameForShrimpFraction = methodNameForShrimpFraction;
         this.parentET = null;
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;
     }
 
     public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
@@ -113,12 +115,14 @@ public class SpotFieldNode extends ExpressionTree {
                     methodNameForShrimpFraction,
                     new Class[]{});
             for (int i = 0; i < shrimpFractions.size(); i++) {
-                double[] value = new double[]{(double) method.invoke(shrimpFractions.get(i), new Object[]{})};
-                retVal[i] = convertArrayToObjects(value);
+                // this generalization handles various types
+                retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i), new Object[]{})};
+//                double[] value = new double[]{(double) method.invoke(shrimpFractions.get(i), new Object[]{})};
+//                retVal[i] = convertArrayToObjects(value);
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
-            throw new SquidException("Could not find variable " + fieldName);
+            throw new SquidException("Could not find field name: " + fieldName);
         }
 
         return retVal;

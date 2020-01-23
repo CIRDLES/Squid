@@ -17,6 +17,8 @@ package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -39,6 +41,7 @@ public class Equal extends Operation {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Predicate"}};
+        definition = "Floating point absolute difference < 1.0E-30";
     }
 
     /**
@@ -54,9 +57,26 @@ public class Equal extends Operation {
 
         boolean retVal;
         try {
-            retVal = (double)childrenET.get(0).eval(shrimpFractions, task)[0][0]
-                    == (double)childrenET.get(1).eval(shrimpFractions, task)[0][0];
-        } catch (Exception e) {
+            Object term1Object = childrenET.get(0).eval(shrimpFractions, task)[0][0];
+            Object term2Object = childrenET.get(1).eval(shrimpFractions, task)[0][0];
+
+            double term1;
+            double term2;
+
+            if (term1Object instanceof Integer) {
+                term1 = ((Integer) term1Object).doubleValue();
+            } else {
+                term1 = (double) term1Object;
+            }
+
+            if (term2Object instanceof Integer) {
+                term2 = ((Integer) term2Object).doubleValue();
+            } else {
+                term2 = (double) term2Object;
+            }
+
+            retVal = Math.abs(term1 - term2) < SQUID_TINY_VALUE;
+        } catch (NullPointerException | SquidException e) {
             retVal = false;
         }
         return new Object[][]{{retVal}};

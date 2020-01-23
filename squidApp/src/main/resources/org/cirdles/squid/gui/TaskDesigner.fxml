@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
+  <columnConstraints>
+    <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
+    <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints valignment="CENTER" vgrow="NEVER" />
+    <RowConstraints valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="15.0" prefHeight="15.0" valignment="TOP" vgrow="NEVER" />
+    <RowConstraints valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="15.0" prefHeight="15.0" valignment="TOP" vgrow="NEVER" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+    <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+         <children>
+            <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="717.0" text="Task Designer: Set Defaults for new Tasks" />
+            <ToolBar prefHeight="43.0" prefWidth="346.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css">
+              <items>
+                <Button mnemonicParsing="false" onAction="#newTaskFromThisDesignAction" text="New Task from this Design" />
+              </items>
+            </ToolBar>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <children>
+            <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
+               <toggleGroup>
+                  <ToggleGroup fx:id="taskTypeToggleGroup" />
+               </toggleGroup>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </RadioButton>
+            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+         </children>
+      </HBox>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Author &amp; Lab:" GridPane.rowIndex="2" />
+      <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
+            <Label text="Lab Name:" />
+            <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Samples:" GridPane.rowIndex="4" />
+      <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <children>
+            <Label prefHeight="28.0" prefWidth="234.0" style="-fx-font-size: 14;" text="Select Name Delimiter OR # Chars:  " />
+            <ComboBox fx:id="delimiterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+         </children>
+      </HBox>
+      <VBox GridPane.rowIndex="6">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="158.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
+            <Label prefHeight="73.0" prefWidth="160.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Parameter preferences are used for both imported Squid2 tasks and new Squid3 tasks." textAlignment="CENTER" wrapText="true" />
+         </children>
+      </VBox>
+      <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+        <columnConstraints>
+          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" />
+          <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="NEVER" />
+          <RowConstraints vgrow="NEVER" />
+          <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+        </rowConstraints>
+         <children>
+            <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
+            <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
+            <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <RadioButton id="PB_204" fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupIsotope" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton id="PB_207" fx:id="pb207RadioButton" mnemonicParsing="false" onAction="#pb207RadioButtonAction" text="207Pb" toggleGroup="$toggleGroupIsotope" />
+                  <RadioButton id="PB_208" fx:id="pb208RadioButton" mnemonicParsing="false" onAction="#pb208RadioButtonAction" text="208Pb" toggleGroup="$toggleGroupIsotope" visible="false" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
+               <children>
+                  <RadioButton fx:id="yesSBMRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#yesSBMRadioButtonAction" selected="true" text="Yes">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupSMB" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSMB" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" text="Linear regression to burn mid-time">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Minimum external 1sigma % err for for 206Pb/238U:" translateX="20.0" />
+                  <Spinner fx:id="assignedExternalErrUSpinner" minWidth="70.0" prefHeight="27.0" prefWidth="70.0" translateX="25.0" />
+                  <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:" translateX="35.0" />
+                  <Spinner fx:id="assignedExternalErrThSpinner" minWidth="70.0" prefHeight="27.0" prefWidth="70.0" translateX="40.0" />
+               </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="30.0" prefWidth="66.0" style="-fx-font-size: 9.5; -fx-text-fill: red;" text="Def Comm Pb:" textAlignment="RIGHT" wrapText="true" />
+                  <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="29.0" prefWidth="77.0" style="-fx-font-size: 10; -fx-text-fill: red;" text="Phys Const:" textAlignment="RIGHT" translateX="10.0" />
+                  <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" translateX="10.0" />
+               </children>
+            </HBox>
+            <Label style="-fx-font-size: 14;" text="Default Parameter Models:" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
+      <VBox GridPane.rowIndex="11">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" />
+            <Label prefHeight="73.0" prefWidth="156.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
+         </children>
+      </VBox>
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="11">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="591.0" minWidth="10.0" prefWidth="165.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1015.0" minWidth="10.0" prefWidth="378.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="377.0" spacing="10.0" GridPane.columnIndex="1">
+               <children>
+                  <RadioButton id="238" mnemonicParsing="false" onAction="#toggleParentNuclideAction" selected="true" text="206Pb/238U">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="primaryAgeToggleGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton id="232" mnemonicParsing="false" onAction="#toggleParentNuclideAction" text="208Pb/232Th" toggleGroup="$primaryAgeToggleGroup" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="uncorrConstPbUExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3">
+               <children>
+                  <RadioButton id="direct" mnemonicParsing="false" onAction="#toggleDirectAltAction" text="Directly">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="dirctALTtoggleGroup" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton id="indirect" mnemonicParsing="false" onAction="#toggleDirectAltAction" selected="true" text="Indirectly" toggleGroup="$dirctALTtoggleGroup" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <children>
+                  <TextField fx:id="parentConcExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="167.0" style="-fx-font-size: 12;" text="Primary daughter/parent ratio:" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
+               <children>
+                  <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="163.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="3">
+               <children>
+                  <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="183.0" style="-fx-font-size: 10;" text="uncorrConstPbTh:" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate secondary d/p ratio:" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <children>
+                  <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="232Th/238U:" textAlignment="JUSTIFY" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <children>
+                  <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="parentConc:" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <TextField fx:id="uncorrConstPbThExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <children>
+                  <TextField fx:id="pb208Th232ExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </HBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: Hold Shift key and click expression to see audit." textAlignment="RIGHT" wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Text>
+         </children>
+      </GridPane>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="8" />
+      <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1157.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+         <children>
+            <Button fx:id="chooseMassesButton" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
+            <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="988.0" style="-fx-background-color: white; -fx-border-color: black;" />
+         </children>
+      </HBox>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="10" />
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
+         <children>
+            <Button fx:id="chooseRatiosButton" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
+            <TextFlow fx:id="defaultRatiosListTextFlow" prefHeight="30.0" prefWidth="990.0" style="-fx-background-color: white; -fx-border-color: black;" />
+         </children>
+      </HBox>
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Type:" GridPane.rowIndex="1" />
+      <ToolBar prefHeight="42.0" prefWidth="744.0" styleClass="backgroundCalamari" GridPane.columnIndex="1" GridPane.rowIndex="7">
+         <items>
+            <Label prefHeight="28.0" prefWidth="188.0" style="-fx-font-size: 14;" text="Reset Masses &amp; Ratios from:" />
+            <Button mnemonicParsing="false" onAction="#blankTaskAction" prefHeight="30.0" text="Blank" />
+            <Button fx:id="fromCurrentTaskBtn" mnemonicParsing="false" onAction="#currentTaskAction" prefHeight="30.0" text="Current Task" />
+            <Button mnemonicParsing="false" onAction="#mass9TaskAction" prefHeight="30.0" text="Default 9-mass" />
+            <Button mnemonicParsing="false" onAction="#mass10TaskAction" prefHeight="30.0" text="Default 10-mass" />
+            <Button mnemonicParsing="false" onAction="#mass11TaskAction" prefHeight="30.0" text="Default 11-mass" />
+         </items>
+      </ToolBar>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click it in the list.  To restore or add a mass or ratio, and to set the mass station for BKG, click the button on the left." textAlignment="RIGHT" wrappingWidth="1066.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
+   </padding>
+</GridPane>

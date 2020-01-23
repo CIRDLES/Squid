@@ -18,14 +18,13 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -37,7 +36,7 @@ public class AgePb76WithErr extends Function {
     private static final long serialVersionUID = 1356960783530914047L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
+     * Provides the functionality of Squid2.5's agePb76 by calling pbPbAge and
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *
@@ -80,13 +79,13 @@ public class AgePb76WithErr extends Function {
             double[] pb207_206Ratio = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207_206Unct1Sigma = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
 
-            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
 
             double[] agePb76 = org.cirdles.ludwig.isoplot3.UPb.pbPbAge(pb207_206Ratio[0],
                     pb207_206Unct1Sigma[0],
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{agePb76[0], agePb76[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
@@ -107,9 +106,7 @@ public class AgePb76WithErr extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

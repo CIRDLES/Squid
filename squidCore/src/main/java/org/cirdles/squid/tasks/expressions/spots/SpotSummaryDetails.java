@@ -23,6 +23,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
  *
@@ -37,6 +38,10 @@ public class SpotSummaryDetails implements Serializable {
     private ExpressionTreeInterface expressionTree;
     private boolean[] rejectedIndices;
     private boolean manualRejectionEnabled;
+    // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
+    private int preferredViewSortOrder;
+    private double minProbabilityWM;
+    private String selectedExpressionName;
 
     private SpotSummaryDetails() {
         this(null);
@@ -58,9 +63,12 @@ public class SpotSummaryDetails implements Serializable {
         this.selectedSpots = selectedSpots;
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
+        this.preferredViewSortOrder = -1;
+        this.minProbabilityWM = 0.0;
+        this.selectedExpressionName = "204/206";
     }
 
-    public double[][] eval(TaskInterface task) throws SquidException{
+    public double[][] eval(TaskInterface task) throws SquidException {
         return convertObjectArrayToDoubles(expressionTree.eval(retrieveActiveSpots(), task));
     }
 
@@ -91,7 +99,7 @@ public class SpotSummaryDetails implements Serializable {
      * @param values
      */
     public void setValues(double[][] values) {
-        this.values = values;
+        this.values = clone2dArray(values);
     }
 
     /**
@@ -129,21 +137,28 @@ public class SpotSummaryDetails implements Serializable {
      * @param rejectedIndices the rejectedIndices to set
      */
     public void setRejectedIndices(boolean[] rejectedIndices) {
-        this.rejectedIndices = rejectedIndices;
+        this.rejectedIndices = rejectedIndices.clone();
     }
-    
-    public void resetRejectedIndices(){
+
+    public void rejectNone() {
         rejectedIndices = new boolean[selectedSpots.size()];
     }
-    
-    public boolean[] getRejectedIndices(){
+
+    public void rejectAll() {
+        rejectedIndices = new boolean[selectedSpots.size()];
+        for (int i = 0; i < rejectedIndices.length; i++) {
+            rejectedIndices[i] = true;
+        }
+    }
+
+    public boolean[] getRejectedIndices() {
         return this.rejectedIndices.clone();
     }
-    
-    public void setIndexOfRejectedIndices(int index, boolean value){
+
+    public void setIndexOfRejectedIndices(int index, boolean value) {
         rejectedIndices[index] = value;
     }
-    
+
     /**
      * @return the manualRejectionEnabled
      */
@@ -158,4 +173,45 @@ public class SpotSummaryDetails implements Serializable {
         this.manualRejectionEnabled = manualRejectionEnabled;
     }
 
+    /**
+     * @return the preferredViewSortOrder
+     */
+    public int getPreferredViewSortOrder() {
+        return preferredViewSortOrder;
+    }
+
+    /**
+     * @param preferredViewSortOrder the preferredViewSortOrder to set
+     */
+    public void setPreferredViewSortOrder(int preferredViewSortOrder) {
+        this.preferredViewSortOrder = preferredViewSortOrder;
+    }
+
+    /**
+     * @return the minProbabilityWM
+     */
+    public double getMinProbabilityWM() {
+        return minProbabilityWM;
+    }
+
+    /**
+     * @param minProbabilityWM the minProbabilityWM to set
+     */
+    public void setMinProbabilityWM(double minProbabilityWM) {
+        this.minProbabilityWM = minProbabilityWM;
+    }
+
+    /**
+     * @return the selectedExpressionName
+     */
+    public String getSelectedExpressionName() {
+        return selectedExpressionName;
+    }
+
+    /**
+     * @param selectedExpressionName the selectedExpressionName to set
+     */
+    public void setSelectedExpressionName(String selectedExpressionName) {
+        this.selectedExpressionName = selectedExpressionName;
+    }
 }

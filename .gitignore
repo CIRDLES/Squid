@@ -16,6 +16,9 @@ hs_err_pid*
 build/
 /Squid/.nb-gradle/
 
+# Maven
+target/
+
 # Netbeans
 nb-configuration.xml
 nbactions.xml
@@ -40,6 +43,8 @@ test_*
 *.zip
 *.squid
 *.xls
+*.pdf
+
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
 squidApp/Schema/
@@ -48,6 +53,16 @@ squidCore/Schema/
 LudwigLibraryJavadoc/
 Schema/
 /Schema/
+squidApp/Squid3_Reports_v?.?.?
+squidApp/XSLTML/
+XSLTML/
+squidCore/out
+
+
+squidCore/expressionsImages
+squidCore/testgroup.pdf
+squidCore/test.pdf
+squidCore/Hf1sabserr.png
 
 # Resources
 !squidApp/src/main/resources/org/cirdles/squid/gui/version.txt
@@ -59,7 +74,9 @@ Schema/
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
 !squidCore/src/main/resources/org/cirdles/squid/projects/Z626611PKPERM1.squid
-!squidCore/src/main/resources/org/cirdles/squid/tasks/squidTask25/*.xls
+!squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/*.xls
+!squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/listOfXSLTMLFiles.txt
+
 
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterialModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
@@ -69,6 +86,11 @@ Schema/
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
 
+!squidApp/pomX.xml
+!squidCore/pomX.xml
+
 
 # MACOS
 .DS_Store
+# WINOS
+Thumbs.db

@@ -38,7 +38,7 @@
 }
 
 .choice-box .label{
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Monospaced";
     -fx-font-weight: bolder;
     -fx-font-size: 9pt;
     -fx-text-fill: Secondary;
@@ -46,7 +46,7 @@
 
 .text-field {
     -fx-background-color: transparent;
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-border-color: transparent transparent Secondary transparent;
     -fx-padding: 4 0 4 0;
@@ -71,7 +71,7 @@
 
 .label {
     -fx-font-size: 12pt;
-    -fx-font-family: "Lucida Sans", "Segoe UI";
+    -fx-font-family: "SansSerif", "Segoe UI";
     -fx-text-fill: P-Text;
     -fx-padding: 4 0 4 0;
     -fx-opacity: 100;
@@ -139,7 +139,7 @@
 
 }
 .tab-pane *.tab-header-background {
-    -fx-background-color: derive(P-Light, 25%);
+    -fx-background-color: derive(P-Light, 25%);/*25%*/
     -fx-alignment: CENTER;
 
 }
@@ -153,9 +153,9 @@
 .tab .tab-label {
     -fx-alignment: CENTER;
     /*-fx-text-fill: S-Text;*/
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
-    -fx-font-size: 12pt;
-    -fx-font-weight: bold;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    /*-fx-font-weight: bold;*/
     -fx-border-radius: 0px;
     -fx-text-fill: white;
 
@@ -167,7 +167,7 @@
 }
 .tab-pane .tab
 {
-    -fx-background-color: Secondary;/*#e6e6e6;*/
+    -fx-background-color: derive(S-Dark, 85%);/*#e6e6e6;*/
     -fx-text-fill: white;
 
 }
@@ -176,7 +176,7 @@
 }
 .tab-pane .tab:selected
 {
-    -fx-background-color: S-Dark;
+    -fx-background-color: derive(S-Dark, 35%);
     /*-fx-background-color: derive(P-Light, 25%);*/
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -222,10 +222,10 @@
     -fx-border-color: #e2e2e2;
     -fx-border-width: 2;
     -fx-background-radius: 0;
-    -fx-background-color: Secondary;/*#72b1bf;!*#43ABC9;!*#ff8f89; !*#ff6961; !*#1d1d1d;*/
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-background-color: Secondary;
+    -fx-font-family: "SansSerif";
     -fx-font-size: 11pt;
-    -fx-text-fill: whitesmoke;/*  #d8d8d8;*/
+    -fx-text-fill: whitesmoke;
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
 }
 
@@ -282,10 +282,16 @@
 
 /*  https://stackoverflow.com/questions/39512621/change-javafx-tableview-font-size  */
 .table-view .column-header-background .label{
-    -fx-font-family: "Lucida Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 10pt;
 }
 
 .table-view .table-column{
     -fx-alignment:center;
+}
+
+#squidReportSettingsColumnDetailsTextArea {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 10pt;
+    -fx-font-color: rgb(43, 32, 32);
 }

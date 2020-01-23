@@ -18,15 +18,13 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_76_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -82,18 +80,19 @@ public class Age7corrWithErr extends Function {
             double[] totPb76 = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double[] totPb76err = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
             
-            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_76_NAME).getValues()[0][0];
+//            double sComm_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_76).getValues()[0][0];
+            double sComm_76 = shrimpFractions.get(0).getCom_207Pb206Pb();
 
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] age7corrWithErr = org.cirdles.ludwig.isoplot3.Pub.age7corrWithErr(totPb6U8[0],
                     totPb6U8err[0],
                     totPb76[0],
                     totPb76err[0],
                     sComm_76,
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{age7corrWithErr[0], age7corrWithErr[1]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0}};
@@ -114,9 +113,7 @@ public class Age7corrWithErr extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

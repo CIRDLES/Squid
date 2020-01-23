@@ -42,6 +42,7 @@ public class Exp extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Exponential"}};
         labelsForInputValues = new String[]{"number"};
+        definition = "Returns e raised to the power of a certain number (Arg0)";
     }
 
     /**

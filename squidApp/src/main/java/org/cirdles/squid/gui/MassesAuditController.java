@@ -74,7 +74,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private final int ROW_HEIGHT = 30;
 
     private static final String STYLE_BUTTON_LABEL
-            = "-fx-font-family: \"Courier New\", \"Lucida Sans\", \"Segoe UI\", Helvetica, Arial, sans-serif;\n"
+            = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
 
@@ -659,7 +659,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
                 int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
-                    qt1y.add((double) spots.get(i).getQtlY());
+                    qt1y.add((double) spots.get(i).getQt1Y());
                 }
             }
             produceGraphOnScrolledPane(
@@ -687,7 +687,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
                 int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
                 for (int j = 0; j < countOfScans; j++) {
-                    qt1z.add((double) spots.get(i).getQtlZ());
+                    qt1z.add((double) spots.get(i).getQt1Z());
                 }
             }
             produceGraphOnScrolledPane(

@@ -23,18 +23,25 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PPM_PARENT_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_PRIMARY_UTH_EQN_NAME_U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_TH_U_EQN_NAME_S;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 
 /**
  *
@@ -46,7 +53,7 @@ public class TaskSquid25 implements Serializable {
 
     private String squidVersion;
     private String squidTaskFileName;
-    private String taskType;
+    private TaskTypeEnum taskType;
     private String taskName;
     private String taskDescription;
     private String labName;
@@ -60,6 +67,8 @@ public class TaskSquid25 implements Serializable {
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
+
+    private Map<String, String> specialSquidFourExpressionsMap;
 
     private static TaskSquid25 taskSquid25;
 
@@ -90,7 +99,7 @@ public class TaskSquid25 implements Serializable {
                 int firstRow = Integer.parseInt(lines[1].split("\t")[1]) - 1;
 
                 taskSquid25.squidTaskFileName = lines[firstRow].split("\t")[1];
-                taskSquid25.taskType = lines[firstRow + 1].split("\t")[1];
+                taskSquid25.taskType = TaskTypeEnum.valueOf(lines[firstRow + 1].split("\t")[1].toUpperCase(Locale.ENGLISH));
                 taskSquid25.taskName = lines[firstRow + 2].split("\t")[1];
                 taskSquid25.taskDescription = lines[firstRow + 3].split("\t")[1];
 
@@ -111,7 +120,7 @@ public class TaskSquid25 implements Serializable {
                 }
 
                 String[] ratioStrings = lines[firstRow + 15].split("\t");
-                if (isSquid2_20 && ratioStrings[0].toUpperCase().startsWith("HIDDEN")){
+                if (isSquid2_20 && ratioStrings[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")) {
                     // special case of 2.2 where this row exists
                     firstRow++;
                     ratioStrings = lines[firstRow + 15].split("\t");
@@ -134,92 +143,37 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.task25Equations = new ArrayList<>();
 
                 // determine where uranium or thorium is primary or secondary
-                String primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_U;
-                String primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
+                String primaryUThEqnName = UNCOR206PB238U_CALIB_CONST;
+                String primaryUThEqnOtherName = UNCOR208PB232TH_CALIB_CONST;
+
+                taskSquid25.specialSquidFourExpressionsMap = new TreeMap<>();
 
                 String[] primaryUThPbEqn = lines[firstRow + 22].split("\t");
                 if (primaryUThPbEqn.length > 1) {
-
                     if (taskSquid25.parentNuclide.contains("232")) {
-                        primaryUThEqnName = SQUID_PRIMARY_UTH_EQN_NAME_TH;
-//                        primaryUThPbEqn[1] = primaryUThPbEqn[1];
-                        primaryUThEqnOtherName = SQUID_PRIMARY_UTH_EQN_NAME_U;
+                        primaryUThEqnName = UNCOR208PB232TH_CALIB_CONST;
+                        primaryUThEqnOtherName = UNCOR206PB238U_CALIB_CONST;
                     }
-
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]),
-                            primaryUThEqnName,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            primaryUThEqnName, prepareSquid25ExcelEquationStringForSquid3(primaryUThPbEqn[1]));
                 }
 
                 String[] secondaryUThPbEqn = lines[firstRow + 23].split("\t");
                 if (secondaryUThPbEqn.length > 1) {
-                    // this is the case of DirectAltPd = TRUE
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]),
-                            primaryUThEqnOtherName,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            primaryUThEqnOtherName, prepareSquid25ExcelEquationStringForSquid3(secondaryUThPbEqn[1]));
                 }
 
                 String[] ThUEqn = lines[firstRow + 24].split("\t");
                 if (ThUEqn.length > 1) {
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_TH_U_EQN_NAME,
-                            true,
-                            false,
-                            false,
-                            true,
-                            true, false));
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]),
-                            SQUID_TH_U_EQN_NAME_S,
-                            false,
-                            true,
-                            false,
-                            true,
-                            true, false));
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            TH_U_EXP_DEFAULT, prepareSquid25ExcelEquationStringForSquid3(ThUEqn[1]));
                 }
-                // this logic is moved to Ludwig Q3 in BuiltInExpressionsFactory
-//                else {
-//                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-//                            prepareSquid25ExcelEquationStringForSquid3("(0.03446*[\"254/238\"] + 0.868) * [\"248/254\"]"),
-//                            SQUID_TH_U_EQN_NAME,
-//                            true,
-//                            true,
-//                            false,
-//                            true,
-//                            true, false));
-//                }
 
                 String[] ppmParentEqn = lines[firstRow + 25].split("\t");
                 if (ppmParentEqn.length > 1) {
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]),
-                            SQUID_PPM_PARENT_EQN_NAME,
-                            true,
-                            true,
-                            false,
-                            true,
-                            true, false));
-
-                    taskSquid25.task25Equations.add(new TaskSquid25Equation(
-                            "CalculateMeanConcStd([\"" + SQUID_PPM_PARENT_EQN_NAME + "\"])",
-                            SQUID_MEAN_PPM_PARENT_NAME,
-                            false,
-                            false,
-                            true,
-                            false,
-                            true, true));
-
+                    taskSquid25.specialSquidFourExpressionsMap.put(
+                            PARENT_ELEMENT_CONC_CONST, prepareSquid25ExcelEquationStringForSquid3(ppmParentEqn[1]));
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
@@ -227,8 +181,14 @@ public class TaskSquid25 implements Serializable {
 
                 String[] equationNames = lines[firstRow + 27].split("\t");
 
-                // these sqitches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
+                // June 2019 skip Hidden row 34
                 String[] switchST = lines[firstRow + 28].split("\t");
+                if(switchST[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")){
+                    firstRow ++;
+                }
+                
+                // these switches split into a//n array of length equations mius 1 in Squid2.20 due to missing count entry
+                switchST = lines[firstRow + 28].split("\t");
 
                 String[] switchSA = lines[firstRow + 29].split("\t");
 
@@ -244,8 +204,7 @@ public class TaskSquid25 implements Serializable {
                 if (constantNamesSource.length > 1) {
                     countOfConstants = Integer.valueOf(constantNamesSource[1]);
                 }
-//                taskSquid25.constantNames = new ArrayList<>();
-//                taskSquid25.constantValues = new ArrayList<>();
+
                 for (int i = 0; i < countOfConstants; i++) {
                     taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
                     taskSquid25.constantValues.add(constantValuesSource[i + 2]);
@@ -260,10 +219,10 @@ public class TaskSquid25 implements Serializable {
                         switchUN = true;
                     }
 
-                    if (prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]).length() > 0) {
-                        String excelExpression = prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]);
+                    String excelExpression = prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]);
+                    if (excelExpression.length() > 0) {
                         //detect if name contains "Age" or "abs" - undo change to % for errors
-                        if ((equationNames[i + 2].toUpperCase().contains("ABS")) || (equationNames[i + 2].toUpperCase().contains("AGE"))) {
+                        if ((equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("ABS")) || (equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("AGE"))) {
                             if (excelExpression.startsWith("[%\"")) {
                                 excelExpression = excelExpression.replaceFirst("\\[%\"", "\\[±\"");
                             }
@@ -278,20 +237,6 @@ public class TaskSquid25 implements Serializable {
                                 false, false));
                     }
                 }
-
-//                String[] constantNamesSource = lines[firstRow + 40].split("\t");
-//                String[] constantValuesSource = lines[firstRow + 41].split("\t");
-//
-//                int countOfConstants = 0;
-//                if (constantNamesSource.length > 1) {
-//                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
-//                }
-//                taskSquid25.constantNames = new ArrayList<>();
-//                taskSquid25.constantValues = new ArrayList<>();
-//                for (int i = 0; i < countOfConstants; i++) {
-//                    taskSquid25.constantNames.add(constantNamesSource[i + 2].replaceFirst("_", ""));
-//                    taskSquid25.constantValues.add(constantValuesSource[i + 2]);
-//                }
             }
         } catch (IOException iOException) {
         }
@@ -305,12 +250,16 @@ public class TaskSquid25 implements Serializable {
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
         retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
-        retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"BKG\"])");
-        retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"BKG\"])");
+        retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
+        retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
         retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
         // assume most calls to uncertainty are for percent
         retVal = retVal.replace("[±\"", "[%\"");
+        
+        // June 2019 fix Allen Kennedy's use of bad quotes
+        retVal = retVal.replace("“", "\"");
+        retVal = retVal.replace("”", "\"");
 
         // regex for robreg with four arguments = robreg.*\)
         Pattern squid25FunctionPattern = Pattern.compile("^(.*)[r,R]obreg.*\\)", Pattern.CASE_INSENSITIVE);
@@ -405,32 +354,87 @@ public class TaskSquid25 implements Serializable {
         }
 
         // do not include calls to error functions of Age as in AgeErPb76 etc
-        if (excelString.toUpperCase(Locale.US).contains("AGEER")) {
+        if (excelString.toUpperCase(Locale.ENGLISH).contains("AGEER")) {
             retVal = "";
         }
 
         // misc edits
         if (retVal.matches("^.*(?i)corr\\S.*")) {
             if (!retVal.contains("corr.")) {
-                retVal = retVal.replace("corr", "corr ");
+                retVal = retVal.replace("corr", "cor_");
+                if (retVal.contains("204cor")) {
+                    retVal = retVal.replace("204cor", "4cor");
+                }
+
+                if (retVal.contains("207cor")) {
+                    retVal = retVal.replace("207cor", "7cor");
+                }
+
+                if (retVal.contains("208cor")) {
+                    retVal = retVal.replace("208cor", "8cor");
+                }
+
+                if (retVal.matches("^.*\\S(?i)age.*")) {
+                    retVal = retVal.replace("Age", "_Age");
+                    retVal = retVal.replace("age", "_Age");
+                }
+            } else {
+                if (retVal.matches("^.*\\S(?i)age.*")) {
+                    retVal = retVal.replace("Age", " Age");
+                    retVal = retVal.replace("age", " Age");
+                }
             }
-            retVal = retVal.replace("corr2", "corr 2");
-        }
-        if (retVal.matches("^.*\\S(?i)age.*")) {
-            retVal = retVal.replace("Age", " Age");
-            retVal = retVal.replace("age", " Age");
+            retVal = retVal.replace("corr 2", "cor_2");
+            retVal = retVal.replace("corr2", "cor_2");
         }
 
-        if (retVal.contains("\"4corr")) {
-            retVal = retVal.replace("\"4corr", "\"4-corr");
+        if (retVal.contains("\"4-cor")) {
+            retVal = retVal.replace("\"4-cor", "\"4cor");
         }
-        if (retVal.contains("\"7corr")) {
-            retVal = retVal.replace("\"7corr", "\"7-corr");
+        if (retVal.contains("\"7-corr")) {
+            retVal = retVal.replace("\"7-cor", "\"7cor");
         }
-        if (retVal.contains("\"8corr")) {
-            retVal = retVal.replace("\"8corr", "\"8-corr");
+        if (retVal.contains("\"8-corr")) {
+            retVal = retVal.replace("\"8-cor", "\"8cor");
         }
 
+        if (retVal.contains("%com206")) {
+            retVal = retVal.replace("%com206", COM206PB_PCT);
+        }
+        if (retVal.contains("%com208")) {
+            retVal = retVal.replace("%com208", COM208PB_PCT);
+        }
+
+        if (retVal.contains("r_206*/238")) {
+            retVal = retVal.replace("r_206*/238", "r_" + R206PB_238U);
+        }
+
+        if (retVal.contains("r_207*/206*")) {
+            retVal = retVal.replace("r_207*/206*", "r_" + R207PB_206PB);
+        }
+
+        if (retVal.contains("r_207*/235")) {
+            retVal = retVal.replace("r_207*/235", "r_" + R207PB_235U);
+        }
+
+        if (retVal.contains("r_207Pb/206Pb")) {
+            retVal = retVal.replace("r_207Pb/206Pb", "r_" + R207PB_206PB);
+        }
+
+        if (retVal.contains("r_206Pb/238U")) {
+            retVal = retVal.replace("r_206Pb/238U", "r_" + R206PB_238U);
+        }
+
+        // finally remove unnecessary ["..."]
+        squid25FunctionPattern = Pattern.compile("\\[\\\"([^]]+)\\\"\\]*", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        while (matcher.find()) {
+            String bracketed = matcher.group();
+            String unBracketed = bracketed.substring(2, bracketed.length() - 2);
+            if (unBracketed.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")) {
+                retVal = retVal.replace(matcher.group(), unBracketed);
+            }
+        }
         return retVal;
     }
 
@@ -469,7 +473,7 @@ public class TaskSquid25 implements Serializable {
     /**
      * @return the taskType
      */
-    public String getTaskType() {
+    public TaskTypeEnum getTaskType() {
         return taskType;
     }
 
@@ -564,6 +568,13 @@ public class TaskSquid25 implements Serializable {
      */
     public List<String> getConstantValues() {
         return constantValues;
+    }
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    public Map<String, String> getSpecialSquidFourExpressionsMap() {
+        return specialSquidFourExpressionsMap;
     }
 
 }

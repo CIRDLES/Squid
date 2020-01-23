@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -53,7 +54,7 @@ public abstract class Operation
      *
      */
     protected int precedence;
-    // establish size of array resullting from evaluation
+    // establish size of array resulting from evaluation
 
     /**
      *
@@ -74,6 +75,10 @@ public abstract class Operation
      *
      */
     protected String[] labelsForInputValues = new String[]{};
+    
+    protected String definition;
+    
+    protected boolean summaryCalc;
 
     /**
      *
@@ -292,11 +297,25 @@ public abstract class Operation
      */
     @Override
     public String[][] getLabelsForOutputValues() {
-        return labelsForOutputValues;
+        return  clone2dArray(labelsForOutputValues);
     }
     
     @Override
     public String[] getLabelsForInputValues() {
-        return labelsForInputValues;
+        return labelsForInputValues.clone();
     }
+
+    @Override
+    public String getDefinition() {
+        return definition;
+    }
+
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc() {
+        return summaryCalc;
+    }
+    
+    
 }

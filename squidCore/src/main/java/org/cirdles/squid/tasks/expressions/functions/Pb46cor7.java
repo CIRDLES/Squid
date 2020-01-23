@@ -18,16 +18,13 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PRESENT_R238_235S_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_64_NAME;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SCOMM_74_NAME;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
  *
@@ -39,24 +36,21 @@ public class Pb46cor7 extends Function {
     private static final long serialVersionUID = 8731067364281915559L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's pb46cor7. Returns 204Pb/206Pb
+     * required to force 206Pb/238U-207Pb/206Pb ages to concordance.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb46cor7() {
 
-        name = "pb46cor7";
+        name = "Pb46cor7";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb46cor7"}};
-        labelsForInputValues = new String[]{"207/206RatioAnd1\u03C3 abs", "207corr206Pb/238UAge"};
+        labelsForInputValues = new String[]{"207/206Ratio with 1\u03C3 abs", "per-spot expression for 207corr206Pb/238UAge"};
     }
 
     /**
@@ -80,20 +74,22 @@ public class Pb46cor7 extends Function {
         try {
             double[] pb207_206RatioAndUnct = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             double[] pb207corr206_238Age = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
-            
-            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_64_NAME).getValues()[0][0];
-            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(SCOMM_74_NAME).getValues()[0][0];
 
-            double PRESENT_R238_235S = (Double) ((ConstantNode) task.getNamedParametersMap().get(PRESENT_R238_235S_NAME)).getValue();
-            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            //double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
+            double sComm_64 = shrimpFractions.get(0).getCom_206Pb204Pb();
+//            double sComm_74 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_74).getValues()[0][0];
+            double sComm_74 = shrimpFractions.get(0).getCom_207Pb204Pb();
+
+            double present238U235U = task.getTaskExpressionsEvaluationsPerSpotSet().get(REF_238U235U).getValues()[0][0];
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] pb46cor7 = org.cirdles.ludwig.squid25.PbUTh_2.pb46cor7(
                     pb207_206RatioAndUnct[0],
                     sComm_64,
                     sComm_74,
                     pb207corr206_238Age[0],
-                    lambda235, lambda238, PRESENT_R238_235S);
+                    lambda235, lambda238, present238U235U);
             retVal = new Object[][]{{pb46cor7[0]}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
             retVal = new Object[][]{{0.0}};
@@ -111,12 +107,10 @@ public class Pb46cor7 extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>Pb46cor7</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

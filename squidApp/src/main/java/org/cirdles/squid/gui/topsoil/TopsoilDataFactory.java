@@ -17,13 +17,21 @@ package org.cirdles.squid.gui.topsoil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
-import static org.cirdles.topsoil.variable.Variables.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
+
+import static org.cirdles.topsoil.Variable.*;
 
 /**
  *
@@ -35,13 +43,13 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
 
         // default is for reference materials
-        String ratioBase75 = " 207*/235";
-        String ratioBase68 = " 206*/238";
-        String errCorr = " errcorr";
+        String ratioBase75 = R207PB_235U_RM;
+        String ratioBase68 = R206PB_238U_RM;
+        String errCorr = ERR_CORREL_RM;
         if (isUnknown) {
-            ratioBase75 = " 207*/235S";
-            ratioBase68 = " 206*/238S";
-            errCorr = " errcorrS";
+            ratioBase75 = R207PB_235U;
+            ratioBase68 = R206PB_238U;
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase75, ratioBase68, errCorr);
@@ -52,15 +60,14 @@ public class TopsoilDataFactory {
     public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
-        // see for example : (unknowns): '4-corr 238/236' vs '8-corr 238/206*'
-        // default is for reference materials
-        String ratioBase86 = " 238/206*";
-        String ratioBase76 = " 207*/206*";
-        String errCorr = " errcorr";
+        // TW is not defined for reference materials
+        String ratioBase86 = "";
+        String ratioBase76 = "";
+        String errCorr = "";
         if (isUnknown) {
-            ratioBase86 = " 238/206";
-            ratioBase76 = " 207*/206*";
-            errCorr = " errcorrS";
+            ratioBase86 = R238U_206PB;
+            ratioBase76 = R207PB_206PB;
+            errCorr = ERR_CORREL;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase86, ratioBase76, errCorr);
@@ -72,6 +79,7 @@ public class TopsoilDataFactory {
             ShrimpFractionExpressionInterface shrimpFraction, String correction, String xAxisRatio, String yAxisRatio, String rho) {
 
         Map<String, Object> datum = new HashMap<>();
+        boolean badData = true;
 
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
@@ -79,22 +87,25 @@ public class TopsoilDataFactory {
                     new Class[]{String.class});
 
             double[] xAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + xAxisRatio}))[0].clone();
-            datum.put(X.getName(), xAxisValueAndUnct[0]);
-            datum.put(SIGMA_X.getName(), 1.0 * xAxisValueAndUnct[1]);
+            badData = badData && Double.isNaN(xAxisValueAndUnct[0]);
+            datum.put(X.getTitle(), xAxisValueAndUnct[0]);
+            datum.put(SIGMA_X.getTitle(), 1.0 * xAxisValueAndUnct[1]);
 
             double[] yAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + yAxisRatio}))[0].clone();
-            datum.put(Y.getName(), yAxisValueAndUnct[0]);
-            datum.put(SIGMA_Y.getName(), 1.0 * yAxisValueAndUnct[1]);
+            badData = badData && Double.isNaN(yAxisValueAndUnct[0]);
+            datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
+            datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
 
             double plotRho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + rho}))[0].clone()[0];
-            datum.put(RHO.getName(), plotRho);
+            datum.put(RHO.getTitle(), plotRho);
 
-            datum.put("Selected", true);
+            datum.put(VISIBLE.getTitle(), true);
+            datum.put(SELECTED.getTitle(), true);
 
-            datum.put("AGE", 0.0);
+//            datum.put("AGE", 0.0);
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
         }
 
-        return datum;
+        return badData ? null : datum;
     }
 }

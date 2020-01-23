@@ -18,6 +18,7 @@ import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
+import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.SQUID_PARAMETER_MODELS_FOLDER;
 
 /**
  * @author ryanb
@@ -26,7 +27,7 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     private static final long serialVersionUID = 7402377463547497587L;
 
-    Map<String, BigDecimal> molarMasses;
+    private Map<String, BigDecimal> molarMasses;
 
     public PhysicalConstantsModel() {
         super();
@@ -89,7 +90,7 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     public static List<ParametersModel> getDefaultModels() {
-        File folder = new File("SamplePhysicalConstantsModels");
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidPhysicalConstantsModels");
         File[] files = new File[0];
         List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {

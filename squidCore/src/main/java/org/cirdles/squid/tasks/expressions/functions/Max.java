@@ -43,6 +43,7 @@ public class Max extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"maximum"}};
         labelsForInputValues = new String[]{"number1", "number2"};
+        definition = "Returns the larger of two numbers.";
     }
 
     /**
@@ -80,9 +81,7 @@ public class Max extends Function {
                 + "<mi>max</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

@@ -22,7 +22,7 @@
 grammar ExpressionsForSquid2;
 
 @header {
-    package org.cirdles.squid;
+   package org.cirdles.squid; //- this causes problems with maven by wrtiitng twice
 } 
 
 /*file:   (functionDecl | varDecl)+ ;
@@ -55,8 +55,9 @@ stat:   block
 // http://meri-stuff.blogspot.com/2011/09/antlr-tutorial-expression-language.html
 
 expr:   FUNCTION WS* '(' exprList+ WS* ')'    // func call like f(), f(x), f(1,2) switched ? to + to require 1 arg min
+    |   expr expr
     |   '(' expr ')'
-    |   ID '[' INT ']'         // array index like a[i], a[i][j]
+//    |   ID '[' INT ']'         // array index like a[i], a[i][j] see below
     |   '-' expr                // unary minus
     |   '!' expr                // boolean not
     |   expr ('*'|'/') expr
@@ -128,22 +129,29 @@ FUNCTION :
     S Q R T |
     R O B R E G |
     S Q B I W E I G H T |
+    B I W E I G H T |
     S Q W T D A V |
+    W T D A V |
     T O T A L C P S |
-    L O O K U P | 
-    M A X | 
+    T O T A L C P S T I M E |
+    M A X |
+    M I N |
     A B S |
     A V E R A G E | 
+    S U M |
     C O U N T |
+    C O U N T I F |
+    T I N V |
     C A L C U L A T E M E A N C O N C S T D |
     W T D M E A N A C A L C |
     V A L U E M O D E L 
 ;
 
-ARRAY_CALL : (ID | NAMED_EXPRESSION) ('[' INT ']');       // array index like a[i]
+ARRAY_CALL : (ID | NAMED_EXPRESSION) ((' ')* '[' INT ']' (' ')*);       // array index like a[1]
 
 //NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.')* PARENS* (' %err')* '"' ']' ;
-NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;
+//NAMED_EXPRESSION : '[' ('±')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;
+NAMED_EXPRESSION : '[' (' ')? ('\u00B1')? ('%')? '"' ID (ID | '/' | ' ' | '*' | '.' | '_' | '%' | '-')* PARENS* (' %err')* '"' ']' ;
 
 ID  :   (LETTER | NUMBER) (LETTER | NUMBER)* ;
 fragment

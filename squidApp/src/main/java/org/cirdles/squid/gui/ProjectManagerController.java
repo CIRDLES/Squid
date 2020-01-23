@@ -24,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
@@ -51,13 +52,17 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private TextField analystNameText;
     @FXML
-    private VBox mainProjectManagerPane;
-    @FXML
     private TextArea projectNotesText;
     @FXML
     private Label loginCommentLabel;
     @FXML
     private Label titleLabel;
+    @FXML
+    private GridPane projectManagerGridPane;
+    @FXML
+    private Label softwareVersionLabel1;
+    @FXML
+    private TextField squidFileNameText;
 
 
     /**
@@ -112,10 +117,12 @@ public class ProjectManagerController implements Initializable {
         analystNameText.setText(squidProject.getAnalystName());
         projectNotesText.setText(squidProject.getProjectNotes());
 
-        orignalPrawnFileName.setText(squidProject.getPrawnXMLFilePath());
+        orignalPrawnFileName.setText(squidProject.getPrawnSourceFilePath());
+        
+        squidFileNameText.setText(SquidUIController.projectFileName);
 
         softwareVersionLabel.setText(
-                "Software Version: "
+                "Version: "
                 + squidProject.getPrawnFileShrimpSoftwareVersionName());
         
         loginCommentLabel.setText(
@@ -132,9 +139,9 @@ public class ProjectManagerController implements Initializable {
         String summaryStatsString = spotPrefixTree.buildSummaryDataString();
 
         // format into rows for summary tab
-        summaryStatsLabel.setText("Session summary:\n\t" + summaryStatsString.replaceAll(";", "\n\t"));
+        summaryStatsLabel.setText("Summary:\n\t" + summaryStatsString.replaceAll(";", "\n\t"));
 
-        totalAnalysisTimeLabel.setText("Total session time in hours = " + (int) squidProject.getSessionDurationHours());
+        totalAnalysisTimeLabel.setText("Total time in hours = " + (int) squidProject.getSessionDurationHours());
     }
 
 }

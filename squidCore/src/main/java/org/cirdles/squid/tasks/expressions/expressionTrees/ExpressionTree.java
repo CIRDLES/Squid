@@ -22,21 +22,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.Expression.MSG_POORLY_FORMED_EXPRESSION;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
+import org.cirdles.squid.tasks.expressions.functions.If;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -60,6 +65,8 @@ public class ExpressionTree
         XMLSerializerInterface {
 
     private static final long serialVersionUID = 69881766695649050L;
+
+    public static final String ANONYMOUS_NAME = "Anonymous";
 
     /**
      *
@@ -102,6 +109,8 @@ public class ExpressionTree
      */
     protected boolean squidSwitchSAUnknownCalculation;
 
+    protected String unknownsGroupSampleName;
+
     /**
      *
      */
@@ -114,15 +123,15 @@ public class ExpressionTree
 
     protected boolean squidSwitchConcentrationReferenceMaterialCalculation;
 
-    protected  String uncertaintyDirective;
+    protected String uncertaintyDirective;
 
-    protected  int index;
+    protected int index;
 
     /**
      *
      */
     public ExpressionTree() {
-        this("Anonymous");
+        this(ANONYMOUS_NAME);
     }
 
     /**
@@ -171,6 +180,7 @@ public class ExpressionTree
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
+        this.unknownsGroupSampleName = Squid3Constants.SpotTypes.UNKNOWN.getPlotType();
         this.squidSpecialUPbThExpression = false;
         this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
@@ -185,6 +195,7 @@ public class ExpressionTree
         target.setSquidSwitchSCSummaryCalculation(squidSwitchSCSummaryCalculation);
         target.setSquidSwitchSTReferenceMaterialCalculation(squidSwitchSTReferenceMaterialCalculation);
         target.setSquidSwitchSAUnknownCalculation(squidSwitchSAUnknownCalculation);
+        target.setUnknownsGroupSampleName(unknownsGroupSampleName);
         target.setSquidSpecialUPbThExpression(squidSpecialUPbThExpression);
         target.setSquidSwitchConcentrationReferenceMaterialCalculation(squidSwitchConcentrationReferenceMaterialCalculation);
         target.setRootExpressionTree(rootExpressionTree);
@@ -212,6 +223,25 @@ public class ExpressionTree
                 }
             }
         }
+        // Jan 2020 added in missing check for divide by zero
+        if (operation instanceof Divide) {
+            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Double)) {
+                if (((Double) ((ConstantNode) childrenET.get(1)).getValue()) == 0) {
+                    retVal = false;
+                }
+            }
+        }
+
+        // Jan 2020 added in missing check for badly constructed if
+        if (operation instanceof If) {
+            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Boolean)) {
+                retVal = false;
+            }
+            if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
+                retVal = false;
+            }
+        }
+
         return retVal;
     }
 
@@ -329,7 +359,7 @@ public class ExpressionTree
                 if (this.amHealthy()) {
                     audit.append(this.getName()).append(" is healthy ").append(this.getClass().getSimpleName());
                 } else if (this.getParentET() == null) {// only if ConstantNode is top of tree vs within an already autided expressiontree
-                    audit.append("    ").append(this.getName()); // = Missing Expression becasue if unhealthy, it was forced to be a constantNode
+                    audit.append("    ").append(this.getName()); // = Missing Expression because if unhealthy, it was forced to be a constantNode
                 }
             }
         } else {
@@ -340,6 +370,7 @@ public class ExpressionTree
             audit.append("Op ").append(operation.getName()).append(" requires/provides: ")
                     .append(requiredChildren).append(" / ").append(suppliedChildren).append(" arguments.");
 
+            int count = 0;
             for (ExpressionTreeInterface child : getChildrenET()) {
                 if (child instanceof ConstantNode) {
                     if (((ConstantNode) child).isMissingExpression()) {
@@ -354,6 +385,28 @@ public class ExpressionTree
                         audit.append("\n    Expression '").append((String) ((ShrimpSpeciesNode) child).getName()).append("' is not a valid argument.");
                     }
                 }
+
+                // Jan 2020 refinement
+                if (count == 1) {
+                    if (operation instanceof Divide) {
+                        if ((child instanceof ConstantNode) && (((ConstantNode) child).getValue() instanceof Double)) {
+                            if (((Double) ((ConstantNode) child).getValue()) == 0) {
+                                audit.append("\n    ** NOTE: Division by Zero! **");
+                            }
+                        }
+                    }
+                }
+
+                // Jan 2020 refinement
+                if ((count > 0) && (child instanceof ConstantNode)) {
+                    if (((ExpressionTree) child.getParentET()).getOperation() instanceof If) {
+                        if (((ConstantNode) child).getValue() instanceof Boolean) {
+                            audit.append("\n    ** NOTE: Boolean Operand Not Allowed **");
+                        }
+                    }
+                }
+
+                count++;
             }
 
             audit.append("\n    returns ").append(operation.printOutputValues());
@@ -362,12 +415,51 @@ public class ExpressionTree
         return audit.toString();
     }
 
+    @Override
+    public String auditTargetCompatibility() {
+        StringBuilder audit = new StringBuilder();
+        boolean referenceMaterialCalc = squidSwitchSTReferenceMaterialCalculation || squidSwitchConcentrationReferenceMaterialCalculation;
+
+        String targetPhrase = (referenceMaterialCalc && !squidSwitchSAUnknownCalculation)
+                ? "REFMAT:      " : "";
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
+                    ? (unknownsGroupSampleName
+                            .compareTo(SpotTypes.UNKNOWN.getPlotType()) == 0 ? "UNKNOWN:    " : ("UNK(" + unknownsGroupSampleName) + "):") : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
+                    ? "BOTH:           " : "";
+        }
+        if (targetPhrase.length() == 0) {
+            targetPhrase = "NONE:       ";
+        }
+
+        if (isSquidSwitchSCSummaryCalculation()) {
+            targetPhrase = "SUMMARY("
+                    + (referenceMaterialCalc ? "R" : "")
+                    + (squidSwitchSAUnknownCalculation ? "U" : "")
+                    + "):";
+        }
+
+        audit.append("    ").append(targetPhrase).append("\t\t")
+                .append(this.getName().length() == 0 ? "<please name this expression>" : this.getName());
+
+        return audit.toString();
+    }
+
+    @Override
+    public boolean amAnonymous() {
+        return name.compareTo(ANONYMOUS_NAME) == 0;
+    }
+
     /**
      *
      * @param xstream
      */
     @Override
-    public void customizeXstream(XStream xstream) {
+    public void customizeXstream(XStream xstream
+    ) {
         xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
         xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
 
@@ -391,6 +483,7 @@ public class ExpressionTree
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
         xstream.alias("ExpressionTree", ExpressionTreeInterface.class);
+        xstream.alias("ExpressionTree", ExpressionTreeParsedFromExcelString.class);
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
@@ -403,7 +496,8 @@ public class ExpressionTree
      * @return String
      */
     @Override
-    public String customizeXML(String xml) {
+    public String customizeXML(String xml
+    ) {
         return XMLSerializerInterface.super.customizeXML(xml);
     }
 
@@ -438,7 +532,6 @@ public class ExpressionTree
         return retVal;
     }
 
-
     public String getUncertaintyDirective() {
         return uncertaintyDirective;
     }
@@ -446,6 +539,7 @@ public class ExpressionTree
     public int getIndex() {
         return index;
     }
+
     /**
      *
      * @return true if instance of Function class
@@ -472,7 +566,7 @@ public class ExpressionTree
     public String toStringMathML() {
         String retVal = "";
         if (operation == null) {
-            retVal = "<mtext>No expression selected.</mtext>\n";
+            retVal = "<mtext>" + MSG_POORLY_FORMED_EXPRESSION + "</mtext>\n";
         } else {
             try {
                 retVal = operation.toStringMathML(childrenET);
@@ -622,7 +716,8 @@ public class ExpressionTree
 
     /**
      *
-     * @return true if ratios-of-interest (raw ratios) included in expressionTree
+     * @return true if ratios-of-interest (raw ratios) included in
+     * expressionTree
      */
     public boolean hasRatiosOfInterest() {
         return ratiosOfInterest.size() > 0;
@@ -675,6 +770,15 @@ public class ExpressionTree
         return name;
     }
 
+    @Override
+    public void copySettings(ExpressionTreeInterface origin) {
+        setSquidSwitchSTReferenceMaterialCalculation(origin.isSquidSwitchSTReferenceMaterialCalculation());
+        setSquidSwitchConcentrationReferenceMaterialCalculation(origin.isSquidSwitchConcentrationReferenceMaterialCalculation());
+        setSquidSwitchSAUnknownCalculation(origin.isSquidSwitchSAUnknownCalculation());
+        setSquidSwitchSCSummaryCalculation(origin.isSquidSwitchSCSummaryCalculation());
+        setUnknownsGroupSampleName(origin.getUnknownsGroupSampleName());
+    }
+
     /**
      * @return the squidSwitchSCSummaryCalculation
      */
@@ -724,6 +828,22 @@ public class ExpressionTree
     @Override
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
         this.squidSwitchSAUnknownCalculation = squidSwitchSAUnknownCalculation;
+    }
+
+    /**
+     * @return the unknownsGroupSampleName
+     */
+    @Override
+    public String getUnknownsGroupSampleName() {
+        return unknownsGroupSampleName;
+    }
+
+    /**
+     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
+     */
+    @Override
+    public void setUnknownsGroupSampleName(String unknownsGroupSampleName) {
+        this.unknownsGroupSampleName = unknownsGroupSampleName;
     }
 
     /**

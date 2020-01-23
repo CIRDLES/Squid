@@ -18,9 +18,9 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
@@ -34,14 +34,12 @@ public class Pb206U238rad extends Function {
     private static final long serialVersionUID = -2586058958550228458L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
-     * returning "Age" and "AgeErr" and encoding the labels for each cell of the
-     * values array produced by eval.
+     * Provides the functionality of Squid2.5's pb206U238rad.
+     * Returns the radiogenic 206Pb/238U ratio for the
+     * specified age.
      *
      * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb206U238rad() {
 
@@ -51,7 +49,7 @@ public class Pb206U238rad extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForOutputValues = new String[][]{{"206Pb/238U"}};
-        labelsForInputValues = new String[]{"206Pb/238U Age"};
+        labelsForInputValues = new String[]{"per-spot expression for 206Pb/238U Age"};
     }
 
     /**
@@ -73,7 +71,7 @@ public class Pb206U238rad extends Function {
         try {
             double[] age = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0]);
             
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] pb206U238rad = org.cirdles.ludwig.squid25.PbUTh_2.pb206U238rad(
                     age[0],
@@ -99,9 +97,7 @@ public class Pb206U238rad extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

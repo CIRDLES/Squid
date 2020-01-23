@@ -31,6 +31,8 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 @XStreamAlias("Operation")
 public class ValueModel extends Function {
 
+    private static final long serialVersionUID = -5439896482911219791L;
+
     /**
      * This wrapper operation combines a value and its absolute uncertainty
      * under a common name to support Squid3 Expressions of the form [%"xxx"]
@@ -43,13 +45,20 @@ public class ValueModel extends Function {
         precedence = 10;
         rowCount = 1;
         colCount = 2;
+        labelsForInputValues = new String[]{"value", "1\u03C3 uncertainty", "absolute = true, percent = false"};
         labelsForOutputValues = new String[][]{{"Value", "1\u03C3 abs"}};
+        definition = "ValueModel creates an expression encapsulating \n"
+                + DEF_TAB + "a calculated value and its 1-sigma absolute uncertainty \n"
+                + DEF_TAB + "as the first two arguments and a boolean flag (true or false) \n"
+                + DEF_TAB + "signalling whether the provided uncertainty is absolute (true) \n"
+                + DEF_TAB + "or per cent (false) as the thrid argument.";
     }
 
     /**
      *
      * @param childrenET the value of childrenET where child 0 is the value,
-     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false for PCT uncertainty.
+     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false
+     * for PCT uncertainty.
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
@@ -65,8 +74,8 @@ public class ValueModel extends Function {
             boolean[] unctFlag = convertObjectArrayToBooleans(childrenET.get(2).eval(shrimpFractions, task)[0]);
             double unct = unctCalc[0];
             if (!unctFlag[0]) {
-                // convert to absolute uncertainty
-                unct = unctCalc[0] / 100.0 * valueCalc[0];
+                // July 2019 fixed missing abs value !!!
+                unct = Math.abs(unctCalc[0] / 100.0 * valueCalc[0]);
             }
             retVal = new Object[][]{{valueCalc[0], unct}};
         } catch (ArithmeticException | IndexOutOfBoundsException | NullPointerException e) {
@@ -87,9 +96,7 @@ public class ValueModel extends Function {
         retVal.append("<mrow>");
         retVal.append("<mi>").append(name).append("</mi>");
         retVal.append("<mfenced>");
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
+        retVal.append(buildChildrenToMathML(childrenET));
 
         retVal.append("</mfenced></mrow>\n");
 

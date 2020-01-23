@@ -29,19 +29,11 @@ public class ParametersLauncher {
         squidLabDataStage.setMinHeight(600);
         squidLabDataStage.setMinWidth(900);
         squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
-            Scene scene = new Scene(loader.load());
-            squidLabDataStage.setScene(scene);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         squidLabDataStage.setTitle("Squid Parameters Manager");
-        squidLabDataWindow = squidLabDataStage.getScene().getWindow();
 
         squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
             squidLabDataStage.hide();
+            squidLabDataStage.setScene(null);
             e.consume();
         });
     }
@@ -49,10 +41,20 @@ public class ParametersLauncher {
     public void launchParametersManager(ParametersTab tab) {
         ParametersManagerGUIController.chosenTab = tab;
         if (!squidLabDataStage.isShowing()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidParametersManagerGUI.fxml"));
+                Scene scene = new Scene(loader.load());
+                squidLabDataStage.setScene(scene);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            squidLabDataWindow = squidLabDataStage.getScene().getWindow();
+
             squidLabDataStage.show();
-            squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
-            squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
+
         }
+        squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
+        squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
         squidLabDataStage.requestFocus();
     }
 

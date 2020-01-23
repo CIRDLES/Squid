@@ -18,12 +18,11 @@ import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -48,23 +47,23 @@ public class SquidReportTableController implements Initializable {
     private boolean isSetUpScroller;
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
+    public static SquidReportTableInterface squidReportTable;
+    public static String unknownSpot = "UNKNOWNS";
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-
-        if (typeOfController == SquidReportTableLauncher.ReportTableTab.refMat) {
-            ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
-            textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-        } else {
-            ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-            List<ShrimpFractionExpressionInterface> spotsBySampleNames = squidProject.makeListOfUnknownsBySample();
-            textArray = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, false);
+        textArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        if(typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
+            unknownSpot = "UNKNOWNS";
         }
         tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
         reportsTable.refresh();

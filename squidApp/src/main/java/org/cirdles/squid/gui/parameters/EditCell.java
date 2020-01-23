@@ -1,16 +1,15 @@
 package org.cirdles.squid.gui.parameters;
 // found at https://gist.github.com/james-d/be5bbd6255a4640a5357
 // fixes javafx bug where edit isn't committed on loss of focus
-// very lightly modified
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
-
-
 
 
 public class EditCell<S, T> extends TableCell<S, T> {
@@ -48,6 +47,16 @@ public class EditCell<S, T> extends TableCell<S, T> {
                 textField.setText(converter.toString(getItem()));
                 cancelEdit();
                 event.consume();
+            }
+        });
+
+        //modification to only allow input of numerical values
+       textField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(!newValue.matches("-?[0-9]*\\.?[0-9]*(E|(E-)|e|(e-))?[0-9]*")) {
+                    textField.setText(oldValue);
+                }
             }
         });
     }

@@ -115,7 +115,7 @@ public final class SquidSerializer {
                 SquidMessageDialog.showWarningDialog(
                         "The file you are attempting to open is not a valid '*.squid' file.", null);
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | ClassCastException ex) {
             if (verbose) {
                 SquidMessageDialog.showWarningDialog(
                         "The file you are attempting to open is not compatible with this version of Squid3.", null);

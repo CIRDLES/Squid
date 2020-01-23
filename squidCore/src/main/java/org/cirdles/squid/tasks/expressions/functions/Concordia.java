@@ -18,10 +18,10 @@ package org.cirdles.squid.tasks.expressions.functions;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
@@ -36,7 +36,7 @@ public class Concordia extends Function {
     private static final long serialVersionUID = 4127169946137305310L;
 
     /**
-     * Provides the functionality of Squid's agePb76 by calling pbPbAge and
+     * Provides the functionality of Squid2.5's agePb76 by calling pbPbAge and
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *
@@ -46,13 +46,13 @@ public class Concordia extends Function {
      * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public Concordia() {
-        name = "concordia";
+        name = "Concordia";
         argumentCount = 3;
         precedence = 4;
         rowCount = 1;
         colCount = 4;
         labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs", "MSWD", "Prob Of MSWD"}};
-        labelsForInputValues = new String[]{"ratioXAnd1\u03C3 abs", "ratioYAnd1\u03C3 abs", "rho"};
+        labelsForInputValues = new String[]{"ratioX with 1\u03C3 abs", "ratioY with 1\u03C3 abs", "rho"};
     }
 
     /**
@@ -76,8 +76,8 @@ public class Concordia extends Function {
             double[] ratioYAndUnct = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0]);
             double[] rho = convertObjectArrayToDoubles(childrenET.get(2).eval(shrimpFractions, task)[0]);
 
-            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_235.getName()).getValues()[0][0];
-            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA_238.getName()).getValues()[0][0];
+            double lambda235 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA235).getValues()[0][0];
+            double lambda238 = task.getTaskExpressionsEvaluationsPerSpotSet().get(LAMBDA238).getValues()[0][0];
 
             double[] concordia
                     = org.cirdles.ludwig.isoplot3.Pub.concordia(
@@ -107,9 +107,7 @@ public class Concordia extends Function {
                 + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

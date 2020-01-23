@@ -21,8 +21,8 @@ import org.cirdles.ludwig.squid25.SquidConstants;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SQUID_MEAN_PPM_PARENT_NAME;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 
 /**
  *
@@ -36,19 +36,21 @@ public class CalculateMeanConcStd extends Function {
     /**
      * Provides the functionality of Squid2.5's GetConcStdData, calculating the
      * mean concentration of the parent isotope of the concentration reference
-     * standard, known as pdMeanParentEleA.
+     * standard, known as Av_ParentElement_ConcenConst.
      *
      * @see
      * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
      */
     public CalculateMeanConcStd() {
-        name = "calculateMeanConcStd";
+        name = "CalculateMeanConcStd";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 2;
-        labelsForOutputValues = new String[][]{{SQUID_MEAN_PPM_PARENT_NAME}};
-        labelsForInputValues = new String[]{"numbers"};
+        labelsForOutputValues = new String[][]{{AV_PARENT_ELEMENT_CONC_CONST}};
+        labelsForInputValues = new String[]{"per-spot expression with concentration values in ppm"};
+        summaryCalc = true;
+        definition = "Calculates the sum divided by the count, ignoring tiny values < 1.0E-30.";
     }
 
     /**
@@ -59,7 +61,7 @@ public class CalculateMeanConcStd extends Function {
      * @param shrimpFractions a list of shrimpFractions from the concentration
      * reference material
      * @param task
-     * @return the double[1][1] array of pdMeanParentEleA
+     * @return the double[1][1] array of Av_ParentElement_ConcenConst
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     @Override
@@ -71,7 +73,7 @@ public class CalculateMeanConcStd extends Function {
             double[] xValues = transposeColumnVectorOfDoubles(childrenET.get(0).eval(shrimpFractions, task), 0);
             int counter = 0;
             double sumOfConcentrations = 0.0;
-            double pdMeanParentEleA = 0.0;
+            double Av_ParentElement_ConcenConst = 0.0;
             for (int i = 0; i < xValues.length; i++) {
                 double concentration = xValues[i];
                 if (concentration > SquidConstants.SQUID_TINY_VALUE) {
@@ -80,10 +82,10 @@ public class CalculateMeanConcStd extends Function {
                 }
             }
             if (counter > 0) {
-                pdMeanParentEleA = sumOfConcentrations / counter;
+                Av_ParentElement_ConcenConst = sumOfConcentrations / counter;
             }
 
-            retVal = new Object[][]{{pdMeanParentEleA}};
+            retVal = new Object[][]{{Av_ParentElement_ConcenConst}};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0}};
         }
@@ -100,12 +102,10 @@ public class CalculateMeanConcStd extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>CalculateMeanConcStd</mi>"
+                + "<mi>" + name + "</mi>"
                 + "<mfenced>";
 
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal += toStringAnotherExpression(childrenET.get(i)) + "&nbsp;\n";
-        }
+        retVal += buildChildrenToMathML(childrenET);
 
         retVal += "</mfenced></mrow>\n";
 

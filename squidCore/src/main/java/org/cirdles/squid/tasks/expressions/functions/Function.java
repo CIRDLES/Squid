@@ -20,10 +20,13 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -75,38 +78,50 @@ public abstract class Function
      */
     protected String[] labelsForInputValues = new String[]{};
 
+    protected String definition;
+
+    protected boolean summaryCalc;
+
     /**
      *
      */
     public static final Map<String, String> FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public static final Map<String, String> MATH_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    public static final Map<String, String> SQUID_COMMMON_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> SQUID_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> LOGIC_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
+    public static final Map<String, String> ALIASED_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
     static {
 
-        SQUID_FUNCTIONS_MAP.put("agePb76", "agePb76");
-        SQUID_FUNCTIONS_MAP.put("agePb76WithErr", "agePb76WithErr");
-        SQUID_FUNCTIONS_MAP.put("age7corrWithErr", "age7corrWithErr");
-        SQUID_FUNCTIONS_MAP.put("age8corrWithErr", "age8corrWithErr");
-        SQUID_FUNCTIONS_MAP.put("age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
-        SQUID_FUNCTIONS_MAP.put("rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
-        SQUID_FUNCTIONS_MAP.put("rad8corConcRho", "rad8corConcRho");
-        SQUID_FUNCTIONS_MAP.put("pb76", "pb76");
-        SQUID_FUNCTIONS_MAP.put("pb46cor7", "pb46cor7");
-        SQUID_FUNCTIONS_MAP.put("pb46cor8", "pb46cor8");
-        SQUID_FUNCTIONS_MAP.put("pb206U238rad", "pb206U238rad");
-        SQUID_FUNCTIONS_MAP.put("calculateMeanConcStd", "calculateMeanConcStd");
-        SQUID_FUNCTIONS_MAP.put("stdPb86radCor7per", "stdPb86radCor7per");
-        SQUID_FUNCTIONS_MAP.put("pb86radCor7per", "pb86radCor7per");
-        SQUID_FUNCTIONS_MAP.put("concordiaTW", "concordiaTW");
-        SQUID_FUNCTIONS_MAP.put("concordia", "concordia");
-        SQUID_FUNCTIONS_MAP.put("robReg", "robReg");
-        SQUID_FUNCTIONS_MAP.put("sqBiweight", "sqBiweight");
-        SQUID_FUNCTIONS_MAP.put("sqWtdAv", "sqWtdAv");
+        // key is case-insensitive name and value is case-sensitive method name
+        SQUID_COMMMON_FUNCTIONS_MAP.put("AgePb76", "agePb76");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("AgePb76WithErr", "agePb76WithErr");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("Pb76", "pb76");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("Pb206U238rad", "pb206U238rad");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("ConcordiaTW", "concordiaTW");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("Concordia", "concordia");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("RobReg", "robReg");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("SqBiweight", "sqBiweight");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("Biweight", "sqBiweight");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("SqWtdAv", "sqWtdAv");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("WtdAv", "sqWtdAv");
+        SQUID_COMMMON_FUNCTIONS_MAP.put("ValueModel", "valueModel");
+
+        SQUID_FUNCTIONS_MAP.put("Age7corrWithErr", "age7corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("Age8corrWithErr", "age8corrWithErr");
+        SQUID_FUNCTIONS_MAP.put("Age7CorrPb8Th2WithErr", "age7CorrPb8Th2WithErr");
+        SQUID_FUNCTIONS_MAP.put("Rad8corPb7U5WithErr", "rad8corPb7U5WithErr");
+        SQUID_FUNCTIONS_MAP.put("Rad8corConcRho", "rad8corConcRho");
+        SQUID_FUNCTIONS_MAP.put("Pb46cor7", "pb46cor7");
+        SQUID_FUNCTIONS_MAP.put("Pb46cor8", "pb46cor8");
+        SQUID_FUNCTIONS_MAP.put("CalculateMeanConcStd", "calculateMeanConcStd");
+        SQUID_FUNCTIONS_MAP.put("StdPb86radCor7per", "stdPb86radCor7per");
+        SQUID_FUNCTIONS_MAP.put("Pb86radCor7per", "pb86radCor7per");
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
-        SQUID_FUNCTIONS_MAP.put("lookup", "lookup");
+        SQUID_FUNCTIONS_MAP.put("TotalCpsTime", "totalCpsTime");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
@@ -117,19 +132,43 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
         MATH_FUNCTIONS_MAP.put("ln", "ln");
         MATH_FUNCTIONS_MAP.put("max", "max");
+        MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
+        MATH_FUNCTIONS_MAP.put("countif", "countif");
+        MATH_FUNCTIONS_MAP.put("tinv", "tinv");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
+        FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(LOGIC_FUNCTIONS_MAP);
 
-        FUNCTIONS_MAP.put("valueModel", "valueModel");
+        ALIASED_FUNCTIONS_MAP.put("SqBiweight", "Biweight");
+        ALIASED_FUNCTIONS_MAP.put("SqWtdAv", "WtdAv");
+        ALIASED_FUNCTIONS_MAP.put("TotalCps", null);
+        // July 2019 for 204 count corrections
+        ALIASED_FUNCTIONS_MAP.put("TotalCpsTime", null);
+
     }
 
     public Function() {
+        this.definition = "todo";
+    }
 
+    public static String replaceAliasedFunctionNamesInExpressionString(String excelExpressionString) {
+        String retVal = excelExpressionString;
+        for (Entry<String, String> entry : ALIASED_FUNCTIONS_MAP.entrySet()) {
+            if (retVal != null && retVal.matches(".*(?i)" + entry.getKey() + "(.*)")) {
+                // replace alias if not null
+                if (entry.getValue() != null) {
+                    retVal = retVal.replaceAll("(?i)" + entry.getKey(), entry.getValue());
+                }
+            }
+        }
+
+        return retVal;
     }
 
     /**
@@ -179,6 +218,30 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface sqBiweight() {
         return new SqBiweight();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface biweight() {
+        return new SqBiweight();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface sqWtdAv() {
+        return new SqWtdAv();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface wtdAv() {
+        return new SqWtdAv();
     }
 
     /**
@@ -289,14 +352,6 @@ public abstract class Function
      *
      * @return
      */
-    public static OperationOrFunctionInterface sqWtdAv() {
-        return new SqWtdAv();
-    }
-
-    /**
-     *
-     * @return
-     */
     public static OperationOrFunctionInterface concordiaTW() {
         return new ConcordiaTW();
     }
@@ -328,9 +383,9 @@ public abstract class Function
     public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
-
-    public static OperationOrFunctionInterface lookup() {
-        return new SpotNodeLookupFunction();
+    
+    public static OperationOrFunctionInterface totalCpsTime() {
+        return new ShrimpSpeciesNodeFunction("getNscansTimesCountTimeSec");
     }
 
     /**
@@ -339,6 +394,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface max() {
         return new Max();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface min() {
+        return new Min();
     }
 
     /**
@@ -361,8 +424,24 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface sum() {
+        return new Sum();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface count() {
         return new Count();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface tinv() {
+        return new TInv();
     }
 
     public static OperationOrFunctionInterface calculateMeanConcStd() {
@@ -434,6 +513,15 @@ public abstract class Function
         return retVal;
     }
 
+    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
+        StringBuilder retVal = new StringBuilder();
+        for (int i = 0; i < childrenET.size(); i++) {
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
+        }
+
+        return retVal.toString();
+    }
+
     /**
      * @return the name
      */
@@ -479,11 +567,23 @@ public abstract class Function
      */
     @Override
     public String[][] getLabelsForOutputValues() {
-        return labelsForOutputValues;
+        return clone2dArray(labelsForOutputValues);
     }
 
     @Override
     public String[] getLabelsForInputValues() {
-        return labelsForInputValues;
+        return labelsForInputValues.clone();
+    }
+
+    @Override
+    public String getDefinition() {
+        return definition;
+    }
+
+    /**
+     * @return the summaryCalc
+     */
+    public boolean isSummaryCalc() {
+        return summaryCalc;
     }
 }
