@@ -469,7 +469,7 @@ public class CommonLeadAssignmentController implements Initializable {
         protected RadioButton chooseSKStarRB;
 
         @FXML
-        private ComboBox<ParametersModel> commonLeadModels;
+        protected ComboBox<ParametersModel> commonLeadModels;
 
         @FXML
         protected VBox nodNameVbox;
@@ -572,24 +572,34 @@ public class CommonLeadAssignmentController implements Initializable {
             commonLeadModels.getSelectionModel().select(squidProject.getTask().getCommonPbModel());
             commonLeadModels.valueProperty().addListener((ObservableValue<? extends ParametersModel> observableModel, ParametersModel oldModel, ParametersModel newModel) -> {
                 if (chooseModelRB.isSelected()) {
-                    ((Task) squidProject.getTask()).setUnknownGroupCommonLeadModel(sampleGroup, newModel);
-                    ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                    SpotSummaryDetails spotSummaryDetails
-                            = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                    mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+                    if ((!newModel.equals(oldModel)) && !suppressChangeAction) {
+                        if (commonLeadSpotToolBarTargets.get(0) instanceof CommonLeadSampleToolBar) {
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                treeItem.getCommonLeadModels().getSelectionModel().select(newModel);
+                            }
+                        } else {
 
-                    try {
-                        updateWeightedMeanLabel(
-                                ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
-                                sampleGroupName);
-                    } catch (Exception e) {
+                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadModel(sampleGroup, newModel);
+                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                            SpotSummaryDetails spotSummaryDetails
+                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
+                            try {
+                                updateWeightedMeanLabel(
+                                        ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
+                                        sampleGroupName);
+                            } catch (Exception e) {
+                            }
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                ((CommonLeadSpotDisplay) treeItem).displayData();
+                            }
+                        }
+                        SquidProject.setProjectChanged(true);
                     }
-                    for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
-                        ((CommonLeadSpotDisplay) treeItem).displayData();
-                    }
-                    SquidProject.setProjectChanged(true);
                 }
             });
+
             commonLeadModelsVbox.getChildren().add(commonLeadModels);
             this.getChildren().add(commonLeadModelsVbox);
 
@@ -926,6 +936,7 @@ public class CommonLeadAssignmentController implements Initializable {
         /**
          * @return the commonLeadModels
          */
+        @Override
         public ComboBox<ParametersModel> getCommonLeadModels() {
             return commonLeadModels;
         }
@@ -949,6 +960,7 @@ public class CommonLeadAssignmentController implements Initializable {
         /**
          * @return the skStarValueTextField
          */
+        @Override
         public TextField getSkStarValueTextField() {
             return skStarValueTextField;
         }

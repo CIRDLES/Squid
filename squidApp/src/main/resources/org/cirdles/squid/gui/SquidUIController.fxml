@@ -18,7 +18,7 @@
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
-                <Menu mnemonicParsing="false" text="Project">
+                <Menu fx:id="projectMenu" mnemonicParsing="false" text="Project">
                     <items>
                         <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />

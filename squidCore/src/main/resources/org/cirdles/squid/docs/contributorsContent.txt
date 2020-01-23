@@ -13,5 +13,6 @@ Tyler Newman,
 Lewis Smith, 
 Maddy Maniaci,   
 Nicole Rayner, 
-Andrew Cross,  
+Andrew Cross, 
+Allen Kennedy 
 ... you?

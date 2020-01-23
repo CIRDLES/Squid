@@ -237,7 +237,9 @@ public class ExpressionTree
             if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Boolean)) {
                 retVal = false;
             }
-            if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
+            if (childrenET.size() < 3) {
+                retVal = false;
+            } else if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
                 retVal = false;
             }
         }

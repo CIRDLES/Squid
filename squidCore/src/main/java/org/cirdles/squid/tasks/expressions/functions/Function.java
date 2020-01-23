@@ -81,7 +81,7 @@ public abstract class Function
     protected String definition;
 
     protected boolean summaryCalc;
-
+    
     /**
      *
      */
