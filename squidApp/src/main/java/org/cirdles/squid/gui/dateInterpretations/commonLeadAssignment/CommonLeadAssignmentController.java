@@ -183,6 +183,7 @@ public class CommonLeadAssignmentController implements Initializable {
                 = new CommonLeadSampleToolBar(
                         Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
                         mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
+        toolBarSampleType.getCommonLeadModels().disableProperty().setValue(true);
         TreeItem<CommonLeadSampleTreeInterface> rootItemSamples = new TreeItem<>(toolBarSampleType);
 
         spotsTreeViewCommonLeadTools.setStyle("-fx-font-size: 12px;");
@@ -210,12 +211,15 @@ public class CommonLeadAssignmentController implements Initializable {
             switch (((CommonLeadSpotDisplay) treeItemSampleInfo.getChildren().get(0).getValue()).getSpot().getCommonLeadSpecsForSpot().getMethodSelected()) {
                 case METHOD_COMMON_LEAD_MODEL:
                     treeItemSampleInfo.getValue().getChooseModelRB().setSelected(true);
+                    treeItemSampleInfo.getValue().getCommonLeadModels().disableProperty().setValue(false);
                     break;
                 case METHOD_STACEY_KRAMER:
                     treeItemSampleInfo.getValue().getChooseSKRB().setSelected(true);
+                    treeItemSampleInfo.getValue().getCommonLeadModels().disableProperty().setValue(true);
                     break;
                 case METHOD_STACEY_KRAMER_BY_GROUP:
                     treeItemSampleInfo.getValue().getChooseSKStarRB().setSelected(true);
+                    treeItemSampleInfo.getValue().getCommonLeadModels().disableProperty().setValue(true);
                     break;
                 default:
             }

@@ -1797,7 +1797,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
         }
     }
-    
+
     public void setUnknownGroupCommonLeadModel(List<ShrimpFractionExpressionInterface> spotsForExpression, ParametersModel commonLeadModel) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.setCommonLeadModel(commonLeadModel);
@@ -1870,7 +1870,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SpotSummaryDetails spotSummaryDetails = null;
 
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
-        
+
         return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
     }
 
@@ -1883,7 +1883,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
                 "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        
+
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
 
         updateSingleExpression(expressionWM);
@@ -3154,6 +3154,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the squidReportTablesUnknown
      */
     public List<SquidReportTableInterface> getSquidReportTablesUnknown() {
+        //TODO: backwards fix can be removed after July 1 2020
+        SquidReportTableInterface oldReport = null;
+        for (SquidReportTableInterface srt : squidReportTablesUnknown) {
+            if (srt.getReportTableName().contains("Squid Filter Report")) {
+                oldReport = srt;
+                break;
+            }
+        }
+        
+        squidReportTablesUnknown.remove(oldReport);
+
         return squidReportTablesUnknown;
     }
 
