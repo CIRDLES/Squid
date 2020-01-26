@@ -457,6 +457,7 @@ public class SquidReportSettingsController implements Initializable {
 
         //Squid Report Categories
         categoryListView.setCellFactory(new SquidReportCategoryInterfaceCellFactory());
+        categoryListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         categoryListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedCategory.setValue(newValue);
@@ -511,6 +512,7 @@ public class SquidReportSettingsController implements Initializable {
 
         //Squid Report Columns
         columnListView.setCellFactory(new SquidReportColumnInterfaceCellFactory());
+        columnListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         columnListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         columnListView.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
             selectedColumn.setValue(newValue);
