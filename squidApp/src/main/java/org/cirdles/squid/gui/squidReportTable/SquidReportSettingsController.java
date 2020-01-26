@@ -226,7 +226,7 @@ public class SquidReportSettingsController implements Initializable {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
             Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
-            if(!isRefMat &&
+            if (!isRefMat &&
                     reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches("Squid Filter Report")) {
                 Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
             } else {
@@ -471,6 +471,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedCategory.setValue(newValue);
         });
+        categoryListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedCategory.setValue(categoryListView.getSelectionModel().getSelectedItem());
         /*
         AtomicDouble scrollAmount = new AtomicDouble(0.0);
@@ -544,6 +545,7 @@ public class SquidReportSettingsController implements Initializable {
             event.setDropCompleted(success);
             event.consume();
         });
+        columnListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initSelectionActions() {
@@ -1493,45 +1495,51 @@ public class SquidReportSettingsController implements Initializable {
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(action -> {
-                        categoryListView.getItems().remove(cell.getItem());
+                        Integer[] selectedIndices = categoryListView.getSelectionModel().getSelectedIndices().toArray(new Integer[0]);
+                        Arrays.sort(selectedIndices);
+                        for(int i = 0; i < selectedIndices.length; i++) {
+                            categoryListView.getItems().remove(selectedIndices[i] - i);
+                        }
                         isEditing.setValue(true);
                     });
+                    contextMenu.getItems().add(deleteItem);
+                    if (categoryListView.getSelectionModel().getSelectedItems().size() < 2) {
+                        MenuItem renameItem = new MenuItem(("Rename"));
+                        renameItem.setOnAction(action -> {
+                            TextInputDialog dialog = new TextInputDialog(cell.getText());
+                            dialog.setTitle("Rename");
+                            dialog.setHeaderText("Rename " + cell.getText());
+                            dialog.setContentText("Enter the new category name:");
 
-                    MenuItem renameItem = new MenuItem(("Rename"));
-                    renameItem.setOnAction(action -> {
-                        TextInputDialog dialog = new TextInputDialog(cell.getText());
-                        dialog.setTitle("Rename");
-                        dialog.setHeaderText("Rename " + cell.getText());
-                        dialog.setContentText("Enter the new category name:");
+                            List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
+                            categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
 
-                        List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
-                        categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
-
-                        Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                        TextField newName = null;
-                        for (Node n : dialog.getDialogPane().getChildren()) {
-                            if (n instanceof TextField) {
-                                newName = (TextField) n;
+                            Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                            TextField newName = null;
+                            for (Node n : dialog.getDialogPane().getChildren()) {
+                                if (n instanceof TextField) {
+                                    newName = (TextField) n;
+                                }
                             }
-                        }
-                        if (okBtn != null && newName != null) {
-                            newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                okBtn.setDisable(catNames.contains(newValue) || newValue.isEmpty());
-                            });
-                        }
-                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
-                        Optional<String> result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            if (catNames.contains(result.get())) {
-                                SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
-                            } else {
-                                cell.getItem().setDisplayName(result.get());
-                                categoryListView.refresh();
+                            if (okBtn != null && newName != null) {
+                                newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                    okBtn.setDisable(catNames.contains(newValue) || newValue.isEmpty());
+                                });
                             }
-                        }
-                    });
-                    contextMenu.getItems().addAll(renameItem, deleteItem);
+                            dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                            dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            Optional<String> result = dialog.showAndWait();
+                            if (result.isPresent()) {
+                                if (catNames.contains(result.get())) {
+                                    SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
+                                } else {
+                                    cell.getItem().setDisplayName(result.get());
+                                    categoryListView.refresh();
+                                }
+                            }
+                        });
+                        contextMenu.getItems().add(renameItem);
+                    }
 
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
                 } else {
@@ -1539,13 +1547,17 @@ public class SquidReportSettingsController implements Initializable {
                 }
             });
 
-            cell.setOnMouseReleased((event) -> {
+            cell.setOnMouseReleased((event) ->
+
+            {
                 cell.setCursor(Cursor.OPEN_HAND);
             });
 
             cell.setCursor(Cursor.OPEN_HAND);
 
-            cell.setOnMouseClicked((event) -> {
+            cell.setOnMouseClicked((event) ->
+
+            {
                 //Nothing
             });
             return cell;
@@ -1648,10 +1660,14 @@ public class SquidReportSettingsController implements Initializable {
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(action -> {
-                        columnListView.getItems().remove(cell.getItem());
+                        Integer[] selectedIndices = columnListView.getSelectionModel().getSelectedIndices().toArray(new Integer[0]);
+                        Arrays.sort(selectedIndices);
+                        for(int i = 0; i < selectedIndices.length; i++) {
+                            columnListView.getItems().remove(selectedIndices[i] - i);
+                        }
                         isEditing.setValue(true);
                     });
-                    contextMenu.getItems().addAll(deleteItem);
+                    contextMenu.getItems().add(deleteItem);
 
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
                 } else {

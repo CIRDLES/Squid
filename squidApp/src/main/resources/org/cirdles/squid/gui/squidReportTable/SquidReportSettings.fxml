@@ -82,9 +82,9 @@
                                       prefHeight="74.0" prefWidth="121.0" spacing="7.0" HBox.hgrow="NEVER">
                                     <children>
                                         <Label style="-fx-font-size: 14;" text="Target:"/>
-                                        <RadioButton fx:id="refMatRadioButton" minWidth="50.0" mnemonicParsing="false"
+                                        <RadioButton fx:id="refMatRadioButton" minWidth="85.0" mnemonicParsing="false"
                                                      onAction="#toggleRefMatUnknownsAction" prefHeight="18.0"
-                                                     prefWidth="76.0" selected="true" text="Ref Mat" translateX="10.0"
+                                                     prefWidth="85.0" selected="true" text="Ref Mat" translateX="10.0"
                                                      translateY="-4.0">
                                             <toggleGroup>
                                                 <ToggleGroup fx:id="refMatUnknownsToggleGroup"/>
