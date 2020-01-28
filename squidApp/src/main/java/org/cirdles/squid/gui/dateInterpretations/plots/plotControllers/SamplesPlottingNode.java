@@ -69,6 +69,7 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -106,20 +107,14 @@ public class SamplesPlottingNode extends HBox {
         this.categoryComboBox = new ComboBox<>();
         this.expressionComboBox = new ComboBox<>();
         
-        initNode();
-
-        // handle special case where raw ratios is populated on the fly per task
-        SquidReportCategory rawRatiosCategory = SquidReportCategory.defaultSquidReportCategories.get(1);
-        LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
-        for (String ratioName : squidProject.getTask().getRatioNames()) {
-            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
-            categoryColumns.add(column);
-        }
-        rawRatiosCategory.setCategoryColumns(categoryColumns);
-        
+        initNode();       
+       
         sampleComboBox.getSelectionModel().selectFirst();
         
-        categoryComboBox.setItems(FXCollections.observableArrayList(SquidReportCategory.defaultSquidReportCategories));
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task)squidProject.getTask()).initSquidWeightedMeanPlotSortTable();
+        categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
+        // remove Time category
+        categoryComboBox.getItems().remove(0);
         categoryComboBox.getSelectionModel().selectFirst();
         
         expressionComboBox.setItems(FXCollections.observableArrayList(categoryComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
@@ -280,11 +275,7 @@ public class SamplesPlottingNode extends HBox {
         Label expressionInfoLabel = new Label("Calc Weighted Mean from");
         formatNode(expressionInfoLabel, 155);
         
-        CheckBox expressionFromReportCheckBox = new CheckBox("Include Report Categories");
-        formatNode(expressionFromReportCheckBox, 175);
-        expressionFromReportCheckBox.setDisable(true);
-        
-        expressionInfoHBox.getChildren().addAll(expressionInfoLabel, expressionFromReportCheckBox);
+        expressionInfoHBox.getChildren().addAll(expressionInfoLabel);
         
         HBox categoryInfoHBox = new HBox(5);
         

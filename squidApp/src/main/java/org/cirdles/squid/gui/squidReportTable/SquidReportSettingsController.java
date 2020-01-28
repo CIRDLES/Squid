@@ -60,6 +60,7 @@ import java.util.*;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -69,6 +70,8 @@ import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.
  * @author ryanb
  */
 public class SquidReportSettingsController implements Initializable {
+
+    private static boolean showContextMenu = true;
 
     @FXML
     public ChoiceBox<SquidReportTableInterface> reportTableCB;
@@ -159,14 +162,15 @@ public class SquidReportSettingsController implements Initializable {
     private boolean isRefMat;
     private static SquidReportTableInterface selectedRefMatReportSetting = null;
     private static SquidReportTableInterface selectedUnknownReportSetting = null;
-    
-    private static String nameOfWeightedMeanPlotSortReport = "Weighted Mean Plot and Sort Report";
 
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
-        initTask();
+        // update
+        task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+        ((Task) task).initTaskDefaultSquidReportTables();
 
         isRefMat = true;
 
@@ -215,8 +219,8 @@ public class SquidReportSettingsController implements Initializable {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
             Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
-            if(!isRefMat &&
-                    reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches(nameOfWeightedMeanPlotSortReport)) {
+            if (!isRefMat
+                    && reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
                 Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
             } else {
                 Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(false));
@@ -243,31 +247,6 @@ public class SquidReportSettingsController implements Initializable {
     private void initDefault() {
         isDefault.setValue(false);
         isDefault.addListener(ob -> processButtons());
-    }
-
-    private void initTask() {
-        List<SquidReportTableInterface> refMatTables = task.getSquidReportTablesRefMat();
-        if (refMatTables.isEmpty()) {
-            refMatTables.add(SquidReportTable.createDefaultSquidReportTableRefMat(task));
-        }
-        List<SquidReportTableInterface> unknownTables = task.getSquidReportTablesUnknown();
-        if (unknownTables.isEmpty()) {
-            unknownTables.add(SquidReportTable.createDefaultSquidReportTableUnknown(task));
-        }
-
-        boolean containsFilterReport = false;
-        for (SquidReportTableInterface table : unknownTables) {
-            if (table.getReportTableName().matches(nameOfWeightedMeanPlotSortReport)) {
-                containsFilterReport = true;
-                break;
-            }
-        }
-        if (!containsFilterReport) {
-            SquidReportTableInterface filterReport = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(task);
-            filterReport.setReportTableName(nameOfWeightedMeanPlotSortReport);
-            filterReport.setIsDefault(false);
-            unknownTables.add(filterReport);
-        }
     }
 
     private void initReportTableCB() {
@@ -1100,6 +1079,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
         table.setReportCategories(new LinkedList<>(cats));
         table.setReportTableName(reportTableCB.getSelectionModel().getSelectedItem().getReportTableName());
+        table.setVersion(reportTableCB.getSelectionModel().getSelectedItem().getVersion());
         return table;
     }
 
@@ -1382,7 +1362,7 @@ public class SquidReportSettingsController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                    + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
@@ -1515,9 +1495,24 @@ public class SquidReportSettingsController implements Initializable {
                             }
                         }
                     });
-                    contextMenu.getItems().addAll(renameItem, deleteItem);
 
+                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table 
+                    showContextMenu = true;
+                    if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()) {
+                        if ((cell.getItem().getDisplayName().compareTo("Time") == 0)
+                                ||(cell.getItem().getDisplayName().compareTo("Ages") == 0)
+                                || (cell.getItem().getDisplayName().compareTo("Raw Ratios") == 0)
+                                || (cell.getItem().getDisplayName().compareTo("Corr. Ratios") == 0)) {
+                            showContextMenu = false;
+                        }
+                    }
+                    if (showContextMenu) {
+                        contextMenu.getItems().addAll(renameItem, deleteItem);
+                    } else {
+                        contextMenu.getItems().addAll(new MenuItem("Fixed Category"));
+                    }
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
+
                 } else {
                     cell.setCursor(Cursor.CLOSED_HAND);
                 }
@@ -1635,8 +1630,22 @@ public class SquidReportSettingsController implements Initializable {
                         columnListView.getItems().remove(cell.getItem());
                         isEditing.setValue(true);
                     });
-                    contextMenu.getItems().addAll(deleteItem);
 
+                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table 
+                    showContextMenu = true;
+                    if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()) {
+                        if ((categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Time") == 0)
+                                ||(categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Ages") == 0)
+                                || (categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Raw Ratios") == 0)
+                                || (categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Corr. Ratios") == 0)) {
+                            showContextMenu = false;
+                        }
+                    }
+                    if (showContextMenu) {
+                        contextMenu.getItems().addAll(deleteItem);
+                    } else {
+                        contextMenu.getItems().addAll(new MenuItem("Fixed Column"));
+                    }
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
                 } else {
                     cell.setCursor(Cursor.CLOSED_HAND);

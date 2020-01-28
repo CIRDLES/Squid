@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -137,6 +138,12 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
@@ -548,6 +555,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+                for (int i = 0; i < filteredList.size(); i++) {
+                    ((ShrimpFraction) filteredList.get(i)).setSpotIndex(i);
+                }
             }
         }
     }
@@ -2307,6 +2317,55 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return calls.toString();
     }
 
+    public void initTaskDefaultSquidReportTables() {
+        if (squidReportTablesRefMat.isEmpty()) {
+            squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
+        }
+
+        if (squidReportTablesUnknown.isEmpty()) {
+            squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
+        }
+
+        initSquidWeightedMeanPlotSortTable();
+    }
+
+    public SquidReportTableInterface initSquidWeightedMeanPlotSortTable() {
+        SquidReportTableInterface squidWeightedMeanPlotSortTable = null;
+
+        boolean containsFilterReport = false;
+        for (SquidReportTableInterface table : squidReportTablesUnknown) {
+            if (table.getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
+                squidWeightedMeanPlotSortTable = table;
+                containsFilterReport = true;
+                break;
+            }
+        }
+
+        if (containsFilterReport
+                && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
+            squidReportTablesUnknown.remove(squidWeightedMeanPlotSortTable);
+            containsFilterReport = false;
+        }
+
+        if (!containsFilterReport) {
+            squidWeightedMeanPlotSortTable
+                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);            
+            squidWeightedMeanPlotSortTable.setIsDefault(false);
+            squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
+        }
+
+        // handle special case where raw ratios is populated on the fly per task
+        SquidReportCategoryInterface rawRatiosCategory =  squidWeightedMeanPlotSortTable.getReportCategories().get(2);//                          SquidReportCategory.defaultSquidReportCategories.get(1);
+        LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
+        for (String ratioName : ratioNames) {
+            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
+            categoryColumns.add(column);
+        }
+        rawRatiosCategory.setCategoryColumns(categoryColumns);
+
+        return squidWeightedMeanPlotSortTable;
+    }
+
     @Override
     public Expression getExpressionByName(String name) {
         Expression exp = null;
@@ -2732,6 +2791,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setChanged(boolean changed) {
         this.changed = changed;
         SquidProject.setProjectChanged(true);
+    }
+
+    /**
+     * @return the changed
+     */
+    public boolean isChanged() {
+        return changed;
     }
 
     /**
@@ -3162,8 +3228,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 break;
             }
         }
-        
-        squidReportTablesUnknown.remove(oldReport);
+
+        if (oldReport != null) {
+            squidReportTablesUnknown.remove(oldReport);
+        }
 
         return squidReportTablesUnknown;
     }
@@ -3171,6 +3239,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param squidReportTablesUnknown the squidReportTablesUnknown to set
      */
+    @Override
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
         this.squidReportTablesUnknown = squidReportTablesUnknown;
     }
@@ -3178,6 +3247,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the overcountCorrectionType
      */
+    @Override
     public OvercountCorrectionTypes getOvercountCorrectionType() {
         return overcountCorrectionType;
     }
@@ -3185,6 +3255,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
+    @Override
     public void setOvercountCorrectionType(OvercountCorrectionTypes overcountCorrectionType) {
         this.overcountCorrectionType = overcountCorrectionType;
     }

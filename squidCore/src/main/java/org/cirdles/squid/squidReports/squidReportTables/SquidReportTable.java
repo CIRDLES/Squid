@@ -45,6 +45,9 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     private static final long serialVersionUID = 1685572683987304408L;
 
+    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 3;
+    public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
+
     public final static int HEADER_ROW_COUNT = 7;
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
 
@@ -53,13 +56,24 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private LinkedList<SquidReportCategoryInterface> reportCategories;
     private boolean isDefault;
 
+    private int version;
+
     private SquidReportTable() {
     }
 
     private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault) {
+        this(reportTableName, reportCategories, isDefault, 0);
+    }
+
+    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault, int version) {
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
         this.isDefault = isDefault;
+        this.version = version;
+    }
+    
+    public boolean amWeightedMeanPlotAndSortReport(){
+        return reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0;
     }
 
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
@@ -80,11 +94,9 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return new SquidReportTable(reportTableName, reportCategories, true);
     }
 
-    public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task) {
-        String reportTableName = "Squid3 Report Table for Filtering Weighted Means of Unknowns";
+    public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task, int version) {
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknownSquidFilter(task);
-
-        return new SquidReportTable(reportTableName, reportCategories, false);
+        return new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
     }
 
     public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
@@ -353,5 +365,19 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         table.setIsDefault(isDefault);
 
         return table;
+    }
+
+    /**
+     * @return the version
+     */
+    public int getVersion() {
+        return version;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(int version) {
+        this.version = version;
     }
 }
