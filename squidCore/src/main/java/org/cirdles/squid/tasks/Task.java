@@ -2355,7 +2355,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         // handle special case where raw ratios is populated on the fly per task
-        SquidReportCategoryInterface rawRatiosCategory =  squidWeightedMeanPlotSortTable.getReportCategories().get(2);//                          SquidReportCategory.defaultSquidReportCategories.get(1);
+        SquidReportCategoryInterface rawRatiosCategory =  squidWeightedMeanPlotSortTable.getReportCategories().get(2);
         LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
         for (String ratioName : ratioNames) {
             SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);

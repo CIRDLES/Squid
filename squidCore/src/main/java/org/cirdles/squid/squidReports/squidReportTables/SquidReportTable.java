@@ -45,7 +45,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     private static final long serialVersionUID = 1685572683987304408L;
 
-    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 3;
+    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 4;
     public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
 
     public final static int HEADER_ROW_COUNT = 7;
@@ -71,9 +71,32 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.isDefault = isDefault;
         this.version = version;
     }
-    
-    public boolean amWeightedMeanPlotAndSortReport(){
+
+    @Override
+    public boolean amWeightedMeanPlotAndSortReport() {
         return reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0;
+    }
+
+    public void formatWeightedMeanPlotAndSortReport() {
+        // force Time and Ages categories to top of categories list
+        SquidReportCategoryInterface timeCat = null;
+        SquidReportCategoryInterface agesCat = null;
+        for (SquidReportCategoryInterface cat : reportCategories) {
+            if (cat.getDisplayName().compareToIgnoreCase("Time") == 0) {
+                timeCat = cat;
+            }
+            if (cat.getDisplayName().compareToIgnoreCase("Ages") == 0) {
+                agesCat = cat;
+            }
+        }
+
+        if ((timeCat != null) && (agesCat != null)) {
+            reportCategories.remove(timeCat);
+            reportCategories.remove(agesCat);
+
+            reportCategories.add(0, agesCat);
+            reportCategories.add(0, timeCat);
+        }
     }
 
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {

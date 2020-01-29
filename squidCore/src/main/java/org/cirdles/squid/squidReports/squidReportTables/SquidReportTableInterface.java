@@ -127,6 +127,8 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
     public void setReportTableName(String reportTableName);
     
     public boolean amWeightedMeanPlotAndSortReport();
+    
+    public void formatWeightedMeanPlotAndSortReport();
 
     /**
      * @return the reportCategories

@@ -226,7 +226,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 } else {
                     agesOrValuesTwoSigma.add(2.0 * results[0][1]);
                 }
-                if (viewSortOrder == 0) {
+                if (spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours")==0){
                     hours.add(spot.getHours());
                 } else {
                     hours.add(index++);
@@ -757,6 +757,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
      */
     public void setAgeOrValueLookupString(String ageOrValueLookupString) {
         this.ageOrValueLookupString = ageOrValueLookupString;
+    }
+
+    /**
+     * @return the ageOrValueLookupString
+     */
+    public String getAgeOrValueLookupString() {
+        return ageOrValueLookupString;
     }
 
 }

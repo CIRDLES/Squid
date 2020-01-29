@@ -577,8 +577,12 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                 if (item instanceof WeightedMeanSpotNode) {
                     if (expressionName.contains("Age")) {
-                        nodeStringWM = item.getNodeName();
-                    } else  {
+                        nodeStringWM = item.getNodeName();//WRONG THIS IS THE WM
+                    } else if (expressionName.compareTo("Hours") == 0) {
+                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + item.getShrimpFraction().getHours();
+                    } else if (expressionName.compareTo("SpotIndex") == 0) {
+                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + item.getShrimpFraction().getSpotIndex();
+                    } else {
                         double[][] expressionValues;
                         if (expressionName.startsWith("/", 3)) {
                             // ratio case
