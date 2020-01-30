@@ -38,9 +38,7 @@ import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
@@ -63,6 +61,7 @@ import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -626,7 +625,7 @@ public class SamplesPlottingNode extends HBox {
             } else {
                 double valueFromNode1 = 0.0;
                 double valueFromNode2 = 0.0;
-                if (selectedFieldName.startsWith("/", 3)) {
+                if (stringIsSquidRatio(selectedFieldName)) {
                     // Ratio case
                     double[][] resultsFromNode1
                             = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()

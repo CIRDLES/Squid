@@ -15,12 +15,10 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
-import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.CustomWeightedMeanCheckBoxTreeCell;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.List;
@@ -75,6 +73,7 @@ import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
@@ -562,7 +561,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     private void showWeightedMeanSamplePlot() {
         // dec 2019 new approach per Nicole
-        //spotListAnchorPane.getChildren().clear();
         HBox toolBox = new SamplesPlottingNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
@@ -573,18 +571,17 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             @Override
             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                 SampleTreeNodeInterface item = object.getValue();
-                String nodeStringWM = "";
+                // the goal is to show the nodename + weightedMean source + value of sorting choice 
+                String nodeStringWM = item.getNodeName();
                 String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                 if (item instanceof WeightedMeanSpotNode) {
-                    if (expressionName.contains("Age")) {
-                        nodeStringWM = item.getNodeName();//WRONG THIS IS THE WM
-                    } else if (expressionName.compareTo("Hours") == 0) {
-                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + item.getShrimpFraction().getHours();
+                    if (expressionName.compareTo("Hours") == 0) {
+                        nodeStringWM += item.getShrimpFraction().getHours();
                     } else if (expressionName.compareTo("SpotIndex") == 0) {
-                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + item.getShrimpFraction().getSpotIndex();
+                        nodeStringWM += item.getShrimpFraction().getSpotIndex();
                     } else {
                         double[][] expressionValues;
-                        if (expressionName.startsWith("/", 3)) {
+                        if (stringIsSquidRatio(expressionName)) {
                             // ratio case
                             expressionValues
                                     = Arrays.stream(item.getShrimpFraction()
@@ -594,12 +591,13 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                                     .getTaskExpressionsEvaluationsPerSpotByField(expressionName);
                         }
 
-                        Formatter formatter = new Formatter();
-                        formatter.format("%5.3E", expressionValues[0][0]);
-                        if (expressionValues[0].length > 1) {
-                            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", expressionValues[0][1]).toString();
+                        if (expressionName.contains("Age")) {
+                            nodeStringWM += WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
+                        } else {
+                            Formatter formatter = new Formatter();
+                            formatter.format("%4.2E", expressionValues[0][0]);
+                            nodeStringWM += formatter.toString();
                         }
-                        nodeStringWM = item.getShrimpFraction().getFractionID() + " " + formatter.toString();
                     }
 
                 }
