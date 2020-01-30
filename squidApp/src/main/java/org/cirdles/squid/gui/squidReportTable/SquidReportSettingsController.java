@@ -1445,6 +1445,7 @@ public class SquidReportSettingsController implements Initializable {
                 } else if (event.isSecondaryButtonDown()) {
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete");
+                    MenuItem renameItem = new MenuItem(("Rename"));
                     deleteItem.setOnAction(action -> {
                         Integer[] selectedIndices = categoryListView.getSelectionModel().getSelectedIndices().toArray(new Integer[0]);
                         Arrays.sort(selectedIndices);
@@ -1454,8 +1455,7 @@ public class SquidReportSettingsController implements Initializable {
                         isEditing.setValue(true);
                     });
                     contextMenu.getItems().add(deleteItem);
-                    if (categoryListView.getSelectionModel().getSelectedItems().size() < 2) {
-                        MenuItem renameItem = new MenuItem(("Rename"));
+                    if (categoryListView.getSelectionModel().getSelectedItems().size() < 2) {                     
                         renameItem.setOnAction(action -> {
                             TextInputDialog dialog = new TextInputDialog(cell.getText());
                             dialog.setTitle("Rename");
