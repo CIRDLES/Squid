@@ -698,8 +698,11 @@ public interface TaskInterface {
     public void setRoundingForSquid3(boolean roundingForSquid3);
 
     public List<SquidReportTableInterface> getSquidReportTablesRefMat();
+
     public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat);
+
     public List<SquidReportTableInterface> getSquidReportTablesUnknown();
+
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown);
 
     /**

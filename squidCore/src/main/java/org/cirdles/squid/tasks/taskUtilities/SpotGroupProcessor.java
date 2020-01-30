@@ -84,7 +84,7 @@ public class SpotGroupProcessor {
                     for (ShrimpFractionExpressionInterface spot : spotSummaryDetailsWM.getSelectedSpots()) {
                         if (!spotSummaryDetailsWM.getRejectedIndices()[indexOfSpots]) {
                             double[] valueAndUnctOfSelectedSpot;
-                            if (selectedExpressionName.startsWith("/", 3)) {
+                            if (selectedExpressionName.contains("/")) {
                                 // case of raw ratios
                                 valueAndUnctOfSelectedSpot = Arrays.stream(spot
                                         .getIsotopicRatioValuesByStringName(selectedExpressionName)).toArray(double[][]::new)[0];
@@ -107,7 +107,7 @@ public class SpotGroupProcessor {
                         // if spot not rejected, check its residual
                         if (!spotSummaryDetailsWM.getRejectedIndices()[indexOfSpots]) {
                             double[] valueAndUnctOfSelectedSpot;
-                            if (selectedExpressionName.startsWith("/", 3)) {
+                            if (selectedExpressionName.contains("/")) {
                                 // case of raw ratios
                                 valueAndUnctOfSelectedSpot = Arrays.stream(spot
                                         .getIsotopicRatioValuesByStringName(selectedExpressionName)).toArray(double[][]::new)[0];

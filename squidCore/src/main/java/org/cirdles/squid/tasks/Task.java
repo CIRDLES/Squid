@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -137,6 +138,12 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
@@ -548,6 +555,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+                for (int i = 0; i < filteredList.size(); i++) {
+                    ((ShrimpFraction) filteredList.get(i)).setSpotIndex(i);
+                }
             }
         }
     }
@@ -1797,7 +1807,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
         }
     }
-    
+
     public void setUnknownGroupCommonLeadModel(List<ShrimpFractionExpressionInterface> spotsForExpression, ParametersModel commonLeadModel) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.setCommonLeadModel(commonLeadModel);
@@ -1870,7 +1880,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SpotSummaryDetails spotSummaryDetails = null;
 
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
-        
+
         return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
     }
 
@@ -1883,7 +1893,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
                 "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        
+
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
 
         updateSingleExpression(expressionWM);
@@ -2305,6 +2315,55 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         showEdge.set(depth - 1, true);
         return calls.toString();
+    }
+
+    public void initTaskDefaultSquidReportTables() {
+        if (squidReportTablesRefMat.isEmpty()) {
+            squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
+        }
+
+        if (squidReportTablesUnknown.isEmpty()) {
+            squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
+        }
+
+        initSquidWeightedMeanPlotSortTable();
+    }
+
+    public SquidReportTableInterface initSquidWeightedMeanPlotSortTable() {
+        SquidReportTableInterface squidWeightedMeanPlotSortTable = null;
+
+        boolean containsFilterReport = false;
+        for (SquidReportTableInterface table : squidReportTablesUnknown) {
+            if (table.getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
+                squidWeightedMeanPlotSortTable = table;
+                containsFilterReport = true;
+                break;
+            }
+        }
+
+        if (containsFilterReport
+                && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
+            squidReportTablesUnknown.remove(squidWeightedMeanPlotSortTable);
+            containsFilterReport = false;
+        }
+
+        if (!containsFilterReport) {
+            squidWeightedMeanPlotSortTable
+                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);            
+            squidWeightedMeanPlotSortTable.setIsDefault(false);
+            squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
+        }
+
+        // handle special case where raw ratios is populated on the fly per task
+        SquidReportCategoryInterface rawRatiosCategory =  squidWeightedMeanPlotSortTable.getReportCategories().get(2);
+        LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
+        for (String ratioName : ratioNames) {
+            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
+            categoryColumns.add(column);
+        }
+        rawRatiosCategory.setCategoryColumns(categoryColumns);
+
+        return squidWeightedMeanPlotSortTable;
     }
 
     @Override
@@ -2735,6 +2794,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
+     * @return the changed
+     */
+    public boolean isChanged() {
+        return changed;
+    }
+
+    /**
      * @return the shrimpFractions
      */
     @Override
@@ -3154,12 +3220,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the squidReportTablesUnknown
      */
     public List<SquidReportTableInterface> getSquidReportTablesUnknown() {
+        //TODO: backwards fix can be removed after July 1 2020
+        SquidReportTableInterface oldReport = null;
+        for (SquidReportTableInterface srt : squidReportTablesUnknown) {
+            if (srt.getReportTableName().contains("Squid Filter Report")) {
+                oldReport = srt;
+                break;
+            }
+        }
+
+        if (oldReport != null) {
+            squidReportTablesUnknown.remove(oldReport);
+        }
+
         return squidReportTablesUnknown;
     }
 
     /**
      * @param squidReportTablesUnknown the squidReportTablesUnknown to set
      */
+    @Override
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
         this.squidReportTablesUnknown = squidReportTablesUnknown;
     }
@@ -3167,6 +3247,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the overcountCorrectionType
      */
+    @Override
     public OvercountCorrectionTypes getOvercountCorrectionType() {
         return overcountCorrectionType;
     }
@@ -3174,6 +3255,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
+    @Override
     public void setOvercountCorrectionType(OvercountCorrectionTypes overcountCorrectionType) {
         this.overcountCorrectionType = overcountCorrectionType;
     }
