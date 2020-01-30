@@ -164,6 +164,8 @@ public interface ShrimpFractionExpressionInterface {
 
     public double getHours();
 
+    public int getSpotIndex();
+
     /**
      * @return the primaryBeam
      */
@@ -267,7 +269,7 @@ public interface ShrimpFractionExpressionInterface {
     public ParametersModel getCommonLeadModel();
 
     public void setCommonLeadModel(ParametersModel commonLeadModel);
-    
+
     /**
      * @return the commonLeadSpecsForSpot
      */

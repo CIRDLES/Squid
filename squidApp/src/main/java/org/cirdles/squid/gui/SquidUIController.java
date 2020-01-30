@@ -1242,6 +1242,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("countCorrectionsUI >>>>   " + iOException.getMessage());
             }
+            menuHighlighter.highlight(manageInterpretationsMenu);
 
             showUI(countCorrectionsUI);
         }
@@ -1278,6 +1279,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("commonLeadAssignmentUI >>>>   " + iOException.getMessage());
             }
+            menuHighlighter.highlight(manageInterpretationsMenu);
 
             showUI(commonLeadAssignmentUI);
         }
