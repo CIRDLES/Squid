@@ -36,6 +36,7 @@ public final class Squid {
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
     public static final StringBuilder CONTRIBUTORS_CONTENT = new StringBuilder();
+    public static final StringBuilder SUPPORTERS_CONTENT = new StringBuilder();
 
     public static final ResourceExtractor SQUID_RESOURCE_EXTRACTOR
             = new ResourceExtractor(Squid.class);
@@ -85,6 +86,18 @@ public final class Squid {
 
             while ((thisLine = reader.readLine()) != null) {
                 Squid.CONTRIBUTORS_CONTENT.append(thisLine);
+            }
+
+        } catch (IOException x) {
+            System.err.format("IOException: %s%n", x);
+        }
+
+        resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/supportersContent.txt");
+        try (BufferedReader reader = Files.newBufferedReader(resourcePath, charset)) {
+            String thisLine;
+
+            while ((thisLine = reader.readLine()) != null) {
+                Squid.SUPPORTERS_CONTENT.append(thisLine);
             }
 
         } catch (IOException x) {
