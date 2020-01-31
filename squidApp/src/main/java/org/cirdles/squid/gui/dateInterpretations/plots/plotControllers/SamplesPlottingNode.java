@@ -215,12 +215,7 @@ public class SamplesPlottingNode extends HBox {
         Collections.sort(fractionNodeDetailsWM, (SampleTreeNodeInterface fraction1, SampleTreeNodeInterface fraction2) -> {
             double age1 = fraction1.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
             double age2 = fraction2.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-
-            int retVal = 0;
-            if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
-                retVal = Double.compare(age1, age2);
-            }
-            return retVal;
+            return Double.compare(age1, age2);
         });
 
         ObservableList<SampleTreeNodeInterface> fractionNodesWM = FXCollections.observableArrayList(fractionNodeDetailsWM);
@@ -313,7 +308,6 @@ public class SamplesPlottingNode extends HBox {
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
                 if (newValue != null) {
                     String selectedExpression = newValue.getExpressionName();
-                    int currentSortOrder = 1;
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
 
                         ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
@@ -326,7 +320,6 @@ public class SamplesPlottingNode extends HBox {
                                         .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.setRejectedIndices(savedRejectedIndices);
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
 
                         PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
@@ -354,15 +347,9 @@ public class SamplesPlottingNode extends HBox {
                                                 selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.rejectNone();
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
                         spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
 
-                        if (currentSortOrder == 2) {
-                            spotSummaryDetailsWM.setSelectedExpressionName(
-                                    sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName());
-                        } else {
-                            spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
-                        }
+                        spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
 
                         PlotDisplayInterface myPlot = new WeightedMeanPlot(
                                 new Rectangle(1000, 600),
@@ -614,37 +601,27 @@ public class SamplesPlottingNode extends HBox {
      */
     private void sortFractionCheckboxesByValue(SpotSummaryDetails spotSummaryDetails) {
         String selectedFieldName = spotSummaryDetails.getSelectedExpressionName();
-        int savedPreferredViewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
         FXCollections.sort(sampleItem.getChildren(), (TreeItem node1, TreeItem node2) -> {
-            // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-            int retVal = 0;
-            if (savedPreferredViewSortOrder < 1) {
-                long acquireTime1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction().getDateTimeMilliseconds();
-                long acquireTime2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction().getDateTimeMilliseconds();
-                retVal = Long.compare(acquireTime1, acquireTime2);
+            double valueFromNode1 = 0.0;
+            double valueFromNode2 = 0.0;
+            if (stringIsSquidRatio(selectedFieldName)) {
+                // Ratio case
+                double[][] resultsFromNode1
+                        = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                valueFromNode1 = resultsFromNode1[0][0];
+                double[][] resultsFromNode2
+                        = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                valueFromNode2 = resultsFromNode2[0][0];
             } else {
-                double valueFromNode1 = 0.0;
-                double valueFromNode2 = 0.0;
-                if (stringIsSquidRatio(selectedFieldName)) {
-                    // Ratio case
-                    double[][] resultsFromNode1
-                            = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode1 = resultsFromNode1[0][0];
-                    double[][] resultsFromNode2
-                            = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode2 = resultsFromNode2[0][0];
-                } else {
-                    valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                    valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                }
-
-                retVal = Double.compare(valueFromNode1, valueFromNode2);
+                valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
             }
-            return retVal;
+
+            return Double.compare(valueFromNode1, valueFromNode2);
         });
     }
 }

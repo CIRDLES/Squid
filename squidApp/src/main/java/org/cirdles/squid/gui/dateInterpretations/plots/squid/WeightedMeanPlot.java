@@ -163,40 +163,31 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             for (ShrimpFractionExpressionInterface sf : storedShrimpFractions) {
                 shrimpFractions.add(sf);
             }
-            // determine sort order for viewing
-            int viewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
             Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                // original acquire time order  
-                int retComp = 0;
                 double valueFromNode1 = 0.0;
                 double valueFromNode2 = 0.0;
-                // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-                if (viewSortOrder == 1) {
-                    if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
-                        // case of raw ratios
-                        double[][] resultsFromNode1
-                                = Arrays.stream(fraction1
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode1 = resultsFromNode1[0][0];
-                        double[][] resultsFromNode2
-                                = Arrays.stream(fraction2
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode2 = resultsFromNode2[0][0];
 
-                    } else {
-                        // all other expressions
-                        valueFromNode1 = fraction1
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
-                        valueFromNode2 = fraction2
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
+                    // case of raw ratios
+                    double[][] resultsFromNode1
+                            = Arrays.stream(fraction1
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode1 = resultsFromNode1[0][0];
+                    double[][] resultsFromNode2
+                            = Arrays.stream(fraction2
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode2 = resultsFromNode2[0][0];
 
-                    }
+                } else {
+                    // all other expressions
+                    valueFromNode1 = fraction1
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                    valueFromNode2 = fraction2
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
 
-                    // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-                    retComp = Double.compare(valueFromNode1, valueFromNode2);
                 }
 
-                return retComp;
+                return Double.compare(valueFromNode1, valueFromNode2);
             });
 
             countOfIncluded = 0;
@@ -549,13 +540,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // X- label
         StringBuilder description = new StringBuilder();
-        if (spotSummaryDetails.getPreferredViewSortOrder() == 0) {
-            description.append("Hours ");
-        } else {
-            description.append(ageOrValueLookupString).append(" ");
-        }
-
-//        description.append((spotSummaryDetails.getPreferredViewSortOrder() > -1) ? "ascending" : "in normalized time ascending");
+        description.append(ageOrValueLookupString).append(" ");
         description.append("ascending by ").append(spotSummaryDetails.getSelectedExpressionName());
         text.setText(description.toString());
 
