@@ -64,6 +64,7 @@ public final class Squid {
             System.err.format("IOException: %s%n", x);
         }
 
+        // format is "x.y.z"
         VERSION = version;
         RELEASE_DATE = releaseDate;
 

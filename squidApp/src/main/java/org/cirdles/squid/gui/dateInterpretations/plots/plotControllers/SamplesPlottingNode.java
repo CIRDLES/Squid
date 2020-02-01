@@ -111,7 +111,7 @@ public class SamplesPlottingNode extends HBox {
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initSquidWeightedMeanPlotSortTable();
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
 

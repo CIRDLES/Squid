@@ -37,6 +37,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
@@ -48,6 +49,7 @@ import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -162,6 +164,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      */
     protected String name;
+    protected String taskSquidVersion;
     protected TaskTypeEnum taskType;
     protected String description;
     protected String authorName;
@@ -284,6 +287,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
         this.name = name;
+        this.taskSquidVersion = Squid.VERSION;
         this.taskType = taskDesign.getTaskType();
         this.description = "";
         this.authorName = taskDesign.getAuthorName();
@@ -377,6 +381,59 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         generateConstants();
         generateParameters();
         generateSpotLookupFields();
+    }
+
+    public boolean synchronizeTaskVersion() {
+        boolean retVal = false;
+        if (taskSquidVersion == null) {
+            taskSquidVersion = "0.0.0";
+        }
+        if (taskSquidVersion.compareTo(Squid.VERSION) != 0) {
+            taskSquidVersion = Squid.VERSION;
+            updateTask();
+            retVal = true;
+        }
+
+        return retVal;
+    }
+
+    public void verifySquidLabDataParameters() {
+        ParametersModel refMat = getReferenceMaterialModel();
+        ParametersModel refMatConc = getConcentrationReferenceMaterialModel();
+        ParametersModel physConst = getPhysicalConstantsModel();
+        ParametersModel commonPbMod = getCommonPbModel();
+
+        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
+
+        if (physConst == null) {
+            setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
+        } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
+            squidLabData.addPhysicalConstantsModel(physConst);
+            squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
+        }
+
+        if (refMat == null) {
+            setReferenceMaterialModel(new ReferenceMaterialModel());
+        } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
+            squidLabData.addReferenceMaterial(refMat);
+            squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+        }
+
+        if (refMatConc == null) {
+            setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
+        } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
+            squidLabData.addReferenceMaterial(refMatConc);
+            squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+        }
+
+        if (commonPbMod == null) {
+            setCommonPbModel(squidLabData.getCommonPbDefault());
+        } else if (!squidLabData.getCommonPbModels().contains(commonPbMod)) {
+            squidLabData.addcommonPbModel(commonPbMod);
+            squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
+        }
+
+        squidLabData.storeState();
     }
 
     @Override
@@ -1417,16 +1474,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() {
         applyTaskIsotopeLabelsToMassStations();
+        updateTask();
+    }
+
+    private void updateTask() {
         changed = true;
-        SquidProject.setProjectChanged(true);
-        prepareParametersAndRatios();
-        assembleNamedExpressionsMap();
-
-        updateAllExpressions(true);
-        processAndSortExpressions();
-
-        updateAllExpressions(true);
-        setupSquidSessionSpecsAndReduceAndReport(false);
+        
+        applyDirectives();
+        
+//        SquidProject.setProjectChanged(true);
+//        prepareParametersAndRatios();
+//        assembleNamedExpressionsMap();
+//
+//        updateAllExpressions(true);
+//        processAndSortExpressions();
+//
+//        updateAllExpressions(true);
+//        setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
     @Override
@@ -2317,7 +2381,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return calls.toString();
     }
 
-    public void initTaskDefaultSquidReportTables() {
+    public SquidReportTableInterface initTaskDefaultSquidReportTables() {
+        if (squidReportTablesRefMat == null) {
+            this.squidReportTablesRefMat = new ArrayList<>();
+        }
+        if (squidReportTablesUnknown == null) {
+            this.squidReportTablesUnknown = new ArrayList<>();
+        }
+        
         if (squidReportTablesRefMat.isEmpty()) {
             squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
         }
@@ -2326,12 +2397,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
         }
 
-        initSquidWeightedMeanPlotSortTable();
+        return initSquidWeightedMeanPlotSortTable();
     }
 
-    public SquidReportTableInterface initSquidWeightedMeanPlotSortTable() {
+    private SquidReportTableInterface initSquidWeightedMeanPlotSortTable() {
         SquidReportTableInterface squidWeightedMeanPlotSortTable = null;
-
+        
         boolean containsFilterReport = false;
         for (SquidReportTableInterface table : squidReportTablesUnknown) {
             if (table.getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
@@ -2349,13 +2420,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (!containsFilterReport) {
             squidWeightedMeanPlotSortTable
-                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);            
+                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
             squidWeightedMeanPlotSortTable.setIsDefault(false);
             squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
         }
 
         // handle special case where raw ratios is populated on the fly per task
-        SquidReportCategoryInterface rawRatiosCategory =  squidWeightedMeanPlotSortTable.getReportCategories().get(2);
+        SquidReportCategoryInterface rawRatiosCategory = squidWeightedMeanPlotSortTable.getReportCategories().get(2);
         LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
         for (String ratioName : ratioNames) {
             SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
@@ -3249,6 +3320,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public OvercountCorrectionTypes getOvercountCorrectionType() {
+        if (overcountCorrectionType == null){
+            overcountCorrectionType = OvercountCorrectionTypes.NONE;
+        }
         return overcountCorrectionType;
     }
 

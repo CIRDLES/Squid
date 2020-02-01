@@ -188,6 +188,9 @@ public class SpotSummaryDetails implements Serializable {
      * @return the selectedExpressionName
      */
     public String getSelectedExpressionName() {
+        if (selectedExpressionName == null){
+            selectedExpressionName = "Hours";
+        }
         return selectedExpressionName;
     }
 

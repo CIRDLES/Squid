@@ -163,32 +163,35 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             for (ShrimpFractionExpressionInterface sf : storedShrimpFractions) {
                 shrimpFractions.add(sf);
             }
-            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                double valueFromNode1 = 0.0;
-                double valueFromNode2 = 0.0;
 
-                if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
-                    // case of raw ratios
-                    double[][] resultsFromNode1
-                            = Arrays.stream(fraction1
-                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                    valueFromNode1 = resultsFromNode1[0][0];
-                    double[][] resultsFromNode2
-                            = Arrays.stream(fraction2
-                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                    valueFromNode2 = resultsFromNode2[0][0];
+            if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+                Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+                    double valueFromNode1 = 0.0;
+                    double valueFromNode2 = 0.0;
 
-                } else {
-                    // all other expressions
-                    valueFromNode1 = fraction1
-                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
-                    valueFromNode2 = fraction2
-                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                    if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
+                        // case of raw ratios
+                        double[][] resultsFromNode1
+                                = Arrays.stream(fraction1
+                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                        valueFromNode1 = resultsFromNode1[0][0];
+                        double[][] resultsFromNode2
+                                = Arrays.stream(fraction2
+                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                        valueFromNode2 = resultsFromNode2[0][0];
 
-                }
+                    } else {
+                        // all other expressions
+                        valueFromNode1 = fraction1
+                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                        valueFromNode2 = fraction2
+                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
 
-                return Double.compare(valueFromNode1, valueFromNode2);
-            });
+                    }
+
+                    return Double.compare(valueFromNode1, valueFromNode2);
+                });
+            }
 
             countOfIncluded = 0;
             for (int i = 0; i < shrimpFractions.size(); i++) {
@@ -218,6 +221,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 } else {
                     agesOrValuesTwoSigma.add(2.0 * results[0][1]);
                 }
+                
                 if (spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") == 0) {
                     hours.add(spot.getHours());
                 } else {
