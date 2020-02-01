@@ -61,17 +61,21 @@ public class Multiply extends Operation {
 
             double term1;
             double term2;
+            if ((term1Object instanceof Number) && (term2Object instanceof Number)) {
+                if (term1Object instanceof Integer) {
+                    term1 = ((Integer) term1Object).doubleValue();
+                } else {
+                    term1 = (double) term1Object;
+                }
 
-            if (term1Object instanceof Integer) {
-                term1 = ((Integer) term1Object).doubleValue();
+                if (term2Object instanceof Integer) {
+                    term2 = ((Integer) term2Object).doubleValue();
+                } else {
+                    term2 = (double) term2Object;
+                }
             } else {
-                term1 = (double) term1Object;
-            }
-
-            if (term2Object instanceof Integer) {
-                term2 = ((Integer) term2Object).doubleValue();
-            } else {
-                term2 = (double) term2Object;
+                term1 = 0;
+                term2 = 0;
             }
 
             retVal = term1 * term2;

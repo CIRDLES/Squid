@@ -91,8 +91,6 @@ public class SamplesPlottingNode extends HBox {
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
 
-    private ToggleGroup sortingToggleGroup;
-
     private CheckBox filterInfoCheckBox;
 
     public SamplesPlottingNode(WeightedMeanRefreshInterface plotsController) {
