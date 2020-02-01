@@ -39,6 +39,8 @@ public class AboutSquidController implements Initializable {
     private Label aboutDetailsLabel;
     @FXML
     private Label contributorsLabel;
+    @FXML
+    private Label supportersLabel;
 
     /**
      * Initializes the controller class.
@@ -51,6 +53,7 @@ public class AboutSquidController implements Initializable {
         buildDate.setText("Release Date: " + Squid.RELEASE_DATE);
         aboutDetailsLabel.setText(Squid.ABOUT_WINDOW_CONTENT.toString());
         contributorsLabel.setText(Squid.CONTRIBUTORS_CONTENT.toString());
+        supportersLabel.setText(Squid.SUPPORTERS_CONTENT.toString());
     }
 
     @FXML

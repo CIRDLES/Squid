@@ -45,11 +45,11 @@ public final class SquidAboutWindow {
     public void loadAboutWindow() {
         try {
             Parent aboutPage = FXMLLoader.load(getClass().getResource("AboutSquid.fxml"));
-            Scene aboutScene = new Scene(aboutPage, 450, 600);
+            Scene aboutScene = new Scene(aboutPage, 550, 700);
             Stage aboutWindow = new Stage(StageStyle.UNDECORATED);
             // center on Squid
-            aboutWindow.setX(primaryStage.getX() + (primaryStage.getWidth() - 450) / 2);
-            aboutWindow.setY(primaryStage.getY() + (primaryStage.getHeight()- 600) / 2);
+            aboutWindow.setX(primaryStage.getX() + (primaryStage.getWidth() - 550) / 2);
+            aboutWindow.setY(primaryStage.getY() + (primaryStage.getHeight()- 700) / 2);
             aboutWindow.setResizable(false);
             aboutWindow.setScene(aboutScene);
             
