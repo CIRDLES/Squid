@@ -225,6 +225,10 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
+        
+        ExpressionTreeInterface expSpotIndex = buildSpotNode("getSpotIndex");
+        expSpotIndex.setSquidSwitchSTReferenceMaterialCalculation(false);
+        spotLookupFields.put(expSpotIndex.getName(), expSpotIndex);
 
         ExpressionTreeInterface expQt1Y = buildSpotNode("getQt1Y");
         spotLookupFields.put(expQt1Y.getName(), expQt1Y);

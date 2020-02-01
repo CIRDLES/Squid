@@ -311,28 +311,28 @@ public class ExpressionBuilderController implements Initializable {
     private static final String OPERATION_FLAG_DELIMITER = " : ";
     private static final String NUMBERSTRING = "NUMBER";
     private final BooleanProperty whiteSpaceVisible = new SimpleBooleanProperty(true);
-    private static final String INVISIBLENEWLINEPLACEHOLDER = " \n";
-    private static final String VISIBLENEWLINEPLACEHOLDER = "\u23CE\n";
-    private static final String INVISIBLETABPLACEHOLDER = "  ";
-    private static final String VISIBLETABPLACEHOLDER = " \u21E5";
-    private static final String VISIBLEWHITESPACEPLACEHOLDER = "\u2423";
-    private static final String INVISIBLEWHITESPACEPLACEHOLDER = " ";
+    private static final String INVISIBLE_NEWLINE_PLACEHOLDER = " \n";
+    private static final String VISIBLE_NEWLINE_PLACEHOLDER = "\u23CE\n";
+    private static final String INVISIBLE_TAB_PLACEHOLDER = "  ";
+    private static final String VISIBLE_TAB_PLACEHOLDER = " \u21E5";
+    private static final String VISIBLE_WHITESPACE_PLACEHOLDER = "\u2423";
+    private static final String INVISIBLE_WHITESPACE_PLACEHOLDER = " ";
     private final Map<String, String> presentationMap = new HashMap<>();
 
     {
-        presentationMap.put("New line", VISIBLENEWLINEPLACEHOLDER);
-        presentationMap.put("Tab", VISIBLETABPLACEHOLDER);
-        presentationMap.put("White space", VISIBLEWHITESPACEPLACEHOLDER);
+        presentationMap.put("New line", VISIBLE_NEWLINE_PLACEHOLDER);
+        presentationMap.put("Tab", VISIBLE_TAB_PLACEHOLDER);
+        presentationMap.put("White space", VISIBLE_WHITESPACE_PLACEHOLDER);
         whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (newValue) {
-                    presentationMap.replace("White space", VISIBLEWHITESPACEPLACEHOLDER);
-                    presentationMap.replace("Tab", VISIBLETABPLACEHOLDER);
-                    presentationMap.replace("New line", VISIBLENEWLINEPLACEHOLDER);
+                    presentationMap.replace("White space", VISIBLE_WHITESPACE_PLACEHOLDER);
+                    presentationMap.replace("Tab", VISIBLE_TAB_PLACEHOLDER);
+                    presentationMap.replace("New line", VISIBLE_NEWLINE_PLACEHOLDER);
                 } else {
-                    presentationMap.replace("White space", INVISIBLEWHITESPACEPLACEHOLDER);
-                    presentationMap.replace("Tab", INVISIBLETABPLACEHOLDER);
-                    presentationMap.replace("New line", INVISIBLENEWLINEPLACEHOLDER);
+                    presentationMap.replace("White space", INVISIBLE_WHITESPACE_PLACEHOLDER);
+                    presentationMap.replace("Tab", INVISIBLE_TAB_PLACEHOLDER);
+                    presentationMap.replace("New line", INVISIBLE_NEWLINE_PLACEHOLDER);
                 }
             }
         });
@@ -719,8 +719,9 @@ public class ExpressionBuilderController implements Initializable {
     private void initListViews() {
         //EXPRESSIONS
         brokenExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        brokenExpressionsListView.setId("Broken");
         brokenExpressionsListView.setCellFactory(new ExpressionCellFactory(true));
-        brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        brokenExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //Listener to update the filter tab when a new value is selected in the broken expression category
         brokenExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
@@ -774,8 +775,9 @@ public class ExpressionBuilderController implements Initializable {
         });
 
         customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
+        customExpressionsListView.setId("Custom");
         customExpressionsListView.setCellFactory(new ExpressionCellFactory());
-        customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
@@ -1286,6 +1288,9 @@ public class ExpressionBuilderController implements Initializable {
     private void editCustomExpressionAction(ActionEvent event) {
         if (selectedExpressionIsEditable.get() && currentMode.get().equals(Mode.VIEW)) {
             currentMode.set(Mode.EDIT);
+            if (!editAsText.get()) {
+                expressionAsTextAction(new ActionEvent());
+            }
             refreshSaved();
         }
     }
@@ -2777,12 +2782,12 @@ public class ExpressionBuilderController implements Initializable {
     private Tooltip createFloatingTooltip(String nodeText) {
         Tooltip tooltip = tooltipsMap.get(nodeText);
         if (nodeText != null && tooltip == null) {
-            String text = nodeText.replace(INVISIBLENEWLINEPLACEHOLDER, "\n");
-            text = text.replace(VISIBLENEWLINEPLACEHOLDER, "\n");
-            text = text.replace(INVISIBLETABPLACEHOLDER, "\t");
-            text = text.replace(VISIBLETABPLACEHOLDER, "\t");
-            text = text.replace(INVISIBLEWHITESPACEPLACEHOLDER, " ");
-            text = text.replace(VISIBLEWHITESPACEPLACEHOLDER, " ");
+            String text = nodeText.replace(INVISIBLE_NEWLINE_PLACEHOLDER, "\n");
+            text = text.replace(VISIBLE_NEWLINE_PLACEHOLDER, "\n");
+            text = text.replace(INVISIBLE_TAB_PLACEHOLDER, "\t");
+            text = text.replace(VISIBLE_TAB_PLACEHOLDER, "\t");
+            text = text.replace(INVISIBLE_WHITESPACE_PLACEHOLDER, " ");
+            text = text.replace(VISIBLE_WHITESPACE_PLACEHOLDER, " ");
 
             if (!text.matches("^[ \t\n\r]$")) {
                 text = nodeText.replace(SUPERSCRIPT_R_FOR_REFMAT + SUPERSCRIPT_SPACE + " ", "");
@@ -3280,16 +3285,16 @@ public class ExpressionBuilderController implements Initializable {
         for (Node node : list) {
             if (node instanceof ExpressionTextNode) {
                 switch (((ExpressionTextNode) node).getText()) {
-                    case VISIBLENEWLINEPLACEHOLDER:
-                    case INVISIBLENEWLINEPLACEHOLDER:
+                    case VISIBLE_NEWLINE_PLACEHOLDER:
+                    case INVISIBLE_NEWLINE_PLACEHOLDER:
                         sb.append("\n");
                         break;
-                    case VISIBLETABPLACEHOLDER:
-                    case INVISIBLETABPLACEHOLDER:
+                    case VISIBLE_TAB_PLACEHOLDER:
+                    case INVISIBLE_TAB_PLACEHOLDER:
                         sb.append("\t");
                         break;
-                    case INVISIBLEWHITESPACEPLACEHOLDER:
-                    case VISIBLEWHITESPACEPLACEHOLDER:
+                    case INVISIBLE_WHITESPACE_PLACEHOLDER:
+                    case VISIBLE_WHITESPACE_PLACEHOLDER:
                         sb.append(" ");
                         break;
                     default:
@@ -3332,21 +3337,21 @@ public class ExpressionBuilderController implements Initializable {
                     etn = new OperationTextNode(' ' + nodeText + ' ');
                 } else if (nodeText.equals("\n") || nodeText.equals("\r")) {
                     if (whiteSpaceVisible.get()) {
-                        etn = new PresentationTextNode(VISIBLENEWLINEPLACEHOLDER);
+                        etn = new PresentationTextNode(VISIBLE_NEWLINE_PLACEHOLDER);
                     } else {
-                        etn = new PresentationTextNode(INVISIBLENEWLINEPLACEHOLDER);
+                        etn = new PresentationTextNode(INVISIBLE_NEWLINE_PLACEHOLDER);
                     }
                 } else if (nodeText.equals("\t")) {
                     if (whiteSpaceVisible.get()) {
-                        etn = new PresentationTextNode(VISIBLETABPLACEHOLDER);
+                        etn = new PresentationTextNode(VISIBLE_TAB_PLACEHOLDER);
                     } else {
-                        etn = new PresentationTextNode(INVISIBLETABPLACEHOLDER);
+                        etn = new PresentationTextNode(INVISIBLE_TAB_PLACEHOLDER);
                     }
                 } else if (nodeText.equals(" ")) {
                     if (whiteSpaceVisible.get()) {
-                        etn = new PresentationTextNode(VISIBLEWHITESPACEPLACEHOLDER);
+                        etn = new PresentationTextNode(VISIBLE_WHITESPACE_PLACEHOLDER);
                     } else {
-                        etn = new PresentationTextNode(INVISIBLEWHITESPACEPLACEHOLDER);
+                        etn = new PresentationTextNode(INVISIBLE_WHITESPACE_PLACEHOLDER);
                     }
                 } else {
                     etn = new ExpressionTextNode(' ' + nodeText + ' ');
@@ -3594,30 +3599,40 @@ public class ExpressionBuilderController implements Initializable {
             cell.setOnMouseClicked((event) -> {
                 if (event.getButton().equals(MouseButton.SECONDARY)) {
                     cm.getItems().clear();
+                    ListView parent = cell.getListView();
 
-                    MenuItem remove = new MenuItem("Remove expression");
-                    remove.setOnAction((t) -> {
-                        int index = cell.getIndex();
-                        ListView parent = cell.getListView();
-                        removedExpressions.add(cell.getItem());
-                        task.removeExpression(cell.getItem(), true);
-                        selectedExpression.set(null);
-                        populateExpressionListViews();
-
-                        //Determines the new expression to select
-                        int size = parent.getItems().size();
-                        if (size <= index) {
-                            index = size - 1;
-                        }
-                        if (index >= 0) {
-                            selectInAllPanes((Expression) parent.getItems().get(index), false);
-                        } else {
-                            if (namedExpressions.size() > 0) {
-                                selectInAllPanes(namedExpressions.get(0), true);
+                    if (parent.getId().startsWith("Custom") || parent.getId().startsWith("Broken")) {
+                        MenuItem remove = new MenuItem("Remove expression(s)");
+                        remove.setOnAction((t) -> {
+                            int index = cell.getIndex();
+//                        ListView parent = cell.getListView();
+                            ObservableList selectedItemsToRemove = parent.getSelectionModel().getSelectedItems();
+                            for (int i = 0; i < selectedItemsToRemove.size(); i++) {
+                                removedExpressions.add((Expression) selectedItemsToRemove.get(i));
+                                task.removeExpression((Expression) selectedItemsToRemove.get(i), true);
                             }
-                        }
-                    });
-                    cm.getItems().add(remove);
+
+//                        removedExpressions.add(cell.getItem());
+//                        task.removeExpression(cell.getItem(), true);
+                            selectedExpression.set(null);
+                            populateExpressionListViews();
+
+                            //Determines the new expression to select
+                            int size = parent.getItems().size();
+                            if (size <= index) {
+                                index = size - 1;
+                            }
+                            if (index >= 0) {
+                                selectInAllPanes((Expression) parent.getItems().get(index), false);
+                            } else {
+                                if (namedExpressions.size() > 0) {
+                                    selectInAllPanes(namedExpressions.get(0), true);
+                                }
+                            }
+                        });
+                        cm.getItems().add(remove);
+
+                    }
 
                     MenuItem restore = new MenuItem("Restore removed expressions");
                     restore.setOnAction((t) -> {
@@ -3643,7 +3658,7 @@ public class ExpressionBuilderController implements Initializable {
 
                     cm.getItems().add(new SeparatorMenuItem());
 
-                    Menu export = new Menu("Export as");
+                    Menu export = new Menu("Export Expression as");
 
                     MenuItem exportXML = new MenuItem("XML document");
                     exportXML.setOnAction((t) -> {
@@ -3663,6 +3678,7 @@ public class ExpressionBuilderController implements Initializable {
                     });
                     export.getItems().add(exportHTML);
 
+                    export.setDisable(parent.getSelectionModel().getSelectedItems().size() > 1);
                     cm.getItems().add(export);
 
                     cm.show(cell, event.getScreenX(), event.getScreenY());
@@ -4115,9 +4131,9 @@ public class ExpressionBuilderController implements Initializable {
                         Tooltip t
                                 = createFloatingTooltip(getText()
                                         .replaceAll("(:.*|\\(.*\\))$", "").trim()
-                                        .replaceAll("Tab", VISIBLETABPLACEHOLDER)
-                                        .replaceAll("New line", VISIBLENEWLINEPLACEHOLDER)
-                                        .replaceAll("White space", VISIBLEWHITESPACEPLACEHOLDER));
+                                        .replaceAll("Tab", VISIBLE_TAB_PLACEHOLDER)
+                                        .replaceAll("New line", VISIBLE_NEWLINE_PLACEHOLDER)
+                                        .replaceAll("White space", VISIBLE_WHITESPACE_PLACEHOLDER));
                         setOnMouseEntered((event) -> {
                             showToolTip(event, this, t);
                         });
@@ -4237,40 +4253,40 @@ public class ExpressionBuilderController implements Initializable {
             super(text);
             this.fontSize = EXPRESSION_BUILDER_DEFAULT_FONTSIZE + 3;
             updateFontSize();
-            if (text.equals(INVISIBLEWHITESPACEPLACEHOLDER) || text.equals(VISIBLEWHITESPACEPLACEHOLDER)) {
+            if (text.equals(INVISIBLE_WHITESPACE_PLACEHOLDER) || text.equals(VISIBLE_WHITESPACE_PLACEHOLDER)) {
                 this.isWhiteSpace = true;
                 whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (newValue) {
-                            setText(VISIBLEWHITESPACEPLACEHOLDER);
+                            setText(VISIBLE_WHITESPACE_PLACEHOLDER);
                         } else {
-                            setText(INVISIBLEWHITESPACEPLACEHOLDER);
+                            setText(INVISIBLE_WHITESPACE_PLACEHOLDER);
                         }
                         updateMode(currentMode.get());
                     }
                 });
             }
-            if (text.equals(INVISIBLENEWLINEPLACEHOLDER) || text.equals(VISIBLENEWLINEPLACEHOLDER)) {
+            if (text.equals(INVISIBLE_NEWLINE_PLACEHOLDER) || text.equals(VISIBLE_NEWLINE_PLACEHOLDER)) {
                 this.isWhiteSpace = true;
                 whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (newValue) {
-                            setText(VISIBLENEWLINEPLACEHOLDER);
+                            setText(VISIBLE_NEWLINE_PLACEHOLDER);
                         } else {
-                            setText(INVISIBLENEWLINEPLACEHOLDER);
+                            setText(INVISIBLE_NEWLINE_PLACEHOLDER);
                         }
                         updateMode(currentMode.get());
                     }
                 });
             }
-            if (text.equals(INVISIBLETABPLACEHOLDER) || text.equals(VISIBLETABPLACEHOLDER)) {
+            if (text.equals(INVISIBLE_TAB_PLACEHOLDER) || text.equals(VISIBLE_TAB_PLACEHOLDER)) {
                 this.isWhiteSpace = true;
                 whiteSpaceVisible.addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         if (newValue) {
-                            setText(VISIBLETABPLACEHOLDER);
+                            setText(VISIBLE_TAB_PLACEHOLDER);
                         } else {
-                            setText(INVISIBLETABPLACEHOLDER);
+                            setText(INVISIBLE_TAB_PLACEHOLDER);
                         }
                         updateMode(currentMode.get());
                     }

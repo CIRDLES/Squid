@@ -269,9 +269,13 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
                     if (expressionName.toUpperCase().contains("DATETIMEMILLISECONDS")) {
                         retVal = spot.getDateTime();
                     } else {
+                        if (!Double.isNaN(results[0][0])){
                         retVal = formatBigDecimalForPublicationSigDigMode(
                                 new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
                                 countOfSignificantDigits);
+                        } else {
+                            retVal = "NaN";
+                        }
                     }
                 }
             } else {
