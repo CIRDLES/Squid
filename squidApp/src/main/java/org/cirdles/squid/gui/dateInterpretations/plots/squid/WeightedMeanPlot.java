@@ -20,6 +20,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
@@ -40,6 +41,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
@@ -221,7 +223,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 } else {
                     agesOrValuesTwoSigma.add(2.0 * results[0][1]);
                 }
-                
+
                 if (spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") == 0) {
                     hours.add(spot.getHours());
                 } else {
@@ -611,7 +613,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             shrimpFractions.get(index).getSelectedAgeExpressionName());
         }
 
-        String retVal = makeAgeOrValueString(values[0][0], values[0][1]);
+        String retVal = makeAgeString(values[0][0], values[0][1]);
         if (!adaptToAgeInMA) {
             retVal += "\n\t\t" + ageOrValueLookupString + " = " + (new BigDecimal(myOnPeakData[index]).setScale(4, RoundingMode.HALF_UP).toEngineeringString());
         }
@@ -619,7 +621,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return retVal;
     }
 
-    public static String makeAgeOrValueString(double age, double twoSigmaUncert) {
+    public static String makeAgeString(double age, double twoSigmaUncert) {
         String retVal = "No Age calculated.";
         try {
             retVal = new BigDecimal(age)
@@ -629,6 +631,22 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         } catch (Exception e) {
         }
         return retVal;
+    }
+
+    public static String makeValueString(double value, double twoSigmaUncert) {
+//        String retVal = "No Value calculated.";
+//        try {
+//            retVal = new BigDecimal(value)
+//                    .setScale(3, RoundingMode.HALF_UP).toEngineeringString()
+//                    + " ±" + new BigDecimal(twoSigmaUncert)
+//                            .setScale(3, RoundingMode.HALF_UP).toEngineeringString() + " ";
+//        } catch (Exception e) {
+//        }
+        
+        Formatter formatter = new Formatter();
+        formatter.format("%3.2E", value);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert).toString();
+        return formatter.toString() + " ";
     }
 
     public static String makeSimpleAgeString(double age) {

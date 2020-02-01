@@ -362,6 +362,10 @@ public class SamplesPlottingNode extends HBox {
                         sampleNode.setSamplePlotWM(myPlot);
 
                         updateSampleFromSlider(probabilitySlider.getValue());
+                        
+                        // sort by self first
+                        categorySortComboBox.getSelectionModel().select(categoryComboBox.getSelectionModel().getSelectedItem());
+                        expressionSortComboBox.getSelectionModel().select(expressionComboBox.getSelectionModel().getSelectedItem());
                     }
                 }
             }

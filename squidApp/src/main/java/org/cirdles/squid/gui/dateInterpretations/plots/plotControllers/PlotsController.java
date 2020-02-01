@@ -571,10 +571,33 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             @Override
             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                 SampleTreeNodeInterface item = object.getValue();
-                // the goal is to show the nodename + weightedMean source + value of sorting choice 
-                String nodeStringWM = item.getNodeName();
+                // the goal is to show the nodename + weightedMean source + value of sorting choice if different
+
+                String wmExpressionName
+                        = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
+                double[][] wmExpressionValues;
+                if (stringIsSquidRatio(wmExpressionName)) {
+                    // ratio case
+                    wmExpressionValues
+                            = Arrays.stream(item.getShrimpFraction()
+                                    .getIsotopicRatioValuesByStringName(wmExpressionName)).toArray(double[][]::new);
+                } else {
+                    wmExpressionValues = item.getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(wmExpressionName);
+                }
+
+                String ageOrValueSourceOfWM;
+                if (wmExpressionName.endsWith("Age")) {
+                    ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], wmExpressionValues[0][1]);
+                } else {
+                    ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], wmExpressionValues[0][1]);
+                }
+                String nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
+
                 String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
-                if (item instanceof WeightedMeanSpotNode) {
+                // check to see if sorted by same field              
+                if ((item instanceof WeightedMeanSpotNode)
+                        && (wmExpressionName.compareToIgnoreCase(expressionName) != 0)) {
                     if (expressionName.compareTo("Hours") == 0) {
                         nodeStringWM += item.getShrimpFraction().getHours();
                     } else if (expressionName.compareTo("SpotIndex") == 0) {
@@ -592,11 +615,11 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         }
 
                         if (expressionName.contains("Age")) {
-                            nodeStringWM += WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
+                            nodeStringWM += "::" + WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
                         } else {
                             Formatter formatter = new Formatter();
                             formatter.format("%4.2E", expressionValues[0][0]);
-                            nodeStringWM += formatter.toString();
+                            nodeStringWM += "::" + formatter.toString();
                         }
                     }
 
