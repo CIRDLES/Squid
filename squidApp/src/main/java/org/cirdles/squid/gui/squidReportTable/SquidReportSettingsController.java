@@ -150,6 +150,7 @@ public class SquidReportSettingsController implements Initializable {
 
     private final ObjectProperty<Expression> selectedExpression = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportCategoryInterface> selectedCategory = new SimpleObjectProperty<>();
+    private final ObjectProperty<Boolean> selectedCategoryIsFixedCategory = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportColumnInterface> selectedColumn = new SimpleObjectProperty<>();
 
     ObservableList<Expression> namedExpressions;
@@ -219,6 +220,7 @@ public class SquidReportSettingsController implements Initializable {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
             Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
+
             if (!isRefMat
                     && reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
                 Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
@@ -441,7 +443,16 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedCategory.setValue(newValue);
         });
+        categoryListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedCategory.setValue(categoryListView.getSelectionModel().getSelectedItem());
+        selectedCategory.addListener((ob, ov, nv) -> {
+            selectedCategoryIsFixedCategory.setValue(nv != null &&
+                    reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport() &&
+                    (nv.getDisplayName().compareTo("Time") == 0 ||
+                            nv.getDisplayName().compareTo("Ages") == 0 ||
+                            nv.getDisplayName().compareTo("Raw Ratios") == 0 ||
+                            nv.getDisplayName().compareTo("Corr. Ratios") == 0));
+        });
         /*
         AtomicDouble scrollAmount = new AtomicDouble(0.0);
         Thread catScrollThread = new Thread(() -> {
@@ -498,16 +509,17 @@ public class SquidReportSettingsController implements Initializable {
         }));
         selectedColumn.setValue(columnListView.getSelectionModel().getSelectedItem());
         columnListView.setOnDragOver(event -> {
-            if (selectedCategory.getValue() != null && event.getDragboard() != null && event.getDragboard().hasString()) {
+            if (selectedCategory.getValue() != null &&
+                    !selectedCategoryIsFixedCategory.getValue() &&
+                    event.getDragboard() != null && event.getDragboard().hasString()) {
                 event.acceptTransferModes(TransferMode.COPY);
             }
         });
         columnListView.setOnDragDropped(event -> {
             boolean success = false;
-            ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
-            if (event.getTransferMode().equals(TransferMode.COPY)) {
+            if (event.getTransferMode().equals(TransferMode.COPY) && !selectedCategoryIsFixedCategory.getValue()) {
                 SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
-                items.add(col);
+                columnListView.getItems().add(col);
                 columnListView.getSelectionModel().select(col);
                 success = true;
                 isEditing.setValue(true);
@@ -515,6 +527,7 @@ public class SquidReportSettingsController implements Initializable {
             event.setDropCompleted(success);
             event.consume();
         });
+        columnListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initSelectionActions() {
@@ -1278,7 +1291,7 @@ public class SquidReportSettingsController implements Initializable {
             });
         } else {
             SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
-            if (table.amWeightedMeanPlotAndSortReport()){
+            if (table.amWeightedMeanPlotAndSortReport()) {
                 table.formatWeightedMeanPlotAndSortReport();
             }
             List<SquidReportTableInterface> tables = getTables();
@@ -1348,7 +1361,7 @@ public class SquidReportSettingsController implements Initializable {
         if (reportTableFile != null) {
             SquidMessageDialog.showInfoDialog(
                     "File saved as:\n\n"
-                    + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
+                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
                     primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
@@ -1365,6 +1378,8 @@ public class SquidReportSettingsController implements Initializable {
 
         @Override
         public ListCell<SquidReportCategoryInterface> call(ListView<SquidReportCategoryInterface> param) {
+            ObjectProperty<Boolean> isFixedCategory = new SimpleObjectProperty<>();
+
             ListCell<SquidReportCategoryInterface> cell = new ListCell<SquidReportCategoryInterface>() {
                 @Override
                 public void updateItem(SquidReportCategoryInterface category, boolean empty) {
@@ -1374,10 +1389,18 @@ public class SquidReportSettingsController implements Initializable {
                     } else {
                         setText(null);
                     }
+                    isFixedCategory.setValue(!this.isEmpty() &&
+                            reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport() &&
+                            (getText().compareTo("Time") == 0 ||
+                                    getText().compareTo("Ages") == 0 ||
+                                    getText().compareTo("Raw Ratios") == 0 ||
+                                    getText().compareTo("Corr. Ratios") == 0));
                 }
             };
+
+
             cell.setOnDragOver(event -> {
-                if (event.getDragboard().hasString() && event.getGestureSource() != cell) {
+                if (!isFixedCategory.getValue() && event.getDragboard().hasString() && event.getGestureSource() != cell) {
                     event.acceptTransferModes(TransferMode.MOVE);
                 }
                 event.consume();
@@ -1401,10 +1424,9 @@ public class SquidReportSettingsController implements Initializable {
                 boolean success = false;
 
                 ObservableList<SquidReportCategoryInterface> items = categoryListView.getItems();
-                SquidReportCategoryInterface cat = null;
-                for (int i = 0; cat == null && i < items.size(); i++) {
+                for (int i = 0; i < items.size(); i++) {
                     if (items.get(i).getDisplayName().equals(event.getDragboard().getString())) {
-                        cat = items.get(i);
+                        SquidReportCategoryInterface cat = items.get(i);
                         items.remove(i);
                         if (cell.isEmpty()) {
                             items.add(cat);
@@ -1415,6 +1437,7 @@ public class SquidReportSettingsController implements Initializable {
                         success = true;
                         event.consume();
                         isEditing.setValue(true);
+                        break;
                     }
                 }
 
@@ -1422,14 +1445,18 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnDragDetected(event -> {
-                selectedCategory.setValue(cell.getItem());
                 if (!cell.isEmpty()) {
-                    Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
-                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.putString(cell.getItem().getDisplayName());
-                    db.setContent(cc);
-                    cell.setCursor(Cursor.CLOSED_HAND);
+                    selectedCategory.setValue(cell.getItem());
+                    if (!isFixedCategory.getValue()) {
+                        Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+                        db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+                        ClipboardContent cc = new ClipboardContent();
+                        cc.putString(cell.getItem().getDisplayName());
+                        db.setContent(cc);
+                        cell.setCursor(Cursor.CLOSED_HAND);
+                    } else {
+                        SquidMessageDialog.showWarningDialog("Cannot drag fixed categories.", primaryStageWindow);
+                    }
                 }
             });
 
@@ -1441,61 +1468,86 @@ public class SquidReportSettingsController implements Initializable {
                 if (cell.isEmpty()) {
                 } else if (event.isSecondaryButtonDown()) {
                     ContextMenu contextMenu = new ContextMenu();
-                    MenuItem deleteItem = new MenuItem("Delete");
-                    deleteItem.setOnAction(action -> {
-                        categoryListView.getItems().remove(cell.getItem());
-                        isEditing.setValue(true);
-                    });
-
-                    MenuItem renameItem = new MenuItem(("Rename"));
-                    renameItem.setOnAction(action -> {
-                        TextInputDialog dialog = new TextInputDialog(cell.getText());
-                        dialog.setTitle("Rename");
-                        dialog.setHeaderText("Rename " + cell.getText());
-                        dialog.setContentText("Enter the new category name:");
-
-                        List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
-                        categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
-
-                        Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                        TextField newName = null;
-                        for (Node n : dialog.getDialogPane().getChildren()) {
-                            if (n instanceof TextField) {
-                                newName = (TextField) n;
-                            }
-                        }
-                        if (okBtn != null && newName != null) {
-                            newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                okBtn.setDisable(catNames.contains(newValue) || newValue.isEmpty());
-                            });
-                        }
-                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
-                        Optional<String> result = dialog.showAndWait();
-                        if (result.isPresent()) {
-                            if (catNames.contains(result.get())) {
-                                SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
-                            } else {
-                                cell.getItem().setDisplayName(result.get());
-                                categoryListView.refresh();
-                            }
-                        }
-                    });
 
                     // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table 
                     showContextMenu = true;
                     if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()) {
                         if ((cell.getItem().getDisplayName().compareTo("Time") == 0)
-                                ||(cell.getItem().getDisplayName().compareTo("Ages") == 0)
+                                || (cell.getItem().getDisplayName().compareTo("Ages") == 0)
                                 || (cell.getItem().getDisplayName().compareTo("Raw Ratios") == 0)
                                 || (cell.getItem().getDisplayName().compareTo("Corr. Ratios") == 0)) {
                             showContextMenu = false;
                         }
                     }
-                    if (showContextMenu) {
-                        contextMenu.getItems().addAll(renameItem, deleteItem);
-                    } else {
+                    if (!showContextMenu) {
                         contextMenu.getItems().addAll(new MenuItem("Fixed Category"));
+                    } else {
+                        MenuItem deleteItem = new MenuItem("Delete");
+                        deleteItem.setOnAction(action -> {
+                            Integer[] selectedIndices = categoryListView.getSelectionModel().getSelectedIndices().toArray(new Integer[0]);
+                            Arrays.sort(selectedIndices);
+
+                            boolean hasFixedCats = false;
+                            int numDeletedCats = 0;
+                            String name;
+                            for (int i = 0; i < selectedIndices.length; i++) {
+                                SquidReportCategoryInterface cat = categoryListView.getItems().get(selectedIndices[i] - numDeletedCats);
+                                name = cat.getDisplayName();
+                                if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport() &&
+                                        (name.compareTo("Time") == 0 ||
+                                                name.compareTo("Age") == 0 ||
+                                                name.compareTo("Raw Ratios") == 0 ||
+                                                name.compareTo("Corr. Ratios") == 0)) {
+                                    hasFixedCats = true;
+                                } else {
+                                    categoryListView.getItems().remove(selectedIndices[i] - numDeletedCats++);
+                                }
+                            }
+
+                            if (hasFixedCats) {
+                                SquidMessageDialog.showWarningDialog("Cannot delete fixed categories.", primaryStageWindow);
+                            }
+                            isEditing.setValue(true);
+                        });
+                        contextMenu.getItems().add(deleteItem);
+                        if (categoryListView.getSelectionModel().getSelectedItems().size() == 1) {
+                            MenuItem renameItem = new MenuItem(("Rename"));
+                            renameItem.setOnAction(action -> {
+                                TextInputDialog dialog = new TextInputDialog(cell.getText());
+                                dialog.setTitle("Rename");
+                                dialog.setHeaderText("Rename " + cell.getText());
+                                dialog.setContentText("Enter the new category name:");
+
+                                List<String> catNames = new ArrayList<>(categoryListView.getItems().size());
+                                categoryListView.getItems().forEach(cat -> catNames.add(cat.getDisplayName()));
+
+                                Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                                TextField newName = null;
+                                for (Node n : dialog.getDialogPane().getChildren()) {
+                                    if (n instanceof TextField) {
+                                        newName = (TextField) n;
+                                    }
+                                }
+                                if (okBtn != null && newName != null) {
+                                    newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                        okBtn.setDisable(catNames.contains(newValue) || newValue.isEmpty());
+                                    });
+                                }
+
+                                dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                                dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                                Optional<String> result = dialog.showAndWait();
+                                if (result.isPresent()) {
+                                    if (catNames.contains(result.get())) {
+                                        SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
+                                    } else {
+                                        cell.getItem().setDisplayName(result.get());
+                                        categoryListView.refresh();
+                                    }
+                                }
+                            });
+                            contextMenu.getItems().add(renameItem);
+                        }
                     }
                     contextMenu.show(cell, event.getScreenX(), event.getScreenY());
 
@@ -1504,13 +1556,17 @@ public class SquidReportSettingsController implements Initializable {
                 }
             });
 
-            cell.setOnMouseReleased((event) -> {
+            cell.setOnMouseReleased((event) ->
+
+            {
                 cell.setCursor(Cursor.OPEN_HAND);
             });
 
             cell.setCursor(Cursor.OPEN_HAND);
 
-            cell.setOnMouseClicked((event) -> {
+            cell.setOnMouseClicked((event) ->
+
+            {
                 //Nothing
             });
             return cell;
@@ -1536,7 +1592,7 @@ public class SquidReportSettingsController implements Initializable {
                 }
             };
             cell.setOnDragOver(event -> {
-                if (event.getDragboard().hasString() && event.getGestureSource() != cell) {
+                if (event.getDragboard().hasString() && event.getGestureSource() != cell && !selectedCategoryIsFixedCategory.getValue()) {
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
                 event.consume();
@@ -1558,33 +1614,35 @@ public class SquidReportSettingsController implements Initializable {
 
             cell.setOnDragDropped(event -> {
                 boolean success = false;
-                ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
-                if (event.getTransferMode().equals(TransferMode.COPY)) {
-                    SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
-                    if (cell.getItem() != null) {
-                        items.add(items.indexOf(cell.getItem()), col);
+                if (!selectedCategoryIsFixedCategory.getValue()) {
+                    ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
+                    if (event.getTransferMode().equals(TransferMode.COPY)) {
+                        SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
+                        if (cell.getItem() != null) {
+                            items.add(items.indexOf(cell.getItem()), col);
+                        } else {
+                            items.add(col);
+                        }
+                        columnListView.getSelectionModel().select(col);
+                        success = true;
+                        event.consume();
+                        isEditing.setValue(true);
                     } else {
-                        items.add(col);
-                    }
-                    columnListView.getSelectionModel().select(col);
-                    success = true;
-                    event.consume();
-                    isEditing.setValue(true);
-                } else {
-                    SquidReportColumnInterface col = null;
-                    for (int i = 0; col == null && i < items.size(); i++) {
-                        if (items.get(i).getExpressionName().equals(event.getDragboard().getString())) {
-                            col = items.get(i);
-                            items.remove(i);
-                            if (cell.isEmpty()) {
-                                items.add(col);
-                            } else {
-                                items.add(cell.getIndex(), col);
+                        for (int i = 0; i < items.size(); i++) {
+                            if (items.get(i).getExpressionName().equals(event.getDragboard().getString())) {
+                                SquidReportColumnInterface col = items.get(i);
+                                items.remove(i);
+                                if (cell.isEmpty()) {
+                                    items.add(col);
+                                } else {
+                                    items.add(cell.getIndex(), col);
+                                }
+                                columnListView.getSelectionModel().select(col);
+                                success = true;
+                                event.consume();
+                                isEditing.setValue(true);
+                                break;
                             }
-                            columnListView.getSelectionModel().select(col);
-                            success = true;
-                            event.consume();
-                            isEditing.setValue(true);
                         }
                     }
                 }
@@ -1613,15 +1671,19 @@ public class SquidReportSettingsController implements Initializable {
                     ContextMenu contextMenu = new ContextMenu();
                     MenuItem deleteItem = new MenuItem("Delete");
                     deleteItem.setOnAction(action -> {
-                        columnListView.getItems().remove(cell.getItem());
+                        Integer[] selectedIndices = columnListView.getSelectionModel().getSelectedIndices().toArray(new Integer[0]);
+                        Arrays.sort(selectedIndices);
+                        for (int i = 0; i < selectedIndices.length; i++) {
+                            columnListView.getItems().remove(selectedIndices[i] - i);
+                        }
                         isEditing.setValue(true);
                     });
 
-                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table 
+                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table
                     showContextMenu = true;
                     if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()) {
                         if ((categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Time") == 0)
-                                ||(categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Ages") == 0)
+                                || (categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Ages") == 0)
                                 || (categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Raw Ratios") == 0)
                                 || (categoryListView.getSelectionModel().getSelectedItem().getDisplayName().compareTo("Corr. Ratios") == 0)) {
                             showContextMenu = false;
