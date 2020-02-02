@@ -23,6 +23,8 @@ dependencies {
     compile project(":squidCore")
 
     compile 'com.github.cirdles:topsoil:79596d2420'
+    
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 
 }
 

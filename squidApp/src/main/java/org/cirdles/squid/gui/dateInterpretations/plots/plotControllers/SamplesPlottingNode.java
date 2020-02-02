@@ -427,6 +427,8 @@ public class SamplesPlottingNode extends HBox {
                 } else {
                     probabilitySlider.setDisable(true);
                     probTextField.setDisable(true);
+                    
+//                    ((WeightedMeanPlot)sampleNode.getSamplePlotWM()).outputToSVG(null);
                 }
             }
         });
