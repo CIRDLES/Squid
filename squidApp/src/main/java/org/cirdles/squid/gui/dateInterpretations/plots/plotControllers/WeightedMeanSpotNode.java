@@ -74,7 +74,7 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
         } 
         else {
             double[] age = shrimpFraction.getTaskExpressionsEvaluationsPerSpotByField(shrimpFraction.getSelectedAgeExpressionName())[0];
-            retVal += "  " + WeightedMeanPlot.makeAgeOrValueString(age[0], age[1]);
+            retVal += "  " + WeightedMeanPlot.makeAgeString(age[0], age[1]);
         }
         return retVal;
     }

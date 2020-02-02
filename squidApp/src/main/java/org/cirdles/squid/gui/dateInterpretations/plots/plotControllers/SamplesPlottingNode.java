@@ -17,6 +17,8 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +41,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -84,14 +87,12 @@ public class SamplesPlottingNode extends HBox {
     private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
     private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
     private final Slider probabilitySlider;
-    private final Label probLabel;
+    private final TextField probTextField;
 
     private final ComboBox<SquidReportCategoryInterface> categoryComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionComboBox;
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
-
-    private ToggleGroup sortingToggleGroup;
 
     private CheckBox filterInfoCheckBox;
 
@@ -101,7 +102,7 @@ public class SamplesPlottingNode extends HBox {
         this.sampleComboBox = new ComboBox<>();
         this.plotsController = plotsController;
         this.probabilitySlider = new Slider(0, 1, 0);
-        this.probLabel = new Label("0.0");
+        this.probTextField = new TextField("0.0");
         this.categoryComboBox = new ComboBox<>();
         this.expressionComboBox = new ComboBox<>();
         this.categorySortComboBox = new ComboBox<>();
@@ -111,7 +112,7 @@ public class SamplesPlottingNode extends HBox {
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initSquidWeightedMeanPlotSortTable();
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
 
@@ -215,12 +216,7 @@ public class SamplesPlottingNode extends HBox {
         Collections.sort(fractionNodeDetailsWM, (SampleTreeNodeInterface fraction1, SampleTreeNodeInterface fraction2) -> {
             double age1 = fraction1.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
             double age2 = fraction2.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-
-            int retVal = 0;
-            if (spotSummaryDetailsWM.getPreferredViewSortOrder() == 1) {
-                retVal = Double.compare(age1, age2);
-            }
-            return retVal;
+            return Double.compare(age1, age2);
         });
 
         ObservableList<SampleTreeNodeInterface> fractionNodesWM = FXCollections.observableArrayList(fractionNodeDetailsWM);
@@ -261,7 +257,35 @@ public class SamplesPlottingNode extends HBox {
         categoryComboBox.getSelectionModel().selectFirst();
 
         probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
-        probLabel.textProperty().setValue(String.format("%.2f", spotSummaryDetailsWM.getMinProbabilityWM()));
+        probTextField.textProperty().setValue(String.format("%.2f", spotSummaryDetailsWM.getMinProbabilityWM()));
+        probTextField.setAlignment(Pos.CENTER);
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        probTextField.setTextFormatter(new TextFormatter<>(c
+                -> {
+            if (c.getControlNewText().isEmpty()) {
+                return c;
+            }
+            ParsePosition parsePosition = new ParsePosition(0);
+            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                return null;
+            } else if (Double.parseDouble(c.getControlNewText()) > 1.0){
+                return null;
+            }else {
+                return c;
+            }
+        }));
+        
+        probTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (probTextField.getText().length() > 0){
+                probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
+                }
+            }
+        });
 
         plotsController.refreshPlot();
     }
@@ -313,7 +337,6 @@ public class SamplesPlottingNode extends HBox {
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
                 if (newValue != null) {
                     String selectedExpression = newValue.getExpressionName();
-                    int currentSortOrder = 1;
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
 
                         ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
@@ -326,7 +349,6 @@ public class SamplesPlottingNode extends HBox {
                                         .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.setRejectedIndices(savedRejectedIndices);
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
 
                         PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
@@ -354,15 +376,9 @@ public class SamplesPlottingNode extends HBox {
                                                 selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.rejectNone();
-                        spotSummaryDetailsWM.setPreferredViewSortOrder(currentSortOrder);
                         spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
 
-                        if (currentSortOrder == 2) {
-                            spotSummaryDetailsWM.setSelectedExpressionName(
-                                    sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName());
-                        } else {
-                            spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
-                        }
+                        spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
 
                         PlotDisplayInterface myPlot = new WeightedMeanPlot(
                                 new Rectangle(1000, 600),
@@ -377,6 +393,10 @@ public class SamplesPlottingNode extends HBox {
                         sampleNode.setSamplePlotWM(myPlot);
 
                         updateSampleFromSlider(probabilitySlider.getValue());
+
+                        // sort by self first
+                        categorySortComboBox.getSelectionModel().select(categoryComboBox.getSelectionModel().getSelectedItem());
+                        expressionSortComboBox.getSelectionModel().select(expressionComboBox.getSelectionModel().getSelectedItem());
                     }
                 }
             }
@@ -396,20 +416,25 @@ public class SamplesPlottingNode extends HBox {
 
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
         filterInfoCheckBox.setSelected(true);
-        formatNode(filterInfoCheckBox, 170);
+        formatNode(filterInfoCheckBox, 150);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    probabilitySlider.setDisable(false);
+                    probTextField.setDisable(false);
                     updateSampleFromSlider(probabilitySlider.getValue());
+                } else {
+                    probabilitySlider.setDisable(true);
+                    probTextField.setDisable(true);
                 }
             }
         });
 
-        formatNode(probLabel, 30);
-        probLabel.setStyle(probLabel.getStyle() + "-fx-text-fill: red;");
+        formatNode(probTextField, 50);
+        probTextField.setStyle(probTextField.getStyle() + "-fx-text-fill: red;");
 
-        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probLabel);
+        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probTextField);
 
         probabilitySlider.setShowTickLabels(true);
         probabilitySlider.setShowTickMarks(true);
@@ -450,7 +475,7 @@ public class SamplesPlottingNode extends HBox {
     private void updateSampleFromSlider(double newValue) {
         // test to see if slider is enabled
         if (filterInfoCheckBox.isSelected()) {
-            probLabel.textProperty().setValue(
+            probTextField.textProperty().setValue(
                     String.format("%.2f", newValue));
             sampleNode.getSpotSummaryDetailsWM().setMinProbabilityWM(newValue);
             SpotSummaryDetails spotSummaryDetailsWM = ((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails();
@@ -614,37 +639,27 @@ public class SamplesPlottingNode extends HBox {
      */
     private void sortFractionCheckboxesByValue(SpotSummaryDetails spotSummaryDetails) {
         String selectedFieldName = spotSummaryDetails.getSelectedExpressionName();
-        int savedPreferredViewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
         FXCollections.sort(sampleItem.getChildren(), (TreeItem node1, TreeItem node2) -> {
-            // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-            int retVal = 0;
-            if (savedPreferredViewSortOrder < 1) {
-                long acquireTime1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction().getDateTimeMilliseconds();
-                long acquireTime2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction().getDateTimeMilliseconds();
-                retVal = Long.compare(acquireTime1, acquireTime2);
+            double valueFromNode1 = 0.0;
+            double valueFromNode2 = 0.0;
+            if (stringIsSquidRatio(selectedFieldName)) {
+                // Ratio case
+                double[][] resultsFromNode1
+                        = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                valueFromNode1 = resultsFromNode1[0][0];
+                double[][] resultsFromNode2
+                        = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                valueFromNode2 = resultsFromNode2[0][0];
             } else {
-                double valueFromNode1 = 0.0;
-                double valueFromNode2 = 0.0;
-                if (stringIsSquidRatio(selectedFieldName)) {
-                    // Ratio case
-                    double[][] resultsFromNode1
-                            = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode1 = resultsFromNode1[0][0];
-                    double[][] resultsFromNode2
-                            = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode2 = resultsFromNode2[0][0];
-                } else {
-                    valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                    valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                }
-
-                retVal = Double.compare(valueFromNode1, valueFromNode2);
+                valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
             }
-            return retVal;
+
+            return Double.compare(valueFromNode1, valueFromNode2);
         });
     }
 }

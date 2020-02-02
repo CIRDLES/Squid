@@ -892,7 +892,6 @@ public class CommonLeadAssignmentController implements Initializable {
                                     = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
                             spotSummaryDetailsWM.setManualRejectionEnabled(true);
                             spotSummaryDetailsWM.setRejectedIndices(currentSpotSummaryDetails.getRejectedIndices().clone());
-                            spotSummaryDetailsWM.setPreferredViewSortOrder(currentSpotSummaryDetails.getPreferredViewSortOrder());
                             spotSummaryDetailsWM.setMinProbabilityWM(currentSpotSummaryDetails.getMinProbabilityWM());
                             try {
                                 spotSummaryDetailsWM.setValues(spotSummaryDetailsWM.eval(squidProject.getTask()));
