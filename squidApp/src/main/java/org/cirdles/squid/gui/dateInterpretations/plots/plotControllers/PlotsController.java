@@ -664,6 +664,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 corr8_RadioButton.setVisible(true);
 
                 showConcordiaPlotsOfUnknownsOrRefMat();
+                autoExcludeSpotsCheckBox.setVisible(false);
                 break;
             case WEIGHTED_MEAN:
                 plotFlavorOneRadioButton.setText(CALIB_CONST_206_238_ROOT + "_CalibConst");
@@ -701,11 +702,13 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         corr8_RadioButton.setSelected(true);
                 }
 
+                autoExcludeSpotsCheckBox.setVisible(true);
                 autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
 
                 showWeightedMeanPlot();
                 break;
             case WEIGHTED_MEAN_SAMPLE:
+                autoExcludeSpotsCheckBox.setVisible(false);
                 showWeightedMeanSamplePlot();
 
         }
