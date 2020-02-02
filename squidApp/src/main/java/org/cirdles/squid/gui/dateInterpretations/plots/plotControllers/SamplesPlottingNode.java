@@ -17,6 +17,8 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +41,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -84,7 +87,7 @@ public class SamplesPlottingNode extends HBox {
     private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
     private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
     private final Slider probabilitySlider;
-    private final Label probLabel;
+    private final TextField probTextField;
 
     private final ComboBox<SquidReportCategoryInterface> categoryComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionComboBox;
@@ -99,7 +102,7 @@ public class SamplesPlottingNode extends HBox {
         this.sampleComboBox = new ComboBox<>();
         this.plotsController = plotsController;
         this.probabilitySlider = new Slider(0, 1, 0);
-        this.probLabel = new Label("0.0");
+        this.probTextField = new TextField("0.0");
         this.categoryComboBox = new ComboBox<>();
         this.expressionComboBox = new ComboBox<>();
         this.categorySortComboBox = new ComboBox<>();
@@ -254,7 +257,35 @@ public class SamplesPlottingNode extends HBox {
         categoryComboBox.getSelectionModel().selectFirst();
 
         probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
-        probLabel.textProperty().setValue(String.format("%.2f", spotSummaryDetailsWM.getMinProbabilityWM()));
+        probTextField.textProperty().setValue(String.format("%.2f", spotSummaryDetailsWM.getMinProbabilityWM()));
+        probTextField.setAlignment(Pos.CENTER);
+
+        DecimalFormat format = new DecimalFormat("0.00");
+        probTextField.setTextFormatter(new TextFormatter<>(c
+                -> {
+            if (c.getControlNewText().isEmpty()) {
+                return c;
+            }
+            ParsePosition parsePosition = new ParsePosition(0);
+            Object object = format.parse(c.getControlNewText(), parsePosition);
+
+            if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
+                return null;
+            } else if (Double.parseDouble(c.getControlNewText()) > 1.0){
+                return null;
+            }else {
+                return c;
+            }
+        }));
+        
+        probTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (probTextField.getText().length() > 0){
+                probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
+                }
+            }
+        });
 
         plotsController.refreshPlot();
     }
@@ -362,7 +393,7 @@ public class SamplesPlottingNode extends HBox {
                         sampleNode.setSamplePlotWM(myPlot);
 
                         updateSampleFromSlider(probabilitySlider.getValue());
-                        
+
                         // sort by self first
                         categorySortComboBox.getSelectionModel().select(categoryComboBox.getSelectionModel().getSelectedItem());
                         expressionSortComboBox.getSelectionModel().select(expressionComboBox.getSelectionModel().getSelectedItem());
@@ -385,20 +416,25 @@ public class SamplesPlottingNode extends HBox {
 
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
         filterInfoCheckBox.setSelected(true);
-        formatNode(filterInfoCheckBox, 170);
+        formatNode(filterInfoCheckBox, 150);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
+                    probabilitySlider.setDisable(false);
+                    probTextField.setDisable(false);
                     updateSampleFromSlider(probabilitySlider.getValue());
+                } else {
+                    probabilitySlider.setDisable(true);
+                    probTextField.setDisable(true);
                 }
             }
         });
 
-        formatNode(probLabel, 30);
-        probLabel.setStyle(probLabel.getStyle() + "-fx-text-fill: red;");
+        formatNode(probTextField, 50);
+        probTextField.setStyle(probTextField.getStyle() + "-fx-text-fill: red;");
 
-        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probLabel);
+        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probTextField);
 
         probabilitySlider.setShowTickLabels(true);
         probabilitySlider.setShowTickMarks(true);
@@ -439,7 +475,7 @@ public class SamplesPlottingNode extends HBox {
     private void updateSampleFromSlider(double newValue) {
         // test to see if slider is enabled
         if (filterInfoCheckBox.isSelected()) {
-            probLabel.textProperty().setValue(
+            probTextField.textProperty().setValue(
                     String.format("%.2f", newValue));
             sampleNode.getSpotSummaryDetailsWM().setMinProbabilityWM(newValue);
             SpotSummaryDetails spotSummaryDetailsWM = ((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails();
