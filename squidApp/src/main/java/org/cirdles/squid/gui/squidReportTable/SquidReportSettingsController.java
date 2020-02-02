@@ -446,7 +446,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedCategory.setValue(categoryListView.getSelectionModel().getSelectedItem());
         selectedCategory.addListener((ob, ov, nv) -> {
-            selectedCategoryIsFixedCategory.setValue(selectedCategory != null &&
+            selectedCategoryIsFixedCategory.setValue(nv != null &&
                     reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport() &&
                     (nv.getDisplayName().compareTo("Time") == 0 ||
                             nv.getDisplayName().compareTo("Ages") == 0 ||
