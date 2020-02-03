@@ -39,8 +39,8 @@
             <Image url="@images/cirdles-logov2.png" />
          </image>
       </ImageView>
-      <Hyperlink layoutX="317.0" layoutY="667.0" onAction="#visitSquidOnCirdlesAction" styleClass="links" text="A CIRDLES Project" textAlignment="CENTER" />
-      <Hyperlink layoutX="90.0" layoutY="667.0" onAction="#visitUsOnGithubAction" styleClass="links" text="Visit Us on GitHub!" textAlignment="CENTER" />
+      <Hyperlink layoutX="326.0" layoutY="667.0" onAction="#visitSquidOnCirdlesAction" styleClass="links" text="A CIRDLES Project" textAlignment="CENTER" />
+      <Hyperlink layoutX="102.0" layoutY="667.0" onAction="#visitUsOnGithubAction" styleClass="links" text="Visit Us on GitHub!" textAlignment="CENTER" />
       <ImageView fitHeight="91.0" fitWidth="62.0" layoutX="127.0" layoutY="604.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/githubBluesqueLogo.png" />
