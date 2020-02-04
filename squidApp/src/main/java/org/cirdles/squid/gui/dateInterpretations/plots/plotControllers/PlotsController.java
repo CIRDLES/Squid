@@ -587,10 +587,14 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 }
 
                 String ageOrValueSourceOfWM;
+                double uncertainty = 0.0;
+                if (wmExpressionValues[0].length > 1){
+                    uncertainty = wmExpressionValues[0][1];
+                }
                 if (wmExpressionName.endsWith("Age")) {
-                    ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], wmExpressionValues[0][1]);
+                    ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], uncertainty);
                 } else {
-                    ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], wmExpressionValues[0][1]);
+                    ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], uncertainty);
                 }
                 String nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
 

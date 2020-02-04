@@ -661,7 +661,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         Formatter formatter = new Formatter();
         formatter.format("%3.2E", value);
-        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert).toString();
+        if (twoSigmaUncert > 0.0) {
+            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert).toString();
+        }
         return formatter.toString() + " ";
     }
 
