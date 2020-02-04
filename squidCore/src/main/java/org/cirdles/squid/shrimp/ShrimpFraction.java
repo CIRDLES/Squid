@@ -41,6 +41,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private String fractionID;
     private int spotNumber;
+    // for tracking time spotIndex of spot in set of unknowns
+    private int spotIndex;
     private String nameOfMount;
     private long dateTimeMilliseconds;
     private double hours;
@@ -92,6 +94,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     public ShrimpFraction() {
         this.fractionID = "NONE";
         this.spotNumber = -1;
+        this.spotIndex = 0;
         this.nameOfMount = "NONE";
         this.dateTimeMilliseconds = 0l;
         this.hours = 0.0;
@@ -199,6 +202,20 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      */
     public void setSpotNumber(int spotNumber) {
         this.spotNumber = spotNumber;
+    }
+
+    /**
+     * @return the spotIndex
+     */
+    public int getSpotIndex() {
+        return spotIndex;
+    }
+
+    /**
+     * @param spotIndex the spotIndex to set
+     */
+    public void setSpotIndex(int spotIndex) {
+        this.spotIndex = spotIndex;
     }
 
     /**

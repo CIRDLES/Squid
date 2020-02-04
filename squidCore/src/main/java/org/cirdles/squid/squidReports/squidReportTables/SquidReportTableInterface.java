@@ -125,6 +125,10 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      * @param reportTableName the reportTableName to set
      */
     public void setReportTableName(String reportTableName);
+    
+    public boolean amWeightedMeanPlotAndSortReport();
+    
+    public void formatWeightedMeanPlotAndSortReport();
 
     /**
      * @return the reportCategories
@@ -141,5 +145,15 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
     public boolean isDefault();
 
     public boolean equals(Object ob);
+
+    /**
+     * @return the version
+     */
+    public int getVersion();
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(int version);
 
 }

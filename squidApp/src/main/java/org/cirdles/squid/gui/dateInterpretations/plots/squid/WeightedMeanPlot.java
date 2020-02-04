@@ -15,11 +15,13 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
@@ -40,10 +42,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
@@ -162,16 +166,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             for (ShrimpFractionExpressionInterface sf : storedShrimpFractions) {
                 shrimpFractions.add(sf);
             }
-            // determine sort order for viewing
-            int viewSortOrder = spotSummaryDetails.getPreferredViewSortOrder();
-            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                // original acquire time order  
-                int retComp = 0;
-                double valueFromNode1 = 0.0;
-                double valueFromNode2 = 0.0;
-                // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-                if (viewSortOrder == 1) {
-                    if (spotSummaryDetails.getSelectedExpressionName().startsWith("/", 3)) {
+
+            if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+                Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+                    double valueFromNode1 = 0.0;
+                    double valueFromNode2 = 0.0;
+
+                    if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
                         // case of raw ratios
                         double[][] resultsFromNode1
                                 = Arrays.stream(fraction1
@@ -191,12 +192,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
                     }
 
-                    // modified so that -1 = in order by ordinal, 0 = in order by hours, 1 = ascending by ordinal
-                    retComp = Double.compare(valueFromNode1, valueFromNode2);
-                }
-
-                return retComp;
-            });
+                    return Double.compare(valueFromNode1, valueFromNode2);
+                });
+            }
 
             countOfIncluded = 0;
             for (int i = 0; i < shrimpFractions.size(); i++) {
@@ -212,7 +210,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             double index = 0;
             for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
                 double[][] results;
-                if (ageOrValueLookupString.startsWith("/", 3)) {
+                if (stringIsSquidRatio(ageOrValueLookupString)) {
                     // ratio case
                     results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(ageOrValueLookupString)).toArray(double[][]::new);
                 } else {
@@ -226,7 +224,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 } else {
                     agesOrValuesTwoSigma.add(2.0 * results[0][1]);
                 }
-                if (viewSortOrder == 0) {
+
+                if (spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") == 0) {
                     hours.add(spot.getHours());
                 } else {
                     hours.add(index++);
@@ -333,10 +332,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             } else {
                 g2d.fillText(squid3RoundedToSize(weightedMeanStats[0], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
             }
-            
+
             text.setText("1-sigmaAbs");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
                 g2d.fillText(squid3RoundedToSize(weightedMeanStats[1] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
@@ -345,27 +344,27 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             text.setText("err 68");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("err 95");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(squid3RoundedToSize(weightedMeanStats[4], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("Prob. of fit");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(squid3RoundedToSize(weightedMeanStats[5], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("n");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(String.valueOf(countOfIncluded) + " of " + String.valueOf(shrimpFractions.size()), rightOfText + widthOffset, currentTextHeightPixels);
 
         } else {
@@ -377,22 +376,22 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             text.setText("1%\u03C3 error of mean");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3  external spot-to-spot error");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[4]), rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("Prob. of fit");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels+=heightOffset);
+            g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[5]), rightOfText + widthOffset, currentTextHeightPixels);
 
         }
@@ -548,13 +547,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // X- label
         StringBuilder description = new StringBuilder();
-        if (spotSummaryDetails.getPreferredViewSortOrder() == 0) {
-            description.append("Hours ");
-        } else {
-            description.append(ageOrValueLookupString).append(" ");
-        }
-
-        description.append((spotSummaryDetails.getPreferredViewSortOrder() > -1) ? "ascending" : "in normalized time ascending");
+        description.append(ageOrValueLookupString).append(" ");
+        description.append("ascending by ").append(spotSummaryDetails.getSelectedExpressionName());
         text.setText(description.toString());
 
         textWidth = (int) text.getLayoutBounds().getWidth();
@@ -620,7 +614,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             shrimpFractions.get(index).getSelectedAgeExpressionName());
         }
 
-        String retVal = makeAgeOrValueString(values[0][0], values[0][1]);
+        String retVal = makeAgeString(values[0][0], values[0][1]);
         if (!adaptToAgeInMA) {
             retVal += "\n\t\t" + ageOrValueLookupString + " = " + (new BigDecimal(myOnPeakData[index]).setScale(4, RoundingMode.HALF_UP).toEngineeringString());
         }
@@ -628,13 +622,42 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return retVal;
     }
 
-    public static String makeAgeOrValueString(double age, double twoSigmaUncert) {
+    public static String makeAgeString(double age, double twoSigmaUncert) {
         String retVal = "No Age calculated.";
         try {
             retVal = new BigDecimal(age)
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
                     + " ±" + new BigDecimal(twoSigmaUncert)
-                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString() + " Ma";
+                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString() + "Ma ";
+        } catch (Exception e) {
+        }
+        return retVal;
+    }
+
+    public static String makeValueString(double value, double twoSigmaUncert) {
+//        String retVal = "No Value calculated.";
+//        try {
+//            retVal = new BigDecimal(value)
+//                    .setScale(3, RoundingMode.HALF_UP).toEngineeringString()
+//                    + " ±" + new BigDecimal(twoSigmaUncert)
+//                            .setScale(3, RoundingMode.HALF_UP).toEngineeringString() + " ";
+//        } catch (Exception e) {
+//        }
+
+        Formatter formatter = new Formatter();
+        formatter.format("%3.2E", value);
+        if (twoSigmaUncert > 0.0) {
+            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert).toString();
+        }
+        return formatter.toString() + " ";
+    }
+
+    public static String makeSimpleAgeString(double age) {
+        String retVal = "No Age calculated.";
+        try {
+            retVal = new BigDecimal(age)
+                    .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
+                    + "Ma";
         } catch (Exception e) {
         }
         return retVal;
@@ -733,6 +756,270 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return this;
     }
 
+//    private SVGGraphics2D svgGenerator = null;
+
+    public void outputToSVG(File file) {
+
+//        File file2 = new File("TEST.SVG");
+//        //Bounds dim = this.getBoundsInLocal();
+//        Document doc = SVGDOMImplementation.getDOMImplementation()
+//                .createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, "svg", null);
+//
+//        try {
+//            Writer writer = new BufferedWriter(new FileWriter(file2));
+//            TranscoderOutput output = new TranscoderOutput(writer);
+//            Bounds bounds = this.getBoundsInLocal();
+//            Rectangle2D rec = new Rectangle2D(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
+//            
+//            svgGenerator = new SVGGraphics2D(doc);
+//            JFXConverter converter = new JFXConverter();
+//            converter.convert(svgGenerator, this);
+//            
+//            finishTranscoding(rec, output);
+//            writer.flush();
+//        } catch (IOException | TranscoderException iOException) {
+//        }
+        // Get a DOMImplementation.
+//////        DOMImplementation domImpl
+//////                = GenericDOMImplementation.getDOMImplementation();
+//////
+//////        // Create an instance of org.w3c.dom.Document.
+//////        String svgNS = "http://www.w3.org/2000/svg";
+//////        Document document = domImpl.createDocument(svgNS, "svg", null);
+//////
+//////        // Create an instance of the SVG Generator.
+//////        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+//////
+//////        // Ask the test to render into the SVG Graphics2D implementation.
+//////        GraphicsContext gc = this.getGraphicsContext2D();
+//////        paint(gc);
+//////
+//////        File file2 = new File("TEST.PNG");
+//////        WritableImage wim = new WritableImage((int) this.getWidth(), (int) this.getHeight());
+//////        this.snapshot(null, wim);
+//////        try {
+//////            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file2);
+//////
+//////        } catch (IOException iOException) {
+//////        }
+
+//        // Finally, stream out SVG to the standard output using
+//        // UTF-8 encoding.
+//        boolean useCSS = true; // we want to use CSS style attributes
+//           
+//        Writer out = null;
+//        try {
+//            out = new OutputStreamWriter(new FileOutputStream(file2), "UTF-8");
+//        } catch (FileNotFoundException | UnsupportedEncodingException fileNotFoundException) {
+//        }
+//        try {
+//            svgGenerator.stream(out, useCSS);
+//        } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+//            System.out.println(sVGGraphics2DIOException.getMessage());
+//        }
+//
+//        // aug 2013
+//        // read svg file back in to add clip size to comments
+//        
+//
+//    public void outputToSVG(File file) {
+//
+////        File file2 = new File("TEST.SVG");
+////        //Bounds dim = this.getBoundsInLocal();
+////        Document doc = SVGDOMImplementation.getDOMImplementation()
+////                .createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, "svg", null);
+////
+////        try {
+////            Writer writer = new BufferedWriter(new FileWriter(file2));
+////            TranscoderOutput output = new TranscoderOutput(writer);
+////            Bounds bounds = this.getBoundsInLocal();
+////            Rectangle2D rec = new Rectangle2D(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
+////            
+////            svgGenerator = new SVGGraphics2D(doc);
+////            JFXConverter converter = new JFXConverter();
+////            converter.convert(svgGenerator, this);
+////            
+////            finishTranscoding(rec, output);
+////            writer.flush();
+////        } catch (IOException | TranscoderException iOException) {
+////        }
+//        // Get a DOMImplementation.
+//        DOMImplementation domImpl
+//                = GenericDOMImplementation.getDOMImplementation();
+//
+//        // Create an instance of org.w3c.dom.Document.
+//        String svgNS = "http://www.w3.org/2000/svg";
+//        Document document = domImpl.createDocument(svgNS, "svg", null);
+//
+//        // Create an instance of the SVG Generator.
+//        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+//
+//        // Ask the test to render into the SVG Graphics2D implementation.
+//        GraphicsContext gc = this.getGraphicsContext2D();
+//        paint(gc);
+//
+//        File file2 = new File("TEST.PNG");
+//        WritableImage wim = new WritableImage((int) this.getWidth(), (int) this.getHeight());
+//        this.snapshot(null, wim);
+//        try {
+//            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file2);
+//
+//        } catch (IOException iOException) {
+//        }
+//
+////        // Finally, stream out SVG to the standard output using
+////        // UTF-8 encoding.
+////        boolean useCSS = true; // we want to use CSS style attributes
+////           
+////        Writer out = null;
+////        try {
+////            out = new OutputStreamWriter(new FileOutputStream(file2), "UTF-8");
+////        } catch (FileNotFoundException | UnsupportedEncodingException fileNotFoundException) {
+////        }
+////        try {
+////            svgGenerator.stream(out, useCSS);
+////        } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+////            System.out.println(sVGGraphics2DIOException.getMessage());
+////        }
+////
+////        // aug 2013
+////        // read svg file back in to add clip size to comments
+////        
+////
+////
+////        // Get a DOMImplementation.
+////        DOMImplementation domImpl
+////                = GenericDOMImplementation.getDOMImplementation();
+////
+////        // Create an instance of org.w3c.dom.Document.
+////        String svgNS = "http://www.w3.org/2000/svg";
+////        Document document = domImpl.createDocument(svgNS, "svg", null);
+////
+////        // Create an instance of the SVG Generator.
+////        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+////
+////        JFXConverter converter = new JFXConverter();
+////        converter.convert(svgGenerator, this);
+////
+////        // Ask the test to render into the SVG Graphics2D implementation.
+//////        paint(converter);
+////        // Finally, stream out SVG to the standard output using
+////        // UTF-8 encoding.
+////        boolean useCSS = true; // we want to use CSS style attributes
+//////            File file2 = new File("TEST.SVG");
+////        Writer out = null;
+////        try {
+////            out = new OutputStreamWriter(new FileOutputStream(file2), "UTF-8");
+////        } catch (FileNotFoundException | UnsupportedEncodingException fileNotFoundException) {
+////        }
+////        try {
+////            svgGenerator.stream(out, useCSS);
+////        } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+////            System.out.println(sVGGraphics2DIOException.getMessage());
+////        }
+////
+////        // aug 2013
+////        // read svg file back in to add clip size to comments
+//    }
+//
+//    private void finishTranscoding(Rectangle2D rec, TranscoderOutput output)
+//            throws TranscoderException {
+//
+//        // get the root element and add size
+//        String minX1 = Double.toString(rec.getMinX());
+//        String minY1 = Double.toString(rec.getMinY());
+//        String width1 = Double.toString(rec.getWidth());
+//        String height1 = Double.toString(rec.getHeight());
+//        String size = minX1 + " " + minY1 + " " + width1 + " " + height1;
+//
+//        Element svgRoot = svgGenerator.getRoot();
+//        svgRoot.setAttributeNS(null, "viewBox", size);
+//
+//        //testOutput(doc, new File(System.getProperty("user.dir"),"test.xml"));
+//        // Now, write the SVG content to the output
+//        writeSVGToOutput(svgRoot, output);
+//    }
+//
+//    protected void writeSVGToOutput(Element svgRoot, TranscoderOutput output) throws TranscoderException {
+//        try {
+//            // Writer
+//            Writer wr = output.getWriter();
+//            if (wr != null) {
+//                svgGenerator.stream(svgRoot, wr);
+//                return;
+//            }
+//        } catch (IOException e) {
+//            throw new TranscoderException(e);
+//        }
+//    }
+//
+//        // aug 2013
+//        // read svg file back in to add clip size to comments
+//    }
+//
+//    private void finishTranscoding(Rectangle2D rec, TranscoderOutput output)
+//            throws TranscoderException {
+//
+//        // get the root element and add size
+//        String minX1 = Double.toString(rec.getMinX());
+//        String minY1 = Double.toString(rec.getMinY());
+//        String width1 = Double.toString(rec.getWidth());
+//        String height1 = Double.toString(rec.getHeight());
+//        String size = minX1 + " " + minY1 + " " + width1 + " " + height1;
+//
+//        Element svgRoot = svgGenerator.getRoot();
+//        svgRoot.setAttributeNS(null, "viewBox", size);
+//
+//        //testOutput(doc, new File(System.getProperty("user.dir"),"test.xml"));
+//        // Now, write the SVG content to the output
+//        writeSVGToOutput(svgRoot, output);
+//    }
+//
+//    protected void writeSVGToOutput(Element svgRoot, TranscoderOutput output) throws TranscoderException {
+//        try {
+//            // Writer
+//            Writer wr = output.getWriter();
+//            if (wr != null) {
+//                svgGenerator.stream(svgRoot, wr);
+//                return;
+//            }
+//        } catch (IOException e) {
+//            throw new TranscoderException(e);
+//        }
+//    }
+
+//    /**
+//     *
+//     * @param file
+//     */
+//    public void outputToPDF(File file) {
+
+//    /**
+//     *
+//     * @param file
+//     */
+//    public void outputToPDF(File file) {
+
+//        SVGConverter myConv = new SVGConverter();
+//        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
+//        try {
+//            myConv.setSources(new String[]{file.getCanonicalPath()});
+//
+//        } catch (IOException iOException) {
+//        }
+//        myConv.setWidth((float) getWidth() + 2);
+//        myConv.setHeight((float) getHeight() + 2);
+//
+//        try {
+//            myConv.execute();
+//
+//        } catch (SVGConverterException sVGConverterException) {
+//            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
+//        }
+
+//    }
+    }
+
     @Override
     public void setProperty(String key, Object datum) {
         getProperties().put(key, datum);
@@ -757,6 +1044,20 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
      */
     public void setAgeOrValueLookupString(String ageOrValueLookupString) {
         this.ageOrValueLookupString = ageOrValueLookupString;
+    }
+
+    /**
+     * @return the ageOrValueLookupString
+     */
+    public String getAgeOrValueLookupString() {
+        return ageOrValueLookupString;
+    }
+
+    /**
+     * @return the rejectedIndices
+     */
+    public boolean[] getRejectedIndices() {
+        return rejectedIndices;
     }
 
 }

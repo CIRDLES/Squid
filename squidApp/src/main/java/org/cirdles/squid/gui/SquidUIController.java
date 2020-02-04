@@ -43,8 +43,6 @@ import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.parameters.ParametersModelComparator;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
@@ -577,7 +575,7 @@ public class SquidUIController implements Initializable {
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
             if (squidProject != null) {
-                verifySquidLabDataParameters();
+                synchronizeTaskLabDataAndSquidVersion();
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
 
@@ -1242,6 +1240,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("countCorrectionsUI >>>>   " + iOException.getMessage());
             }
+            menuHighlighter.highlight(manageInterpretationsMenu);
 
             showUI(countCorrectionsUI);
         }
@@ -1278,6 +1277,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("commonLeadAssignmentUI >>>>   " + iOException.getMessage());
             }
+            menuHighlighter.highlight(manageInterpretationsMenu);
 
             showUI(commonLeadAssignmentUI);
         }
@@ -1540,46 +1540,22 @@ public class SquidUIController implements Initializable {
         System.out.println(squidProject.getTask().listBuiltInExpressions());
     }
 
-    private void verifySquidLabDataParameters() {
+    private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
-
-            ParametersModel refMat = task.getReferenceMaterialModel();
-            ParametersModel refMatConc = task.getConcentrationReferenceMaterialModel();
-            ParametersModel physConst = task.getPhysicalConstantsModel();
-            ParametersModel commonPbModel = task.getCommonPbModel();
-
-            if (physConst == null) {
-                task.setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
-            } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
-                squidLabData.addPhysicalConstantsModel(physConst);
-                squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
-            }
-
-            if (refMat == null) {
-                task.setReferenceMaterialModel(new ReferenceMaterialModel());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
-                squidLabData.addReferenceMaterial(refMat);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
+            
+            SquidProject.setProjectChanged(((Task)task).synchronizeTaskVersion());
+            
+            ((Task)task).verifySquidLabDataParameters();
             squidProject.setReferenceMaterialModel(task.getReferenceMaterialModel());
-
-            if (refMatConc == null) {
-                task.setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
-            } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
-                squidLabData.addReferenceMaterial(refMatConc);
-                squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
-            }
             squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
-
-            if (commonPbModel == null) {
-                task.setCommonPbModel(squidLabData.getCommonPbDefault());
-            } else if (!squidLabData.getCommonPbModels().contains(commonPbModel)) {
-                squidLabData.addcommonPbModel(commonPbModel);
-                squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
+                      
+            if (SquidProject.isProjectChanged()){
+                SquidMessageDialog.showInfoDialog(
+                    "The task has been updated for this version of Squid3.\n"
+                    + "Please save Project.",
+                    primaryStageWindow);
             }
-
-            squidLabData.storeState();
         }
     }
 

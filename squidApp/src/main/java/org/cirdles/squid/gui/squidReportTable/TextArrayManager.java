@@ -183,12 +183,12 @@ public class TextArrayManager {
                     }
                     row.add(aliquot);
                     for (int j = 2; j < array[0].length - 1; j++) {
-                        row.add(array[i][j]);
+                        row.add((j == array[0].length - 2) ? array[i][j] + "    " : array[i][j]);
                     }
 
                 } else {
                     for (int j = 1; j < array[0].length - 1; j++) {
-                        row.add(array[i][j]);
+                        row.add((j == array[0].length - 2) ? array[i][j] + "    " : array[i][j]);
                     }
                 }
                 data.add(row);

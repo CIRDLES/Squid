@@ -37,44 +37,44 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     public static final List<SquidReportCategory> defaultSquidReportCategories = new ArrayList<>();
 
     static {
-        SquidReportCategory ages = createReportCategory("Ages");
+
+        SquidReportCategory time = createReportCategory("Time");
         LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
-        for (SampleAgeTypesEnum sat : SampleAgeTypesEnum.values()){
-            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(sat.getExpressionName());
+        SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn("SpotIndex");
+        categoryColumns.add(column);
+        column = SquidReportColumn.createSquidReportColumn("Hours");
+        categoryColumns.add(column);
+        time.setCategoryColumns(categoryColumns);
+        defaultSquidReportCategories.add(time);
+
+        SquidReportCategory ages = createReportCategory("Ages");
+        categoryColumns = new LinkedList<>();
+        for (SampleAgeTypesEnum sampleAgeType : SampleAgeTypesEnum.values()) {
+            column = SquidReportColumn.createSquidReportColumn(sampleAgeType.getExpressionName());
             categoryColumns.add(column);
         }
         ages.setCategoryColumns(categoryColumns);
         defaultSquidReportCategories.add(ages);
-        
+
         // raw ratios will be populated on the fly from task with the exception of the required ratios
         SquidReportCategory rawRatios = createReportCategory("Raw Ratios");
         categoryColumns = new LinkedList<>();
-        for (String ratioName : BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES){
-            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
+        for (String ratioName : BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES) {
+            column = SquidReportColumn.createSquidReportColumn(ratioName);
             categoryColumns.add(column);
         }
         rawRatios.setCategoryColumns(categoryColumns);
         defaultSquidReportCategories.add(rawRatios);
-        
+
         SquidReportCategory correctedRatios = createReportCategory("Corr. Ratios");
         categoryColumns = new LinkedList<>();
-        for (String ratioName : BuiltInExpressionsDataDictionary.CORRECTED_RATIOS_EXPRESSION_NAMES){
-            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
+        for (String ratioName : BuiltInExpressionsDataDictionary.CORRECTED_RATIOS_EXPRESSION_NAMES) {
+            column = SquidReportColumn.createSquidReportColumn(ratioName);
             categoryColumns.add(column);
         }
         correctedRatios.setCategoryColumns(categoryColumns);
         defaultSquidReportCategories.add(correctedRatios);
-        
-        SquidReportCategory composition = createReportCategory("Composition");
-        categoryColumns = new LinkedList<>();
-        for (String ratioName : BuiltInExpressionsDataDictionary.COMPOSITION_EXPRESSION_NAMES){
-            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
-            categoryColumns.add(column);
-        }
-        composition.setCategoryColumns(categoryColumns);
-        defaultSquidReportCategories.add(composition);
-        
-        
+
     }
 
     // Fields
@@ -173,5 +173,5 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     @Override
     public String toString() {
         return displayName;
-    }  
+    }
 }

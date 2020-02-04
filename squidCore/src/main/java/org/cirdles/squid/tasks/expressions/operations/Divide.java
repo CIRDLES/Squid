@@ -64,19 +64,23 @@ public class Divide extends Operation {
 
             double numerator;
             double denominator;
+            if ((numeratorObject instanceof Number) && (denominatorObject instanceof Number)) {
+                if (numeratorObject instanceof Integer) {
+                    numerator = ((Integer) numeratorObject).doubleValue();
+                } else {
+                    numerator = (double) numeratorObject;
+                }
 
-            if (numeratorObject instanceof Integer) {
-                numerator = ((Integer) numeratorObject).doubleValue();
+                if (denominatorObject instanceof Integer) {
+                    denominator = ((Integer) denominatorObject).doubleValue();
+                } else {
+                    denominator = (double) denominatorObject;
+                }
             } else {
-                numerator = (double) numeratorObject;
+                // something is wrong
+                numerator = 0;
+                denominator = 0;
             }
-
-            if (denominatorObject instanceof Integer) {
-                denominator = ((Integer) denominatorObject).doubleValue();
-            } else {
-                denominator = (double) denominatorObject;
-            }
-
             // Jan 2020 add force to zero if denominator is 0
             // division by zero is also caught in ExpressTree isHealothy()
             if (denominator == 0) {
