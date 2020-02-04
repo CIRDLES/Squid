@@ -61,7 +61,7 @@ public class SpotGroupProcessor {
         }
         
         ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
-        String selectedExpressionName = spotSummaryDetailsWM.getSelectedExpressionName();
+        String selectedExpressionName = expressionTree.getName().split("_WM_")[0];
         List<ShrimpFractionExpressionInterface> spotsUsedForCalculation;
         
         double[][] values = new double[3][7];

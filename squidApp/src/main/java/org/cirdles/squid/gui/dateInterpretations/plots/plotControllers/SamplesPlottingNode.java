@@ -115,6 +115,8 @@ public class SamplesPlottingNode extends HBox {
         SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
+        categorySortComboBox.getSelectionModel().selectFirst();
+        expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
 
         categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         //Category Housekeeping : No Time, Ages is first
@@ -271,18 +273,18 @@ public class SamplesPlottingNode extends HBox {
 
             if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
                 return null;
-            } else if (Double.parseDouble(c.getControlNewText()) > 1.0){
+            } else if (Double.parseDouble(c.getControlNewText()) > 1.0) {
                 return null;
-            }else {
+            } else {
                 return c;
             }
         }));
-        
+
         probTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (probTextField.getText().length() > 0){
-                probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
+                if (probTextField.getText().length() > 0) {
+                    probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
                 }
             }
         });
@@ -314,10 +316,10 @@ public class SamplesPlottingNode extends HBox {
 
                 // special case when Ages is picked, we look up stored WM for age name in sample
                 if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
-                    // restore age wm
-                    // recover rejected indices
-                    boolean[] savedRejectedIndices = sampleNode.getSpotSummaryDetailsWM().getRejectedIndices();
-                    ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(savedRejectedIndices);
+                    if (filterInfoCheckBox.isSelected()) {
+                        // recover current rejected indices from newly chosen sampleNode
+                        ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(sampleNode.getSpotSummaryDetailsWM().getRejectedIndices());
+                    }
                     sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
                     PlotsController.plot = sampleNodeSelectedAgeWMPlot;
 
@@ -342,31 +344,28 @@ public class SamplesPlottingNode extends HBox {
                         ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
                         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
 
-                        boolean[] savedRejectedIndices = sampleNode.getSpotSummaryDetailsWM().getRejectedIndices();
-
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
                                         .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
-                        spotSummaryDetailsWM.setRejectedIndices(savedRejectedIndices);
+
+                        if (filterInfoCheckBox.isSelected()) {
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
+                        }
 
                         PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
-                        spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
 
+                        // if value is unchanged, then we need to force update
                         if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
                             updateSampleFromSlider(probabilitySlider.getValue());
                         } else {
                             // this also forces an update
                             probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
                         }
-
-                        // sort by age first
-                        categorySortComboBox.getSelectionModel().select(1);
-                        expressionSortComboBox.getSelectionModel().select(newValue);
 
                     } else {
                         // non-AGE case for exploration
@@ -393,10 +392,14 @@ public class SamplesPlottingNode extends HBox {
                         sampleNode.setSamplePlotWM(myPlot);
 
                         updateSampleFromSlider(probabilitySlider.getValue());
+                    }
 
-                        // sort by self first
-                        categorySortComboBox.getSelectionModel().select(categoryComboBox.getSelectionModel().getSelectedItem());
-                        expressionSortComboBox.getSelectionModel().select(expressionComboBox.getSelectionModel().getSelectedItem());
+                    // sort by selected sort expression
+                    if (sampleNode != null) {
+                        String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
+                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
+                        sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
+                        plotsController.refreshPlot();
                     }
                 }
             }
@@ -416,24 +419,33 @@ public class SamplesPlottingNode extends HBox {
 
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
         filterInfoCheckBox.setSelected(true);
-        formatNode(filterInfoCheckBox, 150);
+        formatNode(filterInfoCheckBox, 170);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     probabilitySlider.setDisable(false);
                     probTextField.setDisable(false);
+
+                    // if value is unchanged, then we need to force update
+                    if (Double.compare(probabilitySlider.getValue(), sampleNode.getSpotSummaryDetailsWM().getMinProbabilityWM()) == 0) {
+                        updateSampleFromSlider(probabilitySlider.getValue());
+                    } else {
+                        // this also forces an update
+                        probabilitySlider.valueProperty().setValue(sampleNode.getSpotSummaryDetailsWM().getMinProbabilityWM());
+                    }
+
                     updateSampleFromSlider(probabilitySlider.getValue());
                 } else {
                     probabilitySlider.setDisable(true);
                     probTextField.setDisable(true);
-                    
+// test only
 //                    ((WeightedMeanPlot)sampleNode.getSamplePlotWM()).outputToSVG(null);
                 }
             }
         });
 
-        formatNode(probTextField, 50);
+        formatNode(probTextField, 40);
         probTextField.setStyle(probTextField.getStyle() + "-fx-text-fill: red;");
 
         filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probTextField);
@@ -483,15 +495,15 @@ public class SamplesPlottingNode extends HBox {
             SpotSummaryDetails spotSummaryDetailsWM = ((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails();
             SpotGroupProcessor.findCoherentGroupOfSpotsForWeightedMean(
                     squidProject.getTask(), spotSummaryDetailsWM, newValue);
-
-            for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
-                int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
-                ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
-                        !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
-            }
         }
-        plotsController.refreshPlot();
 
+        for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
+            int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
+            ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
+                    !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
+        }
+
+        plotsController.refreshPlot();
     }
 
     private VBox sortedVBox() {
