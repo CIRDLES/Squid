@@ -15,10 +15,7 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
-<<<<<<< HEAD
 import java.io.File;
-=======
->>>>>>> 02b7de0aeded8d214e6bcc7d2c6ccf71f1a05247
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
