@@ -115,7 +115,10 @@ public class SamplesPlottingNode extends HBox {
         SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
-
+        categorySortComboBox.getSelectionModel().selectFirst();
+        expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
+        
+        
         categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         //Category Housekeeping : No Time, Ages is first
         categoryComboBox.getItems().remove(0);
@@ -271,18 +274,18 @@ public class SamplesPlottingNode extends HBox {
 
             if (object == null || parsePosition.getIndex() < c.getControlNewText().length()) {
                 return null;
-            } else if (Double.parseDouble(c.getControlNewText()) > 1.0){
+            } else if (Double.parseDouble(c.getControlNewText()) > 1.0) {
                 return null;
-            }else {
+            } else {
                 return c;
             }
         }));
-        
+
         probTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (probTextField.getText().length() > 0){
-                probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
+                if (probTextField.getText().length() > 0) {
+                    probabilitySlider.valueProperty().setValue(Double.parseDouble(probTextField.getText()));
                 }
             }
         });
@@ -364,10 +367,6 @@ public class SamplesPlottingNode extends HBox {
                             probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
                         }
 
-                        // sort by age first
-                        categorySortComboBox.getSelectionModel().select(1);
-                        expressionSortComboBox.getSelectionModel().select(newValue);
-
                     } else {
                         // non-AGE case for exploration
                         SpotSummaryDetails spotSummaryDetailsWM
@@ -394,9 +393,15 @@ public class SamplesPlottingNode extends HBox {
 
                         updateSampleFromSlider(probabilitySlider.getValue());
 
-                        // sort by self first
-                        categorySortComboBox.getSelectionModel().select(categoryComboBox.getSelectionModel().getSelectedItem());
-                        expressionSortComboBox.getSelectionModel().select(expressionComboBox.getSelectionModel().getSelectedItem());
+                    }
+                    
+                    // sort by selected sort expression
+                    if (sampleNode != null) {
+                        String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
+                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(
+                                selectedSortExpression);
+                        sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
+                        plotsController.refreshPlot();
                     }
                 }
             }
@@ -427,7 +432,7 @@ public class SamplesPlottingNode extends HBox {
                 } else {
                     probabilitySlider.setDisable(true);
                     probTextField.setDisable(true);
-                    
+
 //                    ((WeightedMeanPlot)sampleNode.getSamplePlotWM()).outputToSVG(null);
                 }
             }
