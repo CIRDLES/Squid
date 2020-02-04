@@ -960,4 +960,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return ageOrValueLookupString;
     }
 
+    /**
+     * @return the rejectedIndices
+     */
+    public boolean[] getRejectedIndices() {
+        return rejectedIndices;
+    }
+
 }
