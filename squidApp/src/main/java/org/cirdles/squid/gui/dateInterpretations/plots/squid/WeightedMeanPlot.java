@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -756,6 +757,70 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
 //    private SVGGraphics2D svgGenerator = null;
+
+    public void outputToSVG(File file) {
+
+//        File file2 = new File("TEST.SVG");
+//        //Bounds dim = this.getBoundsInLocal();
+//        Document doc = SVGDOMImplementation.getDOMImplementation()
+//                .createDocument(SVGDOMImplementation.SVG_NAMESPACE_URI, "svg", null);
+//
+//        try {
+//            Writer writer = new BufferedWriter(new FileWriter(file2));
+//            TranscoderOutput output = new TranscoderOutput(writer);
+//            Bounds bounds = this.getBoundsInLocal();
+//            Rectangle2D rec = new Rectangle2D(bounds.getMinX(), bounds.getMinY(), bounds.getWidth(), bounds.getHeight());
+//            
+//            svgGenerator = new SVGGraphics2D(doc);
+//            JFXConverter converter = new JFXConverter();
+//            converter.convert(svgGenerator, this);
+//            
+//            finishTranscoding(rec, output);
+//            writer.flush();
+//        } catch (IOException | TranscoderException iOException) {
+//        }
+        // Get a DOMImplementation.
+//////        DOMImplementation domImpl
+//////                = GenericDOMImplementation.getDOMImplementation();
+//////
+//////        // Create an instance of org.w3c.dom.Document.
+//////        String svgNS = "http://www.w3.org/2000/svg";
+//////        Document document = domImpl.createDocument(svgNS, "svg", null);
+//////
+//////        // Create an instance of the SVG Generator.
+//////        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+//////
+//////        // Ask the test to render into the SVG Graphics2D implementation.
+//////        GraphicsContext gc = this.getGraphicsContext2D();
+//////        paint(gc);
+//////
+//////        File file2 = new File("TEST.PNG");
+//////        WritableImage wim = new WritableImage((int) this.getWidth(), (int) this.getHeight());
+//////        this.snapshot(null, wim);
+//////        try {
+//////            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file2);
+//////
+//////        } catch (IOException iOException) {
+//////        }
+
+//        // Finally, stream out SVG to the standard output using
+//        // UTF-8 encoding.
+//        boolean useCSS = true; // we want to use CSS style attributes
+//           
+//        Writer out = null;
+//        try {
+//            out = new OutputStreamWriter(new FileOutputStream(file2), "UTF-8");
+//        } catch (FileNotFoundException | UnsupportedEncodingException fileNotFoundException) {
+//        }
+//        try {
+//            svgGenerator.stream(out, useCSS);
+//        } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+//            System.out.println(sVGGraphics2DIOException.getMessage());
+//        }
+//
+//        // aug 2013
+//        // read svg file back in to add clip size to comments
+//        
 //
 //    public void outputToSVG(File file) {
 //
@@ -888,11 +953,53 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //        }
 //    }
 //
+//        // aug 2013
+//        // read svg file back in to add clip size to comments
+//    }
+//
+//    private void finishTranscoding(Rectangle2D rec, TranscoderOutput output)
+//            throws TranscoderException {
+//
+//        // get the root element and add size
+//        String minX1 = Double.toString(rec.getMinX());
+//        String minY1 = Double.toString(rec.getMinY());
+//        String width1 = Double.toString(rec.getWidth());
+//        String height1 = Double.toString(rec.getHeight());
+//        String size = minX1 + " " + minY1 + " " + width1 + " " + height1;
+//
+//        Element svgRoot = svgGenerator.getRoot();
+//        svgRoot.setAttributeNS(null, "viewBox", size);
+//
+//        //testOutput(doc, new File(System.getProperty("user.dir"),"test.xml"));
+//        // Now, write the SVG content to the output
+//        writeSVGToOutput(svgRoot, output);
+//    }
+//
+//    protected void writeSVGToOutput(Element svgRoot, TranscoderOutput output) throws TranscoderException {
+//        try {
+//            // Writer
+//            Writer wr = output.getWriter();
+//            if (wr != null) {
+//                svgGenerator.stream(svgRoot, wr);
+//                return;
+//            }
+//        } catch (IOException e) {
+//            throw new TranscoderException(e);
+//        }
+//    }
+
 //    /**
 //     *
 //     * @param file
 //     */
 //    public void outputToPDF(File file) {
+
+//    /**
+//     *
+//     * @param file
+//     */
+//    public void outputToPDF(File file) {
+
 //        SVGConverter myConv = new SVGConverter();
 //        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
 //        try {
@@ -909,7 +1016,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //        } catch (SVGConverterException sVGConverterException) {
 //            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
 //        }
+
 //    }
+    }
 
     @Override
     public void setProperty(String key, Object datum) {
