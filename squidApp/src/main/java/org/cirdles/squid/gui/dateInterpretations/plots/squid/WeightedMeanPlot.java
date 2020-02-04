@@ -16,8 +16,6 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -28,9 +26,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -38,7 +34,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -47,13 +42,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javax.imageio.ImageIO;
-import org.apache.batik.apps.rasterizer.SVGConverter;
-import org.apache.batik.apps.rasterizer.SVGConverterException;
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.transcoder.TranscoderException;
-import org.apache.batik.transcoder.TranscoderOutput;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
@@ -63,9 +51,6 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  *
@@ -769,7 +754,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return this;
     }
 
-    private SVGGraphics2D svgGenerator = null;
+//    private SVGGraphics2D svgGenerator = null;
 
     public void outputToSVG(File file) {
 
@@ -793,28 +778,28 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //        } catch (IOException | TranscoderException iOException) {
 //        }
         // Get a DOMImplementation.
-        DOMImplementation domImpl
-                = GenericDOMImplementation.getDOMImplementation();
-
-        // Create an instance of org.w3c.dom.Document.
-        String svgNS = "http://www.w3.org/2000/svg";
-        Document document = domImpl.createDocument(svgNS, "svg", null);
-
-        // Create an instance of the SVG Generator.
-        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
-
-        // Ask the test to render into the SVG Graphics2D implementation.
-        GraphicsContext gc = this.getGraphicsContext2D();
-        paint(gc);
-
-        File file2 = new File("TEST.PNG");
-        WritableImage wim = new WritableImage((int) this.getWidth(), (int) this.getHeight());
-        this.snapshot(null, wim);
-        try {
-            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file2);
-
-        } catch (IOException iOException) {
-        }
+//////        DOMImplementation domImpl
+//////                = GenericDOMImplementation.getDOMImplementation();
+//////
+//////        // Create an instance of org.w3c.dom.Document.
+//////        String svgNS = "http://www.w3.org/2000/svg";
+//////        Document document = domImpl.createDocument(svgNS, "svg", null);
+//////
+//////        // Create an instance of the SVG Generator.
+//////        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+//////
+//////        // Ask the test to render into the SVG Graphics2D implementation.
+//////        GraphicsContext gc = this.getGraphicsContext2D();
+//////        paint(gc);
+//////
+//////        File file2 = new File("TEST.PNG");
+//////        WritableImage wim = new WritableImage((int) this.getWidth(), (int) this.getHeight());
+//////        this.snapshot(null, wim);
+//////        try {
+//////            ImageIO.write(SwingFXUtils.fromFXImage(wim, null), "png", file2);
+//////
+//////        } catch (IOException iOException) {
+//////        }
 
 //        // Finally, stream out SVG to the standard output using
 //        // UTF-8 encoding.
@@ -870,59 +855,59 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //        // aug 2013
 //        // read svg file back in to add clip size to comments
     }
-
-    private void finishTranscoding(Rectangle2D rec, TranscoderOutput output)
-            throws TranscoderException {
-
-        // get the root element and add size
-        String minX1 = Double.toString(rec.getMinX());
-        String minY1 = Double.toString(rec.getMinY());
-        String width1 = Double.toString(rec.getWidth());
-        String height1 = Double.toString(rec.getHeight());
-        String size = minX1 + " " + minY1 + " " + width1 + " " + height1;
-
-        Element svgRoot = svgGenerator.getRoot();
-        svgRoot.setAttributeNS(null, "viewBox", size);
-
-        //testOutput(doc, new File(System.getProperty("user.dir"),"test.xml"));
-        // Now, write the SVG content to the output
-        writeSVGToOutput(svgRoot, output);
-    }
-
-    protected void writeSVGToOutput(Element svgRoot, TranscoderOutput output) throws TranscoderException {
-        try {
-            // Writer
-            Writer wr = output.getWriter();
-            if (wr != null) {
-                svgGenerator.stream(svgRoot, wr);
-                return;
-            }
-        } catch (IOException e) {
-            throw new TranscoderException(e);
-        }
-    }
+//
+//    private void finishTranscoding(Rectangle2D rec, TranscoderOutput output)
+//            throws TranscoderException {
+//
+//        // get the root element and add size
+//        String minX1 = Double.toString(rec.getMinX());
+//        String minY1 = Double.toString(rec.getMinY());
+//        String width1 = Double.toString(rec.getWidth());
+//        String height1 = Double.toString(rec.getHeight());
+//        String size = minX1 + " " + minY1 + " " + width1 + " " + height1;
+//
+//        Element svgRoot = svgGenerator.getRoot();
+//        svgRoot.setAttributeNS(null, "viewBox", size);
+//
+//        //testOutput(doc, new File(System.getProperty("user.dir"),"test.xml"));
+//        // Now, write the SVG content to the output
+//        writeSVGToOutput(svgRoot, output);
+//    }
+//
+//    protected void writeSVGToOutput(Element svgRoot, TranscoderOutput output) throws TranscoderException {
+//        try {
+//            // Writer
+//            Writer wr = output.getWriter();
+//            if (wr != null) {
+//                svgGenerator.stream(svgRoot, wr);
+//                return;
+//            }
+//        } catch (IOException e) {
+//            throw new TranscoderException(e);
+//        }
+//    }
 
     /**
      *
      * @param file
      */
     public void outputToPDF(File file) {
-        SVGConverter myConv = new SVGConverter();
-        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
-        try {
-            myConv.setSources(new String[]{file.getCanonicalPath()});
-
-        } catch (IOException iOException) {
-        }
-        myConv.setWidth((float) getWidth() + 2);
-        myConv.setHeight((float) getHeight() + 2);
-
-        try {
-            myConv.execute();
-
-        } catch (SVGConverterException sVGConverterException) {
-            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
-        }
+//        SVGConverter myConv = new SVGConverter();
+//        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
+//        try {
+//            myConv.setSources(new String[]{file.getCanonicalPath()});
+//
+//        } catch (IOException iOException) {
+//        }
+//        myConv.setWidth((float) getWidth() + 2);
+//        myConv.setHeight((float) getHeight() + 2);
+//
+//        try {
+//            myConv.execute();
+//
+//        } catch (SVGConverterException sVGConverterException) {
+//            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
+//        }
     }
 
     @Override
