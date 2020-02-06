@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.io.File;
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
