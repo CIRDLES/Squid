@@ -592,8 +592,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
 
         for (int i = 0; i < massMinuends.size(); i++) {
-            MassStationDetail A = massMinuends.get(i);
-            MassStationDetail B = massSubtrahends.get(i);
+            // Feb 2020 need to confirm A nd B are up to date
+            MassStationDetail A = getCurrentVersionOfMassStationDetail(massMinuends.get(i));
+            MassStationDetail B = getCurrentVersionOfMassStationDetail(massSubtrahends.get(i));
             List<Double> deltas = new ArrayList<>();
             for (int j = 0; j < A.getMeasuredTrimMasses().size(); j++) {
                 BigDecimal aBD = new BigDecimal(A.getMeasuredTrimMasses().get(j));
@@ -707,6 +708,13 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             massCounter++;
         }
 
+    }
+
+    private MassStationDetail getCurrentVersionOfMassStationDetail(MassStationDetail massStationDetail) {
+        // MassStationDetails are solely equal based on mass station number
+        MassStationDetail retVal = allMassStations.get(allMassStations.indexOf(massStationDetail));
+
+        return retVal;
     }
 
     @Override
