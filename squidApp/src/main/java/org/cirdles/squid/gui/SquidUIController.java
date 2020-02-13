@@ -71,8 +71,7 @@ import java.util.regex.Pattern;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
@@ -570,6 +569,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void openProject(String aProjectFileName) throws IOException {
+       // loadingPopup.show();
         if (!"".equals(aProjectFileName)) {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
@@ -594,7 +594,7 @@ public class SquidUIController implements Initializable {
                 throw new IOException();
             }
         }
-
+       // loadingPopup.hide();
     }
 
     private void customizeDataMenu() {
@@ -1543,18 +1543,18 @@ public class SquidUIController implements Initializable {
     private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
-            
-            SquidProject.setProjectChanged(((Task)task).synchronizeTaskVersion());
-            
-            ((Task)task).verifySquidLabDataParameters();
+
+            SquidProject.setProjectChanged(((Task) task).synchronizeTaskVersion());
+
+            ((Task) task).verifySquidLabDataParameters();
             squidProject.setReferenceMaterialModel(task.getReferenceMaterialModel());
             squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
-                      
-            if (SquidProject.isProjectChanged()){
+
+            if (SquidProject.isProjectChanged()) {
                 SquidMessageDialog.showInfoDialog(
-                    "The task has been updated for this version of Squid3.\n"
-                    + "Please save Project.",
-                    primaryStageWindow);
+                        "The task has been updated for this version of Squid3.\n"
+                                + "Please save Project.",
+                        primaryStageWindow);
             }
         }
     }

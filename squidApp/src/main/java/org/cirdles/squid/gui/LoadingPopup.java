@@ -2,6 +2,7 @@ package org.cirdles.squid.gui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -10,22 +11,20 @@ import java.io.IOException;
 
 public class LoadingPopup {
     private Stage primaryStage;
-    private Stage window;
+    private Stage popup;
+    private ProgressIndicator progressIndicator;
 
     public LoadingPopup(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        window = null;
-        load();
-    }
+        progressIndicator = new ProgressIndicator();
+        progressIndicator.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
 
-    public void load() {
+        this.primaryStage = primaryStage;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("LoadingPopup.fxml"));
             Scene scene = new Scene(loader.load());
-            Stage window = new Stage(StageStyle.UNDECORATED);
-            this.window = window;
-            window.setScene(scene);
-            window.initModality(Modality.NONE);
+            popup = new Stage(StageStyle.UNDECORATED);
+            popup.setScene(scene);
+            popup.initModality(Modality.NONE);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,19 +35,17 @@ public class LoadingPopup {
     }
 
     public void show(Stage stage) {
-        if (window != null) {
-            load();
-            window.initOwner(stage.getScene().getWindow());
-            window.show();
-            window.setX(stage.getX() + (stage.getWidth() - window.getScene().getWidth()) / 2);
-            window.setY(stage.getY() + (stage.getHeight() - window.getScene().getHeight()) / 2);
-            window.requestFocus();
+        if (popup != null) {
+            popup.show();
+            popup.setX(stage.getX() + (stage.getWidth() - popup.getScene().getWidth()) / 2);
+            popup.setY(stage.getY() + (stage.getHeight() - popup.getScene().getHeight()) / 2);
+            popup.requestFocus();
         }
     }
 
     public void hide() {
-        if (window != null) {
-            window.hide();
+        if (popup != null) {
+            popup.hide();
         }
     }
 }

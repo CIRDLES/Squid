@@ -32,8 +32,9 @@ import javafx.stage.WindowEvent;
 import org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
 /**
- *
  * @author James F. Bowring
  */
 public final class SquidUI extends Application {
@@ -82,9 +83,11 @@ public final class SquidUI extends Application {
 
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
+    protected static LoadingPopup loadingPopup;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        loadingPopup = new LoadingPopup(primaryStage);
 
         SquidUI.primaryStage = primaryStage;
         Parent root = new AnchorPane();
@@ -117,6 +120,20 @@ public final class SquidUI extends Application {
         fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
         primaryStage.setTitle("Squid 3  " + fileSpec);
         SquidUIController.projectFileName = fileName;
+    }
+
+    public static void loadSpecsAndReduceReports() {
+        loadingPopup.show();
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        loadingPopup.hide();
+    }
+
+    public static void loadSpecsAndReduceReports(Stage stage) {
+        loadingPopup.show(stage);
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        loadingPopup.hide();
     }
 
     /**

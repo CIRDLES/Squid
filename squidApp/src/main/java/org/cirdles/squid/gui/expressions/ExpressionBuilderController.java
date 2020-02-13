@@ -427,9 +427,8 @@ public class ExpressionBuilderController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        task = squidProject.getTask();
-        // update
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
+        // update 
+        SquidUI.loadSpecsAndReduceReports();
 
         initPropertyBindings();
         initListViews();
@@ -2268,8 +2267,8 @@ public class ExpressionBuilderController implements Initializable {
                             }
                             sb.append(formatter.toString());
                         }
-//                        
-//                        
+//
+//
 //                        try {
 //                            double[][] results
 //                                    = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
@@ -2370,7 +2369,7 @@ public class ExpressionBuilderController implements Initializable {
                 }
             }
         } else {
-            // null operation ==> SquidSpeciesNode or SpotFieldNode 
+            // null operation ==> SquidSpeciesNode or SpotFieldNode
             if (expTree instanceof ShrimpSpeciesNode) {
                 sb.append(String.format("%1$-25s", "TotalCPS"));
                 sb.append("\n");

@@ -5,6 +5,7 @@
 .table-view {
     -fx-font-family: "Monospaced";
     -fx-font-size: 15;
+    -fx-text-fill: black;
 }
 
 .table-view .table-column {
