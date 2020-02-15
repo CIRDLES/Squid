@@ -86,6 +86,10 @@ public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+
+    static {
+        CalamariFileUtilities.initSampleParametersModels();
+    }
     public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     @FXML
