@@ -15,16 +15,10 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
-import java.io.File;
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.*;
+import com.itextpdf.kernel.pdf.PdfDocument;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -43,18 +37,24 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
-import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInterface {
@@ -177,11 +177,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                         // case of raw ratios
                         double[][] resultsFromNode1
                                 = Arrays.stream(fraction1
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
                         valueFromNode1 = resultsFromNode1[0][0];
                         double[][] resultsFromNode2
                                 = Arrays.stream(fraction2
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
                         valueFromNode2 = resultsFromNode2[0][0];
 
                     } else {
@@ -297,7 +297,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     /**
-     *
      * @param g2d
      */
     @Override
@@ -595,7 +594,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             spotID.applyCss();
             g2d.fillText(
                     shrimpFractions.get(indexOfSelectedSpot).getFractionID()
-                    + "  Age = " + makeAgeOrValueString(indexOfSelectedSpot),
+                            + "  Age = " + makeAgeOrValueString(indexOfSelectedSpot),
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - spotID.getLayoutBounds().getWidth() - 25,
                     mapY(minY) + 0 + spotID.getLayoutBounds().getHeight());
         }
@@ -612,7 +611,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             // for display when another expression is subject of weighted mean
             values
                     = shrimpFractions.get(index).getTaskExpressionsEvaluationsPerSpotByField(
-                            shrimpFractions.get(index).getSelectedAgeExpressionName());
+                    shrimpFractions.get(index).getSelectedAgeExpressionName());
         }
 
         String retVal = makeAgeString(values[0][0], values[0][1]);
@@ -629,7 +628,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             retVal = new BigDecimal(age)
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
                     + " ±" + new BigDecimal(twoSigmaUncert)
-                            .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString() + "Ma ";
+                    .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString() + "Ma ";
         } catch (Exception e) {
         }
         return retVal;
@@ -664,11 +663,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return retVal;
     }
 
-    /**
-     *
-     * @param doReScale the value of doReScale
-     * @param inLiveMode the value of inLiveMode
-     */
     @Override
     public void preparePanel() {
 
@@ -1021,6 +1015,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //    }
     }
 
+
     @Override
     public void setProperty(String key, Object datum) {
         getProperties().put(key, datum);
@@ -1061,4 +1056,29 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         return rejectedIndices;
     }
 
+    /**
+     * @param file
+     * @param canvas
+     * @return whether or not the operation was a success
+     */
+    public static boolean outputToPdf(File file, Canvas canvas) {
+        boolean retVal = true;
+
+        PdfDocument pdf = null;
+        try {
+            pdf = new PdfDocument(new PdfWriter(file.getAbsolutePath()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            retVal = false;
+        }
+        if (retVal) {
+            PdfPage page = pdf.addNewPage();
+            PdfCanvas pdfCanvas = new PdfCanvas(page);
+
+            Canvas newCanvas = new Canvas(pdfCanvas, pdf, new Rectangle());
+
+        }
+
+        return retVal;
+    }
 }
