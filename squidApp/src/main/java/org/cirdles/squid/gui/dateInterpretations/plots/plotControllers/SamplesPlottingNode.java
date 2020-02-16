@@ -418,7 +418,7 @@ public class SamplesPlottingNode extends HBox {
         HBox filterInfoHBox = new HBox();
 
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
-        filterInfoCheckBox.setSelected(true);
+        filterInfoCheckBox.setSelected(false);
         formatNode(filterInfoCheckBox, 170);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
