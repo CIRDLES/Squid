@@ -560,10 +560,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.rotate(90);
 
         // X- label
-        StringBuilder description = new StringBuilder();
-        description.append(ageOrValueLookupString).append(" ");
-        description.append("ascending by ").append(spotSummaryDetails.getSelectedExpressionName());
-        text.setText(description.toString());
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            StringBuilder description = new StringBuilder();
+            description.append(ageOrValueLookupString).append(" ");
+            description.append("ascending by ").append(spotSummaryDetails.getSelectedExpressionName());
+            text.setText(description.toString());
+        }
 
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
