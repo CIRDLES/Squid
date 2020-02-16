@@ -349,6 +349,7 @@ public class TaskSquid25 implements Serializable {
         if (retVal.endsWith(".")) {
             retVal = retVal.substring(0, retVal.lastIndexOf("."));
         }
+        
         // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
         // unless already noted as constant
         // UPDATE FEB 2020 - we now allow simple strings to not have brackets and quotes
