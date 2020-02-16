@@ -16,7 +16,6 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.io.File;
-import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -156,6 +155,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     private boolean extractSpotDetails() {
+        ShrimpFractionExpressionInterface selectedSpot = null;
+        if ((indexOfSelectedSpot >= 0) && (shrimpFractions != null)) {
+            // prepare to reset indexOfSelectedSpot for visualization
+            selectedSpot = shrimpFractions.get(indexOfSelectedSpot);
+        }
+
         storedShrimpFractions = spotSummaryDetails.getSelectedSpots();
         shrimpFractions = new ArrayList<>();
 
@@ -195,6 +200,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
                     return Double.compare(valueFromNode1, valueFromNode2);
                 });
+
+                if (indexOfSelectedSpot > -1) {
+                    // reset indexOfSelectedSpot for visualization
+                    indexOfSelectedSpot = shrimpFractions.indexOf(selectedSpot);
+                }
             }
 
             countOfIncluded = 0;
@@ -524,7 +534,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             mapY(ticsY[0].doubleValue()) + 5);
 
                     // bottom
-                    g2d.fillText(ticsX[i].toBigInteger().toString(),//
+                    // feb 2020 force to appear as 1-based index
+                    boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
+                    String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
+                    g2d.fillText(xText,
                             (float) mapX(ticsX[i].doubleValue()) - 5f,
                             (float) mapY(ticsY[0].doubleValue()) + 15);
 
@@ -758,7 +771,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
 //    private SVGGraphics2D svgGenerator = null;
-
     public void outputToSVG(File file) {
 
 //        File file2 = new File("TEST.SVG");
@@ -803,7 +815,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //////
 //////        } catch (IOException iOException) {
 //////        }
-
 //        // Finally, stream out SVG to the standard output using
 //        // UTF-8 encoding.
 //        boolean useCSS = true; // we want to use CSS style attributes
@@ -988,19 +999,16 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //            throw new TranscoderException(e);
 //        }
 //    }
-
 //    /**
 //     *
 //     * @param file
 //     */
 //    public void outputToPDF(File file) {
-
 //    /**
 //     *
 //     * @param file
 //     */
 //    public void outputToPDF(File file) {
-
 //        SVGConverter myConv = new SVGConverter();
 //        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
 //        try {
@@ -1017,7 +1025,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //        } catch (SVGConverterException sVGConverterException) {
 //            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
 //        }
-
 //    }
     }
 
