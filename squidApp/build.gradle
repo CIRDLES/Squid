@@ -22,9 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
 
-    compile 'com.github.cirdles:topsoil:79596d2420'
-    compile group: 'com.itextpdf', name: 'itext7-core', version: '7.0.4'
-
+    compile 'com.github.cirdles:topsoil:79596d2420'  
 }
 
 task fatAppJar(type: Jar) {
