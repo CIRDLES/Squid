@@ -569,7 +569,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void openProject(String aProjectFileName) throws IOException {
-       // loadingPopup.show();
+       loadingPopup.show();
         if (!"".equals(aProjectFileName)) {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
@@ -594,7 +594,7 @@ public class SquidUIController implements Initializable {
                 throw new IOException();
             }
         }
-       // loadingPopup.hide();
+        loadingPopup.hide();
     }
 
     private void customizeDataMenu() {
