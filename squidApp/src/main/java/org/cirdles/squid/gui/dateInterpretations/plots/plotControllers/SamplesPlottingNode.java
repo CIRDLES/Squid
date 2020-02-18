@@ -183,6 +183,9 @@ public class SamplesPlottingNode extends HBox {
 
     private void displaySample(String newValue) {
         sampleNode = new SampleNode(newValue);
+        filterInfoCheckBox.setSelected(false);
+        probabilitySlider.setDisable(true);
+
         List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(newValue);
 
         String selectedAge = shrimpFractions.get(0).getSelectedAgeExpressionName();
@@ -213,13 +216,9 @@ public class SamplesPlottingNode extends HBox {
                     = new WeightedMeanSpotNode(shrimpFractionsDetails.get(i), i);
             fractionNodeDetailsWM.add(fractionNodeWM);
         }
-
-        // sort the fractions based on age
-        Collections.sort(fractionNodeDetailsWM, (SampleTreeNodeInterface fraction1, SampleTreeNodeInterface fraction2) -> {
-            double age1 = fraction1.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-            double age2 = fraction2.getShrimpFraction().getTaskExpressionsEvaluationsPerSpotByField(selectedAge)[0][0];
-            return Double.compare(age1, age2);
-        });
+        
+        // sort by spot index
+        categorySortComboBox.getSelectionModel().selectFirst();
 
         ObservableList<SampleTreeNodeInterface> fractionNodesWM = FXCollections.observableArrayList(fractionNodeDetailsWM);
 
@@ -418,7 +417,8 @@ public class SamplesPlottingNode extends HBox {
         HBox filterInfoHBox = new HBox();
 
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
-        filterInfoCheckBox.setSelected(true);
+        filterInfoCheckBox.setSelected(false);
+        probabilitySlider.setDisable(true);
         formatNode(filterInfoCheckBox, 170);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
