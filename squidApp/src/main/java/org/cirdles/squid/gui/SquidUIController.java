@@ -83,14 +83,15 @@ import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DE
  * @author James F. Bowring
  */
 public class SquidUIController implements Initializable {
-
-    public static SquidProject squidProject;
-    public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    public static final SquidLabData squidLabData;
 
     static {
         CalamariFileUtilities.initSampleParametersModels();
+        squidLabData = SquidLabData.getExistingSquidLabData();
     }
-    public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
+
+    public static SquidProject squidProject;
+    public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
     @FXML
     private Menu projectMenu;
@@ -1547,18 +1548,18 @@ public class SquidUIController implements Initializable {
     private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
-            
-            SquidProject.setProjectChanged(((Task)task).synchronizeTaskVersion());
-            
-            ((Task)task).verifySquidLabDataParameters();
+
+            SquidProject.setProjectChanged(((Task) task).synchronizeTaskVersion());
+
+            ((Task) task).verifySquidLabDataParameters();
             squidProject.setReferenceMaterialModel(task.getReferenceMaterialModel());
             squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
-                      
-            if (SquidProject.isProjectChanged()){
+
+            if (SquidProject.isProjectChanged()) {
                 SquidMessageDialog.showInfoDialog(
-                    "The task has been updated for this version of Squid3.\n"
-                    + "Please save Project.",
-                    primaryStageWindow);
+                        "The task has been updated for this version of Squid3.\n"
+                                + "Please save Project.",
+                        primaryStageWindow);
             }
         }
     }
