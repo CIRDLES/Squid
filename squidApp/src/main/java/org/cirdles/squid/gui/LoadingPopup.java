@@ -26,19 +26,9 @@ public class LoadingPopup {
     }
 
     public void show(Stage stage) {
-        try {
-            Thread thread = new Thread(() -> {
-            });
-            thread.start();
-            
-            setUpAlert();
-            alert.initOwner(stage);
-            alert.show();
-
-            thread.join();
-        } catch (InterruptedException e) {
-
-        }
+        setUpAlert();
+        alert.initOwner(stage);
+        alert.show();
     }
 
     public void hide() {
