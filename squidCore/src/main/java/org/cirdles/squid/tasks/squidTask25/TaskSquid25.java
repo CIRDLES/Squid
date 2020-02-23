@@ -183,10 +183,10 @@ public class TaskSquid25 implements Serializable {
 
                 // June 2019 skip Hidden row 34
                 String[] switchST = lines[firstRow + 28].split("\t");
-                if(switchST[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")){
-                    firstRow ++;
+                if (switchST[0].toUpperCase(Locale.ENGLISH).startsWith("HIDDEN")) {
+                    firstRow++;
                 }
-                
+
                 // these switches split into a//n array of length equations mius 1 in Squid2.20 due to missing count entry
                 switchST = lines[firstRow + 28].split("\t");
 
@@ -235,6 +235,8 @@ public class TaskSquid25 implements Serializable {
                                 Boolean.parseBoolean(switchSC[i + (isSquid2_20 ? 1 : 2)]),
                                 Boolean.parseBoolean(switchNU[i + (isSquid2_20 ? 1 : 2)]),
                                 false, false));
+                    } else {
+                        System.out.println("BAD EXP   " + equations[i + 2]);
                     }
                 }
             }
@@ -256,7 +258,7 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("(Ma)", "");
         // assume most calls to uncertainty are for percent
         retVal = retVal.replace("[±\"", "[%\"");
-        
+
         // June 2019 fix Allen Kennedy's use of bad quotes
         retVal = retVal.replace("“", "\"");
         retVal = retVal.replace("”", "\"");
@@ -343,13 +345,20 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("1000*", "");
         retVal = retVal.replace("100*", "");
 
+        // strip off trailing period - not allowed in expressions
+        if (retVal.endsWith(".")) {
+            retVal = retVal.substring(0, retVal.lastIndexOf("."));
+        }
+        
         // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
         // unless already noted as constant
+        // UPDATE FEB 2020 - we now allow simple strings to not have brackets and quotes
         if (!taskSquid25.constantNames.contains(retVal)) {
-            if (!excelString.contains("(") && !excelString.contains("[")) {
-                if (!ShuntingYard.isNumber(excelString)) {
-                    retVal = "";
-                }
+            if (!excelString.contains("(")
+                    && !excelString.contains("[")
+                    && !retVal.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")
+                    && !ShuntingYard.isNumber(excelString)) {
+                retVal = "";
             }
         }
 
@@ -435,6 +444,7 @@ public class TaskSquid25 implements Serializable {
                 retVal = retVal.replace(matcher.group(), unBracketed);
             }
         }
+
         return retVal;
     }
 

@@ -624,8 +624,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
+                // provide 1-based time index within unknown group
                 for (int i = 0; i < filteredList.size(); i++) {
-                    ((ShrimpFraction) filteredList.get(i)).setSpotIndex(i);
+                    ((ShrimpFraction) filteredList.get(i)).setSpotIndex(i + 1);
                 }
             }
         }
