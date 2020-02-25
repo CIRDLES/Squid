@@ -23,6 +23,15 @@ public class LoadingPopup {
         alert.setTitle("Loading");
         alert.initModality(Modality.WINDOW_MODAL);
         alert.initStyle(StageStyle.DECORATED);
+        alert.showingProperty().addListener((ob, oldVal, newVal) ->{
+            if(newVal) {
+                System.out.println("Loading Popup: is showing");
+            } else {
+                System.out.println("Loading Popup: isn't showing");
+            }
+        });
+        alert.setOnShown(val -> System.out.println("Loading Popup: shown"));
+        alert.setOnHidden(val -> System.out.println("Loading Popup: hidden"));
     }
 
     public void show(Stage stage) {
