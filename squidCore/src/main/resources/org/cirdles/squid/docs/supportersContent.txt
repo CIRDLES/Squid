@@ -1,3 +1,8 @@
 Supporters: 
-.. list coming soon 
-... you?
+In addition to cash and in-kind contributions from GA and the Geological Survey 
+of Canada, the project has received financial support from AuScope (Australia), 
+the National Institute for Polar Research (Japan), the A.P. Karpinsky Russian 
+Geological Research Institute (VSEGEI), the Stanford University–United States 
+Geological Survey Micro Analysis Center (SUMAC), the Institute of Geosciences 
+at the University of São Paulo (Brazil), and the John de Laeter Research Centre 
+(Australia). We thank Geoff Fraser (GA) for his support and encouragement.

@@ -28,7 +28,7 @@ public class SquidMessageDialog extends Alert {
     public SquidMessageDialog() {
         super(null);
     }
-    
+
     //http://stackoverflow.com/questions/26341152/controlsfx-dialogs-deprecated-for-what/32618003#32618003
     private SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
         super(alertType);
@@ -36,8 +36,12 @@ public class SquidMessageDialog extends Alert {
         setTitle("Squid3 Alert");
         setContentText(message);
         setHeaderText(headerText);
-        initStyle(StageStyle.DECORATED);        
-        getDialogPane().setPrefSize(650, 550);
+        initStyle(StageStyle.DECORATED);
+        int countOfNewLines = 1;
+        for (int i = 0; i < message.length(); i++) {
+            countOfNewLines = countOfNewLines + (int) ((Character.compare(message.charAt(i), '\n') == 0) ? 1 : 0);
+        }
+        getDialogPane().setPrefSize(750, 150 + countOfNewLines * 20);
         getDialogPane().setStyle(getDialogPane().getStyle() + ";-fx-font-family: SansSerif Bold;-fx-font-size: 15");
 
     }
