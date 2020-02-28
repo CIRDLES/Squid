@@ -43,6 +43,9 @@ import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.parameters.ParametersModelComparator;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
@@ -83,10 +86,15 @@ import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DE
  * @author James F. Bowring
  */
 public class SquidUIController implements Initializable {
+    public static final SquidLabData squidLabData;
+
+    static {
+        CalamariFileUtilities.initSampleParametersModels();
+        squidLabData = SquidLabData.getExistingSquidLabData();
+    }
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
-    public static final SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     @FXML
     private Menu projectMenu;
@@ -1543,18 +1551,29 @@ public class SquidUIController implements Initializable {
     private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
-            
-            SquidProject.setProjectChanged(((Task)task).synchronizeTaskVersion());
-            
-            ((Task)task).verifySquidLabDataParameters();
+
+            SquidProject.setProjectChanged(((Task) task).synchronizeTaskVersion());
+
+            (((Task) task).verifySquidLabDataParameters()).forEach(model -> {
+                if (model instanceof PhysicalConstantsModel) {
+                    squidLabData.addPhysicalConstantsModel(model);
+                    squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
+                } else if (model instanceof CommonPbModel) {
+                    squidLabData.addcommonPbModel(model);
+                    squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
+                } else if (model instanceof ReferenceMaterialModel) {
+                    squidLabData.addReferenceMaterial(model);
+                    squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
+                }
+            });
             squidProject.setReferenceMaterialModel(task.getReferenceMaterialModel());
             squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
-                      
-            if (SquidProject.isProjectChanged()){
+
+            if (SquidProject.isProjectChanged()) {
                 SquidMessageDialog.showInfoDialog(
-                    "The task has been updated for this version of Squid3.\n"
-                    + "Please save Project.",
-                    primaryStageWindow);
+                        "The task has been updated for this version of Squid3.\n"
+                                + "Please save Project.",
+                        primaryStageWindow);
             }
         }
     }

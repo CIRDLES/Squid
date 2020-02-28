@@ -397,7 +397,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
-    public void verifySquidLabDataParameters() {
+    public List<ParametersModel> verifySquidLabDataParameters() {
+        List<ParametersModel> retVal = new ArrayList<>(3);
+
         ParametersModel refMat = getReferenceMaterialModel();
         ParametersModel refMatConc = getConcentrationReferenceMaterialModel();
         ParametersModel physConst = getPhysicalConstantsModel();
@@ -409,6 +411,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
         } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
             squidLabData.addPhysicalConstantsModel(physConst);
+            retVal.add(physConst);
             squidLabData.getPhysicalConstantsModels().sort(new ParametersModelComparator());
         }
 
@@ -416,6 +419,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             setReferenceMaterialModel(new ReferenceMaterialModel());
         } else if (!squidLabData.getReferenceMaterials().contains(refMat)) {
             squidLabData.addReferenceMaterial(refMat);
+            retVal.add(refMat);
             squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
         }
 
@@ -423,6 +427,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
         } else if (!squidLabData.getReferenceMaterials().contains(refMatConc)) {
             squidLabData.addReferenceMaterial(refMatConc);
+            retVal.add(refMatConc);
             squidLabData.getReferenceMaterials().sort(new ParametersModelComparator());
         }
 
@@ -430,10 +435,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             setCommonPbModel(squidLabData.getCommonPbDefault());
         } else if (!squidLabData.getCommonPbModels().contains(commonPbMod)) {
             squidLabData.addcommonPbModel(commonPbMod);
+            retVal.add(commonPbMod);
             squidLabData.getCommonPbModels().sort(new ParametersModelComparator());
         }
 
         squidLabData.storeState();
+
+        return retVal;
     }
 
     @Override
