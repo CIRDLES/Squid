@@ -397,10 +397,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
-    /**
-     *
-     * @return ParameterModels that squidLabData doesn't currently contain
-     */
     public List<ParametersModel> verifySquidLabDataParameters() {
         List<ParametersModel> retVal = new ArrayList<>(3);
 
@@ -1954,8 +1950,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public SpotSummaryDetails evaluateSelectedAgeWeightedMeanForUnknownGroup(
             String groupName,
             List<ShrimpFractionExpressionInterface> spotsForExpression) {
-        SpotSummaryDetails spotSummaryDetails = null;
-
+        // use stored selected age expression name from first fraction as each in the sample has the chosen current name
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
 
         return evaluateSelectedExpressionWeightedMeanForUnknownGroup(selectedAgeExpressionName, groupName, spotsForExpression);
@@ -1976,9 +1971,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         updateSingleExpression(expressionWM);
 
         try {
-            //taskExpressionsEvaluationsPerSpotSet.remove(expressionSelectedAgeWM.getExpressionTree().getName());
             evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
             spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
+            //TODO: feb 2020 under discussion on how to expose these
+            // add expression to working list if it is a Sample Age WM
+//            removeExpression(expressionWM, false);
+//            addExpression(expressionWM, false);
         } catch (SquidException squidException) {
         }
 

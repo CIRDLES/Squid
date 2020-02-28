@@ -1,9 +1,9 @@
 Contributors: 
 Jim Bowring, 
-Simon Bodorkos, 
+Simon Bodorkos (GA), 
 John Zeringue, 
-Les Sullivan, 
-Chuck Magee, 
+Les Sullivan (GA), 
+Chuck Magee (GA), 
 Casey Wilson, 
 Maël Gaonach, 
 Ryan Barrett, 
@@ -12,7 +12,7 @@ Bryce Barrett,
 Tyler Newman, 
 Lewis Smith, 
 Maddy Maniaci,   
-Nicole Rayner, 
-Andrew Cross, 
-Allen Kennedy 
+Nicole Rayner (GSC), 
+Andrew Cross (GA), 
+Allen Kennedy (GA), 
 ... you?
