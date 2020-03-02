@@ -1386,8 +1386,27 @@ public class SquidReportSettingsController implements Initializable {
                     super.updateItem(category, empty);
                     if (!empty) {
                         setText(category.getDisplayName());
+                        boolean hasBadExp = false;
+                        for (SquidReportColumnInterface col : category.getCategoryColumns()) {
+                            ExpressionTreeInterface exp = task.findNamedExpression(col.getExpressionName());
+                            if (!(exp != null && !exp.isSquidSwitchSCSummaryCalculation()
+                                    && ((exp.isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
+                                    || (exp.isSquidSwitchSAUnknownCalculation() && !isRefMat)))) {
+                                hasBadExp = true;
+                                break;
+                            }
+                        }
+                        if (hasBadExp) {
+                            ImageView graphic = new ImageView(WARNING);
+                            graphic.setPreserveRatio(true);
+                            graphic.setFitHeight(this.getHeight());
+                            setGraphic(graphic);
+                        } else {
+                            setGraphic(new ImageView(HEALTHY));
+                        }
                     } else {
                         setText(null);
+                        setGraphic(null);
                     }
                     isFixedCategory.setValue(!this.isEmpty() &&
                             reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport() &&
@@ -1586,8 +1605,20 @@ public class SquidReportSettingsController implements Initializable {
                     super.updateItem(column, empty);
                     if (!empty) {
                         setText(column.getExpressionName());
+                        ExpressionTreeInterface exp = task.findNamedExpression(column.getExpressionName());
+                        if (exp != null && !exp.isSquidSwitchSCSummaryCalculation()
+                                && ((exp.isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
+                                || (exp.isSquidSwitchSAUnknownCalculation() && !isRefMat))) {
+                            setGraphic(new ImageView(HEALTHY));
+                        } else {
+                            ImageView graphic = new ImageView(WARNING);
+                            graphic.setPreserveRatio(true);
+                            graphic.setFitHeight(this.getHeight());
+                            setGraphic(graphic);
+                        }
                     } else {
                         setText(null);
+                        setGraphic(null);
                     }
                 }
             };
