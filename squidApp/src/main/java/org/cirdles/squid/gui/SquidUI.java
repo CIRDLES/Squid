@@ -65,6 +65,9 @@ public final class SquidUI extends Application {
     public static final Image HEALTHY = new Image(HEALTHY_URL);
     public static final String UNHEALTHY_URL = "org/cirdles/squid/gui/images/wrongx_icon.png";
     public static final Image UNHEALTHY = new Image(UNHEALTHY_URL);
+
+    public static final String WARNING_URL = "org/cirdles/squid/gui/images/warning.png";
+    public static final Image WARNING = new Image(WARNING_URL);
     
     
     public static  final String HEALTHY_EXPRESSION_STYLE
