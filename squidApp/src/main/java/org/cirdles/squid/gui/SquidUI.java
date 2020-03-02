@@ -101,8 +101,6 @@ public final class SquidUI extends Application {
             System.exit(0);
         });
 
-        CalamariFileUtilities.initSampleParametersModels();
-
         // postpone loading to allow for stage creation and use in controller
         scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
         primaryStage.show();
