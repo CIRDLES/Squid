@@ -47,6 +47,7 @@ import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -1684,6 +1685,32 @@ public class SquidUIController implements Initializable {
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_SAMPLE;
         launchPlots();
         // launchWeightedMeans();
+    }
+
+    @FXML
+    private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException{
+        File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
+                squidProject.getProjectName() +
+                        "_REFMAT_SUMMARY_REPORT_" +
+                        DateHelper.getCurrentDate() +
+                        ".csv");
+        SquidMessageDialog.showInfoDialog(
+                "File saved as:\n\n"
+                        + SquidUIController.showLongfilePath(summaryFile.getAbsolutePath()),
+                primaryStageWindow);
+    }
+
+    @FXML
+    private void unknownsSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
+        File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
+                squidProject.getProjectName() +
+                        "_UNKNOWNS_SUMMARY_REPORT_" +
+                        DateHelper.getCurrentDate() +
+                        ".csv");
+        SquidMessageDialog.showInfoDialog(
+                "File saved as:\n\n"
+                        + SquidUIController.showLongfilePath(summaryFile.getAbsolutePath()),
+                primaryStageWindow);
     }
 
     private class HighlightMainMenu {

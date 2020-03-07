@@ -15,39 +15,33 @@
  */
 package org.cirdles.squid.core;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Serializable;
+import org.cirdles.squid.Squid;
+import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidRatiosModel;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+
+import java.io.*;
 import java.nio.charset.StandardCharsets;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import static java.nio.file.StandardOpenOption.APPEND;
 import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.APPEND;
 import static java.util.Arrays.asList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
-import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import org.cirdles.squid.Squid;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
 import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
-import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
 /**
  * Calamari's reports engine.
@@ -88,7 +82,6 @@ public class CalamariReportsEngine implements Serializable {
     private boolean doWriteReportFiles;
 
     /**
-     *
      * @param squidProject
      */
     public CalamariReportsEngine(SquidProject squidProject) {
@@ -135,7 +128,7 @@ public class CalamariReportsEngine implements Serializable {
     /**
      * ReportsEngine to test results
      *
-     * @param shrimpFractions the value of shrimpFractions
+     * @param shrimpFractions    the value of shrimpFractions
      * @param doWriteReportFiles
      * @param summaryOnly
      * @throws java.io.IOException
@@ -150,7 +143,6 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
-     *
      * @param shrimpFractions
      * @param shrimpFractionUnknown
      * @param shrimpFractionRefMat
@@ -952,7 +944,7 @@ public class CalamariReportsEngine implements Serializable {
                 break;
 
             default:
-            // throw exception
+                // throw exception
         }
 
         return report.toString();
@@ -992,6 +984,65 @@ public class CalamariReportsEngine implements Serializable {
         ReportSerializerToCSV.writeSquid3CustomCSVReport(reportTableFile, report);
 
         return reportTableFile;
+    }
+
+    public File writeSummaryReportsForUnknowns(String baseSummaryCalcName) throws IOException {
+        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+        PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
+            if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+                writeOutCSVSummaryCalc(writer, exp);
+            }
+        }
+        writer.flush();
+
+        return reportFile;
+    }
+
+    public File writeSummaryReportsForReferenceMaterials(String baseSummaryCalcName) throws IOException {
+        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+        PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
+            if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
+                writeOutCSVSummaryCalc(writer, exp);
+            }
+        }
+        writer.flush();
+
+        return reportFile;
+    }
+
+    private void writeOutCSVSummaryCalc(PrintWriter writer, Expression exp) {
+        if (exp != null && writer != null) {
+            SpotSummaryDetails spotSummary = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
+            if (spotSummary != null) {
+                writer.println(exp.getName());
+                writer.println(String.join(", ", ((ExpressionTree) exp.getExpressionTree()).getOperation().getLabelsForOutputValues()[0]));
+                String values = "";
+                for (double val : spotSummary.getValues()[0]) {
+                    values += val + ", ";
+                }
+                if (!values.isEmpty()) {
+                    values = values.substring(0, values.length() - 2);
+                }
+                writer.println(values);
+                writer.println();
+            }
+        }
+    }
+
+    private File getFileForSummaryCalc(String baseSummaryCalcName) throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator + "REPORTS-per-Squid3"
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+        }
+        File reportFile = new File(reportsPath + baseSummaryCalcName);
+        return reportFile;
     }
 
     public File writeTaskSummaryFile() throws IOException {
@@ -1036,13 +1087,13 @@ public class CalamariReportsEngine implements Serializable {
 
         File reportTableFile = null;
         Path reportPath = Paths.get(reportsPath + baseReportTableName);
-        if (!doAppend && reportPath.toFile().exists()){
+        if (!doAppend && reportPath.toFile().exists()) {
             reportPath.toFile().delete();
         }
         try {
-            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath, 
+            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath,
                     (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-            if (!doAppend){
+            if (!doAppend) {
                 out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
             }
             out.write((weightedMeanReport + System.lineSeparator()).getBytes());
@@ -1058,7 +1109,7 @@ public class CalamariReportsEngine implements Serializable {
 
     /**
      * @param aFolderToWriteCalamariReports the folderToWriteCalamariReports to
-     * set
+     *                                      set
      */
     public void setFolderToWriteCalamariReports(File aFolderToWriteCalamariReports) {
         folderToWriteCalamariReports = aFolderToWriteCalamariReports;
