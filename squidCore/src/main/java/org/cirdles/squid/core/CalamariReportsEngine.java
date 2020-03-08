@@ -16,6 +16,7 @@
 package org.cirdles.squid.core;
 
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -240,7 +241,6 @@ public class CalamariReportsEngine implements Serializable {
      * Sorting: Primary criterion = Date, secondary criterion = Scan
      *
      * @param shrimpFraction
-     * @param countOfSpecies
      */
     private void reportTotalIonCountsAtMass(ShrimpFraction shrimpFraction) throws IOException {
 
@@ -290,7 +290,6 @@ public class CalamariReportsEngine implements Serializable {
      * (ascending)
      *
      * @param shrimpFraction
-     * @param countOfSpecies
      */
     private void reportTotalSBMCountsAtMass(ShrimpFraction shrimpFraction) throws IOException {
 
@@ -1007,6 +1006,45 @@ public class CalamariReportsEngine implements Serializable {
                 writeOutCSVSummaryCalc(writer, exp);
             }
         }
+        writer.println("Normalize Ion Counts for SBM");
+        writer.println(squidProject.getTask().isUseSBM() ? "yes" : "no" + "\n");
+
+        writer.println("rounding");
+        writer.println("squid " + (squidProject.getTask().isRoundingForSquid3() ? "3" : "2.5") + "\n");
+
+        writer.println("Ratio Calculation Method");
+        writer.println(squidProject.getTask().isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)" + "\n");
+
+        writer.println("Preferred Index Isotope");
+        writer.println(squidProject.getTask().getSelectedIndexIsotope().getName() + "\n");
+
+        writer.println("Allow squid to auto-reject spots");
+        writer.println(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots() + "\n");
+
+        writer.println("minimum external 1sigma % err for 206Pb/238U");
+        writer.println(squidProject.getTask().getExtPErrU());
+
+        writer.println("Minimum external 1sigma % for 208Pb/232Th");
+        writer.println(squidProject.getTask().getExtPErrTh() + "\n");
+
+        writer.println("Def Comm Pb");
+        writer.println(squidProject.getTask().getCommonPbModel().getModelNameWithVersion() + "\n");
+
+        writer.println("Phys Const");
+        writer.println(squidProject.getTask().getPhysicalConstantsModel().getModelNameWithVersion() + "\n");
+
+        List<ValueModel> values = new ArrayList<>();
+        values.addAll(Arrays.asList(squidProject.getTask().getPhysicalConstantsModel().getValues()));
+        values.addAll(Arrays.asList(squidProject.getTask().getReferenceMaterialModel().getValues()));
+        values.addAll(Arrays.asList(squidProject.getTask().getCommonPbModel().getValues()));
+        writer.println("name, value, one sigma ABS, one sigma PCT");
+        values.forEach(valueModel -> writer.println(
+                valueModel.getName() + "," +
+                        valueModel.getValue() + ", " +
+                        valueModel.getOneSigmaABS().doubleValue() + ", " +
+                        valueModel.getOneSigmaPCT().doubleValue())
+        );
+
         writer.flush();
 
         return reportFile;
