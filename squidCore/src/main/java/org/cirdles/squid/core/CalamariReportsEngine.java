@@ -16,6 +16,7 @@
 package org.cirdles.squid.core;
 
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -1007,7 +1008,7 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
         writer.println("Normalize Ion Counts for SBM");
-        writer.println(squidProject.getTask().isUseSBM() ? "yes" : "no" + "\n");
+        writer.println((squidProject.getTask().isUseSBM() ? "yes" : "no") + "\n");
 
         writer.println("rounding");
         writer.println("squid " + (squidProject.getTask().isRoundingForSquid3() ? "3" : "2.5") + "\n");
@@ -1022,28 +1023,26 @@ public class CalamariReportsEngine implements Serializable {
         writer.println(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots() + "\n");
 
         writer.println("minimum external 1sigma % err for 206Pb/238U");
-        writer.println(squidProject.getTask().getExtPErrU());
+        writer.println(squidProject.getTask().getExtPErrU() + "\n");
 
         writer.println("Minimum external 1sigma % for 208Pb/232Th");
         writer.println(squidProject.getTask().getExtPErrTh() + "\n");
 
-        writer.println("Def Comm Pb");
-        writer.println(squidProject.getTask().getCommonPbModel().getModelNameWithVersion() + "\n");
-
-        writer.println("Phys Const");
-        writer.println(squidProject.getTask().getPhysicalConstantsModel().getModelNameWithVersion() + "\n");
-
-        List<ValueModel> values = new ArrayList<>();
-        values.addAll(Arrays.asList(squidProject.getTask().getPhysicalConstantsModel().getValues()));
-        values.addAll(Arrays.asList(squidProject.getTask().getReferenceMaterialModel().getValues()));
-        values.addAll(Arrays.asList(squidProject.getTask().getCommonPbModel().getValues()));
-        writer.println("name, value, one sigma ABS, one sigma PCT");
-        values.forEach(valueModel -> writer.println(
-                valueModel.getName() + "," +
-                        valueModel.getValue() + ", " +
-                        valueModel.getOneSigmaABS().doubleValue() + ", " +
-                        valueModel.getOneSigmaPCT().doubleValue())
-        );
+        Map<String, ParametersModel> parameters = new HashMap<>(4);
+        parameters.put("Physical Constants Model", squidProject.getTask().getPhysicalConstantsModel());
+        parameters.put("Def Comm Pb", squidProject.getTask().getCommonPbModel());
+        parameters.put("Reference Material Model", squidProject.getTask().getReferenceMaterialModel());
+        parameters.put("Concentration Reference Material Model", squidProject.getTask().getConcentrationReferenceMaterialModel());
+        parameters.forEach((key, val) -> {
+            writer.println("\n" + key);
+            writer.println(val.getModelNameWithVersion());
+            writer.println("name, value, one sigma ABS, one sigma PCT");
+            Arrays.asList(val.getValues()).forEach(valueModel -> writer.println(
+                    valueModel.getName() + "," +
+                            valueModel.getValue() + ", " +
+                            valueModel.getOneSigmaABS().doubleValue() + ", " +
+                            valueModel.getOneSigmaPCT().doubleValue()));
+        });
 
         writer.flush();
 
