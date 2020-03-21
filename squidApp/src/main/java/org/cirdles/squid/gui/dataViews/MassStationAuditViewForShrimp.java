@@ -396,7 +396,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         // X-axis lays out time evenly spaced
         minX = myOnPeakNormalizedAquireTimes[0];
         maxX = myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1];
-        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.5);
+        double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.005);
         minX -= xMarginStretch;
         maxX += xMarginStretch;
 
