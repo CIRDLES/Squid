@@ -1030,7 +1030,7 @@ public class CalamariReportsEngine implements Serializable {
 
         Map<String, ParametersModel> parameters = new HashMap<>(4);
         parameters.put("Physical Constants Model", squidProject.getTask().getPhysicalConstantsModel());
-        parameters.put("Def Comm Pb", squidProject.getTask().getCommonPbModel());
+        parameters.put("Common Pb Model", squidProject.getTask().getCommonPbModel());
         parameters.put("Reference Material Model", squidProject.getTask().getReferenceMaterialModel());
         parameters.put("Concentration Reference Material Model", squidProject.getTask().getConcentrationReferenceMaterialModel());
         parameters.forEach((key, val) -> {
