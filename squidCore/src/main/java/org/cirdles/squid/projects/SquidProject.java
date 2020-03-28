@@ -18,14 +18,7 @@ package org.cirdles.squid.projects;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -810,4 +803,11 @@ public final class SquidProject implements Serializable {
         this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
+                prawnSourceFile, prawnFile, getFilterForRefMatSpotNames(), getFilterForConcRefMatSpotNames(),
+                getSessionDurationHours(), getTask(), getFiltersForUnknownNames(), getDelimiterForUnknownNames(),
+                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());
+    }
 }

@@ -94,6 +94,7 @@ public class SquidUIController implements Initializable {
     }
 
     public static SquidProject squidProject;
+    public static int squidProjectOriginalHash;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
     @FXML
@@ -219,6 +220,35 @@ public class SquidUIController implements Initializable {
         mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
+
+        Thread graySaveMenuThreadChecker = new Thread(() -> {
+            while(true) {
+                if(squidProject != null) {
+                    Runnable saveSquidProjectMenuItemAlterRunnable = null;
+                    if(squidProjectOriginalHash == squidProject.hashCode()) {
+                        if(!saveSquidProjectMenuItem.isDisable()) {
+                            saveSquidProjectMenuItemAlterRunnable = () -> {
+                                saveSquidProjectMenuItem.setDisable(true);
+                            };
+                        }
+                    } else {
+                        if(saveSquidProjectMenuItem.isDisable()) {
+                            saveSquidProjectMenuItemAlterRunnable = () -> {
+                                saveSquidProjectMenuItem.setDisable(false);
+                            };
+                        }
+                    }
+                    if(saveSquidProjectMenuItemAlterRunnable != null) {
+                        Platform.runLater(saveSquidProjectMenuItemAlterRunnable);
+                    }
+                }
+                try {
+                    Thread.sleep(3000);
+                } catch(InterruptedException e) {
+                }
+            }
+        });
+        graySaveMenuThreadChecker.start();
 
         menuHighlighter = new HighlightMainMenu();
 
@@ -434,6 +464,7 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         squidProject = new SquidProject();
+        squidProjectOriginalHash = squidProject.hashCode();
 
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
@@ -551,6 +582,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             try {
                 File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                squidProjectOriginalHash = squidProject.hashCode();
                 if (projectFile != null) {
                     saveSquidProjectMenuItem.setDisable(false);
                     squidPersistentState.updateProjectListMRU(projectFile);
@@ -582,6 +614,8 @@ public class SquidUIController implements Initializable {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
+            squidProjectOriginalHash = squidProject.hashCode();
+
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
 
@@ -627,6 +661,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
+                squidProjectOriginalHash = squidProject.hashCode();
             } catch (IOException iOException) {
             }
         }
@@ -646,6 +681,7 @@ public class SquidUIController implements Initializable {
                 if (t.equals(ButtonType.YES)) {
                     try {
                         File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                        squidProjectOriginalHash = squidProject.hashCode();
                     } catch (IOException iOException) {
                         SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
                                 null);
