@@ -30,7 +30,7 @@ public class SquidMessageDialog extends Alert {
     }
 
     //http://stackoverflow.com/questions/26341152/controlsfx-dialogs-deprecated-for-what/32618003#32618003
-    private SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
+    public SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
         super(alertType);
         initOwner(owner);
         setTitle("Squid3 Alert");

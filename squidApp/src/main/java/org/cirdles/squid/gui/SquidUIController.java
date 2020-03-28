@@ -25,6 +25,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -65,10 +72,12 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBException;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -1694,10 +1703,8 @@ public class SquidUIController implements Initializable {
                         "_REFMAT_SUMMARY_REPORT_" +
                         DateHelper.getCurrentDate() +
                         ".csv");
-        SquidMessageDialog.showInfoDialog(
-                "File saved as:\n\n"
-                        + SquidUIController.showLongfilePath(summaryFile.getAbsolutePath()),
-                primaryStageWindow);
+
+        showSavedAsDialog(summaryFile);
     }
 
     @FXML
@@ -1707,10 +1714,25 @@ public class SquidUIController implements Initializable {
                         "_UNKNOWNS_SUMMARY_REPORT_" +
                         DateHelper.getCurrentDate() +
                         ".csv");
-        SquidMessageDialog.showInfoDialog(
-                "File saved as:\n\n"
-                        + SquidUIController.showLongfilePath(summaryFile.getAbsolutePath()),
+        showSavedAsDialog(summaryFile);
+    }
+
+    private void showSavedAsDialog(File file) {
+        Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
+                SquidUIController.showLongfilePath(file.getAbsolutePath()),
+                "File saved as:",
                 primaryStageWindow);
+        ButtonType openButton = new ButtonType("Open", ButtonBar.ButtonData.APPLY);
+        dialog.getButtonTypes().setAll(openButton, ButtonType.OK);
+
+        dialog.showAndWait().ifPresent(action ->{
+            if(action == openButton) {
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch(IOException e) {
+                }
+            }
+        });
     }
 
     private class HighlightMainMenu {

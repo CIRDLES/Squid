@@ -995,6 +995,7 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
         writer.flush();
+        writer.close();
 
         return reportFile;
     }
@@ -1045,6 +1046,7 @@ public class CalamariReportsEngine implements Serializable {
         });
 
         writer.flush();
+        writer.close();
 
         return reportFile;
     }
