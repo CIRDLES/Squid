@@ -84,6 +84,7 @@ import java.util.regex.Pattern;
 
 import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
+import static org.cirdles.squid.dialogs.SquidMessageDialog.showLongfilePath;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
@@ -1164,28 +1165,11 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
-    public static String showLongfilePath(String path) {
-        String retVal = "";
-        String fileSeparatorPattern = Pattern.quote(File.separator);
-        String[] pathParts = path.split(fileSeparatorPattern);
-        for (int i = 0; i < pathParts.length; i++) {
-            retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
-            for (int j = 0; j < i; j++) {
-                retVal += "  ";
-            }
-        }
-
-        return retVal;
-    }
-
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
         if (reportTableFile != null) {
-            SquidMessageDialog.showInfoDialog(
-                    "File saved as:\n\n"
-                            + showLongfilePath(reportTableFile.getCanonicalPath()),
-                    primaryStageWindow);
+            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
 
             //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
@@ -1199,10 +1183,7 @@ public class SquidUIController implements Initializable {
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsCSV(true);
         if (reportTableFile != null) {
-            SquidMessageDialog.showInfoDialog(
-                    "File saved as:\n\n"
-                            + showLongfilePath(reportTableFile.getCanonicalPath()),
-                    primaryStageWindow);
+            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
             //BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
@@ -1215,10 +1196,7 @@ public class SquidUIController implements Initializable {
     private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
         File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
         if (reportTableFile != null) {
-            SquidMessageDialog.showInfoDialog(
-                    "File saved as:\n\n"
-                            + showLongfilePath(reportTableFile.getCanonicalPath()),
-                    primaryStageWindow);
+            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
 //            BrowserControl.showURI(reportTableFile.getCanonicalPath());
         } else {
             SquidMessageDialog.showInfoDialog(
@@ -1704,7 +1682,7 @@ public class SquidUIController implements Initializable {
                         DateHelper.getCurrentDate() +
                         ".csv");
 
-        showSavedAsDialog(summaryFile);
+        SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
     }
 
     @FXML
@@ -1714,25 +1692,7 @@ public class SquidUIController implements Initializable {
                         "_UNKNOWNS_SUMMARY_REPORT_" +
                         DateHelper.getCurrentDate() +
                         ".csv");
-        showSavedAsDialog(summaryFile);
-    }
-
-    private void showSavedAsDialog(File file) {
-        Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
-                SquidUIController.showLongfilePath(file.getAbsolutePath()),
-                "File saved as:",
-                primaryStageWindow);
-        ButtonType openButton = new ButtonType("Open", ButtonBar.ButtonData.APPLY);
-        dialog.getButtonTypes().setAll(openButton, ButtonType.OK);
-
-        dialog.showAndWait().ifPresent(action ->{
-            if(action == openButton) {
-                try {
-                    Desktop.getDesktop().open(file);
-                } catch(IOException e) {
-                }
-            }
-        });
+        SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
     }
 
     private class HighlightMainMenu {
