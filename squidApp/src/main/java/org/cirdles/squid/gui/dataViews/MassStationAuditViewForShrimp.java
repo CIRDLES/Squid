@@ -62,6 +62,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double[] peakTukeysMeanAndUnct;
 
     private int indexOfSelectedSpot;
+    private int secondIndexOfSelectedSpotForMultiSelect;
     private int[] countOfScansCumulative;
 
     private final MassAuditRefreshInterface massAuditRefreshInterface;
@@ -79,17 +80,16 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param prawnFileRuns the value of prawnFileRuns
      * @param showTimeNormalized
      * @param massAuditRefreshInterface the value of massAuditRefreshInterface
-     * @param countOfScansCumulative the value of countOfScansCumulative
      */
     public MassStationAuditViewForShrimp(
-            Rectangle bounds, 
-            String plotTitle, 
+            Rectangle bounds,
+            String plotTitle,
             List<Double> measuredTrimMasses,
-            List<Double> timesOfMeasuredTrimMasses, 
+            List<Double> timesOfMeasuredTrimMasses,
             List<Integer> indicesOfScansAtMeasurementTimes,
-            List<Integer> indicesOfRunsAtMeasurementTimes, 
+            List<Integer> indicesOfRunsAtMeasurementTimes,
             List<Run> prawnFileRuns,
-            boolean showTimeNormalized, 
+            boolean showTimeNormalized,
             MassAuditRefreshInterface massAuditRefreshInterface) {
 
         super(bounds, 265, 0);
@@ -103,6 +103,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         this.massAuditRefreshInterface = massAuditRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
+        this.secondIndexOfSelectedSpotForMultiSelect = -1;
 
         setOpacity(1.0);
 
@@ -118,7 +119,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * implementation
      */
     private void setupSpotContextMenu() {
-        MenuItem menuItem1 = new MenuItem("Remove this spot.");
+        MenuItem menuItem1 = new MenuItem("Remove selected spot.");
         menuItem1.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = prawnFileRuns.get(indexOfSelectedSpot);
             if (selectedRun != null) {
@@ -192,12 +193,16 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         @Override
         public void handle(MouseEvent mouseEvent) {
             spotContextMenu.hide();
-            indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-            if (indexOfSelectedSpot > -1) {
-                massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot);
-                if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
-                    spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                            mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
+            if (mouseEvent.isShiftDown()) {
+                // multi-selection
+            } else {
+                indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+                if (indexOfSelectedSpot > -1) {
+                    massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot);
+                    if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+                        spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                                mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
+                    }
                 }
             }
         }
@@ -209,18 +214,18 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         // look up index
         for (int i = 0; i < myOnPeakNormalizedAquireTimes.length - 1; i++) {
             if ((convertedX >= myOnPeakNormalizedAquireTimes[i])
-                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])){
+                    && (convertedX < myOnPeakNormalizedAquireTimes[i + 1])) {
                 index = i;
                 break;
             }
-            
+
             // handle case of last age
-            if (index == -1){
-                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)){
-                    index = myOnPeakNormalizedAquireTimes.length -1;
-                } 
+            if (index == -1) {
+                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
+                    index = myOnPeakNormalizedAquireTimes.length - 1;
+                }
             }
-            
+
 //            if ((convertedX < myOnPeakNormalizedAquireTimes[i])) {
 //                index = i;
 //                break;
