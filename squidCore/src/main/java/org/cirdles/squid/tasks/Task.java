@@ -23,19 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -3345,4 +3333,27 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.overcountCorrectionType = overcountCorrectionType;
     }
 
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getName(), taskSquidVersion, getTaskType(), getDescription(), getAuthorName(),
+                getLabName(), getProvenance(), getDateRevised(), isUseSBM(), isUserLinFits(), getIndexOfBackgroundSpecies(),
+                indexOfTaskBackgroundMass, getParentNuclide(), isDirectAltPD(), getFilterForRefMatSpotNames(),
+                filterForConcRefMatSpotNames, filtersForUnknownNames, getNominalMasses(), getRatioNames(),
+                getMapOfIndexToMassStationDetails(), getSquidSessionModel(), getSquidSpeciesModelList(), getSquidRatiosModelList(),
+                getTaskExpressionsOrdered(), taskExpressionsRemoved, getNamedExpressionsMap(), namedOvercountExpressionsMap,
+                getNamedConstantsMap(), getNamedParametersMap(), getNamedSpotLookupFieldsMap(), getShrimpFractions(),
+                getReferenceMaterialSpots(), getConcentrationReferenceMaterialSpots(), getUnknownSpots(), getMapOfUnknownsBySampleNames(),
+                prawnChanged, getTaskExpressionsEvaluationsPerSpotSet(), prawnFile, reportsEngine, isChanged(),
+                isUseCalculatedAv_ParentElement_ConcenConst(), getSelectedIndexIsotope(), getMassMinuends(), getMassSubtrahends(),
+                isShowTimeNormalized(), isShowPrimaryBeam(), isShowQt1y(), isShowQt1z(), isSquidAllowsAutoExclusionOfSpots(),
+                getExtPErrU(), getExtPErrTh(), getPhysicalConstantsModel(), getReferenceMaterialModel(), getCommonPbModel(),
+                getConcentrationReferenceMaterialModel(), physicalConstantsModelChanged, referenceMaterialModelChanged,
+                commonPbModelChanged, concentrationReferenceMaterialModelChanged, getSpecialSquidFourExpressionsMap(),
+                getDelimiterForUnknownNames(), concentrationTypeEnum, getProvidesExpressionsGraph(), getRequiresExpressionsGraph(),
+                getMissingExpressionsByName(), isRoundingForSquid3(), getSquidReportTablesRefMat(), getSquidReportTablesUnknown(),
+                getOvercountCorrectionType());
+        result = 31 * result + Arrays.hashCode(getTableOfSelectedRatiosByMassStationIndex());
+        System.out.println(result);
+        return result;
+    }
 }

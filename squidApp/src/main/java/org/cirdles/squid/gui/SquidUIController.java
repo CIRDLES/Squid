@@ -94,7 +94,6 @@ public class SquidUIController implements Initializable {
     }
 
     public static SquidProject squidProject;
-    public static int squidProjectOriginalHash;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
     @FXML
@@ -205,6 +204,10 @@ public class SquidUIController implements Initializable {
     public static SquidReportTableLauncher squidReportTableLauncher;
     public static HighlightMainMenu menuHighlighter;
 
+    public Thread saveMenuItemDisablerThread;
+    public static int squidProjectOriginalHash;
+    public boolean runSaveMenuItemDisablerThread;
+
     /**
      * Initializes the controller class.
      *
@@ -221,9 +224,9 @@ public class SquidUIController implements Initializable {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
 
-        Thread graySaveMenuThreadChecker = new Thread(() -> {
+         saveMenuItemDisablerThread = new Thread(() -> {
             while(true) {
-                if(squidProject != null) {
+                if(squidProject != null && runSaveMenuItemDisablerThread) {
                     Runnable saveSquidProjectMenuItemAlterRunnable = null;
                     if(squidProjectOriginalHash == squidProject.hashCode()) {
                         if(!saveSquidProjectMenuItem.isDisable()) {
@@ -243,12 +246,12 @@ public class SquidUIController implements Initializable {
                     }
                 }
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(2000);
                 } catch(InterruptedException e) {
                 }
             }
         });
-        graySaveMenuThreadChecker.start();
+        saveMenuItemDisablerThread.start();
 
         menuHighlighter = new HighlightMainMenu();
 
@@ -464,11 +467,11 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         squidProject = new SquidProject();
-        squidProjectOriginalHash = squidProject.hashCode();
 
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
+        runSaveMenuItemDisablerThread = false;
     }
 
     @FXML
@@ -582,13 +585,14 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             try {
                 File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
-                squidProjectOriginalHash = squidProject.hashCode();
                 if (projectFile != null) {
                     saveSquidProjectMenuItem.setDisable(false);
                     squidPersistentState.updateProjectListMRU(projectFile);
                     SquidUI.updateStageTitle(projectFile.getAbsolutePath());
                     buildProjectMenuMRU();
                     launchProjectManager();
+                    runSaveMenuItemDisablerThread = true;
+                    squidProjectOriginalHash = squidProject.hashCode();
                 }
 
             } catch (IOException ex) {
@@ -614,7 +618,6 @@ public class SquidUIController implements Initializable {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
-            squidProjectOriginalHash = squidProject.hashCode();
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
@@ -630,6 +633,9 @@ public class SquidUIController implements Initializable {
 
                 // this updates output folder for reports to current version
                 CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
+                squidProjectOriginalHash = squidProject.hashCode();
+                runSaveMenuItemDisablerThread = true;
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
                 SquidUI.updateStageTitle("");
@@ -681,7 +687,6 @@ public class SquidUIController implements Initializable {
                 if (t.equals(ButtonType.YES)) {
                     try {
                         File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
-                        squidProjectOriginalHash = squidProject.hashCode();
                     } catch (IOException iOException) {
                         SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
                                 null);
@@ -690,6 +695,7 @@ public class SquidUIController implements Initializable {
             });
             SquidProject.setProjectChanged(false);
             launchProjectManager();
+            squidProjectOriginalHash = squidProject.hashCode();
         }
     }
 

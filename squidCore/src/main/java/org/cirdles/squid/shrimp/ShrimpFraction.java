@@ -19,12 +19,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
+
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
@@ -968,5 +964,26 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
         return commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(), getDateTimeMilliseconds(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(), getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(), getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(), isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(), getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(), isSelected(), getCountOfNonPositiveSBMCounts(), getCommonLeadSpecsForSpot());
+        result = 31 * result + Arrays.hashCode(getCountTimeSec());
+        result = 31 * result + Arrays.hashCode(getNamesOfSpecies());
+        result = 31 * result + Arrays.hashCode(getRawPeakData());
+        result = 31 * result + Arrays.hashCode(getRawSBMData());
+        result = 31 * result + Arrays.hashCode(getTotalCounts());
+        result = 31 * result + Arrays.hashCode(getTotalCountsOneSigmaAbs());
+        result = 31 * result + Arrays.hashCode(getTotalCountsSBM());
+        result = 31 * result + Arrays.hashCode(getTimeStampSec());
+        result = 31 * result + Arrays.hashCode(getTrimMass());
+        result = 31 * result + Arrays.hashCode(getTotalCps());
+        result = 31 * result + Arrays.hashCode(getNetPkCps());
+        result = 31 * result + Arrays.hashCode(getPkFerr());
+        result = 31 * result + Arrays.hashCode(getReducedPkHt());
+        result = 31 * result + Arrays.hashCode(getReducedPkHtFerr());
+        result = 31 * result + Arrays.hashCode(getPkInterpScanArray());
+        return result;
     }
 }
