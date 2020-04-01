@@ -246,7 +246,7 @@ public class SquidUIController implements Initializable {
                     }
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(2500);
                 } catch(InterruptedException e) {
                 }
             }

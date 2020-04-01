@@ -15,12 +15,12 @@
  */
 package org.cirdles.squid.projects;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
+
+import org.apache.commons.lang3.SerializationUtils;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
@@ -804,9 +804,20 @@ public final class SquidProject implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
+        /*return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
                 prawnSourceFile, prawnFile, getFilterForRefMatSpotNames(), getFilterForConcRefMatSpotNames(),
                 getSessionDurationHours(), getTask(), getFiltersForUnknownNames(), getDelimiterForUnknownNames(),
-                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());
+                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());*/
+        int result = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            oos.flush();
+            oos.close();
+            result = Arrays.hashCode(bos.toByteArray());
+        } catch (IOException e) {
+        }
+        return result;
     }
 }

@@ -3335,24 +3335,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getName(), taskSquidVersion, getTaskType(), getDescription(), getAuthorName(),
-                getLabName(), getProvenance(), getDateRevised(), isUseSBM(), isUserLinFits(), getIndexOfBackgroundSpecies(),
-                indexOfTaskBackgroundMass, getParentNuclide(), isDirectAltPD(), getFilterForRefMatSpotNames(),
-                filterForConcRefMatSpotNames, filtersForUnknownNames, getNominalMasses(), getRatioNames(),
-                getMapOfIndexToMassStationDetails(), getSquidSessionModel(), getSquidSpeciesModelList(), getSquidRatiosModelList(),
-                getTaskExpressionsOrdered(), taskExpressionsRemoved, getNamedExpressionsMap(), namedOvercountExpressionsMap,
-                getNamedConstantsMap(), getNamedParametersMap(), getNamedSpotLookupFieldsMap(), getShrimpFractions(),
-                getReferenceMaterialSpots(), getConcentrationReferenceMaterialSpots(), getUnknownSpots(), getMapOfUnknownsBySampleNames(),
-                prawnChanged, getTaskExpressionsEvaluationsPerSpotSet(), prawnFile, reportsEngine, isChanged(),
-                isUseCalculatedAv_ParentElement_ConcenConst(), getSelectedIndexIsotope(), getMassMinuends(), getMassSubtrahends(),
-                isShowTimeNormalized(), isShowPrimaryBeam(), isShowQt1y(), isShowQt1z(), isSquidAllowsAutoExclusionOfSpots(),
-                getExtPErrU(), getExtPErrTh(), getPhysicalConstantsModel(), getReferenceMaterialModel(), getCommonPbModel(),
-                getConcentrationReferenceMaterialModel(), physicalConstantsModelChanged, referenceMaterialModelChanged,
-                commonPbModelChanged, concentrationReferenceMaterialModelChanged, getSpecialSquidFourExpressionsMap(),
-                getDelimiterForUnknownNames(), concentrationTypeEnum, getProvidesExpressionsGraph(), getRequiresExpressionsGraph(),
-                getMissingExpressionsByName(), isRoundingForSquid3(), getSquidReportTablesRefMat(), getSquidReportTablesUnknown(),
-                getOvercountCorrectionType());
-        result = 31 * result + Arrays.hashCode(getTableOfSelectedRatiosByMassStationIndex());
+        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName, provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies, indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames, filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames, mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList, squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved, namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions, referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots, mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet, prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst, selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized, showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots, extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel, concentrationReferenceMaterialModel, physicalConstantsModelChanged, referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged, specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum, providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName, roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+        result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         System.out.println(result);
         return result;
     }
