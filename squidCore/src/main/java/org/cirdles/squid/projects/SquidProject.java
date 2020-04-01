@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;

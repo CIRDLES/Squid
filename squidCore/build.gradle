@@ -45,9 +45,6 @@ dependencies {
     compile('javax.activation:activation:1.1')
     compile('org.glassfish.jaxb:jaxb-runtime:2.3.0')
     
-    compile 'org.apache.commons:commons-lang3:3.5'
-
-
 }
 
 sourceSets {
