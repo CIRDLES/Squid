@@ -1039,19 +1039,15 @@ public class CalamariReportsEngine implements Serializable {
         if (!doAppend && reportPath.toFile().exists()){
             reportPath.toFile().delete();
         }
-        try {
-            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath, 
-                    (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-            if (!doAppend){
-                out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
-            }
-            out.write((weightedMeanReport + System.lineSeparator()).getBytes());
-            out.flush();
-            out.close();
-            reportTableFile = reportPath.toFile();
-
-        } catch (IOException iOException) {
+        OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath,
+                (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
+        if (!doAppend){
+            out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
         }
+        out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+        out.flush();
+        out.close();
+        reportTableFile = reportPath.toFile();
 
         return reportTableFile;
     }

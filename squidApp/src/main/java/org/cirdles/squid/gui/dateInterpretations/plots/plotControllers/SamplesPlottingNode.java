@@ -17,6 +17,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.text.DecimalFormat;
 import java.text.ParsePosition;
 import java.util.ArrayList;
@@ -625,17 +626,21 @@ public class SamplesPlottingNode extends HBox {
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
         String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
         String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
-        File reportFile
-                = squidProject.getPrawnFileHandler().getReportsEngine()
-                        .writeSquidWeightedMeanReportToFile(report, reportFileName, doAppend);
-        if (reportFile != null) {
-            SquidMessageDialog.showInfoDialog("File saved as:\n\n"
-                    + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
-                    primaryStageWindow);
-        } else {
-            SquidMessageDialog.showInfoDialog(
-                    "Report file does not exist.\n",
-                    primaryStageWindow);
+        try {
+            File reportFile
+                    = squidProject.getPrawnFileHandler().getReportsEngine()
+                    .writeSquidWeightedMeanReportToFile(report, reportFileName, doAppend);
+            if (reportFile != null) {
+                SquidMessageDialog.showInfoDialog("File saved as:\n\n"
+                                + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
+                        primaryStageWindow);
+            }
+        } catch (NoSuchFileException e) {
+            SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
+        }catch (java.nio.file.FileSystemException e) {
+            SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
+        } catch (IOException e) {
+            SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
         }
     }
 
