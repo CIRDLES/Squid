@@ -812,11 +812,10 @@ public final class SquidProject implements Serializable {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
             oos.writeObject(this);
-            oos.flush();
-            oos.close();
             result = Arrays.hashCode(bos.toByteArray());
         } catch (IOException e) {
         }
         return result;
+        //return HashCodeBuilder.reflectionHashCode(17, 31, this, false, Object.class);
     }
 }

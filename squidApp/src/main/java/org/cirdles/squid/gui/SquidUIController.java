@@ -226,7 +226,7 @@ public class SquidUIController implements Initializable {
 
          saveMenuItemDisablerThread = new Thread(() -> {
             while(true) {
-                if(squidProject != null && runSaveMenuItemDisablerThread) {
+                if(squidProject != null && runSaveMenuItemDisablerThread && primaryStageWindow.isFocused()) {
                     Runnable saveSquidProjectMenuItemAlterRunnable = null;
                     if(squidProjectOriginalHash == squidProject.hashCode()) {
                         if(!saveSquidProjectMenuItem.isDisable()) {
@@ -234,12 +234,10 @@ public class SquidUIController implements Initializable {
                                 saveSquidProjectMenuItem.setDisable(true);
                             };
                         }
-                    } else {
-                        if(saveSquidProjectMenuItem.isDisable()) {
-                            saveSquidProjectMenuItemAlterRunnable = () -> {
-                                saveSquidProjectMenuItem.setDisable(false);
-                            };
-                        }
+                    } else if(saveSquidProjectMenuItem.isDisable()) {
+                        saveSquidProjectMenuItemAlterRunnable = () -> {
+                            saveSquidProjectMenuItem.setDisable(false);
+                        };
                     }
                     if(saveSquidProjectMenuItemAlterRunnable != null) {
                         Platform.runLater(saveSquidProjectMenuItemAlterRunnable);
