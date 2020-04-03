@@ -19,6 +19,7 @@ package org.cirdles.squid.gui.dataViews;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -62,7 +63,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     private double[] peakTukeysMeanAndUnct;
 
     private int indexOfSelectedSpot;
-    private int secondIndexOfSelectedSpotForMultiSelect;
+    private int indexOfSecondSelectedSpotForMultiSelect;
+
     private int[] countOfScansCumulative;
 
     private final MassAuditRefreshInterface massAuditRefreshInterface;
@@ -79,6 +81,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param indicesOfRunsAtMeasurementTimes
      * @param prawnFileRuns the value of prawnFileRuns
      * @param showTimeNormalized
+     * @param showSpotLabels the value of showSpotLabels
      * @param massAuditRefreshInterface the value of massAuditRefreshInterface
      */
     public MassStationAuditViewForShrimp(
@@ -90,6 +93,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             List<Integer> indicesOfRunsAtMeasurementTimes,
             List<Run> prawnFileRuns,
             boolean showTimeNormalized,
+            boolean showSpotLabels,
             MassAuditRefreshInterface massAuditRefreshInterface) {
 
         super(bounds, 265, 0);
@@ -100,10 +104,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
         this.prawnFileRuns = prawnFileRuns;
         this.showTimeNormalized = showTimeNormalized;
+        this.showspotLabels = showSpotLabels;
         this.massAuditRefreshInterface = massAuditRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
-        this.secondIndexOfSelectedSpotForMultiSelect = -1;
+        this.indexOfSecondSelectedSpotForMultiSelect = -1;
 
         setOpacity(1.0);
 
@@ -119,16 +124,28 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * implementation
      */
     private void setupSpotContextMenu() {
-        MenuItem menuItem1 = new MenuItem("Remove selected spot.");
+        MenuItem menuItem1 = new MenuItem("Remove selected spot(s).");
         menuItem1.setOnAction((evt) -> {
-            PrawnFile.Run selectedRun = prawnFileRuns.get(indexOfSelectedSpot);
-            if (selectedRun != null) {
-                squidProject.removeRunFromPrawnFile(selectedRun);
+            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
+            if (secondIndex == -1) {
+                secondIndex = indexOfSelectedSpot;
+            }
+            List<PrawnFile.Run> selectedRuns = new ArrayList<>();
+            if (indexOfSelectedSpot >= 0) {
+                boolean increasing = (secondIndex >= indexOfSelectedSpot);
+                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
+                        index <= (increasing ? secondIndex : indexOfSelectedSpot);
+                        index++) {
+                    selectedRuns.add(prawnFileRuns.get(index));
+                }
+
+                squidProject.removeRunsFromPrawnFile(selectedRuns);
+
                 squidProject.generatePrefixTreeFromSpotNames();
-                squidProject.getTask().setChanged(true);
-                squidProject.getTask().buildSquidSpeciesModelList();
+                squidProject.setProjectChanged(true);
                 massAuditRefreshInterface.removeSpotFromGraphs(indexOfSelectedSpot);
             }
+
         });
 
         MenuItem menuItem2 = new MenuItem("Split Prawn file starting with this run, using original unedited.");
@@ -193,15 +210,25 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         @Override
         public void handle(MouseEvent mouseEvent) {
             spotContextMenu.hide();
-            if (mouseEvent.isShiftDown()) {
-                // multi-selection
+
+            if ((indexOfSelectedSpot > -1) && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
+                spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
+                        mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
             } else {
-                indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-                if (indexOfSelectedSpot > -1) {
-                    massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot);
-                    if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
-                        spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
-                                mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
+
+                if ((indexOfSelectedSpot > -1) && (mouseEvent.isShiftDown())) {
+                    // multi-selection
+                    indexOfSecondSelectedSpotForMultiSelect = indexOfSpotFromMouseX(mouseEvent.getX());
+                    if (indexOfSecondSelectedSpotForMultiSelect > -1) {
+                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(indexOfSecondSelectedSpotForMultiSelect);
+                    }
+                } else {
+                    if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) != 0) {
+                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(-1);
+                        indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
+                        if (indexOfSelectedSpot > -1) {
+                            massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot);
+                        }
                     }
                 }
             }
@@ -225,11 +252,6 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                     index = myOnPeakNormalizedAquireTimes.length - 1;
                 }
             }
-
-//            if ((convertedX < myOnPeakNormalizedAquireTimes[i])) {
-//                index = i;
-//                break;
-//            }
         }
 
         // determine spot number
@@ -269,26 +291,37 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("SansSerif", 8));
         g2d.fillText("Mouse:", 5, 45);
-        g2d.fillText(" left = spot name", 5, 55);
-        g2d.fillText(" right = spot menu", 5, 65);
+        g2d.fillText(" left = select spot", 5, 55);
+        g2d.fillText(" shift + left = select 2nd spot", 5, 65);
+        g2d.fillText(" right = spot menu", 5, 75);
 
         g2d.setFont(Font.font("SansSerif", 12));
+        int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
+        if (secondIndex == -1) {
+            secondIndex = indexOfSelectedSpot;
+        }
         if (indexOfSelectedSpot >= 0) {
-            // gray spot rectangle
-            g2d.setFill(Color.rgb(0, 0, 0, 0.2));
-            g2d.fillRect(
-                    mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]) - 2f,
-                    0,
-                    Math.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot + 1] - 1])
-                            - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]])) + 4f,
-                    height);
-            g2d.setFill(Paint.valueOf("BLACK"));
-            Text text = new Text(prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue());
-            text.applyCss();
-            g2d.fillText(
-                    prawnFileRuns.get(indexOfSelectedSpot).getPar().get(0).getValue(),
-                    mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot] + 4]) - text.getLayoutBounds().getWidth(),
-                    20);
+            boolean increasing = (secondIndex >= indexOfSelectedSpot);
+            for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
+                    index <= (increasing ? secondIndex : indexOfSelectedSpot);
+                    index++) {
+
+                // gray spot(s) rectangle
+                g2d.setFill(Color.rgb(0, 0, 0, 0.1));
+                g2d.fillRect(
+                        mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]]) - 2f,
+                        0,
+                        Math.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index + 1] - 1])
+                                - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]])) + 4f,
+                        height);
+            }
+            // label spots 
+            if (!showspotLabels) {
+                showSpotLabelOnGraph(g2d, indexOfSelectedSpot);
+                if (secondIndex != indexOfSelectedSpot) {
+                    showSpotLabelOnGraph(g2d, secondIndex);
+                }
+            }
         }
 
         g2d.setFill(Paint.valueOf("Red"));
@@ -363,6 +396,26 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                 (float) mapX(minX) - 150f,
                 (float) mapY(minMassAMU) + verticalTextShift);
 
+        // label spots
+        if (showspotLabels) {
+            for (int spotIndex = 0; spotIndex < prawnFileRuns.size(); spotIndex++) {
+                showSpotLabelOnGraph(g2d, spotIndex);
+            }
+        }
+
+    }
+
+    private void showSpotLabelOnGraph(GraphicsContext g2d, int spotIndex) {
+        g2d.setFill(Paint.valueOf("BLACK"));
+        Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());
+        text.applyCss();
+        g2d.rotate(-90);
+        g2d.fillText(
+                prawnFileRuns.get(spotIndex).getPar().get(0).getValue(),
+                -80,//-text.getLayoutBounds().getWidth() - 5,
+                mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[spotIndex] + 4])
+        );
+        g2d.rotate(90);
     }
 
     /**
@@ -434,6 +487,14 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      */
     public void setIndexOfSelectedSpot(int aIndexOfSelectedSpot) {
         indexOfSelectedSpot = aIndexOfSelectedSpot;
+    }
+
+    /**
+     * @param indexOfSecondSelectedSpotForMultiSelect the
+     * indexOfSecondSelectedSpotForMultiSelect to set
+     */
+    public void setIndexOfSecondSelectedSpotForMultiSelect(int indexOfSecondSelectedSpotForMultiSelect) {
+        this.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
     }
 
     /**

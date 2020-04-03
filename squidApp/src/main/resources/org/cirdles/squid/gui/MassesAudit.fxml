@@ -55,6 +55,7 @@
                               <Label layoutX="16.0" layoutY="27.0" text="Available Masses" />
                               <Label layoutX="282.0" layoutY="26.0" text="Displayed Masses" />
                               <CheckBox fx:id="normalizeTimeAxisCheckBox" layoutX="31.0" layoutY="273.0" mnemonicParsing="false" onAction="#normalizeTimeAxisCheckBoxAction" text="Display normalized time axis" />
+                              <CheckBox fx:id="displaySpotLabelsCheckBox" layoutX="225.0" layoutY="273.0" mnemonicParsing="false" onAction="#displaySpotLabelsCheckBoxAction" text="Display spot labels" />
                               <Text layoutX="8.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: use drag-and-drop to populate lists.">
                                  <font>
                                     <Font size="11.0" />
