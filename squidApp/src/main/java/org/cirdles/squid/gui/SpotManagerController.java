@@ -17,6 +17,7 @@ package org.cirdles.squid.gui;
 
 import java.math.RoundingMode;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -34,13 +35,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import static javafx.scene.paint.Color.RED;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -211,6 +210,7 @@ public class SpotManagerController implements Initializable {
             throws SquidException {
 
         shrimpFractionList.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
+        shrimpFractionList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         shrimpFractionList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PrawnFile.Run>() {
             @Override
@@ -260,21 +260,18 @@ public class SpotManagerController implements Initializable {
     private ContextMenu createAllSpotsViewContextMenu()
             throws SquidException {
         ContextMenu contextMenu = new ContextMenu();
-        MenuItem menuItem = new MenuItem("Remove this spot.");
-        menuItem.setOnAction((evt) -> {
-            PrawnFile.Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
-            if (selectedRun != null) {
-                runsModel.remove(selectedRun);
-                shrimpRunsRefMat.remove(selectedRun);
-                shrimpRunsConcRefMat.remove(selectedRun);
-                squidProject.removeRunFromPrawnFile(selectedRun);
-                spotsShownLabel.setText(runsModel.showFilteredOverAllCount());
-
-                squidProject.generatePrefixTreeFromSpotNames();
-                rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
-                concrmCountLabel.setText(String.valueOf(shrimpRunsConcRefMat.size()));
-                squidProject.getTask().setChanged(true);
+        MenuItem menuItem = new MenuItem("Remove selected spot(s).");
+        menuItem.setOnAction ((evt) -> {
+            List<PrawnFile.Run> selectedRuns = shrimpFractionList.getSelectionModel().getSelectedItems();
+            squidProject.removeRunsFromPrawnFile(selectedRuns);
+            
+            try {
+                setUpPrawnFile();
+            } catch (SquidException squidException) {
+               
             }
+            squidProject.generatePrefixTreeFromSpotNames();
+            squidProject.setProjectChanged(true);
         });
         contextMenu.getItems().add(menuItem);
 
