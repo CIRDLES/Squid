@@ -51,7 +51,7 @@ public class SquidWeightedMeanReportEngine {
         
         boolean isAnAge = spotSummaryDetails.getSelectedExpressionName().contains("Age");
         report.append(spotSummaryDetails.getExpressionTree().getUnknownsGroupSampleName()).append(", ");
-        report.append(spotSummaryDetails.getSelectedExpressionName()).append(", ");
+        report.append(spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0]).append(", ");
         report.append(spotSummaryDetails.getValues()[0][0] / (isAnAge ? 1e6 : 1.0)).append(", ");
         report.append(spotSummaryDetails.getValues()[0][1] / (isAnAge ? 1e6 : 1.0) * 2.0).append(", ");
         report.append(spotSummaryDetails.getValues()[0][3] / (isAnAge ? 1e6 : 1.0)).append(", ");        
