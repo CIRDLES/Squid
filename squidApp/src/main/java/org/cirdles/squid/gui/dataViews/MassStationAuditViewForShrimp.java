@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -288,13 +289,19 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             g2d.fillText(plotTitle, 5, 15);
         }
 
+        // legend background
+        g2d.setFill(Color.rgb(255, 239, 213, 0.75));
+        g2d.fillRect(3, 35, 125, 47);
+        // legend
         g2d.setFill(Paint.valueOf("BLACK"));
-        g2d.setFont(Font.font("SansSerif", 8));
+        g2d.setFont(Font.font("SansSerif", 10));
         g2d.fillText("Mouse:", 5, 45);
         g2d.fillText(" left = select spot", 5, 55);
         g2d.fillText(" shift + left = select 2nd spot", 5, 65);
         g2d.fillText(" right = spot menu", 5, 75);
 
+        // selection rectangle and labels
+        g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("SansSerif", 12));
         int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
         if (secondIndex == -1) {
@@ -406,13 +413,14 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     }
 
     private void showSpotLabelOnGraph(GraphicsContext g2d, int spotIndex) {
+        g2d.setFont(Font.font("SansSerif", 10));
         g2d.setFill(Paint.valueOf("BLACK"));
         Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());
         text.applyCss();
         g2d.rotate(-90);
         g2d.fillText(
                 prawnFileRuns.get(spotIndex).getPar().get(0).getValue(),
-                -80,//-text.getLayoutBounds().getWidth() - 5,
+                -70,//-text.getLayoutBounds().getWidth() - 5,
                 mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[spotIndex] + 4])
         );
         g2d.rotate(90);
