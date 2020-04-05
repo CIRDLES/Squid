@@ -115,10 +115,13 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private static boolean showPrimaryBeam;
     private static boolean showQt1y;
     private static boolean showQt1z;
+    private static boolean showSpotLabels;
 
     private List<AbstractDataView> graphs;
 
     private static boolean synchedScrolls;
+    @FXML
+    private CheckBox displaySpotLabelsCheckBox;
 
     /**
      * Initializes the controller class.
@@ -143,6 +146,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         showQt1z = squidProject.getTask().isShowQt1z();
         showQt1zCheckBox.setSelected(showQt1z);
+        
+        showSpotLabels = squidProject.getTask().isShowSpotLabels();
+        displaySpotLabelsCheckBox.setSelected(showSpotLabels);
 
         graphs = new ArrayList<>();
 
@@ -257,6 +263,13 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     public int[] getCountOfScansCumulative() {
         return countOfScansCumulative;
+    }
+
+    @FXML
+    private void displaySpotLabelsCheckBoxAction(ActionEvent event) {
+        showSpotLabels = displaySpotLabelsCheckBox.isSelected();
+        squidProject.getTask().setShowSpotLabels(showSpotLabels);
+        displayMassStationsForReview();
     }
 
     static class MassStationDetailListCell extends ListCell<MassStationDetail> {
@@ -558,7 +571,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                         entry.getIndicesOfScansAtMeasurementTimes(),
                         entry.getIndicesOfRunsAtMeasurementTimes(),
                         squidProject.getPrawnFileRuns(),
-                        showTimeNormalized,
+                        showTimeNormalized, 
+                        showSpotLabels,
                         this);
 
         scrolledBox.getChildren().add(canvas);
@@ -721,6 +735,14 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     public void updateGraphsWithSelectedIndex(int index) {
         for (int i = 0; i < graphs.size(); i++) {
             ((MassStationAuditViewForShrimp) graphs.get(i)).setIndexOfSelectedSpot(index);
+            graphs.get(i).repaint();
+        }
+    }
+
+    @Override
+    public void updateGraphsWithSecondSelectedIndex(int index) {
+        for (int i = 0; i < graphs.size(); i++) {
+            ((MassStationAuditViewForShrimp) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
             graphs.get(i).repaint();
         }
     }

@@ -457,5 +457,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         return expressionName;
     }
     
-    
+    public static void main(String[] args) {
+        SquidReportColumnInterface col = new SquidReportColumn(R204PB_206PB);
+        col.serializeXMLObject("TEST.xml");
+        
+        SquidReportColumnInterface col2 = (SquidReportColumn)col.readXMLObject("TEST.xml", false);
+        System.out.println(col2.getExpressionName());
+    }
 }
