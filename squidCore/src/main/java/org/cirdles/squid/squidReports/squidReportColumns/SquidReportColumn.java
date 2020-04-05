@@ -458,10 +458,12 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         return expressionName;
     }
 
+
     @Override
     public int hashCode() {
         int result = Objects.hash(expTree, amIsotopicRatio, getExpressionName(), getUnits(), getUncertaintyColumn(), isAmUncertaintyColumn(), getUncertaintyDirective(), getCountOfSignificantDigits(), isVisible(), getFootnoteSpec());
         result = 31 * result + Arrays.hashCode(getColumnHeaders());
         return result;
+
     }
 }

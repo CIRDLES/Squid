@@ -187,7 +187,7 @@ public final class SquidProject implements Serializable {
         this.task.setFiltersForUnknownNames(filtersForUnknownNames);
         this.task.setParentNuclide(taskSquid25.getParentNuclide());
         this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
-        
+
         this.task.setReferenceMaterialModel(referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
@@ -499,6 +499,20 @@ public final class SquidProject implements Serializable {
 
     }
 
+    public void removeRunsFromPrawnFile(List<Run> runs) {
+
+        for (Run run : runs) {
+            prawnFile.getRun().remove(run);
+        }
+
+        // save new count
+        prawnFile.setRuns((short) prawnFile.getRun().size());
+
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();
+
+    }
+
     public void removeRunFromPrawnFile(Run run) {
         prawnFile.getRun().remove(run);
 
@@ -672,7 +686,7 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
-        if (filterForRefMatSpotNames.length() == 0){
+        if (filterForRefMatSpotNames.length() == 0) {
             setReferenceMaterialModel(new ReferenceMaterialModel());
         }
         if (task != null) {
@@ -686,7 +700,7 @@ public final class SquidProject implements Serializable {
 
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
-        if (filterForConcRefMatSpotNames.length() == 0){
+        if (filterForConcRefMatSpotNames.length() == 0) {
             setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
         }
         if (task != null) {
