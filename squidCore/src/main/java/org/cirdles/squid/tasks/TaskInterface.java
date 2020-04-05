@@ -605,6 +605,18 @@ public interface TaskInterface {
     public boolean expressionIsNuSwitched(String expressionName);
 
     /**
+     *
+     * @return showSpotLabels
+     */
+    public boolean isShowSpotLabels();
+
+    /**
+     *
+     * @param showSpotLabels
+     */
+    public void setShowSpotLabels(boolean showSpotLabels);
+
+    /**
      * @return the mapOfUnknownsBySampleNames
      */
     public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();

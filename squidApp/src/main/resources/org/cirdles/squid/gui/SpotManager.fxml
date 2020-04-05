@@ -44,7 +44,7 @@
                         <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
                         <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
                            <tooltip>
-                              <Tooltip text="Right-click spot for removal menu." />
+                              <Tooltip text="Right-click selected spot(s) for removal menu." />
                            </tooltip>
                            <rotationAxis>
                               <Point3D />
