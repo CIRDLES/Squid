@@ -224,13 +224,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected IndexIsoptopesEnum selectedIndexIsotope;
 
-    // next 3 fields used to track user's choice of displayed deltas
+    // next 7 fields used to track user's choice of displayed options in mass audits
     protected List<MassStationDetail> massMinuends;
     protected List<MassStationDetail> massSubtrahends;
     protected boolean showTimeNormalized;
     protected boolean showPrimaryBeam;
     protected boolean showQt1y;
     protected boolean showQt1z;
+    protected boolean showSpotLabels;
 
     protected boolean squidAllowsAutoExclusionOfSpots;
 
@@ -339,6 +340,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
         this.showTimeNormalized = true; // in honor of Nicole Rayner's normal work flow
+        this.showSpotLabels = false;
 
         this.showPrimaryBeam = false;
         this.showQt1y = false;
@@ -3060,6 +3062,24 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setShowQt1z(boolean aShowQt1z) {
         showQt1z = aShowQt1z;
+    }
+
+    /**
+     * 
+     * @return showSpotLabels
+     */
+    @Override
+    public boolean isShowSpotLabels() {
+        return showSpotLabels;
+    }
+
+    /**
+     * 
+     * @param showSpotLabels 
+     */
+    @Override
+    public void setShowSpotLabels(boolean showSpotLabels) {
+        this.showSpotLabels = showSpotLabels;
     }
 
     @Override

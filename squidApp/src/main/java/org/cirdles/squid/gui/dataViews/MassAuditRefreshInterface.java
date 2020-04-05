@@ -22,6 +22,8 @@ package org.cirdles.squid.gui.dataViews;
 public interface MassAuditRefreshInterface {
     public void updateGraphsWithSelectedIndex(int index);
     
+    public void updateGraphsWithSecondSelectedIndex(int index);
+    
     public void removeSpotFromGraphs(int spotIndex);
     
     public int[] getCountOfScansCumulative();
