@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -35,19 +37,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
@@ -627,17 +622,40 @@ public class SamplesPlottingNode extends HBox {
         String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
         String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
         try {
-            File reportFile
-                    = squidProject.getPrawnFileHandler().getReportsEngine()
-                    .writeSquidWeightedMeanReportToFile(report, reportFileName, doAppend);
+            File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
             if (reportFile != null) {
-                SquidMessageDialog.showInfoDialog("File saved as:\n\n"
-                                + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
-                        primaryStageWindow);
+                BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                BooleanProperty doAppendProperty = new SimpleBooleanProperty(doAppend);
+                if(reportFile.exists() && !doAppendProperty.getValue()) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                            "It appears that a weighted means report already exists. " +
+                                    "Would you like to overwrite it?");
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                    alert.showAndWait().ifPresent(action -> {
+                        if(action == ButtonType.CANCEL) {
+                            writeReport.setValue(false);
+                        }
+                    });
+                } else if(!reportFile.exists() && doAppendProperty.getValue()) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. " +
+                            "Would you like to create a new report?");
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                    alert.showAndWait().ifPresent(action -> {
+                        if(action == ButtonType.OK) {
+                            doAppendProperty.setValue(false);
+                        }
+                    });
+                }
+                if(writeReport.getValue()) {
+                    squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
+                    SquidMessageDialog.showInfoDialog("File saved as:\n\n"
+                                    + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
+                            primaryStageWindow);
+                }
             }
         } catch (NoSuchFileException e) {
             SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
-        }catch (java.nio.file.FileSystemException e) {
+        } catch (java.nio.file.FileSystemException e) {
             SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
