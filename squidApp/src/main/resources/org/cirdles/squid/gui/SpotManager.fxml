@@ -44,7 +44,7 @@
                         <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
                         <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
                            <tooltip>
-                              <Tooltip text="Right-click spot for removal menu." />
+                              <Tooltip text="Right-click selected spot(s) for removal menu." />
                            </tooltip>
                            <rotationAxis>
                               <Point3D />
@@ -138,7 +138,7 @@
                               <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="136.0" style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                  <children>
-                                  <Button fx:id="viewRMmodelButton" mnemonicParsing="false" onAction="#viewRMmodelButton" text="View RM Model" />
+                                  <Button fx:id="viewRMmodelButton" mnemonicParsing="false" onAction="#viewRMmodelButton" text="Manage RM Model" />
                                  </children>
                               </HBox>
                               <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
@@ -217,7 +217,7 @@
                                     <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                     <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                        <children>
-                                          <Button fx:id="viewCMmodelButton" mnemonicParsing="false" onAction="#viewCMmodelButton" text="View CRM Model" />
+                                          <Button fx:id="viewCMmodelButton" mnemonicParsing="false" onAction="#viewCMmodelButton" text="Manage CRM Model" />
                                        </children>
                                     </HBox>
                                  </children>

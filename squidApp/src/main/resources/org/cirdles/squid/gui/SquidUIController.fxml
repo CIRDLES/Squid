@@ -179,7 +179,6 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Online Resources">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
                                 <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
                                 <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
                                 <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
@@ -200,6 +199,7 @@
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
+                          <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
                         <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
                   <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
