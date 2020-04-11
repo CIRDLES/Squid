@@ -150,19 +150,12 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Summary Reports">
                             <items>
-                                <Menu mnemonicParsing="false" text="Reference Materials">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false"
-                                                  onAction="#referenceMaterialSummaryReportOnAction"
-                                                  text="Reference Materials"/>
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Unknowns">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#unknownsSummaryReportOnAction"
-                                                  text="Unknowns"/>
-                                    </items>
-                                </Menu>
+                                <MenuItem mnemonicParsing="false"
+                                          onAction="#referenceMaterialSummaryReportOnAction"
+                                          text="Reference Materials"/>
+                                <MenuItem mnemonicParsing="false"
+                                          onAction="#unknownsSummaryReportOnAction"
+                                          text="Unknowns"/>
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Default Report Tables">

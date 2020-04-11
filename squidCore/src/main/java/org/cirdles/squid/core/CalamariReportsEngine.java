@@ -17,7 +17,6 @@ package org.cirdles.squid.core;
 
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.valueModels.ValueModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -27,6 +26,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 
 import java.io.*;
@@ -989,11 +989,14 @@ public class CalamariReportsEngine implements Serializable {
     public File writeSummaryReportsForUnknowns(String baseSummaryCalcName) throws IOException {
         File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
         PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        List<Expression> unknownExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
             if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
-                writeOutCSVSummaryCalc(writer, exp);
+                unknownExpressions.add(exp);
             }
         }
+        writeSummaryReportsForExpressions(unknownExpressions, writer);
+
         writer.flush();
         writer.close();
 
@@ -1003,11 +1006,14 @@ public class CalamariReportsEngine implements Serializable {
     public File writeSummaryReportsForReferenceMaterials(String baseSummaryCalcName) throws IOException {
         File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
         PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        List<Expression> refMatExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
             if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
-                writeOutCSVSummaryCalc(writer, exp);
+                refMatExpressions.add(exp);
             }
         }
+        writeSummaryReportsForExpressions(refMatExpressions, writer);
+
         writer.println("Normalize Ion Counts for SBM");
         writer.println((squidProject.getTask().isUseSBM() ? "yes" : "no") + "\n");
 
@@ -1049,6 +1055,42 @@ public class CalamariReportsEngine implements Serializable {
         writer.close();
 
         return reportFile;
+    }
+
+    private void writeSummaryReportsForExpressions(List<Expression> expressions, PrintWriter writer) {
+        List<Expression> nuSwitchedExpressions = new ArrayList<>();
+        List<Expression> builtInExpressions = new ArrayList<>();
+        List<Expression> customExpressions = new ArrayList<>();
+        List<Expression> otherExpressions = new ArrayList<>();
+
+        Map<String, List<Expression>> expressionMap = new HashMap<>(4);
+        expressionMap.put("Custom Expressions", customExpressions);
+        expressionMap.put("NU-switched Expressions with Uncts", nuSwitchedExpressions);
+        expressionMap.put("Built-In Expressions", builtInExpressions);
+        expressionMap.put("Other Expressions", otherExpressions);
+
+        expressions.forEach(exp -> {
+            if (exp.amHealthy() && exp.isSquidSwitchNU()
+                    && !exp.aliasedExpression()) {
+                nuSwitchedExpressions.add(exp);
+            } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
+                    && exp.amHealthy()
+                    && !exp.aliasedExpression()) {
+                builtInExpressions.add(exp);
+            } else if (exp.isCustom() && exp.amHealthy()) {
+                customExpressions.add(exp);
+            } else {
+                otherExpressions.add(exp);
+            }
+        });
+
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+        expressionMap.forEach((name, expList) -> {
+            writer.println(name);
+            expList.sort((exp1, exp2) -> intuitiveStringComparator.compare(exp1.getName().toUpperCase(), exp2.getName().toUpperCase()));
+            expList.forEach(exp -> writeOutCSVSummaryCalc(writer, exp));
+            writer.println();
+        });
     }
 
     private void writeOutCSVSummaryCalc(PrintWriter writer, Expression exp) {
