@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -58,6 +59,8 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
+import org.cirdles.squid.gui.dateInterpretations.Correction;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -94,6 +97,20 @@ public class CommonLeadAssignmentController implements Initializable {
 
     private static boolean suppressChangeAction = false;
 
+    @FXML
+    private RadioButton correctionNoneRB;
+    @FXML
+    private ToggleGroup correctionsToggleGroup;
+    @FXML
+    private RadioButton correction207RB;
+    @FXML
+    private RadioButton correction208RB;
+    @FXML
+    private Label biweight207Label;
+    @FXML
+    private Label biweight208Label;
+    @FXML
+    private HBox headerHBoxForCorrections;
     @FXML
     private VBox vboxMaster;
     @FXML
@@ -175,6 +192,24 @@ public class CommonLeadAssignmentController implements Initializable {
                 get(SampleAgeTypesEnum.PB8COR206_238AGE.getExpressionName());
         expPB8COR207_206AGE = squidProject.getTask().getNamedExpressionsMap().
                 get(SampleAgeTypesEnum.PB8COR207_206AGE.getExpressionName());
+    }
+
+    @FXML
+    private void correctionNoneAction(ActionEvent event) {
+        Correction.correctionNoneAction();
+        showUnknownsWithOvercountCorrections();
+    }
+
+    @FXML
+    private void correction207Action(ActionEvent event) {
+        Correction.correction207Action();
+        showUnknownsWithOvercountCorrections();
+    }
+
+    @FXML
+    private void correction208Action(ActionEvent event) {
+        Correction.correction208Action();
+        showUnknownsWithOvercountCorrections();
     }
 
     private void showUnknownsWithOvercountCorrections() {
@@ -999,5 +1034,5 @@ public class CommonLeadAssignmentController implements Initializable {
         public ParametersModel fromString(String string) {
             return null;
         }
-    };
+    }
 }
