@@ -15,19 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
-import java.text.DecimalFormat;
-import java.text.ParsePosition;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -40,8 +27,6 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
-
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -52,15 +37,12 @@ import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.gui.SquidUIController;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
-import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -69,9 +51,26 @@ import org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMean
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.SpotGroupProcessor;
+import org.cirdles.squid.utilities.FileUtilities;
+import org.cirdles.squid.utilities.OsCheck;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SamplesPlottingNode extends HBox {
@@ -212,7 +211,7 @@ public class SamplesPlottingNode extends HBox {
                     = new WeightedMeanSpotNode(shrimpFractionsDetails.get(i), i);
             fractionNodeDetailsWM.add(fractionNodeWM);
         }
-        
+
         // sort by spot index
         categorySortComboBox.getSelectionModel().selectFirst();
 
@@ -232,7 +231,7 @@ public class SamplesPlottingNode extends HBox {
 
             checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM
                     .getRejectedIndices()[((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue())
-                            .getIndexOfSpot()]);
+                    .getIndexOfSpot()]);
 
             checkBoxTreeItemWM.selectedProperty().addListener((observable, oldChoice, newChoice) -> {
                 ((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newChoice));
@@ -341,7 +340,7 @@ public class SamplesPlottingNode extends HBox {
 
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                        .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
                         if (filterInfoCheckBox.isSelected()) {
@@ -366,8 +365,8 @@ public class SamplesPlottingNode extends HBox {
                         // non-AGE case for exploration
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                        .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
-                                                selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
+                                        selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.rejectNone();
                         spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
@@ -626,31 +625,60 @@ public class SamplesPlottingNode extends HBox {
             if (reportFile != null) {
                 BooleanProperty writeReport = new SimpleBooleanProperty(true);
                 BooleanProperty doAppendProperty = new SimpleBooleanProperty(doAppend);
-                if(reportFile.exists() && !doAppendProperty.getValue()) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                            "It appears that a weighted means report already exists. " +
-                                    "Would you like to overwrite it?");
-                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                    alert.showAndWait().ifPresent(action -> {
-                        if(action == ButtonType.CANCEL) {
-                            writeReport.setValue(false);
-                        }
-                    });
-                } else if(!reportFile.exists() && doAppendProperty.getValue()) {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. " +
-                            "Would you like to create a new report?");
-                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                    alert.showAndWait().ifPresent(action -> {
-                        if(action == ButtonType.OK) {
-                            doAppendProperty.setValue(false);
-                        }
-                    });
+                boolean confirmedExists = false;
+                OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                if (reportFile.exists()) {
+                    switch (osType) {
+                        case Windows:
+                            if (!FileUtilities.isFileClosedWindows(reportFile)) {
+                                SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                writeReport.setValue(false);
+                            }
+                            break;
+                        case MacOS:
+                        case Linux:
+                            if (!FileUtilities.isFileClosedUnix(reportFile)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+                                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                alert.showAndWait().ifPresent(action -> {
+                                    if (action != ButtonType.OK) {
+                                        writeReport.setValue(false);
+                                    }
+                                });
+                                confirmedExists = true;
+                            }
+                            break;
+                    }
                 }
-                if(writeReport.getValue()) {
-                    squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
-                    SquidMessageDialog.showInfoDialog("File saved as:\n\n"
-                                    + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
-                            primaryStageWindow);
+                if (writeReport.getValue()) {
+                    if (reportFile.exists() && !doAppendProperty.getValue()) {
+                        if(!confirmedExists) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                    "It appears that a weighted means report already exists. " +
+                                            "Would you like to overwrite it?");
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.showAndWait().ifPresent(action -> {
+                                if (action == ButtonType.CANCEL) {
+                                    writeReport.setValue(false);
+                                }
+                            });
+                        }
+                    } else if (!reportFile.exists() && doAppendProperty.getValue()) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. " +
+                                "Would you like to create a new report?");
+                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                        alert.showAndWait().ifPresent(action -> {
+                            if (action == ButtonType.OK) {
+                                doAppendProperty.setValue(false);
+                            }
+                        });
+                    }
+                    if (writeReport.getValue()) {
+                        squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
+                        SquidMessageDialog.showInfoDialog("File saved as:\n\n"
+                                        + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
+                                primaryStageWindow);
+                    }
                 }
             }
         } catch (NoSuchFileException e) {
@@ -671,7 +699,6 @@ public class SamplesPlottingNode extends HBox {
     }
 
     /**
-     *
      * @param spotSummaryDetails the value of spotSummaryDetails
      */
     private void sortFractionCheckboxesByValue(SpotSummaryDetails spotSummaryDetails) {
@@ -683,11 +710,11 @@ public class SamplesPlottingNode extends HBox {
                 // Ratio case
                 double[][] resultsFromNode1
                         = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode1 = resultsFromNode1[0][0];
                 double[][] resultsFromNode2
                         = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode2 = resultsFromNode2[0][0];
             } else {
                 valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
