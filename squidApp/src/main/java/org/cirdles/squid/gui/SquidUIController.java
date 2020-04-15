@@ -215,6 +215,9 @@ public class SquidUIController implements Initializable {
     public static SquidReportTableLauncher squidReportTableLauncher;
     public static HighlightMainMenu menuHighlighter;
 
+    public static int squidProjectOriginalHash;
+    public boolean runSaveMenuDisableCheck;
+
     /**
      * Initializes the controller class.
      *
@@ -230,6 +233,8 @@ public class SquidUIController implements Initializable {
         mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
             AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
         });
+
+        initSaveMenuItemDisabling();
 
         menuHighlighter = new HighlightMainMenu();
 
@@ -275,6 +280,31 @@ public class SquidUIController implements Initializable {
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
+    }
+
+    private void initSaveMenuItemDisabling() {
+        projectMenu.setOnShown(value -> {
+            Thread thread = new Thread(() -> {
+                if (squidProject != null && runSaveMenuDisableCheck) {
+                    Runnable saveSquidProjectMenuItemAlterRunnable = null;
+                    if (squidProjectOriginalHash == squidProject.hashCode()) {
+                        if (!saveSquidProjectMenuItem.isDisable()) {
+                            saveSquidProjectMenuItemAlterRunnable = () -> {
+                                saveSquidProjectMenuItem.setDisable(true);
+                            };
+                        }
+                    } else if (saveSquidProjectMenuItem.isDisable()) {
+                        saveSquidProjectMenuItemAlterRunnable = () -> {
+                            saveSquidProjectMenuItem.setDisable(false);
+                        };
+                    }
+                    if (saveSquidProjectMenuItemAlterRunnable != null) {
+                        Platform.runLater(saveSquidProjectMenuItemAlterRunnable);
+                    }
+                }
+            });
+            thread.start();
+        });
     }
 
     public static void launchTaskManagerStatic() {
@@ -449,6 +479,7 @@ public class SquidUIController implements Initializable {
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
+        runSaveMenuDisableCheck = false;
     }
 
     @FXML
@@ -568,6 +599,8 @@ public class SquidUIController implements Initializable {
                     SquidUI.updateStageTitle(projectFile.getAbsolutePath());
                     buildProjectMenuMRU();
                     launchProjectManager();
+                    runSaveMenuDisableCheck = true;
+                    squidProjectOriginalHash = squidProject.hashCode();
                 }
 
             } catch (IOException ex) {
@@ -593,6 +626,7 @@ public class SquidUIController implements Initializable {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
             squidProject = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFileName, true);
+
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
 
@@ -607,6 +641,9 @@ public class SquidUIController implements Initializable {
 
                 // this updates output folder for reports to current version
                 CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
+
+                squidProjectOriginalHash = squidProject.hashCode();
+                runSaveMenuDisableCheck = true;
             } else {
                 saveSquidProjectMenuItem.setDisable(true);
                 SquidUI.updateStageTitle("");
@@ -638,6 +675,7 @@ public class SquidUIController implements Initializable {
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
+                squidProjectOriginalHash = squidProject.hashCode();
             } catch (IOException iOException) {
             }
         }
@@ -665,6 +703,7 @@ public class SquidUIController implements Initializable {
             });
             SquidProject.setProjectChanged(false);
             launchProjectManager();
+            squidProjectOriginalHash = squidProject.hashCode();
         }
     }
 

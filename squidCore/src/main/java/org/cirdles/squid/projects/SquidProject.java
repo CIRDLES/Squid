@@ -15,19 +15,11 @@
  */
 package org.cirdles.squid.projects;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeSet;
+import java.io.*;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
+
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
@@ -42,7 +34,6 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
@@ -824,4 +815,21 @@ public final class SquidProject implements Serializable {
         this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
     }
 
+    @Override
+    public int hashCode() {
+        /*return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
+                prawnSourceFile, prawnFile, getFilterForRefMatSpotNames(), getFilterForConcRefMatSpotNames(),
+                getSessionDurationHours(), getTask(), getFiltersForUnknownNames(), getDelimiterForUnknownNames(),
+                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());*/
+        int result = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(bos);
+            oos.writeObject(this);
+            result = Arrays.hashCode(bos.toByteArray());
+        } catch (IOException e) {
+        }
+        return result;
+        //return HashCodeBuilder.reflectionHashCode(17, 31, this, false, Object.class);
+    }
 }
