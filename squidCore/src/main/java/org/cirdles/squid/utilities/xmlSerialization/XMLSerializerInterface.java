@@ -17,10 +17,8 @@ package org.cirdles.squid.utilities.xmlSerialization;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -35,7 +33,6 @@ public interface XMLSerializerInterface {
     /**
      * Use XStream to serialize object to XML
      *
-     * @param object
      * @param filename
      */
     public default void serializeXMLObject(String filename) {
@@ -73,14 +70,16 @@ public interface XMLSerializerInterface {
      */
     public default Object readXMLObject(String filename, boolean doValidate) {
 
-        String xmlContents = null;
         Object myModelClassInstance = null;
 
         try {
-            xmlContents = new String(Files.readAllBytes(Paths.get(filename)));
+            InputStream bis = new ByteArrayInputStream(Files.readAllBytes(Paths.get(filename)));
+            Reader reader = new InputStreamReader(bis, "UTF-8");
+
             XStream xstream = new XStream(new DomDriver());
             customizeXstream(xstream);
-            myModelClassInstance = xstream.fromXML(xmlContents);
+
+            myModelClassInstance = xstream.fromXML(reader);
         } catch (IOException iOException) {
             // do nothing for now
         }
