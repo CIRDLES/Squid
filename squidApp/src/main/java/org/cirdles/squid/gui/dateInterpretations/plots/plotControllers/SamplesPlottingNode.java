@@ -629,9 +629,7 @@ public class SamplesPlottingNode extends HBox {
                 = squidProject.getPrawnFileHandler().getReportsEngine()
                         .writeSquidWeightedMeanReportToFile(report, reportFileName, doAppend);
         if (reportFile != null) {
-            SquidMessageDialog.showInfoDialog("File saved as:\n\n"
-                    + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
-                    primaryStageWindow);
+            SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
                     "Report file does not exist.\n",
