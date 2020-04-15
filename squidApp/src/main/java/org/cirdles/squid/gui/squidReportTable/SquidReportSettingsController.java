@@ -1359,10 +1359,7 @@ public class SquidReportSettingsController implements Initializable {
                 = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
 
         if (reportTableFile != null) {
-            SquidMessageDialog.showInfoDialog(
-                    "File saved as:\n\n"
-                            + SquidUIController.showLongfilePath(reportTableFile.getCanonicalPath()),
-                    primaryStageWindow);
+            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
         } else {
             SquidMessageDialog.showInfoDialog(
                     "An Error Occurred.\n",

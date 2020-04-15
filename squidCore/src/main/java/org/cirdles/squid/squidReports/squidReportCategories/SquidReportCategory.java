@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 
@@ -173,5 +175,10 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     @Override
     public String toString() {
         return displayName;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDisplayName(), getCategoryColumns(), isVisible());
     }
 }
