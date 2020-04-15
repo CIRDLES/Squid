@@ -18,6 +18,7 @@ package org.cirdles.squid.shrimp;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -85,17 +86,16 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     @Override
-    public boolean equals(Object massStationDetail) {
-        boolean retVal = false;
-        if (massStationDetail instanceof MassStationDetail) {
-            retVal = (massStationIndex == ((MassStationDetail) massStationDetail).getMassStationIndex());
-        }
-        return retVal;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MassStationDetail)) return false;
+        MassStationDetail that = (MassStationDetail) o;
+        return massStationIndex == that.massStationIndex;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return Objects.hash(massStationIndex, massStationLabel, elementLabel, isotopeLabel, taskIsotopeLabel, isBackground, centeringTimeSec, measuredTrimMasses, timesOfMeasuredTrimMasses, indicesOfScansAtMeasurementTimes, indicesOfRunsAtMeasurementTimes, uThBearingName, viewedAsGraph);
     }
 
     /**

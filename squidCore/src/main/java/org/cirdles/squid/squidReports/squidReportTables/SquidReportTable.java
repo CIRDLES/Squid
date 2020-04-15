@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
@@ -402,5 +403,10 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
      */
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getReportTableName(), getReportCategories(), isDefault(), getVersion());
     }
 }
