@@ -16,11 +16,17 @@
 package org.cirdles.squid.dialogs;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.regex.Pattern;
+
 /**
- *
  * @author James Bowring
  */
 public class SquidMessageDialog extends Alert {
@@ -30,7 +36,7 @@ public class SquidMessageDialog extends Alert {
     }
 
     //http://stackoverflow.com/questions/26341152/controlsfx-dialogs-deprecated-for-what/32618003#32618003
-    private SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
+    public SquidMessageDialog(Alert.AlertType alertType, String message, String headerText, Window owner) {
         super(alertType);
         initOwner(owner);
         setTitle("Squid3 Alert");
@@ -47,7 +53,6 @@ public class SquidMessageDialog extends Alert {
     }
 
     /**
-     *
      * @param message
      * @param owner
      */
@@ -57,13 +62,44 @@ public class SquidMessageDialog extends Alert {
     }
 
     /**
-     *
      * @param message
      * @param owner
      */
     public static void showInfoDialog(String message, Window owner) {
         Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message, "Squid3 informs you:", owner);
         alert.showAndWait();
+    }
+
+    public static void showSavedAsDialog(File file, Window owner) {
+        Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
+                showLongfilePath(file.getAbsolutePath()),
+                "File saved as:",
+                owner);
+        ButtonType openButton = new ButtonType("Open", ButtonBar.ButtonData.APPLY);
+        dialog.getButtonTypes().setAll(openButton, ButtonType.OK);
+
+        dialog.showAndWait().ifPresent(action -> {
+            if (action == openButton) {
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch (IOException e) {
+                }
+            }
+        });
+    }
+
+    public static String showLongfilePath(String path) {
+        String retVal = "";
+        String fileSeparatorPattern = Pattern.quote(File.separator);
+        String[] pathParts = path.split(fileSeparatorPattern);
+        for (int i = 0; i < pathParts.length; i++) {
+            retVal += pathParts[i] + (i < (pathParts.length - 1) ? File.separator : "") + "\n";
+            for (int j = 0; j < i; j++) {
+                retVal += "  ";
+            }
+        }
+
+        return retVal;
     }
 
 }
