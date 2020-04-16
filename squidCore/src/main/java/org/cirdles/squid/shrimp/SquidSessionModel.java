@@ -16,11 +16,7 @@
 package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  *
@@ -213,5 +209,10 @@ public class SquidSessionModel implements Serializable {
      */
     public void setConcentrationReferenceMaterialNameFilter(String concentrationReferenceMaterialNameFilter) {
         this.concentrationReferenceMaterialNameFilter = concentrationReferenceMaterialNameFilter;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSquidSpeciesModelList(), getSquidRatiosModelList(), isUseSBM(), isUserLinFits(), getIndexOfBackgroundSpecies(), getReferenceMaterialNameFilter(), getConcentrationReferenceMaterialNameFilter(), filtersForUnknownNames);
     }
 }

@@ -155,4 +155,9 @@ public class PhysicalConstantsModel extends ParametersModel {
         xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
         return xstream;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getMolarMasses());
+    }
 }

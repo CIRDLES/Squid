@@ -620,6 +620,7 @@ public class SamplesPlottingNode extends HBox {
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
         String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
         String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
+
         try {
             File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
             if (reportFile != null) {

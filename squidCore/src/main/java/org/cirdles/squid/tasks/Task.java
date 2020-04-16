@@ -23,19 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -3365,4 +3353,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.overcountCorrectionType = overcountCorrectionType;
     }
 
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName, provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies, indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames, filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames, mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList, squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved, namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions, referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots, mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet, prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst, selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized, showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots, extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel, concentrationReferenceMaterialModel, physicalConstantsModelChanged, referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged, specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum, providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName, roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+        result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
+        System.out.println(result);
+        return result;
+    }
 }
