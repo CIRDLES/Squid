@@ -17,6 +17,8 @@ package org.cirdles.squid.dialogs;
 
 import javafx.scene.control.Alert;
 
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
 
 import javafx.stage.StageStyle;

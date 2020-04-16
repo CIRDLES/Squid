@@ -676,9 +676,7 @@ public class SamplesPlottingNode extends HBox {
                     }
                     if (writeReport.getValue()) {
                         squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
-                        SquidMessageDialog.showInfoDialog("File saved as:\n\n"
-                                        + SquidUIController.showLongfilePath(reportFile.getCanonicalPath()),
-                                primaryStageWindow);
+                        SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
                     }
                 }
             }
