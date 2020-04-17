@@ -68,23 +68,15 @@ import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -192,6 +184,42 @@ public class CommonLeadAssignmentController implements Initializable {
                 get(SampleAgeTypesEnum.PB8COR206_238AGE.getExpressionName());
         expPB8COR207_206AGE = squidProject.getTask().getNamedExpressionsMap().
                 get(SampleAgeTypesEnum.PB8COR207_206AGE.getExpressionName());
+
+        switch (squidProject.getTask().getOvercountCorrectionType()) {
+            case NONE:
+                correctionNoneRB.setSelected(true);
+                break;
+            case FR_207:
+                correction207RB.setSelected(true);
+                break;
+            case FR_208:
+                correction208RB.setSelected(true);
+        }
+        setUpHeader();
+    }
+
+    public void setUpHeader() {
+        SpotSummaryDetails spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_207);
+        double biWeight = spotSummaryDetails.getValues()[0][0];
+        double conf95 = spotSummaryDetails.getValues()[0][2];
+
+        Formatter formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+
+        spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
+        biWeight = spotSummaryDetails.getValues()[0][0];
+        conf95 = spotSummaryDetails.getValues()[0][2];
+
+        formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
     }
 
     @FXML
