@@ -16,8 +16,11 @@
 package org.cirdles.squid.dialogs;
 
 import javafx.scene.control.Alert;
+
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.Region;
+
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
@@ -49,7 +52,6 @@ public class SquidMessageDialog extends Alert {
         }
         getDialogPane().setPrefSize(750, 150 + countOfNewLines * 20);
         getDialogPane().setStyle(getDialogPane().getStyle() + ";-fx-font-family: SansSerif Bold;-fx-font-size: 15");
-
     }
 
     /**
