@@ -22,11 +22,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ryanb
@@ -323,5 +319,12 @@ public abstract class ParametersModel implements
 
     public void setIsEditable(boolean isEditable) {
         this.isEditable = isEditable;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getModelName(), getLabName(), getVersion(), getDateCertified(), getComments(), getReferences(), getCorrModel(), getCovModel(), getRhos(), isEditable());
+        result = 31 * result + Arrays.hashCode(getValues());
+        return result;
     }
 }

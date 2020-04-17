@@ -17,7 +17,10 @@ package org.cirdles.squid.tasks.expressions.spots;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -199,5 +202,13 @@ public class SpotSummaryDetails implements Serializable {
      */
     public void setSelectedExpressionName(String selectedExpressionName) {
         this.selectedExpressionName = selectedExpressionName;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getSelectedSpots(), getExpressionTree(), isManualRejectionEnabled(), getMinProbabilityWM(), getSelectedExpressionName());
+        result = 31 * result + Arrays.hashCode(getValues());
+        result = 31 * result + Arrays.hashCode(getRejectedIndices());
+        return result;
     }
 }

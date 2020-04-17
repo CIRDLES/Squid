@@ -437,4 +437,12 @@ public class ReferenceMaterialModel extends ParametersModel {
         return model;
     }
 
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(super.hashCode(), getParDerivTerms(), isReferenceDates());
+        result = 31 * result + Arrays.hashCode(getConcentrations());
+        result = 31 * result + Arrays.hashCode(getDataMeasured());
+        result = 31 * result + Arrays.hashCode(getDates());
+        return result;
+    }
 }

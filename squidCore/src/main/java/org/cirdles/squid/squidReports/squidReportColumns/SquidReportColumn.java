@@ -30,6 +30,7 @@ import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
@@ -456,12 +457,13 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     public String toString() {
         return expressionName;
     }
-    
-    public static void main(String[] args) {
-        SquidReportColumnInterface col = new SquidReportColumn(R204PB_206PB);
-        col.serializeXMLObject("TEST.xml");
-        
-        SquidReportColumnInterface col2 = (SquidReportColumn)col.readXMLObject("TEST.xml", false);
-        System.out.println(col2.getExpressionName());
+
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(expTree, amIsotopicRatio, getExpressionName(), getUnits(), getUncertaintyColumn(), isAmUncertaintyColumn(), getUncertaintyDirective(), getCountOfSignificantDigits(), isVisible(), getFootnoteSpec());
+        result = 31 * result + Arrays.hashCode(getColumnHeaders());
+        return result;
+
     }
 }
