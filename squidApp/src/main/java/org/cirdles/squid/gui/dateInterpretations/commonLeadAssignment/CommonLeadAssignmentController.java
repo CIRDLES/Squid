@@ -163,8 +163,19 @@ public class CommonLeadAssignmentController implements Initializable {
 
         showUnknownsWithOvercountCorrections();
 
-        setUpFooter();
+        switch (squidProject.getTask().getOvercountCorrectionType()) {
+            case NONE:
+                correctionNoneRB.setSelected(true);
+                break;
+            case FR_207:
+                correction207RB.setSelected(true);
+                break;
+            case FR_208:
+                correction208RB.setSelected(true);
+        }
 
+        setUpHeader();
+        setUpFooter();
     }
 
     private void setupAgeTypes() {
@@ -184,18 +195,6 @@ public class CommonLeadAssignmentController implements Initializable {
                 get(SampleAgeTypesEnum.PB8COR206_238AGE.getExpressionName());
         expPB8COR207_206AGE = squidProject.getTask().getNamedExpressionsMap().
                 get(SampleAgeTypesEnum.PB8COR207_206AGE.getExpressionName());
-
-        switch (squidProject.getTask().getOvercountCorrectionType()) {
-            case NONE:
-                correctionNoneRB.setSelected(true);
-                break;
-            case FR_207:
-                correction207RB.setSelected(true);
-                break;
-            case FR_208:
-                correction208RB.setSelected(true);
-        }
-        setUpHeader();
     }
 
     public void setUpHeader() {
