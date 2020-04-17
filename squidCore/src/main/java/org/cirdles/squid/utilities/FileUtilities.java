@@ -8,8 +8,10 @@ package org.cirdles.squid.utilities;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.FileWriteMode;
 //import com.google.common.io.Files;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,6 +62,31 @@ public class FileUtilities {
                 .sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
+    }
+
+    public static boolean isFileClosedWindows(File file) {
+        return file.renameTo(file);
+    }
+
+    public static boolean isFileClosedUnix(File file) {
+        try {
+            Process plsof = new ProcessBuilder(new String[]{"lsof", "|", "grep", file.getAbsolutePath()}).start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(plsof.getInputStream()));
+            String line;
+            while((line=reader.readLine())!=null) {
+                if(line.contains(file.getAbsolutePath())) {
+                    reader.close();
+                    plsof.destroy();
+                    return false;
+                }
+            }
+            reader.close();
+            plsof.destroy();
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
     }
 
     public static void unpackZipFile(final File archive, final File targetDirectory)

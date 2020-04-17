@@ -1153,39 +1153,44 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
-    public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
-            throws IOException {
-        String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
+    public String getWeightedMeansReportPath() throws IOException {
+        return
+                folderToWriteCalamariReports.getCanonicalPath()
                 + File.separator + "PROJECT-" + squidProject.getProjectName()
                 + File.separator + "TASK-" + squidProject.getTask().getName()
                 + File.separator + "REPORTS-per-Squid3"
                 + File.separator;
+    }
+
+    public File getWeightedMeansReportFile(String baseReportTableName) throws IOException {
+        String reportsPath = getWeightedMeansReportPath();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
-
-        File reportTableFile = null;
+        reportsFolder.mkdirs();
         Path reportPath = Paths.get(reportsPath + baseReportTableName);
-        if (!doAppend && reportPath.toFile().exists()) {
-            reportPath.toFile().delete();
-        }
-        try {
-            OutputStream out = new BufferedOutputStream(Files.newOutputStream(reportPath,
-                    (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-            if (!doAppend) {
-                out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
-            }
-            out.write((weightedMeanReport + System.lineSeparator()).getBytes());
-            out.flush();
-            out.close();
-            reportTableFile = reportPath.toFile();
 
-        } catch (IOException iOException) {
-        }
+        return reportPath.toFile();
+    }
 
+
+    public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
+            throws IOException {
+        File reportTableFile = getWeightedMeansReportFile(baseReportTableName);
+        writeSquidWeightedMeanReportToFile(weightedMeanReport, reportTableFile, doAppend);
         return reportTableFile;
+    }
+
+    public void writeSquidWeightedMeanReportToFile(String weightedMeanReport, File reportTableFile, boolean doAppend) throws IOException {
+        if (!doAppend && reportTableFile.exists()){
+            reportTableFile.delete();
+        }
+        OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(reportTableFile.getAbsolutePath()),
+                (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
+        if (!doAppend){
+            out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
+        }
+        out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+        out.flush();
+        out.close();
     }
 
     /**
