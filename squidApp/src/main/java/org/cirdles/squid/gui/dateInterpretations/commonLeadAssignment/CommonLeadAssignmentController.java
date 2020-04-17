@@ -130,13 +130,16 @@ public class CommonLeadAssignmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // update 
+        init();
+    }
+
+    private void init() {
+        // update
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         spotsTreeViewCommonLeadTools.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         spotsTreeViewCommonLeadTools.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight() + footerHBox.getPrefHeight()));
-
         // prime StaceyKramer
         StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
         StaceyKramerCommonLeadModel.updateU_Ratio(
@@ -144,7 +147,7 @@ public class CommonLeadAssignmentController implements Initializable {
 
         setupAgeTypes();
 
-        // set up groups and refresh calculations       
+        // set up groups and refresh calculations
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
         // case of sample names chosen
         if (mapOfSpotsBySampleNames.size() > 1) {
@@ -224,19 +227,19 @@ public class CommonLeadAssignmentController implements Initializable {
     @FXML
     private void correctionNoneAction(ActionEvent event) {
         Correction.correctionNoneAction();
-        showUnknownsWithOvercountCorrections();
+        init();
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
         Correction.correction207Action();
-        showUnknownsWithOvercountCorrections();
+        init();
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
         Correction.correction208Action();
-        showUnknownsWithOvercountCorrections();
+        init();
     }
 
     private void showUnknownsWithOvercountCorrections() {
