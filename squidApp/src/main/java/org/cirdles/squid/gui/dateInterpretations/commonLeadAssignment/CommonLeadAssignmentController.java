@@ -25,6 +25,7 @@ import java.util.TreeMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -58,6 +59,8 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
+import org.cirdles.squid.gui.dateInterpretations.Correction;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -65,23 +68,15 @@ import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -94,6 +89,20 @@ public class CommonLeadAssignmentController implements Initializable {
 
     private static boolean suppressChangeAction = false;
 
+    @FXML
+    private RadioButton correctionNoneRB;
+    @FXML
+    private ToggleGroup correctionsToggleGroup;
+    @FXML
+    private RadioButton correction207RB;
+    @FXML
+    private RadioButton correction208RB;
+    @FXML
+    private Label biweight207Label;
+    @FXML
+    private Label biweight208Label;
+    @FXML
+    private HBox headerHBoxForCorrections;
     @FXML
     private VBox vboxMaster;
     @FXML
@@ -121,13 +130,16 @@ public class CommonLeadAssignmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // update 
+        init();
+    }
+
+    private void init() {
+        // update
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
         spotsTreeViewCommonLeadTools.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         spotsTreeViewCommonLeadTools.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight() + footerHBox.getPrefHeight()));
-
         // prime StaceyKramer
         StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
         StaceyKramerCommonLeadModel.updateU_Ratio(
@@ -135,7 +147,7 @@ public class CommonLeadAssignmentController implements Initializable {
 
         setupAgeTypes();
 
-        // set up groups and refresh calculations       
+        // set up groups and refresh calculations
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
         // case of sample names chosen
         if (mapOfSpotsBySampleNames.size() > 1) {
@@ -154,8 +166,19 @@ public class CommonLeadAssignmentController implements Initializable {
 
         showUnknownsWithOvercountCorrections();
 
-        setUpFooter();
+        switch (squidProject.getTask().getOvercountCorrectionType()) {
+            case NONE:
+                correctionNoneRB.setSelected(true);
+                break;
+            case FR_207:
+                correction207RB.setSelected(true);
+                break;
+            case FR_208:
+                correction208RB.setSelected(true);
+        }
 
+        setUpHeader();
+        setUpFooter();
     }
 
     private void setupAgeTypes() {
@@ -175,6 +198,48 @@ public class CommonLeadAssignmentController implements Initializable {
                 get(SampleAgeTypesEnum.PB8COR206_238AGE.getExpressionName());
         expPB8COR207_206AGE = squidProject.getTask().getNamedExpressionsMap().
                 get(SampleAgeTypesEnum.PB8COR207_206AGE.getExpressionName());
+    }
+
+    public void setUpHeader() {
+        SpotSummaryDetails spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_207);
+        double biWeight = spotSummaryDetails.getValues()[0][0];
+        double conf95 = spotSummaryDetails.getValues()[0][2];
+
+        Formatter formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+
+        spotSummaryDetails
+                = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
+        biWeight = spotSummaryDetails.getValues()[0][0];
+        conf95 = spotSummaryDetails.getValues()[0][2];
+
+        formatter = new Formatter();
+        formatter.format("%5.5f", biWeight);
+        formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
+
+        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+    }
+
+    @FXML
+    private void correctionNoneAction(ActionEvent event) {
+        Correction.correctionNoneAction();
+        init();
+    }
+
+    @FXML
+    private void correction207Action(ActionEvent event) {
+        Correction.correction207Action();
+        init();
+    }
+
+    @FXML
+    private void correction208Action(ActionEvent event) {
+        Correction.correction208Action();
+        init();
     }
 
     private void showUnknownsWithOvercountCorrections() {
@@ -999,5 +1064,5 @@ public class CommonLeadAssignmentController implements Initializable {
         public ParametersModel fromString(String string) {
             return null;
         }
-    };
+    }
 }
