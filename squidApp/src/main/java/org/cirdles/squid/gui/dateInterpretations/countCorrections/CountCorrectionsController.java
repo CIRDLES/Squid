@@ -40,6 +40,8 @@ import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECT
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
+import org.cirdles.squid.gui.dateInterpretations.Correction;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -221,28 +223,19 @@ public class CountCorrectionsController implements Initializable {
 
     @FXML
     private void correctionNoneAction(ActionEvent event) {
-        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
-        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOriginal204_206();
-        SquidProject.setProjectChanged(true);
-        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
+        Correction.correctionNoneAction();
         updateColumnBold(true, false, false);
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
-        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_207);
-        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
-        SquidProject.setProjectChanged(true);
-        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
+        Correction.correction207Action();
         updateColumnBold(false, true, false);
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
-        squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_208);
-        ((Task) squidProject.getTask()).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
-        SquidProject.setProjectChanged(true);
-        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(squidProject.getTask().getUnknownSpots());
+        Correction.correction208Action();
         updateColumnBold(false, false, true);
     }
 }
