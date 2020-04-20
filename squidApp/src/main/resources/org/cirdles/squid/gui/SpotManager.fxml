@@ -128,7 +128,8 @@
                               <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="172.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="Select Isotopic RM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
@@ -138,12 +139,17 @@
                               <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="136.0" style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                  <children>
-                                  <Button fx:id="viewRMmodelButton" mnemonicParsing="false" onAction="#viewRMmodelButton" text="Manage RM Model" />
+                                  <Button fx:id="viewRMmodelButton" minWidth="172.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="172.0" text="Manage RM Model" />
                                  </children>
                               </HBox>
                               <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                               <Label fx:id="pb207Pb206AgeLabel" prefHeight="31.0" prefWidth="104.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                               <Label fx:id="pb208Th232AgeLabel" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="7">
+                                 <children>
+                                    <Button fx:id="refreshRMmodelButton" minWidth="172.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="172.0" text="Refresh RM Model" />
+                                 </children>
+                              </HBox>
                            </children>
                         </GridPane>
                      </children>
@@ -206,6 +212,7 @@
                                     <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="172.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
@@ -217,7 +224,12 @@
                                     <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                     <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                        <children>
-                                          <Button fx:id="viewCMmodelButton" mnemonicParsing="false" onAction="#viewCMmodelButton" text="Manage CRM Model" />
+                                          <Button fx:id="viewCMmodelButton" minWidth="183.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="183.0" text="Manage CRM Model" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
+                                       <children>
+                                          <Button fx:id="refreshRMmodelButton2" minWidth="183.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="183.0" text="Refresh CRM Model" />
                                        </children>
                                     </HBox>
                                  </children>

@@ -850,22 +850,43 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    /**
+     *
+     * @param refreshCommonLeadModel the value of refreshCommonLeadModel
+     * @param refreshPhysicalConstantsModel the value of
+     * refreshPhysicalConstantsModel
+     * @param refreshReferenceMaterialsModel the value of
+     * refreshReferenceMaterialsModel
+     */
     @Override
-    public void refreshParametersFromModels() {
-        List<ParametersModel> models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
-        commonPbModel = findModelByName(models, commonPbModel);
-        commonPbModelChanged = true;
+    public void refreshParametersFromModels(
+            boolean refreshCommonLeadModel,
+            boolean refreshPhysicalConstantsModel,
+            boolean refreshReferenceMaterialsModel) {
 
-        models = SquidLabData.getExistingSquidLabData().getPhysicalConstantsModels();
-        physicalConstantsModel = findModelByName(models, physicalConstantsModel);
-        physicalConstantsModelChanged = true;
+        List<ParametersModel> models = null;
 
-//        models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
-//        referenceMaterialModel = findModelByName(models, referenceMaterialModel);
-//        referenceMaterialModelChanged = true;
-//
-//        concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
-//        concentrationReferenceMaterialModelChanged = true;
+        if (refreshCommonLeadModel) {
+            models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
+            commonPbModel = findModelByName(models, commonPbModel);
+            commonPbModelChanged = true;
+        }
+
+        if (refreshPhysicalConstantsModel) {
+            models = SquidLabData.getExistingSquidLabData().getPhysicalConstantsModels();
+            physicalConstantsModel = findModelByName(models, physicalConstantsModel);
+            physicalConstantsModelChanged = true;
+        }
+
+        if (refreshReferenceMaterialsModel) {
+            models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
+            referenceMaterialModel = findModelByName(models, referenceMaterialModel);
+            referenceMaterialModelChanged = true;
+
+            concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
+            concentrationReferenceMaterialModelChanged = true;
+        }
+
         updateParametersFromModels();
     }
 
@@ -3053,7 +3074,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * 
+     *
      * @return showSpotLabels
      */
     @Override
@@ -3062,8 +3083,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * 
-     * @param showSpotLabels 
+     *
+     * @param showSpotLabels
      */
     @Override
     public void setShowSpotLabels(boolean showSpotLabels) {
