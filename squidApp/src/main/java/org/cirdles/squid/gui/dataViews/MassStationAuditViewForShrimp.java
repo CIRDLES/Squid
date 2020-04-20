@@ -291,13 +291,13 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         // legend background
         g2d.setFill(Color.rgb(255, 239, 213, 0.75));
-        g2d.fillRect(3, 35, 125, 47);
+        g2d.fillRect(3, 35, 105, 47);
         // legend
         g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("SansSerif", 10));
         g2d.fillText("Mouse:", 5, 45);
         g2d.fillText(" left = select spot", 5, 55);
-        g2d.fillText(" shift + left = select 2nd spot", 5, 65);
+        g2d.fillText(" shift + left = select 2nd", 5, 65);
         g2d.fillText(" right = spot menu", 5, 75);
 
         // selection rectangle and labels

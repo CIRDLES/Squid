@@ -692,7 +692,13 @@ public interface TaskInterface {
 
     public void generateMapOfUnknownsBySampleNames();
 
-    public void refreshParametersFromModels();
+    /**
+     *
+     * @param refreshCommonLeadModel the value of refreshCommonLeadModel
+     * @param refreshPhysicalConstantsModel the value of refreshPhysicalConstantsModel
+     * @param refreshReferenceMaterialsModel the value of refreshReferenceMaterialsModel
+     */
+    public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel);
 
     /**
      * @return the missingExpressionsByName

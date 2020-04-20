@@ -507,7 +507,7 @@ public class TaskManagerController implements Initializable {
 
     @FXML
     private void refreshModelsAction(ActionEvent event) {
-        task.refreshParametersFromModels();
+        task.refreshParametersFromModels(true, true, false);
     }
 
 }

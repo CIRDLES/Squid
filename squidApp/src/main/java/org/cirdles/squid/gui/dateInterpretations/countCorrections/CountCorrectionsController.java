@@ -41,14 +41,12 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
-import org.cirdles.squid.gui.dateInterpretations.Correction;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
 
 /**
  * FXML Controller class
@@ -223,19 +221,19 @@ public class CountCorrectionsController implements Initializable {
 
     @FXML
     private void correctionNoneAction(ActionEvent event) {
-        Correction.correctionNoneAction();
+        OvercountCorrection.correctionNone(squidProject.getTask());
         updateColumnBold(true, false, false);
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
-        Correction.correction207Action();
+        OvercountCorrection.correction207(squidProject.getTask());
         updateColumnBold(false, true, false);
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
-        Correction.correction208Action();
+        OvercountCorrection.correction208(squidProject.getTask());
         updateColumnBold(false, false, true);
     }
 }
