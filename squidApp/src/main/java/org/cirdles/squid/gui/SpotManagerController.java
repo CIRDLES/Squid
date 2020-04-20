@@ -130,6 +130,10 @@ public class SpotManagerController implements Initializable {
     private Button viewCMmodelButton;
     @FXML
     private ComboBox<String> sampleNameComboBox;
+    @FXML
+    private Button refreshRMmodelButton;
+    @FXML
+    private Button refreshRMmodelButton2;
 
     /**
      * Initializes the controller class.
@@ -261,14 +265,14 @@ public class SpotManagerController implements Initializable {
             throws SquidException {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Remove selected spot(s).");
-        menuItem.setOnAction ((evt) -> {
+        menuItem.setOnAction((evt) -> {
             List<PrawnFile.Run> selectedRuns = shrimpFractionList.getSelectionModel().getSelectedItems();
             squidProject.removeRunsFromPrawnFile(selectedRuns);
-            
+
             try {
                 setUpPrawnFile();
             } catch (SquidException squidException) {
-               
+
             }
             squidProject.generatePrefixTreeFromSpotNames();
             squidProject.setProjectChanged(true);
@@ -388,20 +392,23 @@ public class SpotManagerController implements Initializable {
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    pbb206U238AgeLabel.setText(
-                            ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName())
-                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                    pb207Pb206AgeLabel.setText(
-                            ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName())
-                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                    pb208Th232AgeLabel.setText(
-                            ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName())
-                                    .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    if (newValue != null) {
+                        pbb206U238AgeLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName())
+                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        pb207Pb206AgeLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName())
+                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        pb208Th232AgeLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName())
+                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
 
-                    squidProject.setReferenceMaterialModel(newValue);
-                    squidProject.getTask().setChanged(true);
+                        squidProject.setReferenceMaterialModel(newValue);
+                        squidProject.getTask().setChanged(true);
 
-                    viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+                        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+                        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+                    }
                 });
 
         updateViewRM();
@@ -412,17 +419,20 @@ public class SpotManagerController implements Initializable {
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    uPpmLabel.setText(
-                            ((ReferenceMaterialModel) newValue).getConcentrationByName("concU")
-                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
-                    thPpmLabel.setText(
-                            ((ReferenceMaterialModel) newValue).getConcentrationByName("concTh")
-                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+                    if (newValue != null) {
+                        uPpmLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getConcentrationByName("concU")
+                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+                        thPpmLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getConcentrationByName("concTh")
+                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
-                    squidProject.setConcentrationReferenceMaterialModel(newValue);
-                    squidProject.getTask().setChanged(true);
+                        squidProject.setConcentrationReferenceMaterialModel(newValue);
+                        squidProject.getTask().setChanged(true);
 
-                    viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+                        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+                        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+                    }
                 });
 
         updateViewCM();
@@ -487,17 +497,25 @@ public class SpotManagerController implements Initializable {
     }
 
     private void updateViewRM() {
+        refMatModelComboBox.getSelectionModel().clearSelection();
         refMatModelComboBox.getSelectionModel().select(squidProject.getReferenceMaterialModel());
         refMatModelComboBox.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
         viewRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
         viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+
+        refreshRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
+        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
     }
 
     private void updateViewCM() {
+        concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
         concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
         viewCMmodelButton.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
         viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+
+        refreshRMmodelButton2.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
@@ -547,11 +565,22 @@ public class SpotManagerController implements Initializable {
     private void viewRMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        squidProject.getTask().refreshParametersFromModels(false, false, true);
+        updateViewRM();
     }
 
     @FXML
     private void viewCMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        squidProject.getTask().refreshParametersFromModels(false, false, true);
+        updateViewCM();
+    }
+
+    @FXML
+    private void refreshRMmodelButton(ActionEvent event) {
+        squidProject.getTask().refreshParametersFromModels(false, false, true);
+        updateViewRM();
+        updateViewCM();
     }
 }

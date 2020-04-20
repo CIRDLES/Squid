@@ -60,7 +60,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
-import org.cirdles.squid.gui.dateInterpretations.Correction;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -77,6 +76,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
+import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -226,19 +226,19 @@ public class CommonLeadAssignmentController implements Initializable {
 
     @FXML
     private void correctionNoneAction(ActionEvent event) {
-        Correction.correctionNoneAction();
+        OvercountCorrection.correctionNone(squidProject.getTask());
         init();
     }
 
     @FXML
     private void correction207Action(ActionEvent event) {
-        Correction.correction207Action();
+        OvercountCorrection.correction207(squidProject.getTask());
         init();
     }
 
     @FXML
     private void correction208Action(ActionEvent event) {
-        Correction.correction208Action();
+        OvercountCorrection.correction208(squidProject.getTask());
         init();
     }
 
