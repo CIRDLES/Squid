@@ -658,7 +658,7 @@ public class TaskDesignerController implements Initializable {
         // does double duty setting labdata defaults
 
         // PhysicalConstantsModels
-        physConstModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        physConstModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
         physConstModelComboBox.getSelectionModel().select(taskDesigner.getPhysicalConstantsModel());
 
@@ -672,7 +672,7 @@ public class TaskDesignerController implements Initializable {
                 });
 
         // CommonPbModels
-        commonPbModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        commonPbModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
         commonPbModelComboBox.getSelectionModel().select(taskDesigner.getCommonPbModel());
 
