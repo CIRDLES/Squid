@@ -59,8 +59,8 @@
                    promptText="name and location of project '.squid' file will appear here"
                    style="-fx-font-family: SansSerif; -fx-font-size: 13;" GridPane.columnIndex="1"
                    GridPane.rowIndex="2"/>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Session:" GridPane.rowIndex="5"/>
-        <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Session:" GridPane.rowIndex="6"/>
+        <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS">
             <VBox>
                 <children>
                     <Label fx:id="loginCommentLabel" text="Login Comment:"/>
@@ -81,8 +81,8 @@
     </children>
     <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0"
            style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:"
-           GridPane.rowIndex="6"/>
-    <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+           GridPane.rowIndex="5"/>
+    <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0" prefWidth="210.0"/>
             <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0"/>
@@ -190,6 +190,8 @@
             <Label alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="195.0" style="-fx-font-size: 14;"
                    text="Parameter Models:" GridPane.rowIndex="5"/>
         </children>
+        <Button GridPane.columnIndex="0" GridPane.rowIndex="6" fx:id="parametersSetDefaultsButton" text="Set Defaults"
+                onAction="#parametersSetDefaultsOnAction"/>
     </GridPane>
     <padding>
         <Insets bottom="15.0" left="20.0" right="20.0" top="1.0"/>

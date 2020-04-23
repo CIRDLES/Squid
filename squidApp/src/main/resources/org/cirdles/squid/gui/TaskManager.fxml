@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -14,9 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
@@ -27,8 +22,6 @@
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints valignment="CENTER" vgrow="NEVER" />
     <RowConstraints valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints valignment="TOP" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
     <RowConstraints valignment="TOP" vgrow="SOMETIMES" />
   </rowConstraints>
@@ -58,20 +51,15 @@
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Provenance:" GridPane.rowIndex="4" />
       <TextField fx:id="provenanceTextField" promptText="Provenance" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <VBox GridPane.rowIndex="6">
-         <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
-         </children>
-      </VBox>
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Audit:" GridPane.rowIndex="8" />
-      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Audit:" GridPane.rowIndex="6" />
+      <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
             <Label fx:id="titleLabel" style="-fx-font-size: 14;" text="Task &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />
          </children>
       </HBox>
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" GridPane.rowIndex="7" />
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="7">
+      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" GridPane.rowIndex="5" />
+      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
@@ -174,13 +162,6 @@
             </HBox>
          </children>
       </GridPane>
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Samples:" GridPane.rowIndex="5" />
-      <HBox alignment="CENTER_LEFT" prefHeight="30.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-         <children>
-            <Label prefHeight="28.0" prefWidth="240.0" style="-fx-font-size: 14;" text="Select Name Delimiter OR # Chars:  " />
-            <ComboBox fx:id="delimiterComboBox" prefHeight="28.0" prefWidth="65.0" style="-fx-font-size: 14; -fx-font-weight: bold;" />
-         </children>
-      </HBox>
    </children>
    <padding>
       <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
