@@ -1097,7 +1097,11 @@ public class CalamariReportsEngine implements Serializable {
         if (exp != null && writer != null) {
             SpotSummaryDetails spotSummary = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             if (spotSummary != null) {
-                writer.println(exp.getName());
+                if(exp.getName().toLowerCase().contains("age")) {
+
+                } else {
+                    writer.println(exp.getName() + " | Note: " + exp.getNotes());
+                }
                 writer.println(String.join(", ", ((ExpressionTree) exp.getExpressionTree()).getOperation().getLabelsForOutputValues()[0]));
                 String values = "";
                 for (double val : spotSummary.getValues()[0]) {
