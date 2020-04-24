@@ -1097,15 +1097,16 @@ public class CalamariReportsEngine implements Serializable {
         if (exp != null && writer != null) {
             SpotSummaryDetails spotSummary = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(exp.getExpressionTree().getName());
             if (spotSummary != null) {
-                if(exp.getName().toLowerCase().contains("age")) {
-
+                boolean isAge = exp.getName().toLowerCase(Locale.ENGLISH).contains("age");
+                if (isAge) {
+                    writer.println(exp.getName() + " (Ma) | Note: " + exp.getNotes());
                 } else {
                     writer.println(exp.getName() + " | Note: " + exp.getNotes());
                 }
                 writer.println(String.join(", ", ((ExpressionTree) exp.getExpressionTree()).getOperation().getLabelsForOutputValues()[0]));
                 String values = "";
                 for (double val : spotSummary.getValues()[0]) {
-                    values += val + ", ";
+                    values += (isAge ? val * 1.0e-6 + " (Ma)" : val) + ", ";
                 }
                 if (!values.isEmpty()) {
                     values = values.substring(0, values.length() - 2);
@@ -1160,10 +1161,10 @@ public class CalamariReportsEngine implements Serializable {
     public String getWeightedMeansReportPath() throws IOException {
         return
                 folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator + "REPORTS-per-Squid3"
-                + File.separator;
+                        + File.separator + "PROJECT-" + squidProject.getProjectName()
+                        + File.separator + "TASK-" + squidProject.getTask().getName()
+                        + File.separator + "REPORTS-per-Squid3"
+                        + File.separator;
     }
 
     public File getWeightedMeansReportFile(String baseReportTableName) throws IOException {
@@ -1184,12 +1185,12 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     public void writeSquidWeightedMeanReportToFile(String weightedMeanReport, File reportTableFile, boolean doAppend) throws IOException {
-        if (!doAppend && reportTableFile.exists()){
+        if (!doAppend && reportTableFile.exists()) {
             reportTableFile.delete();
         }
         OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(reportTableFile.getAbsolutePath()),
                 (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-        if (!doAppend){
+        if (!doAppend) {
             out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
         }
         out.write((weightedMeanReport + System.lineSeparator()).getBytes());
