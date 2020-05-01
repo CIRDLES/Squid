@@ -387,7 +387,7 @@ public class SpotManagerController implements Initializable {
 
     private void setUpParametersModelsComboBoxes() {
         // ReferenceMaterials
-        refMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        refMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
 
         refMatModelComboBox.valueProperty()
@@ -414,7 +414,7 @@ public class SpotManagerController implements Initializable {
         updateViewRM();
 
         // ConcentrationReferenceMaterials
-        concRefMatModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
+        concRefMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
 
         concRefMatModelComboBox.valueProperty()
