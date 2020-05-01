@@ -15,25 +15,27 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
-import java.io.File;
-import java.io.IOException;
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import org.cirdles.squid.core.PrawnXMLFileHandler;
-import org.cirdles.squid.prawn.PrawnFile;
-import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
-import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
+import org.cirdles.squid.utilities.FileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
- *
  * @author bowring
  */
 public class CalamariFileUtilities {
