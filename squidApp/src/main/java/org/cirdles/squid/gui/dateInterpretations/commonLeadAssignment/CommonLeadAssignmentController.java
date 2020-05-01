@@ -15,13 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.commonLeadAssignment;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -33,18 +26,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -52,31 +37,29 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import static org.cirdles.squid.gui.SquidUIController.squidLabData;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
+
+import java.net.URL;
+import java.util.*;
+
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.gui.SquidUI.*;
+import static org.cirdles.squid.gui.SquidUIController.squidLabData;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -139,7 +122,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         spotsTreeViewCommonLeadTools.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         spotsTreeViewCommonLeadTools.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
-                .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight() + footerHBox.getPrefHeight()));
+                .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight() + headerHBoxForCorrections.getPrefHeight()
+                        + footerHBox.getPrefHeight()));
         // prime StaceyKramer
         StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
         StaceyKramerCommonLeadModel.updateU_Ratio(
@@ -246,8 +230,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         CommonLeadSampleTreeInterface toolBarSampleType
                 = new CommonLeadSampleToolBar(
-                        Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
-                        mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
+                Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
+                mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
         toolBarSampleType.getCommonLeadModels().disableProperty().setValue(true);
         TreeItem<CommonLeadSampleTreeInterface> rootItemSamples = new TreeItem<>(toolBarSampleType);
 
@@ -442,10 +426,9 @@ public class CommonLeadAssignmentController implements Initializable {
         }
 
         /**
-         *
          * @param label the value of label
          * @param value the value of value
-         * @param unct the value of unct
+         * @param unct  the value of unct
          */
         private void addVboxFactory(String label, double value, double unct) {
             boolean fontIsBold = false;
@@ -924,10 +907,9 @@ public class CommonLeadAssignmentController implements Initializable {
         }
 
         /**
-         *
          * @param sampleGroupName the value of sampleGroupName
-         * @param sampleAgeType the value of sampleAgeType
-         * @param corrString the value of corrString
+         * @param sampleAgeType   the value of sampleAgeType
+         * @param corrString      the value of corrString
          */
         private RadioButton ageRadioButtonFactory(String sampleGroupName, SampleAgeTypesEnum sampleAgeType, String corrString) {
             RadioButton ageRB = new RadioButton(corrString + "\n" + sampleAgeType.getExpressionName().replace(corrString, ""));
