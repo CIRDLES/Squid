@@ -27,8 +27,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -38,15 +36,11 @@ import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -66,15 +60,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
@@ -121,32 +111,6 @@ public class TaskDesignerController implements Initializable {
     @FXML
     private TextField labNameTextField;
     @FXML
-    private RadioButton pb204RadioButton;
-    @FXML
-    private ToggleGroup toggleGroupIsotope;
-    @FXML
-    private RadioButton pb207RadioButton;
-    @FXML
-    private RadioButton pb208RadioButton;
-    @FXML
-    private RadioButton yesSBMRadioButton;
-    @FXML
-    private ToggleGroup toggleGroupSMB;
-    @FXML
-    private RadioButton noSBMRadioButton;
-    @FXML
-    private RadioButton linearRegressionRatioCalcRadioButton;
-    @FXML
-    private ToggleGroup toggleGroupRatioCalcMethod;
-    @FXML
-    private RadioButton spotAverageRatioCalcRadioButton;
-    @FXML
-    private CheckBox autoExcludeSpotsCheckBox;
-    @FXML
-    private ComboBox<ParametersModel> commonPbModelComboBox;
-    @FXML
-    private ComboBox<ParametersModel> physConstModelComboBox;
-    @FXML
     private Label titleLabel;
     @FXML
     private ToggleGroup primaryAgeToggleGroup;
@@ -160,8 +124,6 @@ public class TaskDesignerController implements Initializable {
     private Label th232U238Label;
     @FXML
     private Label parentConcLabel;
-    @FXML
-    private ComboBox<String> delimiterComboBox;
     @FXML
     private TextField uncorrConstPbUExpressionText;
     @FXML
@@ -202,10 +164,6 @@ public class TaskDesignerController implements Initializable {
     private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
     private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
     private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
-    @FXML
-    private Spinner<Double> assignedExternalErrThSpinner;
-    @FXML
-    private Spinner<Double> assignedExternalErrUSpinner;
     @FXML
     private Button fromCurrentTaskBtn;
 
@@ -293,60 +251,7 @@ public class TaskDesignerController implements Initializable {
         authorsNameTextField.setText(taskDesigner.getAuthorName());
         labNameTextField.setText(taskDesigner.getLabName());
 
-        if (taskDesigner.isUseSBM()) {
-            yesSBMRadioButton.setSelected(true);
-        } else {
-            noSBMRadioButton.setSelected(true);
-        }
-
-        if (taskDesigner.isUserLinFits()) {
-            linearRegressionRatioCalcRadioButton.setSelected(true);
-        } else {
-            spotAverageRatioCalcRadioButton.setSelected(true);
-        }
-
-        ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getSelectedIndexIsotope().getName())).setSelected(true);
-
-        autoExcludeSpotsCheckBox.setSelected(taskDesigner.isSquidAllowsAutoExclusionOfSpots());
-
-        SpinnerValueFactory<Double> valueFactoryU
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, taskDesigner.getExtPErrU(), 0.05);
-        assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
-        assignedExternalErrUSpinner.valueProperty().addListener(new ChangeListener<Double>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Double> observable,//
-                    Double oldValue, Double newValue) {
-                taskDesigner.setExtPErrU(assignedExternalErrUSpinner.getValue());
-            }
-        });
-
-        SpinnerValueFactory<Double> valueFactoryTh
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, taskDesigner.getExtPErrTh(), 0.05);
-        assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
-        assignedExternalErrThSpinner.valueProperty().addListener(new ChangeListener<Double>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Double> observable,//
-                    Double oldValue, Double newValue) {
-                taskDesigner.setExtPErrTh(assignedExternalErrThSpinner.getValue());
-            }
-        });
-
         setupListeners();
-        setUpParametersModelsComboBoxes();
-
-        // samples
-        ObservableList<String> delimitersList = FXCollections.observableArrayList(Squid3Constants.SampleNameDelimitersEnum.names());
-        delimiterComboBox.setItems(delimitersList);
-        // set value before adding listener
-        delimiterComboBox.getSelectionModel().select(taskDesigner.getDelimiterForUnknownNames());
-        delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-            public void changed(ObservableValue<? extends String> ov,
-                    final String oldvalue, final String newvalue) {
-                taskDesigner.setDelimiterForUnknownNames(newvalue);
-            }
-        });
 
         populateMasses();
         populateRatios();
@@ -478,10 +383,6 @@ public class TaskDesignerController implements Initializable {
         fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskDesigner.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
-
-        pb208RadioButton.setVisible(
-                ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected()
-                && ((RadioButton) taskManagerGridPane.lookup("#indirect")).isSelected());
 
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         String UTh_U = taskDesigner.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
@@ -652,78 +553,6 @@ public class TaskDesignerController implements Initializable {
      */
     private Expression makeExpression(String expressionName, final String expressionString) {
         return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
-    }
-
-    private void setUpParametersModelsComboBoxes() {
-        // does double duty setting labdata defaults
-
-        // PhysicalConstantsModels
-        physConstModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
-        physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
-        physConstModelComboBox.getSelectionModel().select(taskDesigner.getPhysicalConstantsModel());
-
-        physConstModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if ((newValue != null) && (oldValue != null)) {
-                        squidLabData.setPhysConstDefault(newValue);
-                        squidLabData.storeState();
-                        taskDesigner.setPhysicalConstantsModel(newValue);
-                    }
-                });
-
-        // CommonPbModels
-        commonPbModelComboBox.setConverter(new TaskManagerController.ParameterModelStringConverter());
-        commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
-        commonPbModelComboBox.getSelectionModel().select(taskDesigner.getCommonPbModel());
-
-        commonPbModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if ((newValue != null) && (oldValue != null)) {
-                        squidLabData.setCommonPbDefault(newValue);
-                        squidLabData.storeState();
-                        taskDesigner.setCommonPbModel(newValue);
-                    }
-                });
-    }
-
-    @FXML
-    private void pb204RadioButtonAction(ActionEvent event) {
-        taskDesigner.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb204RadioButton.getId()));
-    }
-
-    @FXML
-    private void pb207RadioButtonAction(ActionEvent event) {
-        taskDesigner.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb207RadioButton.getId()));
-    }
-
-    @FXML
-    private void pb208RadioButtonAction(ActionEvent event) {
-        taskDesigner.setSelectedIndexIsotope(IndexIsoptopesEnum.valueOf(pb208RadioButton.getId()));
-    }
-
-    @FXML
-    private void yesSBMRadioButtonAction(ActionEvent event) {
-        taskDesigner.setUseSBM(true);
-    }
-
-    @FXML
-    private void noSBMRadioButtonActions(ActionEvent event) {
-        taskDesigner.setUseSBM(false);
-    }
-
-    @FXML
-    private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
-        taskDesigner.setUserLinFits(true);
-    }
-
-    @FXML
-    private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
-        taskDesigner.setUserLinFits(false);
-    }
-
-    @FXML
-    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
-        taskDesigner.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
     }
 
     @FXML
