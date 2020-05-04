@@ -1258,7 +1258,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchCountCorrections() {
+    public void launchCountCorrections() {
         mainPane.getChildren().remove(countCorrectionsUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1295,7 +1295,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchCommonLeadAssignment() {
+    public void launchCommonLeadAssignment() {
         mainPane.getChildren().remove(commonLeadAssignmentUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
