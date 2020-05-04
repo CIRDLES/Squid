@@ -1099,9 +1099,9 @@ public class CalamariReportsEngine implements Serializable {
             if (spotSummary != null) {
                 boolean isAge = exp.getName().toLowerCase(Locale.ENGLISH).contains("age");
                 if (isAge) {
-                    writer.println(exp.getName() + " (Ma) | Note: " + exp.getNotes());
+                    writer.println(exp.getName() + " (Ma) | Note: " + exp.getNotes().replaceAll(",", ""));
                 } else {
-                    writer.println(exp.getName() + " | Note: " + exp.getNotes());
+                    writer.println(exp.getName() + " | Note: " + exp.getNotes().replaceAll(",", ""));
                 }
                 writer.println(String.join(", ", ((ExpressionTree) exp.getExpressionTree()).getOperation().getLabelsForOutputValues()[0]));
                 String values = "";
