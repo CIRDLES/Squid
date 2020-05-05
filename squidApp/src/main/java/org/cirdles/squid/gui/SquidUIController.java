@@ -642,6 +642,8 @@ public class SquidUIController implements Initializable {
                 // this updates output folder for reports to current version
                 CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler());
 
+                squidProject.getPrawnFileHandler().getReportsEngine().setFolderToWriteCalamariReports(new File(projectFileName).getParentFile());
+
                 squidProjectOriginalHash = squidProject.hashCode();
                 runSaveMenuDisableCheck = true;
             } else {
@@ -1206,41 +1208,53 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
-        File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
-        if (reportTableFile != null) {
-            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
+            if (reportTableFile != null) {
+                SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
 
-            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
+                //BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "There are no reference materials chosen.\n\n",
+                        primaryStageWindow);
+            }
         } else {
-            SquidMessageDialog.showInfoDialog(
-                    "There are no reference materials chosen.\n\n",
-                    primaryStageWindow);
+            SquidMessageDialog.showInfoDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
 
     @FXML
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
-        File reportTableFile = squidProject.produceUnknownsCSV(true);
-        if (reportTableFile != null) {
-            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
-            //BrowserControl.showURI(reportTableFile.getCanonicalPath());
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File reportTableFile = squidProject.produceUnknownsCSV(true);
+            if (reportTableFile != null) {
+                SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
+                //BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "There are no Unknowns chosen.\n\n",
+                        primaryStageWindow);
+            }
         } else {
-            SquidMessageDialog.showInfoDialog(
-                    "There are no Unknowns chosen.\n\n",
-                    primaryStageWindow);
+            SquidMessageDialog.showInfoDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
 
     @FXML
     private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException {
-        File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
-        if (reportTableFile != null) {
-            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
+            if (reportTableFile != null) {
+                SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
 //            BrowserControl.showURI(reportTableFile.getCanonicalPath());
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "There are no Unknowns chosen.\n\n",
+                        primaryStageWindow);
+            }
         } else {
-            SquidMessageDialog.showInfoDialog(
-                    "There are no Unknowns chosen.\n\n",
-                    primaryStageWindow);
+            SquidMessageDialog.showInfoDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
 
@@ -1468,9 +1482,9 @@ public class SquidUIController implements Initializable {
                             alert.setContentText(exp.getName() + " exists");
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
+                                    expressions.remove(exp);
                                     expressions.add(exp);
-                                }
-                                if (t.equals(rename)) {
+                                } else if (t.equals(rename)) {
                                     TextInputDialog dialog = new TextInputDialog(exp.getName());
                                     dialog.setTitle("Rename");
                                     dialog.setHeaderText("Rename " + exp.getName());
@@ -1715,23 +1729,30 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException{
-        File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
-                squidProject.getProjectName() +
-                        "_REFMAT_SUMMARY_REPORT_" +
-                        DateHelper.getCurrentDate() +
-                        ".csv");
-
-        SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
+                    squidProject.getProjectName() +
+                            "_REFMAT_SUMMARY_REPORT_" +
+                            DateHelper.getCurrentDate() +
+                            ".csv");
+            SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
+        } else {
+            SquidMessageDialog.showInfoDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
     }
 
     @FXML
     private void unknownsSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
-        File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
-                squidProject.getProjectName() +
-                        "_UNKNOWNS_SUMMARY_REPORT_" +
-                        DateHelper.getCurrentDate() +
-                        ".csv");
-        SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
+                    squidProject.getProjectName() +
+                            "_UNKNOWNS_SUMMARY_REPORT_" +
+                            DateHelper.getCurrentDate() +
+                            ".csv");
+            SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
     }
 
     private class HighlightMainMenu {

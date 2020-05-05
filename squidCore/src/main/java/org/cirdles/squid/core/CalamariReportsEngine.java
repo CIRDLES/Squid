@@ -28,6 +28,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
