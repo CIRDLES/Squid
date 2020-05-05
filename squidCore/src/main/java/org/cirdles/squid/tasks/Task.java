@@ -762,6 +762,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         summary.append((String) ((taskExpressionsOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionsOrdered.size() - count) : "None")).append(" excluded.");
 
+        //parameters
+        summary.append("\n\nParameters:\n");
+        summary.append("\tIon Counts Normalized for SBM: " + useSBM + "\n");
+        summary.append("\tRatio Calculation Method: ");
+        summary.append((userLinFits ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)") + "\n");
+        summary.append("\tPreferred Index Isotope: " + selectedIndexIsotope.getName() + "\n");
+        summary.append("\tWeighted Means of RefMat:\n");
+        summary.append("\t\tAllow Squid to Auto Reject Spots: " + squidAllowsAutoExclusionOfSpots + "\n");
+        summary.append("\t\tMinimum external 1sigma % err for 206Pb/238U: " + extPErrU + "\n");
+        summary.append("\t\tMinimum external 1sigma % err for 208Pb/232Th: " + extPErrTh + "\n");
+        summary.append("\tParameter Models:\n");
+        summary.append("\t\tDef Comm Pb: " + commonPbModel.getModelNameWithVersion() + "\n");
+        summary.append("\t\tPhys Const: " + physicalConstantsModel.getModelNameWithVersion() + "\n");
+
         return summary.toString();
     }
 
