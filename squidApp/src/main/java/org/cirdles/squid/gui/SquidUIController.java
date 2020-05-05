@@ -1482,9 +1482,9 @@ public class SquidUIController implements Initializable {
                             alert.setContentText(exp.getName() + " exists");
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
+                                    expressions.remove(exp);
                                     expressions.add(exp);
-                                }
-                                if (t.equals(rename)) {
+                                } else if (t.equals(rename)) {
                                     TextInputDialog dialog = new TextInputDialog(exp.getName());
                                     dialog.setTitle("Rename");
                                     dialog.setHeaderText("Rename " + exp.getName());
