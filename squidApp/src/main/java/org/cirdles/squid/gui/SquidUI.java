@@ -105,7 +105,9 @@ public final class SquidUI extends Application {
         });
 
         // postpone loading to allow for stage creation and use in controller
-        scene.setRoot(FXMLLoader.load(getClass().getResource("SquidUIController.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidUIController.fxml"));
+        scene.setRoot(loader.load());
+        scene.setUserData(loader.getController());
         primaryStage.show();
         primaryStage.setMinHeight(scene.getHeight() + 15);
         primaryStage.setMinWidth(scene.getWidth());

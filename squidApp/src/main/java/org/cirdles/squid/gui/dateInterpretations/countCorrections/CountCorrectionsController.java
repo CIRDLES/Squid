@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -41,6 +42,7 @@ import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
+import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
@@ -235,5 +237,11 @@ public class CountCorrectionsController implements Initializable {
     private void correction208Action(ActionEvent event) {
         OvercountCorrection.correction208(squidProject.getTask());
         updateColumnBold(false, false, true);
+    }
+
+    @FXML
+    private void returnOnAction(ActionEvent actionEvent) {
+        SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
+        primaryStageController.launchCommonLeadAssignment();
     }
 }
