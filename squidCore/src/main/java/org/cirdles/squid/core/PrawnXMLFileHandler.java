@@ -277,12 +277,20 @@ public class PrawnXMLFileHandler implements Serializable {
      * @param prawnFileLocation
      */
     public void initReportsEngineWithCurrentPrawnFileName(String prawnFileLocation) {
-        //failsafe removes directories from path
-        Path prawnFilePath = Paths.get(prawnFileLocation);
-        prawnFileLocation = prawnFilePath.getName(prawnFilePath.getNameCount() - 1).toString();
+        //removes directories from path
+        prawnFileLocation = prawnFileLocation.replaceAll(".*[\\\\/]", "");
+
+        //to be extra sure
+        prawnFileLocation = new File(prawnFileLocation).getName();
+
+        //get rid of whitespace and replace with underscores
+        prawnFileLocation = prawnFileLocation.replaceAll("\\s", "_");
 
         // strip .xml from file name
-        reportsEngine.setNameOfPrawnSourceFile(new File(prawnFileLocation).getName().split("\\.")[0]);
+        prawnFileLocation = prawnFileLocation.substring(0, prawnFileLocation.lastIndexOf('.'));
+
+        //finally set name of prawn source file
+        reportsEngine.setNameOfPrawnSourceFile(prawnFileLocation);
     }
 
     /**
