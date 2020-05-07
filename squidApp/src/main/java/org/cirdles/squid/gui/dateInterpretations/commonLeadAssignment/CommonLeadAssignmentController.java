@@ -23,6 +23,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -38,6 +39,7 @@ import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -107,6 +109,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private Map<String, SpotSummaryDetails> mapOfWeightedMeansBySampleNames;
+    @FXML
+    private Button viewDetailsButton;
 
     /**
      * Initializes the controller class.
@@ -206,6 +210,8 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        
+        viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 
     @FXML
@@ -333,6 +339,12 @@ public class CommonLeadAssignmentController implements Initializable {
         aLabel.setTranslateY(verticalTranslate);
 
         return aLabel;
+    }
+
+    @FXML
+    private void viewDetailsOnAction(ActionEvent actionEvent) {
+        SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
+        primaryStageController.launchCountCorrections();
     }
 
     private interface CommonLeadSampleTreeInterface {

@@ -88,6 +88,7 @@ import static org.cirdles.squid.dialogs.SquidMessageDialog.showLongfilePath;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
+import org.cirdles.squid.prawn.PrawnFile;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 
@@ -106,6 +107,8 @@ public class SquidUIController implements Initializable {
 
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+            
+    public static List<PrawnFile.Run> selectedRunsForRestore = new ArrayList<>();
 
     @FXML
     private Menu projectMenu;
@@ -1258,7 +1261,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchCountCorrections() {
+    public void launchCountCorrections() {
         mainPane.getChildren().remove(countCorrectionsUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1295,7 +1298,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchCommonLeadAssignment() {
+    public void launchCommonLeadAssignment() {
         mainPane.getChildren().remove(commonLeadAssignmentUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1482,9 +1485,9 @@ public class SquidUIController implements Initializable {
                             alert.setContentText(exp.getName() + " exists");
                             alert.showAndWait().ifPresent((t) -> {
                                 if (t.equals(replace) || t.equals(replaceAll)) {
+                                    expressions.remove(exp);
                                     expressions.add(exp);
-                                }
-                                if (t.equals(rename)) {
+                                } else if (t.equals(rename)) {
                                     TextInputDialog dialog = new TextInputDialog(exp.getName());
                                     dialog.setTitle("Rename");
                                     dialog.setHeaderText("Rename " + exp.getName());
