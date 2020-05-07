@@ -20,10 +20,13 @@
 package org.cirdles.squid.gui.dataViews;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.cirdles.squid.prawn.PrawnFile;
 
 /**
  *
@@ -95,6 +98,7 @@ public abstract class AbstractDataView extends Canvas {
 
     protected boolean showTimeNormalized;
     protected boolean showspotLabels;
+    
 
     /**
      *
