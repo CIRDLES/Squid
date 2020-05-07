@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
@@ -79,6 +80,8 @@ public class CountCorrectionsController implements Initializable {
     private Label biweight207Label;
     @FXML
     private Label biweight208Label;
+    @FXML
+    private Button returnToCommonLeadButton;
 
     /**
      * Initializes the controller class.
@@ -129,6 +132,8 @@ public class CountCorrectionsController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        
+        returnToCommonLeadButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 
     private void showUnknownsWithOvercountCorrections() {

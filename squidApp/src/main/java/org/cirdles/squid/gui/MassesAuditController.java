@@ -747,8 +747,11 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
+    /**
+     *
+     */
     @Override
-    public void removeSpotFromGraphs(int spotIndex) {
+    public void updateSpotsInGraphs() {
         calculateCountOfScansCumulative();
         setupMassStationDetailsListViews();
         displayMassStationsForReview();
