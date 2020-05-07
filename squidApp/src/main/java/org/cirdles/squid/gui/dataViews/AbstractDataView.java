@@ -98,7 +98,7 @@ public abstract class AbstractDataView extends Canvas {
 
     protected boolean showTimeNormalized;
     protected boolean showspotLabels;
-    static List<PrawnFile.Run> selectedRunsForRestore = new ArrayList<>();
+    
 
     /**
      *

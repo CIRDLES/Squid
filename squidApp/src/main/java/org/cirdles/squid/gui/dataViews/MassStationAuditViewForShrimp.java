@@ -38,8 +38,9 @@ import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import org.cirdles.squid.gui.SquidUIController;
+import static org.cirdles.squid.gui.SquidUIController.selectedRunsForRestore;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.gui.dataViews.AbstractDataView.selectedRunsForRestore;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.projects.SquidProject;
@@ -137,7 +138,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
             if (indexOfSelectedSpot >= 0) {
                 squidProject.removeRunsFromPrawnFile(selectedRuns);
-                selectedRunsForRestore.addAll(selectedRuns);
+                SquidUIController.selectedRunsForRestore.addAll(selectedRuns);
 
                 squidProject.generatePrefixTreeFromSpotNames();
                 SquidProject.setProjectChanged(true);
