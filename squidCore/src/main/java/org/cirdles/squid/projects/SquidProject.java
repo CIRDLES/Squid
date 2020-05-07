@@ -16,6 +16,8 @@
 package org.cirdles.squid.projects;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.xml.bind.JAXBException;
@@ -511,6 +513,45 @@ public final class SquidProject implements Serializable {
         // update fractions
         ((Task) task).setupSquidSessionSkeleton();
 
+    }
+
+    public void restoreRunsToPrawnFile(List<Run> runs) {
+
+        for (Run run : runs) {
+            prawnFile.getRun().add(run);
+        }
+
+        Collections.sort(prawnFile.getRun(), new Comparator<Run>() {
+            @Override
+            public int compare(Run run1, Run run2) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
+                String run1DateTime = generateDateTimeMillisecondsStringForRun(run1);
+                String run2DateTime = generateDateTimeMillisecondsStringForRun(run2);
+                
+                long run1DateTimeMilliseconds = 0l;
+                long run2DateTimeMilliseconds = 0l;
+                try {
+                    run1DateTimeMilliseconds = dateFormat.parse(run1DateTime).getTime();
+                    run2DateTimeMilliseconds = dateFormat.parse(run2DateTime).getTime();
+                } catch (ParseException parseException) {
+                }
+
+                return Long.compare(run1DateTimeMilliseconds, run2DateTimeMilliseconds);
+            }
+        });
+
+        // save new count
+        prawnFile.setRuns((short) prawnFile.getRun().size());
+
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();
+
+    }
+
+    public static String generateDateTimeMillisecondsStringForRun(Run run) {
+        return run.getSet().getPar().get(0).getValue()
+                + " " + run.getSet().getPar().get(1).getValue()
+                + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
     }
 
     public void removeRunFromPrawnFile(Run run) {
