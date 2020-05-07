@@ -109,6 +109,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private Map<String, SpotSummaryDetails> mapOfWeightedMeansBySampleNames;
+    @FXML
+    private Button viewDetailsButton;
 
     /**
      * Initializes the controller class.
@@ -208,6 +210,8 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        
+        viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 
     @FXML

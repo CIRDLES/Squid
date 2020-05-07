@@ -24,7 +24,10 @@ public interface MassAuditRefreshInterface {
     
     public void updateGraphsWithSecondSelectedIndex(int index);
     
-    public void removeSpotFromGraphs(int spotIndex);
+    /**
+     *
+     */
+    public void updateSpotsInGraphs();
     
     public int[] getCountOfScansCumulative();
 }
