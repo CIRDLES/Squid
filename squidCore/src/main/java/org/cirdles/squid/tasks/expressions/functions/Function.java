@@ -127,6 +127,7 @@ public abstract class Function
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
         LOGIC_FUNCTIONS_MAP.put("sqIf", "sqIf");
+        LOGIC_FUNCTIONS_MAP.put("not", "not");
 
         MATH_FUNCTIONS_MAP.put("exp", "exp");
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
@@ -390,6 +391,14 @@ public abstract class Function
         return new If();
     }
 
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface not() {
+        return new Not();
+    }
+
     public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
@@ -429,15 +438,14 @@ public abstract class Function
     public static OperationOrFunctionInterface average() {
         return new Average();
     }
-    
-        /**
+
+    /**
      *
      * @return
      */
     public static OperationOrFunctionInterface median() {
         return new Median();
     }
-
 
     /**
      *

@@ -125,6 +125,7 @@ FUNCTION :
     C O N C O R D I A |
     E X P |
     I F |
+    N O T |
     L N |
     L O G |
     S Q R T |
