@@ -28,7 +28,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 public interface OperationOrFunctionInterface {
 
     public static final String DEF_TAB = "           ";
-    
+
     /**
      *
      * @param childrenET the value of childrenET
@@ -113,6 +113,31 @@ public interface OperationOrFunctionInterface {
     }
 
     /**
+     *
+     * @param expression
+     * @return
+     */
+    public default String toStringAnotherExpression(ExpressionTreeInterface expression) {
+
+        String retVal = "<mtext>\nNot a valid expression</mtext>\n";
+
+        if (expression != null) {
+            retVal = expression.toStringMathML();
+        }
+
+        return retVal;
+    }
+
+    public default String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
+        StringBuilder retVal = new StringBuilder();
+        for (int i = 0; i < childrenET.size(); i++) {
+            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
+        }
+
+        return retVal.toString();
+    }
+
+    /**
      * @return the rowCount
      */
     public int getRowCount();
@@ -131,9 +156,9 @@ public interface OperationOrFunctionInterface {
     public default boolean isScalarResult() {
         return (getRowCount() == 1) && (getColCount() == 1);
     }
-    
+
     public String getDefinition();
-    
+
     /**
      * @return the summaryCalc
      */

@@ -143,6 +143,7 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("count", "count");
         MATH_FUNCTIONS_MAP.put("countif", "countif");
         MATH_FUNCTIONS_MAP.put("tinv", "tinv");
+        MATH_FUNCTIONS_MAP.put("round", "round");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
@@ -480,6 +481,14 @@ public abstract class Function
         return new TInv();
     }
 
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface round() {
+        return new Round();
+    }
+
     public static OperationOrFunctionInterface calculateMeanConcStd() {
         return new CalculateMeanConcStd();
     }
@@ -531,31 +540,6 @@ public abstract class Function
         }
 
         return rowVector;
-    }
-
-    /**
-     *
-     * @param expression
-     * @return
-     */
-    protected String toStringAnotherExpression(ExpressionTreeInterface expression) {
-
-        String retVal = "<mtext>\nNot a valid expression</mtext>\n";
-
-        if (expression != null) {
-            retVal = expression.toStringMathML();
-        }
-
-        return retVal;
-    }
-
-    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
-        StringBuilder retVal = new StringBuilder();
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
-
-        return retVal.toString();
     }
 
     /**
