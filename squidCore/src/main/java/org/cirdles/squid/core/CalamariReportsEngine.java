@@ -268,7 +268,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(ionIntegrations_PerScan.toPath(), asList(dataLine), APPEND);
+                Files.write(ionIntegrations_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -317,7 +317,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(sBMIntegrations_PerScan.toPath(), asList(dataLine), APPEND);
+                Files.write(sBMIntegrations_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -379,7 +379,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(totalCounts_IonsAndSBM_PerScan.toPath(), asList(dataLine), APPEND);
+                Files.write(totalCounts_IonsAndSBM_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -989,7 +989,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeSummaryReportsForUnknowns(String baseSummaryCalcName) throws IOException {
         File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
-        PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> unknownExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
             if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
@@ -1006,7 +1006,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeSummaryReportsForReferenceMaterials(String baseSummaryCalcName) throws IOException {
         File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
-        PrintWriter writer = new PrintWriter(new FileOutputStream(reportFile));
+        PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> refMatExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
             if (exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()) {
@@ -1189,10 +1189,10 @@ public class CalamariReportsEngine implements Serializable {
         }
         OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(reportTableFile.getAbsolutePath()),
                 (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-        if (!doAppend) {
-            out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes());
+       if (!doAppend) {
+            out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes(UTF_8));
         }
-        out.write((weightedMeanReport + System.lineSeparator()).getBytes());
+        out.write((weightedMeanReport + System.lineSeparator()).getBytes(UTF_8));
         out.flush();
         out.close();
     }
