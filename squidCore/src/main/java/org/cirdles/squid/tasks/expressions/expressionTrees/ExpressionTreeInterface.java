@@ -267,6 +267,9 @@ public interface ExpressionTreeInterface {
         }
         boolean[] retVal = new boolean[objects.length];
         for (int i = 0; i < objects.length; i++) {
+            if (!(objects[i] instanceof Boolean)){
+                objects[i] = false;
+            }
             retVal[i] = (boolean) objects[i];
         }
         return retVal;

@@ -20,7 +20,6 @@ import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToBooleans;
 
@@ -29,58 +28,45 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class If extends Function {
+public class Or extends Function {
 
-    private static final long serialVersionUID = -40046344284456075L;
+    private static final long serialVersionUID = -5740761443384313262L;
 
     /**
      *
      */
-    public If() {
-        name = "sqIF";
-        argumentCount = 3;
+    public Or() {
+        name = "OR";
+        argumentCount = 2;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"Conditional"}};
-        labelsForInputValues = new String[]{"condition", "expressionIfTrue", "expressionIfFalse"};
-        definition = "Checks whether a condition is met,\n "
-                + "and returns one double value if true, another double value if false";
+        labelsForOutputValues = new String[][]{{"Disjunction"}};
+        labelsForInputValues = new String[]{"condition1", "condition2"};
+        definition = "Boolean OR: returns TRUE if either argument is TRUE.";
     }
 
     /**
-     * If expects child 0 as boolean and child 1 and 2 as double
+     * Or expects two boolean children.
      *
      * @param childrenET the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task
-     * @return the Object[][] containing doubles
+     * @return the Object[1][1] containing boolean
      */
     @Override
     public Object[][] eval(
             List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) {
 
-        Object[][] retVal;
-
+        boolean retVal;
         try {
-            if (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0]) {
-                if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Boolean)) {
-                    retVal = new Object[][]{{0}};
-                } else {
-                    retVal = childrenET.get(1).eval(shrimpFractions, task);
-                }
-            } else {
-                if ((childrenET.get(2) instanceof ConstantNode) && (((ConstantNode) childrenET.get(2)).getValue() instanceof Boolean)) {
-                    retVal = new Object[][]{{0}};
-                } else {
-                    retVal = childrenET.get(2).eval(shrimpFractions, task);
-                }
-            }
+            retVal = (convertObjectArrayToBooleans(childrenET.get(0).eval(shrimpFractions, task)[0])[0])
+                    || (convertObjectArrayToBooleans(childrenET.get(1).eval(shrimpFractions, task)[0])[0]);
         } catch (SquidException squidException) {
-            retVal = new Object[][]{{0}};
+            retVal = false;
         }
 
-        return retVal;
+        return new Object[][]{{retVal}};
     }
 
     /**
@@ -90,16 +76,15 @@ public class If extends Function {
      */
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>if</mi>"
-                + "<mfenced>";
+        StringBuilder retVal = new StringBuilder();
+        retVal.append("<mrow>");
+        retVal.append("<mi>").append(name).append("</mi>");
+        retVal.append("<mfenced>");
+        retVal.append(buildChildrenToMathML(childrenET));
 
-        retVal += buildChildrenToMathML(childrenET);
+        retVal.append("</mfenced></mrow>\n");
 
-        retVal += "</mfenced></mrow>\n";
-
-        return retVal;
+        return retVal.toString();
     }
 
 }

@@ -125,6 +125,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
+        LOGIC_FUNCTIONS_MAP.put("or", "or");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
         LOGIC_FUNCTIONS_MAP.put("sqIf", "sqIf");
         LOGIC_FUNCTIONS_MAP.put("not", "not");
@@ -381,6 +382,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface and() {
         return new And();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface or() {
+        return new Or();
     }
 
     /**

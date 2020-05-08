@@ -36,7 +36,7 @@ public class Not extends Function {
      *
      */
     public Not() {
-        name = "not";
+        name = "NOT";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
