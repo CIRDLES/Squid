@@ -18,6 +18,8 @@ package org.cirdles.squid.tasks;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
+
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -354,7 +356,7 @@ public interface TaskInterface {
     /**
      * The original Calamari Reports
      */
-    public void produceSanityReportsToFiles();
+    public File produceSanityReportsToFiles();
 
     public void updateRatioNames(String[] ratioNames);
 

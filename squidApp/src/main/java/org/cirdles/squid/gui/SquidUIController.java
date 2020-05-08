@@ -1152,7 +1152,11 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void produceSanityCheckReportsAction(ActionEvent event) {
-        squidProject.getTask().produceSanityReportsToFiles();
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            SquidMessageDialog.showSavedAsDialog(squidProject.getTask().produceSanityReportsToFiles(), primaryStageWindow);
+        } else {
+            SquidMessageDialog.showInfoDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
     }
 
     @FXML
