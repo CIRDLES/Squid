@@ -81,7 +81,7 @@ public abstract class Function
     protected String definition;
 
     protected boolean summaryCalc;
-    
+
     /**
      *
      */
@@ -131,10 +131,12 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("exp", "exp");
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
         MATH_FUNCTIONS_MAP.put("ln", "ln");
+        MATH_FUNCTIONS_MAP.put("log", "log");
         MATH_FUNCTIONS_MAP.put("max", "max");
         MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("median", "median");
         MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
         MATH_FUNCTIONS_MAP.put("countif", "countif");
@@ -186,6 +188,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface ln() {
         return new Ln();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface log() {
+        return new Log();
     }
 
     /**
@@ -383,7 +393,7 @@ public abstract class Function
     public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
-    
+
     public static OperationOrFunctionInterface totalCpsTime() {
         return new ShrimpSpeciesNodeFunction("getNscansTimesCountTimeSec");
     }
@@ -419,6 +429,15 @@ public abstract class Function
     public static OperationOrFunctionInterface average() {
         return new Average();
     }
+    
+        /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface median() {
+        return new Median();
+    }
+
 
     /**
      *

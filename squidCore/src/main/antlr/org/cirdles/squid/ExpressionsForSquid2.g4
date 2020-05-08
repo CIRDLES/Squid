@@ -126,6 +126,7 @@ FUNCTION :
     E X P |
     I F |
     L N |
+    L O G |
     S Q R T |
     R O B R E G |
     S Q B I W E I G H T |
@@ -137,7 +138,8 @@ FUNCTION :
     M A X |
     M I N |
     A B S |
-    A V E R A G E | 
+    A V E R A G E |
+    M E D I A N |
     S U M |
     C O U N T |
     C O U N T I F |

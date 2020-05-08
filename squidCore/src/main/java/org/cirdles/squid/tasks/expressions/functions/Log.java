@@ -1,5 +1,5 @@
 /* 
- * Copyright 2016 James F. Bowring and CIRDLES.org.
+ * Copyright 2020 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,22 +28,33 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
-public class Ln extends Function {
+public class Log extends Function {
 
-    private static final long serialVersionUID = 441943806225660404L;
+    private static final long serialVersionUID = 4646312522597920358L;
 
+//    private void readObject(ObjectInputStream stream) throws IOException,
+//            ClassNotFoundException {
+//        stream.defaultReadObject();
+//
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+//                Class.forName(Log.class.getCanonicalName()));
+//        long theSUID = myObject.getSerialVersionUID();
+//
+//        System.out.println("Customized De-serialization of Log "
+//                + theSUID);
+//    }
     /**
      *
      */
-    public Ln() {
-        name = "ln";
+    public Log() {
+        name = "log";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
         colCount = 1;
-        labelsForOutputValues = new String[][]{{"natLog"}};
+        labelsForOutputValues = new String[][]{{"LogBase10"}};
         labelsForInputValues = new String[]{"number"};
-        definition = "Returns the natural logarithm of a number";
+        definition = "Returns the base 10 logarithm of a number.  To calculate the log of n with base b, use log(n)/log(b) or ln(n)/ln(b).";
     }
 
     /**
@@ -59,7 +70,7 @@ public class Ln extends Function {
 
         double retVal;
         try {
-            retVal = Math.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+            retVal = Math.log10(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (SquidException se) {
             retVal = 0.0;
         }
@@ -76,7 +87,7 @@ public class Ln extends Function {
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
         String retVal
                 = "<mrow>"
-                + "<mi>ln</mi>"
+                + "<mi>log</mi>"
                 + "<mfenced>";
 
         retVal += buildChildrenToMathML(childrenET);
