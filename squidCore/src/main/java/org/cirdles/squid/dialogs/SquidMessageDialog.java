@@ -74,7 +74,7 @@ public class SquidMessageDialog extends Alert {
 
     public static void showSavedAsDialog(File file, Window owner) {
         Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
-                showLongfilePath(file.getAbsolutePath()),
+                file != null ? showLongfilePath(file.getAbsolutePath()) : "File is Null!",
                 "File saved as:",
                 owner);
         ButtonType openButton = new ButtonType("Open", ButtonBar.ButtonData.APPLY);

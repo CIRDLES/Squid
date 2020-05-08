@@ -28,7 +28,6 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -153,10 +152,11 @@ public class CalamariReportsEngine implements Serializable {
      * @param summaryOnly
      * @throws IOException
      */
-    public void produceReports(
+    public File produceReports(
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             ShrimpFraction shrimpFractionUnknown, ShrimpFraction shrimpFractionRefMat,
             boolean doWriteReportFiles, boolean summaryOnly) throws IOException {
+        File retVal = null;
 
         this.doWriteReportFiles = doWriteReportFiles;
 
@@ -185,6 +185,7 @@ public class CalamariReportsEngine implements Serializable {
             if (!reportsFolder.mkdirs()) {
                 throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
             }
+            retVal = reportsFolder;
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -209,6 +210,7 @@ public class CalamariReportsEngine implements Serializable {
         finishSpeciesReportFiles();
         finishRatiosReportFiles();
 
+        return retVal;
     }
 
     /**
@@ -956,7 +958,6 @@ public class CalamariReportsEngine implements Serializable {
                 = folderToWriteCalamariReports.getCanonicalPath()
                 + File.separator + "PROJECT-" + squidProject.getProjectName()
                 + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator + "REPORTS-per-Squid2"
                 + File.separator;
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
@@ -974,7 +975,6 @@ public class CalamariReportsEngine implements Serializable {
                 = folderToWriteCalamariReports.getCanonicalPath()
                 + File.separator + "PROJECT-" + squidProject.getProjectName()
                 + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator + "REPORTS-per-Squid3"
                 + File.separator;
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
@@ -1123,7 +1123,6 @@ public class CalamariReportsEngine implements Serializable {
                 = folderToWriteCalamariReports.getCanonicalPath()
                 + File.separator + "PROJECT-" + squidProject.getProjectName()
                 + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator + "REPORTS-per-Squid3"
                 + File.separator;
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
@@ -1164,7 +1163,6 @@ public class CalamariReportsEngine implements Serializable {
                 folderToWriteCalamariReports.getCanonicalPath()
                         + File.separator + "PROJECT-" + squidProject.getProjectName()
                         + File.separator + "TASK-" + squidProject.getTask().getName()
-                        + File.separator + "REPORTS-per-Squid3"
                         + File.separator;
     }
 

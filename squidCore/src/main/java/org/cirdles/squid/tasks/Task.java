@@ -1068,10 +1068,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * The original Calamari Reports
      */
     @Override
-    public void produceSanityReportsToFiles() {
+    public File produceSanityReportsToFiles() {
+        File retVal = null;
         if (unknownSpots.size() > 0) {
             try {
-                reportsEngine.produceReports(shrimpFractions,
+                retVal = reportsEngine.produceReports(shrimpFractions,
                         (ShrimpFraction) unknownSpots.get(0),
                         referenceMaterialSpots.size() > 0
                         ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
@@ -1079,6 +1080,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             } catch (IOException iOException) {
             }
         }
+        return retVal;
     }
 
     private void reorderExpressions() {
