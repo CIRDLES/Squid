@@ -237,21 +237,6 @@ public abstract class Operation
         return retVal;
     }
 
-    /**
-     *
-     * @param expression
-     * @return
-     */
-    protected String toStringAnotherExpression(ExpressionTreeInterface expression) {
-
-        String retVal = "<mtext>\nNot a valid expression</mtext>\n";
-
-        if (expression != null) {
-            retVal = expression.toStringMathML();
-        }
-
-        return retVal;
-    }
 
     /**
      * @return the name

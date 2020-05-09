@@ -1638,9 +1638,9 @@ public class SquidUIController implements Initializable {
         });
         MenuItem copyAsCsv = new MenuItem("Copy all as CSV");
         copyAsCsv.setOnAction((evt) -> {
-            String csv = textArea.getText().replaceAll("\\s*\\R", ",\n");
-            csv = csv.replaceAll("\\s*,", ",");
-            content.putString(csv);
+            String csv = textArea.getText().replaceAll("\\s*\\R", "\n");
+            String csv2 = csv.replaceAll("\\s+[^\\S\\r\\n]", ", ");
+            content.putString(csv2);
             clipboard.setContent(content);
         });
         contextMenu.getItems().addAll(copyAll, copyAsCsv);
