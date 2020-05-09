@@ -147,6 +147,8 @@ FUNCTION :
     C O U N T I F |
     T I N V |
     R O U N D |
+    S T D E V |
+    S T D E V P |
     C A L C U L A T E M E A N C O N C S T D |
     W T D M E A N A C A L C |
     V A L U E M O D E L 

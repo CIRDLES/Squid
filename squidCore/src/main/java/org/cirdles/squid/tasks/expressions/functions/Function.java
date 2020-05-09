@@ -20,11 +20,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -144,6 +142,8 @@ public abstract class Function
         MATH_FUNCTIONS_MAP.put("countif", "countif");
         MATH_FUNCTIONS_MAP.put("tinv", "tinv");
         MATH_FUNCTIONS_MAP.put("round", "round");
+        MATH_FUNCTIONS_MAP.put("stdev", "stdev");
+        MATH_FUNCTIONS_MAP.put("stdevp", "stdevp");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
@@ -487,6 +487,22 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface round() {
         return new Round();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface stdev() {
+        return new Stdev();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface stdevp() {
+        return new StdevP();
     }
 
     public static OperationOrFunctionInterface calculateMeanConcStd() {
