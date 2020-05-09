@@ -36,7 +36,7 @@ public class And extends Function {
      *
      */
     public And() {
-        name = "and";
+        name = "AND";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;

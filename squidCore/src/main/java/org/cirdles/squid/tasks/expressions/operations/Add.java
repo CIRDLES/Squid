@@ -40,6 +40,8 @@ public class Add extends Operation {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Sum"}};
+        labelsForInputValues = new String[]{"number1", "number2"};
+        definition = "Arithmetic sum of two numbers.";
     }
 
     /**
