@@ -619,6 +619,7 @@ public abstract class Function
     /**
      * @return the summaryCalc
      */
+    @Override
     public boolean isSummaryCalc() {
         return summaryCalc;
     }

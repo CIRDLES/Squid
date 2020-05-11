@@ -622,7 +622,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                             nodeStringWM += "::" + WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
                         } else {
                             Formatter formatter = new Formatter();
-                            formatter.format("%4.2E", expressionValues[0][0]);
+                            formatter.format("%4.4f", expressionValues[0][0]);
                             nodeStringWM += "::" + formatter.toString();
                         }
                     }
