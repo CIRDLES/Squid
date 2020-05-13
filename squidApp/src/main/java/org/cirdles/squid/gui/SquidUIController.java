@@ -1762,6 +1762,25 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    @FXML
+    private void produceTaskSummaryReportAction(ActionEvent actionEvent) throws IOException {
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File taskAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
+            SquidMessageDialog.showSavedAsDialog(taskAuditFile, primaryStageWindow);
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+    }
+
+    public void produceProjectAuditReportAction(ActionEvent actionEvent) throws IOException {
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File taskAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
+            SquidMessageDialog.showSavedAsDialog(taskAuditFile, primaryStageWindow);
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+    }
+
     private class HighlightMainMenu {
 
         private Menu highlightedMenu;

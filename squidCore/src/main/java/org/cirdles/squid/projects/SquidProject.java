@@ -416,6 +416,38 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
+    public String printProjectAudit() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Project Name: ").append(projectName).append("\n");
+        sb.append("Analyst Name: ").append(analystName).append("\n");
+        sb.append("Data File: ").append(prawnSourceFile.getAbsolutePath()).append("\n");
+        sb.append("Software: ").append(getPrawnFileShrimpSoftwareVersionName()).append("\n\n");
+        sb.append("Session\n");
+        sb.append("\tLogin Comment: ").append(getPrawnFileLoginComment()).append("\n");
+        sb.append("\tSummary\n");
+        sb.append("\t\t").append(generatePrefixTreeFromSpotNames().buildSummaryDataString().replaceAll(";", "\n\t\t")).append("\n");
+        sb.append("\tTotal Time in Hours: ").append((int) sessionDurationHours).append("\n\n");
+        sb.append("Project Notes:\n").append(projectNotes).append("\n");
+
+        //parameters
+        if(task != null) {
+            sb.append("\n Parameters:\n");
+            sb.append("\t Ion Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
+            sb.append("\t Ratio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
+            sb.append("\t Preferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
+            sb.append("\t Weighted Means of RefMat:\n");
+            sb.append("\t\t Allow Squid to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
+            sb.append("\t\t Minimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU()).append("\n");
+            sb.append("\t\t Minimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh()).append("\n");
+            sb.append("\t Parameter Models:\n");
+            sb.append("\t\t Def Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\t Phys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
+        }
+
+        return sb.toString();
+    }
+
     /**
      * Helper method to prepare for reports by sample
      *
