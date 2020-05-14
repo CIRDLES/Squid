@@ -432,17 +432,17 @@ public final class SquidProject implements Serializable {
 
         //parameters
         if(task != null) {
-            sb.append("\n Parameters:\n");
-            sb.append("\t Ion Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
-            sb.append("\t Ratio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
-            sb.append("\t Preferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
-            sb.append("\t Weighted Means of RefMat:\n");
-            sb.append("\t\t Allow Squid to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
-            sb.append("\t\t Minimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU()).append("\n");
-            sb.append("\t\t Minimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh()).append("\n");
-            sb.append("\t Parameter Models:\n");
-            sb.append("\t\t Def Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
-            sb.append("\t\t Phys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
+            sb.append("\nParameters:\n");
+            sb.append("\tIon Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
+            sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
+            sb.append("\tPreferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
+            sb.append("\tWeighted Means of RefMat:\n");
+            sb.append("\t\tAllow Squid to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
+            sb.append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU()).append("\n");
+            sb.append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh()).append("\n");
+            sb.append("\tParameter Models:\n");
+            sb.append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
         }
 
         return sb.toString();

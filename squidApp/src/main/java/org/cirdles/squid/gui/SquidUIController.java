@@ -1774,8 +1774,32 @@ public class SquidUIController implements Initializable {
 
     public void produceProjectAuditReportAction(ActionEvent actionEvent) throws IOException {
         if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
-            File taskAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
-            SquidMessageDialog.showSavedAsDialog(taskAuditFile, primaryStageWindow);
+            File projectAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
+            SquidMessageDialog.showSavedAsDialog(projectAuditFile, primaryStageWindow);
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+    }
+
+    public void generateAllReportsAction(ActionEvent actionEvent) throws IOException {
+        if(!squidProject.getPrawnFileHandler().getReportsEngine().getFolderToWriteCalamariReports().equals(Squid.DEFAULT_SQUID3_REPORTS_FOLDER)) {
+            File projectAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
+            File taskAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
+            File unknownsSummaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
+                    squidProject.getProjectName() +
+                            "_UNKNOWNS_SUMMARY_REPORT_" +
+                            DateHelper.getCurrentDate() +
+                            ".csv");
+            File refMatSummaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
+                    squidProject.getProjectName() +
+                            "_REFMAT_SUMMARY_REPORT_" +
+                            DateHelper.getCurrentDate() +
+                            ".csv");
+            File unknownsBySampleForETReduxCSV = squidProject.produceUnknownsBySampleForETReduxCSV(true);
+            File unknownsCSV = squidProject.produceUnknownsCSV(true);
+            File refMatCSV = squidProject.produceReferenceMaterialCSV(true);
+            File sanityReports = squidProject.getTask().produceSanityReportsToFiles();
+            SquidMessageDialog.showSavedAsDialog(projectAuditFile.getParentFile(), primaryStageWindow);
         } else {
             SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
