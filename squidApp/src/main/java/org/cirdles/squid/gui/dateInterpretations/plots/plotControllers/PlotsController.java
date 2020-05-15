@@ -150,6 +150,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             this.plotType = plotType;
         }
     }
+    
+    // default settings
     public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
     public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
@@ -433,6 +435,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     }
 
     private void showWeightedMeanPlot() {
+        // may 2020 new approach per Nicole
+        HBox toolBox = new RefMatPlottingToolBoxNode(this);
+        vboxMaster.getChildren().add(0, toolBox);
+
         // get type of correction
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
         // flavor of plot
@@ -561,7 +567,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     private void showWeightedMeanSamplePlot() {
         // dec 2019 new approach per Nicole
-        HBox toolBox = new SamplesPlottingNode(this);
+        HBox toolBox = new SamplesPlottingToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
         ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new CheckBoxTreeCell<>(
@@ -728,7 +734,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             case "7":
                 squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
                 break;
-            default:
+            default: // case 8
                 squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         }
 

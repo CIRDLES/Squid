@@ -73,7 +73,7 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class SamplesPlottingNode extends HBox {
+public class SamplesPlottingToolBoxNode extends HBox {
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private final ComboBox<String> sampleComboBox;
@@ -91,7 +91,7 @@ public class SamplesPlottingNode extends HBox {
 
     private CheckBox filterInfoCheckBox;
 
-    public SamplesPlottingNode(WeightedMeanRefreshInterface plotsController) {
+    public SamplesPlottingToolBoxNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
 
         this.sampleComboBox = new ComboBox<>();
@@ -574,7 +574,7 @@ public class SamplesPlottingNode extends HBox {
                 try {
                     writeWeightedMeanReport(false);
                 } catch (IOException ex) {
-                    Logger.getLogger(SamplesPlottingNode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SamplesPlottingToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -588,7 +588,7 @@ public class SamplesPlottingNode extends HBox {
                 try {
                     writeWeightedMeanReport(true);
                 } catch (IOException ex) {
-                    Logger.getLogger(SamplesPlottingNode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SamplesPlottingToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
