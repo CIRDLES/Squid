@@ -267,8 +267,8 @@ public class SquidUIController implements Initializable {
         newSquid3TaskFromPrefsMenuItem.setDisable(false);
         selectSquid3TaskFromLibraryMenu.setDisable(true);
         importSquid25TaskMenuItem.setDisable(false);
-        importSquid3TaskMenuItem.setDisable(true);
-        exportSquid3TaskMenuItem.setDisable(true);
+        importSquid3TaskMenuItem.setDisable(false);
+        exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -1033,10 +1033,23 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            FileHandler.exportSquid3TaskFile(squidProject, primaryStageWindow);
+        } catch (Exception e) {
+            e.printStackTrace();
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
+        }
     }
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            FileHandler.selectSquid3TaskFile(squidProject, primaryStageWindow);
+            launchTaskManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+            SquidMessageDialog.showWarningDialog("An Exception Occured: " + e.getMessage(), primaryStageWindow);
+        }
     }
 
     @FXML

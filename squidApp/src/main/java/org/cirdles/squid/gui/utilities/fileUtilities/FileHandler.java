@@ -22,10 +22,13 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
+import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
 
@@ -59,6 +62,51 @@ public class FileHandler {
 
         if (projectFileNew != null) {
             retVal = projectFileNew.getCanonicalPath();
+        }
+
+        return retVal;
+    }
+
+    public static File exportSquid3TaskFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException {
+
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid 3 Task");
+        String initialFileName = FileNameFixer.fixFileName(((Task) squidProject.getTask()).getName()) + ".xml";
+        fileChooser.setInitialFileName(initialFileName);
+        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
+
+        File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
+
+        if (squidTaskFile != null ) {
+            retVal = squidTaskFile;
+            Task task = (Task) squidProject.getTask();
+            task.serializeXMLObject(retVal.getAbsolutePath());
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile.getParentFile());
+        }
+
+        return retVal;
+    }
+
+    public static File selectSquid3TaskFile(SquidProject squidProject, Window ownerWindow)
+            throws IOException {
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid 3 Task");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 3 Task File", "*.xml"));
+        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
+
+        File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
+
+        if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+            retVal = squidTaskFile;
+            Task task = (Task) squidProject.getTask();
+            task = (Task) task.readXMLObject(retVal.getAbsolutePath(), false);
+            squidProject.setTask(task);
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
         }
 
         return retVal;

@@ -22,6 +22,7 @@ import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
@@ -736,4 +737,23 @@ public interface TaskInterface {
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 
     public void updateAllSpotsWithCurrentCommonPbModel();
+
+    public String getTaskSquidVersion();
+
+    public void setTaskSquidVersion(String taskSquidVersion);
+
+    public int getIndexOfTaskBackgroundMass();
+
+    public String getFilterForRefMatSpotNames();
+
+    public String getFilterForConcRefMatSpotNames();
+
+    public SortedSet<Expression> getTaskExpressionsRemoved();
+
+    public void setTaskExpressionsRemoved(SortedSet<Expression> taskExpressionsRemoved);
+
+    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap();
+
+    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap);
+
 }

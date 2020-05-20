@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
+
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
@@ -40,8 +41,11 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModelXMLConverter;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModelXMLConverter;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
@@ -54,6 +58,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -63,6 +68,8 @@ import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotP
 import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
+
+import org.cirdles.squid.tasks.expressions.ExpressionXMLConverter;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
@@ -79,6 +86,8 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
@@ -1797,16 +1806,38 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         xstream.registerConverter(new ExpressionTreeXMLConverter());
         xstream.alias("ExpressionTree", ExpressionTree.class);
 
+        xstream.registerConverter(new ExpressionXMLConverter());
+        xstream.alias("Expression", Expression.class);
+
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
 
         xstream.registerConverter(new SquidReportTableXMLConverter());
+        xstream.alias("SquidReportTable", SquidReportTable.class);
+
         xstream.registerConverter(new SquidReportCategoryXMLConverter());
+        xstream.alias("SquidReportCategory", SquidReportCategory.class);
+
         xstream.registerConverter(new SquidReportColumnXMLConverter());
+        xstream.alias("SquidReportColumn", SquidReportColumn.class);
+
+        xstream.registerConverter(new ReferenceMaterialModelXMLConverter());
+        xstream.alias("ReferenceMaterialModel", ReferenceMaterialModel.class);
+
+        xstream.registerConverter(new PhysicalConstantsModelXMLConverter());
+        xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
+
+        xstream.registerConverter(new CommonPbModelXMLConverter());
+        xstream.alias("CommonPbModel", CommonPbModel.class);
+
+        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
+        xstream.alias("SpotFieldNode", SpotFieldNode.class);
 
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
+
+        xstream.autodetectAnnotations(true);
 
     }
 
@@ -3339,6 +3370,46 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat) {
         this.squidReportTablesRefMat = squidReportTablesRefMat;
+    }
+
+    @Override
+    public String getTaskSquidVersion() {
+        return taskSquidVersion;
+    }
+
+    @Override
+    public void setTaskSquidVersion(String taskSquidVersion) {
+        this.taskSquidVersion = taskSquidVersion;
+    }
+
+    @Override
+    public int getIndexOfTaskBackgroundMass() {
+        return indexOfTaskBackgroundMass;
+    }
+
+    @Override
+    public String getFilterForConcRefMatSpotNames() {
+        return filterForConcRefMatSpotNames;
+    }
+
+    @Override
+    public SortedSet<Expression> getTaskExpressionsRemoved() {
+        return taskExpressionsRemoved;
+    }
+
+    @Override
+    public void setTaskExpressionsRemoved(SortedSet<Expression> taskExpressionsRemoved) {
+        this.taskExpressionsRemoved = taskExpressionsRemoved;
+    }
+
+    @Override
+    public Map<String, ExpressionTreeInterface> getNamedOvercountExpressionsMap() {
+        return namedOvercountExpressionsMap;
+    }
+
+    @Override
+    public void setNamedOvercountExpressionsMap(Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap) {
+        this.namedOvercountExpressionsMap = namedOvercountExpressionsMap;
     }
 
     /**
