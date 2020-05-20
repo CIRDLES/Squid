@@ -28,7 +28,7 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '25.1-jre'
     
     compile "com.github.cirdles:LudwigLibrary:03782e1c69"
-    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.9'
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.12'
     
     antlr "org.antlr:antlr4:4.7.2"
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.7.2'
