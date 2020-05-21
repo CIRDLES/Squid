@@ -77,7 +77,7 @@ public class FileHandler {
         String initialFileName = FileNameFixer.fixFileName(((Task) squidProject.getTask()).getName()) + ".xml";
         fileChooser.setInitialFileName(initialFileName);
         File initialDirectory = SquidPersistentState.getExistingPersistentState().getMRUTaskFile();
-        fileChooser.setInitialDirectory(initialDirectory.exists() ? initialDirectory : null);
+        fileChooser.setInitialDirectory(initialDirectory != null && initialDirectory.exists() ? initialDirectory : null);
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
 
@@ -98,8 +98,9 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid 3 Task");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 3 Task File", "*.xml"));
-        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
-
+        File initialDirectory = SquidPersistentState.getExistingPersistentState().getMRUTaskFile();
+        fileChooser.setInitialDirectory(initialDirectory != null && initialDirectory.exists() ? initialDirectory : null);
+        
         File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
 
         if (squidTaskFile != null && squidTaskFile.getName().toLowerCase(Locale.US).endsWith(".xml")) {

@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
@@ -393,7 +394,7 @@ public class TaskXMLConverter implements Converter {
             reader.moveUp();
 
             reader.moveDown();
-            expTree = (ExpressionTree) context.convertAnother(expTree, ExpressionTree.class);
+            expTree = (ExpressionTreeInterface) context.convertAnother(expTree, ExpressionTree.class);
             reader.moveUp();
 
             reader.moveUp();
