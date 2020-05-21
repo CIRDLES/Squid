@@ -189,6 +189,7 @@ public class SamplesPlottingToolBoxNode extends HBox {
                 = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(newValue, shrimpFractions);
         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
+        WeightedMeanPlot.switchRefMatViewToCalibConst = false;
         sampleNodeSelectedAgeWMPlot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
                 " Sample " + newValue,
@@ -373,6 +374,7 @@ public class SamplesPlottingToolBoxNode extends HBox {
 
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
 
+                        WeightedMeanPlot.switchRefMatViewToCalibConst = false;
                         PlotDisplayInterface myPlot = new WeightedMeanPlot(
                                 new Rectangle(1000, 600),
                                 " Sample " + sampleNode.getNodeName(),
@@ -434,8 +436,6 @@ public class SamplesPlottingToolBoxNode extends HBox {
                 } else {
                     probabilitySlider.setDisable(true);
                     probTextField.setDisable(true);
-// test only
-//                    ((WeightedMeanPlot)sampleNode.getSamplePlotWM()).outputToSVG(null);
                 }
             }
         });

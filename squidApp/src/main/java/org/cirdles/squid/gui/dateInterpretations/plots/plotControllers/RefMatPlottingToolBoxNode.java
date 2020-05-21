@@ -18,6 +18,8 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -33,17 +35,22 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterfac
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RefMatPlottingToolBoxNode extends HBox {
 
+    private WeightedMeanRefreshInterface plotsController;
+
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
 
     public RefMatPlottingToolBoxNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
+
+        this.plotsController = plotsController;
 
         this.categorySortComboBox = new ComboBox<>();
         this.expressionSortComboBox = new ComboBox<>();
@@ -62,20 +69,28 @@ public class RefMatPlottingToolBoxNode extends HBox {
         setStyle("-fx-padding: 1;" + "-fx-background-color: white;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 0 2 0 2;"
                 + "-fx-border-radius: 4;" + "-fx-border-color: blue;-fx-effect: null;");
-        
-        VBox sortingToolBox = sortedVBox();
+
+        setPrefHeight(23);
+        setHeight(23);
+        setFillHeight(true);
+        setAlignment(Pos.CENTER);
+
+        CheckBox autoExcludeSpotsCheckBox = autoExcludeSpotsCheckBox();
+
+        HBox plotChoiceHBox = plotChoiceHBox();
+        HBox sortingToolBox = sortedHBox();
 
         Path separator1 = separator();
+        Path separator2 = separator();
+        Path separator3 = separator();
 
-        getChildren().addAll( separator1, sortingToolBox);
-
-        setAlignment(Pos.CENTER);
+        getChildren().addAll(autoExcludeSpotsCheckBox, separator1, plotChoiceHBox, separator2, separator3, sortingToolBox);
     }
 
     private Path separator() {
         Path separator = new Path();
         separator.getElements().add(new MoveTo(2.0f, 0.0f));
-        separator.getElements().add(new VLineTo(30.0f));
+        separator.getElements().add(new VLineTo(20.0f));
         separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
         separator.setStrokeWidth(2);
 
@@ -86,16 +101,96 @@ public class RefMatPlottingToolBoxNode extends HBox {
 
     }
 
- 
+    private CheckBox autoExcludeSpotsCheckBox() {
+        CheckBox autoExcludeSpotsCheckBox = new CheckBox("Auto-reject spots");
+        autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
+        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+                // this will cause weighted mean expressions to be changed with boolean flag
+                squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+                plotsController.showRefMatWeightedMeanPlot();
+            }
+        });
+        formatNode(autoExcludeSpotsCheckBox, 110);
+        return autoExcludeSpotsCheckBox;
+    }
 
-    private VBox sortedVBox() {
-        VBox sortedToolBox = new VBox(-2);
+    private HBox plotChoiceHBox() {
 
-        HBox sortingHBoxA = new HBox(5);
+        HBox plotChoiceHBox = new HBox(5);
+
+        Label plotChoiceLabel = new Label("Plot:");
+        formatNode(plotChoiceLabel, 35);
+
+        ToggleGroup plotGroup = new ToggleGroup();
+
+        RadioButton ageRB = new RadioButton("Age");
+        ageRB.setToggleGroup(plotGroup);
+        ageRB.setUserData(false);
+        ageRB.setSelected(true);
+        formatNode(ageRB, 45);
+
+        RadioButton ccRB = new RadioButton("CC");
+        ccRB.setToggleGroup(plotGroup);
+        ccRB.setUserData(true);
+        formatNode(ccRB, 40);
+
+        // add listener after initial choice
+        plotGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                WeightedMeanPlot.switchRefMatViewToCalibConst = (boolean) plotGroup.getSelectedToggle().getUserData();
+                plotsController.showRefMatWeightedMeanPlot();
+            }
+        });
+
+        plotChoiceHBox.getChildren().addAll(plotChoiceLabel, ageRB, ccRB);
+
+        return plotChoiceHBox;
+    }
+
+    private HBox corrChoiceHBox() {
+
+        HBox corrChoiceHBox = new HBox(5);
+
+        Label corrChoiceLabel = new Label("Corr:");
+        formatNode(corrChoiceLabel, 35);
+
+        ToggleGroup corrGroup = new ToggleGroup();
+
+        RadioButton ageRB = new RadioButton("Age");
+        ageRB.setToggleGroup(corrGroup);
+        ageRB.setUserData(false);
+        ageRB.setSelected(true);
+        formatNode(ageRB, 45);
+
+        RadioButton ccRB = new RadioButton("CC");
+        ccRB.setToggleGroup(corrGroup);
+        ccRB.setUserData(true);
+        formatNode(ccRB, 40);
+
+        // add listener after initial choice
+        corrGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                WeightedMeanPlot.switchRefMatViewToCalibConst = (boolean) corrGroup.getSelectedToggle().getUserData();
+                plotsController.showRefMatWeightedMeanPlot();
+            }
+        });
+
+        corrChoiceHBox.getChildren().addAll(corrChoiceLabel, ageRB, ccRB);
+
+        return corrChoiceHBox;
+    }
+
+    private HBox sortedHBox() {
+
+        HBox sortingHBox = new HBox(5);
+
         Label sortedByLabel = new Label("Sorted Ascending by:");
         formatNode(sortedByLabel, 125);
-
-        HBox sortingHBoxB = new HBox(5);
 
         formatNode(categorySortComboBox, 120);
         categorySortComboBox.setPromptText("Category");
@@ -135,11 +230,9 @@ public class RefMatPlottingToolBoxNode extends HBox {
             }
         });
 
-        sortingHBoxB.getChildren().addAll(sortedByLabel, categorySortComboBox, expressionSortComboBox);
+        sortingHBox.getChildren().addAll(sortedByLabel, categorySortComboBox, expressionSortComboBox);
 
-        sortedToolBox.getChildren().addAll(sortingHBoxB);
-
-        return sortedToolBox;
+        return sortingHBox;
     }
 
     private void formatNode(Control control, int width) {

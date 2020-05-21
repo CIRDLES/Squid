@@ -53,7 +53,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -128,8 +127,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @FXML
     private ToggleGroup plotFlavorToggleGroup;
     @FXML
-    private CheckBox autoExcludeSpotsCheckBox;
-    @FXML
     private ScrollPane plotScrollPane;
     @FXML
     private HBox controlPanel;
@@ -150,7 +147,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             this.plotType = plotType;
         }
     }
-    
+
     // default settings
     public static PlotTypes plotTypeSelected = PlotTypes.CONCORDIA;
 
@@ -434,10 +431,13 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
     }
 
-    private void showWeightedMeanPlot() {
+    @Override
+    public void showRefMatWeightedMeanPlot() {
         // may 2020 new approach per Nicole
         HBox toolBox = new RefMatPlottingToolBoxNode(this);
-        vboxMaster.getChildren().add(0, toolBox);
+        if (!(vboxMaster.getChildren().get(0) instanceof RefMatPlottingToolBoxNode)) {
+            vboxMaster.getChildren().add(0, toolBox);
+        }
 
         // get type of correction
         String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
@@ -447,14 +447,15 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
                         get(WTDAV_PREFIX + correction + calibrConstAgeBaseName + "_CalibConst");
+
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
                 correction + calibrConstAgeBaseName + " calibr.const Weighted Mean of Reference Material "
                 + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(),
                 spotSummaryDetails,
-                correction + calibrConstAgeBaseName.replace("/", "") + "_Age_RM", // TODO: FIX THIS HACK
+                correction + calibrConstAgeBaseName + "_Age_RM", // TODO: FIX THIS HACK  correction + calibrConstAgeBaseName + "_CalibConst",//
                 squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(REFRAD_AGE_U_PB).getValues()[0][0],
-                this);//559.1 * 1e6);
+                this);
 
         refreshPlot();
 
@@ -565,7 +566,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
     }
 
-    private void showWeightedMeanSamplePlot() {
+    private void showSampleWeightedMeanPlot() {
         // dec 2019 new approach per Nicole
         HBox toolBox = new SamplesPlottingToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
@@ -594,7 +595,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                 String ageOrValueSourceOfWM;
                 double uncertainty = 0.0;
-                if (wmExpressionValues[0].length > 1){
+                if (wmExpressionValues[0].length > 1) {
                     uncertainty = wmExpressionValues[0][1];
                 }
                 if (wmExpressionName.endsWith("Age")) {
@@ -674,7 +675,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 corr8_RadioButton.setVisible(true);
 
                 showConcordiaPlotsOfUnknownsOrRefMat();
-                autoExcludeSpotsCheckBox.setVisible(false);
                 break;
             case WEIGHTED_MEAN:
                 plotFlavorOneRadioButton.setText(CALIB_CONST_206_238_ROOT + "_CalibConst");
@@ -712,15 +712,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                         corr8_RadioButton.setSelected(true);
                 }
 
-                autoExcludeSpotsCheckBox.setVisible(true);
-                autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
-
-                showWeightedMeanPlot();
+                showRefMatWeightedMeanPlot();
                 break;
             case WEIGHTED_MEAN_SAMPLE:
-                autoExcludeSpotsCheckBox.setVisible(false);
-                showWeightedMeanSamplePlot();
-
+                showSampleWeightedMeanPlot();
         }
     }
 
@@ -746,18 +741,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                showWeightedMeanPlot();
+                showRefMatWeightedMeanPlot();
         }
-    }
-
-    @FXML
-    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
-
-        squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
-        // this will cause weighted mean expressions to be changed with boolean flag
-        squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
-
-        showWeightedMeanPlot();
     }
 
     private class ConcordiaFractionNode implements SampleTreeNodeInterface {

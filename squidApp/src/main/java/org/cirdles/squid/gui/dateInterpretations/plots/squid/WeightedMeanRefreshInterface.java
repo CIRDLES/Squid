@@ -24,4 +24,5 @@ public interface WeightedMeanRefreshInterface {
     public void toggleSpotExclusionWM(int index);
     public void calculateWeightedMean();
     public void refreshPlot();
+    public void showRefMatWeightedMeanPlot();
 }
