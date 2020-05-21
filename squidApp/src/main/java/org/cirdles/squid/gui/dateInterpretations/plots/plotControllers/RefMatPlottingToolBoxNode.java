@@ -36,6 +36,7 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -76,15 +77,15 @@ public class RefMatPlottingToolBoxNode extends HBox {
         setAlignment(Pos.CENTER);
 
         CheckBox autoExcludeSpotsCheckBox = autoExcludeSpotsCheckBox();
-
         HBox plotChoiceHBox = plotChoiceHBox();
+        HBox corrChoiceHBox = corrChoiceHBox();
         HBox sortingToolBox = sortedHBox();
 
         Path separator1 = separator();
         Path separator2 = separator();
         Path separator3 = separator();
 
-        getChildren().addAll(autoExcludeSpotsCheckBox, separator1, plotChoiceHBox, separator2, separator3, sortingToolBox);
+        getChildren().addAll(autoExcludeSpotsCheckBox, separator1, plotChoiceHBox, separator2, corrChoiceHBox, separator3, sortingToolBox);
     }
 
     private Path separator() {
@@ -160,27 +161,26 @@ public class RefMatPlottingToolBoxNode extends HBox {
 
         ToggleGroup corrGroup = new ToggleGroup();
 
-        RadioButton ageRB = new RadioButton("Age");
-        ageRB.setToggleGroup(corrGroup);
-        ageRB.setUserData(false);
-        ageRB.setSelected(true);
-        formatNode(ageRB, 45);
+        RadioButton corr4_RadioButton = new RadioButton("4-corr");
+        corr4_RadioButton.setToggleGroup(corrGroup);
+        corr4_RadioButton.setUserData(PB4CORR);
+        corr4_RadioButton.setSelected(true);
+        formatNode(corr4_RadioButton, 60);
 
         RadioButton ccRB = new RadioButton("CC");
         ccRB.setToggleGroup(corrGroup);
         ccRB.setUserData(true);
         formatNode(ccRB, 40);
 
-        // add listener after initial choice
-        corrGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                WeightedMeanPlot.switchRefMatViewToCalibConst = (boolean) corrGroup.getSelectedToggle().getUserData();
-                plotsController.showRefMatWeightedMeanPlot();
-            }
-        });
-
-        corrChoiceHBox.getChildren().addAll(corrChoiceLabel, ageRB, ccRB);
+//        // add listener after initial choice
+//        corrGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+//                WeightedMeanPlot.switchRefMatViewToCalibConst = (boolean) corrGroup.getSelectedToggle().getUserData();
+//                plotsController.showRefMatWeightedMeanPlot();
+//            }
+//        });
+        corrChoiceHBox.getChildren().addAll(corrChoiceLabel, corr4_RadioButton);
 
         return corrChoiceHBox;
     }
@@ -192,7 +192,7 @@ public class RefMatPlottingToolBoxNode extends HBox {
         Label sortedByLabel = new Label("Sorted Ascending by:");
         formatNode(sortedByLabel, 125);
 
-        formatNode(categorySortComboBox, 120);
+        formatNode(categorySortComboBox, 80);
         categorySortComboBox.setPromptText("Category");
 
         categorySortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -213,7 +213,7 @@ public class RefMatPlottingToolBoxNode extends HBox {
             }
         });
 
-        formatNode(expressionSortComboBox, 180);
+        formatNode(expressionSortComboBox, 120);
         expressionSortComboBox.setPromptText("Expression");
         expressionSortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
