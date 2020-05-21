@@ -76,7 +76,8 @@ public class FileHandler {
         fileChooser.setTitle("Save Squid 3 Task");
         String initialFileName = FileNameFixer.fixFileName(((Task) squidProject.getTask()).getName()) + ".xml";
         fileChooser.setInitialFileName(initialFileName);
-        fileChooser.setInitialDirectory(SquidPersistentState.getExistingPersistentState().getMRUTaskFile());
+        File initialDirectory = SquidPersistentState.getExistingPersistentState().getMRUTaskFile();
+        fileChooser.setInitialDirectory(initialDirectory.exists() ? initialDirectory : null);
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
 

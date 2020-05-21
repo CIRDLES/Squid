@@ -34,7 +34,7 @@ public class TaskXMLConverterTest {
     @Test
     public void TaskXMLConverterTest() {
         try {
-            String folderPath = "src/test/resources/org/cirdles/squid/TaskXMLFiles/";
+            String folderPath = "src/test/resources/org/cirdles/squid/tasks/TaskXMLFiles/";
 
             //create task from sample document
             Task originalTask = new Task();
