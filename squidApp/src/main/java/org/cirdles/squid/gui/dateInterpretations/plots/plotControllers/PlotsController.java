@@ -36,7 +36,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
@@ -53,6 +52,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
+import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
+import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -153,6 +155,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
+    public static Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
+
+    public static String correction = PB4CORR;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // update 
@@ -174,10 +180,19 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
+        selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
+
         customizePlotChooserToolbarAndInvokePlotter();
     }
 
     private void showConcordiaPlotsOfUnknownsOrRefMat() {
+        // may 2020 new approach per Nicole              
+        if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
+            vboxMaster.getChildren().remove(0);
+        }
+        HBox toolBox = new ConcordiaPlottingToolBoxNode(this);
+        vboxMaster.getChildren().add(0, toolBox);
+
         spotsTreeViewCheckBox = new CheckTreeView<>();
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
@@ -198,7 +213,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             mapOfSpotsBySampleNames.put("Concentration Ref Mat", squidProject.getTask().getConcentrationReferenceMaterialSpots());
         }
         // get type of correctionList
-        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+//        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
 
         // need current physical contants for plotting of concordia etc.
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
@@ -433,14 +448,15 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @Override
     public void showRefMatWeightedMeanPlot() {
-        // may 2020 new approach per Nicole
-        HBox toolBox = new RefMatPlottingToolBoxNode(this);
-        if (!(vboxMaster.getChildren().get(0) instanceof RefMatPlottingToolBoxNode)) {
-            vboxMaster.getChildren().add(0, toolBox);
+        // may 2020 new approach per Nicole  
+        if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
+            vboxMaster.getChildren().remove(0);
         }
+        HBox toolBox = new RefMatPlottingToolBoxNode(this);
+        vboxMaster.getChildren().add(0, toolBox);
 
         // get type of correction
-        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
+//        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
         // flavor of plot
         String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
@@ -568,6 +584,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     private void showSampleWeightedMeanPlot() {
         // dec 2019 new approach per Nicole
+        if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
+            vboxMaster.getChildren().remove(0);
+        }
         HBox toolBox = new SamplesPlottingToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
@@ -700,7 +719,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                 corr7_RadioButton.setVisible(true);
 
-                Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
+//                Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
                 switch (selectedIndexIsotope) {
                     case PB_204:
                         corr4_RadioButton.setSelected(true);
@@ -721,20 +740,28 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     @FXML
     private void selectedIsotopeIndexAction(ActionEvent event) {
-        String correction = ((String) ((RadioButton) event.getSource()).getUserData()).substring(0, 1);
-        switch (correction) {
+//        String correction = ((String) ((RadioButton) event.getSource()).getUserData()).substring(0, 1);
+        switch (correction.substring(0, 1)) {
             case "4":
-                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+                squidProject.getTask().setSelectedIndexIsotope(PB_204);
+                selectedIndexIsotope = PB_204;
                 break;
             case "7":
-                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+                squidProject.getTask().setSelectedIndexIsotope(PB_207);
+                selectedIndexIsotope = PB_207;
                 break;
             default: // case 8
-                squidProject.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
+                squidProject.getTask().setSelectedIndexIsotope(PB_208);
+                selectedIndexIsotope = PB_208;
         }
 
         squidProject.getTask().setChanged(true);
 
+        showActivePlot();
+
+    }
+
+    public void showActivePlot() {
         switch (plotTypeSelected) {
             case CONCORDIA:
             case TERA_WASSERBURG:

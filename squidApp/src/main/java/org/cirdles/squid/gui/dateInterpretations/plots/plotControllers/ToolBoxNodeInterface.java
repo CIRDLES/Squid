@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 James F. Bowring and CIRDLES.org.
+ * Copyright 2020 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.dateInterpretations.plots.squid;
+package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface WeightedMeanRefreshInterface {  
+public interface ToolBoxNodeInterface {
     
-    public void toggleSpotExclusionWM(int index);
-    public void calculateWeightedMean();
-    public void refreshPlot();
-    public void showRefMatWeightedMeanPlot();
-    public void showActivePlot();
 }

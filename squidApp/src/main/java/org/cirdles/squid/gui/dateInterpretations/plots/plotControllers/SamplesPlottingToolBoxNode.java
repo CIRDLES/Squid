@@ -73,7 +73,7 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class SamplesPlottingToolBoxNode extends HBox {
+public class SamplesPlottingToolBoxNode extends HBox implements ToolBoxNodeInterface {
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private final ComboBox<String> sampleComboBox;

@@ -41,7 +41,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class RefMatPlottingToolBoxNode extends HBox {
+public class RefMatPlottingToolBoxNode extends HBox  implements ToolBoxNodeInterface {
 
     private WeightedMeanRefreshInterface plotsController;
 
@@ -78,7 +78,7 @@ public class RefMatPlottingToolBoxNode extends HBox {
 
         CheckBox autoExcludeSpotsCheckBox = autoExcludeSpotsCheckBox();
         HBox plotChoiceHBox = plotChoiceHBox();
-        HBox corrChoiceHBox = corrChoiceHBox();
+        HBox corrChoiceHBox = new CorrectionsControlToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
 
         Path separator1 = separator();
@@ -150,39 +150,6 @@ public class RefMatPlottingToolBoxNode extends HBox {
         plotChoiceHBox.getChildren().addAll(plotChoiceLabel, ageRB, ccRB);
 
         return plotChoiceHBox;
-    }
-
-    private HBox corrChoiceHBox() {
-
-        HBox corrChoiceHBox = new HBox(5);
-
-        Label corrChoiceLabel = new Label("Corr:");
-        formatNode(corrChoiceLabel, 35);
-
-        ToggleGroup corrGroup = new ToggleGroup();
-
-        RadioButton corr4_RadioButton = new RadioButton("4-corr");
-        corr4_RadioButton.setToggleGroup(corrGroup);
-        corr4_RadioButton.setUserData(PB4CORR);
-        corr4_RadioButton.setSelected(true);
-        formatNode(corr4_RadioButton, 60);
-
-        RadioButton ccRB = new RadioButton("CC");
-        ccRB.setToggleGroup(corrGroup);
-        ccRB.setUserData(true);
-        formatNode(ccRB, 40);
-
-//        // add listener after initial choice
-//        corrGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-//                WeightedMeanPlot.switchRefMatViewToCalibConst = (boolean) corrGroup.getSelectedToggle().getUserData();
-//                plotsController.showRefMatWeightedMeanPlot();
-//            }
-//        });
-        corrChoiceHBox.getChildren().addAll(corrChoiceLabel, corr4_RadioButton);
-
-        return corrChoiceHBox;
     }
 
     private HBox sortedHBox() {
