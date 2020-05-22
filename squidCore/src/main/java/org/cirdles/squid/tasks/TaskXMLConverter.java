@@ -167,83 +167,23 @@ public class TaskXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("namedExpressionsMap");
-        task.getNamedExpressionsMap().forEach((key, val) -> {
-            writer.startNode("entry");
-
-            writer.startNode("key");
-            writer.setValue(key);
-            writer.endNode();
-
-            writer.startNode("value");
-            context.convertAnother(val);
-            writer.endNode();
-
-            writer.endNode();
-        });
+        writeOutExpressionTreeHashMap(writer, context, task.getNamedExpressionsMap());
         writer.endNode();
 
         writer.startNode("namedOvercountExpressionsMap");
-        task.getNamedOvercountExpressionsMap().forEach((key, val) -> {
-            writer.startNode("entry");
-
-            writer.startNode("key");
-            writer.setValue(key);
-            writer.endNode();
-
-            writer.startNode("value");
-            context.convertAnother(val);
-            writer.endNode();
-
-            writer.endNode();
-        });
+        writeOutExpressionTreeHashMap(writer, context, task.getNamedOvercountExpressionsMap());
         writer.endNode();
 
         writer.startNode("namedConstantsMap");
-        task.getNamedConstantsMap().forEach((key, val) -> {
-            writer.startNode("entry");
-
-            writer.startNode("key");
-            writer.setValue(key);
-            writer.endNode();
-
-            writer.startNode("value");
-            context.convertAnother(val);
-            writer.endNode();
-
-            writer.endNode();
-        });
+        writeOutExpressionTreeHashMap(writer, context, task.getNamedConstantsMap());
         writer.endNode();
 
         writer.startNode("namedParametersMap");
-        task.getNamedParametersMap().forEach((key, val) -> {
-            writer.startNode("entry");
-
-            writer.startNode("key");
-            writer.setValue(key);
-            writer.endNode();
-
-            writer.startNode("value");
-            context.convertAnother(val);
-            writer.endNode();
-
-            writer.endNode();
-        });
+        writeOutExpressionTreeHashMap(writer, context, task.getNamedParametersMap());
         writer.endNode();
 
         writer.startNode("namedSpotLookupFieldsMap");
-        task.getNamedSpotLookupFieldsMap().forEach((key, val) -> {
-            writer.startNode("entry");
-
-            writer.startNode("key");
-            writer.setValue(key);
-            writer.endNode();
-
-            writer.startNode("value");
-            context.convertAnother(val);
-            writer.endNode();
-
-            writer.endNode();
-        });
+        writeOutExpressionTreeHashMap(writer, context, task.getNamedSpotLookupFieldsMap());
         writer.endNode();
 
         writer.startNode("useCalculatedAv_ParentElement_ConcenConst");
@@ -267,7 +207,7 @@ public class TaskXMLConverter implements Converter {
             writer.endNode();
 
             writer.startNode("value");
-            context.convertAnother(val);
+            writer.setValue(val);
             writer.endNode();
 
             writer.endNode();
@@ -382,113 +322,23 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        Map<String, ExpressionTreeInterface> namedExpressionsMap = task.getNamedExpressionsMap();
-        while (reader.hasMoreChildren()) {
-            String key;
-            ExpressionTreeInterface expTree = new ExpressionTree();
-
-            reader.moveDown();
-
-            reader.moveDown();
-            key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            expTree = (ExpressionTreeInterface) context.convertAnother(expTree, ExpressionTree.class);
-            reader.moveUp();
-
-            reader.moveUp();
-
-            namedExpressionsMap.put(key, expTree);
-        }
+        readInExpressionTreeHashMap(reader, context, task.getNamedExpressionsMap());
         reader.moveUp();
 
         reader.moveDown();
-        Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap = task.getNamedOvercountExpressionsMap();
-        while (reader.hasMoreChildren()) {
-            String key;
-            ExpressionTreeInterface expTree = new ExpressionTree();
-
-            reader.moveDown();
-
-            reader.moveDown();
-            key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            expTree = (ExpressionTree) context.convertAnother(expTree, ExpressionTree.class);
-            reader.moveUp();
-
-            reader.moveUp();
-
-            namedOvercountExpressionsMap.put(key, expTree);
-        }
+        readInExpressionTreeHashMap(reader, context, task.getNamedOvercountExpressionsMap());
         reader.moveUp();
 
         reader.moveDown();
-        Map<String, ExpressionTreeInterface> namedConstantsMap = task.getNamedConstantsMap();
-        while (reader.hasMoreChildren()) {
-            String key;
-            ExpressionTreeInterface expTree = new ExpressionTree();
-
-            reader.moveDown();
-
-            reader.moveDown();
-            key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            expTree = (ExpressionTree) context.convertAnother(expTree, ExpressionTree.class);
-            reader.moveUp();
-
-            reader.moveUp();
-
-            namedConstantsMap.put(key, expTree);
-        }
+        readInExpressionTreeHashMap(reader, context, task.getNamedConstantsMap());
         reader.moveUp();
 
         reader.moveDown();
-        Map<String, ExpressionTreeInterface> namedParametersMap = task.getNamedParametersMap();
-        while (reader.hasMoreChildren()) {
-            String key;
-            ExpressionTreeInterface expTree = new ExpressionTree();
-
-            reader.moveDown();
-
-            reader.moveDown();
-            key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            expTree = (ExpressionTree) context.convertAnother(expTree, ExpressionTree.class);
-            reader.moveUp();
-
-            reader.moveUp();
-
-            namedParametersMap.put(key, expTree);
-        }
+        readInExpressionTreeHashMap(reader, context, task.getNamedParametersMap());
         reader.moveUp();
 
         reader.moveDown();
-        Map<String, ExpressionTreeInterface> namedSpotLookupFieldsMap = task.getNamedSpotLookupFieldsMap();
-        while (reader.hasMoreChildren()) {
-            String key;
-            ExpressionTreeInterface expTree = new ExpressionTree();
-
-            reader.moveDown();
-
-            reader.moveDown();
-            key = reader.getValue();
-            reader.moveUp();
-
-            reader.moveDown();
-            expTree = (ExpressionTree) context.convertAnother(expTree, ExpressionTree.class);
-            reader.moveUp();
-
-            reader.moveUp();
-
-            namedSpotLookupFieldsMap.put(key, expTree);
-        }
+        readInExpressionTreeHashMap(reader, context, task.getNamedSpotLookupFieldsMap());
         reader.moveUp();
 
         reader.moveDown();
@@ -534,6 +384,49 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
 
         return task;
+    }
+
+    private static final void writeOutExpressionTreeHashMap(HierarchicalStreamWriter writer, MarshallingContext context, Map<String, ExpressionTreeInterface> map) {
+        map.forEach((key, val) -> {
+            if(val.amHealthy()) {
+                writer.startNode("entry");
+
+                writer.startNode("key");
+                writer.setValue(key);
+                writer.endNode();
+
+                writer.startNode(val.getClass().getName());
+                context.convertAnother(val);
+                writer.endNode();
+
+                writer.endNode();
+            }
+        });
+    }
+
+    private static final void readInExpressionTreeHashMap(HierarchicalStreamReader reader, UnmarshallingContext context, Map<String, ExpressionTreeInterface> map) {
+        while (reader.hasMoreChildren()) {
+            String key;
+            ExpressionTreeInterface expTree = new ExpressionTree();
+
+            reader.moveDown();
+
+            reader.moveDown();
+            key = reader.getValue();
+            reader.moveUp();
+
+            reader.moveDown();
+            try {
+                expTree = (ExpressionTree) context.convertAnother(expTree, Class.forName(reader.getNodeName()));
+            } catch (ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+            reader.moveUp();
+
+            reader.moveUp();
+
+            map.put(key, expTree);
+        }
     }
 
 }

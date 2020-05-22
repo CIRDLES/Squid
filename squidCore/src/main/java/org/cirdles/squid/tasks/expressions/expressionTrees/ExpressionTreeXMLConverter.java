@@ -102,7 +102,10 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("operation");
-        context.convertAnother(((ExpressionTree) expressionTree).getOperation());
+        writer.startNode("name");
+        OperationOrFunctionInterface operation = ((ExpressionTree) value).getOperation();
+        writer.setValue(operation == null ? "null" : operation.getName());
+        writer.endNode();
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
@@ -211,13 +214,15 @@ public class ExpressionTreeXMLConverter implements Converter {
         // operation
         reader.moveDown();
         reader.moveDown();
-        OperationOrFunctionInterface operation = Operation.operationFactory(reader.getValue());
-        if (operation == null) {
-            // try function list
-            operation = Function.operationFactory(reader.getValue());
+        String val = reader.getValue();
+        if(!val.equalsIgnoreCase("null")) {
+            OperationOrFunctionInterface operation = Operation.operationFactory(val);
+            if (operation == null) {
+                // try function list
+                operation = Function.operationFactory(reader.getValue());
+            }
+            ((ExpressionTree) expressionTree).setOperation(operation);
         }
-
-        ((ExpressionTree) expressionTree).setOperation(operation);
         reader.moveUp();
         reader.moveUp();
 

@@ -76,8 +76,8 @@ public class FileHandler {
         fileChooser.setTitle("Save Squid 3 Task");
         String initialFileName = FileNameFixer.fixFileName(((Task) squidProject.getTask()).getName()) + ".xml";
         fileChooser.setInitialFileName(initialFileName);
-        File initialDirectory = SquidPersistentState.getExistingPersistentState().getMRUTaskFile();
-        fileChooser.setInitialDirectory(initialDirectory != null && initialDirectory.exists() ? initialDirectory : null);
+        File initialDirectory = new File(SquidPersistentState.getExistingPersistentState().getMRUTaskFolderPath());
+        fileChooser.setInitialDirectory(initialDirectory.exists() ? initialDirectory : null);
 
         File squidTaskFile = fileChooser.showSaveDialog(ownerWindow);
 
@@ -85,7 +85,8 @@ public class FileHandler {
             retVal = squidTaskFile;
             Task task = (Task) squidProject.getTask();
             task.serializeXMLObject(retVal.getAbsolutePath());
-            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile.getParentFile());
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFolderPath(squidTaskFile.getParentFile().getCanonicalPath());
         }
 
         return retVal;
@@ -98,8 +99,8 @@ public class FileHandler {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid 3 Task");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 3 Task File", "*.xml"));
-        File initialDirectory = SquidPersistentState.getExistingPersistentState().getMRUTaskFile();
-        fileChooser.setInitialDirectory(initialDirectory != null && initialDirectory.exists() ? initialDirectory : null);
+        File initialDirectory = new File(SquidPersistentState.getExistingPersistentState().getMRUTaskFolderPath());
+        fileChooser.setInitialDirectory(initialDirectory.exists() ? initialDirectory : null);
         
         File squidTaskFile = fileChooser.showOpenDialog(ownerWindow);
 
@@ -109,6 +110,7 @@ public class FileHandler {
             task = (Task) task.readXMLObject(retVal.getAbsolutePath(), false);
             squidProject.setTask(task);
             SquidPersistentState.getExistingPersistentState().setMRUTaskFile(squidTaskFile);
+            SquidPersistentState.getExistingPersistentState().setMRUTaskFolderPath(squidTaskFile.getParentFile().getCanonicalPath());
         }
 
         return retVal;
