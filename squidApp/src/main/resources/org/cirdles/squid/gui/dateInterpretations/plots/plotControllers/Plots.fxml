@@ -27,14 +27,6 @@
                         <ToolBar fx:id="plotToolBar" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
                         <HBox fx:id="controlPanel" alignment="CENTER_LEFT" minHeight="28.0" prefHeight="28.0" spacing="5.0">
                            <children>
-                              <Label minWidth="83.0" prefHeight="28.0" prefWidth="83.0" text="Correction:" />
-                              <RadioButton fx:id="corr4_RadioButton" minWidth="68.0" mnemonicParsing="false" onAction="#selectedIsotopeIndexAction" prefHeight="18.0" prefWidth="68.0" selected="true" text="4-corr">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="correctionToggleGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="corr7_RadioButton" minWidth="68.0" mnemonicParsing="false" onAction="#selectedIsotopeIndexAction" prefHeight="18.0" prefWidth="68.0" text="7-corr" toggleGroup="$correctionToggleGroup" />
-                              <RadioButton fx:id="corr8_RadioButton" minWidth="71.0" mnemonicParsing="false" onAction="#selectedIsotopeIndexAction" prefHeight="18.0" prefWidth="71.0" text="8-corr" toggleGroup="$correctionToggleGroup" />
                               <Label minWidth="49.0" text="Flavor:" />
                               <RadioButton fx:id="plotFlavorOneRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" selected="true" text="Plot Flavor One">
                                  <toggleGroup>

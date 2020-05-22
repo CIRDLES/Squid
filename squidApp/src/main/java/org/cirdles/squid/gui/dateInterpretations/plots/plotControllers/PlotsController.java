@@ -77,8 +77,6 @@ import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillD
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
@@ -112,16 +110,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @FXML
     private VBox plotVBox;
     @FXML
-    private RadioButton corr4_RadioButton;
-    @FXML
-    private ToggleGroup correctionToggleGroup;
-    @FXML
-    private RadioButton corr8_RadioButton;
-    @FXML
-    private RadioButton corr7_RadioButton;
-    @FXML
     private AnchorPane plotAndConfigAnchorPane;
-
     @FXML
     private RadioButton plotFlavorOneRadioButton;
     @FXML
@@ -173,10 +162,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotListAnchorPane.prefHeightProperty().bind(spotListScrollPane.heightProperty());
         spotListAnchorPane.prefWidthProperty().bind(spotListScrollPane.widthProperty());
 
-        corr4_RadioButton.setUserData(PB4CORR);
-        corr7_RadioButton.setUserData(PB7CORR);
-        corr8_RadioButton.setUserData(PB8CORR);
-
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
@@ -212,8 +197,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             mapOfSpotsBySampleNames.put("Reference Mat", squidProject.getTask().getReferenceMaterialSpots());
             mapOfSpotsBySampleNames.put("Concentration Ref Mat", squidProject.getTask().getConcentrationReferenceMaterialSpots());
         }
-        // get type of correctionList
-//        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
 
         // need current physical contants for plotting of concordia etc.
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
@@ -455,8 +438,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         HBox toolBox = new RefMatPlottingToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
-        // get type of correction
-//        String correction = (String) correctionToggleGroup.getSelectedToggle().getUserData();
         // flavor of plot
         String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
@@ -690,9 +671,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorOneRadioButton.setDisable(false);
                 plotFlavorTwoRadioButton.setDisable(fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0);
 
-                corr7_RadioButton.setVisible(false);
-                corr8_RadioButton.setVisible(true);
-
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
@@ -701,36 +679,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
                 plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
 
-                boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
-                boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
-
-                corr8_RadioButton.setVisible(false);
-                if (!isDirectAltPD && !has232) { // perm1
-                    plotFlavorOneRadioButton.setSelected(true);
-                    plotFlavorTwoRadioButton.setDisable(true);
-                    corr8_RadioButton.setVisible(true);
-                } else if (!isDirectAltPD && has232) {// perm3
-                    plotFlavorOneRadioButton.setDisable(true);
-                    plotFlavorTwoRadioButton.setSelected(true);
-                } else {
-                    plotFlavorOneRadioButton.setDisable(false);
-                    plotFlavorTwoRadioButton.setDisable(false);
-                }
-
-                corr7_RadioButton.setVisible(true);
-
-//                Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
-                switch (selectedIndexIsotope) {
-                    case PB_204:
-                        corr4_RadioButton.setSelected(true);
-                        break;
-                    case PB_207:
-                        corr7_RadioButton.setSelected(true);
-                        break;
-                    case PB_208:
-                        corr8_RadioButton.setSelected(true);
-                }
-
                 showRefMatWeightedMeanPlot();
                 break;
             case WEIGHTED_MEAN_SAMPLE:
@@ -738,9 +686,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
     }
 
-    @FXML
     private void selectedIsotopeIndexAction(ActionEvent event) {
-//        String correction = ((String) ((RadioButton) event.getSource()).getUserData()).substring(0, 1);
         switch (correction.substring(0, 1)) {
             case "4":
                 squidProject.getTask().setSelectedIndexIsotope(PB_204);
@@ -756,9 +702,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
 
         squidProject.getTask().setChanged(true);
-
         showActivePlot();
-
     }
 
     public void showActivePlot() {
@@ -837,5 +781,4 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             return shrimpFraction.getFractionID();
         }
     }
-
 }
