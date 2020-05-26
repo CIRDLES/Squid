@@ -306,19 +306,43 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        task.setNominalMasses((List) context.convertAnother(task.getNominalMasses(), List.class));
+        List<String> nominalMasses = task.getNominalMasses();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            nominalMasses.add(reader.getValue());
+            reader.moveUp();
+        }
         reader.moveUp();
 
         reader.moveDown();
-        task.setRatioNames((List) context.convertAnother(task.getRatioNames(), List.class));
+        List<String> ratioNames = task.getRatioNames();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            ratioNames.add(reader.getValue());
+            reader.moveUp();
+        }
         reader.moveUp();
 
         reader.moveDown();
-        task.setTaskExpressionsOrdered((List) context.convertAnother(task.getTaskExpressionsOrdered(), List.class));
+        List<Expression> taskExpressionsOrdered = task.getTaskExpressionsOrdered();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            Expression exp = new Expression();
+            exp = (Expression) context.convertAnother(exp, Expression.class);
+            taskExpressionsOrdered.add(exp);
+            reader.moveUp();
+        }
         reader.moveUp();
 
         reader.moveDown();
-        task.setTaskExpressionsRemoved((SortedSet) context.convertAnother(task.getTaskExpressionsRemoved(), SortedSet.class));
+        SortedSet<Expression> taskExpressionsRemoved = task.getTaskExpressionsRemoved();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            Expression exp = new Expression();
+            exp = (Expression) context.convertAnother(exp, Expression.class);
+            taskExpressionsRemoved.add(exp);
+            reader.moveUp();
+        }
         reader.moveUp();
 
         reader.moveDown();
@@ -376,11 +400,25 @@ public class TaskXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        task.setSquidReportTablesRefMat((List) context.convertAnother(task.getSquidReportTablesRefMat(), List.class));
+        List<SquidReportTableInterface> squidReportTablesRefMat = task.getSquidReportTablesRefMat();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable("no name");
+            table = (SquidReportTable) context.convertAnother(table, SquidReportTable.class);
+            squidReportTablesRefMat.add(table);
+            reader.moveUp();
+        }
         reader.moveUp();
 
         reader.moveDown();
-        task.setSquidReportTablesUnknown((List) context.convertAnother(task.getSquidReportTablesUnknown(), List.class));
+        List<SquidReportTableInterface> squidReportTablesUnknown = task.getSquidReportTablesUnknown();
+        while(reader.hasMoreChildren()) {
+            reader.moveDown();
+            SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable("n/a");
+            table = (SquidReportTable) context.convertAnother(table, SquidReportTable.class);
+            squidReportTablesUnknown.add(table);
+            reader.moveUp();
+        }
         reader.moveUp();
 
         return task;
@@ -388,7 +426,7 @@ public class TaskXMLConverter implements Converter {
 
     private static final void writeOutExpressionTreeHashMap(HierarchicalStreamWriter writer, MarshallingContext context, Map<String, ExpressionTreeInterface> map) {
         map.forEach((key, val) -> {
-            if(val.amHealthy()) {
+            if (val.amHealthy()) {
                 writer.startNode("entry");
 
                 writer.startNode("key");
