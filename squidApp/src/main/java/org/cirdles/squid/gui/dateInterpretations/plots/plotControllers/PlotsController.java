@@ -52,9 +52,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -147,6 +144,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     public static Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
 
     public static String correction = PB4CORR;
+    
+    public static String calibrConstAgeBaseName = CALIB_CONST_206_238_ROOT;
+    
+    public static String concordiaFlavor = "C";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -202,7 +203,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
         // choose wetherill or tw
-        if (plotFlavorOneRadioButton.isSelected()) {
+        if (concordiaFlavor.equals("C")) {
             rootPlot = new TopsoilPlotWetherill(
                     "Wetherill Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
                     allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
@@ -255,7 +256,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
             // choose wetherill or tw
             PlotDisplayInterface myPlot;
-            if (plotFlavorOneRadioButton.isSelected()) {
+            if (concordiaFlavor.equals("C")) {
                 myPlot = new TopsoilPlotWetherill(
                         "Wetherill Concordia of " + correction + " for " + entry.getKey(),
                         entry.getValue(), physicalConstantsModel);
@@ -268,9 +269,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
 
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
-                String flavorOfConcordia = plotFlavorOneRadioButton.isSelected() ? "C" : "TW";
                 SampleTreeNodeInterface fractionNode
-                        = new ConcordiaFractionNode(flavorOfConcordia, spot, correction);
+                        = new ConcordiaFractionNode(concordiaFlavor, spot, correction);
                 if (((ConcordiaFractionNode) fractionNode).isValid()) {
 
                     fractionNodeDetails.add(fractionNode);
@@ -438,8 +438,6 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         HBox toolBox = new RefMatPlottingToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
-        // flavor of plot
-        String calibrConstAgeBaseName = (String) plotFlavorToggleGroup.getSelectedToggle().getUserData();
         // get details
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
@@ -678,6 +676,20 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 plotFlavorTwoRadioButton.setText(CALIB_CONST_208_232_ROOT + "_CalibConst");
                 plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
                 plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
+                
+                boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
+                boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
+                
+                if (!isDirectAltPD && !has232) { // perm1
+                    plotFlavorOneRadioButton.setSelected(true);
+                    plotFlavorTwoRadioButton.setDisable(true);
+                } else if (!isDirectAltPD && has232) {// perm3
+                    plotFlavorOneRadioButton.setDisable(true);
+                    plotFlavorTwoRadioButton.setSelected(true);
+                } else {
+                    plotFlavorOneRadioButton.setDisable(false);
+                    plotFlavorTwoRadioButton.setDisable(false);
+                }
 
                 showRefMatWeightedMeanPlot();
                 break;
@@ -686,24 +698,24 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         }
     }
 
-    private void selectedIsotopeIndexAction(ActionEvent event) {
-        switch (correction.substring(0, 1)) {
-            case "4":
-                squidProject.getTask().setSelectedIndexIsotope(PB_204);
-                selectedIndexIsotope = PB_204;
-                break;
-            case "7":
-                squidProject.getTask().setSelectedIndexIsotope(PB_207);
-                selectedIndexIsotope = PB_207;
-                break;
-            default: // case 8
-                squidProject.getTask().setSelectedIndexIsotope(PB_208);
-                selectedIndexIsotope = PB_208;
-        }
-
-        squidProject.getTask().setChanged(true);
-        showActivePlot();
-    }
+//    private void selectedIsotopeIndexAction(ActionEvent event) {
+//        switch (correction.substring(0, 1)) {
+//            case "4":
+//                squidProject.getTask().setSelectedIndexIsotope(PB_204);
+//                selectedIndexIsotope = PB_204;
+//                break;
+//            case "7":
+//                squidProject.getTask().setSelectedIndexIsotope(PB_207);
+//                selectedIndexIsotope = PB_207;
+//                break;
+//            default: // case 8
+//                squidProject.getTask().setSelectedIndexIsotope(PB_208);
+//                selectedIndexIsotope = PB_208;
+//        }
+//
+//        squidProject.getTask().setChanged(true);
+//        showActivePlot();
+//    }
 
     public void showActivePlot() {
         switch (plotTypeSelected) {

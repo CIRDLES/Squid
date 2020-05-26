@@ -17,10 +17,6 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 
 /**
@@ -52,16 +48,6 @@ public class ConcordiaPlottingToolBoxNode extends HBox implements ToolBoxNodeInt
         HBox corrChoiceHBox = new CorrectionsControlToolBoxNode(plotsController);
 
         getChildren().addAll(corrChoiceHBox);
-    }
-
-    private Path separator() {
-        Path separator = new Path();
-        separator.getElements().add(new MoveTo(2.0f, 0.0f));
-        separator.getElements().add(new VLineTo(20.0f));
-        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
-        separator.setStrokeWidth(2);
-
-        return separator;
     }
 
 }

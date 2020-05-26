@@ -97,11 +97,7 @@ public class RefMatPlottingToolBoxNode extends HBox  implements ToolBoxNodeInter
 
         return separator;
     }
-
-    private void displaySample(String newValue) {
-
-    }
-
+    
     private CheckBox autoExcludeSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Auto-reject spots");
         autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
@@ -130,12 +126,13 @@ public class RefMatPlottingToolBoxNode extends HBox  implements ToolBoxNodeInter
         RadioButton ageRB = new RadioButton("Age");
         ageRB.setToggleGroup(plotGroup);
         ageRB.setUserData(false);
-        ageRB.setSelected(true);
+        ageRB.setSelected(!WeightedMeanPlot.switchRefMatViewToCalibConst);
         formatNode(ageRB, 45);
 
         RadioButton ccRB = new RadioButton("CC");
         ccRB.setToggleGroup(plotGroup);
         ccRB.setUserData(true);
+        ccRB.setSelected(WeightedMeanPlot.switchRefMatViewToCalibConst);
         formatNode(ccRB, 40);
 
         // add listener after initial choice
