@@ -78,7 +78,6 @@ squidCore/Hf1sabserr.png
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/*.xls
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/listOfXSLTMLFiles.txt
 
-
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterialModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/commonPbModels/*
@@ -86,6 +85,7 @@ squidCore/Hf1sabserr.png
 !squidWeb/src/main/resources/org/cirdles/squid/tasks/squidTask25/*.xls
 
 !squidCore/src/test/resources/org/cirdles/squid/core/*.csv
+!squidCore/src/test/resources/org/cirdles/squid/tasks/TaskXMLFiles/SampleTask.XML
 
 !squidApp/pomX.xml
 !squidCore/pomX.xml
