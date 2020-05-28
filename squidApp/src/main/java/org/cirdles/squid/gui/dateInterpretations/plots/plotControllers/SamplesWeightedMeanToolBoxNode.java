@@ -73,7 +73,7 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class SamplesPlottingToolBoxNode extends HBox implements ToolBoxNodeInterface {
+public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeInterface {
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private final ComboBox<String> sampleComboBox;
@@ -91,7 +91,7 @@ public class SamplesPlottingToolBoxNode extends HBox implements ToolBoxNodeInter
 
     private CheckBox filterInfoCheckBox;
 
-    public SamplesPlottingToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public SamplesWeightedMeanToolBoxNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
 
         this.sampleComboBox = new ComboBox<>();
@@ -574,7 +574,7 @@ public class SamplesPlottingToolBoxNode extends HBox implements ToolBoxNodeInter
                 try {
                     writeWeightedMeanReport(false);
                 } catch (IOException ex) {
-                    Logger.getLogger(SamplesPlottingToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -588,7 +588,7 @@ public class SamplesPlottingToolBoxNode extends HBox implements ToolBoxNodeInter
                 try {
                     writeWeightedMeanReport(true);
                 } catch (IOException ex) {
-                    Logger.getLogger(SamplesPlottingToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

@@ -23,7 +23,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
@@ -36,19 +35,18 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class RefMatPlottingToolBoxNode extends HBox  implements ToolBoxNodeInterface {
+public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeInterface {
 
     private WeightedMeanRefreshInterface plotsController;
 
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
 
-    public RefMatPlottingToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public RefMatWeightedMeanControlNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
 
         this.plotsController = plotsController;
@@ -78,7 +76,7 @@ public class RefMatPlottingToolBoxNode extends HBox  implements ToolBoxNodeInter
 
         CheckBox autoExcludeSpotsCheckBox = autoExcludeSpotsCheckBox();
         HBox plotChoiceHBox = plotChoiceHBox();
-        HBox corrChoiceHBox = new CorrectionsControlToolBoxNode(plotsController);
+        HBox corrChoiceHBox = new RefMatWeightedMeanToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
 
         Path separator1 = separator();

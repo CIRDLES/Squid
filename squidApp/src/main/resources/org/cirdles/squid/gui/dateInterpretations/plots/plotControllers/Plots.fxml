@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="vboxMaster" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" stylesheets="@../../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController">
@@ -25,17 +21,6 @@
                      <children>
                         <AnchorPane fx:id="plotAndConfigAnchorPane" VBox.vgrow="ALWAYS" />
                         <ToolBar fx:id="plotToolBar" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
-                        <HBox fx:id="controlPanel" alignment="CENTER_LEFT" minHeight="28.0" prefHeight="28.0" spacing="5.0">
-                           <children>
-                              <Label minWidth="49.0" text="Flavor:" />
-                              <RadioButton fx:id="plotFlavorOneRadioButton" mnemonicParsing="false" onAction="#plotChooserAction" selected="true" text="Plot Flavor One">
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="plotFlavorToggleGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="plotFlavorTwoRadioButton" minWidth="116.0" mnemonicParsing="false" onAction="#plotChooserAction" text="PlotFlavor Two" toggleGroup="$plotFlavorToggleGroup" />
-                           </children>
-                        </HBox>
                      </children>
                   </VBox>
                </content>

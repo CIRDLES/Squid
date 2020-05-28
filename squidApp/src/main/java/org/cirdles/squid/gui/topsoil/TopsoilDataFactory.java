@@ -56,7 +56,7 @@ public class TopsoilDataFactory {
         return datum;
     }
 
-    public static Map<String, Object> prepareTeraWasserburgDatum(
+    public static Map<String, Object> prepareTerraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
         // TW is not defined for reference materials

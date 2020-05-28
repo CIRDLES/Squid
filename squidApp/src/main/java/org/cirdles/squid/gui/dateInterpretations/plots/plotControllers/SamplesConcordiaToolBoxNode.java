@@ -36,7 +36,6 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plotTypeSelected;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.selectedIndexIsotope;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
@@ -48,11 +47,11 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class CorrectionsControlToolBoxNode extends HBox {
+public class SamplesConcordiaToolBoxNode extends HBox {
 
     private WeightedMeanRefreshInterface plotsController;
 
-    public CorrectionsControlToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public SamplesConcordiaToolBoxNode(WeightedMeanRefreshInterface plotsController) {
         super(5);
         this.plotsController = plotsController;
 
@@ -86,8 +85,8 @@ public class CorrectionsControlToolBoxNode extends HBox {
         // flavors
         Path separator1 = separator();
 
-        Label typeChoiceLabel = new Label("Type:");
-        formatNode(typeChoiceLabel, 35);
+        Label typeChoiceLabel = new Label("System:");
+        formatNode(typeChoiceLabel, 55);
 
         ToggleGroup typeGroup = new ToggleGroup();
 
@@ -101,97 +100,31 @@ public class CorrectionsControlToolBoxNode extends HBox {
 
         boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
         boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
-        // weighted mean
-        if (PlotsController.plotTypeSelected.name().startsWith("WEIGHT")) {
-            type1RadioButton.setText(CALIB_CONST_206_238_ROOT);
-            type2RadioButton.setText(CALIB_CONST_208_232_ROOT);
-            type1RadioButton.setUserData(CALIB_CONST_206_238_ROOT);
-            type2RadioButton.setUserData(CALIB_CONST_208_232_ROOT);
 
-            corr8_RadioButton.setDisable(true);
-//            PlotsController.calibrConstAgeBaseName = CALIB_CONST_206_238_ROOT;
-            if (!isDirectAltPD && !has232) { // perm1
-                type1RadioButton.setSelected(true);
-                PlotsController.calibrConstAgeBaseName = CALIB_CONST_206_238_ROOT;
-                type2RadioButton.setDisable(true);
-                corr8_RadioButton.setDisable(false);
-            } else if (!isDirectAltPD && has232) {// perm3
-                type1RadioButton.setDisable(true);
-                type2RadioButton.setSelected(true);
-                PlotsController.calibrConstAgeBaseName = CALIB_CONST_208_232_ROOT;
-            } else {
-                type1RadioButton.setDisable(false);
-                type1RadioButton.setSelected(PlotsController.calibrConstAgeBaseName.equals(CALIB_CONST_206_238_ROOT));
-                type2RadioButton.setDisable(false);
-                type2RadioButton.setSelected(PlotsController.calibrConstAgeBaseName.equals(CALIB_CONST_208_232_ROOT));
-            }
-
-            if ((correction.equals(PB8CORR)) && (corr8_RadioButton.isDisabled())) {
-                correction = PB4CORR;
-                corr4_RadioButton.setSelected(true);
-            }
-
-            getChildren().addAll(
-                    corrChoiceLabel, corr4_RadioButton, corr7_RadioButton, corr8_RadioButton, separator1, typeChoiceLabel, type1RadioButton, type2RadioButton);
-        } else {
-            // concordia
-            if (correction.equals(PB7CORR)) {
-                correction = PB4CORR;
-                corr4_RadioButton.setSelected(true);
-            }
-
-            if (fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0) {
-                PlotsController.concordiaFlavor = "C";
-            }
-
-            type1RadioButton.setText("Wetherill");
-            type1RadioButton.setUserData("C");
-            type1RadioButton.setSelected(PlotsController.concordiaFlavor.equals("C"));
-            formatNode(type1RadioButton, 80);
-
-            type2RadioButton.setText("Tera-Wasserburg");
-            type2RadioButton.setUserData("TW");
-            type2RadioButton.setSelected(PlotsController.concordiaFlavor.equals("TW"));
-            formatNode(type2RadioButton, 120);
-
-            if (fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0) {
-                // ref materials
-                corr8_RadioButton.setDisable(isDirectAltPD || has232);
-                if (isDirectAltPD || has232) {
-                    correction = PB4CORR;
-                }
-                //corr4_RadioButton.setDisable(!isDirectAltPD && has232);
-                corr4_RadioButton.setSelected(isDirectAltPD || has232 || corr4_RadioButton.isSelected());
-                getChildren().addAll(
-                        corrChoiceLabel, corr4_RadioButton, corr8_RadioButton);
-            } else {
-                // unknowns
-                getChildren().addAll(
-                        corrChoiceLabel, corr4_RadioButton, corr8_RadioButton, separator1, typeChoiceLabel, type1RadioButton, type2RadioButton);
-            }
+        if (correction.equals(PB7CORR)) {
+            correction = PB4CORR;
+            corr4_RadioButton.setSelected(true);
         }
+
+        type1RadioButton.setText("Wetherill");
+        type1RadioButton.setUserData("C");
+        type1RadioButton.setSelected(PlotsController.concordiaFlavor.equals("C"));
+        formatNode(type1RadioButton, 80);
+
+        type2RadioButton.setText("Terra-Wasserburg");
+        type2RadioButton.setUserData("TW");
+        type2RadioButton.setSelected(PlotsController.concordiaFlavor.equals("TW"));
+        formatNode(type2RadioButton, 120);
+
+        getChildren().addAll(
+                corrChoiceLabel, corr4_RadioButton, corr8_RadioButton, separator1, typeChoiceLabel, type1RadioButton, type2RadioButton);
 
         // add listener after initial choice
         corrGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 correction = ((String) corrGroup.getSelectedToggle().getUserData());
-                switch (correction.substring(0, 1)) {
-                    case "4":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_204);
-                        selectedIndexIsotope = PB_204;
-                        break;
-                    case "7":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_207);
-                        selectedIndexIsotope = PB_207;
-                        break;
-                    default: // case 8
-                        squidProject.getTask().setSelectedIndexIsotope(PB_208);
-                        selectedIndexIsotope = PB_208;
-                }
-
                 squidProject.getTask().setChanged(true);
-
                 plotsController.showActivePlot();
             }
         });
@@ -201,18 +134,8 @@ public class CorrectionsControlToolBoxNode extends HBox {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
-                switch (plotTypeSelected) {
-                    case CONCORDIA:
-                    case TERA_WASSERBURG:
-                        PlotsController.concordiaFlavor = flavor;
-                        break;
-                    case WEIGHTED_MEAN:
-                    case WEIGHTED_MEAN_SAMPLE:
-                        PlotsController.calibrConstAgeBaseName = flavor;
-                }
-
+                PlotsController.concordiaFlavor = flavor;
                 squidProject.getTask().setChanged(true);
-
                 plotsController.showActivePlot();
             }
         });

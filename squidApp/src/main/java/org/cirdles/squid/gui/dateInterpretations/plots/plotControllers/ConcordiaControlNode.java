@@ -17,16 +17,18 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class ConcordiaPlottingToolBoxNode extends HBox implements ToolBoxNodeInterface {
+public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
 
     private WeightedMeanRefreshInterface plotsController;
 
-    public ConcordiaPlottingToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public ConcordiaControlNode(WeightedMeanRefreshInterface plotsController) {
         super(4);
 
         this.plotsController = plotsController;
@@ -45,9 +47,14 @@ public class ConcordiaPlottingToolBoxNode extends HBox implements ToolBoxNodeInt
         setFillHeight(true);
         setAlignment(Pos.CENTER);
 
-        HBox corrChoiceHBox = new CorrectionsControlToolBoxNode(plotsController);
+        HBox isotopeChoiceHBox;
+        if (fractionTypeSelected.compareTo(Squid3Constants.SpotTypes.UNKNOWN) == 0) {
+            isotopeChoiceHBox = new SamplesConcordiaToolBoxNode(plotsController);
+        } else {
+            isotopeChoiceHBox = new RefMatConcordiaToolBoxNode(plotsController);
+        }
 
-        getChildren().addAll(corrChoiceHBox);
+        getChildren().addAll(isotopeChoiceHBox);
     }
 
 }

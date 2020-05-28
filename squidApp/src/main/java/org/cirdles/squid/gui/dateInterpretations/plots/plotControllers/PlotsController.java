@@ -30,16 +30,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -51,7 +48,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
-import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
@@ -68,16 +65,16 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
-import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
-import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.MessagePlot;
+import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTerraWasserburg;
 import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_U_PB;
+import static org.cirdles.squid.gui.topsoil.TopsoilDataFactory.prepareTerraWasserburgDatum;
 
 /**
  *
@@ -109,15 +106,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     @FXML
     private AnchorPane plotAndConfigAnchorPane;
     @FXML
-    private RadioButton plotFlavorOneRadioButton;
-    @FXML
-    private RadioButton plotFlavorTwoRadioButton;
-    @FXML
-    private ToggleGroup plotFlavorToggleGroup;
-    @FXML
     private ScrollPane plotScrollPane;
-    @FXML
-    private HBox controlPanel;
     @FXML
     private ScrollPane spotListScrollPane;
     @FXML
@@ -125,7 +114,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
-        TERA_WASSERBURG("TERA_WASSERBURG"),
+        TERRA_WASSERBURG("TERRA_WASSERBURG"),
         WEIGHTED_MEAN("WEIGHTED_MEAN"),
         WEIGHTED_MEAN_SAMPLE("WEIGHTED_MEAN_SAMPLE");
 
@@ -141,12 +130,10 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     public static SpotTypes fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
 
-    public static Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
-
     public static String correction = PB4CORR;
-    
+
     public static String calibrConstAgeBaseName = CALIB_CONST_206_238_ROOT;
-    
+
     public static String concordiaFlavor = "C";
 
     @Override
@@ -166,9 +153,39 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
-        selectedIndexIsotope = squidProject.getTask().getSelectedIndexIsotope();
+        showActivePlot();
+    }
 
-        customizePlotChooserToolbarAndInvokePlotter();
+    private PlotDisplayInterface generateConcordiaPlot(
+            String plotType,
+            List<ShrimpFractionExpressionInterface> shrimpFractions,
+            ParametersModel physicalConstantsModel) {
+
+        PlotDisplayInterface plot;
+        // choose wetherill or tw
+        if (concordiaFlavor.equals("C")) {
+            if (plotType.equals("UNKNOWNS")) {
+                plot = new TopsoilPlotWetherill(
+                        "Wetherill Concordia of " + correction + " for " + plotType,
+                        shrimpFractions, physicalConstantsModel);
+            } else {
+                if (squidProject.getTask().getSelectedIndexIsotope().equals(IndexIsoptopesEnum.PB_207)) {
+                    plot = new MessagePlot(
+                            "Concordia of Reference Material is not defined for Index Isotope "
+                            + squidProject.getTask().getSelectedIndexIsotope().getName());
+                } else {
+                    plot = new TopsoilPlotWetherill(
+                            "Wetherill Concordia from Index Isotope " + squidProject.getTask().getSelectedIndexIsotope().getName() + " for " + plotType,
+                            shrimpFractions, physicalConstantsModel);
+                }
+            }
+        } else {
+            plot = new TopsoilPlotTerraWasserburg(
+                    "Terra-Wasserburg Concordia of " + correction + " for " + plotType,
+                    shrimpFractions, physicalConstantsModel);
+        }
+
+        return plot;
     }
 
     private void showConcordiaPlotsOfUnknownsOrRefMat() {
@@ -176,7 +193,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
-        HBox toolBox = new ConcordiaPlottingToolBoxNode(this);
+        HBox toolBox = new ConcordiaControlNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
         spotsTreeViewCheckBox = new CheckTreeView<>();
@@ -202,16 +219,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         // need current physical contants for plotting of concordia etc.
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
-        // choose wetherill or tw
-        if (concordiaFlavor.equals("C")) {
-            rootPlot = new TopsoilPlotWetherill(
-                    "Wetherill Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
-                    allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
-        } else {
-            rootPlot = new TopsoilPlotTeraWasserburg(
-                    "Tera-Wasserburg Concordia of " + correction + " for " + fractionTypeSelected.getPlotType(),
-                    allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
-        }
+        rootPlot = generateConcordiaPlot(
+                fractionTypeSelected.getPlotType(), allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
+
         rootData = new ArrayList<>();
 
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
@@ -254,17 +264,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
             List<Map<String, Object>> myData = new ArrayList<>();
 
-            // choose wetherill or tw
-            PlotDisplayInterface myPlot;
-            if (concordiaFlavor.equals("C")) {
-                myPlot = new TopsoilPlotWetherill(
-                        "Wetherill Concordia of " + correction + " for " + entry.getKey(),
-                        entry.getValue(), physicalConstantsModel);
-            } else {
-                myPlot = new TopsoilPlotTeraWasserburg(
-                        "Tera-Wasserburg Concordia of " + correction + " for " + entry.getKey(),
-                        entry.getValue(), physicalConstantsModel);
-            }
+            PlotDisplayInterface myPlot = generateConcordiaPlot(
+                    entry.getKey(), entry.getValue(), physicalConstantsModel);
 
             mapOfPlotsOfSpotSets.put(sampleItem.getValue().getNodeName(), myPlot);
 
@@ -375,11 +376,11 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                     if (plotTypeSelected.compareTo(PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
                         plotVBox.getChildren().remove(plotToolBar);
-                        plotVBox.getChildren().remove(controlPanel);
+
                         ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty());
                         spotsTreeViewCheckBox.refresh();
                     } else {
-                        ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty().subtract(controlPanel.getPrefHeight()));
+                        ((Canvas) plot).heightProperty().bind(plotScrollPane.heightProperty());
                     }
                 } else {
 
@@ -406,10 +407,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         } else {
             plotAndConfigAnchorPane.getChildren().clear();
             plotToolBar.getItems().clear();
-            controlPanel.getChildren().clear();
 
             plotVBox.getChildren().remove(plotToolBar);
-            plotVBox.getChildren().remove(controlPanel);
+
         }
     }
 
@@ -435,7 +435,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
-        HBox toolBox = new RefMatPlottingToolBoxNode(this);
+        HBox toolBox = new RefMatWeightedMeanControlNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
         // get details
@@ -566,7 +566,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
-        HBox toolBox = new SamplesPlottingToolBoxNode(this);
+        HBox toolBox = new SamplesWeightedMeanToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
         ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new CheckBoxTreeCell<>(
@@ -652,79 +652,17 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     }
 
-    @FXML
-    private void plotChooserAction(ActionEvent event) {
-        if (((Task) squidProject.getTask()).getReferenceMaterialSpots().size() > 0) {
-            customizePlotChooserToolbarAndInvokePlotter();
-        }
-    }
-
-    private void customizePlotChooserToolbarAndInvokePlotter() {
-
+    public void showActivePlot() {
         switch (plotTypeSelected) {
             case CONCORDIA:
-            case TERA_WASSERBURG:
-                plotFlavorOneRadioButton.setText("Wetherill Concordia");
-                plotFlavorTwoRadioButton.setText("Tera-Wasserburg");
-                plotFlavorOneRadioButton.setDisable(false);
-                plotFlavorTwoRadioButton.setDisable(fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0);
-
+            case TERRA_WASSERBURG:
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
-                plotFlavorOneRadioButton.setText(CALIB_CONST_206_238_ROOT + "_CalibConst");
-                plotFlavorTwoRadioButton.setText(CALIB_CONST_208_232_ROOT + "_CalibConst");
-                plotFlavorOneRadioButton.setUserData(CALIB_CONST_206_238_ROOT);
-                plotFlavorTwoRadioButton.setUserData(CALIB_CONST_208_232_ROOT);
-                
-                boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
-                boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
-                
-                if (!isDirectAltPD && !has232) { // perm1
-                    plotFlavorOneRadioButton.setSelected(true);
-                    plotFlavorTwoRadioButton.setDisable(true);
-                } else if (!isDirectAltPD && has232) {// perm3
-                    plotFlavorOneRadioButton.setDisable(true);
-                    plotFlavorTwoRadioButton.setSelected(true);
-                } else {
-                    plotFlavorOneRadioButton.setDisable(false);
-                    plotFlavorTwoRadioButton.setDisable(false);
-                }
-
                 showRefMatWeightedMeanPlot();
                 break;
             case WEIGHTED_MEAN_SAMPLE:
                 showSampleWeightedMeanPlot();
-        }
-    }
-
-//    private void selectedIsotopeIndexAction(ActionEvent event) {
-//        switch (correction.substring(0, 1)) {
-//            case "4":
-//                squidProject.getTask().setSelectedIndexIsotope(PB_204);
-//                selectedIndexIsotope = PB_204;
-//                break;
-//            case "7":
-//                squidProject.getTask().setSelectedIndexIsotope(PB_207);
-//                selectedIndexIsotope = PB_207;
-//                break;
-//            default: // case 8
-//                squidProject.getTask().setSelectedIndexIsotope(PB_208);
-//                selectedIndexIsotope = PB_208;
-//        }
-//
-//        squidProject.getTask().setChanged(true);
-//        showActivePlot();
-//    }
-
-    public void showActivePlot() {
-        switch (plotTypeSelected) {
-            case CONCORDIA:
-            case TERA_WASSERBURG:
-                showConcordiaPlotsOfUnknownsOrRefMat();
-                break;
-            case WEIGHTED_MEAN:
-                showRefMatWeightedMeanPlot();
         }
     }
 
@@ -740,7 +678,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
             if (flavor.compareToIgnoreCase("C") == 0) {
                 this.datum = prepareWetherillDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
             } else {
-                this.datum = prepareTeraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
+                this.datum = prepareTerraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
             }
             if (datum != null) {
                 this.datum.put(Variable.SELECTED.getTitle(), shrimpFraction.isSelected());
