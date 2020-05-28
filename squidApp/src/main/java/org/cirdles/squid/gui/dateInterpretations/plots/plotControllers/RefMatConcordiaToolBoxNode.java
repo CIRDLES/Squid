@@ -53,7 +53,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
 
         Label isotopeChoiceLabel = new Label("Index Isotope:");
-        formatNode(isotopeChoiceLabel, 95);
+        formatNode(isotopeChoiceLabel, 90);
 
         ToggleGroup isotopeGroup = new ToggleGroup();
 

@@ -98,9 +98,6 @@ public class SamplesConcordiaToolBoxNode extends HBox {
         type2RadioButton.setToggleGroup(typeGroup);
         formatNode(type2RadioButton, 90);
 
-        boolean isDirectAltPD = squidProject.getTask().isDirectAltPD();
-        boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
-
         if (correction.equals(PB7CORR)) {
             correction = PB4CORR;
             corr4_RadioButton.setSelected(true);

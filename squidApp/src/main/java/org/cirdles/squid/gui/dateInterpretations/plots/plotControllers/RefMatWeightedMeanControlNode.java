@@ -39,7 +39,7 @@ import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeInterface {
+public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeInterface {
 
     private WeightedMeanRefreshInterface plotsController;
 
@@ -75,6 +75,7 @@ public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeI
         setAlignment(Pos.CENTER);
 
         CheckBox autoExcludeSpotsCheckBox = autoExcludeSpotsCheckBox();
+        CheckBox showExcludedSpotsCheckBox = showExcludedSpotsCheckBox();
         HBox plotChoiceHBox = plotChoiceHBox();
         HBox corrChoiceHBox = new RefMatWeightedMeanToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
@@ -83,7 +84,11 @@ public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeI
         Path separator2 = separator();
         Path separator3 = separator();
 
-        getChildren().addAll(autoExcludeSpotsCheckBox, separator1, plotChoiceHBox, separator2, corrChoiceHBox, separator3, sortingToolBox);
+        getChildren().addAll(
+                autoExcludeSpotsCheckBox, showExcludedSpotsCheckBox,
+                separator1, plotChoiceHBox,
+                separator2, corrChoiceHBox,
+                separator3, sortingToolBox);
     }
 
     private Path separator() {
@@ -95,7 +100,7 @@ public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeI
 
         return separator;
     }
-    
+
     private CheckBox autoExcludeSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Auto-reject spots");
         autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
@@ -112,12 +117,26 @@ public class RefMatWeightedMeanControlNode extends HBox  implements ToolBoxNodeI
         return autoExcludeSpotsCheckBox;
     }
 
+    private CheckBox showExcludedSpotsCheckBox() {
+        CheckBox autoExcludeSpotsCheckBox = new CheckBox("Plot rejects");
+        autoExcludeSpotsCheckBox.setSelected(WeightedMeanPlot.doPlotRejectedSpots);
+        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
+                plotsController.showRefMatWeightedMeanPlot();
+            }
+        });
+        formatNode(autoExcludeSpotsCheckBox, 85);
+        return autoExcludeSpotsCheckBox;
+    }
+
     private HBox plotChoiceHBox() {
 
         HBox plotChoiceHBox = new HBox(5);
 
         Label plotChoiceLabel = new Label("Plot:");
-        formatNode(plotChoiceLabel, 35);
+        formatNode(plotChoiceLabel, 30);
 
         ToggleGroup plotGroup = new ToggleGroup();
 

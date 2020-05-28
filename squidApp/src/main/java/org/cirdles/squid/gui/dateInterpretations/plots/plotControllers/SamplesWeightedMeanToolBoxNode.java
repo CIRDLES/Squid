@@ -37,7 +37,6 @@ import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
@@ -232,7 +231,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
             checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM
                     .getRejectedIndices()[((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue())
-                    .getIndexOfSpot()]);
+                            .getIndexOfSpot()]);
 
             checkBoxTreeItemWM.selectedProperty().addListener((observable, oldChoice, newChoice) -> {
                 ((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newChoice));
@@ -341,7 +340,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                        .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
                         if (filterInfoCheckBox.isSelected()) {
@@ -366,8 +365,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         // non-AGE case for exploration
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
-                                        selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                        .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
+                                                selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
                         spotSummaryDetailsWM.rejectNone();
                         spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
@@ -416,7 +415,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         filterInfoCheckBox = new CheckBox("Filter by min. Prob of Fit:");
         filterInfoCheckBox.setSelected(false);
         probabilitySlider.setDisable(true);
-        formatNode(filterInfoCheckBox, 170);
+        formatNode(filterInfoCheckBox, 150);
         filterInfoCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -443,7 +442,9 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         formatNode(probTextField, 40);
         probTextField.setStyle(probTextField.getStyle() + "-fx-text-fill: red;");
 
-        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probTextField);
+        CheckBox showExcludedSpotsCheckBox = showExcludedSpotsCheckBox();
+
+        filterInfoHBox.getChildren().addAll(filterInfoCheckBox, probTextField, showExcludedSpotsCheckBox);
 
         probabilitySlider.setShowTickLabels(true);
         probabilitySlider.setShowTickMarks(true);
@@ -479,6 +480,20 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 .addAll(filterInfoHBox, probabilitySlider);
 
         return filterToolBox;
+    }
+
+    private CheckBox showExcludedSpotsCheckBox() {
+        CheckBox autoExcludeSpotsCheckBox = new CheckBox("Plot rejects");
+        autoExcludeSpotsCheckBox.setSelected(WeightedMeanPlot.doPlotRejectedSpots);
+        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
+                plotsController.refreshPlot();
+            }
+        });
+        formatNode(autoExcludeSpotsCheckBox, 85);
+        return autoExcludeSpotsCheckBox;
     }
 
     private void updateSampleFromSlider(double newValue) {
@@ -562,7 +577,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         HBox saveDataHBox = new HBox(5);
         Label saveWMStatsLabel = new Label("Save WM stats to file:");
-        saveWMStatsLabel.setAlignment(Pos.CENTER_RIGHT);
+        saveWMStatsLabel.setAlignment(Pos.CENTER_LEFT);
         formatNode(saveWMStatsLabel, 125);
 
         Button saveToNewFileButton = new Button("New");
@@ -593,26 +608,26 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             }
         });
 
-        saveDataHBox.getChildren().addAll(saveWMStatsLabel, saveToNewFileButton, appendToFileButton);
+        saveDataHBox.getChildren().addAll(saveToNewFileButton, appendToFileButton);
+//
+//        HBox saveImageHBox = new HBox(5);
+//        Label saveImageLabel = new Label("Save WM Image as:");
+//        saveImageLabel.setAlignment(Pos.CENTER_RIGHT);
+//        formatNode(saveImageLabel, 125);
+//
+//        Button saveAsSVGFileButton = new Button("SVG");
+//        formatNode(saveAsSVGFileButton, 50);
+//        saveAsSVGFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+//        saveAsSVGFileButton.setDisable(true);
+//
+//        Button saveAsPDFFileButton = new Button("PDF");
+//        formatNode(saveAsPDFFileButton, 50);
+//        saveAsPDFFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+//        saveAsPDFFileButton.setDisable(true);
+//
+//        saveImageHBox.getChildren().addAll(saveImageLabel, saveAsSVGFileButton, saveAsPDFFileButton);
 
-        HBox saveImageHBox = new HBox(5);
-        Label saveImageLabel = new Label("Save WM Image as:");
-        saveImageLabel.setAlignment(Pos.CENTER_RIGHT);
-        formatNode(saveImageLabel, 125);
-
-        Button saveAsSVGFileButton = new Button("SVG");
-        formatNode(saveAsSVGFileButton, 50);
-        saveAsSVGFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveAsSVGFileButton.setDisable(true);
-
-        Button saveAsPDFFileButton = new Button("PDF");
-        formatNode(saveAsPDFFileButton, 50);
-        saveAsPDFFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveAsPDFFileButton.setDisable(true);
-
-        saveImageHBox.getChildren().addAll(saveImageLabel, saveAsSVGFileButton, saveAsPDFFileButton);
-
-        saveAsToolBox.getChildren().addAll(saveDataHBox, saveImageHBox);
+        saveAsToolBox.getChildren().addAll(saveWMStatsLabel, saveDataHBox);
 
         return saveAsToolBox;
     }
@@ -653,10 +668,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 }
                 if (writeReport.getValue()) {
                     if (reportFile.exists() && !doAppendProperty.getValue()) {
-                        if(!confirmedExists) {
+                        if (!confirmedExists) {
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "It appears that a weighted means report already exists. " +
-                                            "Would you like to overwrite it?");
+                                    "It appears that a weighted means report already exists. "
+                                    + "Would you like to overwrite it?");
                             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                             alert.showAndWait().ifPresent(action -> {
                                 if (action == ButtonType.CANCEL) {
@@ -665,8 +680,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             });
                         }
                     } else if (!reportFile.exists() && doAppendProperty.getValue()) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. " +
-                                "Would you like to create a new report?");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. "
+                                + "Would you like to create a new report?");
                         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                         alert.showAndWait().ifPresent(action -> {
                             if (action == ButtonType.OK) {
@@ -709,11 +724,11 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 // Ratio case
                 double[][] resultsFromNode1
                         = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode1 = resultsFromNode1[0][0];
                 double[][] resultsFromNode2
                         = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode2 = resultsFromNode2[0][0];
             } else {
                 valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()

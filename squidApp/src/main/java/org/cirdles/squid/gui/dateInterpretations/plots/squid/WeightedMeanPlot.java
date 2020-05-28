@@ -78,7 +78,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
 
-    private boolean doPlotRejectedSpots;
+    public static boolean doPlotRejectedSpots = true;
 
     public static boolean switchRefMatViewToCalibConst = false;
     private String switchRefMatViewToCalibConstLookupString;
@@ -107,7 +107,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
-        this.doPlotRejectedSpots = true;
 
         setOpacity(1.0);
 
@@ -747,13 +746,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
         });
         spotContextMenu.getItems().addAll(menuItem1);
-
-        MenuItem menuItem2 = new MenuItem("Toggle Show Excluded Spots");
-        menuItem2.setOnAction((evt) -> {
-            doPlotRejectedSpots = !doPlotRejectedSpots;
-            refreshPanel(false, false);
-        });
-        spotContextMenu.getItems().addAll(menuItem2);
     }
 
     @Override
