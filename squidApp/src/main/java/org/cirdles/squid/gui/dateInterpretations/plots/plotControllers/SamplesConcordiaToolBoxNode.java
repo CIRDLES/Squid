@@ -59,6 +59,8 @@ public class SamplesConcordiaToolBoxNode extends HBox {
     }
 
     private void initNode() {
+        correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
+
         Label corrChoiceLabel = new Label("Corr:");
         formatNode(corrChoiceLabel, 35);
 
@@ -67,19 +69,19 @@ public class SamplesConcordiaToolBoxNode extends HBox {
         RadioButton corr4_RadioButton = new RadioButton("4-corr");
         corr4_RadioButton.setToggleGroup(corrGroup);
         corr4_RadioButton.setUserData(PB4CORR);
-        corr4_RadioButton.setSelected(correction == PB4CORR);
+        corr4_RadioButton.setSelected(correction.equals(PB4CORR));
         formatNode(corr4_RadioButton, 60);
 
         RadioButton corr7_RadioButton = new RadioButton("7-corr");
         corr7_RadioButton.setToggleGroup(corrGroup);
         corr7_RadioButton.setUserData(PB7CORR);
-        corr7_RadioButton.setSelected(correction == PB7CORR);
+        corr7_RadioButton.setSelected(correction.equals(PB7CORR));
         formatNode(corr7_RadioButton, 60);
 
         RadioButton corr8_RadioButton = new RadioButton("8-corr");
         corr8_RadioButton.setToggleGroup(corrGroup);
         corr8_RadioButton.setUserData(PB8CORR);
-        corr8_RadioButton.setSelected(correction == PB8CORR);
+        corr8_RadioButton.setSelected(correction.equals(PB8CORR));
         formatNode(corr8_RadioButton, 60);
 
         // flavors

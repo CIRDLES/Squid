@@ -1935,6 +1935,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    /**
+     * Update Common Lead calculations
+     * @param spotsForExpression 
+     */
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
         // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {

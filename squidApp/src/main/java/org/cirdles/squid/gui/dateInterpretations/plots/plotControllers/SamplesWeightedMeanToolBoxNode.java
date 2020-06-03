@@ -182,6 +182,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(newValue);
 
+        // each fraction stores this info, so get from first one
         String selectedAge = shrimpFractions.get(0).getSelectedAgeExpressionName();
         ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(shrimpFractions);
         SpotSummaryDetails spotSummaryDetailsWM
@@ -674,7 +675,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                     + "Would you like to overwrite it?");
                             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                             alert.showAndWait().ifPresent(action -> {
-                                if (action == ButtonType.CANCEL) {
+                                if (action.equals(ButtonType.CANCEL)) {
                                     writeReport.setValue(false);
                                 }
                             });
@@ -684,7 +685,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 + "Would you like to create a new report?");
                         alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                         alert.showAndWait().ifPresent(action -> {
-                            if (action == ButtonType.OK) {
+                            if (action.equals(ButtonType.OK)) {
                                 doAppendProperty.setValue(false);
                             }
                         });

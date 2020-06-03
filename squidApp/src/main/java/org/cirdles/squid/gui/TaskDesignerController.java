@@ -299,7 +299,7 @@ public class TaskDesignerController implements Initializable {
             } else {
                 massText = makeMassStackPane(mass, "white");
                 massText.setOnMouseClicked((MouseEvent event) -> {
-                    if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                    if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
                         defaultMassesListTextFlow.getChildren().remove(massText);
                         undoMassesList.add(0, massText);
                         taskDesigner.removeNominalMass(mass);
@@ -332,7 +332,7 @@ public class TaskDesignerController implements Initializable {
             ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
             ratio.setTranslateX(1 * count++);
             ratio.setOnMouseClicked((MouseEvent event) -> {
-                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
                     namedExpressionsMap.remove(ratioName);
                     defaultRatiosListTextFlow.getChildren().remove(ratio);
                     undoRatiosList.add(0, ratio);

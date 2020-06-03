@@ -210,10 +210,16 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getPlotType());
             }
         } else {
+            // ref mat
             allUnknownOrRefMatShrimpFractions = squidProject.getTask().getReferenceMaterialSpots();
             mapOfSpotsBySampleNames = new TreeMap<>();
-            mapOfSpotsBySampleNames.put("Reference Mat", squidProject.getTask().getReferenceMaterialSpots());
-            mapOfSpotsBySampleNames.put("Concentration Ref Mat", squidProject.getTask().getConcentrationReferenceMaterialSpots());
+            mapOfSpotsBySampleNames.put("Ref Mat " + ((Task) squidProject.getTask()).getFilterForRefMatSpotNames(), squidProject.getTask().getReferenceMaterialSpots());
+//            mapOfSpotsBySampleNames.put("Concentration Ref Mat", squidProject.getTask().getConcentrationReferenceMaterialSpots());
+
+            // used to synchronize rejects between weighted mean and concordia
+            spotSummaryDetails
+                    = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
+                            get(WTDAV_PREFIX + correction + calibrConstAgeBaseName + "_CalibConst");
         }
 
         // need current physical contants for plotting of concordia etc.
@@ -280,6 +286,20 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
                             = new CheckBoxTreeItem<>(fractionNode);
                     sampleItem.getChildren().add(checkBoxTreeSpotItem);
+                    
+                    // for ref material synchronize rejects
+                    if (fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0) {
+                        fractionNode.setSelectedProperty(
+                                new SimpleBooleanProperty(
+                                        !spotSummaryDetails.getRejectedIndices()[entry.getValue().indexOf(spot)]));
+                    }
+
+                    checkBoxTreeSpotItem.setIndependent(false);
+                    checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
+
+                    myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
+                    // this contains all samples at the tree top
+                    rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
 
                     checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
                         @Override
@@ -288,12 +308,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                             myPlot.setData(myData);
                         }
                     });
-                    checkBoxTreeSpotItem.setIndependent(false);
-                    checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
 
-                    myData.add(((ConcordiaFractionNode) fractionNode).getDatum());
-                    // this contains all samples at the tree top
-                    rootData.add(((ConcordiaFractionNode) fractionNode).getDatum());
                 }
             }
 
@@ -308,6 +323,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 }
             });
             sampleItem.setIndependent(false);
+            sampleItem.setExpanded(fractionTypeSelected.compareTo(SpotTypes.REFERENCE_MATERIAL) == 0);
         }
         rootPlot.setData(rootData);
 
