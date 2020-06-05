@@ -17,6 +17,9 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -24,6 +27,10 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.VLineTo;
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
@@ -51,6 +58,18 @@ public class RefMatConcordiaToolBoxNode extends HBox {
 
     private void initNode() {
         correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
+
+        Button saveToNewFileButton = new Button("Synch Selected Spots with Weighted Mean");
+        formatNode(saveToNewFileButton, 250);
+        saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = true;
+                plotsController.showActivePlot();
+                PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = false;
+            }
+        });
 
         Label isotopeChoiceLabel = new Label("Index Isotope:");
         formatNode(isotopeChoiceLabel, 90);
@@ -86,7 +105,9 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         pb208RadioButton.setDisable(isDirectAltPD || has232);
 
         pb204RadioButton.setSelected(isDirectAltPD || has232 || pb204RadioButton.isSelected());
-        getChildren().addAll(isotopeChoiceLabel, pb204RadioButton, pb207RadioButton, pb208RadioButton);
+        
+        getChildren().addAll(
+                saveToNewFileButton, separator(), isotopeChoiceLabel, pb204RadioButton, pb207RadioButton, pb208RadioButton);
 
         // add listener after initial choice
         isotopeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -108,6 +129,16 @@ public class RefMatConcordiaToolBoxNode extends HBox {
                 plotsController.showActivePlot();
             }
         });
+    }
+
+    private Path separator() {
+        Path separator = new Path();
+        separator.getElements().add(new MoveTo(2.0f, 0.0f));
+        separator.getElements().add(new VLineTo(20.0f));
+        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
+        separator.setStrokeWidth(2);
+
+        return separator;
     }
 
     private void formatNode(Control control, int width) {

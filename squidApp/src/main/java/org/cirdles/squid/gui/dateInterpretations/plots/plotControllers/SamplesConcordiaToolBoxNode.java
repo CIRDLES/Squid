@@ -28,17 +28,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
-import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plotTypeSelected;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
@@ -59,7 +51,6 @@ public class SamplesConcordiaToolBoxNode extends HBox {
     }
 
     private void initNode() {
-        correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
 
         Label corrChoiceLabel = new Label("Corr:");
         formatNode(corrChoiceLabel, 35);
