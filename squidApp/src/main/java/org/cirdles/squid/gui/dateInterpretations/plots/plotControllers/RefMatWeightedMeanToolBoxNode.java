@@ -59,7 +59,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox {
         correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
         
         Label corrChoiceLabel = new Label("Index Isotope:");
-        formatNode(corrChoiceLabel, 90);
+        formatNode(corrChoiceLabel, 85);
 
         ToggleGroup isotopeGroup = new ToggleGroup();
 
@@ -85,7 +85,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox {
         Path separator1 = separator();
 
         Label typeChoiceLabel = new Label("System:");
-        formatNode(typeChoiceLabel, 55);
+        formatNode(typeChoiceLabel, 50);
 
         ToggleGroup typeGroup = new ToggleGroup();
 

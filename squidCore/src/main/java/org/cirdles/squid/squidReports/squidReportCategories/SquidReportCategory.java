@@ -37,6 +37,7 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     private static final long serialVersionUID = 8741573410884399160L;
 
     public static final List<SquidReportCategory> defaultSquidReportCategories = new ArrayList<>();
+    public static final List<SquidReportCategory> defaultRefMatWMSortingCategories = new ArrayList<>();
 
     static {
 
@@ -48,6 +49,7 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         categoryColumns.add(column);
         time.setCategoryColumns(categoryColumns);
         defaultSquidReportCategories.add(time);
+        defaultRefMatWMSortingCategories.add(time);
 
         SquidReportCategory ages = createReportCategory("Ages");
         categoryColumns = new LinkedList<>();
@@ -67,6 +69,7 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         }
         rawRatios.setCategoryColumns(categoryColumns);
         defaultSquidReportCategories.add(rawRatios);
+        defaultRefMatWMSortingCategories.add(rawRatios);
 
         SquidReportCategory correctedRatios = createReportCategory("Corr. Ratios");
         categoryColumns = new LinkedList<>();

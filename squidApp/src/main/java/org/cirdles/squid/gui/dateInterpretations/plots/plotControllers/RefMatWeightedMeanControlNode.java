@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.util.LinkedList;
+import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,11 +32,12 @@ import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
+import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
+import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.defaultRefMatWMSortingCategories;
+import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -56,9 +59,17 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
 
         initNode();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
+        List<SquidReportCategory> refMatWMSortingCategories = defaultRefMatWMSortingCategories;
+        // handle special case where raw ratios is populated on the fly per task
+        SquidReportCategoryInterface rawRatiosCategory = refMatWMSortingCategories.get(1);
+        LinkedList<SquidReportColumnInterface> categoryColumns = new LinkedList<>();
+        for (String ratioName : squidProject.getTask().getRatioNames()) {
+            SquidReportColumnInterface column = SquidReportColumn.createSquidReportColumn(ratioName);
+            categoryColumns.add(column);
+        }
+        rawRatiosCategory.setCategoryColumns(categoryColumns);
 
-        categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
+        categorySortComboBox.setItems(FXCollections.observableArrayList(defaultRefMatWMSortingCategories));
         categorySortComboBox.getSelectionModel().selectFirst();
         expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
 
@@ -127,7 +138,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
                 plotsController.showRefMatWeightedMeanPlot();
             }
         });
-        formatNode(autoExcludeSpotsCheckBox, 85);
+        formatNode(autoExcludeSpotsCheckBox, 80);
         return autoExcludeSpotsCheckBox;
     }
 
@@ -136,7 +147,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         HBox plotChoiceHBox = new HBox(5);
 
         Label plotChoiceLabel = new Label("Plot:");
-        formatNode(plotChoiceLabel, 30);
+        formatNode(plotChoiceLabel, 28);
 
         ToggleGroup plotGroup = new ToggleGroup();
 
@@ -173,7 +184,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         Label sortedByLabel = new Label("Sorted Ascending by:");
         formatNode(sortedByLabel, 125);
 
-        formatNode(categorySortComboBox, 80);
+        formatNode(categorySortComboBox, 100);
         categorySortComboBox.setPromptText("Category");
 
         categorySortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -194,7 +205,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
             }
         });
 
-        formatNode(expressionSortComboBox, 120);
+        formatNode(expressionSortComboBox, 115);
         expressionSortComboBox.setPromptText("Expression");
         expressionSortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
