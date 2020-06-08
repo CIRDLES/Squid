@@ -98,7 +98,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private ToolBar plotToolBar;
 
     public static TreeView<SampleTreeNodeInterface> spotsTreeViewCheckBox = new CheckTreeView<>();
-    public static  TreeView<String> spotsTreeViewString = new TreeView<>();
+    public static TreeView<SampleTreeNodeInterface> spotsTreeViewString = new TreeView<>();
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
@@ -272,7 +272,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
-                if (newValue == null){
+                if (newValue == null) {
                     newValue = rootItem;
                 }
                 currentlyPlottedSampleTreeNode = newValue;
@@ -342,9 +342,9 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     myPlot.setData(myData);
                     rootPlot.setData(rootData);
                 }
-                
+
             });
-            
+
             if (currentlyPlottedSampleTreeNode == null) {
                 currentlyPlottedSampleTreeNode = sampleItem;
             }
@@ -506,6 +506,8 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().
                         get(WTDAV_PREFIX + correction + calibrConstAgeBaseName + "_CalibConst");
+        // backwards compatible for priming sorting
+        spotSummaryDetails.setSelectedExpressionName("SpotIndex");
 
         plot = new WeightedMeanPlot(
                 new Rectangle(1000, 600),
@@ -543,7 +545,14 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                     @Override
                     public String toString(TreeItem<SampleTreeNodeInterface> object) {
                         SampleTreeNodeInterface item = object.getValue();
-                        return item.getNodeName();
+                        
+                        String displayVal = "";
+                        try {
+                            displayVal =item.getNodeName()
+                                    + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
+                        } catch (Exception e) {
+                        }
+                        return displayVal;
                     }
 
                     @Override
@@ -579,25 +588,26 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
                 spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
             } else {
-                TreeItem<String> rootItemWM
-                        = new TreeItem<>(squidProject.getFilterForRefMatSpotNames());
+                TreeItem<SampleTreeNodeInterface> rootItemWM
+                        = new TreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
                 spotsTreeViewString.setRoot(rootItemWM);
-
-                spotsTreeViewString.setCellFactory(tv -> new TreeCell<String>() {
-
+                spotsTreeViewString.setCellFactory(param -> new TreeCell<SampleTreeNodeInterface>() {
                     @Override
-                    protected void updateItem(String item, boolean empty) {
+                    public void updateItem(SampleTreeNodeInterface item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty || item == null) {
                             setText("");
                             setStyle(null);
                         } else {
-                            if (item.startsWith("*")) {
-                                setText(item.replaceFirst("\\*", ""));
-                                setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
-                            } else {
-                                setText(item);
+                            if (item.getSelectedProperty().get()) {
                                 setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: red;");
+                            } else {
+                                setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
+                            }
+                            try {
+                                setText(item.getNodeName()
+                                        + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName()));
+                            } catch (Exception e) {
                             }
                         }
                     }
@@ -610,10 +620,11 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
                 for (int i = 0; i < fractionNodes.size(); i++) {
                     boolean rejected = spotSummaryDetails.getRejectedIndices()[i];
-                    final TreeItem<String> TreeItemWM
-                            = new TreeItem<>((rejected ? "*" : "") + fractionNodes.get(i).getNodeName());
 
-                    rootItemWM.getChildren().add(TreeItemWM);
+                    fractionNodes.get(i).setSelectedProperty(new SimpleBooleanProperty(!rejected));
+                    final TreeItem<SampleTreeNodeInterface> treeItemWM
+                            = new TreeItem<>(fractionNodes.get(i));
+                    rootItemWM.getChildren().add(treeItemWM);
                 }
 
                 spotListAnchorPane.getChildren().clear();
@@ -667,34 +678,35 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
                 }
                 String nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
 
-                String expressionName = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
+                String sortingExpression = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
                 // check to see if sorted by same field              
                 if ((item instanceof WeightedMeanSpotNode)
-                        && (wmExpressionName.compareToIgnoreCase(expressionName) != 0)) {
-                    if (expressionName.compareTo("Hours") == 0) {
-                        nodeStringWM += item.getShrimpFraction().getHours();
-                    } else if (expressionName.compareTo("SpotIndex") == 0) {
-                        nodeStringWM += item.getShrimpFraction().getSpotIndex();
-                    } else {
-                        double[][] expressionValues;
-                        if (stringIsSquidRatio(expressionName)) {
-                            // ratio case
-                            expressionValues
-                                    = Arrays.stream(item.getShrimpFraction()
-                                            .getIsotopicRatioValuesByStringName(expressionName)).toArray(double[][]::new);
-                        } else {
-                            expressionValues = item.getShrimpFraction()
-                                    .getTaskExpressionsEvaluationsPerSpotByField(expressionName);
-                        }
-
-                        if (expressionName.contains("Age")) {
-                            nodeStringWM += "::" + WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
-                        } else {
-                            Formatter formatter = new Formatter();
-                            formatter.format("%4.4f", expressionValues[0][0]);
-                            nodeStringWM += "::" + formatter.toString();
-                        }
-                    }
+                        && (wmExpressionName.compareToIgnoreCase(sortingExpression) != 0)) {
+                    nodeStringWM += prettyPrintSortedWM(item.getShrimpFraction(), sortingExpression);
+//                    if (sortingExpression.compareTo("Hours") == 0) {
+//                        nodeStringWM += "::" + item.getShrimpFraction().getHours();
+//                    } else if (sortingExpression.compareTo("SpotIndex") == 0) {
+//                        nodeStringWM += "::" + item.getShrimpFraction().getSpotIndex();
+//                    } else {
+//                        double[][] expressionValues;
+//                        if (stringIsSquidRatio(sortingExpression)) {
+//                            // ratio case
+//                            expressionValues
+//                                    = Arrays.stream(item.getShrimpFraction()
+//                                            .getIsotopicRatioValuesByStringName(sortingExpression)).toArray(double[][]::new);
+//                        } else {
+//                            expressionValues = item.getShrimpFraction()
+//                                    .getTaskExpressionsEvaluationsPerSpotByField(sortingExpression);
+//                        }
+//
+//                        if (sortingExpression.contains("Age")) {
+//                            nodeStringWM += "::" + WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
+//                        } else {
+//                            Formatter formatter = new Formatter();
+//                            formatter.format("%4.4f", expressionValues[0][0]);
+//                            nodeStringWM += "::" + formatter.toString();
+//                        }
+//                    }
 
                 }
                 return (object.getParent() == null) ? "" : (item instanceof SampleNode) ? "" : nodeStringWM;
@@ -713,6 +725,38 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
         spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
 
         refreshPlot();
+
+    }
+
+    private String prettyPrintSortedWM(ShrimpFractionExpressionInterface shrimpFraction, String sortingExpression) {
+        String nodeStringWM = "";
+
+        if (sortingExpression.compareTo("Hours") == 0) {
+            nodeStringWM += " ::" + shrimpFraction.getHours();
+        } else if (sortingExpression.compareTo("SpotIndex") == 0) {
+            nodeStringWM += " ::" + shrimpFraction.getSpotIndex();
+        } else {
+            double[][] expressionValues;
+            if (stringIsSquidRatio(sortingExpression)) {
+                // ratio case
+                expressionValues
+                        = Arrays.stream(shrimpFraction
+                                .getIsotopicRatioValuesByStringName(sortingExpression)).toArray(double[][]::new);
+            } else {
+                expressionValues = shrimpFraction
+                        .getTaskExpressionsEvaluationsPerSpotByField(sortingExpression);
+            }
+
+            if (sortingExpression.contains("Age")) {
+                nodeStringWM += "::" + WeightedMeanPlot.makeSimpleAgeString(expressionValues[0][0]);
+            } else {
+                Formatter formatter = new Formatter();
+                formatter.format("%4.4f", expressionValues[0][0]);
+                nodeStringWM += "::" + formatter.toString();
+            }
+        }
+
+        return nodeStringWM;
 
     }
 

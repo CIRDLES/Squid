@@ -38,6 +38,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotSummaryDetails;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewCheckBox;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewString;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -238,28 +239,36 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
      */
     private void sortFractionCheckboxesByValue(SpotSummaryDetails spotSummaryDetails) {
         String selectedFieldName = spotSummaryDetails.getSelectedExpressionName();
-        
-        FXCollections.sort(spotsTreeViewCheckBox.getRoot().getChildren(), (TreeItem node1, TreeItem node2) -> {
-            double valueFromNode1 = 0.0;
-            double valueFromNode2 = 0.0;
-            if (stringIsSquidRatio(selectedFieldName)) {
-                // Ratio case
-                double[][] resultsFromNode1
-                        = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                valueFromNode1 = resultsFromNode1[0][0];
-                double[][] resultsFromNode2
-                        = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                valueFromNode2 = resultsFromNode2[0][0];
-            } else {
-                valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                        .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-            }
 
-            return Double.compare(valueFromNode1, valueFromNode2);
-        });
+        TreeView<SampleTreeNodeInterface> activeTreeView = spotsTreeViewString;
+        if (!autoExcludeSpotsCheckBox().isSelected()) {
+            activeTreeView = spotsTreeViewCheckBox;
+        }
+
+        if (activeTreeView.getRoot() != null) {
+
+            FXCollections.sort(activeTreeView.getRoot().getChildren(), (TreeItem node1, TreeItem node2) -> {
+                double valueFromNode1 = 0.0;
+                double valueFromNode2 = 0.0;
+                if (stringIsSquidRatio(selectedFieldName)) {
+                    // Ratio case
+                    double[][] resultsFromNode1
+                            = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                    valueFromNode1 = resultsFromNode1[0][0];
+                    double[][] resultsFromNode2
+                            = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                    valueFromNode2 = resultsFromNode2[0][0];
+                } else {
+                    valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                    valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                }
+
+                return Double.compare(valueFromNode1, valueFromNode2);
+            });
+        }
     }
 }

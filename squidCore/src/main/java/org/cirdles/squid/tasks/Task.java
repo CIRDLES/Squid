@@ -1905,8 +1905,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (Expression expression : taskExpressionsOrdered) {
             evaluateTaskExpression(expression.getExpressionTree());
-            System.out.println(expression.getName() + "     " + expression.getExpressionTree().getName());
-                    
         }
     }
 

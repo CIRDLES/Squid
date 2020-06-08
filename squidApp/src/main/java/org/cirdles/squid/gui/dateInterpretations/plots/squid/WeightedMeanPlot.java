@@ -175,38 +175,36 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 shrimpFractions.add(sf);
             }
 
-            if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-                Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                    double valueFromNode1 = 0.0;
-                    double valueFromNode2 = 0.0;
+            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+                double valueFromNode1 = 0.0;
+                double valueFromNode2 = 0.0;
 
-                    if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
-                        // case of raw ratios
-                        double[][] resultsFromNode1
-                                = Arrays.stream(fraction1
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode1 = resultsFromNode1[0][0];
-                        double[][] resultsFromNode2
-                                = Arrays.stream(fraction2
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode2 = resultsFromNode2[0][0];
+                if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
+                    // case of raw ratios
+                    double[][] resultsFromNode1
+                            = Arrays.stream(fraction1
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode1 = resultsFromNode1[0][0];
+                    double[][] resultsFromNode2
+                            = Arrays.stream(fraction2
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode2 = resultsFromNode2[0][0];
 
-                    } else {
-                        // all other expressions
-                        valueFromNode1 = fraction1
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
-                        valueFromNode2 = fraction2
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                } else {
+                    // all other expressions
+                    valueFromNode1 = fraction1
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                    valueFromNode2 = fraction2
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
 
-                    }
-
-                    return Double.compare(valueFromNode1, valueFromNode2);
-                });
-
-                if (indexOfSelectedSpot > -1) {
-                    // reset indexOfSelectedSpot for visualization
-                    indexOfSelectedSpot = shrimpFractions.indexOf(selectedSpot);
                 }
+
+                return Double.compare(valueFromNode1, valueFromNode2);
+            });
+
+            if (indexOfSelectedSpot > -1) {
+                // reset indexOfSelectedSpot for visualization
+                indexOfSelectedSpot = shrimpFractions.indexOf(selectedSpot);
             }
 
             countOfIncluded = 0;
@@ -460,7 +458,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setLineWidth(1.0);
         g2d.setStroke(Paint.valueOf("GREEN"));
         if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
-                || switchRefMatViewToCalibConst){
+                || switchRefMatViewToCalibConst) {
             g2d.strokeLine(
                     mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));
             // show plus minus 2 sigma
@@ -565,11 +563,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.rotate(90);
 
         // X- label
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-            StringBuilder description = new StringBuilder();
-            description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
-            text.setText(description.toString());
-        }
+        StringBuilder description = new StringBuilder();
+        description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
+        text.setText(description.toString());
 
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
