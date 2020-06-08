@@ -98,7 +98,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
     private ToolBar plotToolBar;
 
     public static TreeView<SampleTreeNodeInterface> spotsTreeViewCheckBox = new CheckTreeView<>();
-    private TreeView<String> spotsTreeViewString = new TreeView<>();
+    public static  TreeView<String> spotsTreeViewString = new TreeView<>();
 
     private static ObservableList<SampleTreeNodeInterface> fractionNodes;
     private static PlotDisplayInterface rootPlot;
@@ -716,6 +716,7 @@ public class PlotsController implements Initializable, WeightedMeanRefreshInterf
 
     }
 
+    @Override
     public void showActivePlot() {
         switch (plotTypeSelected) {
             case CONCORDIA:
