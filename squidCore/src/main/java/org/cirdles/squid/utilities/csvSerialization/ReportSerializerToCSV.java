@@ -34,7 +34,7 @@ public class ReportSerializerToCSV {
 
         if (rawOutput) {
             try {
-                outputWriter = new PrintWriter(new FileWriter(csvFile));
+                outputWriter = new PrintWriter(csvFile, "UTF-8");
                 for (int row = 0; row < reportFractions.length; row++) {
                     for (int c = 0; c < reportFractions[0].length; c++) {
                         outputWriter.write(reportFractions[row][c] + ", ");
@@ -48,7 +48,7 @@ public class ReportSerializerToCSV {
             int firstDataRow = Integer.parseInt(reportFractions[0][0]);
 
             try {
-                outputWriter = new PrintWriter(new FileWriter(csvFile));
+                outputWriter = new PrintWriter(csvFile, "UTF-8");
 
                 // category titles 
                 String catName = "Fraction";
