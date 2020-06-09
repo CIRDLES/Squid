@@ -20,17 +20,14 @@ import java.io.PrintStream;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 
 /**
  *

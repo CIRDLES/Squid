@@ -89,7 +89,6 @@ public class SessionAuditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         sampleNameDelimiter = squidProject.getDelimiterForUnknownNames();
-        squidProject.updateFiltersForUnknownNames(new HashMap<>());
         
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));

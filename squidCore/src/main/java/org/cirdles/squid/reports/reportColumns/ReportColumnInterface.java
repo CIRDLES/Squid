@@ -431,7 +431,9 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
-                        if (Double.isNaN(doubleValue)){retVal[0] = "NaN";}
+                        if (Double.isNaN(doubleValue)) {
+                            retVal[0] = "NaN";
+                        }
                         if (isNumeric) {
                             retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
@@ -461,7 +463,9 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
-                        if (Double.isNaN(doubleValue)){retVal[0] = "NaN";}
+                        if (Double.isNaN(doubleValue)) {
+                            retVal[0] = "NaN";
+                        }
                         if (isNumeric) {
                             retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
                         } else if (isDisplayedWithArbitraryDigitCount()) {
@@ -489,54 +493,57 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                 new Class[]{String.class});
 
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
-                        
-                        if (Double.isNaN(vm[0])){retVal[0] = "NaN";}
-                        if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
-                        } else if (isDisplayedWithArbitraryDigitCount()) {
-                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
-                                    getValueInUnits(vm[0], getUnits()),
-                                    getCountOfSignificantDigits());
+
+                        if (Double.isNaN(vm[0])) {
+                            retVal[0] = "NaN";
                         } else {
-                            // value is in sigfig mode = two flavors
-                            // if there is no uncertainty column, then show the value with
-                            // normal sigfig formatting
-                            // if there is an uncertainty column and it is in arbitrary mode, then
-                            // also show value with normal sigfig formatting
 
-                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
-                                    new BigDecimal(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
-                                    getCountOfSignificantDigits());
+                            if (isNumeric) {
+                                retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
+                            } else if (isDisplayedWithArbitraryDigitCount()) {
+                                retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                        getValueInUnits(vm[0], getUnits()),
+                                        getCountOfSignificantDigits());
+                            } else {
+                                // value is in sigfig mode = two flavors
+                                // if there is no uncertainty column, then show the value with
+                                // normal sigfig formatting
+                                // if there is an uncertainty column and it is in arbitrary mode, then
+                                // also show value with normal sigfig formatting
 
-                            // however, if uncertainty column is in sigfig mode, then
-                            // use special algorithm to format value per the digits of
-                            // the formatted uncertainty column
-                            if (getUncertaintyColumn() != null) {
-                                // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
-                                if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
-                                    // uncertainty column is in sigfig mode
-                                    retVal[0] = "0";
-                                    try {
-                                        retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
-                                                vm[0], vm[1],
-                                                getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
-                                                getUncertaintyColumn().getCountOfSignificantDigits());
-                                    } catch (Exception e) {
+                                retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                        new BigDecimal(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
+                                        getCountOfSignificantDigits());
+
+                                // however, if uncertainty column is in sigfig mode, then
+                                // use special algorithm to format value per the digits of
+                                // the formatted uncertainty column
+                                if (getUncertaintyColumn() != null) {
+                                    // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
+                                    if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
+                                        // uncertainty column is in sigfig mode
+                                        retVal[0] = "0";
+                                        try {
+                                            retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
+                                                    vm[0], vm[1],
+                                                    getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
+                                                    getUncertaintyColumn().getCountOfSignificantDigits());
+                                        } catch (Exception e) {
+                                        }
                                     }
                                 }
-                            }
 //                            // in either case, we have a sigfig mode for the value
 //                            retVal[0] = FormatNumericStringAlignDecimalPoint(retVal[0]);
-                        }
-                        // in nonnumeric case, we need to format string
-                        if (!isNumeric) {
-                            retVal[0] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[0]);
-                        }
+                            }
+                            // in nonnumeric case, we need to format string
+                            if (!isNumeric) {
+                                retVal[0] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[0]);
+                            }
 
-                        // report 1-sigma uncertainty
-                        if (getUncertaintyColumn() != null) {
-                            if (getUncertaintyColumn().isVisible()) {
-                                // check for reporting mode
+                            // report 1-sigma uncertainty
+                            if (getUncertaintyColumn() != null) {
+                                if (getUncertaintyColumn().isVisible()) {
+                                    // check for reporting mode
 
 //                                if ((vm[0] > 0.0) && (vm[0] < 10e-20)) {
 //                                    // may 2013 for tiny numbers due to below detection
@@ -547,38 +554,38 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 //                                    retVal[1] = " - ";
 //
 //                                } else 
-                                if (isNumeric) {
-                                    try {
-                                        // check on size of vm[1] - if already rounded, then preserve for output
-                                        int countDigits = countSigDigits(String.valueOf(vm[1]));
-                                        int roundingCount = getCountOfSignificantDigits();
-                                        // this is needed for test cases where 15 digit rounding is specified
-                                        if ((roundingCount >= 12) && (countDigits <= 12)) {
-                                            roundingCount = 12;
-                                        }
+                                    if (isNumeric) {
+                                        try {
+                                            // check on size of vm[1] - if already rounded, then preserve for output
+                                            int countDigits = countSigDigits(String.valueOf(vm[1]));
+                                            int roundingCount = getCountOfSignificantDigits();
+                                            // this is needed for test cases where 15 digit rounding is specified
+                                            if ((roundingCount >= 12) && (countDigits <= 12)) {
+                                                roundingCount = 12;
+                                            }
 
-                                        retVal[1] = String.valueOf(Utilities.roundedToSize(
-                                                getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).doubleValue(), roundingCount));
-                                    } catch (Exception e) {
+                                            retVal[1] = String.valueOf(Utilities.roundedToSize(
+                                                    getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).doubleValue(), roundingCount));
+                                        } catch (Exception e) {
+                                        }
+                                    } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
+                                        retVal[1]
+                                                = formatBigDecimalForPublicationArbitraryMode(//
+                                                        getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
+                                                        getUncertaintyColumn().getCountOfSignificantDigits());
+                                    } else {
+                                        retVal[1] = formatOneSigmaForPublicationSigDigMode(//
+                                                vm[0],
+                                                vm[1],
+                                                getUncertaintyType(),
+                                                Squid3Constants.getUnitConversionMoveCount(getUnits()),
+                                                getUncertaintyColumn().getCountOfSignificantDigits());
                                     }
-                                } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
-                                    retVal[1]
-                                            = formatBigDecimalForPublicationArbitraryMode(//
-                                                    getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
-                                                    getUncertaintyColumn().getCountOfSignificantDigits());
-                                } else {
-                                    retVal[1] = formatOneSigmaForPublicationSigDigMode(//
-                                            vm[0],
-                                            vm[1],
-                                            getUncertaintyType(),
-                                            Squid3Constants.getUnitConversionMoveCount(getUnits()),
-                                            getUncertaintyColumn().getCountOfSignificantDigits());
+                                    retVal[1] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[1]);
+                                    // }
                                 }
-                                retVal[1] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[1]);
-                                // }
                             }
                         }
-
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         System.err.println("problem formatting " + getRetrieveVariableName() + " for " + fraction.getFractionID() + " >> " + e);
                     }

@@ -370,7 +370,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         @Override
         public void handle(DragEvent event) {
             /* the drag and drop gesture ended if the data was successfully moved, clear it */
-            if (event.getTransferMode() == TransferMode.MOVE) {
+            if (event.getTransferMode().equals(TransferMode.MOVE)) {
                 MassStationDetail massStationDetail = (MassStationDetail) event.getDragboard().getContent(MASS_DETAIL_FORMAT);
                 myListView.getItems().remove(massStationDetail);
                 massStationDetail.setViewedAsGraph(!myListView.idProperty().getValue().contains("viewedAsGraph"));

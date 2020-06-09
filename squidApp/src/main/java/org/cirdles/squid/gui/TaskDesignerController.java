@@ -60,6 +60,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -298,7 +299,7 @@ public class TaskDesignerController implements Initializable {
             } else {
                 massText = makeMassStackPane(mass, "white");
                 massText.setOnMouseClicked((MouseEvent event) -> {
-                    if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                    if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
                         defaultMassesListTextFlow.getChildren().remove(massText);
                         undoMassesList.add(0, massText);
                         taskDesigner.removeNominalMass(mass);
@@ -331,7 +332,7 @@ public class TaskDesignerController implements Initializable {
             ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
             ratio.setTranslateX(1 * count++);
             ratio.setOnMouseClicked((MouseEvent event) -> {
-                if (event.getEventType() == MouseEvent.MOUSE_CLICKED) {
+                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
                     namedExpressionsMap.remove(ratioName);
                     defaultRatiosListTextFlow.getChildren().remove(ratio);
                     undoRatiosList.add(0, ratio);
@@ -379,7 +380,14 @@ public class TaskDesignerController implements Initializable {
         return ratio;
     }
 
+    private void updateDirectiveButtons() {
+        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+    }
+
     private void populateDirectives() {
+        updateDirectiveButtons();
+        
         fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskDesigner.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
