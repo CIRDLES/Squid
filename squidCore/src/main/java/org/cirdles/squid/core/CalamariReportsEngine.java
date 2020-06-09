@@ -17,6 +17,7 @@ package org.cirdles.squid.core;
 
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -1154,6 +1155,47 @@ public class CalamariReportsEngine implements Serializable {
 
         } catch (IOException iOException) {
         }
+
+        return reportTableFile;
+    }
+
+    public File writeTaskAudit() throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + "Task_Audit_" + DateHelper.getCurrentDate() + ".txt");
+
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        outputWriter.write(squidProject.getTask().printTaskAudit());
+        outputWriter.flush();
+        outputWriter.close();
+
+        return reportTableFile;
+    }
+
+    public File writeProjectAudit() throws IOException {
+        String reportsPath
+                = folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "PROJECT-" + squidProject.getProjectName()
+                + File.separator;
+        File reportsFolder = new File(reportsPath);
+        if (!reportsFolder.mkdirs()) {
+            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
+        }
+
+        File reportTableFile = new File(reportsPath + "Project_Audit_" + DateHelper.getCurrentDate() + ".txt");
+
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        outputWriter.write(squidProject.printProjectAudit());
+        outputWriter.flush();
+        outputWriter.close();
 
         return reportTableFile;
     }

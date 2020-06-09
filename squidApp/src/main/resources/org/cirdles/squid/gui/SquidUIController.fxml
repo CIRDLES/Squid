@@ -198,6 +198,12 @@
                         </Menu>
                         <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction"
                                   text="Produce Sanity Check Reports"/>
+                        <MenuItem mnemonicParsing="false" onAction="#produceTaskSummaryReportAction"
+                                  text="Produce Task Audit"/>
+                        <MenuItem mnemonicParsing="false" onAction="#produceProjectAuditReportAction"
+                                  text="Produce Project Audit"/>
+                        <MenuItem mnemonicParsing="false" onAction="#generateAllReportsAction"
+                                  text="Generate All Reports"/>
                     </items>
                 </Menu>
                 <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
