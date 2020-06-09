@@ -1179,7 +1179,7 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
-    private void launchVisualizations() {
+    private void launchInterpretations() {
         try {
             topsoilPlotUI = FXMLLoader.load(getClass().getResource("dateInterpretations/plots/plotControllers/Plots.fxml"));
             topsoilPlotUI.setId("TopsoilPlot");
@@ -1394,7 +1394,8 @@ public class SquidUIController implements Initializable {
                     "There is no Reference Material Model chosen.\n\n",
                     primaryStageWindow);
         } else {
-            launchVisualizations();
+            launchInterpretations();
+            PlotsController.currentlyPlottedSampleTreeNode = null;
             showUI(topsoilPlotUI);
             menuHighlighter.highlight(manageInterpretationsMenu);
         }
@@ -1404,6 +1405,7 @@ public class SquidUIController implements Initializable {
     private void referenceMaterialConcordiaAction(ActionEvent event) {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
+        PlotsController.currentlyPlottedSampleTreeNode = null;
         launchPlots();
     }
 
@@ -1411,6 +1413,7 @@ public class SquidUIController implements Initializable {
     private void referenceMaterialWMAction(ActionEvent event) {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN;
+        PlotsController.currentlyPlottedSampleTreeNode = null;
         launchPlots();
     }
 
@@ -1418,6 +1421,7 @@ public class SquidUIController implements Initializable {
     private void unknownConcordiaAction(ActionEvent event) {
         PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
+        PlotsController.currentlyPlottedSampleTreeNode = null;
         launchPlots();
     }
 
@@ -1638,9 +1642,9 @@ public class SquidUIController implements Initializable {
         });
         MenuItem copyAsCsv = new MenuItem("Copy all as CSV");
         copyAsCsv.setOnAction((evt) -> {
-            String csv = textArea.getText().replaceAll("\\s*\\R", ",\n");
-            csv = csv.replaceAll("\\s*,", ",");
-            content.putString(csv);
+            String csv = textArea.getText().replaceAll("\\s*\\R", "\n");
+            String csv2 = csv.replaceAll("\\s+[^\\S\\r\\n]", ", ");
+            content.putString(csv2);
             clipboard.setContent(content);
         });
         contextMenu.getItems().addAll(copyAll, copyAsCsv);

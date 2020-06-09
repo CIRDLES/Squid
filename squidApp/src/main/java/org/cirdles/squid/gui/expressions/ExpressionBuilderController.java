@@ -1134,7 +1134,7 @@ public class ExpressionBuilderController implements Initializable {
 
             //By default, the node will be placed at the end of the textflow
             double ord = expressionTextFlow.getChildren().size();
-            if (toggleGroup.getSelectedToggle() == dragndropLeftRadio) {
+            if (toggleGroup.getSelectedToggle().equals(dragndropLeftRadio)) {
                 //But if the dragndropLeftRadio is selected, the node will be placed at the begining of the textflow
                 ord = -1.0;
             }
@@ -1399,7 +1399,7 @@ public class ExpressionBuilderController implements Initializable {
 
     @FXML
     private void expressionAsTextAction(ActionEvent event) {
-        if (editAsText.get() == false) {
+        if (!editAsText.get()) {
             //Case was editing with drag and drop -> switch to textArea
 
             editAsText.set(true);
@@ -1978,7 +1978,7 @@ public class ExpressionBuilderController implements Initializable {
                             } else {
                                 allSelected = false;
                             }
-                            if (anySelected == true && allSelected == false) {
+                            if (anySelected && !allSelected) {
                                 break;
                             }
                         }
@@ -2006,7 +2006,7 @@ public class ExpressionBuilderController implements Initializable {
                     } else {
                         allSelected = false;
                     }
-                    if (anySelected == true && allSelected == false) {
+                    if (anySelected && !allSelected) {
                         break;
                     }
                 }

@@ -826,6 +826,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filterForRefMatSpotNames,
                         filterForConcRefMatSpotNames,
                         filtersForUnknownNames);
+
+                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() !=2;
             }
 
             if (requiresChanges || prawnChanged || forceReprocess) {
@@ -1516,12 +1518,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         applyDirectives();
 
-        //ensure metadata up to date
+        //ensure metadata filed for spots up to date
         try {
             ExpressionTreeInterface hoursExp = namedSpotLookupFieldsMap.get("Hours");
-            evaluateExpressionForSpotSet(hoursExp, unknownSpots);
+            evaluateExpressionForSpotSet(hoursExp, shrimpFractions);
             ExpressionTreeInterface spotIndexExp = namedSpotLookupFieldsMap.get("SpotIndex");
-            evaluateExpressionForSpotSet(spotIndexExp, unknownSpots);
+            evaluateExpressionForSpotSet(spotIndexExp, shrimpFractions);
         } catch (SquidException squidException) {
             System.out.println("FIXME");
         }
@@ -1859,13 +1861,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         unknownSpots = new ArrayList<>();
         boolean firstReferenceMaterial = true;
         long baseTimeOfFirstRefMatForCalcHoursField = 0l;
+        int refMatSpotIndex = 1;
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             // spots that are concentrationReferenceMaterialModel will also be in one of the other two buckets
             if (spot.isConcentrationReferenceMaterial()) {
                 concentrationReferenceMaterialSpots.add(spot);
             }
+
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
+                // assign 1-based spotIndex for sorting at WM visualization
+                ((ShrimpFraction) spot).setSpotIndex(refMatSpotIndex);
+                refMatSpotIndex++;
+
                 if (firstReferenceMaterial) {
                     baseTimeOfFirstRefMatForCalcHoursField = spot.getDateTimeMilliseconds();
                     firstReferenceMaterial = false;
@@ -1935,6 +1943,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    /**
+     * Update Common Lead calculations
+     *
+     * @param spotsForExpression
+     */
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
         // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
@@ -3390,7 +3403,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName, provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies, indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames, filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames, mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList, squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved, namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions, referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots, mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet, prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst, selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized, showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots, extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel, concentrationReferenceMaterialModel, physicalConstantsModelChanged, referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged, specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum, providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName, roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName, 
+                provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies, 
+                indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames, 
+                filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames, 
+                mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList, 
+                squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved, 
+                namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions, 
+                referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots, 
+                mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet, 
+                prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst, 
+                selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized, 
+                showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots, 
+                extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel, 
+                concentrationReferenceMaterialModel, physicalConstantsModelChanged, 
+                referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged, 
+                specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum, 
+                providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName, 
+                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType,
+                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         System.out.println(result);
         return result;

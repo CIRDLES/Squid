@@ -20,11 +20,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -81,7 +79,7 @@ public abstract class Function
     protected String definition;
 
     protected boolean summaryCalc;
-    
+
     /**
      *
      */
@@ -125,20 +123,27 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
+        LOGIC_FUNCTIONS_MAP.put("or", "or");
         LOGIC_FUNCTIONS_MAP.put("if", "sqIf");
         LOGIC_FUNCTIONS_MAP.put("sqIf", "sqIf");
+        LOGIC_FUNCTIONS_MAP.put("not", "not");
 
         MATH_FUNCTIONS_MAP.put("exp", "exp");
         MATH_FUNCTIONS_MAP.put("sqrt", "sqrt");
         MATH_FUNCTIONS_MAP.put("ln", "ln");
+        MATH_FUNCTIONS_MAP.put("log", "log");
         MATH_FUNCTIONS_MAP.put("max", "max");
         MATH_FUNCTIONS_MAP.put("min", "min");
         MATH_FUNCTIONS_MAP.put("abs", "abs");
         MATH_FUNCTIONS_MAP.put("average", "average");
+        MATH_FUNCTIONS_MAP.put("median", "median");
         MATH_FUNCTIONS_MAP.put("sum", "sum");
         MATH_FUNCTIONS_MAP.put("count", "count");
         MATH_FUNCTIONS_MAP.put("countif", "countif");
         MATH_FUNCTIONS_MAP.put("tinv", "tinv");
+        MATH_FUNCTIONS_MAP.put("round", "round");
+        MATH_FUNCTIONS_MAP.put("stdev", "stdev");
+        MATH_FUNCTIONS_MAP.put("stdevp", "stdevp");
 
         FUNCTIONS_MAP.putAll(MATH_FUNCTIONS_MAP);
         FUNCTIONS_MAP.putAll(SQUID_COMMMON_FUNCTIONS_MAP);
@@ -186,6 +191,14 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface ln() {
         return new Ln();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface log() {
+        return new Log();
     }
 
     /**
@@ -376,14 +389,30 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface or() {
+        return new Or();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface sqIf() {
         return new If();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface not() {
+        return new Not();
     }
 
     public static OperationOrFunctionInterface totalCps() {
         return new ShrimpSpeciesNodeFunction("getTotalCps");
     }
-    
+
     public static OperationOrFunctionInterface totalCpsTime() {
         return new ShrimpSpeciesNodeFunction("getNscansTimesCountTimeSec");
     }
@@ -424,6 +453,14 @@ public abstract class Function
      *
      * @return
      */
+    public static OperationOrFunctionInterface median() {
+        return new Median();
+    }
+
+    /**
+     *
+     * @return
+     */
     public static OperationOrFunctionInterface sum() {
         return new Sum();
     }
@@ -442,6 +479,30 @@ public abstract class Function
      */
     public static OperationOrFunctionInterface tinv() {
         return new TInv();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface round() {
+        return new Round();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface stdev() {
+        return new Stdev();
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static OperationOrFunctionInterface stdevp() {
+        return new StdevP();
     }
 
     public static OperationOrFunctionInterface calculateMeanConcStd() {
@@ -491,35 +552,14 @@ public abstract class Function
     protected double[] transposeColumnVectorOfDoubles(Object[][] columnVector, int colIndex) {
         double[] rowVector = new double[columnVector.length];
         for (int i = 0; i < rowVector.length; i++) {
-            rowVector[i] = (double) columnVector[i][colIndex];
+            if (columnVector[i][colIndex] instanceof Integer) {
+                rowVector[i] = (double) (Integer)columnVector[i][colIndex];
+            } else {
+                rowVector[i] = (double) columnVector[i][colIndex];
+            }
         }
 
         return rowVector;
-    }
-
-    /**
-     *
-     * @param expression
-     * @return
-     */
-    protected String toStringAnotherExpression(ExpressionTreeInterface expression) {
-
-        String retVal = "<mtext>\nNot a valid expression</mtext>\n";
-
-        if (expression != null) {
-            retVal = expression.toStringMathML();
-        }
-
-        return retVal;
-    }
-
-    protected String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
-        StringBuilder retVal = new StringBuilder();
-        for (int i = 0; i < childrenET.size(); i++) {
-            retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
-        }
-
-        return retVal.toString();
     }
 
     /**
@@ -583,6 +623,7 @@ public abstract class Function
     /**
      * @return the summaryCalc
      */
+    @Override
     public boolean isSummaryCalc() {
         return summaryCalc;
     }

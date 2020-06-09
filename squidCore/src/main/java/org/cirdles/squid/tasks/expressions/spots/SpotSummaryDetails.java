@@ -65,7 +65,7 @@ public class SpotSummaryDetails implements Serializable {
         this.rejectedIndices = new boolean[selectedSpots.size()];
         this.manualRejectionEnabled = false;
         this.minProbabilityWM = 0.0;
-        this.selectedExpressionName = "204/206";
+        this.selectedExpressionName = "SpotIndex";
     }
 
     public double[][] eval(TaskInterface task) throws SquidException {

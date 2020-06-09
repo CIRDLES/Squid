@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.cirdles.ludwig.isoplot3.Means.weightedAverage;
 import static org.cirdles.ludwig.squid25.Resistant.fdNmad;
-import static org.cirdles.ludwig.squid25.Utilities.median;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -227,7 +226,7 @@ public class WtdMeanACalc extends Function {
         double[] wmErrRejIndexArray;
 
         // first get fdNmad of uncertainty column 
-        double medianEr = median(oneSigmaPctUnct);
+        double medianEr = org.cirdles.ludwig.squid25.Utilities.median(oneSigmaPctUnct);
         double nMadd = fdNmad(oneSigmaPctUnct)[0];
 
         List<Double> largeErrRejIndexList = new ArrayList<>();

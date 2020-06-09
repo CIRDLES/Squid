@@ -78,7 +78,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
 
-    private boolean doPlotRejectedSpots;
+    public static boolean doPlotRejectedSpots = true;
+
+    public static boolean switchRefMatViewToCalibConst = false;
+    private String switchRefMatViewToCalibConstLookupString;
 
     public WeightedMeanPlot(
             Rectangle bounds,
@@ -90,7 +93,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         super(bounds, 0, 0);
 
-        leftMargin = 75;
+        leftMargin = 100;
         topMargin = 200;
 
         this.plotTitle = plotTitle;
@@ -104,7 +107,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
 
         this.indexOfSelectedSpot = -1;
-        this.doPlotRejectedSpots = true;
 
         setOpacity(1.0);
 
@@ -173,38 +175,36 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 shrimpFractions.add(sf);
             }
 
-            if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-                Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
-                    double valueFromNode1 = 0.0;
-                    double valueFromNode2 = 0.0;
+            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+                double valueFromNode1 = 0.0;
+                double valueFromNode2 = 0.0;
 
-                    if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
-                        // case of raw ratios
-                        double[][] resultsFromNode1
-                                = Arrays.stream(fraction1
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode1 = resultsFromNode1[0][0];
-                        double[][] resultsFromNode2
-                                = Arrays.stream(fraction2
-                                        .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
-                        valueFromNode2 = resultsFromNode2[0][0];
+                if (stringIsSquidRatio(spotSummaryDetails.getSelectedExpressionName())) {
+                    // case of raw ratios
+                    double[][] resultsFromNode1
+                            = Arrays.stream(fraction1
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode1 = resultsFromNode1[0][0];
+                    double[][] resultsFromNode2
+                            = Arrays.stream(fraction2
+                                    .getIsotopicRatioValuesByStringName(spotSummaryDetails.getSelectedExpressionName())).toArray(double[][]::new);
+                    valueFromNode2 = resultsFromNode2[0][0];
 
-                    } else {
-                        // all other expressions
-                        valueFromNode1 = fraction1
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
-                        valueFromNode2 = fraction2
-                                .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                } else {
+                    // all other expressions
+                    valueFromNode1 = fraction1
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
+                    valueFromNode2 = fraction2
+                            .getTaskExpressionsEvaluationsPerSpotByField(spotSummaryDetails.getSelectedExpressionName())[0][0];
 
-                    }
-
-                    return Double.compare(valueFromNode1, valueFromNode2);
-                });
-
-                if (indexOfSelectedSpot > -1) {
-                    // reset indexOfSelectedSpot for visualization
-                    indexOfSelectedSpot = shrimpFractions.indexOf(selectedSpot);
                 }
+
+                return Double.compare(valueFromNode1, valueFromNode2);
+            });
+
+            if (indexOfSelectedSpot > -1) {
+                // reset indexOfSelectedSpot for visualization
+                indexOfSelectedSpot = shrimpFractions.indexOf(selectedSpot);
             }
 
             countOfIncluded = 0;
@@ -219,13 +219,17 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             hours = new ArrayList<>();
 
             double index = 0;
+            // special case for reference materials to plot actual calib const instead of ages
+            switchRefMatViewToCalibConstLookupString
+                    = (switchRefMatViewToCalibConst && spotSummaryDetails.getExpressionTree().getName().endsWith("_CalibConst"))
+                    ? ageOrValueLookupString.replace("_Age_RM", "_CalibConst") : ageOrValueLookupString;
             for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
                 double[][] results;
                 if (stringIsSquidRatio(ageOrValueLookupString)) {
                     // ratio case
                     results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(ageOrValueLookupString)).toArray(double[][]::new);
                 } else {
-                    results = spot.getTaskExpressionsEvaluationsPerSpotByField(ageOrValueLookupString);
+                    results = spot.getTaskExpressionsEvaluationsPerSpotByField(switchRefMatViewToCalibConstLookupString);
                 }
 
                 agesOrValues.add(results[0][0]);
@@ -407,6 +411,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         }
 
+        // plot data
         g2d.setLineWidth(2.0);
         for (int i = 0; i < myOnPeakData.length; i++) {
             if (rejectedIndices[i]) {
@@ -452,7 +457,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         // standard age
         g2d.setLineWidth(1.0);
         g2d.setStroke(Paint.valueOf("GREEN"));
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+        if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
+                || switchRefMatViewToCalibConst) {
             g2d.strokeLine(
                     mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));
             // show plus minus 2 sigma
@@ -499,27 +505,25 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
 
                     // left side
-                    if (adaptToAgeInMA) {
-                        g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
-                                (float) mapX(minX) - 25f,
-                                (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
                     } else {
-                        g2d.fillText(ticsY[i].toString(),//
-                                (float) mapX(minX) - 25f,
-                                (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                        text.setText(ticsY[i].toString());
                     }
+                    textWidth = (int) text.getLayoutBounds().getWidth();
+                    g2d.fillText(text.getText(),//
+                            (float) mapX(minX) - textWidth + 5f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
 
                     // right side
-                    if (adaptToAgeInMA) {
-                        g2d.fillText(ticsY[i].movePointLeft(6).toBigInteger().toString(),//
-                                (float) mapX(maxX) + 5f,
-                                (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
                     } else {
-                        g2d.fillText(ticsY[i].toString(),//
-                                (float) mapX(maxX) + 5f,
-                                (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                        text.setText(ticsY[i].toString());
                     }
-
+                    g2d.fillText(text.getText(),//
+                            (float) mapX(maxX) + 5f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
                 }
             }
         }
@@ -549,23 +553,19 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setFont(Font.font("SansSerif", 15));
 
         // Y - label
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-            text.setText((adaptToAgeInMA ? "Age (Ma)" : ageOrValueLookupString));
-        } else {
-            text.setText("Ref Mat Age (Ma)");
-        }
+        text.setText(switchRefMatViewToCalibConstLookupString + (switchRefMatViewToCalibConstLookupString.contains("Age") ? " (Ma)" : ""));
 
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        int plotHeight = (int) Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue()));
+        int offset = (plotHeight - textWidth) / 2;
         g2d.rotate(-90);
-        g2d.fillText(text.getText(), -400, leftMargin - 50);
+        g2d.fillText(text.getText(), -(mapY(ticsY[0].doubleValue())) + offset, 25);
         g2d.rotate(90);
 
         // X- label
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
-            StringBuilder description = new StringBuilder();
-            description.append(ageOrValueLookupString).append(" ");
-            description.append("ascending by ").append(spotSummaryDetails.getSelectedExpressionName());
-            text.setText(description.toString());
-        }
+        StringBuilder description = new StringBuilder();
+        description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
+        text.setText(description.toString());
 
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
@@ -742,13 +742,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
         });
         spotContextMenu.getItems().addAll(menuItem1);
-
-        MenuItem menuItem2 = new MenuItem("Toggle Show Excluded Spots");
-        menuItem2.setOnAction((evt) -> {
-            doPlotRejectedSpots = !doPlotRejectedSpots;
-            refreshPanel(false, false);
-        });
-        spotContextMenu.getItems().addAll(menuItem2);
     }
 
     @Override
