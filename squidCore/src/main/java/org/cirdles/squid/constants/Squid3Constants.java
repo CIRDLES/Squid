@@ -102,7 +102,9 @@ public final class Squid3Constants {
     }
 
     public static final String DUPLICATE_STRING = "-DUP-";
-
+    /**
+     * Misspelling is sticky because of serialization.
+     */
     public enum IndexIsoptopesEnum {
         PB_204("PB_204", "204"),
         PB_207("PB_207", "207"),

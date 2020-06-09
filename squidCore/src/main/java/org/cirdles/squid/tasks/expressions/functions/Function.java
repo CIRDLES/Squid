@@ -552,7 +552,11 @@ public abstract class Function
     protected double[] transposeColumnVectorOfDoubles(Object[][] columnVector, int colIndex) {
         double[] rowVector = new double[columnVector.length];
         for (int i = 0; i < rowVector.length; i++) {
-            rowVector[i] = (double) columnVector[i][colIndex];
+            if (columnVector[i][colIndex] instanceof Integer) {
+                rowVector[i] = (double) (Integer)columnVector[i][colIndex];
+            } else {
+                rowVector[i] = (double) columnVector[i][colIndex];
+            }
         }
 
         return rowVector;
@@ -619,6 +623,7 @@ public abstract class Function
     /**
      * @return the summaryCalc
      */
+    @Override
     public boolean isSummaryCalc() {
         return summaryCalc;
     }

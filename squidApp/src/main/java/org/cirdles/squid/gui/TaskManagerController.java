@@ -131,7 +131,6 @@ public class TaskManagerController implements Initializable {
         populateDirectives();
     }
 
-
     class MyConverter extends StringConverter<Double> {
 
         @Override
@@ -155,14 +154,20 @@ public class TaskManagerController implements Initializable {
         return makeExpressionForAudit(expressionName, expressionString, task.getNamedExpressionsMap());
     }
 
+    private void updateDirectiveButtons() {
+        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208)==0);
+        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208)==0);
+    }
+
     private void populateDirectives() {
+        updateDirectiveButtons();
+        
         // Directives fields
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
         boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
-
 
         boolean perm1 = uPicked && !directPicked;
         boolean perm2 = uPicked && directPicked;
@@ -266,6 +271,5 @@ public class TaskManagerController implements Initializable {
         task.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
         task.setChanged(true);
     }
-
 
 }
