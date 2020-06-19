@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plot;
@@ -81,5 +82,10 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
 
     public int getIndexOfSpot() {
         return indexOfSpot;
+    }
+
+    @Override
+    public Map<String, Object> getDatum() {
+        return null;
     }
 }

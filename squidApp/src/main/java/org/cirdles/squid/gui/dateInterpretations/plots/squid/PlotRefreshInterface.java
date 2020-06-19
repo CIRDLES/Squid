@@ -19,11 +19,13 @@ package org.cirdles.squid.gui.dateInterpretations.plots.squid;
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface WeightedMeanRefreshInterface {  
+public interface PlotRefreshInterface {  
     
     public void toggleSpotExclusionWM(int index);
     public void calculateWeightedMean();
     public void refreshPlot();
     public void showRefMatWeightedMeanPlot();
     public void showActivePlot();
+    public void setXAxisExpressionName(String xAxisExpressionName);
+    public void setYAxisExpressionName(String yAxisExpressionName);
 }

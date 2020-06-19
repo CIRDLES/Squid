@@ -25,6 +25,9 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -42,24 +45,35 @@ import static org.cirdles.topsoil.plot.PlotOption.*;
  *
  * @author James F. Bowring
  */
-public class TopsoilPlotTerraWasserburg extends AbstractTopsoilPlot {
+public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
 
-    public TopsoilPlotTerraWasserburg() {
+    private String xAxisExpressionName;
+    private String yAxisExpressionName;
+
+    public TopsoilPlotAnyTwo() {
         this("placeholder");
     }
 
-    public TopsoilPlotTerraWasserburg(String title) {
+    public TopsoilPlotAnyTwo(String title) {
         this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
-                SquidLabData.getExistingSquidLabData().getPhysConstDefault()
+                SquidLabData.getExistingSquidLabData().getPhysConstDefault(),
+                "X",
+                "Y"
         );
     }
 
-    public TopsoilPlotTerraWasserburg(
+    public TopsoilPlotAnyTwo(
             String title,
             List<ShrimpFractionExpressionInterface> shrimpFractions,
-            ParametersModel physicalConstantsModel) {
+            ParametersModel physicalConstantsModel,
+            String xAxisExpressionName,
+            String yAxisExpressionName) {
         super();
+
+        this.xAxisExpressionName = xAxisExpressionName;
+        this.yAxisExpressionName = yAxisExpressionName;
+
         setupPlot(title, physicalConstantsModel);
     }
 
@@ -67,13 +81,12 @@ public class TopsoilPlotTerraWasserburg extends AbstractTopsoilPlot {
     protected void setupPlot(String title, ParametersModel physicalConstantsModel) {
         plotOptions = PlotOptions.defaultOptions();
 
-        plotOptions.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB);
-        plotOptions.put(X_AXIS, "238U / 206Pb*");
-        plotOptions.put(Y_AXIS, "207Pb* / 206Pb*");
+        plotOptions.put(ISOTOPE_SYSTEM, IsotopeSystem.GENERIC);
+        plotOptions.put(X_AXIS, xAxisExpressionName);
+        plotOptions.put(Y_AXIS, yAxisExpressionName);
 
         plotOptions.put(TITLE, title);
-        plotOptions.put(CONCORDIA_LINE, true);
-        plotOptions.put(CONCORDIA_TYPE, org.cirdles.topsoil.plot.feature.Concordia.TERA_WASSERBURG);
+        plotOptions.put(CONCORDIA_LINE, false);
         plotOptions.put(POINTS, true);
         plotOptions.put(ELLIPSES, true);
         plotOptions.put(ELLIPSES_FILL, "red");
@@ -94,50 +107,48 @@ public class TopsoilPlotTerraWasserburg extends AbstractTopsoilPlot {
     public List<Node> toolbarControlsFactory() {
         List<Node> controls = super.toolbarControlsFactory();
 
-        CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
-        concordiaLineCheckBox.setSelected((Boolean) getPlotOptions().get(CONCORDIA_LINE));
-        concordiaLineCheckBox.setOnAction(mouseEvent -> {
-            setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
-        });
+        if (hasUncertainties) {
+            CheckBox ellipsesCheckBox = new CheckBox("Ellipses:");
+            formatNode(ellipsesCheckBox, 75);
+            ellipsesCheckBox.setSelected((Boolean) getPlotOptions().get(ELLIPSES));
+            ellipsesCheckBox.setOnAction(mouseEvent -> {
+                setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
+            });
 
-        CheckBox ellipsesCheckBox = new CheckBox("Ellipses:");
-        ellipsesCheckBox.setSelected((Boolean) getPlotOptions().get(ELLIPSES));
-        ellipsesCheckBox.setOnAction(mouseEvent -> {
-            setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
-        });
+            ChoiceBox<Uncertainty> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(retrievePlottingUncertainties()));
+            uncertaintyChoiceBox.setValue((Uncertainty) getPlotOptions().get(UNCERTAINTY));
+            uncertaintyChoiceBox.setConverter(new StringConverter<Uncertainty>() {
+                @Override
+                public String toString(Uncertainty object) {
+                    return object.getName();
+                }
 
-        ChoiceBox<Uncertainty> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(retrievePlottingUncertainties()));
-        uncertaintyChoiceBox.setValue((Uncertainty) getPlotOptions().get(UNCERTAINTY));
-        uncertaintyChoiceBox.setConverter(new StringConverter<Uncertainty>() {
-            @Override
-            public String toString(Uncertainty object) {
-                return object.getName();
-            }
+                @Override
+                public Uncertainty fromString(String string) {
+                    return null;
+                }
+            });
+            uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Uncertainty>() {
+                @Override
+                public void changed(ObservableValue observable, Uncertainty oldValue, Uncertainty newValue) {
+                    setProperty(UNCERTAINTY, newValue);
+                }
+            });
 
-            @Override
-            public Uncertainty fromString(String string) {
-                return null;
-            }
-        });
-        uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Uncertainty>() {
-            @Override
-            public void changed(ObservableValue observable, Uncertainty oldValue, Uncertainty newValue) {
-                setProperty(UNCERTAINTY, newValue);
-            }
-        });
+            ColorPicker ellipsesColorPicker = new ColorPicker(Color.valueOf(((String) getPlotOptions().get(ELLIPSES_FILL)).replaceAll("#", "0x")));
+            ellipsesColorPicker.setPrefWidth(100);
+            ellipsesColorPicker.setOnAction(mouseEvent -> {
+                // to satisfy D3
+                setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
+            });
 
-        ColorPicker ellipsesColorPicker = new ColorPicker(Color.valueOf(((String) getPlotOptions().get(ELLIPSES_FILL)).replaceAll("#", "0x")));
-        ellipsesColorPicker.setPrefWidth(100);
-        ellipsesColorPicker.setOnAction(mouseEvent -> {
-            // to satisfy D3
-            setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
-        });
+            controls.add(ellipsesCheckBox);
+            controls.add(uncertaintyChoiceBox);
+            controls.add(ellipsesColorPicker);
+        }
 
-        CheckBox dataPointsCheckBox = new CheckBox("DataPoints:");
-        dataPointsCheckBox.setSelected(true);
-        dataPointsCheckBox.setOnAction(mouseEvent -> {
-            setProperty(POINTS, dataPointsCheckBox.isSelected());
-        });
+        Label dataPointsLabel = new Label(" DataPoints:");
+        formatNode(dataPointsLabel, 75);
 
         ColorPicker dataPointsColorPicker = new ColorPicker(Color.valueOf(((String) getPlotOptions().get(POINTS_FILL)).replaceAll("#", "0x")));
         dataPointsColorPicker.setPrefWidth(100);
@@ -145,14 +156,19 @@ public class TopsoilPlotTerraWasserburg extends AbstractTopsoilPlot {
             // to satisfy D3
             setProperty(POINTS_FILL, dataPointsColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
         });
-        controls.add(concordiaLineCheckBox);
-        controls.add(ellipsesCheckBox);
-        controls.add(uncertaintyChoiceBox);
-        controls.add(ellipsesColorPicker);
-        controls.add(dataPointsCheckBox);
+
+        controls.add(dataPointsLabel);
         controls.add(dataPointsColorPicker);
 
         return controls;
+    }
+
+    private void formatNode(Control control, int width) {
+        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
+        control.setPrefWidth(width);
+        control.setMinWidth(USE_PREF_SIZE);
+        control.setPrefHeight(25);
+        control.setMinHeight(USE_PREF_SIZE);
     }
 
 }

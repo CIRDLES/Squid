@@ -19,16 +19,16 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
 
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
-    public ConcordiaControlNode(WeightedMeanRefreshInterface plotsController) {
+    public ConcordiaControlNode(PlotRefreshInterface plotsController) {
         super(4);
 
         this.plotsController = plotsController;

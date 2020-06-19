@@ -17,9 +17,6 @@ import javafx.stage.FileChooser;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
-import org.cirdles.topsoil.Variable;
 import org.cirdles.topsoil.javafx.PlotView;
 import org.cirdles.topsoil.plot.DataEntry;
 import org.cirdles.topsoil.plot.PlotFunction;
@@ -34,12 +31,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import org.cirdles.topsoil.Variable;
+import static org.cirdles.topsoil.Variable.SIGMA_X;
+import static org.cirdles.topsoil.Variable.SIGMA_Y;
+import org.cirdles.topsoil.data.Uncertainty;
 
 public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
-    private PlotView plot;
+    protected PlotView plot;
+    protected PlotOptions plotOptions;
+    protected boolean hasUncertainties;
+    protected boolean hasData;
 
-    private final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public final ObservableList<DataEntry> getData() {
         return dataEntries.get();
@@ -48,6 +52,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     @Override
     public final void setData(List<Map<String, Object>> data) {
         List<DataEntry> entries = new ArrayList<>();
+        this.hasUncertainties = true;
         DataEntry newEntry;
         for (Map<String, Object> map : data) {
             newEntry = new DataEntry();
@@ -56,15 +61,18 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
                 newEntry.put(Variable.variableForKey(key), pair.getValue());
             }
             entries.add(newEntry);
+            this.hasUncertainties = hasUncertainties && ((Double) newEntry.get(SIGMA_X)) != 0.0;
+            this.hasUncertainties = hasUncertainties && ((Double) newEntry.get(SIGMA_Y)) != 0.0;
         }
+
         dataEntries.setAll(entries);
     }
-
+    
     public final void setDataEntries(List<DataEntry> dataEntries) {
         this.dataEntries.setAll(dataEntries);
     }
 
-    private final ReadOnlyMapProperty<PlotOption<?>, Object> options
+    protected final ReadOnlyMapProperty<PlotOption<?>, Object> options
             = new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
 
     public final Map<PlotOption<?>, Object> getPlotOptions() {
@@ -83,19 +91,9 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
     private BooleanProperty isLoading = new SimpleBooleanProperty(false);
 
-    public AbstractTopsoilPlot(String title) {
-        this(
-                title,
-                new ArrayList<ShrimpFractionExpressionInterface>(),
-                SquidLabData.getExistingSquidLabData().getPhysConstDefault()
-        );
-    }
-
-    public AbstractTopsoilPlot(
-            String title,
-            List<ShrimpFractionExpressionInterface> shrimpFractions,
-            ParametersModel physicalConstantsModel) {
-        setupPlot(title, physicalConstantsModel);
+    public AbstractTopsoilPlot() {
+        this.hasUncertainties = true;
+        this.hasData = false;
     }
 
     protected abstract void setupPlot(String title, ParametersModel physicalConstantsModel);
@@ -103,7 +101,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     @Override
     public void setProperty(String key, Object datum) {
         PlotOption<?> option = PlotOption.forKey(key);
-        if (option != null) {
+        if (option == null) {
             throw new IllegalArgumentException("String key \"" + key + "\" does not represent a valid PlotOption.");
         }
 
@@ -117,7 +115,8 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     @Override
     public final Node displayPlotAsNode() {
         if (plot == null) {
-            plot = new PlotView(PlotType.SCATTER, new PlotOptions(getPlotOptions()), getData());
+            PlotOptions myPlotOptions = new PlotOptions(options.get());
+            plot = new PlotView(PlotType.SCATTER, myPlotOptions, getData());
             CompletableFuture<Void> loadFuture = plot.getLoadFuture();
             isLoading.set(!loadFuture.isDone());
             loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
@@ -130,7 +129,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         }
         return plot;
     }
-    
+
     @Override
     public List<Node> toolbarControlsFactory() {
         Text loadingIndicator = new Text("Loading...");
@@ -165,10 +164,29 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
         return controls;
     }
+    
+    protected Uncertainty[] retrievePlottingUncertainties(){
+        List<Uncertainty> plottingUncertList = new ArrayList<>();
+        for (Uncertainty entry : Uncertainty.values()){
+            if (!entry.getName().contains("(%)")){
+                plottingUncertList.add(entry);
+            }
+        }        
+        
+        Uncertainty [] plottingUncertArray = new Uncertainty[plottingUncertList.size()];
+        plottingUncertArray = plottingUncertList.toArray(plottingUncertArray);
+        return plottingUncertArray;
+    }
 
     @Override
     public String makeAgeOrValueString(int index) {
         return "";
     }
 
+    /**
+     * @return the hasUncertainties
+     */
+    public boolean isHasUncertainties() {
+        return hasUncertainties;
+    }
 }

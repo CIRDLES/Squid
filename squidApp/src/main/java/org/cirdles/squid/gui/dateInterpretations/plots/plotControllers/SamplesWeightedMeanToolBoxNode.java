@@ -41,7 +41,6 @@ import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -68,6 +67,7 @@ import java.util.logging.Logger;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -76,7 +76,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
     private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private final ComboBox<String> sampleComboBox;
-    private final WeightedMeanRefreshInterface plotsController;
+    private final PlotRefreshInterface plotsController;
     private SampleNode sampleNode;
     private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
     private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
@@ -90,7 +90,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
     private CheckBox filterInfoCheckBox;
 
-    public SamplesWeightedMeanToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public SamplesWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
         super(4);
 
         this.sampleComboBox = new ComboBox<>();

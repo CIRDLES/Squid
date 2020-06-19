@@ -18,7 +18,6 @@ package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -37,7 +36,6 @@ import org.cirdles.topsoil.IsotopeSystem;
 import org.cirdles.topsoil.data.Uncertainty;
 import org.cirdles.topsoil.plot.PlotOptions;
 
-import static org.cirdles.squid.gui.SquidUI.COLORPICKER_CSS_STYLE_SPECS;
 import static org.cirdles.topsoil.plot.PlotOption.*;
 
 /**
@@ -51,8 +49,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
     }
 
     public TopsoilPlotWetherill(String title) {
-        this(
-                title,
+        this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
                 SquidLabData.getExistingSquidLabData().getPhysConstDefault()
         );
@@ -62,104 +59,99 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
             String title,
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             ParametersModel physicalConstantsModel) {
-        super(title, shrimpFractions, physicalConstantsModel);
+        super();
+        setupPlot(title, physicalConstantsModel);
     }
 
     @Override
     protected void setupPlot(String title, ParametersModel physicalConstantsModel) {
-        PlotOptions options = PlotOptions.defaultOptions();
+        plotOptions = PlotOptions.defaultOptions();
 
-        options.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB);
-        options.put(X_AXIS, "207Pb*/235U");
-        options.put(Y_AXIS, "206Pb*/238U");
+        plotOptions.put(ISOTOPE_SYSTEM, IsotopeSystem.UPB);
+        plotOptions.put(X_AXIS, "207Pb*/235U");
+        plotOptions.put(Y_AXIS, "206Pb*/238U");
 
-        options.put(TITLE, title);
-        options.put(CONCORDIA_LINE, true);
-//        options.put(CONCORDIA_ENVELOPE, true);
-        options.put(CONCORDIA_TYPE, org.cirdles.topsoil.plot.feature.Concordia.WETHERILL);
-        options.put(POINTS, true);
-        options.put(ELLIPSES, true);
-        options.put(ELLIPSES_FILL, "red");
+        plotOptions.put(TITLE, title);
+        plotOptions.put(CONCORDIA_LINE, true);
+        plotOptions.put(CONCORDIA_TYPE, org.cirdles.topsoil.plot.feature.Concordia.WETHERILL);
+        plotOptions.put(POINTS, true);
+        plotOptions.put(ELLIPSES, true);
+        plotOptions.put(ELLIPSES_FILL, "red");
 
-        options.put(MCLEAN_REGRESSION, false);
-        options.put(MCLEAN_REGRESSION_ENVELOPE, false);
+        plotOptions.put(MCLEAN_REGRESSION, false);
+        plotOptions.put(MCLEAN_REGRESSION_ENVELOPE, false);
 
-        options.put(UNCERTAINTY, Uncertainty.ONE_SIGMA_ABSOLUTE);
+        plotOptions.put(UNCERTAINTY, Uncertainty.ONE_SIGMA_ABSOLUTE);
 
-        options.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
-        options.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());
-        options.put(LAMBDA_U238, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue());
+        plotOptions.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
+        plotOptions.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());
+        plotOptions.put(LAMBDA_U238, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_238.getName()).getValue().doubleValue());
 
-        setPlotOptions(options);
+        setPlotOptions(plotOptions);
     }
 
     @Override
     public List<Node> toolbarControlsFactory() {
         List<Node> controls = super.toolbarControlsFactory();
 
-        CheckBox ellipsesCheckBox = new CheckBox("Centers");
-        ellipsesCheckBox.setSelected(true);
-        ellipsesCheckBox.setOnAction(mouseEvent -> {
-            setProperty(POINTS, ellipsesCheckBox.isSelected());
+        CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
+        concordiaLineCheckBox.setSelected((Boolean)getPlotOptions().get(CONCORDIA_LINE));
+        concordiaLineCheckBox.setOnAction(mouseEvent -> {
+            setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
         });
 
-        ChoiceBox<SigmaPresentationModes> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(SigmaPresentationModes.values()));
-        uncertaintyChoiceBox.setValue(SigmaPresentationModes.ONE_SIGMA_ABSOLUTE);
-        uncertaintyChoiceBox.setConverter(new StringConverter<SigmaPresentationModes>() {
+        CheckBox ellipsesCheckBox = new CheckBox("Ellipses:");
+        ellipsesCheckBox.setSelected((Boolean)getPlotOptions().get(ELLIPSES));
+        ellipsesCheckBox.setOnAction(mouseEvent -> {
+            setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
+        });
+
+        ChoiceBox<Uncertainty> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(retrievePlottingUncertainties()));
+        uncertaintyChoiceBox.setValue((Uncertainty)getPlotOptions().get(UNCERTAINTY));
+        uncertaintyChoiceBox.setConverter(new StringConverter<Uncertainty>() {
             @Override
-            public String toString(SigmaPresentationModes object) {
-                return object.getDisplayName();
+            public String toString(Uncertainty object) {
+                return object.getName();
             }
 
             @Override
-            public SigmaPresentationModes fromString(String string) {
+            public Uncertainty fromString(String string) {
                 return null;
             }
         });
-        uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SigmaPresentationModes>() {
+        uncertaintyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Uncertainty>() {
             @Override
-            public void changed(ObservableValue observable, SigmaPresentationModes oldValue, SigmaPresentationModes newValue) {
-                setProperty(UNCERTAINTY, Uncertainty.fromMultiplier(newValue.getSigmaMultiplier()));
+            public void changed(ObservableValue observable, Uncertainty oldValue, Uncertainty newValue) {
+                setProperty(UNCERTAINTY, newValue);
             }
         });
 
-        ColorPicker ellipsesColorPicker = new ColorPicker(Color.RED);
-        ellipsesColorPicker.setStyle(COLORPICKER_CSS_STYLE_SPECS);
+        ColorPicker ellipsesColorPicker = new ColorPicker(Color.valueOf(((String)getPlotOptions().get(ELLIPSES_FILL)).replaceAll("#", "0x")));
         ellipsesColorPicker.setPrefWidth(100);
         ellipsesColorPicker.setOnAction(mouseEvent -> {
             // to satisfy D3
             setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
         });
 
-        CheckBox concordiaLineCheckBox = new CheckBox("Concordia");
-        concordiaLineCheckBox.setSelected(true);
-        concordiaLineCheckBox.setOnAction(mouseEvent -> {
-            setProperty(CONCORDIA_LINE, concordiaLineCheckBox.isSelected());
+        CheckBox dataPointsCheckBox = new CheckBox("DataPoints:");
+        dataPointsCheckBox.setSelected(true);
+        dataPointsCheckBox.setOnAction(mouseEvent -> {
+            setProperty(POINTS, dataPointsCheckBox.isSelected());
         });
 
-        CheckBox regressionCheckBox = new CheckBox("2D Regression");
-        regressionCheckBox.setSelected(false);
-        regressionCheckBox.setOnAction(mouseEvent -> {
-            boolean isRegression = regressionCheckBox.isSelected();
-            setProperty(MCLEAN_REGRESSION, isRegression);
-//            regressionUnctEnvelopeCheckBox.setDisable(!isRegression);
+        ColorPicker dataPointsColorPicker = new ColorPicker(Color.valueOf(((String)getPlotOptions().get(POINTS_FILL)).replaceAll("#", "0x")));
+        dataPointsColorPicker.setPrefWidth(100);
+        dataPointsColorPicker.setOnAction(mouseEvent -> {
+            // to satisfy D3
+            setProperty(POINTS_FILL, dataPointsColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
         });
 
-        CheckBox regressionUnctEnvelopeCheckBox = new CheckBox("2D Regression Unct");
-        regressionUnctEnvelopeCheckBox.setSelected(false);
-        regressionUnctEnvelopeCheckBox.setOnAction(mouseEvent -> {
-            setProperty(MCLEAN_REGRESSION_ENVELOPE, regressionUnctEnvelopeCheckBox.isSelected());
-        });
-        regressionUnctEnvelopeCheckBox.disableProperty().bind(
-                Bindings.not(regressionCheckBox.selectedProperty())
-        );
-
+        controls.add(concordiaLineCheckBox);
         controls.add(ellipsesCheckBox);
         controls.add(uncertaintyChoiceBox);
         controls.add(ellipsesColorPicker);
-        controls.add(concordiaLineCheckBox);
-        controls.add(regressionCheckBox);
-        controls.add(regressionUnctEnvelopeCheckBox);
+        controls.add(dataPointsCheckBox);
+        controls.add(dataPointsColorPicker);
 
         return controls;
     }

@@ -124,18 +124,20 @@ public class SpotManagerController implements Initializable {
     private Label pb207Pb206AgeLabel;
     @FXML
     private Label pb208Th232AgeLabel;
-    @FXML
-    private Button viewRMmodelButton;
+
     @FXML
     private ComboBox<ParametersModel> concRefMatModelComboBox;
     @FXML
     private Label uPpmLabel;
     @FXML
     private Label thPpmLabel;
-    @FXML
-    private Button viewCMmodelButton;
+
     @FXML
     private ComboBox<String> sampleNameComboBox;
+    @FXML
+    private Button viewRMmodelButton;
+    @FXML
+    private Button viewCMmodelButton;
     @FXML
     private Button refreshRMmodelButton;
     @FXML
@@ -296,7 +298,7 @@ public class SpotManagerController implements Initializable {
         spotContextMenuItem1R.setOnAction((evt) -> {
             squidProject.restoreRunsToPrawnFile(selectedRunsForRestore);
             selectedRunsForRestore.clear();
-            
+
             try {
                 setUpPrawnFile();
             } catch (SquidException squidException) {
@@ -466,8 +468,8 @@ public class SpotManagerController implements Initializable {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
 
-                        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
-                        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+//                        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+//                        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
                     }
                 });
 
@@ -490,8 +492,8 @@ public class SpotManagerController implements Initializable {
                         squidProject.setConcentrationReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
 
-                        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
-                        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+//                        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+//                        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
                     }
                 });
 
@@ -560,22 +562,22 @@ public class SpotManagerController implements Initializable {
         refMatModelComboBox.getSelectionModel().clearSelection();
         refMatModelComboBox.getSelectionModel().select(squidProject.getReferenceMaterialModel());
         refMatModelComboBox.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-        viewRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
-
-        refreshRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+//        viewRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
+//        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
+//
+//        refreshRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
+//        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
     }
 
     private void updateViewCM() {
         concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
         concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-        viewCMmodelButton.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
-
-        refreshRMmodelButton2.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+//        viewCMmodelButton.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+//        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+//
+//        refreshRMmodelButton2.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+//        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {

@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
+import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
@@ -41,4 +42,9 @@ public interface SampleTreeNodeInterface {
      * @param selectedProperty the selectedProperty to set
      */
     public void setSelectedProperty(SimpleBooleanProperty selectedProperty);
+
+    /**
+     * @return the datum
+     */
+    public Map<String, Object> getDatum();
 }
