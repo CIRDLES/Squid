@@ -36,10 +36,10 @@ import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  *
@@ -47,9 +47,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class RefMatConcordiaToolBoxNode extends HBox {
 
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
-    public RefMatConcordiaToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public RefMatConcordiaToolBoxNode(PlotRefreshInterface plotsController) {
         super(5);
         this.plotsController = plotsController;
 
@@ -99,7 +99,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         boolean has232 = squidProject.getTask().getParentNuclide().contains("232");
 
         // concordia for ref mat
-        PlotsController.concordiaFlavor = "C";
+        PlotsController.topsoilPlotFlavor = "C";
 
         // ref materials
         pb208RadioButton.setDisable(isDirectAltPD || has232);

@@ -17,10 +17,10 @@
             </ScrollPane>
             <ScrollPane fx:id="plotScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER">
                <content>
-                  <VBox fx:id="plotVBox" alignment="BASELINE_LEFT" prefHeight="658.0" prefWidth="914.0">
+                  <VBox fx:id="plotVBox" alignment="BASELINE_LEFT" prefHeight="658.0" prefWidth="959.0">
                      <children>
-                        <AnchorPane fx:id="plotAndConfigAnchorPane" VBox.vgrow="ALWAYS" />
-                        <ToolBar fx:id="plotToolBar" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
+                        <AnchorPane fx:id="plotAndConfigAnchorPane" prefHeight="618.0" prefWidth="954.0" VBox.vgrow="ALWAYS" />
+                        <ToolBar fx:id="plotToolBar" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER" />
                      </children>
                   </VBox>
                </content>

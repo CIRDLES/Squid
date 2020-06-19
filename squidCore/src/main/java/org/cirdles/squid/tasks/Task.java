@@ -1505,7 +1505,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         applyDirectives();
 
-        //ensure metadata filed for spots up to date
+        //ensure metadata fields for spots up to date to power sorting at Interpretations menu
         try {
             ExpressionTreeInterface hoursExp = namedSpotLookupFieldsMap.get("Hours");
             evaluateExpressionForSpotSet(hoursExp, shrimpFractions);
@@ -2056,7 +2056,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    private void evaluateExpressionForSpotSet(
+    public void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expressionTree,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
 

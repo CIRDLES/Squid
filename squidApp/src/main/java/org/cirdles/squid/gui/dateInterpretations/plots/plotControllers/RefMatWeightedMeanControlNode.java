@@ -30,7 +30,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -44,18 +43,19 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.defaultRefMatWMSortingCategories;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeInterface {
 
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
 
-    public RefMatWeightedMeanControlNode(WeightedMeanRefreshInterface plotsController) {
+    public RefMatWeightedMeanControlNode(PlotRefreshInterface plotsController) {
         super(4);
 
         this.plotsController = plotsController;
@@ -128,7 +128,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
                 squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
                 // this will cause weighted mean expressions to be changed with boolean flag
                 squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
-                plotsController.showRefMatWeightedMeanPlot();
+                plotsController.showActivePlot();
             }
         });
         formatNode(autoExcludeSpotsCheckBox, 110);
@@ -246,29 +246,32 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         }
 
         if (activeTreeView.getRoot() != null) {
-
-            FXCollections.sort(activeTreeView.getRoot().getChildren(), (TreeItem node1, TreeItem node2) -> {
-                double valueFromNode1 = 0.0;
-                double valueFromNode2 = 0.0;
-                if (stringIsSquidRatio(selectedFieldName)) {
-                    // Ratio case
-                    double[][] resultsFromNode1
-                            = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode1 = resultsFromNode1[0][0];
-                    double[][] resultsFromNode2
-                            = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
-                    valueFromNode2 = resultsFromNode2[0][0];
-                } else {
-                    valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                    valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
-                }
-
-                return Double.compare(valueFromNode1, valueFromNode2);
-            });
+            try {
+                FXCollections.sort(activeTreeView.getRoot().getChildren(), (TreeItem node1, TreeItem node2) -> {
+                    double valueFromNode1 = 0.0;
+                    double valueFromNode2 = 0.0;
+                    if (stringIsSquidRatio(selectedFieldName)) {
+                        // Ratio case
+                        double[][] resultsFromNode1
+                                = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        valueFromNode1 = resultsFromNode1[0][0];
+                        double[][] resultsFromNode2
+                                = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        valueFromNode2 = resultsFromNode2[0][0];
+                    } else {
+                        valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
+                                .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                        valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
+                                .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
+                    }
+                    
+                    return Double.compare(valueFromNode1, valueFromNode2);
+                });
+            } catch (Exception e) {
+                // sorting optional
+            }
         }
     }
 }

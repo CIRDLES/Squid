@@ -30,10 +30,10 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  *
@@ -41,9 +41,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class SamplesConcordiaToolBoxNode extends HBox {
 
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
-    public SamplesConcordiaToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public SamplesConcordiaToolBoxNode(PlotRefreshInterface plotsController) {
         super(5);
         this.plotsController = plotsController;
 
@@ -98,12 +98,12 @@ public class SamplesConcordiaToolBoxNode extends HBox {
 
         type1RadioButton.setText("Wetherill");
         type1RadioButton.setUserData("C");
-        type1RadioButton.setSelected(PlotsController.concordiaFlavor.equals("C"));
+        type1RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("C"));
         formatNode(type1RadioButton, 80);
 
         type2RadioButton.setText("Terra-Wasserburg");
         type2RadioButton.setUserData("TW");
-        type2RadioButton.setSelected(PlotsController.concordiaFlavor.equals("TW"));
+        type2RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("TW"));
         formatNode(type2RadioButton, 120);
 
         getChildren().addAll(
@@ -124,7 +124,7 @@ public class SamplesConcordiaToolBoxNode extends HBox {
             @Override
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
-                PlotsController.concordiaFlavor = flavor;
+                PlotsController.topsoilPlotFlavor = flavor;
                 squidProject.getTask().setChanged(true);
                 plotsController.showActivePlot();
             }

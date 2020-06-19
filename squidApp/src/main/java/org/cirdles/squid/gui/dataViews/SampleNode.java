@@ -15,12 +15,13 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
+import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  *
@@ -31,7 +32,7 @@ public class SampleNode implements SampleTreeNodeInterface {
     private final String sampleName;
     private SimpleBooleanProperty selectedProperty;
     private PlotDisplayInterface samplePlotWM;    
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
     public SampleNode(String sampleName) {
         this.sampleName = sampleName;
@@ -88,14 +89,19 @@ public class SampleNode implements SampleTreeNodeInterface {
     /**
      * @return the plotsController
      */
-    public WeightedMeanRefreshInterface getPlotsController() {
+    public PlotRefreshInterface getPlotsController() {
         return plotsController;
     }
 
     /**
      * @param plotsController the plotsController to set
      */
-    public void setPlotsController(WeightedMeanRefreshInterface plotsController) {
+    public void setPlotsController(PlotRefreshInterface plotsController) {
         this.plotsController = plotsController;
+    }
+
+    @Override
+    public Map<String, Object> getDatum() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

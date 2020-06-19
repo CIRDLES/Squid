@@ -33,12 +33,12 @@ import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanRefreshInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 /**
  *
@@ -46,9 +46,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class RefMatWeightedMeanToolBoxNode extends HBox {
 
-    private WeightedMeanRefreshInterface plotsController;
+    private PlotRefreshInterface plotsController;
 
-    public RefMatWeightedMeanToolBoxNode(WeightedMeanRefreshInterface plotsController) {
+    public RefMatWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
         super(5);
         this.plotsController = plotsController;
 

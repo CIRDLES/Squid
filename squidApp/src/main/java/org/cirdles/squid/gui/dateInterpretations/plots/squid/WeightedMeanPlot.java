@@ -75,7 +75,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private final double referenceMaterialAge;
 
     private int indexOfSelectedSpot;
-    private final WeightedMeanRefreshInterface weightedMeanRefreshInterface;
+    private final PlotRefreshInterface weightedMeanRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
 
     public static boolean doPlotRejectedSpots = true;
@@ -89,7 +89,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             SpotSummaryDetails spotSummaryDetails,
             String ageOrValueLookupString,
             double referenceMaterialAge,
-            WeightedMeanRefreshInterface weightedMeanRefreshInterface) {
+            PlotRefreshInterface weightedMeanRefreshInterface) {
 
         super(bounds, 0, 0);
 

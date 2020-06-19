@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.gui.topsoil;
+package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
@@ -29,8 +31,13 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
-
-import static org.cirdles.topsoil.Variable.*;
+import static org.cirdles.topsoil.Variable.RHO;
+import static org.cirdles.topsoil.Variable.SELECTED;
+import static org.cirdles.topsoil.Variable.SIGMA_X;
+import static org.cirdles.topsoil.Variable.SIGMA_Y;
+import static org.cirdles.topsoil.Variable.VISIBLE;
+import static org.cirdles.topsoil.Variable.X;
+import static org.cirdles.topsoil.Variable.Y;
 
 /**
  *
@@ -74,36 +81,62 @@ public class TopsoilDataFactory {
         return datum;
     }
 
+    public static Map<String, Object> preparePlotAnyTwoDatum(
+            ShrimpFractionExpressionInterface shrimpFraction, String xAxisExpressionName, String yAxisExpressionName) {
+
+        Map<String, Object> datum = prepareDatum(shrimpFraction, "", xAxisExpressionName, yAxisExpressionName, "");
+
+        return datum;
+    }
+
     private static Map<String, Object> prepareDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, String xAxisRatio, String yAxisRatio, String rho) {
 
         Map<String, Object> datum = new HashMap<>();
         boolean badData = true;
 
-        try {
-            Method method = ShrimpFractionExpressionInterface.class.getMethod(//
-                    "getTaskExpressionsEvaluationsPerSpotByField",
-                    new Class[]{String.class});
-
-            double[] xAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + xAxisRatio}))[0].clone();
-            badData = badData && Double.isNaN(xAxisValueAndUnct[0]);
-            datum.put(X.getTitle(), xAxisValueAndUnct[0]);
-            datum.put(SIGMA_X.getTitle(), 1.0 * xAxisValueAndUnct[1]);
-
-            double[] yAxisValueAndUnct = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + yAxisRatio}))[0].clone();
-            badData = badData && Double.isNaN(yAxisValueAndUnct[0]);
-            datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
-            datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
-
-            double plotRho = ((double[][]) method.invoke(shrimpFraction, new Object[]{correction + rho}))[0].clone()[0];
-            datum.put(RHO.getTitle(), plotRho);
-
-            datum.put(VISIBLE.getTitle(), true);
-            datum.put(SELECTED.getTitle(), true);
-
-//            datum.put("AGE", 0.0);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
+        // xAxis
+        double[] xAxisValueAndUnct;
+        if (stringIsSquidRatio(correction + xAxisRatio)) {
+            // case of raw ratios
+            xAxisValueAndUnct
+                    = Arrays.stream(shrimpFraction
+                            .getIsotopicRatioValuesByStringName(correction + xAxisRatio)).toArray(double[][]::new)[0];
+        } else {
+            // all other expressions
+            xAxisValueAndUnct = shrimpFraction
+                    .getTaskExpressionsEvaluationsPerSpotByField(correction + xAxisRatio)[0];
         }
+        badData = badData && Double.isNaN(xAxisValueAndUnct[0]);
+        datum.put(X.getTitle(), xAxisValueAndUnct[0]);
+        datum.put(SIGMA_X.getTitle(), 0.0);
+        if (xAxisValueAndUnct.length > 1) {
+            datum.put(SIGMA_X.getTitle(), 1.0 * xAxisValueAndUnct[1]);
+        }
+
+        // yAxis
+        double[] yAxisValueAndUnct;
+        if (stringIsSquidRatio(correction + yAxisRatio)) {
+            // case of raw ratios
+            yAxisValueAndUnct
+                    = Arrays.stream(shrimpFraction
+                            .getIsotopicRatioValuesByStringName(correction + yAxisRatio)).toArray(double[][]::new)[0];
+        } else {
+            // all other expressions
+            yAxisValueAndUnct = shrimpFraction
+                    .getTaskExpressionsEvaluationsPerSpotByField(correction + yAxisRatio)[0];
+        }
+        badData = badData && Double.isNaN(yAxisValueAndUnct[0]);
+        datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
+        datum.put(SIGMA_Y.getTitle(), 0.0);
+        if (yAxisValueAndUnct.length > 1) {
+            datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
+        }
+
+        datum.put(RHO.getTitle(), 0.0);
+
+        datum.put(VISIBLE.getTitle(), true);
+        datum.put(SELECTED.getTitle(), true);
 
         return badData ? null : datum;
     }
