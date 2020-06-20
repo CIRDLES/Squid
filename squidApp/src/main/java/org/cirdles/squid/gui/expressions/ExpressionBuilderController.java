@@ -1876,8 +1876,7 @@ public class ExpressionBuilderController implements Initializable {
                         Collections.sort(unSpots, new Comparator<ShrimpFractionExpressionInterface>() {
                             @Override
                             public int compare(ShrimpFractionExpressionInterface sf1, ShrimpFractionExpressionInterface sf2) {
-                                return intuitiveStringComparator.compare(
-                                        sf1.getSpotIndex()  +  sf1.getFractionID(), sf2.getSpotIndex()  +  sf2.getFractionID());
+                                return intuitiveStringComparator.compare(sf1.getFractionID(), sf2.getFractionID());
                             }
                         });
                         res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
