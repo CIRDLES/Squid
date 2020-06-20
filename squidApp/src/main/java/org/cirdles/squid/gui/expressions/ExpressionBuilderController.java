@@ -1872,6 +1872,14 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Unknowns not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
+                        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+                        Collections.sort(unSpots, new Comparator<ShrimpFractionExpressionInterface>() {
+                            @Override
+                            public int compare(ShrimpFractionExpressionInterface sf1, ShrimpFractionExpressionInterface sf2) {
+                                return intuitiveStringComparator.compare(
+                                        sf1.getSpotIndex()  +  sf1.getFractionID(), sf2.getSpotIndex()  +  sf2.getFractionID());
+                            }
+                        });
                         res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
                     } else {
                         res = "No Unknowns";
