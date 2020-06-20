@@ -748,7 +748,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(!newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpression.set(newValue);
                     }
@@ -765,7 +765,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(false);
                         selectedExpressionIsBuiltIn.set(true);
                         selectedExpression.set(newValue);
                     }
