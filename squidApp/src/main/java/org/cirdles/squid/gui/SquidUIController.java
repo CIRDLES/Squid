@@ -1823,6 +1823,11 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    @FXML
+    private void citeSquidAction(ActionEvent event) {
+        BrowserControl.showURI("https://doi.org/10.11636/133870");
+    }
+
     private class HighlightMainMenu {
 
         private Menu highlightedMenu;

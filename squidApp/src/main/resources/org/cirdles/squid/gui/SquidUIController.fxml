@@ -213,11 +213,16 @@
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
                         <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
-                        <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
-                        <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
 
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="About">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
+               </items>
+            </Menu>
             </menus>
         </MenuBar>
         <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">
