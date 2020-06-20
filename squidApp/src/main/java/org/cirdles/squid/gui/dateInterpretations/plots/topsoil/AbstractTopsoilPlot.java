@@ -142,7 +142,8 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
                 return;
             }
             FileChooser chooser = new FileChooser();
-            chooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("SVG", "svg"));
+            chooser.setTitle("Export to SVG");
+            chooser.getExtensionFilters().setAll(new FileChooser.ExtensionFilter("SVG Image", "*.svg"));
             File file = chooser.showSaveDialog(SquidUI.primaryStageWindow);
             if (file != null) {
                 new SVGSaver().save(plot.toSVGDocument(), file);

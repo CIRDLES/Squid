@@ -94,64 +94,40 @@
                 </Menu>
                 <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
                     <items>
-                        <MenuItem disable="false" mnemonicParsing="false" onAction="#reportLayoutManagerOnAction" text="Report Builder" />
-                        <Menu mnemonicParsing="false" text="Quick View Report Tables">
-                            <items>
-                                <Menu mnemonicParsing="false" text="Reference Materials">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
-                                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Unknowns">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
-                                        <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
-                                    </items>
-                                </Menu>
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Summary Reports">
+                        <MenuItem disable="false" mnemonicParsing="false" onAction="#reportLayoutManagerOnAction" text="Custom Report Builder" />
+                        <Menu mnemonicParsing="false" text="Summary Expressions and Values">
                             <items>
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialSummaryReportOnAction" text="Reference Materials" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsSummaryReportOnAction" text="Unknowns" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Default Report Tables">
+                        <MenuItem mnemonicParsing="false" onAction="#produceProjectAuditReportAction" text="Project Audit" />
+                        <MenuItem mnemonicParsing="false" onAction="#produceTaskSummaryReportAction" text="Task Audit" />
+                        <MenuItem mnemonicParsing="false" onAction="#generateAllReportsAction" text="Generate All Reports" />
+                        <Menu mnemonicParsing="false" text="Misc. Report Tables">
                             <items>
+                              <Menu mnemonicParsing="false" text="Quick View Report Tables">
+                                  <items>
+                                      <Menu mnemonicParsing="false" text="Reference Materials">
+                                          <items>
+                                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
+                                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
+                                          </items>
+                                      </Menu>
+                                      <Menu mnemonicParsing="false" text="Unknowns">
+                                          <items>
+                                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
+                                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
+                                          </items>
+                                      </Menu>
+                                  </items>
+                              </Menu>
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Reference Materials - per Squid2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Unknowns - per Squid 2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Unknowns - by Sample for use by ET_Redux and Topsoil" />
-                                <Menu mnemonicParsing="false" text="Reference Materials" visible="false">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableReferenceMaterials" text="Report Table - per Squid 3" visible="false" />
-                                    </items>
-                                </Menu>
-                                <Menu fx:id="unknownsmenu" mnemonicParsing="false" text="Unknowns" visible="false">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#openSquid3ReportTableUnknowns" text="Report Table - per Squid 3" visible="false" />
-                                    </items>
-                                </Menu>
+                              <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Custom Report Tables" visible="false">
-                            <items>
-                                <Menu mnemonicParsing="false" text="Reference Materials">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableRMAction" text="Beta Interactive Default Table" />
-                                    </items>
-                                </Menu>
-                                <Menu mnemonicParsing="false" text="Unknowns">
-                                    <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#interactiveDefaultTableUnknownAction" text="Beta Interactive Default Table" />
-                                    </items>
-                                </Menu>
-                            </items>
-                        </Menu>
-                        <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
-                        <MenuItem mnemonicParsing="false" onAction="#produceTaskSummaryReportAction" text="Produce Task Audit" />
-                        <MenuItem mnemonicParsing="false" onAction="#produceProjectAuditReportAction" text="Produce Project Audit" />
-                        <MenuItem mnemonicParsing="false" onAction="#generateAllReportsAction" text="Generate All Reports" />
                     </items>
                 </Menu>
                 <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
