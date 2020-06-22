@@ -186,8 +186,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu squidLabDataMenu;
     @FXML
-    private Menu unknownsmenu;
-    @FXML
     private Label chinese;
     @FXML
     private Label japanese;
@@ -1465,12 +1463,10 @@ public class SquidUIController implements Initializable {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
     }
 
-    @FXML
     public void openSquid3ReportTableReferenceMaterials(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMat);
     }
 
-    @FXML
     public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
     }
@@ -1708,12 +1704,10 @@ public class SquidUIController implements Initializable {
         launchCountCorrections();
     }
 
-    @FXML
     private void interactiveDefaultTableRMAction(ActionEvent event) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMatCustom);
     }
 
-    @FXML
     private void interactiveDefaultTableUnknownAction(ActionEvent event) {
         squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknownCustom);
     }
@@ -1821,6 +1815,11 @@ public class SquidUIController implements Initializable {
         } else {
             SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
+    }
+
+    @FXML
+    private void citeSquidAction(ActionEvent event) {
+        BrowserControl.showURI("https://doi.org/10.11636/133870");
     }
 
     private class HighlightMainMenu {

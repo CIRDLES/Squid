@@ -6,7 +6,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.5.1'
+String mavenVersion = '1.5.0'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -51,7 +51,7 @@ artifacts {
     archives jar
     archives sourcesJar
 //  Uncomment next line to produce javadocs
-//    archives packageJavadoc
+    archives packageJavadoc
 }
 
 configure(install.repositories.mavenInstaller) {

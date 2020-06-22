@@ -84,6 +84,8 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static javafx.scene.paint.Color.BLACK;
+import static javafx.scene.paint.Color.BLUE;
 
 import static javafx.scene.paint.Color.RED;
 import static org.cirdles.squid.constants.Squid3Constants.*;
@@ -748,7 +750,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(!newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                         selectedExpression.set(newValue);
                     }
@@ -765,7 +767,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(false);
                         selectedExpressionIsBuiltIn.set(true);
                         selectedExpression.set(newValue);
                     }
@@ -1872,6 +1874,13 @@ public class ExpressionBuilderController implements Initializable {
                 res = "Unknowns not processed.";
                 if (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
                     if (unSpots.size() > 0) {
+                        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+                        Collections.sort(unSpots, new Comparator<ShrimpFractionExpressionInterface>() {
+                            @Override
+                            public int compare(ShrimpFractionExpressionInterface sf1, ShrimpFractionExpressionInterface sf2) {
+                                return intuitiveStringComparator.compare(sf1.getFractionID(), sf2.getFractionID());
+                            }
+                        });
                         res = peekDetailsPerSpot(unSpots, exp.getExpressionTree());
                     } else {
                         res = "No Unknowns";
@@ -2268,19 +2277,7 @@ public class ExpressionBuilderController implements Initializable {
                             }
                             sb.append(formatter.toString());
                         }
-//                        
-//                        
-//                        try {
-//                            double[][] results
-//                                    = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-//                            for (int i = 0; i < resultLabels[0].length; i++) {
-//                                try {
-//                                    sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
-//                                } catch (Exception e) {
-//                                }
-//                            }
-//                        } catch (Exception e) {
-//                        }
+
                         sb.append("\n");
                     }
                 } else if (((ExpressionTree) expTree).getOperation() instanceof Value) {
@@ -2300,12 +2297,6 @@ public class ExpressionBuilderController implements Initializable {
                             sb.append(formatter.toString());
                         }
 
-//                        for (int i = 0; i < results[0].length; i++) {
-//                            try {
-//                                sb.append(String.format("%1$-23s", squid3RoundedToSize(results[0][i], sigDigits)));
-//                            } catch (Exception e) {
-//                            }
-//                        }
                         sb.append("\n");
                     }
                 } else {
@@ -2358,13 +2349,6 @@ public class ExpressionBuilderController implements Initializable {
                             }
                         }
 
-//                        for (int i = 0; i < resultsWithPct.length; i++) {
-//                            try {
-//                                sb.append(String.format("%1$-" + (i >= 2 ? 23 : 21) + "s",
-//                                        squid3RoundedToSize(resultsWithPct[i], sigDigits)));
-//                            } catch (Exception e) {
-//                            }
-//                        }
                         sb.append("\n");
                     }
                 }
@@ -2391,17 +2375,6 @@ public class ExpressionBuilderController implements Initializable {
                         sb.append(formatter.toString());
                     }
 
-//                    try {
-//                        double[][] results
-//                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-//                        for (int i = 0; i < results[0].length; i++) {
-//                            try {
-//                                sb.append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][i], sigDigits)));
-//                            } catch (Exception e) {
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                    }
                     sb.append("\n");
                 }
             } else {
@@ -3086,6 +3059,11 @@ public class ExpressionBuilderController implements Initializable {
                 exp = selectedExpression.get();
             }
 
+            // prevent edit of custom sample WM Expressions
+            selectedExpressionIsEditable.set(!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
+                    || !exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                    || !expressionString.get().toUpperCase().startsWith("WTDMEANACALC"));
+
             ((Task) task).evaluateTaskExpression(exp.getExpressionTree());
             boolean localAmHealthy = exp.amHealthy() && (exp.getName().length() > 0);
             auditTextArea.setText(customizeExpressionTreeAudit(exp));
@@ -3126,16 +3104,28 @@ public class ExpressionBuilderController implements Initializable {
 
         ExpressionTreeInterface expTree = exp.getExpressionTree();
 
-        expTree.setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.isSelected());
-        expTree.setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.isSelected());
-        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
-        expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
-        expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
-        expTree.setUnknownsGroupSampleName(unknownGroupsComboBox.getValue());
+        if (expressionString != null) {
+            expTree.setSquidSwitchSTReferenceMaterialCalculation(refMatSwitchCheckBox.isSelected());
+            expTree.setSquidSwitchSAUnknownCalculation(unknownsSwitchCheckBox.isSelected());
+            expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(concRefMatSwitchCheckBox.isSelected());
+            expTree.setSquidSwitchSCSummaryCalculation(summaryCalculationSwitchCheckBox.isSelected());
+            expTree.setSquidSpecialUPbThExpression(specialUPbThSwitchCheckBox.isSelected());
+            expTree.setUnknownsGroupSampleName(unknownGroupsComboBox.getValue());
 
-        // to detect ratios of interest
-        if (expTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) expTree).buildExpression();
+            // to detect ratios of interest
+            if (expTree instanceof BuiltInExpressionInterface) {
+                ((BuiltInExpressionInterface) expTree).buildExpression();
+            }
+
+            // detect existing summary and get correct group
+            if (expTree.isSquidSwitchSCSummaryCalculation()) {
+                SpotSummaryDetails spotSummaryDetail
+                        = task.getTaskExpressionsEvaluationsPerSpotSet().get(expressionName);
+                if (spotSummaryDetail != null) {
+                    expTree.setUnknownsGroupSampleName(spotSummaryDetail.getExpressionTree().getUnknownsGroupSampleName());
+                }
+            }
+
         }
 
         return exp;
@@ -3526,6 +3516,15 @@ public class ExpressionBuilderController implements Initializable {
                         setOnMouseMoved((event) -> {
                             showToolTip(event, this, toolTip);
                         });
+
+                        // show in BLUE custom sample WM Expressions
+                        if(expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
+                                && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
+                                && ((ExpressionTree)expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc){
+                            setTextFill(BLUE);
+                        } else {
+                            setTextFill(BLACK);
+                        }
                     }
                 }
             };

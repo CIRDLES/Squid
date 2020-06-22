@@ -61,14 +61,14 @@ public class BuiltinExpressionsCountCorrection204 {
                 + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
                 + term5 + ","
                 + "false)", false, true, false);
-        
-        countCorrectionExpression204From207.getExpressionTree().setSquidSpecialUPbThExpression(false);
+
+        countCorrectionExpression204From207.getExpressionTree().setSquidSpecialUPbThExpression(true);
 
         return countCorrectionExpression204From207;
     }
 
     /**
-     * @see 
+     * @see
      * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
      *
      * @return
@@ -103,8 +103,8 @@ public class BuiltinExpressionsCountCorrection204 {
                 + term5 + ","
                 + "false)", false, true, false);
 
-        countCorrectionExpression204From208.getExpressionTree().setSquidSpecialUPbThExpression(false);
-        
+        countCorrectionExpression204From208.getExpressionTree().setSquidSpecialUPbThExpression(true);
+
         return countCorrectionExpression204From208;
     }
 
