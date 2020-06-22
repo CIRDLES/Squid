@@ -250,7 +250,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         // sample always defaults to Ages Category because WM is of primary interest
         // need to force change detection to ages
-        categoryComboBox.getSelectionModel().select(1);
+        categoryComboBox.getSelectionModel().select(-1);
         categoryComboBox.getSelectionModel().selectFirst();
 
         probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
@@ -305,24 +305,26 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
             @Override
             public void changed(ObservableValue<? extends SquidReportCategoryInterface> observable, SquidReportCategoryInterface oldValue, SquidReportCategoryInterface newValue) {
-                // first get columns from category   
-                expressionComboBox.getSelectionModel().clearSelection();
-                expressionComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumns()));
+                if (newValue != null) {
+                    // first get columns from category   
+                    expressionComboBox.getSelectionModel().clearSelection();
+                    expressionComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumns()));
 
-                // special case when Ages is picked, we look up stored WM for age name in sample
-                if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
-                    if (filterInfoCheckBox.isSelected()) {
-                        // recover current rejected indices from newly chosen sampleNode
-                        ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(sampleNode.getSpotSummaryDetailsWM().getRejectedIndices());
+                    // special case when Ages is picked, we look up stored WM for age name in sample
+                    if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
+                        if (filterInfoCheckBox.isSelected()) {
+                            // recover current rejected indices from newly chosen sampleNode
+                            ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(sampleNode.getSpotSummaryDetailsWM().getRejectedIndices());
+                        }
+                        sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
+                        PlotsController.plot = sampleNodeSelectedAgeWMPlot;
+
+                        String selectedAge = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
+                        expressionComboBox.getSelectionModel().select(newValue.findColumnByName(selectedAge));
+                    } else {
+                        // show the first
+                        expressionComboBox.getSelectionModel().selectFirst();
                     }
-                    sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
-                    PlotsController.plot = sampleNodeSelectedAgeWMPlot;
-
-                    String selectedAge = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
-                    expressionComboBox.getSelectionModel().select(newValue.findColumnByName(selectedAge));
-                } else {
-                    // show the first
-                    expressionComboBox.getSelectionModel().selectFirst();
                 }
             }
         });

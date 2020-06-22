@@ -135,6 +135,7 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
+import org.cirdles.squid.tasks.expressions.operations.Value;
 
 /**
  *
@@ -814,7 +815,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filterForConcRefMatSpotNames,
                         filtersForUnknownNames);
 
-                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() !=2;
+                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() != 2;
             }
 
             if (requiresChanges || prawnChanged || forceReprocess) {
@@ -1938,14 +1939,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) {
         // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
-            List<ShrimpFractionExpressionInterface> spotList = new ArrayList<>();
-            spotList.add(spot);
-
             switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
                 case METHOD_STACEY_KRAMER:
                     // per Bodorkos Oct 2019 first restore original age values
                     spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
-                    evaluateExpressionsForSampleGroup(spotList);
+                    evaluateExpressionsForSampleSpot(spot);
                     ExpressionTreeInterface selectedAgeExpression
                             = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
                     // run SK 3 times per Ludwig
@@ -1953,18 +1951,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
                                 spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
                         // update
-                        evaluateExpressionsForSampleGroup(spotList);
+                        evaluateExpressionsForSampleSpot(spot);
                     }
                     break;
                 case METHOD_COMMON_LEAD_MODEL:
                     spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
-                    evaluateExpressionsForSampleGroup(spotList);
+                    evaluateExpressionsForSampleSpot(spot);
                     break;
                 // todo
                 case METHOD_STACEY_KRAMER_BY_GROUP:
                     spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromAgeSK();
                     // update
-                    evaluateExpressionsForSampleGroup(spotList);
+                    evaluateExpressionsForSampleSpot(spot);
                     break;
                 default:
                     break;
@@ -1990,8 +1988,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
                 "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
 
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
+        expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
 
         updateSingleExpression(expressionWM);
 
@@ -1999,23 +1999,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
             spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
             //TODO: feb 2020 under discussion on how to expose these
-            // add expression to working list if it is a Sample Age WM
-//            removeExpression(expressionWM, false);
-//            addExpression(expressionWM, false);
+            if ((expressionName.toUpperCase().contains("AGE"))
+                    && !namedExpressionsMap.containsKey(expressionWM.getName())) {
+                // add expression to working list if it is a Sample Age WM - others not available
+                removeExpression(expressionWM, false);
+                addExpression(expressionWM, false);
+            }
         } catch (SquidException squidException) {
         }
 
         return spotSummaryDetails;
     }
 
-    private void evaluateExpressionsForSampleGroup(List<ShrimpFractionExpressionInterface> spotsForExpression) {
+    /**
+     *
+     * @param spot the value of spot
+     */
+    private void evaluateExpressionsForSampleSpot(ShrimpFractionExpressionInterface spot) {
         for (Expression expression : taskExpressionsOrdered) {
             ExpressionTreeInterface expressionTree = expression.getExpressionTree();
             if (expressionTree.amHealthy()) {
                 if (((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation()) {
                     // now evaluate expressionTree
                     try {
-                        evaluateExpressionForSpotSet(expressionTree, spotsForExpression);
+                        evaluateExpressionForSpot(expressionTree, spot);
                     } catch (SquidException | ArrayIndexOutOfBoundsException squidException) {
                     }
                 }
@@ -3390,23 +3397,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName, 
-                provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies, 
-                indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames, 
-                filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames, 
-                mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList, 
-                squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved, 
-                namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions, 
-                referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots, 
-                mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet, 
-                prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst, 
-                selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized, 
-                showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots, 
-                extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel, 
-                concentrationReferenceMaterialModel, physicalConstantsModelChanged, 
-                referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged, 
-                specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum, 
-                providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName, 
+        int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName,
+                provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies,
+                indexOfTaskBackgroundMass, parentNuclide, directAltPD, filterForRefMatSpotNames,
+                filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames,
+                mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList,
+                squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved,
+                namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions,
+                referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots,
+                mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet,
+                prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst,
+                selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized,
+                showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots,
+                extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel,
+                concentrationReferenceMaterialModel, physicalConstantsModelChanged,
+                referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged,
+                specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum,
+                providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName,
                 roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType,
                 ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
