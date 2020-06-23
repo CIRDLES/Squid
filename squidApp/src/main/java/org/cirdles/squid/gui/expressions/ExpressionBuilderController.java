@@ -3117,8 +3117,9 @@ public class ExpressionBuilderController implements Initializable {
                 ((BuiltInExpressionInterface) expTree).buildExpression();
             }
 
-            // detect existing summary and get correct group
-            if (expTree.isSquidSwitchSCSummaryCalculation()) {
+            // detect existing sample WM and get correct group
+            if (expTree.isSquidSwitchSCSummaryCalculation()
+                    && (((ExpressionTree) expTree).getOperation() instanceof WtdMeanACalc)) {
                 SpotSummaryDetails spotSummaryDetail
                         = task.getTaskExpressionsEvaluationsPerSpotSet().get(expressionName);
                 if (spotSummaryDetail != null) {
@@ -3518,9 +3519,9 @@ public class ExpressionBuilderController implements Initializable {
                         });
 
                         // show in BLUE custom sample WM Expressions
-                        if(expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
+                        if (expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                                 && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && ((ExpressionTree)expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc){
+                                && ((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc) {
                             setTextFill(BLUE);
                         } else {
                             setTextFill(BLACK);
