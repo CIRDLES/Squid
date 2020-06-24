@@ -43,6 +43,18 @@ public enum SampleAgeTypesEnum implements Serializable {
     public String getExpressionName() {
         return expressionName;
     }
+    
+    public static boolean isReservedName(String nameString){
+        boolean retVal = false;
+        
+        for (String name : getNames()){
+            if (nameString.startsWith(name)){
+                retVal = true;
+                break;
+            }
+        }
+        return retVal;
+    }
 
     public static String[] getNames() {
         String[] retVal = new String[7];

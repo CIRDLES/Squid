@@ -100,6 +100,7 @@ import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATION
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
@@ -785,7 +786,7 @@ public class ExpressionBuilderController implements Initializable {
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
                     if (currentMode.get().equals(Mode.VIEW)) {
-                        selectedExpressionIsEditable.set(true);
+                        selectedExpressionIsEditable.set(!SampleAgeTypesEnum.isReservedName(newValue.getName()));
                         selectedExpressionIsBuiltIn.set(false);
                         selectedExpression.set(newValue);
 
@@ -3059,11 +3060,6 @@ public class ExpressionBuilderController implements Initializable {
                 exp = selectedExpression.get();
             }
 
-            // prevent edit of custom sample WM Expressions
-            selectedExpressionIsEditable.set(!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
-                    || !exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    || !expressionString.get().toUpperCase().startsWith("WTDMEANACALC"));
-
             ((Task) task).evaluateTaskExpression(exp.getExpressionTree());
             boolean localAmHealthy = exp.amHealthy() && (exp.getName().length() > 0);
             auditTextArea.setText(customizeExpressionTreeAudit(exp));
@@ -3117,8 +3113,9 @@ public class ExpressionBuilderController implements Initializable {
                 ((BuiltInExpressionInterface) expTree).buildExpression();
             }
 
-            // detect existing summary and get correct group
-            if (expTree.isSquidSwitchSCSummaryCalculation()) {
+            // detect existing sample WM and get correct group
+            if (expTree.isSquidSwitchSCSummaryCalculation()
+                    && (((ExpressionTree) expTree).getOperation() instanceof WtdMeanACalc)) {
                 SpotSummaryDetails spotSummaryDetail
                         = task.getTaskExpressionsEvaluationsPerSpotSet().get(expressionName);
                 if (spotSummaryDetail != null) {
@@ -3155,7 +3152,8 @@ public class ExpressionBuilderController implements Initializable {
         dest.setSquidSwitchSAUnknownCalculation(source.isSquidSwitchSAUnknownCalculation());
         dest.setSquidSwitchSCSummaryCalculation(source.isSquidSwitchSCSummaryCalculation());
         dest.setSquidSwitchSTReferenceMaterialCalculation(source.isSquidSwitchSTReferenceMaterialCalculation());
-        dest.setSquidSpecialUPbThExpression(source.isSquidSpecialUPbThExpression());
+        // all copies are custom
+        dest.setSquidSpecialUPbThExpression(false);
         dest.setUnknownsGroupSampleName(source.getUnknownsGroupSampleName());
 
     }
@@ -3518,9 +3516,10 @@ public class ExpressionBuilderController implements Initializable {
                         });
 
                         // show in BLUE custom sample WM Expressions
-                        if(expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
+                        if (expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                                 && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && ((ExpressionTree)expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc){
+                                && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc)
+                                && SampleAgeTypesEnum.isReservedName(expression.getName())) {
                             setTextFill(BLUE);
                         } else {
                             setTextFill(BLACK);
