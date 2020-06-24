@@ -51,7 +51,7 @@ artifacts {
     archives jar
     archives sourcesJar
 //  Uncomment next line to produce javadocs
-    archives packageJavadoc
+//    archives packageJavadoc
 }
 
 configure(install.repositories.mavenInstaller) {
