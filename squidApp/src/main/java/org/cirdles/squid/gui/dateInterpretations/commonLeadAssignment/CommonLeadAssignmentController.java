@@ -23,7 +23,6 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -57,6 +56,7 @@ import java.util.*;
 
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.dialogs.SquidMessageDialog.showWarningDialog;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -130,8 +130,13 @@ public class CommonLeadAssignmentController implements Initializable {
                         + footerHBox.getPrefHeight()));
         // prime StaceyKramer
         StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
-        StaceyKramerCommonLeadModel.updateU_Ratio(
-                squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+
+        try {
+            StaceyKramerCommonLeadModel.updateU_Ratio(
+                    squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+        } catch (SquidException squidException) {
+            showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         setupAgeTypes();
 
@@ -210,7 +215,7 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
-        
+
         viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 
@@ -236,8 +241,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         CommonLeadSampleTreeInterface toolBarSampleType
                 = new CommonLeadSampleToolBar(
-                Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
-                mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
+                        Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
+                        mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
         toolBarSampleType.getCommonLeadModels().disableProperty().setValue(true);
         TreeItem<CommonLeadSampleTreeInterface> rootItemSamples = new TreeItem<>(toolBarSampleType);
 
@@ -440,7 +445,7 @@ public class CommonLeadAssignmentController implements Initializable {
         /**
          * @param label the value of label
          * @param value the value of value
-         * @param unct  the value of unct
+         * @param unct the value of unct
          */
         private void addVboxFactory(String label, double value, double unct) {
             boolean fontIsBold = false;
@@ -920,8 +925,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         /**
          * @param sampleGroupName the value of sampleGroupName
-         * @param sampleAgeType   the value of sampleAgeType
-         * @param corrString      the value of corrString
+         * @param sampleAgeType the value of sampleAgeType
+         * @param corrString the value of corrString
          */
         private RadioButton ageRadioButtonFactory(String sampleGroupName, SampleAgeTypesEnum sampleAgeType, String corrString) {
             RadioButton ageRB = new RadioButton(corrString + "\n" + sampleAgeType.getExpressionName().replace(corrString, ""));

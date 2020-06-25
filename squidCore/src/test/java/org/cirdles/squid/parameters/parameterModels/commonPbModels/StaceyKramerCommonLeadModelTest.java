@@ -16,6 +16,7 @@
 package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_EPSILON;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.junit.After;
@@ -60,7 +61,10 @@ public class StaceyKramerCommonLeadModelTest {
         ParametersModel physicalConstantsModel
                 = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         StaceyKramerCommonLeadModel.updatePhysicalConstants(physicalConstantsModel);
-        StaceyKramerCommonLeadModel.updateU_Ratio(137.88);
+        try {
+            StaceyKramerCommonLeadModel.updateU_Ratio(137.88);
+        } catch (SquidException squidException) {
+        }
         double targetAge = 3.7E9;
         double[] expResult = new double[]{11.152, 12.998, 31.23};
         double[] result

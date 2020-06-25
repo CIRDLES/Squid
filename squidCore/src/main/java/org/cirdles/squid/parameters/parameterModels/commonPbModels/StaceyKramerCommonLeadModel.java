@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
+import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 
@@ -42,8 +44,15 @@ public class StaceyKramerCommonLeadModel {
         lambd232 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_232.getName()).getValue().doubleValue();
     }
 
-    public static void updateU_Ratio(double u_ratio) {
+    public static void updateU_Ratio(double u_ratio)
+            throws SquidException {
         U_RATIO = u_ratio;
+        if (u_ratio == 0.0) {
+            U_RATIO = REF_238U235U_DEFAULT;
+            throw new SquidException("Your Reference Material model contains a zero value for U_ratio: 238-U/235-U,\n"
+                    + "so 137.818 will be used instead.\n"
+                    + "Please update your model.");
+        }
     }
 
     /**
@@ -58,8 +67,8 @@ public class StaceyKramerCommonLeadModel {
         double[] PbLambda = new double[]{lambda238, lambda235, lambd232};
         double[] PbR0 = new double[]{SK_ALPHA0, SK_BETA0, SK_GAMMA0};
         double[] MuIsh = new double[]{
-            SK_MU, 
-            (SK_MU / U_RATIO), 
+            SK_MU,
+            (SK_MU / U_RATIO),
             (SK_MU * SK_KAPPA_MU)};
         double[] PbExp = new double[]{
             Math.exp(SK_START_AGE * lambda238),
