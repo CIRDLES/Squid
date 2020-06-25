@@ -431,7 +431,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
-                        if (Double.isNaN(doubleValue)) {
+                        if (!Double.isFinite(doubleValue)) {
                             retVal[0] = "NaN";
                         }
                         if (isNumeric) {
@@ -463,7 +463,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                         new Class[0]);
 
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
-                        if (Double.isNaN(doubleValue)) {
+                        if (!Double.isFinite(doubleValue)) {
                             retVal[0] = "NaN";
                         }
                         if (isNumeric) {
@@ -494,7 +494,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
 
-                        if (Double.isNaN(vm[0])) {
+                        if (!Double.isFinite(vm[0])) {
                             retVal[0] = "NaN";
                         } else {
 

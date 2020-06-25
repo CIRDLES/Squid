@@ -789,7 +789,7 @@ public class PrawnFileRunFractionParser {
 
                         pkFractErr = Math.sqrt(pkFractErr * pkFractErr
                                 + 1.0 / sbmCps[scanNum][pkOrder] / countTimeSec[pkOrder]);
-                        if (Double.isNaN(pkFractErr)) {
+                        if (!Double.isFinite(pkFractErr)) {
                             pkFractErr = SQUID_ERROR_VALUE;
                         }
                     } else {

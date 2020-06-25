@@ -756,7 +756,7 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
-                        if (Double.isNaN(results[0][0])) {
+                        if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
@@ -787,7 +787,7 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
-                        if (Double.isNaN(results[0][0])) {
+                        if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
@@ -812,7 +812,7 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
 
-                        if (Double.isNaN(results[0][0])) {
+                        if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
@@ -830,7 +830,7 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
-                        if (Double.isNaN(results[0][0])) {
+                        if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
                             double[] resultsWithPct = new double[0];
@@ -845,7 +845,7 @@ public class SquidReportSettingsController implements Initializable {
                             }
 
                             Formatter formatter = new Formatter();
-                            if (Double.isNaN(results[0][0])) {
+                            if (!Double.isFinite(results[0][0])) {
                                 sb.append("NaN");
                             } else {
                                 for (int i = 0; i < resultsWithPct.length; i++) {
@@ -871,7 +871,7 @@ public class SquidReportSettingsController implements Initializable {
 
                     double[][] results
                             = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                    if (Double.isNaN(results[0][0])) {
+                    if (!Double.isFinite(results[0][0])) {
                         sb.append("NaN");
                     } else {
                         Formatter formatter = new Formatter();
@@ -905,7 +905,7 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
-                        if (Double.isNaN(results[0][0])) {
+                        if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
