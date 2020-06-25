@@ -134,7 +134,15 @@ public class TopsoilDataFactory {
         }
 
         datum.put(RHO.getTitle(), 0.0);
-
+        
+        double[] plotRho;
+        try {
+            plotRho = shrimpFraction
+                    .getTaskExpressionsEvaluationsPerSpotByField(correction + rho)[0];
+            datum.put(RHO.getTitle(), plotRho[0]);
+        } catch (Exception e) {
+        }
+        
         datum.put(VISIBLE.getTitle(), true);
         datum.put(SELECTED.getTitle(), true);
 

@@ -270,7 +270,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
                     if (expressionName.toUpperCase().contains("DATETIMEMILLISECONDS")) {
                         retVal = spot.getDateTime();
                     } else {
-                        if (!Double.isFinite(results[0][0])){
+                        if (Double.isFinite(results[0][0])){
                         retVal = formatBigDecimalForPublicationSigDigMode(
                                 new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
                                 countOfSignificantDigits);
