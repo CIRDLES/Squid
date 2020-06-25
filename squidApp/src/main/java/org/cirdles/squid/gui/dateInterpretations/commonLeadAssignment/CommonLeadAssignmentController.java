@@ -461,7 +461,7 @@ public class CommonLeadAssignmentController implements Initializable {
             Label aValue = new Label(formatter.toString());
             aValue.getStyleClass().clear();
             aValue.setFont(Font.font("Monospaced", fontIsBold ? FontWeight.BOLD : FontWeight.MEDIUM, 12));
-            if ((value <= 0.0) || Double.isNaN(value)) {
+            if ((value <= 0.0) || !Double.isFinite(value)) {
                 aValue.setTextFill(Paint.valueOf("red"));
                 aValue.setFont(Font.font("Monospaced", FontWeight.BOLD, 12));
             }

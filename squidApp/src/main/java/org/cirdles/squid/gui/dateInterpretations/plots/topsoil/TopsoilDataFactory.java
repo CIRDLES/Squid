@@ -107,7 +107,7 @@ public class TopsoilDataFactory {
             xAxisValueAndUnct = shrimpFraction
                     .getTaskExpressionsEvaluationsPerSpotByField(correction + xAxisRatio)[0];
         }
-        badData = badData && Double.isNaN(xAxisValueAndUnct[0]);
+        badData = badData && !Double.isFinite(xAxisValueAndUnct[0]);
         datum.put(X.getTitle(), xAxisValueAndUnct[0]);
         datum.put(SIGMA_X.getTitle(), 0.0);
         if (xAxisValueAndUnct.length > 1) {
@@ -126,7 +126,7 @@ public class TopsoilDataFactory {
             yAxisValueAndUnct = shrimpFraction
                     .getTaskExpressionsEvaluationsPerSpotByField(correction + yAxisRatio)[0];
         }
-        badData = badData && Double.isNaN(yAxisValueAndUnct[0]);
+        badData = badData && !Double.isFinite(yAxisValueAndUnct[0]);
         datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
         datum.put(SIGMA_Y.getTitle(), 0.0);
         if (yAxisValueAndUnct.length > 1) {
