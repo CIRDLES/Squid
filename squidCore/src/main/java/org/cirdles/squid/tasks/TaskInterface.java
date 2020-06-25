@@ -736,4 +736,23 @@ public interface TaskInterface {
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 
     public void updateAllSpotsWithCurrentCommonPbModel();
+    
+        
+    /**
+     * 
+     * @param excelExpression
+     * @return boolean whether this expression contains a named ratio and thus could use NU handling
+     */
+    public default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression){
+        boolean retVal = false;
+        
+        for (String ratioName : getRatioNames()){
+            if (excelExpression.contains(ratioName)){
+                retVal = true;
+                break;
+            }
+        }
+        
+        return retVal;
+    }
 }

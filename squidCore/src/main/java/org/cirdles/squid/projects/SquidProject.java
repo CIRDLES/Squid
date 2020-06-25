@@ -902,7 +902,7 @@ public final class SquidProject implements Serializable {
             result = Arrays.hashCode(bos.toByteArray());
         } catch (IOException e) {
         }
-        return result;
+        return result;// + 31 * Objects.hash(task);
         //return HashCodeBuilder.reflectionHashCode(17, 31, this, false, Object.class);
     }
 }

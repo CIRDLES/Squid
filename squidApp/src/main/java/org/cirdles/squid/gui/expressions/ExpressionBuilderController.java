@@ -483,7 +483,7 @@ public class ExpressionBuilderController implements Initializable {
         //specialUPbThSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW));
         summaryCalculationSwitchCheckBox.disableProperty()
                 .bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
-        NUSwitchCheckBox.setDisable(true);//NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
+        NUSwitchCheckBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(hasRatioOfInterest.not()));
 
         unknownGroupsComboBox.disableProperty().bind(currentMode.isEqualTo(Mode.VIEW).or(selectedExpressionIsBuiltIn));
         unknownGroupsComboBox.visibleProperty().bind(unknownsSwitchCheckBox.selectedProperty()
@@ -1217,7 +1217,9 @@ public class ExpressionBuilderController implements Initializable {
                 NUSwitchCheckBox.setSelected(newValue.isSquidSwitchNU());
                 expressionString.set(null);
                 expressionString.set(newValue.getExcelExpressionString());
-                hasRatioOfInterest.set(((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest());
+                hasRatioOfInterest.set(
+                        ((ExpressionTree) newValue.getExpressionTree()).hasRatiosOfInterest()
+                        || task.expressionTreeIsCandidateForSwitchNU(newValue.getExcelExpressionString()));
                 selectedExpressionIsBuiltIn.set(newValue.getExpressionTree().isSquidSpecialUPbThExpression());
                 populateSpotsSelection(newValue);
             } else {
