@@ -690,6 +690,10 @@ public final class SquidProject implements Serializable {
 
         return retVal;
     }
+    
+    public boolean hasReportsFolder(){
+        return prawnFileHandler.getReportsEngine().getFolderToWriteCalamariReports() != null;
+    }
 
     /**
      * @return the prawnFileHandler

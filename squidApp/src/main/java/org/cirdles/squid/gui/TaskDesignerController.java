@@ -83,6 +83,7 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
@@ -775,7 +776,7 @@ public class TaskDesignerController implements Initializable {
                     + " masses, but the Task Designer specifies "
                     + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
                     + ".",
-                    null);
+                    primaryStageWindow);
         }
     }
 }

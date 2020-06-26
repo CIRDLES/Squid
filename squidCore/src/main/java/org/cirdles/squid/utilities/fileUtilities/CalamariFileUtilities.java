@@ -281,9 +281,14 @@ public class CalamariFileUtilities {
         }
     }
 
-    public static void initCalamariReportsFolder(PrawnXMLFileHandler prawnFileHandler) {
+    /**
+     *
+     * @param prawnFileHandler the value of prawnFileHandler
+     * @param folder the value of folder
+     */
+    public static void initCalamariReportsFolder(PrawnXMLFileHandler prawnFileHandler, File folder) {
         prawnFileHandler.getReportsEngine()
-                .setFolderToWriteCalamariReports(Squid.DEFAULT_SQUID3_REPORTS_FOLDER);
+                .setFolderToWriteCalamariReports(folder);
 
         prawnFileHandler.initReportsEngineWithCurrentPrawnFileName();
     }

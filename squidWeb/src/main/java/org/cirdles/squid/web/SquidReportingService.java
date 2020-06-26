@@ -33,7 +33,6 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
-import static org.cirdles.squid.Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -138,7 +137,7 @@ public class SquidReportingService {
             task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
-            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve(DEFAULT_SQUID3_REPORTS_FOLDER.getName() + "-from Web Service");
+            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve("Squid3 Reports from Web Service");
             File reportsDestinationFile = calamariReportsFolderAlias.toFile();
 
             reportsEngine = prawnFileHandler.getReportsEngine();

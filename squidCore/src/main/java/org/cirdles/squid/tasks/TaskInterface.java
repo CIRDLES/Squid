@@ -355,6 +355,7 @@ public interface TaskInterface {
 
     /**
      * The original Calamari Reports
+     * @return 
      */
     public File produceSanityReportsToFiles();
 
