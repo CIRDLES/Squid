@@ -78,4 +78,4 @@ Please be patient and contribute your ideas via the issues tracker.
 
 Please volunteer to help with documentation, how-to videos, coding, etc.
 
-Updated 5 March 2019
+Updated 25 June 2020
