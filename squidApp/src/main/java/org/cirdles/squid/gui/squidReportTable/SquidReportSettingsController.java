@@ -152,7 +152,7 @@ public class SquidReportSettingsController implements Initializable {
     private final ObjectProperty<Boolean> selectedCategoryIsFixedCategory = new SimpleObjectProperty<>();
     private final ObjectProperty<SquidReportColumnInterface> selectedColumn = new SimpleObjectProperty<>();
 
-    ObservableList<Expression> namedExpressions;
+    List<Expression> namedExpressions;
     public static Expression expressionToHighlightOnInit = null;
     private TaskInterface task;
 
@@ -1015,12 +1015,20 @@ public class SquidReportSettingsController implements Initializable {
 
     //POPULATE LISTS
     private void populateExpressionListViews() {
-        namedExpressions = FXCollections.observableArrayList();
+        namedExpressions = new ArrayList<>();
         task.getTaskExpressionsOrdered().forEach(exp -> {
             if (!exp.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                     && ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
                     || (exp.getExpressionTree().isSquidSwitchSAUnknownCalculation() && !isRefMat))) {
                 namedExpressions.add(exp);
+            }
+        });
+
+        Collections.sort(namedExpressions, new Comparator<Expression>() {
+            @Override
+            public int compare(Expression exp1, Expression exp2) {
+                IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+                return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
             }
         });
 
@@ -1337,11 +1345,11 @@ public class SquidReportSettingsController implements Initializable {
         SquidReportTableInterface reportTable = createCopyOfUpdatedSquidReportTable();
         String baseFileName;
         String[][] textArray;
-        
+
         File reportTableFile = null;
         if (isRefMat) {
             reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
-            
+
 //            textArray = SquidReportTableHelperMethods.processReportTextArray(
 //                    SquidReportTableLauncher.ReportTableTab.refMatCustom,
 //                    reportTable,
@@ -1366,7 +1374,6 @@ public class SquidReportSettingsController implements Initializable {
 //            reportTableFile
 //                = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
         }
-        
 
         if (reportTableFile != null) {
             SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);

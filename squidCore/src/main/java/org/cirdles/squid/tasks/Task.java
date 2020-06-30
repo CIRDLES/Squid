@@ -597,7 +597,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(samRadiogenicCols);
 
-        Collections.sort(taskExpressionsOrdered);
+//        Collections.sort(taskExpressionsOrdered);
+        Collections.sort(taskExpressionsOrdered, new Comparator<Expression>() {
+            @Override
+            public int compare(Expression exp1, Expression exp2) {
+                IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+                return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
+            }
+        });
     }
 
     @Override
