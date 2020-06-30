@@ -41,8 +41,7 @@ public class TextArrayManager {
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
 
-        if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown ||
-                controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
+        if (controllerType.equals(SquidReportTableLauncher.ReportTableTab.unknownCustom)) {
             initializeAliquots();
             initializeSortPolicies();
         }
@@ -112,7 +111,7 @@ public class TextArrayManager {
         boundCol.setSortPolicy(sortPolicy);
     }
 
-    public void setHeaders() {
+    private void setHeaders() {
         table.getColumns().clear();
 
         TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][3]);
@@ -134,7 +133,7 @@ public class TextArrayManager {
         setUpBoundCol();
     }
 
-    public int getMaxColumnHeaderLength(String input) {
+    private int getMaxColumnHeaderLength(String input) {
         int max = 0;
         String[] levels = input.split("\n");
         for (int i = 0; i < levels.length; i++) {
@@ -143,7 +142,7 @@ public class TextArrayManager {
         return max;
     }
 
-    public static String getColumnName(int col, String[][] textArray) {
+    private static String getColumnName(int col, String[][] textArray) {
         String retVal = "";
         for (int i = 1; i <= 4; i++) {
             String currVal = textArray[i][col].trim();
@@ -160,21 +159,11 @@ public class TextArrayManager {
         return retVal;
     }
 
-    public void setTableItems() {
+    private void setTableItems() {
         data.clear();
         int startSpot = Integer.parseInt(array[0][0]);
         String aliquot = null;
         for (int i = startSpot; i < array.length; i++) {
-            if (controllerType == SquidReportTableLauncher.ReportTableTab.unknown && (aliquot == null || !aliquot.equals(array[i][1]) && !array[i][1].isEmpty())) {
-                aliquot = array[i][1];
-                ObservableList<String> aliquotRow = FXCollections.observableArrayList();
-                aliquotRow.add(aliquot);
-                aliquotRow.add(aliquot);
-                for (int j = 2; j < array[0].length - 2; j++) {
-                    aliquotRow.add("");
-                }
-                data.add(aliquotRow);
-            }
             if (Boolean.parseBoolean(array[i][0]) == true) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 if (controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
@@ -212,7 +201,7 @@ public class TextArrayManager {
         boundCol.getColumns().add(header);
     }
 
-    public void setUpWidths() {
+    private void setUpWidths() {
         if (!data.isEmpty()) {
             int header = 0, counter = 0;
             for (int j = 2; j < data.get(0).size(); j++) {

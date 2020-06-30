@@ -138,33 +138,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     public default Object readXMLObject(String filename, boolean doValidate)
             throws FileNotFoundException, FileNotFoundException {
         ReportSettingsInterface myReportSettings = null;
-
-//        BufferedReader reader = URIHelper.getBufferedReader(filename);
-//
-//        if (reader != null) {
-//            boolean isValidOrAirplaneMode = true;
-//
-//            XStream xstream = getXStreamReader();
-//
-//            if (doValidate) {
-//                isValidOrAirplaneMode = URIHelper.validateXML(reader, filename, getReportSettingsXMLSchemaURL());
-//            }
-//
-//            if (isValidOrAirplaneMode) {
-//                // re-create reader
-//                reader = URIHelper.getBufferedReader(filename);
-//                try {
-//                    myReportSettings = (ReportSettingsInterface) xstream.fromXML(reader);
-//                } catch (ConversionException e) {
-//                    throw new ETException(null, e.getMessage());
-//                }
-//
-//            } else {
-//                throw new ETException(null, "XML data file does not conform to schema.");
-//            }
-//        } else {
-//            throw new FileNotFoundException("Missing XML data file.");
-//        }
         return myReportSettings;
     }
 

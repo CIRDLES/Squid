@@ -372,7 +372,7 @@ public class FileHandler {
         return fileChooser.showSaveDialog(ownerWindow);
     }
 
-    public static File saveSquidReportSettingsXMLFile(SquidReportTableInterface table, Window ownerWindow) throws IOException {
+    public static File saveSquidReportModelXMLFile(SquidReportTableInterface table, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Squid Report Settings XML File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));
@@ -381,7 +381,7 @@ public class FileHandler {
         return fileChooser.showSaveDialog(ownerWindow);
     }
 
-    public static File selectSquidReportSettingsXMLFile(Window ownerWindow) throws IOException {
+    public static File selectSquidReportModelXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Squid Report Settings XML File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));

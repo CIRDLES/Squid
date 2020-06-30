@@ -1215,7 +1215,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File reportTableFile = squidProject.produceReferenceMaterialCSV(true);
+            File reportTableFile = squidProject.produceReferenceMaterialPerSquid25CSV(true);
             if (reportTableFile != null) {
                 SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
             } else {
@@ -1229,7 +1229,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void unknownsReportTableAction(ActionEvent event) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File reportTableFile = squidProject.produceUnknownsCSV(true);
+            File reportTableFile = squidProject.produceUnknownsPerSquid25CSV(true);
             if (reportTableFile != null) {
                 SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
             } else {
@@ -1261,11 +1261,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
-                    squidProject.getProjectName()
-                    + "_REFMAT_SUMMARY_REPORT_"
-                    + DateHelper.getCurrentDate()
-                    + ".csv");
+            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
@@ -1275,11 +1271,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void unknownsSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
-                    squidProject.getProjectName()
-                    + "_UNKNOWNS_SUMMARY_REPORT_"
-                    + DateHelper.getCurrentDate()
-                    + ".csv");
+            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
@@ -1315,19 +1307,18 @@ public class SquidUIController implements Initializable {
             if (squidProject.hasReportsFolder()) {
                 File projectAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
                 squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
-                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns(
-                        squidProject.getProjectName()
-                        + "_UNKNOWNS_SUMMARY_REPORT_"
-                        + DateHelper.getCurrentDate()
-                        + ".csv");
-                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials(
-                        squidProject.getProjectName()
-                        + "_REFMAT_SUMMARY_REPORT_"
-                        + DateHelper.getCurrentDate()
-                        + ".csv");
+
+                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+                squidProject.produceReferenceMaterialPerSquid25CSV(true);
+                squidProject.produceSelectedReferenceMaterialReportCSV();
+
+                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns();
+                squidProject.produceUnknownsPerSquid25CSV(true);
                 squidProject.produceUnknownsBySampleForETReduxCSV(true);
-                squidProject.produceUnknownsCSV(true);
-                squidProject.produceReferenceMaterialCSV(true);
+                squidProject.produceSelectedUnknownsReportCSV();
+                squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
+
+
                 squidProject.getTask().produceSanityReportsToFiles();
                 SquidMessageDialog.showSavedAsDialog(projectAuditFile.getParentFile(), primaryStageWindow);
             } else {
@@ -1535,14 +1526,6 @@ public class SquidUIController implements Initializable {
 
     private void openDefaultSquidLabDataModels() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.defaultModels);
-    }
-
-    public void openSquid3ReportTableReferenceMaterials(ActionEvent actionEvent) {
-        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.refMat);
-    }
-
-    public void openSquid3ReportTableUnknowns(ActionEvent actionEvent) {
-        squidReportTableLauncher.launch(SquidReportTableLauncher.ReportTableTab.unknown);
     }
 
     @FXML

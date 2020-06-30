@@ -33,6 +33,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -40,9 +41,10 @@ import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
@@ -113,25 +115,31 @@ public class SquidReportingService {
 
             taskFilePath = uploadDirectory2.resolve("task-file.xls");
             Files.copy(taskFile, taskFilePath);
+            File squidTaskFile = taskFilePath.toFile();
 
             ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
             squidProject.setPrawnFile(prawnFileData);
-
-            // hard-wired for now
-            squidProject.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-            squidProject.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
-            File squidTaskFile = taskFilePath.toFile();
-
-            squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
-
             squidProject.setDelimiterForUnknownNames("-");
 
+            squidProject.updateFilterForRefMatSpotNames(refMatFilter);
+            squidProject.updateFilterForRefMatSpotNames(concRefMatFilter);
+            squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+
             TaskInterface task = squidProject.getTask();
-            task.setFilterForRefMatSpotNames(refMatFilter);
-            task.setFilterForConcRefMatSpotNames(concRefMatFilter);
+
+            // hard-wired for now
+            task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
+            task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+            task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
+            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+
+            task.setExtPErrU(0.75);
+            task.setExtPErrTh(0.75);
             task.setUseSBM(useSBM);
             task.setUserLinFits(userLinFits);
             task.setSelectedIndexIsotope(preferredIndexIsotope);
+            task.setSquidAllowsAutoExclusionOfSpots(true);
 
             // process task           
             task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
@@ -144,19 +152,24 @@ public class SquidReportingService {
             prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
             reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
 
-            reportsEngine.produceReports(
-                    task.getShrimpFractions(),
-                    (ShrimpFraction) task.getUnknownSpots().get(0),
-                    task.getReferenceMaterialSpots().size() > 0
-                    ? (ShrimpFraction) task.getReferenceMaterialSpots().get(0) : (ShrimpFraction) task.getUnknownSpots().get(0),
-                    true, false);
+            ((Task) task).initTaskDefaultSquidReportTables();
 
-            squidProject.produceTaskAudit();
-            
-            squidProject.produceUnknownsCSV(true);
-            squidProject.produceReferenceMaterialCSV(true);
-            // next line report will show only super sample for now
-            squidProject.produceUnknownsBySampleForETReduxCSV(true);
+            if (squidProject.hasReportsFolder()) {
+                squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
+                squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
+
+                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+                squidProject.produceReferenceMaterialPerSquid25CSV(true);
+                squidProject.produceSelectedReferenceMaterialReportCSV();
+
+                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns();
+                squidProject.produceUnknownsPerSquid25CSV(true);
+                squidProject.produceUnknownsBySampleForETReduxCSV(true);
+                squidProject.produceSelectedUnknownsReportCSV();
+                squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
+
+                squidProject.getTask().produceSanityReportsToFiles();
+            }
 
             Files.delete(prawnFilePath);
 

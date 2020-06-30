@@ -15,16 +15,11 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
 import java.util.*;
 
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
@@ -42,7 +37,7 @@ public class SquidReportTableController implements Initializable {
     @FXML
     private ScrollBar scrollBar;
 
-    private String[][] textArray;
+    private String[][] reportTextArray;
     private TextArrayManager tableManager;
     private boolean isSetUpScroller;
 
@@ -61,11 +56,12 @@ public class SquidReportTableController implements Initializable {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-        textArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
-        if(typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
+        if (typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
             unknownSpot = "UNKNOWNS";
         }
-        tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
+
+        reportTextArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        tableManager = new TextArrayManager(boundCol, reportsTable, reportTextArray, typeOfController);
         reportsTable.refresh();
         boundCol.refresh();
 

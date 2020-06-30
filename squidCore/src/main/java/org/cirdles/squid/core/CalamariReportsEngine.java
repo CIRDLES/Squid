@@ -989,8 +989,15 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
-    public File writeSummaryReportsForUnknowns(String baseSummaryCalcName) throws IOException {
-        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+    /**
+     *
+     * @throws IOException
+     */
+    public File writeSummaryReportsForUnknowns() throws IOException {
+        File reportFile = getFileForSummaryCalc(
+                squidProject.getProjectName()
+                + "_UnknownsSummaryReport"
+                + ".csv");
         PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> unknownExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
@@ -1006,8 +1013,16 @@ public class CalamariReportsEngine implements Serializable {
         return reportFile;
     }
 
-    public File writeSummaryReportsForReferenceMaterials(String baseSummaryCalcName) throws IOException {
-        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+    /**
+     *
+     * @throws IOException
+     * @return the java.io.File
+     */
+    public File writeSummaryReportsForReferenceMaterials() throws IOException {
+        File reportFile = getFileForSummaryCalc(
+                squidProject.getProjectName()
+                    + "_RefMatSummaryReport"
+                    + ".csv");
         PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> refMatExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
@@ -1129,31 +1144,6 @@ public class CalamariReportsEngine implements Serializable {
         }
         File reportFile = new File(reportsPath + baseSummaryCalcName);
         return reportFile;
-    }
-
-    public File writeTaskSummaryFile() throws IOException {
-        String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
-        File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
-
-        File reportTableFile = new File(reportsPath + "TaskSummary.txt");
-
-        PrintWriter outputWriter;
-
-        try {
-            outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));          
-            outputWriter.write(squidProject.getTask().printTaskSummary());
-            outputWriter.flush();
-            outputWriter.close();
-
-        } catch (IOException iOException) {
-        }
-
-        return reportTableFile;
     }
 
     public File writeTaskAudit() throws IOException {

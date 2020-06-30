@@ -252,6 +252,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected List<SquidReportTableInterface> squidReportTablesRefMat;
     protected List<SquidReportTableInterface> squidReportTablesUnknown;
+    protected SquidReportTableInterface selectedRefMatReportModel;
+    protected SquidReportTableInterface selectedUnknownReportModel;
 
     protected OvercountCorrectionTypes overcountCorrectionType;
 
@@ -365,6 +367,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.squidReportTablesRefMat = new ArrayList<>();
         this.squidReportTablesUnknown = new ArrayList<>();
+        this.selectedRefMatReportModel = null;
+        this.selectedUnknownReportModel = null;
 
         this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
 
@@ -2434,10 +2438,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (squidReportTablesRefMat.isEmpty()) {
             squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
+            selectedRefMatReportModel = squidReportTablesRefMat.get(0);
         }
 
         if (squidReportTablesUnknown.isEmpty()) {
             squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
+            selectedUnknownReportModel = squidReportTablesUnknown.get(0);
         }
 
         return initSquidWeightedMeanPlotSortTable();
@@ -3374,6 +3380,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
         this.squidReportTablesUnknown = squidReportTablesUnknown;
+    }
+
+    /**
+     * @return the selectedRefMatReportModel
+     */
+    public SquidReportTableInterface getSelectedRefMatReportModel() {
+        return selectedRefMatReportModel;
+    }
+
+    /**
+     * @param selectedRefMatReportModel the selectedRefMatReportModel to set
+     */
+    public void setSelectedRefMatReportModel(SquidReportTableInterface selectedRefMatReportModel) {
+        this.selectedRefMatReportModel = selectedRefMatReportModel;
+    }
+
+    /**
+     * @return the selectedUnknownReportModel
+     */
+    public SquidReportTableInterface getSelectedUnknownReportModel() {
+        return selectedUnknownReportModel;
+    }
+
+    /**
+     * @param selectedUnknownReportModel the selectedUnknownReportModel to set
+     */
+    public void setSelectedUnknownReportModel(SquidReportTableInterface selectedUnknownReportModel) {
+        this.selectedUnknownReportModel = selectedUnknownReportModel;
     }
 
     /**

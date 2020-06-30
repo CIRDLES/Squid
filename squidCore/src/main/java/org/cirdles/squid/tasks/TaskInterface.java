@@ -355,7 +355,8 @@ public interface TaskInterface {
 
     /**
      * The original Calamari Reports
-     * @return 
+     *
+     * @return
      */
     public File produceSanityReportsToFiles();
 
@@ -698,8 +699,10 @@ public interface TaskInterface {
     /**
      *
      * @param refreshCommonLeadModel the value of refreshCommonLeadModel
-     * @param refreshPhysicalConstantsModel the value of refreshPhysicalConstantsModel
-     * @param refreshReferenceMaterialsModel the value of refreshReferenceMaterialsModel
+     * @param refreshPhysicalConstantsModel the value of
+     * refreshPhysicalConstantsModel
+     * @param refreshReferenceMaterialsModel the value of
+     * refreshReferenceMaterialsModel
      */
     public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel);
 
@@ -727,6 +730,26 @@ public interface TaskInterface {
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown);
 
     /**
+     * @return the selectedRefMatReportModel
+     */
+    public SquidReportTableInterface getSelectedRefMatReportModel();
+
+    /**
+     * @param selectedRefMatReportModel the selectedRefMatReportModel to set
+     */
+    public void setSelectedRefMatReportModel(SquidReportTableInterface selectedRefMatReportModel);
+
+    /**
+     * @return the selectedUnknownReportModel
+     */
+    public SquidReportTableInterface getSelectedUnknownReportModel();
+
+    /**
+     * @param selectedUnknownReportModel the selectedUnknownReportModel to set
+     */
+    public void setSelectedUnknownReportModel(SquidReportTableInterface selectedUnknownReportModel);
+
+    /**
      * @return the overcountCorrectionType
      */
     public Squid3Constants.OvercountCorrectionTypes getOvercountCorrectionType();
@@ -737,23 +760,23 @@ public interface TaskInterface {
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 
     public void updateAllSpotsWithCurrentCommonPbModel();
-    
-        
+
     /**
-     * 
+     *
      * @param excelExpression
-     * @return boolean whether this expression contains a named ratio and thus could use NU handling
+     * @return boolean whether this expression contains a named ratio and thus
+     * could use NU handling
      */
-    public default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression){
+    public default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression) {
         boolean retVal = false;
-        
-        for (String ratioName : getRatioNames()){
-            if (excelExpression.contains(ratioName)){
+
+        for (String ratioName : getRatioNames()) {
+            if (excelExpression.contains(ratioName)) {
                 retVal = true;
                 break;
             }
         }
-        
+
         return retVal;
     }
 }

@@ -49,6 +49,7 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
@@ -370,26 +371,39 @@ public final class SquidProject implements Serializable {
     }
 
     // reports
-    public File produceReferenceMaterialCSV(boolean numberStyleIsNumeric)
+    public File produceReferenceMaterialPerSquid25CSV(boolean numberStyleIsNumeric)
             throws IOException {
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(), numberStyleIsNumeric);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, projectName + "_ReferenceMaterialReportTable.csv");
+                    report, projectName + "_RefMatReportTablePerSquid25.csv");
         }
         return reportTableFile;
     }
 
-    public File produceUnknownsCSV(boolean numberStyleIsNumeric)
+    public File produceSelectedReferenceMaterialReportCSV()
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getReferenceMaterialSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSelectedRefMatReportModel();
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getReferenceMaterialSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, (projectName + "_RefMatReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+        }
+        return reportTableFile;
+    }
+
+    public File produceUnknownsPerSquid25CSV(boolean numberStyleIsNumeric)
             throws IOException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(task.getUnknownSpots(), numberStyleIsNumeric);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, projectName + "_UnknownsReportTable.csv");
+                    report, projectName + "_UnknownsReportTablePerSquid25.csv");
         }
         return reportTableFile;
     }
@@ -408,11 +422,29 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
-    public File produceTaskAudit()
+    public File produceSelectedUnknownsReportCSV()
             throws IOException {
         File reportTableFile = null;
-        reportTableFile = prawnFileHandler.getReportsEngine().writeTaskSummaryFile();
+        if (task.getUnknownSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getUnknownSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, (projectName + "_UnknownsReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+        }
+        return reportTableFile;
+    }
 
+    public File produceUnknownsWeightedMeanSortingFieldsCSV()
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getUnknownSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSquidReportTablesUnknown().get(1);
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getUnknownSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, projectName.replaceAll("\\s+", "_") + "_UnknownsWeightedMeansSortingFields.csv");
+        }
         return reportTableFile;
     }
 
@@ -431,7 +463,7 @@ public final class SquidProject implements Serializable {
         sb.append("Project Notes:\n").append(projectNotes).append("\n");
 
         //parameters
-        if(task != null) {
+        if (task != null) {
             sb.append("\nParameters:\n");
             sb.append("\tIon Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
             sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
@@ -559,7 +591,7 @@ public final class SquidProject implements Serializable {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
                 String run1DateTime = generateDateTimeMillisecondsStringForRun(run1);
                 String run2DateTime = generateDateTimeMillisecondsStringForRun(run2);
-                
+
                 long run1DateTimeMilliseconds = 0l;
                 long run2DateTimeMilliseconds = 0l;
                 try {
@@ -690,8 +722,8 @@ public final class SquidProject implements Serializable {
 
         return retVal;
     }
-    
-    public boolean hasReportsFolder(){
+
+    public boolean hasReportsFolder() {
         return prawnFileHandler.getReportsEngine().getFolderToWriteCalamariReports() != null;
     }
 
