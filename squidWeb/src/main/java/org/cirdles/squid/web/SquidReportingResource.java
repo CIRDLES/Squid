@@ -44,6 +44,7 @@ public class SquidReportingResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("application/zip")
     public Response generateReports(
+            @DefaultValue("WebProject") @FormDataParam("projectName") String projectName,
             @FormDataParam("prawnFile") InputStream prawnFile,
             @FormDataParam("prawnFile") FormDataContentDisposition contentDispositionHeader,
             @FormDataParam("taskFile") InputStream taskFile,
@@ -55,6 +56,7 @@ public class SquidReportingResource {
             throws Exception {
 
         java.nio.file.Path pathToZip = squidReportingService.generateReports(
+                projectName,
                 contentDispositionHeader.getFileName(), 
                 prawnFile, taskFile, useSBM, userLinFits, refMatFilter, concRefMatFilter,
                 preferredIndexIsotopeName);

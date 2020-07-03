@@ -23,21 +23,25 @@ import java.util.List;
  */
 public class TextArrayManager {
 
-    private TableView<ObservableList<String>> table;
-    private TableView<ObservableList<String>> boundCol;
-    private String[][] array;
-    private ObservableList<ObservableList<String>> data;
+    private static TableView<ObservableList<String>> table;
+    private static TableView<ObservableList<String>> boundCol;
+    private static String[][] array;
+    private static ObservableList<ObservableList<String>> data;
     private static final double characterSize = 9.5;
     private static final double columnHeaderCharacterSize = 11;
     private static final RowComparator comparator = new RowComparator();
-    private List<String> aliquots;
-    private SquidReportTableLauncher.ReportTableTab controllerType;
+    private static List<String> aliquots;
+    private static SquidReportTableLauncher.ReportTableTab controllerType;
 
-    public TextArrayManager(TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> table, String[][] array, SquidReportTableLauncher.ReportTableTab controllerType) {
-        this.boundCol = boundCol;
-        this.table = table;
-        this.array = array;
-        this.controllerType = controllerType;
+    private TextArrayManager() {
+    }
+
+    public static void textArrayManagerInitialize(
+            TableView<ObservableList<String>> boundCol, TableView<ObservableList<String>> reportsTable, String[][] array, SquidReportTableLauncher.ReportTableTab controllerType) {
+        TextArrayManager.boundCol = boundCol;
+        TextArrayManager.table = reportsTable;
+        TextArrayManager.array = array;
+        TextArrayManager.controllerType = controllerType;
         aliquots = new ArrayList<>();
         data = FXCollections.observableArrayList();
 
@@ -49,14 +53,17 @@ public class TextArrayManager {
         setHeaders();
         setTableItems();
         initializeSelectionProperties();
+
+        reportsTable.refresh();
+        boundCol.refresh();
     }
 
-    private void initializeSelectionProperties() {
+    private static void initializeSelectionProperties() {
         boundCol.setOnMouseClicked(val -> table.getSelectionModel().select(boundCol.getSelectionModel().getSelectedIndex()));
         table.setOnMouseClicked(val -> boundCol.getSelectionModel().select(table.getSelectionModel().getSelectedIndex()));
     }
 
-    private void initializeAliquots() {
+    private static void initializeAliquots() {
         aliquots.clear();
         int i = Integer.parseInt(array[0][0]);
         String currentAliquot = array[i][1];
@@ -69,41 +76,41 @@ public class TextArrayManager {
         }
     }
 
-    private void initializeRowFactories() {
-        Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack =
-                new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
+    private static void initializeRowFactories() {
+        Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>> tableCallBack
+                = new Callback<TableView<ObservableList<String>>, TableRow<ObservableList<String>>>() {
+            @Override
+            public TableRow<ObservableList<String>> call(TableView<ObservableList<String>> personTableView) {
+                return new TableRow<ObservableList<String>>() {
                     @Override
-                    public TableRow<ObservableList<String>> call(TableView<ObservableList<String>> personTableView) {
-                        return new TableRow<ObservableList<String>>() {
-                            @Override
-                            protected void updateItem(ObservableList<String> list, boolean b) {
-                                super.updateItem(list, b);
-                                ObservableList<String> styles = getStyleClass();
-                                if (list != null) {
-                                    if (aliquots.contains(list.get(1))) {
-                                        if (!styles.contains("table-row-aliquot")) {
-                                            styles.removeAll(Collections.singleton("table-row-cell"));
-                                            styles.add("table-row-aliquot");
-                                        }
-                                    } else {
-                                        styles.removeAll(Collections.singleton("table-row-aliquot"));
-                                        styles.add("table-row-cell");
-                                    }
+                    protected void updateItem(ObservableList<String> list, boolean b) {
+                        super.updateItem(list, b);
+                        ObservableList<String> styles = getStyleClass();
+                        if (list != null) {
+                            if (aliquots.contains(list.get(1))) {
+                                if (!styles.contains("table-row-aliquot")) {
+                                    styles.removeAll(Collections.singleton("table-row-cell"));
+                                    styles.add("table-row-aliquot");
                                 }
+                            } else {
+                                styles.removeAll(Collections.singleton("table-row-aliquot"));
+                                styles.add("table-row-cell");
                             }
-                        };
+                        }
                     }
                 };
+            }
+        };
         table.setRowFactory(tableCallBack);
         boundCol.setRowFactory(tableCallBack);
     }
 
-    private void initializeSortPolicies() {
+    private static void initializeSortPolicies() {
         Callback<TableView<ObservableList<String>>, Boolean> sortPolicy = t -> {
-            Comparator<ObservableList<String>> rowComparator = (r1, r2) ->
-                    t.getComparator() == null || r1.get(0) != r2.get(0) ||
-                            aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1)) ?
-                            0 : t.getComparator().compare(r1, r2);
+            Comparator<ObservableList<String>> rowComparator = (r1, r2)
+                    -> t.getComparator() == null || r1.get(0) != r2.get(0)
+                    || aliquots.contains(r1.get(1)) || aliquots.contains(r2.get(1))
+                    ? 0 : t.getComparator().compare(r1, r2);
             FXCollections.sort(table.getItems(), rowComparator);
             return true;
         };
@@ -111,7 +118,7 @@ public class TextArrayManager {
         boundCol.setSortPolicy(sortPolicy);
     }
 
-    private void setHeaders() {
+    private static void setHeaders() {
         table.getColumns().clear();
 
         TableColumn<ObservableList<String>, String> header = new TableColumn<>(array[0][3]);
@@ -133,7 +140,7 @@ public class TextArrayManager {
         setUpBoundCol();
     }
 
-    private int getMaxColumnHeaderLength(String input) {
+    private static int getMaxColumnHeaderLength(String input) {
         int max = 0;
         String[] levels = input.split("\n");
         for (int i = 0; i < levels.length; i++) {
@@ -159,7 +166,7 @@ public class TextArrayManager {
         return retVal;
     }
 
-    private void setTableItems() {
+    private static void setTableItems() {
         data.clear();
         int startSpot = Integer.parseInt(array[0][0]);
         String aliquot = null;
@@ -167,7 +174,7 @@ public class TextArrayManager {
             if (Boolean.parseBoolean(array[i][0]) == true) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 if (controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
-                    if(aliquot == null || !array[i][1].isEmpty()) {
+                    if (aliquot == null || !array[i][1].isEmpty()) {
                         aliquot = array[i][1];
                     }
                     row.add(aliquot);
@@ -188,7 +195,7 @@ public class TextArrayManager {
         setUpWidths();
     }
 
-    private void setUpBoundCol() {
+    private static void setUpBoundCol() {
         boundCol.getColumns().clear();
         TableColumn<ObservableList<String>, String> header = new TableColumn<>("Squid");
         TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nFractions");
@@ -201,7 +208,7 @@ public class TextArrayManager {
         boundCol.getColumns().add(header);
     }
 
-    private void setUpWidths() {
+    private static void setUpWidths() {
         if (!data.isEmpty()) {
             int header = 0, counter = 0;
             for (int j = 2; j < data.get(0).size(); j++) {

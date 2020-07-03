@@ -19,7 +19,7 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterfac
 
 import java.net.URL;
 import java.util.*;
-
+import static org.cirdles.squid.gui.squidReportTable.TextArrayManager.textArrayManagerInitialize;
 
 /**
  * FXML Controller class
@@ -38,7 +38,7 @@ public class SquidReportTableController implements Initializable {
     private ScrollBar scrollBar;
 
     private String[][] reportTextArray;
-    private TextArrayManager tableManager;
+
     private boolean isSetUpScroller;
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
@@ -56,14 +56,9 @@ public class SquidReportTableController implements Initializable {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-        if (typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
-            unknownSpot = "UNKNOWNS";
-        }
 
         reportTextArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
-        tableManager = new TextArrayManager(boundCol, reportsTable, reportTextArray, typeOfController);
-        reportsTable.refresh();
-        boundCol.refresh();
+        textArrayManagerInitialize(boundCol, reportsTable, reportTextArray, typeOfController);
 
         EventHandler<MouseEvent> scrollHandler = event -> {
             if (!isSetUpScroller) {
@@ -99,20 +94,22 @@ public class SquidReportTableController implements Initializable {
                 rtHbar = curr;
             }
         }
-        rtHbar.setPrefHeight(24.0);
-        rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
-            if (newVal) {
+        if (rtHbar != null) {
+            rtHbar.setPrefHeight(24.0);
+            rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
+                if (newVal) {
+                    AnchorPane.setBottomAnchor(boundCol, 29.0);
+                } else {
+                    AnchorPane.setBottomAnchor(boundCol, 5.0);
+                }
+            });
+
+            //surprisingly not redundant, above won't be triggered until the visible property changes
+            if (rtHbar.isVisible()) {
                 AnchorPane.setBottomAnchor(boundCol, 29.0);
             } else {
                 AnchorPane.setBottomAnchor(boundCol, 5.0);
             }
-        });
-
-        //surprisingly not redundant, above won't be triggered until the visible property changes
-        if (rtHbar.isVisible()) {
-            AnchorPane.setBottomAnchor(boundCol, 29.0);
-        } else {
-            AnchorPane.setBottomAnchor(boundCol, 5.0);
         }
     }
 

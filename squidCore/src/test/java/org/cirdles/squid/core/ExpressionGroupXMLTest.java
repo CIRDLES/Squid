@@ -33,7 +33,7 @@ public class ExpressionGroupXMLTest {
         List<Expression> expressions = project.getTask().getTaskExpressionsOrdered();
         List<Expression> customExpressions = Collections.synchronizedList(new ArrayList<>());
         expressions.parallelStream().forEach(exp -> {
-            if (exp.isCustom()) {
+            if (exp.isCustom() && exp.amHealthy()) {
                 exp.serializeXMLObject(folder.getAbsolutePath() + File.separator + FileNameFixer.fixFileName(exp.getName()) + ".xml");
                 customExpressions.add(exp);
             }

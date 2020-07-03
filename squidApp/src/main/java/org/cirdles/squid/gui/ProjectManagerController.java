@@ -29,7 +29,6 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,7 +36,8 @@ import java.util.ResourceBundle;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.useSigFig15;
+import org.cirdles.squid.projects.SquidProject;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.USE_SIG_FIG_15;
 
 /**
  * FXML Controller class
@@ -111,6 +111,8 @@ public class ProjectManagerController implements Initializable {
 
     private TaskInterface task;
     private TaskDesign taskDesign;
+    @FXML
+    private ToggleGroup toggleGroupIsotope;
 
     /**
      * Initializes the controller class.
@@ -126,12 +128,12 @@ public class ProjectManagerController implements Initializable {
         if (task != null) {
             roundingSquid3.setSelected(task.isRoundingForSquid3());
             setUpParametersModelsComboBoxes();
-            if (task.isUseSBM()) {
+            if (squidProject.isUseSBM()) {
                 yesSBMRadioButton.setSelected(true);
             } else {
                 noSBMRadioButton.setSelected(true);
             }
-            if (task.isUserLinFits()) {
+            if (squidProject.isUserLinFits()) {
                 linearRegressionRatioCalcRadioButton.setSelected(true);
             } else {
                 spotAverageRatioCalcRadioButton.setSelected(true);
@@ -155,25 +157,31 @@ public class ProjectManagerController implements Initializable {
         // PhysicalConstantsModels
         physConstModelComboBox.setConverter(new ParameterModelStringConverter());
         physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
-        physConstModelComboBox.getSelectionModel().select(task.getPhysicalConstantsModel());
+        physConstModelComboBox.getSelectionModel().select(squidProject.getPhysicalConstantsModel());
 
         physConstModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setPhysicalConstantsModel(newValue);
+                    squidProject.setPhysicalConstantsModel(newValue);
+                    SquidProject.setProjectChanged(true);
                     task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport(false);
+                    if (task.getReferenceMaterialSpots().size() > 0) {
+                        task.setupSquidSessionSpecsAndReduceAndReport(false);
+                    }
                 });
 
         // CommonPbModels
         commonPbModelComboBox.setConverter(new ParameterModelStringConverter());
         commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
-        commonPbModelComboBox.getSelectionModel().select(task.getCommonPbModel());
+        commonPbModelComboBox.getSelectionModel().select(squidProject.getCommonPbModel());
 
         commonPbModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    task.setCommonPbModel(newValue);
+                    squidProject.setCommonPbModel(newValue);
+                    SquidProject.setProjectChanged(true);
                     task.setChanged(true);
-                    task.setupSquidSessionSpecsAndReduceAndReport(false);
+                    if (task.getReferenceMaterialSpots().size() > 0) {
+                        task.setupSquidSessionSpecsAndReduceAndReport(false);
+                    }
                 });
     }
 
@@ -217,7 +225,7 @@ public class ProjectManagerController implements Initializable {
             pb204RadioButton.setSelected(true);
         }
 
-        switch (task.getSelectedIndexIsotope()) {
+        switch (squidProject.getSelectedIndexIsotope()) {
             case PB_204:
                 pb204RadioButton.setSelected(true);
                 break;
@@ -229,13 +237,15 @@ public class ProjectManagerController implements Initializable {
                 break;
         }
 
-        autoExcludeSpotsCheckBox.setSelected(task.isSquidAllowsAutoExclusionOfSpots());
+        autoExcludeSpotsCheckBox.setSelected(squidProject.isSquidAllowsAutoExclusionOfSpots());
 
         SpinnerValueFactory<Double> valueFactoryU
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
         assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable,
                 Double oldValue, Double newValue) -> {
+            squidProject.setExtPErrU(newValue);
+            SquidProject.setProjectChanged(true);
             task.setExtPErrU(newValue);
         });
 
@@ -244,6 +254,8 @@ public class ProjectManagerController implements Initializable {
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
         assignedExternalErrThSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
                 Double oldValue, Double newValue) -> {
+            squidProject.setExtPErrTh(newValue);
+            SquidProject.setProjectChanged(true);
             task.setExtPErrTh(newValue);
         });
     }
@@ -285,6 +297,8 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void yesSBMRadioButtonAction(ActionEvent event) {
+        squidProject.setUseSBM(true);
+        SquidProject.setProjectChanged(true);
         task.setUseSBM(true);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -292,6 +306,8 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void noSBMRadioButtonActions(ActionEvent event) {
+        squidProject.setUseSBM(false);
+        SquidProject.setProjectChanged(true);
         task.setUseSBM(false);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -299,6 +315,8 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
+        squidProject.setUserLinFits(true);
+        SquidProject.setProjectChanged(true);
         task.setUserLinFits(true);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -306,6 +324,8 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
+        squidProject.setUserLinFits(false);
+        SquidProject.setProjectChanged(true);
         task.setUserLinFits(false);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -313,25 +333,31 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void pb204RadioButtonAction(ActionEvent event) {
+        squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        SquidProject.setProjectChanged(true);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setChanged(true);
     }
 
     @FXML
     private void pb207RadioButtonAction(ActionEvent event) {
+        squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        SquidProject.setProjectChanged(true);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         task.setChanged(true);
     }
 
     @FXML
     private void pb208RadioButtonAction(ActionEvent event) {
+        squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
+        SquidProject.setProjectChanged(true);
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
     }
 
     @FXML
     private void roundingSquid25Action(ActionEvent event) {
-        useSigFig15 = false;
+        USE_SIG_FIG_15 = false;
         task.setRoundingForSquid3(false);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -339,7 +365,7 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void roundingSquid3Action(ActionEvent event) {
-        useSigFig15 = true;
+        USE_SIG_FIG_15 = true;
         task.setRoundingForSquid3(true);
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(true);
@@ -348,6 +374,8 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
         // this will cause weighted mean expressions to be changed with boolean flag
+        squidProject.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+        SquidProject.setProjectChanged(true);
         task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
     }
 

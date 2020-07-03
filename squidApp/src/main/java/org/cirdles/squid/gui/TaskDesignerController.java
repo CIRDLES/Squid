@@ -248,6 +248,16 @@ public class TaskDesignerController implements Initializable {
     private void initTaskDesign() {
         taskDesigner = SquidPersistentState.getExistingPersistentState().getTaskDesign();
 
+        // update to project having parameters spring 2020
+        taskDesigner.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
+        taskDesigner.setCommonPbModel(squidProject.getCommonPbModel());
+        taskDesigner.setUseSBM(squidProject.isUseSBM());
+        taskDesigner.setUserLinFits(squidProject.isUserLinFits());
+        taskDesigner.setSelectedIndexIsotope(squidProject.getSelectedIndexIsotope());
+        taskDesigner.setSquidAllowsAutoExclusionOfSpots(squidProject.isSquidAllowsAutoExclusionOfSpots());
+        taskDesigner.setExtPErrU(squidProject.getExtPErrU());
+        taskDesigner.setExtPErrTh(squidProject.getExtPErrTh());
+
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getTaskType().getName())).setSelected(true);
 
         authorsNameTextField.setText(taskDesigner.getAuthorName());
@@ -388,7 +398,7 @@ public class TaskDesignerController implements Initializable {
 
     private void populateDirectives() {
         updateDirectiveButtons();
-        
+
         fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskDesigner.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);

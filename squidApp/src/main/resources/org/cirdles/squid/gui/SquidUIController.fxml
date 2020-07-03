@@ -55,7 +55,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="Task Designer" />
+                        <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="New Task using Task Design Assistant" />
                         <MenuItem fx:id="newSquid3TaskFromPrefsMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskFromPrefsMenuItemAction" text="New Squid Task from Task Designer" visible="false" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
@@ -92,6 +92,32 @@
 
                     </items>
                 </Menu>
+            <Menu fx:id="commonPbMenu" mnemonicParsing="false" text="Common Pb">
+              <items>
+                  <Menu mnemonicParsing="false" text="Unknowns">
+                    <items>
+                                <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="204 Count Corrections &amp; Assign Common Lead Ratios" />
+                    </items>
+                  </Menu>
+              </items>
+            </Menu>
+                <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
+                    <items>
+                        <Menu mnemonicParsing="false" text="Reference Materials">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
+                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
+                        <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Unknowns">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
+                                <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
                 <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
                     <items>
                         <MenuItem disable="false" mnemonicParsing="false" onAction="#reportLayoutManagerOnAction" text="Custom Report Builder" />
@@ -125,25 +151,7 @@
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Reference Materials - per Squid2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Unknowns - per Squid 2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Unknowns - by Sample for use by ET_Redux and Topsoil" />
-                              <MenuItem mnemonicParsing="false" onAction="#produceSanityCheckReportsAction" text="Produce Sanity Check Reports" />
-                            </items>
-                        </Menu>
-                    </items>
-                </Menu>
-                <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
-                    <items>
-                        <Menu mnemonicParsing="false" text="Reference Materials">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
-                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
-                        <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Unknowns">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="204 Count Corrections &amp; Assign Common Lead Ratios" />
-                                <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
-                                <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
+                              <MenuItem mnemonicParsing="false" onAction="#producePerScanReportsAction" text="Per Scan Reports Bundle" />
                             </items>
                         </Menu>
                     </items>
@@ -183,6 +191,13 @@
                         </Menu>
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="About">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
+                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
+               </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
 
@@ -192,13 +207,6 @@
 
                     </items>
                 </Menu>
-            <Menu mnemonicParsing="false" text="About">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
-                  <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
-                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
-               </items>
-            </Menu>
             </menus>
         </MenuBar>
         <AnchorPane fx:id="mainPane" style="-fx-background-color: #3a4c88;" stylesheets="@css/projectManager.css" VBox.vgrow="ALWAYS">

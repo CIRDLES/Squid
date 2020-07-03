@@ -21,9 +21,9 @@ package org.cirdles.squid.utilities.conversionUtilities;
  */
 public class RoundingUtilities {
     
-    public static boolean useSigFig15 = false;
+    public static boolean USE_SIG_FIG_15 = false;
     
     public static double squid3RoundedToSize(double value, int sigFigs){
-        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, useSigFig15 ? 15 : sigFigs);
+        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, USE_SIG_FIG_15 ? 15 : sigFigs);
     }
 }

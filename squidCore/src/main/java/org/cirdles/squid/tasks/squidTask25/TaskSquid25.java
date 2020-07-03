@@ -350,22 +350,23 @@ public class TaskSquid25 implements Serializable {
             retVal = retVal.substring(0, retVal.lastIndexOf("."));
         }
         
-        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
-        // unless already noted as constant
-        // UPDATE FEB 2020 - we now allow simple strings to not have brackets and quotes
-        if (!taskSquid25.constantNames.contains(retVal)) {
-            if (!excelString.contains("(")
-                    && !excelString.contains("[")
-                    && !retVal.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")
-                    && !ShuntingYard.isNumber(excelString)) {
-                retVal = "";
-            }
-        }
+        // as of JUNE 2020, it was requested by Simon Bodorkos that all expressions show up even if bad
+//        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
+//        // unless already noted as constant
+//        // UPDATE FEB 2020 - we now allow simple strings to not have brackets and quotes
+//        if (!taskSquid25.constantNames.contains(retVal)) {
+//            if (!excelString.contains("(")
+//                    && !excelString.contains("[")
+//                    && !retVal.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")
+//                    && !ShuntingYard.isNumber(excelString)) {
+//                retVal = "";
+//            }
+//        }
 
-        // do not include calls to error functions of Age as in AgeErPb76 etc
-        if (excelString.toUpperCase(Locale.ENGLISH).contains("AGEER")) {
-            retVal = "";
-        }
+//        // do not include calls to error functions of Age as in AgeErPb76 etc
+//        if (excelString.toUpperCase(Locale.ENGLISH).contains("AGEER")) {
+//            retVal = "";
+//        }
 
         // misc edits
         if (retVal.matches("^.*(?i)corr\\S.*")) {

@@ -41,6 +41,7 @@ import java.util.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.util.Arrays.asList;
+import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
@@ -145,8 +146,8 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     private String makeReportFolderStructure() {
-        return File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
+        return File.separator + "Squid3ProjectReports-" + squidProject.getProjectName().replaceAll("\\s", "_")
+                //                + File.separator + "TASK-" + squidProject.getTask().getName()
                 + File.separator;
     }
 
@@ -183,7 +184,8 @@ public class CalamariReportsEngine implements Serializable {
             folderToWriteCalamariReportsPath
                     = folderToWriteCalamariReports.getCanonicalPath()
                     + makeReportFolderStructure()
-                    + "PRAWN-" + nameOfPrawnSourceFile
+                    //                    + "PRAWN-" + nameOfPrawnSourceFile
+                    + squidProject.getProjectName().replaceAll("\\s", "_") + "_PerScan"
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
@@ -192,6 +194,17 @@ public class CalamariReportsEngine implements Serializable {
                 throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
             }
             retVal = reportsFolder;
+        }
+
+        // get docs for folder
+        Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/SquidPerScanReportsDocumentation.pdf");
+        Path newFile = Paths.get(folderToWriteCalamariReportsPath, "SquidPerScanReportsDocumentation.pdf");
+        try (OutputStream os = new FileOutputStream(newFile.toFile())) {
+
+            Files.copy(resourcePath, os);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -1021,8 +1034,8 @@ public class CalamariReportsEngine implements Serializable {
     public File writeSummaryReportsForReferenceMaterials() throws IOException {
         File reportFile = getFileForSummaryCalc(
                 squidProject.getProjectName()
-                    + "_RefMatSummaryReport"
-                    + ".csv");
+                + "_RefMatSummaryReport"
+                + ".csv");
         PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> refMatExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
@@ -1155,9 +1168,9 @@ public class CalamariReportsEngine implements Serializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "Task_Audit_" + DateHelper.getCurrentDate() + ".txt");
+        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_TaskAudit.txt");
 
-        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
         outputWriter.write(squidProject.getTask().printTaskAudit());
         outputWriter.flush();
         outputWriter.close();
@@ -1168,16 +1181,15 @@ public class CalamariReportsEngine implements Serializable {
     public File writeProjectAudit() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "Project_Audit_" + DateHelper.getCurrentDate() + ".txt");
+        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_ProjectAudit.txt");
 
-        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
         outputWriter.write(squidProject.printProjectAudit());
         outputWriter.flush();
         outputWriter.close();

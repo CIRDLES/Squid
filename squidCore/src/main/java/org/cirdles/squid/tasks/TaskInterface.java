@@ -358,7 +358,7 @@ public interface TaskInterface {
      *
      * @return
      */
-    public File produceSanityReportsToFiles();
+    public File producePerScanReportsToFiles();
 
     public void updateRatioNames(String[] ratioNames);
 

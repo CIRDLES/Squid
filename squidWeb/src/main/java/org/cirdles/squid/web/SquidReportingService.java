@@ -64,6 +64,7 @@ public class SquidReportingService {
     }
 
     public Path generateReports(
+            String myProjectName,
             String myFileName,
             InputStream prawnFile,
             InputStream taskFile,
@@ -91,7 +92,7 @@ public class SquidReportingService {
             fileName = myFileName;
         }
 
-        SquidProject squidProject = new SquidProject();
+        SquidProject squidProject = new SquidProject(myProjectName);
         prawnFileHandler = squidProject.getPrawnFileHandler();
 
         CalamariFileUtilities.initSampleParametersModels();
@@ -168,7 +169,7 @@ public class SquidReportingService {
                 squidProject.produceSelectedUnknownsReportCSV();
                 squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
 
-                squidProject.getTask().produceSanityReportsToFiles();
+                squidProject.getTask().producePerScanReportsToFiles();
             }
 
             Files.delete(prawnFilePath);

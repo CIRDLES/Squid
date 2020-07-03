@@ -70,6 +70,7 @@ squidCore/Hf1sabserr.png
 !squidApp/src/main/resources/org/cirdles/squid/gui/content/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/version.txt
 !squidCore/src/main/resources/org/cirdles/squid/docs/*.txt
+!squidCore/src/main/resources/org/cirdles/squid/docs/*.pdf
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.xml
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.txt
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid

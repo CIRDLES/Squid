@@ -216,6 +216,8 @@ public class SquidUIController implements Initializable {
 
     public static int squidProjectOriginalHash;
     public boolean runSaveMenuDisableCheck;
+    @FXML
+    private Menu commonPbMenu;
 
     /**
      * Initializes the controller class.
@@ -243,6 +245,7 @@ public class SquidUIController implements Initializable {
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
         manageExpressionsMenu.setDisable(true);
+        commonPbMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
         manageInterpretationsMenu.setDisable(true);
 
@@ -410,6 +413,7 @@ public class SquidUIController implements Initializable {
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            commonPbMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageInterpretationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
@@ -457,6 +461,7 @@ public class SquidUIController implements Initializable {
         projectManagerMenuItem.setDisable(true);
 
         manageExpressionsMenu.setDisable(true);
+        commonPbMenu.setDisable(true);
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
@@ -822,6 +827,7 @@ public class SquidUIController implements Initializable {
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
+            commonPbMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
             manageInterpretationsMenu.setDisable(squidProject.getTask().getRatioNames().isEmpty());
 
@@ -1198,14 +1204,15 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
+    
     @FXML
-    private void produceSanityCheckReportsAction(ActionEvent event) {
+    private void producePerScanReportsAction(ActionEvent event) {
         if (!squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {
-                SquidMessageDialog.showSavedAsDialog(squidProject.getTask().produceSanityReportsToFiles(), primaryStageWindow);
+                SquidMessageDialog.showSavedAsDialog(squidProject.getTask().producePerScanReportsToFiles(), primaryStageWindow);
             } else {
                 showReportsWarning();
             }
@@ -1319,7 +1326,7 @@ public class SquidUIController implements Initializable {
                 squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
 
 
-                squidProject.getTask().produceSanityReportsToFiles();
+                squidProject.getTask().producePerScanReportsToFiles();
                 SquidMessageDialog.showSavedAsDialog(projectAuditFile.getParentFile(), primaryStageWindow);
             } else {
                 showReportsWarning();
@@ -1374,7 +1381,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("countCorrectionsUI >>>>   " + iOException.getMessage());
             }
-            menuHighlighter.highlight(manageInterpretationsMenu);
+            menuHighlighter.highlight(commonPbMenu);
 
             showUI(countCorrectionsUI);
         }
@@ -1405,7 +1412,7 @@ public class SquidUIController implements Initializable {
             } catch (IOException | RuntimeException iOException) {
                 System.out.println("commonLeadAssignmentUI >>>>   " + iOException.getMessage());
             }
-            menuHighlighter.highlight(manageInterpretationsMenu);
+            menuHighlighter.highlight(commonPbMenu);
 
             showUI(commonLeadAssignmentUI);
         }

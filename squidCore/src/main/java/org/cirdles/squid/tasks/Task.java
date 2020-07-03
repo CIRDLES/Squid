@@ -277,6 +277,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+        this.prawnFile = prawnFile;
+        this.reportsEngine = reportsEngine;
+
+        SquidProject squidProject = null;
+        if (reportsEngine != null) {
+            squidProject = reportsEngine.getSquidProject();
+        }
+
         this.name = name;
         this.taskSquidVersion = Squid.VERSION;
         this.taskType = taskDesign.getTaskType();
@@ -289,8 +297,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
 
-        this.useSBM = taskDesign.isUseSBM();
-        this.userLinFits = taskDesign.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = taskDesign.getParentNuclide();//  "238";
@@ -318,14 +324,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.concentrationReferenceMaterialSpots = new ArrayList<>();
         this.unknownSpots = new ArrayList<>();
 
-        this.prawnFile = prawnFile;
-        this.reportsEngine = reportsEngine;
-
         this.changed = true;
         SquidProject.setProjectChanged(true);
 
         this.useCalculatedAv_ParentElement_ConcenConst = false;
-        this.selectedIndexIsotope = taskDesign.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -338,19 +340,31 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnChanged = false;
 
-        this.squidAllowsAutoExclusionOfSpots = taskDesign.isSquidAllowsAutoExclusionOfSpots();
+        this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
+        if (squidProject != null) {
+            this.useSBM = squidProject.isUseSBM();
+            this.userLinFits = squidProject.isUserLinFits();
+            this.selectedIndexIsotope = squidProject.getSelectedIndexIsotope();
+            this.squidAllowsAutoExclusionOfSpots = squidProject.isSquidAllowsAutoExclusionOfSpots();
+            this.extPErrU = squidProject.getExtPErrU();
+            this.extPErrTh = squidProject.getExtPErrTh();
+            this.physicalConstantsModel = squidProject.getPhysicalConstantsModel();
+            this.commonPbModel = squidProject.getCommonPbModel();
+            this.delimiterForUnknownNames = squidProject.getDelimiterForUnknownNames();
+        } else {
+            this.useSBM = taskDesign.isUseSBM();
+            this.userLinFits = taskDesign.isUserLinFits();
+            this.selectedIndexIsotope = taskDesign.getSelectedIndexIsotope();
+            this.squidAllowsAutoExclusionOfSpots = taskDesign.isSquidAllowsAutoExclusionOfSpots();
+            this.extPErrU = taskDesign.getExtPErrU();
+            this.extPErrTh = taskDesign.getExtPErrTh();
+            this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
+            this.commonPbModel = taskDesign.getCommonPbModel();
+            this.delimiterForUnknownNames = taskDesign.getDelimiterForUnknownNames();
+        }
 
-        this.extPErrU = taskDesign.getExtPErrU();
-        this.extPErrTh = taskDesign.getExtPErrTh();
-
-        this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
         this.referenceMaterialModel = new ReferenceMaterialModel();
         this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
-        this.commonPbModel = taskDesign.getCommonPbModel();
-
-        this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
-
-        this.delimiterForUnknownNames = taskDesign.getDelimiterForUnknownNames();
 
         this.physicalConstantsModelChanged = false;
         this.referenceMaterialModelChanged = false;
@@ -597,14 +611,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(samRadiogenicCols);
 
-//        Collections.sort(taskExpressionsOrdered);
-        Collections.sort(taskExpressionsOrdered, new Comparator<Expression>() {
-            @Override
-            public int compare(Expression exp1, Expression exp2) {
-                IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
-                return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
-            }
-        });
+        // uses complex comparator in expression
+        Collections.sort(taskExpressionsOrdered);
     }
 
     @Override
@@ -1069,7 +1077,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * The original Calamari Reports
      */
     @Override
-    public File produceSanityReportsToFiles() {
+    public File producePerScanReportsToFiles() {
         File retVal = null;
         if (unknownSpots.size() > 0) {
             try {
