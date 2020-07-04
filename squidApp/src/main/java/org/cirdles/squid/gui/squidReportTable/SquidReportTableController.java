@@ -15,16 +15,11 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
 import java.util.*;
-
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.squidReportTable.TextArrayManager.textArrayManagerInitialize;
 
 /**
  * FXML Controller class
@@ -42,8 +37,8 @@ public class SquidReportTableController implements Initializable {
     @FXML
     private ScrollBar scrollBar;
 
-    private String[][] textArray;
-    private TextArrayManager tableManager;
+    private String[][] reportTextArray;
+
     private boolean isSetUpScroller;
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
@@ -61,13 +56,9 @@ public class SquidReportTableController implements Initializable {
         isSetUpScroller = false;
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
-        textArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
-        if(typeOfController == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
-            unknownSpot = "UNKNOWNS";
-        }
-        tableManager = new TextArrayManager(boundCol, reportsTable, textArray, typeOfController);
-        reportsTable.refresh();
-        boundCol.refresh();
+
+        reportTextArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        textArrayManagerInitialize(boundCol, reportsTable, reportTextArray, typeOfController);
 
         EventHandler<MouseEvent> scrollHandler = event -> {
             if (!isSetUpScroller) {
@@ -103,20 +94,22 @@ public class SquidReportTableController implements Initializable {
                 rtHbar = curr;
             }
         }
-        rtHbar.setPrefHeight(24.0);
-        rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
-            if (newVal) {
+        if (rtHbar != null) {
+            rtHbar.setPrefHeight(24.0);
+            rtHbar.visibleProperty().addListener((obVal, oldVal, newVal) -> {
+                if (newVal) {
+                    AnchorPane.setBottomAnchor(boundCol, 29.0);
+                } else {
+                    AnchorPane.setBottomAnchor(boundCol, 5.0);
+                }
+            });
+
+            //surprisingly not redundant, above won't be triggered until the visible property changes
+            if (rtHbar.isVisible()) {
                 AnchorPane.setBottomAnchor(boundCol, 29.0);
             } else {
                 AnchorPane.setBottomAnchor(boundCol, 5.0);
             }
-        });
-
-        //surprisingly not redundant, above won't be triggered until the visible property changes
-        if (rtHbar.isVisible()) {
-            AnchorPane.setBottomAnchor(boundCol, 29.0);
-        } else {
-            AnchorPane.setBottomAnchor(boundCol, 5.0);
         }
     }
 

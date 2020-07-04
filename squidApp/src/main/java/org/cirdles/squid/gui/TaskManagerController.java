@@ -37,7 +37,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.useSigFig15;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.USE_SIG_FIG_15;
 
 /**
  * FXML Controller class
@@ -101,7 +101,7 @@ public class TaskManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
-            useSigFig15 = task.isRoundingForSquid3();
+            USE_SIG_FIG_15 = task.isRoundingForSquid3();
             task.setupSquidSessionSpecsAndReduceAndReport(false);
             populateTaskFields();
             setupListeners();
@@ -155,13 +155,13 @@ public class TaskManagerController implements Initializable {
     }
 
     private void updateDirectiveButtons() {
-        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208)==0);
-        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208)==0);
+        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives() {
         updateDirectiveButtons();
-        
+
         // Directives fields
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);

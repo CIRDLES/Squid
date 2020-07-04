@@ -663,7 +663,8 @@ public class ExpressionBuilderController implements Initializable {
                             && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
                             && exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+//                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+                        return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
                         // RU
                     } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
@@ -675,7 +676,8 @@ public class ExpressionBuilderController implements Initializable {
                             && !exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
                             && exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && !exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+//                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+                        return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
                         // R
                     } else if (exp1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && !exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
@@ -687,7 +689,8 @@ public class ExpressionBuilderController implements Initializable {
                             && exp1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
                             && !exp2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
                             && exp2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+//                        return intuitiveStringComparator.compare(exp1.getName(), exp2.getName());
+                        return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
                     } else {
                         return 1;
                     }
@@ -697,7 +700,8 @@ public class ExpressionBuilderController implements Initializable {
 
             default://"NAME":
                 listView.setItems(items.sorted((exp1, exp2) -> {
-                    return exp1.getName().toLowerCase().compareTo(exp2.getName().toLowerCase());
+                    //return exp1.getName().toLowerCase().compareTo(exp2.getName().toLowerCase());
+                    return intuitiveStringComparator.compare(exp1.getName().toLowerCase(), exp2.getName().toLowerCase());
                 }));
                 break;
         }

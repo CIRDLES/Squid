@@ -1,7 +1,5 @@
 package org.cirdles.squid.gui.squidReportTable;
 
-import org.cirdles.squid.reports.reportSettings.ReportSettings;
-import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -15,19 +13,11 @@ public class SquidReportTableHelperMethods {
         String[][] textArray = {};
 
         switch (tab) {
-            case refMat:
-                ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, squidProject.getTask());
-                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.getTask().getReferenceMaterialSpots(), false);
-                break;
             case refMatCustom:
                 if (squidReportTable == null) {
                     squidReportTable = SquidReportTable.createDefaultSquidReportTableRefMat(squidProject.getTask());
                 }
                 textArray = squidReportTable.reportSpotsInCustomTable(squidReportTable, squidProject.getTask(), squidProject.getTask().getReferenceMaterialSpots());
-                break;
-            case unknown:
-                reportSettings = new ReportSettings("Unknowns", false, squidProject.getTask());
-                textArray = reportSettings.reportFractionsByNumberStyle(squidProject.makeListOfUnknownsBySampleName(), false);
                 break;
             case unknownCustom:
                 if (squidReportTable == null) {
@@ -44,7 +34,7 @@ public class SquidReportTableHelperMethods {
         return textArray;
     }
 
-    public static void filterShrimpFractionsBySpot(List<ShrimpFractionExpressionInterface> spots, String unknownSpot) {
+    private static void filterShrimpFractionsBySpot(List<ShrimpFractionExpressionInterface> spots, String unknownSpot) {
         if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
             for (int i = 0; i < spots.size(); i++) {
                 ShrimpFractionExpressionInterface spot = spots.get(i);

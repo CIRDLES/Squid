@@ -49,6 +49,8 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 /**
@@ -80,6 +82,18 @@ public final class SquidProject implements Serializable {
     private ParametersModel referenceMaterialModel;
     private ParametersModel concentrationReferenceMaterialModel;
 
+    //Spring 2020 adding parameters to project from task ***********************
+    private ParametersModel physicalConstantsModel;
+    private ParametersModel commonPbModel;
+    private boolean squidAllowsAutoExclusionOfSpots;
+    // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
+    private double extPErrU;
+    // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
+    private double extPErrTh;
+    private Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
+    private boolean useSBM;
+    private boolean userLinFits;
+
     public SquidProject() {
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
@@ -96,13 +110,31 @@ public final class SquidProject implements Serializable {
         this.referenceMaterialModel = new ReferenceMaterialModel();
         this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
 
+        // new fields from migration to project of parameters spring 2020
+        TaskDesign taskDesignDefault = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+        this.physicalConstantsModel = taskDesignDefault.getPhysicalConstantsModel();
+        this.commonPbModel = taskDesignDefault.getCommonPbModel();
+        this.squidAllowsAutoExclusionOfSpots = taskDesignDefault.isSquidAllowsAutoExclusionOfSpots();
+        this.extPErrU = taskDesignDefault.getExtPErrU();
+        this.extPErrTh = taskDesignDefault.getExtPErrTh();
+        this.selectedIndexIsotope = taskDesignDefault.getSelectedIndexIsotope();
+        this.useSBM = taskDesignDefault.isUseSBM();
+        this.userLinFits = taskDesignDefault.isUserLinFits();
+
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
         this.task.setReferenceMaterialModel(this.referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
+        this.task.setPhysicalConstantsModel(physicalConstantsModel);
+        this.task.setCommonPbModel(commonPbModel);
 
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
                 = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
+    }
+    
+    public SquidProject(String projectName){
+        this();
+        this.projectName = projectName;
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -143,6 +175,18 @@ public final class SquidProject implements Serializable {
     public void createNewTask() {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
+
+        this.task.setDelimiterForUnknownNames(delimiterForUnknownNames);
+        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        this.task.setFiltersForUnknownNames(filtersForUnknownNames);
+        this.task.setCommonPbModel(commonPbModel);
+        this.task.setPhysicalConstantsModel(physicalConstantsModel);
+        this.task.setSelectedIndexIsotope(selectedIndexIsotope);
+        this.task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+        this.task.setExtPErrU(extPErrU);
+        this.task.setExtPErrTh(extPErrTh);
+
         this.task.setReferenceMaterialModel(referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
@@ -370,26 +414,39 @@ public final class SquidProject implements Serializable {
     }
 
     // reports
-    public File produceReferenceMaterialCSV(boolean numberStyleIsNumeric)
+    public File produceReferenceMaterialPerSquid25CSV(boolean numberStyleIsNumeric)
             throws IOException {
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(), numberStyleIsNumeric);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, projectName + "_ReferenceMaterialReportTable.csv");
+                    report, projectName + "_RefMatReportTablePerSquid25.csv");
         }
         return reportTableFile;
     }
 
-    public File produceUnknownsCSV(boolean numberStyleIsNumeric)
+    public File produceSelectedReferenceMaterialReportCSV()
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getReferenceMaterialSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSelectedRefMatReportModel();
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getReferenceMaterialSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, (projectName + "_RefMatReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+        }
+        return reportTableFile;
+    }
+
+    public File produceUnknownsPerSquid25CSV(boolean numberStyleIsNumeric)
             throws IOException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(task.getUnknownSpots(), numberStyleIsNumeric);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, projectName + "_UnknownsReportTable.csv");
+                    report, projectName + "_UnknownsReportTablePerSquid25.csv");
         }
         return reportTableFile;
     }
@@ -408,11 +465,29 @@ public final class SquidProject implements Serializable {
         return reportTableFile;
     }
 
-    public File produceTaskAudit()
+    public File produceSelectedUnknownsReportCSV()
             throws IOException {
         File reportTableFile = null;
-        reportTableFile = prawnFileHandler.getReportsEngine().writeTaskSummaryFile();
+        if (task.getUnknownSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getUnknownSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, (projectName + "_UnknownsReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+        }
+        return reportTableFile;
+    }
 
+    public File produceUnknownsWeightedMeanSortingFieldsCSV()
+            throws IOException {
+        File reportTableFile = null;
+        if (task.getUnknownSpots().size() > 0) {
+            SquidReportTableInterface reportSettings = task.getSquidReportTablesUnknown().get(1);
+            String[][] report = reportSettings.reportSpotsInCustomTable(
+                    reportSettings, task, task.getUnknownSpots());
+            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+                    report, projectName.replaceAll("\\s+", "_") + "_UnknownsWeightedMeansSortingFields.csv");
+        }
         return reportTableFile;
     }
 
@@ -431,7 +506,7 @@ public final class SquidProject implements Serializable {
         sb.append("Project Notes:\n").append(projectNotes).append("\n");
 
         //parameters
-        if(task != null) {
+        if (task != null) {
             sb.append("\nParameters:\n");
             sb.append("\tIon Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
             sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
@@ -559,7 +634,7 @@ public final class SquidProject implements Serializable {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
                 String run1DateTime = generateDateTimeMillisecondsStringForRun(run1);
                 String run2DateTime = generateDateTimeMillisecondsStringForRun(run2);
-                
+
                 long run1DateTimeMilliseconds = 0l;
                 long run2DateTimeMilliseconds = 0l;
                 try {
@@ -689,6 +764,10 @@ public final class SquidProject implements Serializable {
         prawnFile.setRuns((short) runs.size());
 
         return retVal;
+    }
+
+    public boolean hasReportsFolder() {
+        return prawnFileHandler.getReportsEngine().getFolderToWriteCalamariReports() != null;
     }
 
     /**
@@ -886,6 +965,185 @@ public final class SquidProject implements Serializable {
             task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         }
         this.concentrationReferenceMaterialModel = concentrationReferenceMaterialModel;
+    }
+
+    /**
+     * @return the physicalConstantsModel
+     */
+    public ParametersModel getPhysicalConstantsModel() {
+        if (physicalConstantsModel == null) {
+            physicalConstantsModel = task.getPhysicalConstantsModel();
+            //backwards compatible
+            if (task != null) {
+                physicalConstantsModel = task.getPhysicalConstantsModel();
+            } else {
+                physicalConstantsModel
+                        = SquidPersistentState.getExistingPersistentState().getTaskDesign().getPhysicalConstantsModel();
+            }
+        }
+        return physicalConstantsModel;
+    }
+
+    /**
+     * @param physicalConstantsModel the physicalConstantsModel to set
+     */
+    public void setPhysicalConstantsModel(ParametersModel physicalConstantsModel) {
+        if (task != null) {
+            task.setPhysicalConstantsModel(physicalConstantsModel);
+        }
+        this.physicalConstantsModel = physicalConstantsModel;
+    }
+
+    /**
+     * @return the commonPbModel
+     */
+    public ParametersModel getCommonPbModel() {
+        if (commonPbModel == null) {
+            //backwards compatible
+            if (task != null) {
+                commonPbModel = task.getCommonPbModel();
+            } else {
+                commonPbModel
+                        = SquidPersistentState.getExistingPersistentState().getTaskDesign().getCommonPbModel();
+            }
+        }
+        return commonPbModel;
+    }
+
+    /**
+     * @param commonPbModel the commonPbModel to set
+     */
+    public void setCommonPbModel(ParametersModel commonPbModel) {
+        if (task != null) {
+            task.setCommonPbModel(commonPbModel);
+        }
+        this.commonPbModel = commonPbModel;
+    }
+
+    /**
+     * @return the squidAllowsAutoExclusionOfSpots
+     */
+    public boolean isSquidAllowsAutoExclusionOfSpots() {
+        //backwards compatible
+        if (task != null) {
+            squidAllowsAutoExclusionOfSpots = task.isSquidAllowsAutoExclusionOfSpots();
+        }
+        return squidAllowsAutoExclusionOfSpots;
+    }
+
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the
+     * squidAllowsAutoExclusionOfSpots to set
+     */
+    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
+        if (task != null) {
+            task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+        }
+        this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
+    }
+
+    /**
+     * @return the extPErrU
+     */
+    public double getExtPErrU() {
+        //backwards compatible
+        if (task != null) {
+            extPErrU = task.getExtPErrU();
+        }
+        return extPErrU;
+    }
+
+    /**
+     * @param extPErrU the extPErrU to set
+     */
+    public void setExtPErrU(double extPErrU) {
+        if (task != null) {
+            task.setExtPErrU(extPErrU);
+        }
+        this.extPErrU = extPErrU;
+    }
+
+    /**
+     * @return the extPErrTh
+     */
+    public double getExtPErrTh() {
+        //backwards compatible
+        if (task != null) {
+            extPErrTh = task.getExtPErrTh();
+        }
+        return extPErrTh;
+    }
+
+    /**
+     * @param extPErrTh the extPErrTh to set
+     */
+    public void setExtPErrTh(double extPErrTh) {
+        if (task != null) {
+            task.setExtPErrTh(extPErrTh);
+        }
+        this.extPErrTh = extPErrTh;
+    }
+
+    /**
+     * @return the selectedIndexIsotope
+     */
+    public Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope() {
+        if (selectedIndexIsotope == null) {
+            selectedIndexIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
+        }
+        return selectedIndexIsotope;
+    }
+
+    /**
+     * @param selectedIndexIsotope the selectedIndexIsotope to set
+     */
+    public void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope) {
+        if (task != null) {
+            task.setSelectedIndexIsotope(selectedIndexIsotope);
+        }
+        this.selectedIndexIsotope = selectedIndexIsotope;
+    }
+
+    /**
+     * @return the useSBM
+     */
+    public boolean isUseSBM() {
+        //backwards compatible
+        if (task != null) {
+            useSBM = task.isUseSBM();
+        }
+        return useSBM;
+    }
+
+    /**
+     * @param useSBM the useSBM to set
+     */
+    public void setUseSBM(boolean useSBM) {
+        if (task != null) {
+            task.setUseSBM(useSBM);
+        }
+        this.useSBM = useSBM;
+    }
+
+    /**
+     * @return the userLinFits
+     */
+    public boolean isUserLinFits() {
+        //backwards compatible
+        if (task != null) {
+            userLinFits = task.isUserLinFits();
+        }
+        return userLinFits;
+    }
+
+    /**
+     * @param userLinFits the userLinFits to set
+     */
+    public void setUserLinFits(boolean userLinFits) {
+        if (task != null) {
+            task.setUserLinFits(userLinFits);
+        }
+        this.userLinFits = userLinFits;
     }
 
     @Override

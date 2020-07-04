@@ -192,7 +192,8 @@ public class PrawnFileHandlerIT {
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
         squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
-        TaskInterface task = new Task();
+        CalamariReportsEngine reportsEngine = prawnFileHandler.getReportsEngine();
+        TaskInterface task = new Task("New Task", reportsEngine);
 
         task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         task.setUseSBM(true);
@@ -200,6 +201,7 @@ public class PrawnFileHandlerIT {
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setSquidAllowsAutoExclusionOfSpots(true);
         task.setExtPErrU(0.75);
+        task.setExtPErrTh(0.75);
         task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
         task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
@@ -209,19 +211,23 @@ public class PrawnFileHandlerIT {
         List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);
 
         try {
-            prawnFileHandler.getReportsEngine().produceReports(shrimpFractions, true, false);
+            reportsEngine.produceReports(shrimpFractions, true, false);
         } catch (IOException iOException) {
         }
 
         // Dec 2018 represents temp / PROJECT / TASK / PRAWN /
+        // JUL 2020 represents temp / PROJECT / PRAWN / 6 reports plus 1 pdf file
         // NOTE: this works on MACOS because it executes before creation of .dstore files
         File targetFolder = reportsFolder.listFiles((File current, String name) -> new File(current, name).isDirectory())[0];
-        assertThat(targetFolder.listFiles()[0].listFiles()[0].listFiles()[0].listFiles()).hasSize(6); // 6 reports
+        assertThat(targetFolder.listFiles()[0].listFiles()[0].listFiles()).hasSize(7); // 6 reports plus 1 pdf
 
         // reportsFolder has produced reports
-        for (File report : targetFolder.listFiles()[0].listFiles()[0].listFiles()[0].listFiles()) {
-            File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(report.getName());
-            assertThat(report).hasSameContentAs(expectedReport);
+        for (File report : targetFolder.listFiles()[0].listFiles()[0].listFiles()) {
+            // ignore pdf files
+            if (report.getAbsolutePath().endsWith(".csv")) {
+                File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(report.getName());
+                assertThat(report).hasSameContentAs(expectedReport);
+            }
         }
     }
 

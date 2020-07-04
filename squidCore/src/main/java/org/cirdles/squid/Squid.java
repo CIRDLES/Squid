@@ -32,7 +32,6 @@ public final class Squid {
 
     public static final String VERSION;
     public static final String RELEASE_DATE;
-    public static final File DEFAULT_SQUID3_REPORTS_FOLDER;
 
     public static final StringBuilder ABOUT_WINDOW_CONTENT = new StringBuilder();
     public static final StringBuilder CONTRIBUTORS_CONTENT = new StringBuilder();
@@ -103,13 +102,6 @@ public final class Squid {
 
         } catch (IOException x) {
             System.err.format("IOException: %s%n", x);
-        }
-
-        DEFAULT_SQUID3_REPORTS_FOLDER = new File("Squid3_Reports_v" + VERSION);
-        if (!DEFAULT_SQUID3_REPORTS_FOLDER.exists()) {
-            if (!DEFAULT_SQUID3_REPORTS_FOLDER.mkdir()) {
-                //System.out.println("Failed to make Squid3 Reports folder.");
-            }
         }
     }
 }

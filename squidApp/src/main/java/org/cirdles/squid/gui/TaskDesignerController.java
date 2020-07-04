@@ -83,6 +83,7 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
 import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
@@ -247,6 +248,16 @@ public class TaskDesignerController implements Initializable {
     private void initTaskDesign() {
         taskDesigner = SquidPersistentState.getExistingPersistentState().getTaskDesign();
 
+        // update to project having parameters spring 2020
+        taskDesigner.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
+        taskDesigner.setCommonPbModel(squidProject.getCommonPbModel());
+        taskDesigner.setUseSBM(squidProject.isUseSBM());
+        taskDesigner.setUserLinFits(squidProject.isUserLinFits());
+        taskDesigner.setSelectedIndexIsotope(squidProject.getSelectedIndexIsotope());
+        taskDesigner.setSquidAllowsAutoExclusionOfSpots(squidProject.isSquidAllowsAutoExclusionOfSpots());
+        taskDesigner.setExtPErrU(squidProject.getExtPErrU());
+        taskDesigner.setExtPErrTh(squidProject.getExtPErrTh());
+
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getTaskType().getName())).setSelected(true);
 
         authorsNameTextField.setText(taskDesigner.getAuthorName());
@@ -387,7 +398,7 @@ public class TaskDesignerController implements Initializable {
 
     private void populateDirectives() {
         updateDirectiveButtons();
-        
+
         fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskDesigner.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
@@ -775,7 +786,7 @@ public class TaskDesignerController implements Initializable {
                     + " masses, but the Task Designer specifies "
                     + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
                     + ".",
-                    null);
+                    primaryStageWindow);
         }
     }
 }

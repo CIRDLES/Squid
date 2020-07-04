@@ -252,6 +252,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected List<SquidReportTableInterface> squidReportTablesRefMat;
     protected List<SquidReportTableInterface> squidReportTablesUnknown;
+    protected SquidReportTableInterface selectedRefMatReportModel;
+    protected SquidReportTableInterface selectedUnknownReportModel;
 
     protected OvercountCorrectionTypes overcountCorrectionType;
 
@@ -275,6 +277,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) {
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+        this.prawnFile = prawnFile;
+        this.reportsEngine = reportsEngine;
+
+        SquidProject squidProject = null;
+        if (reportsEngine != null) {
+            squidProject = reportsEngine.getSquidProject();
+        }
+
         this.name = name;
         this.taskSquidVersion = Squid.VERSION;
         this.taskType = taskDesign.getTaskType();
@@ -287,8 +297,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
 
-        this.useSBM = taskDesign.isUseSBM();
-        this.userLinFits = taskDesign.isUserLinFits();
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
         this.parentNuclide = taskDesign.getParentNuclide();//  "238";
@@ -316,14 +324,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.concentrationReferenceMaterialSpots = new ArrayList<>();
         this.unknownSpots = new ArrayList<>();
 
-        this.prawnFile = prawnFile;
-        this.reportsEngine = reportsEngine;
-
         this.changed = true;
         SquidProject.setProjectChanged(true);
 
         this.useCalculatedAv_ParentElement_ConcenConst = false;
-        this.selectedIndexIsotope = taskDesign.getSelectedIndexIsotope();
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -336,19 +340,31 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.prawnChanged = false;
 
-        this.squidAllowsAutoExclusionOfSpots = taskDesign.isSquidAllowsAutoExclusionOfSpots();
+        this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
+        if (squidProject != null) {
+            this.useSBM = squidProject.isUseSBM();
+            this.userLinFits = squidProject.isUserLinFits();
+            this.selectedIndexIsotope = squidProject.getSelectedIndexIsotope();
+            this.squidAllowsAutoExclusionOfSpots = squidProject.isSquidAllowsAutoExclusionOfSpots();
+            this.extPErrU = squidProject.getExtPErrU();
+            this.extPErrTh = squidProject.getExtPErrTh();
+            this.physicalConstantsModel = squidProject.getPhysicalConstantsModel();
+            this.commonPbModel = squidProject.getCommonPbModel();
+            this.delimiterForUnknownNames = squidProject.getDelimiterForUnknownNames();
+        } else {
+            this.useSBM = taskDesign.isUseSBM();
+            this.userLinFits = taskDesign.isUserLinFits();
+            this.selectedIndexIsotope = taskDesign.getSelectedIndexIsotope();
+            this.squidAllowsAutoExclusionOfSpots = taskDesign.isSquidAllowsAutoExclusionOfSpots();
+            this.extPErrU = taskDesign.getExtPErrU();
+            this.extPErrTh = taskDesign.getExtPErrTh();
+            this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
+            this.commonPbModel = taskDesign.getCommonPbModel();
+            this.delimiterForUnknownNames = taskDesign.getDelimiterForUnknownNames();
+        }
 
-        this.extPErrU = taskDesign.getExtPErrU();
-        this.extPErrTh = taskDesign.getExtPErrTh();
-
-        this.physicalConstantsModel = taskDesign.getPhysicalConstantsModel();
         this.referenceMaterialModel = new ReferenceMaterialModel();
         this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
-        this.commonPbModel = taskDesign.getCommonPbModel();
-
-        this.specialSquidFourExpressionsMap = taskDesign.getSpecialSquidFourExpressionsMap();
-
-        this.delimiterForUnknownNames = taskDesign.getDelimiterForUnknownNames();
 
         this.physicalConstantsModelChanged = false;
         this.referenceMaterialModelChanged = false;
@@ -365,6 +381,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         this.squidReportTablesRefMat = new ArrayList<>();
         this.squidReportTablesUnknown = new ArrayList<>();
+        this.selectedRefMatReportModel = null;
+        this.selectedUnknownReportModel = null;
 
         this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
 
@@ -593,6 +611,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
         taskExpressionsOrdered.addAll(samRadiogenicCols);
 
+        // uses complex comparator in expression
         Collections.sort(taskExpressionsOrdered);
     }
 
@@ -1058,7 +1077,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * The original Calamari Reports
      */
     @Override
-    public File produceSanityReportsToFiles() {
+    public File producePerScanReportsToFiles() {
         File retVal = null;
         if (unknownSpots.size() > 0) {
             try {
@@ -2434,10 +2453,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (squidReportTablesRefMat.isEmpty()) {
             squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
+            selectedRefMatReportModel = squidReportTablesRefMat.get(0);
         }
 
         if (squidReportTablesUnknown.isEmpty()) {
             squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
+            selectedUnknownReportModel = squidReportTablesUnknown.get(0);
         }
 
         return initSquidWeightedMeanPlotSortTable();
@@ -3374,6 +3395,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown) {
         this.squidReportTablesUnknown = squidReportTablesUnknown;
+    }
+
+    /**
+     * @return the selectedRefMatReportModel
+     */
+    public SquidReportTableInterface getSelectedRefMatReportModel() {
+        return selectedRefMatReportModel;
+    }
+
+    /**
+     * @param selectedRefMatReportModel the selectedRefMatReportModel to set
+     */
+    public void setSelectedRefMatReportModel(SquidReportTableInterface selectedRefMatReportModel) {
+        this.selectedRefMatReportModel = selectedRefMatReportModel;
+    }
+
+    /**
+     * @return the selectedUnknownReportModel
+     */
+    public SquidReportTableInterface getSelectedUnknownReportModel() {
+        return selectedUnknownReportModel;
+    }
+
+    /**
+     * @param selectedUnknownReportModel the selectedUnknownReportModel to set
+     */
+    public void setSelectedUnknownReportModel(SquidReportTableInterface selectedUnknownReportModel) {
+        this.selectedUnknownReportModel = selectedUnknownReportModel;
     }
 
     /**

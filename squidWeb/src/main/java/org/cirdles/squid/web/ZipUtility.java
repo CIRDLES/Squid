@@ -81,6 +81,7 @@ public class ZipUtility {
     public static Path extractZippedFile(File inFile, File destination) throws IOException {
         File outFile = null;
         OutputStream out = null;
+        Path retVal = null;
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(inFile))) {
             //open infile for reading
             ZipEntry entry;
@@ -103,12 +104,13 @@ public class ZipUtility {
                     //close outFile
                     if (out != null) {
                         out.close();
+                        retVal = Paths.get(outFile.getPath());
                     }
                 }
             }
         }
 
-        return Paths.get(outFile.getPath());
+        return retVal;
 
     }
 }

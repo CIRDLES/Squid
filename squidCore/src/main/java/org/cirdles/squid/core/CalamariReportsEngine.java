@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.core;
 
-import org.cirdles.squid.Squid;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.DateHelper;
 import org.cirdles.squid.projects.SquidProject;
@@ -42,6 +41,7 @@ import java.util.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.util.Arrays.asList;
+import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
@@ -94,7 +94,7 @@ public class CalamariReportsEngine implements Serializable {
         this.reportParameterValues = "";
         this.reportNamePrefix = "";
 
-        this.folderToWriteCalamariReports = Squid.DEFAULT_SQUID3_REPORTS_FOLDER;
+        this.folderToWriteCalamariReports = null;
         this.nameOfPrawnSourceFile = "";
 
         this.refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
@@ -131,7 +131,7 @@ public class CalamariReportsEngine implements Serializable {
     /**
      * ReportsEngine to test results
      *
-     * @param shrimpFractions    the value of shrimpFractions
+     * @param shrimpFractions the value of shrimpFractions
      * @param doWriteReportFiles
      * @param summaryOnly
      * @throws java.io.IOException
@@ -143,6 +143,12 @@ public class CalamariReportsEngine implements Serializable {
 
             produceReports(shrimpFractions, shrimpFractionUnknown, shrimpFractionUnknown, doWriteReportFiles, summaryOnly);
         }
+    }
+
+    private String makeReportFolderStructure() {
+        return File.separator + "Squid3ProjectReports-" + squidProject.getProjectName().replaceAll("\\s", "_")
+                //                + File.separator + "TASK-" + squidProject.getTask().getName()
+                + File.separator;
     }
 
     /**
@@ -157,6 +163,7 @@ public class CalamariReportsEngine implements Serializable {
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             ShrimpFraction shrimpFractionUnknown, ShrimpFraction shrimpFractionRefMat,
             boolean doWriteReportFiles, boolean summaryOnly) throws IOException {
+
         File retVal = null;
 
         this.doWriteReportFiles = doWriteReportFiles;
@@ -176,9 +183,9 @@ public class CalamariReportsEngine implements Serializable {
         if (doWriteReportFiles) {
             folderToWriteCalamariReportsPath
                     = folderToWriteCalamariReports.getCanonicalPath()
-                    + File.separator + "PROJECT-" + squidProject.getProjectName()
-                    + File.separator + "TASK-" + squidProject.getTask().getName()
-                    + File.separator + "PRAWN-" + nameOfPrawnSourceFile
+                    + makeReportFolderStructure()
+                    //                    + "PRAWN-" + nameOfPrawnSourceFile
+                    + squidProject.getProjectName().replaceAll("\\s", "_") + "_PerScan"
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
@@ -187,6 +194,17 @@ public class CalamariReportsEngine implements Serializable {
                 throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
             }
             retVal = reportsFolder;
+        }
+
+        // get docs for folder
+        Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/SquidPerScanReportsDocumentation.pdf");
+        Path newFile = Paths.get(folderToWriteCalamariReportsPath, "SquidPerScanReportsDocumentation.pdf");
+        try (OutputStream os = new FileOutputStream(newFile.toFile())) {
+
+            Files.copy(resourcePath, os);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -948,7 +966,7 @@ public class CalamariReportsEngine implements Serializable {
                 break;
 
             default:
-                // throw exception
+            // throw exception
         }
 
         return report.toString();
@@ -957,9 +975,7 @@ public class CalamariReportsEngine implements Serializable {
     public File writeReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -974,9 +990,7 @@ public class CalamariReportsEngine implements Serializable {
     public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -988,8 +1002,15 @@ public class CalamariReportsEngine implements Serializable {
         return reportTableFile;
     }
 
-    public File writeSummaryReportsForUnknowns(String baseSummaryCalcName) throws IOException {
-        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+    /**
+     *
+     * @throws IOException
+     */
+    public File writeSummaryReportsForUnknowns() throws IOException {
+        File reportFile = getFileForSummaryCalc(
+                squidProject.getProjectName()
+                + "_UnknownsSummaryReport"
+                + ".csv");
         PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> unknownExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
@@ -1005,8 +1026,16 @@ public class CalamariReportsEngine implements Serializable {
         return reportFile;
     }
 
-    public File writeSummaryReportsForReferenceMaterials(String baseSummaryCalcName) throws IOException {
-        File reportFile = getFileForSummaryCalc(baseSummaryCalcName);
+    /**
+     *
+     * @throws IOException
+     * @return the java.io.File
+     */
+    public File writeSummaryReportsForReferenceMaterials() throws IOException {
+        File reportFile = getFileForSummaryCalc(
+                squidProject.getProjectName()
+                + "_RefMatSummaryReport"
+                + ".csv");
         PrintWriter writer = new PrintWriter(reportFile, "UTF-8");
         List<Expression> refMatExpressions = new ArrayList<>();
         for (Expression exp : squidProject.getTask().getTaskExpressionsOrdered()) {
@@ -1047,10 +1076,10 @@ public class CalamariReportsEngine implements Serializable {
             writer.println(val.getModelNameWithVersion());
             writer.println("name, value, one sigma ABS, one sigma PCT");
             Arrays.asList(val.getValues()).forEach(valueModel -> writer.println(
-                    valueModel.getName() + "," +
-                            valueModel.getValue() + ", " +
-                            valueModel.getOneSigmaABS().doubleValue() + ", " +
-                            valueModel.getOneSigmaPCT().doubleValue()));
+                    valueModel.getName() + ","
+                    + valueModel.getValue() + ", "
+                    + valueModel.getOneSigmaABS().doubleValue() + ", "
+                    + valueModel.getOneSigmaPCT().doubleValue()));
         });
 
         writer.flush();
@@ -1122,9 +1151,7 @@ public class CalamariReportsEngine implements Serializable {
     private File getFileForSummaryCalc(String baseSummaryCalcName) throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
         }
@@ -1132,47 +1159,18 @@ public class CalamariReportsEngine implements Serializable {
         return reportFile;
     }
 
-    public File writeTaskSummaryFile() throws IOException {
-        String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator;
-        File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
-
-        File reportTableFile = new File(reportsPath + "TaskSummary.txt");
-
-        PrintWriter outputWriter;
-
-        try {
-            outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));          
-            outputWriter.write(squidProject.getTask().printTaskSummary());
-            outputWriter.flush();
-            outputWriter.close();
-
-        } catch (IOException iOException) {
-        }
-
-        return reportTableFile;
-    }
-
     public File writeTaskAudit() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator + "TASK-" + squidProject.getTask().getName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "Task_Audit_" + DateHelper.getCurrentDate() + ".txt");
+        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_TaskAudit.txt");
 
-        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
         outputWriter.write(squidProject.getTask().printTaskAudit());
         outputWriter.flush();
         outputWriter.close();
@@ -1183,16 +1181,15 @@ public class CalamariReportsEngine implements Serializable {
     public File writeProjectAudit() throws IOException {
         String reportsPath
                 = folderToWriteCalamariReports.getCanonicalPath()
-                + File.separator + "PROJECT-" + squidProject.getProjectName()
-                + File.separator;
+                + makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + "Project_Audit_" + DateHelper.getCurrentDate() + ".txt");
+        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_ProjectAudit.txt");
 
-        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));//             new FileWriter(reportTableFile));
+        PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
         outputWriter.write(squidProject.printProjectAudit());
         outputWriter.flush();
         outputWriter.close();
@@ -1201,11 +1198,8 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     public String getWeightedMeansReportPath() throws IOException {
-        return
-                folderToWriteCalamariReports.getCanonicalPath()
-                        + File.separator + "PROJECT-" + squidProject.getProjectName()
-                        + File.separator + "TASK-" + squidProject.getTask().getName()
-                        + File.separator;
+        return folderToWriteCalamariReports.getCanonicalPath()
+                + makeReportFolderStructure();
     }
 
     public File getWeightedMeansReportFile(String baseReportTableName) throws IOException {
@@ -1216,7 +1210,6 @@ public class CalamariReportsEngine implements Serializable {
 
         return reportPath.toFile();
     }
-
 
     public File writeSquidWeightedMeanReportToFile(String weightedMeanReport, String baseReportTableName, boolean doAppend)
             throws IOException {
@@ -1231,7 +1224,7 @@ public class CalamariReportsEngine implements Serializable {
         }
         OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(reportTableFile.getAbsolutePath()),
                 (doAppend ? StandardOpenOption.APPEND : StandardOpenOption.CREATE)));
-       if (!doAppend) {
+        if (!doAppend) {
             out.write((makeWeightedMeanReportHeaderAsCSV() + System.lineSeparator()).getBytes(UTF_8));
         }
         out.write((weightedMeanReport + System.lineSeparator()).getBytes(UTF_8));
@@ -1241,7 +1234,7 @@ public class CalamariReportsEngine implements Serializable {
 
     /**
      * @param aFolderToWriteCalamariReports the folderToWriteCalamariReports to
-     *                                      set
+     * set
      */
     public void setFolderToWriteCalamariReports(File aFolderToWriteCalamariReports) {
         folderToWriteCalamariReports = aFolderToWriteCalamariReports;

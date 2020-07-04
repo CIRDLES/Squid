@@ -20,7 +20,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
@@ -38,12 +40,17 @@ public class ReducedDataReportManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-      
+
         reportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
-         // todo: fix demeters law violation
-        squidProject.getTask().produceSummaryReportsForGUI();
-        reportTextArea.setText(
-                squidProject.getPrawnFileHandler().getReportsEngine()
-                        .produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
+        if (squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+            // TODO: fix demeters law violation
+            squidProject.getTask().produceSummaryReportsForGUI();
+            reportTextArea.setText(
+                    squidProject.getPrawnFileHandler().getReportsEngine()
+                            .produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
+        } else {
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+                    primaryStageWindow);
+        }
     }
 }
