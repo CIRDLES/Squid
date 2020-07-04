@@ -75,6 +75,8 @@ import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -88,6 +90,7 @@ import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.prawn.PrawnFile;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
 /**
  * FXML Controller class
@@ -218,6 +221,8 @@ public class SquidUIController implements Initializable {
     public boolean runSaveMenuDisableCheck;
     @FXML
     private Menu commonPbMenu;
+    @FXML
+    private MenuItem newSquidProjectFromZippedPrawnMenuItem;
 
     /**
      * Initializes the controller class.
@@ -251,6 +256,7 @@ public class SquidUIController implements Initializable {
 
         // Squid project menu items
         newSquidProjectMenuItem.setDisable(false);
+        newSquidProjectFromZippedPrawnMenuItem.setDisable(false);
         newSquidProjectByJoinMenuItem.setDisable(false);
         openSquidProjectMenuItem.setDisable(false);
         buildProjectMenuMRU();
@@ -512,7 +518,7 @@ public class SquidUIController implements Initializable {
         if (file != null) {
             squidProject.setupPrawnOPFile(file);
             squidProject.autoDivideSamples();
-            //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+            //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
             SquidUI.updateStageTitle("");
             launchProjectManager();
             saveSquidProjectMenuItem.setDisable(true);
@@ -526,15 +532,52 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
+    private void newSquidProjectFromZippedPrawnAction(ActionEvent event) {
+        prepareForNewProject();
+
+        try {
+            File prawnZippedSourceFile = FileHandler.selectZippedPrawnXMLFile(primaryStageWindow);
+            if (prawnZippedSourceFile != null) {
+                
+                Path prawnFilePathParent = prawnZippedSourceFile.toPath().getParent();
+                Path prawnFilePath = extractZippedFile(prawnZippedSourceFile, prawnFilePathParent.toFile());
+         
+                File prawnSourceFileNew = prawnFilePath.toFile();
+                
+                squidProject.setupPrawnXMLFile(prawnSourceFileNew);
+                squidProject.autoDivideSamples();
+                squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+                SquidUI.updateStageTitle("");
+                launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
+                customizeDataMenu();
+            } else {
+                squidProject.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
+            }
+        } catch (IOException | JAXBException | SAXException | SquidException anException) {
+            String message = anException.getMessage();
+            if (message == null) {
+                message = anException.getCause().getMessage();
+            }
+
+            SquidMessageDialog.showWarningDialog(
+                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    + message,
+                    primaryStageWindow);
+        }
+    }
+
+    @FXML
     private void newSquidProjectAction(ActionEvent event) {
         prepareForNewProject();
 
         try {
-            File prawnSourceFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
-            if (prawnSourceFileNew != null) {
-                squidProject.setupPrawnXMLFile(prawnSourceFileNew);
+            File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
+            if (prawnSourceFile != null) {
+                squidProject.setupPrawnXMLFile(prawnSourceFile);
                 squidProject.autoDivideSamples();
-                squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+                squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(true);
@@ -1204,7 +1247,6 @@ public class SquidUIController implements Initializable {
         BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
     }
 
-    
     @FXML
     private void producePerScanReportsAction(ActionEvent event) {
         if (!squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
@@ -1324,7 +1366,6 @@ public class SquidUIController implements Initializable {
                 squidProject.produceUnknownsBySampleForETReduxCSV(true);
                 squidProject.produceSelectedUnknownsReportCSV();
                 squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
-
 
                 squidProject.getTask().producePerScanReportsToFiles();
                 SquidMessageDialog.showSavedAsDialog(projectAuditFile.getParentFile(), primaryStageWindow);

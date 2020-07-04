@@ -25,6 +25,7 @@
                         <Menu mnemonicParsing="false" text="New Squid Project">
                             <items>
                                 <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
+                        <MenuItem fx:id="newSquidProjectFromZippedPrawnMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromZippedPrawnAction" text="From a single Zipped Prawn XML file" />
                                 <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
                                 <SeparatorMenuItem />
                                 <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File" />

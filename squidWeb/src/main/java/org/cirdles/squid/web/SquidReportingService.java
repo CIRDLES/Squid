@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.web;
 
+import org.cirdles.squid.utilities.fileUtilities.ZipUtility;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +50,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
-import static org.cirdles.squid.web.ZipUtility.extractZippedFile;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 import org.xml.sax.SAXException;
 
 /**
@@ -146,7 +147,7 @@ public class SquidReportingService {
             task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
-            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve("Squid3 Reports from Web Service");
+            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve("Squid3ReportsFromWebService");
             File reportsDestinationFile = calamariReportsFolderAlias.toFile();
 
             reportsEngine = prawnFileHandler.getReportsEngine();
