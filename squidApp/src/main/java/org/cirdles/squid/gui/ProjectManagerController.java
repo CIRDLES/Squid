@@ -240,7 +240,7 @@ public class ProjectManagerController implements Initializable {
         autoExcludeSpotsCheckBox.setSelected(squidProject.isSquidAllowsAutoExclusionOfSpots());
 
         SpinnerValueFactory<Double> valueFactoryU
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrU(), 0.05);
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
         assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable,
                 Double oldValue, Double newValue) -> {
@@ -250,7 +250,7 @@ public class ProjectManagerController implements Initializable {
         });
 
         SpinnerValueFactory<Double> valueFactoryTh
-                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.50, 1.00, task.getExtPErrTh(), 0.05);
+                = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrTh(), 0.05);
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
         assignedExternalErrThSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
                 Double oldValue, Double newValue) -> {
