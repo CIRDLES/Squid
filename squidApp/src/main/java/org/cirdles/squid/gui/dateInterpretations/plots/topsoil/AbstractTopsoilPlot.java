@@ -132,10 +132,11 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
     @Override
     public List<Node> toolbarControlsFactory() {
-        Text loadingIndicator = new Text("Loading...");
-        loadingIndicator.visibleProperty().bind(isLoading);
+//        Text loadingIndicator = new Text("Loading...");
+//        loadingIndicator.visibleProperty().bind(isLoading);
 
         Button saveToSVGButton = new Button("Save as SVG");
+        saveToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 2 2 2 2;");
         saveToSVGButton.setOnAction(mouseEvent -> {
             if (plot == null) {
                 // Plot has not been displayed
@@ -151,6 +152,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         });
 
         Button recenterButton = new Button("Re-center");
+        recenterButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 2 2 2 2;");
         recenterButton.setOnAction(mouseEvent -> {
             if (plot != null) {
                 plot.call(PlotFunction.Scatter.RECENTER);
@@ -158,7 +160,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         });
 
         List<Node> controls = new ArrayList<>(Arrays.asList(
-                loadingIndicator,
+//                loadingIndicator,
                 saveToSVGButton,
                 recenterButton
         ));
