@@ -400,6 +400,8 @@ public class ProjectManagerController implements Initializable {
 
         taskDesign.setPhysicalConstantsModel(physConstModelComboBox.getValue());
         taskDesign.setCommonPbModel(commonPbModelComboBox.getValue());
+        
+        taskDesign.setAnalystName(analystNameText.getText());
 
         SquidUIController.squidPersistentState.updateSquidPersistentState();
     }

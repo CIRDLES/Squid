@@ -135,7 +135,6 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
-import org.cirdles.squid.tasks.expressions.operations.Value;
 
 /**
  *

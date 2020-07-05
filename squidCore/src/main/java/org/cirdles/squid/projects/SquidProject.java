@@ -120,6 +120,7 @@ public final class SquidProject implements Serializable {
         this.selectedIndexIsotope = taskDesignDefault.getSelectedIndexIsotope();
         this.useSBM = taskDesignDefault.isUseSBM();
         this.userLinFits = taskDesignDefault.isUserLinFits();
+        this.analystName = taskDesignDefault.getAnalystName();
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
         this.task.setReferenceMaterialModel(this.referenceMaterialModel);
