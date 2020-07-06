@@ -183,8 +183,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
-        xAxisExpressionName = "LnPbU";
-        yAxisExpressionName = "LnUOU";
+        xAxisExpressionName = "Choose X";
+        yAxisExpressionName = "Choose Y";
 
         showActivePlot();
     }

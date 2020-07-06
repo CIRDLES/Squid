@@ -89,7 +89,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         }
     }
 
-    private BooleanProperty isLoading = new SimpleBooleanProperty(false);
+//    private BooleanProperty isLoading = new SimpleBooleanProperty(false);
 
     public AbstractTopsoilPlot() {
         this.hasUncertainties = true;
@@ -118,8 +118,8 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
             PlotOptions myPlotOptions = new PlotOptions(options.get());
             plot = new PlotView(PlotType.SCATTER, myPlotOptions, getData());
             CompletableFuture<Void> loadFuture = plot.getLoadFuture();
-            isLoading.set(!loadFuture.isDone());
-            loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
+//            isLoading.set(!loadFuture.isDone());
+//            loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
             dataEntries.addListener((ListChangeListener<DataEntry>) c -> {
                 plot.setData(dataEntries);
             });
