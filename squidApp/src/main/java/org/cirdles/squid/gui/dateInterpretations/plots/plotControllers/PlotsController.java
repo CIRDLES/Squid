@@ -825,9 +825,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     public String toString(TreeItem<SampleTreeNodeInterface> object) {
                         SampleTreeNodeInterface item = object.getValue();
 
-                        String displayVal = "";
+                        String displayVal = item.getNodeName();
                         try {
-                            displayVal = item.getNodeName()
+                            displayVal = displayVal
                                     + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
                         } catch (Exception e) {
                         }
@@ -883,11 +883,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             } else {
                                 setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
                             }
+                            
+                            String displayVal = item.getNodeName();
                             try {
-                                setText(item.getNodeName()
-                                        + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName()));
+                                displayVal = displayVal 
+                                        + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
                             } catch (Exception e) {
                             }
+                            setText(displayVal);
                         }
                     }
 
