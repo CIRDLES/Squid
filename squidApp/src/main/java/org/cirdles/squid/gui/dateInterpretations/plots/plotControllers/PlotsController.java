@@ -551,8 +551,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
             List<Map<String, Object>> myData = new ArrayList<>();
 
-            PlotDisplayInterface myPlotTry = 
-                    mapOfPlotsOfSpotSets.get(sampleItem.getValue().getNodeName() + xAxisExpressionName + yAxisExpressionName);
+            PlotDisplayInterface myPlotTry
+                    = mapOfPlotsOfSpotSets.get(sampleItem.getValue().getNodeName() + xAxisExpressionName + yAxisExpressionName);
 
             if (myPlotTry == null) {
                 myPlotTry = generateAnyTwoPlot(
@@ -883,10 +883,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             } else {
                                 setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
                             }
-                            
+
                             String displayVal = item.getNodeName();
                             try {
-                                displayVal = displayVal 
+                                displayVal = displayVal
                                         + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
                             } catch (Exception e) {
                             }
@@ -936,39 +936,43 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                 SampleTreeNodeInterface item = object.getValue();
                 // the goal is to show the nodename + weightedMean source + value of sorting choice if different
+                String nodeStringWM = "";
+                if (object.getParent() != null) {
 
-                String wmExpressionName
-                        = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
-                double[][] wmExpressionValues;
-                if (stringIsSquidRatio(wmExpressionName)) {
-                    // ratio case
-                    wmExpressionValues
-                            = Arrays.stream(item.getShrimpFraction()
-                                    .getIsotopicRatioValuesByStringName(wmExpressionName)).toArray(double[][]::new);
-                } else {
-                    wmExpressionValues = item.getShrimpFraction()
-                            .getTaskExpressionsEvaluationsPerSpotByField(wmExpressionName);
-                }
+                    String wmExpressionName
+                            = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
+                    double[][] wmExpressionValues;
+                    if (stringIsSquidRatio(wmExpressionName)) {
+                        // ratio case
+                        wmExpressionValues
+                                = Arrays.stream(item.getShrimpFraction()
+                                        .getIsotopicRatioValuesByStringName(wmExpressionName)).toArray(double[][]::new);
+                    } else {
+                        wmExpressionValues = item.getShrimpFraction()
+                                .getTaskExpressionsEvaluationsPerSpotByField(wmExpressionName);
+                    }
 
-                String ageOrValueSourceOfWM;
-                double uncertainty = 0.0;
-                if (wmExpressionValues[0].length > 1) {
-                    uncertainty = wmExpressionValues[0][1];
-                }
-                if (wmExpressionName.endsWith("Age")) {
-                    ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], uncertainty);
-                } else {
-                    ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], uncertainty);
-                }
-                String nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
+                    String ageOrValueSourceOfWM;
+                    double uncertainty = 0.0;
+                    if (wmExpressionValues[0].length > 1) {
+                        uncertainty = wmExpressionValues[0][1];
+                    }
+                    if (wmExpressionName.endsWith("Age")) {
+                        ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], uncertainty);
+                    } else {
+                        ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], uncertainty);
+                    }
+                    nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
 
-                String sortingExpression = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
-                // check to see if sorted by same field              
-                if ((item instanceof WeightedMeanSpotNode)
-                        && (wmExpressionName.compareToIgnoreCase(sortingExpression) != 0)) {
-                    nodeStringWM += prettyPrintSortedWM(item.getShrimpFraction(), sortingExpression);
+                    String sortingExpression = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
+                    // check to see if sorted by same field              
+                    if ((item instanceof WeightedMeanSpotNode)
+                            && (wmExpressionName.compareToIgnoreCase(sortingExpression) != 0)) {
+                        nodeStringWM += prettyPrintSortedWM(item.getShrimpFraction(), sortingExpression);
+                    }
+
                 }
-                return (object.getParent() == null) ? "" : (item instanceof SampleNode) ? "" : nodeStringWM;
+                return (object.getParent() == null) ? ((SampleNode) object.getValue()).getNodeName() : (item instanceof SampleNode) ? "" : nodeStringWM;
             }
 
             @Override
