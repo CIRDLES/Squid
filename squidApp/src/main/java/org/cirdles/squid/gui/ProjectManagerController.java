@@ -32,6 +32,8 @@ import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.HBox;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -66,10 +68,6 @@ public class ProjectManagerController implements Initializable {
     private Label loginCommentLabel;
     @FXML
     private Label titleLabel;
-    @FXML
-    private GridPane projectManagerGridPane;
-    @FXML
-    private Label softwareVersionLabel1;
     @FXML
     private TextField squidFileNameText;
     @FXML
@@ -113,6 +111,18 @@ public class ProjectManagerController implements Initializable {
     private TaskDesign taskDesign;
     @FXML
     private ToggleGroup toggleGroupIsotope;
+    @FXML
+    private Label projectModeLabel;
+    @FXML
+    private Label specifyDefaultCommonPbLabel;
+    @FXML
+    private Label preferredIndexIsotopeLabel;
+    @FXML
+    private HBox isotopeHBox;
+    @FXML
+    private HBox weightedMeansHBox;
+    @FXML
+    private Label weightedMeanRefMatLabel;
 
     /**
      * Initializes the controller class.
@@ -122,6 +132,7 @@ public class ProjectManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        projectModeLabel.setText(squidProject.getProjectType().getProjectName() + " Mode");
         task = squidProject.getTask();
         taskDesign = SquidUIController.squidPersistentState.getTaskDesign();
 
@@ -141,6 +152,11 @@ public class ProjectManagerController implements Initializable {
         }
 
         orignalPrawnFileName.setEditable(false);
+        
+        preferredIndexIsotopeLabel.setVisible(squidProject.isTypeGeochron());
+        isotopeHBox.setVisible(squidProject.isTypeGeochron());
+        weightedMeansHBox.setVisible(squidProject.isTypeGeochron());
+        weightedMeanRefMatLabel.setVisible(squidProject.isTypeGeochron());
 
         setupListeners();
 
@@ -169,20 +185,25 @@ public class ProjectManagerController implements Initializable {
                     }
                 });
 
-        // CommonPbModels
-        commonPbModelComboBox.setConverter(new ParameterModelStringConverter());
-        commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
-        commonPbModelComboBox.getSelectionModel().select(squidProject.getCommonPbModel());
+        if (squidProject.isTypeGeochron()) {
+            // CommonPbModels
+            commonPbModelComboBox.setConverter(new ParameterModelStringConverter());
+            commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
+            commonPbModelComboBox.getSelectionModel().select(squidProject.getCommonPbModel());
 
-        commonPbModelComboBox.valueProperty()
-                .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    squidProject.setCommonPbModel(newValue);
-                    SquidProject.setProjectChanged(true);
-                    task.setChanged(true);
-                    if (task.getReferenceMaterialSpots().size() > 0) {
-                        task.setupSquidSessionSpecsAndReduceAndReport(false);
-                    }
-                });
+            commonPbModelComboBox.valueProperty()
+                    .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
+                        squidProject.setCommonPbModel(newValue);
+                        SquidProject.setProjectChanged(true);
+                        task.setChanged(true);
+                        if (task.getReferenceMaterialSpots().size() > 0) {
+                            task.setupSquidSessionSpecsAndReduceAndReport(false);
+                        }
+                    });
+        } else {
+            specifyDefaultCommonPbLabel.setVisible(false);
+            commonPbModelComboBox.setVisible(false);
+        }
     }
 
     static class ParameterModelStringConverter extends StringConverter<ParametersModel> {
@@ -400,7 +421,7 @@ public class ProjectManagerController implements Initializable {
 
         taskDesign.setPhysicalConstantsModel(physConstModelComboBox.getValue());
         taskDesign.setCommonPbModel(commonPbModelComboBox.getValue());
-        
+
         taskDesign.setAnalystName(analystNameText.getText());
 
         SquidUIController.squidPersistentState.updateSquidPersistentState();
@@ -408,7 +429,7 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void refreshModelsAction(ActionEvent event) {
-        task.refreshParametersFromModels(true, true, false);
+        task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
     }
 
 }

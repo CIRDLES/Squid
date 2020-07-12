@@ -833,7 +833,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filterForConcRefMatSpotNames,
                         filtersForUnknownNames);
 
-                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() != 2;
+                // temporary hack because of switch to 1-based spotIndex
+//                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() != 2;
             }
 
             if (requiresChanges || prawnChanged || forceReprocess) {
@@ -1492,7 +1493,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         if (indexOfTaskBackgroundMass == index) {
                             massStationDetail.setTaskIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
                         } else {
-                            massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                            try {
+                                massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
+                            } catch (Exception e) {
+                                //TODO: more robust handling for tasks without enough masses
+                            }
                         }
                         index++;
                     }
@@ -1505,6 +1510,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     massStationDetail.setuThBearingName(ssm.getuThBearingName());
 
                     massStationDetail.setViewedAsGraph(ssm.isViewedAsGraph());
+
+                    massStationDetail.setNumeratorRole(ssm.isNumeratorRole());
+                    massStationDetail.setDenominatorRole(ssm.isDenominatorRole());
                 }
             } else {
                 buildSquidSpeciesModelListFromMassStationDetails();
@@ -1550,6 +1558,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
             }
             index++;
+        }
+    }
+    
+    public void applyTaskIsotopeRatioRolesToSquidSpeciesModels(MassStationDetail massStationDetail){
+        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+            if (ssm.getMassStationIndex() == massStationDetail.getMassStationIndex()){
+                ssm.setNumeratorRole(massStationDetail.isNumeratorRole());
+                ssm.setDenominatorRole(massStationDetail.isDenominatorRole());
+                break;
+            }
         }
     }
 
@@ -2314,6 +2332,30 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
         ratioNames = revisedRatioNames;
+    }
+
+    /**
+     * Performs update to set all numerator and denominator flags to true if all
+     * are false for backward compatibility.
+     */
+    public void updateSquidSpeciesModels() {
+        boolean detectTrueNumerator = false;
+        boolean detectTrueDenominator = false;
+        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+            detectTrueNumerator = detectTrueNumerator || ssm.isNumeratorRole();
+            detectTrueDenominator = detectTrueDenominator || ssm.isDenominatorRole();
+        }
+
+        if (!(detectTrueNumerator && detectTrueDenominator)) {
+            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                ssm.setNumeratorRole(true);
+                ssm.setDenominatorRole(true);
+
+                MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                massStationDetail.setNumeratorRole(true);
+                massStationDetail.setDenominatorRole(true);
+            }
+        }
     }
 
     public void buildExpressionDependencyGraphs() {

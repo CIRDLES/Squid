@@ -409,6 +409,9 @@ public class PrawnFileRunFractionParser {
         for (int scanNum = 0; scanNum < nScans; scanNum++) {
             for (int speciesMeasurementIndex = 0; speciesMeasurementIndex < nSpecies; speciesMeasurementIndex++) {
                 if (speciesMeasurementIndex != indexOfBackgroundSpecies) {
+                    
+                    // July 2020 bug fix for no background case: indexOfBackgroundSpecies = -1
+                    int operativeIndexOfBackgroundSpecies = (indexOfBackgroundSpecies <  0) ? speciesMeasurementIndex : indexOfBackgroundSpecies;
                     // correct PeakCps to NetPkCps
                     pkNetCps[scanNum][speciesMeasurementIndex] = pkCps[scanNum][speciesMeasurementIndex] - backgroundCps;
                     sumOfCorrectedPeaks[speciesMeasurementIndex] += pkNetCps[scanNum][speciesMeasurementIndex];
@@ -417,7 +420,7 @@ public class PrawnFileRunFractionParser {
                     if (absNetPeakCps > 1.0e-6) {
                         double calcVariance
                                 = totalCounts[scanNum][speciesMeasurementIndex]//
-                                + (Math.abs(backgroundCps) * Math.pow(countTimeSec[speciesMeasurementIndex] / countTimeSec[indexOfBackgroundSpecies], 2));
+                                + (Math.abs(backgroundCps) * Math.pow(countTimeSec[speciesMeasurementIndex] / countTimeSec[operativeIndexOfBackgroundSpecies], 2));
                         pkFerr[scanNum][speciesMeasurementIndex]
                                 = Math.sqrt(calcVariance) / absNetPeakCps / countTimeSec[speciesMeasurementIndex];
                     } else {

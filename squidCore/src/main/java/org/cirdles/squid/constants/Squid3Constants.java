@@ -139,17 +139,26 @@ public final class Squid3Constants {
     }
 
     public enum TaskTypeEnum {
-        GEOCHRON("GEOCHRON"),
-        GENERAL("GENERAL");
+        GEOCHRON("GEOCHRON", "Geochron"),
+        GENERAL("GENERAL", "Ratio");
 
         private final String name;
+        private final String projectName;
 
-        private TaskTypeEnum(String name) {
+        private TaskTypeEnum(String name, String projectName) {
             this.name = name;
+            this.projectName = projectName;
         }
 
         public String getName() {
             return name;
+        }
+
+        /**
+         * @return the projectName
+         */
+        public String getProjectName() {
+            return projectName;
         }
     }
 

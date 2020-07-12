@@ -26,6 +26,9 @@ import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -49,7 +52,9 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
@@ -94,7 +99,14 @@ public final class SquidProject implements Serializable {
     private boolean useSBM;
     private boolean userLinFits;
 
-    public SquidProject() {
+    private TaskTypeEnum projectType;
+
+    /**
+     *
+     * @param projectType the value of projectType
+     */
+    public SquidProject(TaskTypeEnum projectType) {
+        this.projectType = projectType;
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
         this.prawnSourceFile = new File("");
@@ -105,7 +117,7 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        this.projectChanged = false;
+        SquidProject.projectChanged = false;
 
         this.referenceMaterialModel = new ReferenceMaterialModel();
         this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
@@ -123,6 +135,7 @@ public final class SquidProject implements Serializable {
         this.analystName = taskDesignDefault.getAnalystName();
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
+        this.task.setTaskType(projectType);
         this.task.setReferenceMaterialModel(this.referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
         this.task.setPhysicalConstantsModel(physicalConstantsModel);
@@ -131,11 +144,31 @@ public final class SquidProject implements Serializable {
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
                 = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
+
     }
-    
-    public SquidProject(String projectName){
-        this();
+
+    /**
+     *
+     * @param projectName the value of projectName
+     * @param projectType the value of projectType
+     */
+    public SquidProject(String projectName, TaskTypeEnum projectType) {
+        this(projectType);
         this.projectName = projectName;
+    }
+
+    /**
+     * @return the projectType
+     */
+    public TaskTypeEnum getProjectType() {
+        if (projectType == null) {
+            projectType = GEOCHRON;
+        }
+        return projectType;
+    }
+
+    public boolean isTypeGeochron() {
+        return (projectType.equals(GEOCHRON));
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -170,6 +203,21 @@ public final class SquidProject implements Serializable {
             task.updateAllExpressions(true);
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+            // autogenerate task basics for type General = Ratio mode
+            if (projectType.equals(GENERAL)) {
+                List<String> nominalMasses = new ArrayList<>();
+                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
+                    String proposedName = ssm.getMassStationSpeciesName();
+                    if (proposedName.toUpperCase(Locale.ENGLISH).startsWith("B")){
+                        proposedName = BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+                    } else {
+                        proposedName = proposedName.replace(ssm.getElementName(), "");
+                    }
+                    nominalMasses.add(proposedName);
+                }
+                this.task.setNominalMasses(nominalMasses);
+            }
         }
     }
 
@@ -199,7 +247,7 @@ public final class SquidProject implements Serializable {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
-        // if Task is ashort of nominal masses, add them
+        // if Task is short of nominal masses, add them
         int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
             SquidMessageDialog.showWarningDialog(

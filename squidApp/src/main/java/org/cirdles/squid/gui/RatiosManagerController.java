@@ -40,8 +40,8 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  */
 public class RatiosManagerController implements Initializable {
 
-    private static final String STYLE_RATIO = 
-            "-fx-padding: 0 0 0 0;   \n"
+    private static final String STYLE_RATIO
+            = "-fx-padding: 0 0 0 0;   \n"
             + "    -fx-border-width: 1;\n"
             + "    -fx-border-color: black;\n"
             + "    -fx-background-radius: 0;\n"
@@ -66,7 +66,7 @@ public class RatiosManagerController implements Initializable {
             + "    -fx-font-size: 9pt;\n"
             + "    -fx-text-fill: Black;/*  #d8d8d8;*/\n";
 
-    private static final String STYLE_RATIO_LABEL = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
+    private static final String STYLE_RATIO_LABEL = "-fx-font-family: 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 7pt;\n";
 
@@ -115,44 +115,65 @@ public class RatiosManagerController implements Initializable {
         colcon.setHalignment(HPos.CENTER);
         ratiosGridPane.getColumnConstraints().add(colcon);
 
+        int rowCounter = 0;
+        int colCounter = 0;
         for (int i = 0; i < squidSpeciesList.size(); i++) {
             if (squidSpeciesList.get(i).getIsBackground()) {
                 indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
                 squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
 
-                Label rowLabel = new SquidLabel(0, i + 1, squidSpeciesList.get(i).getIsotopeName());
-                Label colLabel = new SquidLabel(0, i + 1, squidSpeciesList.get(i).getIsotopeName());
-                ratiosGridPane.add(rowLabel, 0, i + 1);
-                ratiosGridPane.add(colLabel, i + 1, 0);
-            } else {
-                Button colButton = new SquidRowColButton(i, -1, squidSpeciesList.get(i).getIsotopeName());
-                ratiosGridPane.add(colButton, 0, i + 1);
+                if (squidSpeciesList.get(i).isNumeratorRole()) {
+                    Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
+                    ratiosGridPane.add(rowBackgroundLabel, 0, rowCounter + 1);
+                    rowCounter++;
+                }
 
-                Button rowButton = new SquidRowColButton(-1, i, squidSpeciesList.get(i).getIsotopeName());
-                ratiosGridPane.add(rowButton, i + 1, 0);
+                if (squidSpeciesList.get(i).isDenominatorRole()) {
+                    Label colBackgroundLabel = new SquidLabel(0, colCounter + 1, squidSpeciesList.get(i).getIsotopeName());
+                    ratiosGridPane.add(colBackgroundLabel, colCounter + 1, 0);
+                    colCounter++;
+                }
+
+            } else {
+                if (squidSpeciesList.get(i).isNumeratorRole()) {
+                    Button rowNumeratorButton = new SquidRowColButton(rowCounter, -1, squidSpeciesList.get(i).getIsotopeName());
+                    ratiosGridPane.add(rowNumeratorButton, 0, rowCounter + 1);
+                    rowCounter++;
+                }
+
+                if (squidSpeciesList.get(i).isDenominatorRole()) {
+                    Button colDenominatorButton = new SquidRowColButton(-1, colCounter, squidSpeciesList.get(i).getIsotopeName());
+                    ratiosGridPane.add(colDenominatorButton, colCounter + 1, 0);
+                    colCounter++;
+                }
             }
 
-            Label corLabel = new SquidLabel(0, 0, "ROW/\nCOL");
-            ratiosGridPane.add(corLabel, 0, 0);
-
-            ratiosGridPane.getRowConstraints().add(rowCon);
-            ratiosGridPane.getColumnConstraints().add(colcon);
+            Label cornerLabel = new SquidLabel(0, 0, "Num/\nDen");
+            ratiosGridPane.add(cornerLabel, 0, 0);
         }
 
         populateRatioGrid();
     }
 
     private void populateRatioGrid() {
+        int rowCounter = 0;
         for (int i = 0; i < squidSpeciesList.size(); i++) {
-            for (int j = 0; j < squidSpeciesList.size(); j++) {
-                if ((i != j) && (i != indexOfBackgroundSpecies) && (j != indexOfBackgroundSpecies)) {
-                    Button ratioButton = new SquidRatioButton(
-                            i, j,
-                            squidSpeciesList.get(i).getIsotopeName() + "/\n" + squidSpeciesList.get(j).getIsotopeName(),
-                            SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[i][j]);
-                    ratiosGridPane.add(ratioButton, j + 1, i + 1);
+            if ((i != indexOfBackgroundSpecies)
+                    && squidSpeciesList.get(i).isNumeratorRole()) {
+                int colCounter = 0;
+                for (int j = 0; j < squidSpeciesList.size(); j++) {
+                    if ((i != j) && (j != indexOfBackgroundSpecies)
+                            && squidSpeciesList.get(j).isDenominatorRole()) {
+                        Button ratioButton = new SquidRatioButton(
+                                i, j,
+                                squidSpeciesList.get(i).getIsotopeName() + "/\n" + squidSpeciesList.get(j).getIsotopeName(),
+                                SquidUIController.squidProject.getTask().getTableOfSelectedRatiosByMassStationIndex()[i][j]);
+                        ratiosGridPane.add(ratioButton, colCounter + 1, rowCounter + 1);
+                    }
+                    colCounter = colCounter + (squidSpeciesList.get(j).isDenominatorRole() ? 1 : 0);
                 }
             }
+            rowCounter = rowCounter + (squidSpeciesList.get(i).isNumeratorRole() ? 1 : 0);
         }
     }
 
@@ -212,6 +233,8 @@ public class RatiosManagerController implements Initializable {
 
         public SquidLabel(int row, int col, String text) {
             super(text);
+            setWidth(BUTTON_WIDTH);
+            setHeight(BUTTON_HEIGHT);
 
             setStyle(STYLE_RATIO_LABEL);
         }

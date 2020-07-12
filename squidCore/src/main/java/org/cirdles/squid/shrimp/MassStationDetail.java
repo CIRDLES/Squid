@@ -47,6 +47,10 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
     private boolean viewedAsGraph;
 
+    // added July 2020 to accommodate Ratio mode
+    private boolean numeratorRole;
+    private boolean denominatorRole;
+
     public MassStationDetail(
             int massStationIndex,
             String massStationLabel,
@@ -73,6 +77,8 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
         // default value
         this.viewedAsGraph = centeringTimeSec > 0.0;
+        this.numeratorRole = true;
+        this.denominatorRole = true;
     }
 
     @Override
@@ -87,8 +93,12 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MassStationDetail)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MassStationDetail)) {
+            return false;
+        }
         MassStationDetail that = (MassStationDetail) o;
         return massStationIndex == that.massStationIndex;
     }
@@ -248,6 +258,34 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         return String.format("%1$-" + 8 + "s", massStationLabel)
                 + String.format("%1$-" + 7 + "s", isotopeLabel)
                 + (autoCentered() ? "auto-centered" : "");
+    }
+
+    /**
+     * @return the numeratorRole
+     */
+    public boolean isNumeratorRole() {
+        return numeratorRole;
+    }
+
+    /**
+     * @param numeratorRole the numeratorRole to set
+     */
+    public void setNumeratorRole(boolean numeratorRole) {
+        this.numeratorRole = numeratorRole;
+    }
+
+    /**
+     * @return the denominatorRole
+     */
+    public boolean isDenominatorRole() {
+        return denominatorRole;
+    }
+
+    /**
+     * @param denominatorRole the denominatorRole to set
+     */
+    public void setDenominatorRole(boolean denominatorRole) {
+        this.denominatorRole = denominatorRole;
     }
 
 }

@@ -37,6 +37,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
@@ -93,7 +94,7 @@ public class SquidReportingService {
             fileName = myFileName;
         }
 
-        SquidProject squidProject = new SquidProject(myProjectName);
+        SquidProject squidProject = new SquidProject(myProjectName, GEOCHRON);
         prawnFileHandler = squidProject.getPrawnFileHandler();
 
         CalamariFileUtilities.initSampleParametersModels();

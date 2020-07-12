@@ -163,7 +163,10 @@ public class TaskManagerController implements Initializable {
         updateDirectiveButtons();
 
         // Directives fields
-        ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
+        try {
+            ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
+        } catch (Exception e) {
+        }
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();

@@ -23,6 +23,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
@@ -37,7 +38,6 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
@@ -100,7 +100,7 @@ public class PrawnFileHandlerIT {
      */
     @BeforeClass // provides to run setup once
     public static void setUp() throws Exception {
-        prawnFileHandler = (new SquidProject()).getPrawnFileHandler();
+        prawnFileHandler = (new SquidProject(GEOCHRON)).getPrawnFileHandler();
         reportsFolder = temporaryFolder.getRoot();
 
         prawnFileZ6266 = RESOURCE_EXTRACTOR
@@ -108,7 +108,7 @@ public class PrawnFileHandlerIT {
 
         CalamariFileUtilities.initSampleParametersModels();
 
-        squidProjectZ6266 = new SquidProject();
+        squidProjectZ6266 = new SquidProject(GEOCHRON);
 
         prawnFileDataZ6266 = prawnFileHandler.unmarshallPrawnFileXML(prawnFileZ6266.getAbsolutePath(), true);
 

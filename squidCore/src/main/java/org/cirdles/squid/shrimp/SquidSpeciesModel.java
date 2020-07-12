@@ -39,22 +39,25 @@ public class SquidSpeciesModel implements
     private boolean isBackground;
     private String uThBearingName;
     private boolean viewedAsGraph;
+    // added July 2020 to accommodate Ratio mode
+    private boolean numeratorRole;
+    private boolean denominatorRole;
 
     public SquidSpeciesModel() {
         this(-1, "NONE", "NONE", "NONE", false, "No", false);
     }
-    
+
     public SquidSpeciesModel(String isotopeName) {
         this(-1, "NONE", isotopeName, "NONE", false, "No", false);
     }
 
     public SquidSpeciesModel(
-            int massStationIndex, 
-            String massStationName, 
-            String isotopeName, 
-            String elementName, 
-            boolean isBackground, 
-            String uThBearingAbbreviation, 
+            int massStationIndex,
+            String massStationName,
+            String isotopeName,
+            String elementName,
+            boolean isBackground,
+            String uThBearingAbbreviation,
             boolean viewedAsGraph) {
         this.massStationIndex = massStationIndex;
         this.massStationSpeciesName = massStationName;
@@ -64,7 +67,10 @@ public class SquidSpeciesModel implements
         this.isBackground = isBackground;
         this.uThBearingName = uThBearingAbbreviation;
         this.viewedAsGraph = viewedAsGraph;
-        }
+
+        this.numeratorRole = true;
+        this.denominatorRole = true;
+    }
 
     @Override
     public int compareTo(SquidSpeciesModel squidSpeciesModel) {
@@ -197,6 +203,33 @@ public class SquidSpeciesModel implements
     public void setViewedAsGraph(boolean viewedAsGraph) {
         this.viewedAsGraph = viewedAsGraph;
     }
-    
-    
+
+    /**
+     * @return the numeratorRole
+     */
+    public boolean isNumeratorRole() {
+        return numeratorRole;
+    }
+
+    /**
+     * @param numeratorRole the numeratorRole to set
+     */
+    public void setNumeratorRole(boolean numeratorRole) {
+        this.numeratorRole = numeratorRole;
+    }
+
+    /**
+     * @return the denominatorRole
+     */
+    public boolean isDenominatorRole() {
+        return denominatorRole;
+    }
+
+    /**
+     * @param denominatorRole the denominatorRole to set
+     */
+    public void setDenominatorRole(boolean denominatorRole) {
+        this.denominatorRole = denominatorRole;
+    }
+
 }

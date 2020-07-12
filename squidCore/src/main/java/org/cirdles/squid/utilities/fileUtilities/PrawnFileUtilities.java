@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
@@ -71,7 +73,15 @@ public final class PrawnFileUtilities {
             double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
             double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
             String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
-            String elementLabel = massStationLabel.replace(isotopeLabel, "");
+            
+            // upated July 2020
+            Pattern pattern = Pattern.compile("^(\\d\\d)?(\\d)?(\\D+\\d?\\D?)*(\\d\\d\\d)?$", Pattern.CASE_INSENSITIVE); 
+            Matcher matcher = pattern.matcher(massStationLabel); 
+            String elementLabel = massStationLabel;
+            if (matcher.matches()){
+                elementLabel = matcher.group(3);
+            }
+            
 
             boolean isBackground = massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
             String uThBearingName = UThBearingEnum.N.getName();
