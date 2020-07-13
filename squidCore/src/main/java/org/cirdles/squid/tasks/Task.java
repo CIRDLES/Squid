@@ -34,6 +34,7 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -578,38 +579,39 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel) physicalConstantsModel);
         taskExpressionsOrdered.addAll(generatePhysicalConstantsValues);
 
-        SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
-        taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
+        if (taskType.equals(GEOCHRON)) {
+            SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
+            taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
 
-        SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
-        taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
+            SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
+            taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
 
-        SortedSet<Expression> experimentalExpressions = generateExperimentalExpressions();
-        taskExpressionsOrdered.addAll(experimentalExpressions);
+            SortedSet<Expression> experimentalExpressions = generateExperimentalExpressions();
+            taskExpressionsOrdered.addAll(experimentalExpressions);
 
-        // Squid2.5 Framework: Part 4 up to means
-        SortedSet<Expression> perSpotProportionsOfCommonPb = generatePerSpotProportionsOfCommonPb();
-        taskExpressionsOrdered.addAll(perSpotProportionsOfCommonPb);
+            // Squid2.5 Framework: Part 4 up to means
+            SortedSet<Expression> perSpotProportionsOfCommonPb = generatePerSpotProportionsOfCommonPb();
+            taskExpressionsOrdered.addAll(perSpotProportionsOfCommonPb);
 
-        //Squid2.5 Framework: Part 4 means
-        // March 2019
-        if (specialSquidFourExpressionsMap.get(PARENT_ELEMENT_CONC_CONST).matches("(.*)(232|248|264)(.*)")) {
-            concentrationTypeEnum = THORIUM;
-        } else {
-            concentrationTypeEnum = URANIUM;
+            //Squid2.5 Framework: Part 4 means
+            // March 2019
+            if (specialSquidFourExpressionsMap.get(PARENT_ELEMENT_CONC_CONST).matches("(.*)(232|248|264)(.*)")) {
+                concentrationTypeEnum = THORIUM;
+            } else {
+                concentrationTypeEnum = URANIUM;
+            }
+            SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD(), concentrationTypeEnum);
+            taskExpressionsOrdered.addAll(perSpotConcentrations);
+
+            SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
+            taskExpressionsOrdered.addAll(overCountMeansRefMaterials);
+
+            SortedSet<Expression> stdRadiogenicCols = stdRadiogenicCols(parentNuclide, isDirectAltPD());
+            taskExpressionsOrdered.addAll(stdRadiogenicCols);
+
+            SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
+            taskExpressionsOrdered.addAll(samRadiogenicCols);
         }
-        SortedSet<Expression> perSpotConcentrations = generatePpmUandPpmTh(parentNuclide, isDirectAltPD(), concentrationTypeEnum);
-        taskExpressionsOrdered.addAll(perSpotConcentrations);
-
-        SortedSet<Expression> overCountMeansRefMaterials = overCountMeans();
-        taskExpressionsOrdered.addAll(overCountMeansRefMaterials);
-
-        SortedSet<Expression> stdRadiogenicCols = stdRadiogenicCols(parentNuclide, isDirectAltPD());
-        taskExpressionsOrdered.addAll(stdRadiogenicCols);
-
-        SortedSet<Expression> samRadiogenicCols = samRadiogenicCols(parentNuclide, isDirectAltPD());
-        taskExpressionsOrdered.addAll(samRadiogenicCols);
-
         // uses complex comparator in expression
         Collections.sort(taskExpressionsOrdered);
     }
@@ -804,6 +806,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         updateParametersFromModels();
 
         buildSquidSpeciesModelList();
+
+        prepareRatios();
+    }
+
+    public void prepareRatios() {
 
         populateTableOfSelectedRatiosFromRatiosList();
 
@@ -1560,10 +1567,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             index++;
         }
     }
-    
-    public void applyTaskIsotopeRatioRolesToSquidSpeciesModels(MassStationDetail massStationDetail){
+
+    public void applyTaskIsotopeRatioRolesToSquidSpeciesModels(MassStationDetail massStationDetail) {
         for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-            if (ssm.getMassStationIndex() == massStationDetail.getMassStationIndex()){
+            if (ssm.getMassStationIndex() == massStationDetail.getMassStationIndex()) {
                 ssm.setNumeratorRole(massStationDetail.isNumeratorRole());
                 ssm.setDenominatorRole(massStationDetail.isDenominatorRole());
                 break;
@@ -2278,49 +2285,59 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport(false);
-        updateAllExpressions(true);
+//        setupSquidSessionSpecsAndReduceAndReport(false);
+        prepareRatios();
+//        updateAllExpressions(true);
     }
 
     @Override
     public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected) {
         if (row == -1) {
-            String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
-            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
-                String num = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
-                if (num.compareTo(den) != 0) {
-                    String ratioName = num + "/" + den;
-                    if (selected) {
-                        if (!ratioNames.contains(ratioName)) {
-                            ratioNames.add(ratioName);
+            if (mapOfIndexToMassStationDetails.get(col).isDenominatorRole()) {
+                String den = mapOfIndexToMassStationDetails.get(col).getIsotopeLabel();
+                for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                    if (mapOfIndexToMassStationDetails.get(i).isNumeratorRole()) {
+                        String num = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                        if (num.compareTo(den) != 0) {
+                            String ratioName = num + "/" + den;
+                            if (selected) {
+                                if (!ratioNames.contains(ratioName)) {
+                                    ratioNames.add(ratioName);
+                                }
+                            } else {
+                                ratioNames.remove(ratioName);
+                            }
                         }
-                    } else {
-                        ratioNames.remove(ratioName);
                     }
                 }
             }
         }
 
         if (col == -1) {
-            String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
-            for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
-                String den = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
-                if (num.compareTo(den) != 0) {
-                    String ratioName = num + "/" + den;
-                    if (selected) {
-                        if (!ratioNames.contains(ratioName)) {
-                            ratioNames.add(ratioName);
+            if (mapOfIndexToMassStationDetails.get(row).isNumeratorRole()) {
+                String num = mapOfIndexToMassStationDetails.get(row).getIsotopeLabel();
+                for (int i = 0; i < mapOfIndexToMassStationDetails.size(); i++) {
+                    if (mapOfIndexToMassStationDetails.get(i).isDenominatorRole()) {
+                        String den = mapOfIndexToMassStationDetails.get(i).getIsotopeLabel();
+                        if (num.compareTo(den) != 0) {
+                            String ratioName = num + "/" + den;
+                            if (selected) {
+                                if (!ratioNames.contains(ratioName)) {
+                                    ratioNames.add(ratioName);
+                                }
+                            } else {
+                                ratioNames.remove(ratioName);
+                            }
                         }
-                    } else {
-                        ratioNames.remove(ratioName);
                     }
                 }
             }
         }
 
         setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport(false);
-        updateAllExpressions(true);
+//        setupSquidSessionSpecsAndReduceAndReport(false);
+        prepareRatios();
+//        updateAllExpressions(true);
     }
 
     private void updateRatioNamesFromNominalMasses() {
@@ -2338,22 +2355,37 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * Performs update to set all numerator and denominator flags to true if all
      * are false for backward compatibility.
      */
-    public void updateSquidSpeciesModels() {
-        boolean detectTrueNumerator = false;
-        boolean detectTrueDenominator = false;
-        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-            detectTrueNumerator = detectTrueNumerator || ssm.isNumeratorRole();
-            detectTrueDenominator = detectTrueDenominator || ssm.isDenominatorRole();
-        }
-
-        if (!(detectTrueNumerator && detectTrueDenominator)) {
+    public void updateSquidSpeciesModelsGeochronMode() {
+        if (taskType.equals(TaskTypeEnum.GEOCHRON)) {
+            boolean detectTrueNumerator = false;
+            boolean detectTrueDenominator = false;
             for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-                ssm.setNumeratorRole(true);
-                ssm.setDenominatorRole(true);
+                detectTrueNumerator = detectTrueNumerator || ssm.isNumeratorRole();
+                detectTrueDenominator = detectTrueDenominator || ssm.isDenominatorRole();
+            }
+
+            if (!(detectTrueNumerator && detectTrueDenominator)) {
+                for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                    ssm.setNumeratorRole(true);
+                    ssm.setDenominatorRole(true);
+
+                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                    massStationDetail.setNumeratorRole(true);
+                    massStationDetail.setDenominatorRole(true);
+                }
+            }
+        }
+    }
+
+    public void initializeSquidSpeciesModelsRatioMode() {
+        if (taskType.equals(TaskTypeEnum.GENERAL)) {
+            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+                ssm.setNumeratorRole(false);
+                ssm.setDenominatorRole(false);
 
                 MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                massStationDetail.setNumeratorRole(true);
-                massStationDetail.setDenominatorRole(true);
+                massStationDetail.setNumeratorRole(false);
+                massStationDetail.setDenominatorRole(false);
             }
         }
     }

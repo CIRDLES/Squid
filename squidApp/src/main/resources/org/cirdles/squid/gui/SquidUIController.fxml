@@ -112,14 +112,14 @@
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
+                                <MenuItem fx:id="refMatConcordiaMenuItem" mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
                         <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
+                                <MenuItem fx:id="unknownConcordiaMenuItem" mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
                             </items>
                         </Menu>

@@ -331,7 +331,7 @@
                                     </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.4738598442714127" prefHeight="200.0" prefWidth="200.0">
+                              <SplitPane fx:id="smallSplitPane" dividerPositions="0.33" prefHeight="200.0" prefWidth="200.0">
                                  <items>
                                     <AnchorPane>
                                        <children>

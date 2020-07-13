@@ -228,6 +228,10 @@ public class SquidUIController implements Initializable {
     private MenuItem newSquidRatioProjectMenuItem;
     @FXML
     private MenuItem newTaskUsingDesignerMenuItem;
+    @FXML
+    private MenuItem refMatConcordiaMenuItem;
+    @FXML
+    private MenuItem unknownConcordiaMenuItem;
 
     /**
      * Initializes the controller class.
@@ -425,9 +429,13 @@ public class SquidUIController implements Initializable {
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
-            commonPbMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
+            commonPbMenu.setDisable(!squidProject.isTypeGeochron() || squidProject.getTask().getNominalMasses().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
-            manageInterpretationsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
+            manageInterpretationsMenu.setDisable(!squidProject.isTypeGeochron() || squidProject.getTask().getNominalMasses().isEmpty());
+
+            //Interpretations Menu
+            refMatConcordiaMenuItem.setVisible(squidProject.isTypeGeochron());
+            unknownConcordiaMenuItem.setVisible(squidProject.isTypeGeochron());
 
             // log prawnFileFolderMRU
             // squidPersistentState.setMRUPrawnFileFolderPath(squidProject.getPrawnFileHandler().getCurrentPrawnFileLocationFolder());
@@ -726,13 +734,17 @@ public class SquidUIController implements Initializable {
                 synchronizeTaskLabDataAndSquidVersion();
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
-                ((Task) squidProject.getTask()).updateSquidSpeciesModels();
+                ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();
 
                 squidPersistentState.updateProjectListMRU(new File(projectFileName));
                 SquidUI.updateStageTitle(projectFileName);
                 buildProjectMenuMRU();
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
+
+                newTaskUsingDesignerMenuItem.setDisable(!squidProject.isTypeGeochron());
+                importSquid25TaskMenuItem.setDisable(!squidProject.isTypeGeochron());
+
                 customizeDataMenu();
 
                 // this updates output folder for reports to current version
@@ -898,7 +910,7 @@ public class SquidUIController implements Initializable {
 
     private void ManageRefMatWarning() {
         // present warning if needed
-        if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+        if (squidProject.isTypeGeochron() && squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Reference Materials and "
                     + "Sample names using the Data menu.\n",
                     primaryStageWindow);
@@ -922,9 +934,9 @@ public class SquidUIController implements Initializable {
             showUI(taskManagerUI);
             manageRatiosMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
-            commonPbMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
+            commonPbMenu.setDisable(!squidProject.isTypeGeochron() || squidProject.getTask().getNominalMasses().isEmpty());
             manageReportsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
-            manageInterpretationsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
+            manageInterpretationsMenu.setDisable(!squidProject.isTypeGeochron() || squidProject.getTask().getNominalMasses().isEmpty());
 
             menuHighlighter.highlight(manageTasksMenu);
         } catch (IOException | RuntimeException iOException) {
@@ -978,7 +990,7 @@ public class SquidUIController implements Initializable {
 
     private void launchExpressionBuilder() {
         // present warning if needed
-        if (squidProject.isTypeGeochron() && !squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+        if (!squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         }
@@ -1279,6 +1291,7 @@ public class SquidUIController implements Initializable {
 
             mainPane.getChildren().add(plotUI);
             plotUI.setVisible(false);
+
         } catch (IOException | RuntimeException iOException) {
             System.out.println("PlotUI >>>>   " + iOException.getMessage());
         }
@@ -1303,7 +1316,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void producePerScanReportsAction(ActionEvent event) {
-        if (squidProject.isTypeGeochron() && !squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+        if (!squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         } else {
@@ -1403,7 +1416,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     public void generateAllReportsAction(ActionEvent actionEvent) throws IOException {
-        if (squidProject.isTypeGeochron() && !squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+        if (!squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         } else {
@@ -1529,9 +1542,9 @@ public class SquidUIController implements Initializable {
         // if ratios list not populated or no ref mat chosen show warning
         if (squidProject.getTask().getSquidRatiosModelList().isEmpty()) {
             showManageIsotopesWarning();
-        } else if (squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
+        } else if ((squidProject.isTypeGeochron()) && squidProject.getTask().getReferenceMaterialSpots().isEmpty()) {
             showManageRefMatWarning();
-        } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
+        } else if ((squidProject.isTypeGeochron()) && !((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
             showManageRefMatModelWarning();
         } else {
             retVal = true;

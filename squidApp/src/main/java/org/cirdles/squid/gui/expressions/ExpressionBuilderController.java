@@ -433,6 +433,7 @@ public class ExpressionBuilderController implements Initializable {
         task = squidProject.getTask();
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
+        task.updateAllExpressions(true);
 
         initPropertyBindings();
         initListViews();
@@ -1643,12 +1644,11 @@ public class ExpressionBuilderController implements Initializable {
 
     private void populateIsotopesListView() {
         List<SquidSpeciesModel> isotopesList = task.getSquidSpeciesModelList();
-
         ObservableList<SquidSpeciesModel> items = FXCollections.observableArrayList(isotopesList);
-        items = items.sorted((isotope1, isotope2) -> {
-            return isotope1.getIsotopeName().compareToIgnoreCase(isotope2.getIsotopeName());
+        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+        items = items.sorted((SquidSpeciesModel ssm1, SquidSpeciesModel ssm2) -> {
+            return intuitiveStringComparator.compare(ssm1.getIsotopeName(), ssm2.getIsotopeName());
         });
-
         isotopesExpressionsListView.setItems(items);
     }
 

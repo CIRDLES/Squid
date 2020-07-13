@@ -217,6 +217,8 @@ public final class SquidProject implements Serializable {
                     nominalMasses.add(proposedName);
                 }
                 this.task.setNominalMasses(nominalMasses);
+                
+                ((Task)task).initializeSquidSpeciesModelsRatioMode();
             }
         }
     }
@@ -590,6 +592,10 @@ public final class SquidProject implements Serializable {
         }
 
         return listOfUnknownsBySample;
+    }
+    
+    public boolean projectIsHealthyGeochronMode(){
+        return   isTypeGeochron() &&  task.getExpressionByName("ParentElement_ConcenConst").amHealthy();
     }
 
     public String getPrawnSourceFileName() {

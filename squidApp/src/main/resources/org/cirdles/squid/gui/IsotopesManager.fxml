@@ -38,8 +38,8 @@ limitations under the License.
             <TableColumn fx:id="uOrThBearingColumn" maxWidth="4500.0" prefWidth="75.0" sortable="false" text="U- or Th-Bearing (edit)" />
                 <TableColumn fx:id="isotopeLabelColumn" prefWidth="224.0" sortable="false" style="-fx-alignment: CENTER;" text="(M) Isotope Label (edit)" />
             <TableColumn fx:id="taskIsotopeLabelColumn" editable="false" prefWidth="106.0" sortable="false" style="-fx-alignment: CENTER;" text="(T) Task Isotope Label" />
-            <TableColumn fx:id="numeratorColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Numerator?" />
-            <TableColumn fx:id="denominatorColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Denominator?" />
+            <TableColumn fx:id="numeratorColumn" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" text="As Numerator?" />
+            <TableColumn fx:id="denominatorColumn" maxWidth="120.0" minWidth="120.0" prefWidth="120.0" text="As Denominator?" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -53,7 +53,7 @@ limitations under the License.
         </TableView>
       <HBox>
          <children>
-            <Label lineSpacing="2.0" prefWidth="440.0" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-background-color: white; -fx-border-color: black;" text="Note: Squid calculates Isotopic Ratios using column M’s Mass Station Isotope Labels.  However, the ratios in Task expressions use column T’s Task Isotope Labels. Columns M and T must be identical - use button to align them. " textAlignment="JUSTIFY" wrapText="true">
+            <Label lineSpacing="2.0" prefHeight="83.0" prefWidth="518.0" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-background-color: white; -fx-border-color: black;" text="Note: Squid calculates Isotopic Ratios using column M’s Mass Station Isotope Labels.  However, the ratios in Task expressions use column T’s Task Isotope Labels. Columns M and T must be identical - use button to map M to T." textAlignment="JUSTIFY" wrapText="true">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

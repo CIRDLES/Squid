@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskManagerController">
   <columnConstraints>
     <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
     <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
@@ -29,14 +29,8 @@
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Name:" GridPane.rowIndex="1" />
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <TextField fx:id="taskNameTextField" promptText="Task name" HBox.hgrow="ALWAYS" />
-            <Label text="Type:" />
-            <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
-               <toggleGroup>
-                  <ToggleGroup fx:id="taskTypeToggleGroup" />
-               </toggleGroup>
-            </RadioButton>
-            <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+            <TextField fx:id="taskNameTextField" prefHeight="27.0" prefWidth="877.0" promptText="Task name" HBox.hgrow="ALWAYS" />
+            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: red;" text="Geochron Mode" />
          </children>
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Description:" GridPane.rowIndex="2" />
@@ -59,7 +53,7 @@
          </children>
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" GridPane.rowIndex="5" />
-      <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
+      <GridPane fx:id="directivesGridPane" GridPane.columnIndex="1" GridPane.rowIndex="5">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
