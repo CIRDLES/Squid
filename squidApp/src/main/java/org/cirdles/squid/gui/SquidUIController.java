@@ -505,7 +505,7 @@ public class SquidUIController implements Initializable {
         squidProject = new SquidProject(projectType);
 
         newTaskUsingDesignerMenuItem.setDisable(projectType.equals(GENERAL));
-        importSquid25TaskMenuItem.setDisable(projectType.equals(GENERAL));
+        //importSquid25TaskMenuItem.setDisable(projectType.equals(GENERAL));
 
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler(), new File(projectFileName).getParentFile());
@@ -633,7 +633,7 @@ public class SquidUIController implements Initializable {
                 squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
 
                 // auto generate task data for nominal masses
-                squidProject.initializeTaskAndReduceData();
+                squidProject.initializeTaskAndReduceData(true);
 
                 SquidUI.updateStageTitle("");
                 launchProjectManager();
@@ -743,7 +743,7 @@ public class SquidUIController implements Initializable {
                 saveSquidProjectMenuItem.setDisable(false);
 
                 newTaskUsingDesignerMenuItem.setDisable(!squidProject.isTypeGeochron());
-                importSquid25TaskMenuItem.setDisable(!squidProject.isTypeGeochron());
+                //importSquid25TaskMenuItem.setDisable(!squidProject.isTypeGeochron());
 
                 customizeDataMenu();
 
@@ -990,7 +990,7 @@ public class SquidUIController implements Initializable {
 
     private void launchExpressionBuilder() {
         // present warning if needed
-        if (!squidProject.projectIsHealthyGeochronMode()) {
+        if (squidProject.isTypeGeochron() &&   !squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         }
@@ -1316,8 +1316,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void producePerScanReportsAction(ActionEvent event) {
-        if (!squidProject.projectIsHealthyGeochronMode()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+        if (squidProject.getTask().getRatioNames().isEmpty()) {
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {
@@ -1416,8 +1416,8 @@ public class SquidUIController implements Initializable {
 
     @FXML
     public void generateAllReportsAction(ActionEvent actionEvent) throws IOException {
-        if (!squidProject.projectIsHealthyGeochronMode()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+        if (squidProject.getTask().getRatioNames().isEmpty()) {
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {

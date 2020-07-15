@@ -29,6 +29,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
@@ -78,6 +79,10 @@ public class IsotopesManagerController implements Initializable {
     private TableColumn<MassStationDetail, Boolean> numeratorColumn;
     @FXML
     private TableColumn<MassStationDetail, Boolean> denominatorColumn;
+    @FXML
+    private CheckBox selectAllNumeratorCheckBox;
+    @FXML
+    private CheckBox selectAllDenominatorCheckBox;
 
     /**
      * Initializes the controller class.
@@ -192,30 +197,54 @@ public class IsotopesManagerController implements Initializable {
         numeratorColumn.setCellValueFactory(cellData -> {
             MassStationDetail cellValue = cellData.getValue();
             BooleanProperty property = new SimpleBooleanProperty(cellValue.isNumeratorRole());
+            if (cellValue.getIsBackground()) {
+                property = new SimpleBooleanProperty(false);
+            }
 
             // Add listener to handler change
             property.addListener((observable, oldValue, newValue) -> {
-                cellValue.setNumeratorRole(newValue);
-                ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                if (cellValue.getIsBackground()) {
+                    cellValue.setNumeratorRole(false);
+                    ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                    isotopesTableView.refresh();
+                } else {
+                    cellValue.setNumeratorRole(newValue);
+                    ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                }
+                updateSelectAllNumeratorCheckbox();
             });
 
             return property;
         });
+
+        updateSelectAllNumeratorCheckbox();
 
         // ==== denominatorColumn  ==
         denominatorColumn.setCellFactory(column -> new CheckBoxTableCell<>());
         denominatorColumn.setCellValueFactory(cellData -> {
             MassStationDetail cellValue = cellData.getValue();
             BooleanProperty property = new SimpleBooleanProperty(cellValue.isDenominatorRole());
+            if (cellValue.getIsBackground()) {
+                property = new SimpleBooleanProperty(false);
+            }
 
             // Add listener to handler change
             property.addListener((observable, oldValue, newValue) -> {
-                cellValue.setDenominatorRole(newValue);
-                ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                if (cellValue.getIsBackground()) {
+                    cellValue.setDenominatorRole(false);
+                    ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                    isotopesTableView.refresh();
+                } else {
+                    cellValue.setDenominatorRole(newValue);
+                    ((Task) task).applyTaskIsotopeRatioRolesToSquidSpeciesModels(cellValue);
+                }
+                updateSelectAllDenominatorCheckbox();
             });
 
             return property;
         });
+
+        updateSelectAllDenominatorCheckbox();
 
         isotopesTableView.setRowFactory(new Callback<TableView<MassStationDetail>, TableRow<MassStationDetail>>() {
             @Override
@@ -238,6 +267,8 @@ public class IsotopesManagerController implements Initializable {
                         }
                         task.setChanged(true);
                         isotopesTableView.refresh();
+                        updateSelectAllNumeratorCheckbox();
+                        updateSelectAllDenominatorCheckbox();
                     }
                 });
                 contextMenu.getItems().add(selectAsBackgroundMenuItem);
@@ -252,8 +283,15 @@ public class IsotopesManagerController implements Initializable {
                         task.setIndexOfBackgroundSpecies(-1);
                         task.setChanged(true);
                         ssm.setIsBackground(false);
+                        row.getItem().setIsBackground(false);
                         row.getItem().setIsotopeLabel(ssm.getIsotopeName());
+                        ssm.setNumeratorRole(false);
+                        ssm.setDenominatorRole(false);
+                        row.getItem().setNumeratorRole(false);
+                        row.getItem().setDenominatorRole(false);
                         isotopesTableView.refresh();
+                        updateSelectAllNumeratorCheckbox();
+                        updateSelectAllDenominatorCheckbox();
                     }
                 });
                 contextMenu.getItems().add(deSelectAsBackgroundMenuItem);
@@ -273,6 +311,28 @@ public class IsotopesManagerController implements Initializable {
         isotopesTableView.prefHeightProperty().bind(Bindings.size(isotopesTableView.getItems()).multiply(isotopesTableView.getFixedCellSize()).add(30));
     }
 
+    private void updateSelectAllNumeratorCheckbox() {
+        // detect if all are selected or deselected as numerators
+        boolean allIncluded = true;
+        for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
+            if (!ssm.getIsBackground()) {
+                allIncluded = allIncluded && ssm.isNumeratorRole();
+            }
+        }
+        selectAllNumeratorCheckBox.setSelected(allIncluded);
+    }
+
+    private void updateSelectAllDenominatorCheckbox() {
+        // detect if all are selected or deselected as denominators
+        boolean allIncluded = true;
+        for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
+            if (!ssm.getIsBackground()) {
+                allIncluded = allIncluded && ssm.isDenominatorRole();
+            }
+        }
+        selectAllDenominatorCheckBox.setSelected(allIncluded);
+    }
+
     @FXML
     private void applyTaskIsotopeLabelsAction(ActionEvent event) {
         task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
@@ -290,6 +350,19 @@ public class IsotopesManagerController implements Initializable {
                 = FXCollections.observableArrayList(task.makeListOfMassStationDetails());
         isotopesTableView.setItems(massStationsData);
         isotopesTableView.refresh();
+    }
+
+    @FXML
+    private void selectAllNumeratorAction(ActionEvent event) {
+        ((Task) task).initializeSquidSpeciesModelsRatioMode(true, selectAllNumeratorCheckBox.isSelected(), false, false);
+        isotopesTableView.refresh();
+    }
+
+    @FXML
+    private void selectAllDenominatorAction(ActionEvent event) {
+        ((Task) task).initializeSquidSpeciesModelsRatioMode(false, false, true, selectAllDenominatorCheckBox.isSelected());
+        isotopesTableView.refresh();
+
     }
 
     class EditingCell extends TableCell<MassStationDetail, String> {

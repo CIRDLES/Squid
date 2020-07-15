@@ -20,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 
 import org.cirdles.squid.constants.Squid3Constants;
@@ -192,7 +194,11 @@ public final class SquidProject implements Serializable {
         this.task.setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
-    public void initializeTaskAndReduceData() {
+    /**
+     *
+     * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
+     */
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
         if (task != null) {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
@@ -205,11 +211,11 @@ public final class SquidProject implements Serializable {
             task.setupSquidSessionSpecsAndReduceAndReport(false);
 
             // autogenerate task basics for type General = Ratio mode
-            if (projectType.equals(GENERAL)) {
+            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
                 List<String> nominalMasses = new ArrayList<>();
                 for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
                     String proposedName = ssm.getMassStationSpeciesName();
-                    if (proposedName.toUpperCase(Locale.ENGLISH).startsWith("B")){
+                    if (proposedName.toUpperCase(Locale.ENGLISH).startsWith("B")) {
                         proposedName = BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
                     } else {
                         proposedName = proposedName.replace(ssm.getElementName(), "");
@@ -217,8 +223,8 @@ public final class SquidProject implements Serializable {
                     nominalMasses.add(proposedName);
                 }
                 this.task.setNominalMasses(nominalMasses);
-                
-                ((Task)task).initializeSquidSpeciesModelsRatioMode();
+
+                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
             }
         }
     }
@@ -242,7 +248,7 @@ public final class SquidProject implements Serializable {
         this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
         this.task.applyDirectives();
-        initializeTaskAndReduceData();
+        initializeTaskAndReduceData(false);
     }
 
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
@@ -344,7 +350,7 @@ public final class SquidProject implements Serializable {
         this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         this.task.applyDirectives();
 
-        initializeTaskAndReduceData();
+        initializeTaskAndReduceData(false);
     }
 
     public void setupPrawnOPFile(File opFileNew)
@@ -441,6 +447,15 @@ public final class SquidProject implements Serializable {
     public void autoDivideSamples() {
         this.filtersForUnknownNames = new HashMap<>();
         if (task.getShrimpFractions() != null) {
+            // July 2020 add in delimiter suggester
+            Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
+            Matcher matcher
+                    = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
+            if (matcher.find()) {
+                int s = matcher.start();
+                delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
+            }
+
             boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
             for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
                 // determine flavor
@@ -593,9 +608,9 @@ public final class SquidProject implements Serializable {
 
         return listOfUnknownsBySample;
     }
-    
-    public boolean projectIsHealthyGeochronMode(){
-        return   isTypeGeochron() &&  task.getExpressionByName("ParentElement_ConcenConst").amHealthy();
+
+    public boolean projectIsHealthyGeochronMode() {
+        return isTypeGeochron() && task.getExpressionByName("ParentElement_ConcenConst").amHealthy();
     }
 
     public String getPrawnSourceFileName() {

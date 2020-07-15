@@ -1681,12 +1681,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             if (squidSpeciesModel.getIsBackground()) {
                 squidSpeciesModel.setIsBackground(false);
                 retVal = squidSpeciesModel.getMassStationIndex();
+                mapOfIndexToMassStationDetails.get(retVal).setIsBackground(false);
                 break;
             }
         }
 
         if (ssm != null) {
             ssm.setIsBackground(true);
+            mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex()).setIsBackground(true);
         }
 
         return retVal;
@@ -2366,25 +2368,50 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             if (!(detectTrueNumerator && detectTrueDenominator)) {
                 for (SquidSpeciesModel ssm : squidSpeciesModelList) {
-                    ssm.setNumeratorRole(true);
-                    ssm.setDenominatorRole(true);
+                    if (!ssm.getIsBackground()) {
+                        ssm.setNumeratorRole(true);
+                        ssm.setDenominatorRole(true);
 
-                    MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
-                    massStationDetail.setNumeratorRole(true);
-                    massStationDetail.setDenominatorRole(true);
+                        MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                        massStationDetail.setNumeratorRole(true);
+                        massStationDetail.setDenominatorRole(true);
+                    } else {
+                        ssm.setNumeratorRole(false);
+                        ssm.setDenominatorRole(false);
+
+                        MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+                        massStationDetail.setNumeratorRole(false);
+                        massStationDetail.setDenominatorRole(false);
+                    }
                 }
             }
         }
     }
 
-    public void initializeSquidSpeciesModelsRatioMode() {
-        if (taskType.equals(TaskTypeEnum.GENERAL)) {
-            for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+    /**
+     *
+     * @param numerator the value of numerator
+     * @param numValue the value of numValue
+     * @param denominator the value of denominator
+     * @param denValue the value of denValue
+     */
+    public void initializeSquidSpeciesModelsRatioMode(boolean numerator, boolean numValue, boolean denominator, boolean denValue) {
+        for (SquidSpeciesModel ssm : squidSpeciesModelList) {
+            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+            if (!ssm.getIsBackground()) {
+                if (numerator) {
+                    ssm.setNumeratorRole(numValue);
+                    massStationDetail.setNumeratorRole(numValue);
+                }
+                if (denominator) {
+                    ssm.setDenominatorRole(denValue);
+                    massStationDetail.setDenominatorRole(denValue);
+                }
+            } else {
+                // background
                 ssm.setNumeratorRole(false);
-                ssm.setDenominatorRole(false);
-
-                MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
                 massStationDetail.setNumeratorRole(false);
+                ssm.setDenominatorRole(false);
                 massStationDetail.setDenominatorRole(false);
             }
         }

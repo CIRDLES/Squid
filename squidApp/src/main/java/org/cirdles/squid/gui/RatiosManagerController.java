@@ -123,8 +123,8 @@ public class RatiosManagerController implements Initializable {
         int colCounter = 0;
         for (int i = 0; i < squidSpeciesList.size(); i++) {
             if (squidSpeciesList.get(i).getIsBackground()) {
-                indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
-                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
+//                indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
+//                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
 
                 if (squidSpeciesList.get(i).isNumeratorRole()) {
                     Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
@@ -226,7 +226,7 @@ public class RatiosManagerController implements Initializable {
             ratioToolTip = new Tooltip("Click to select entire " + (String) (row == -1 ? "column" : "row"));
             setTooltip(ratioToolTip);
             
-            selected = true;
+            selected = false;
 
             setOnMousePressed(new SquidRowColButtonEventHandler(row, col, selected));
 

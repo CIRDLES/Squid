@@ -89,7 +89,7 @@ public class SessionAuditController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         sampleNameDelimiter = squidProject.getDelimiterForUnknownNames();
-        
+
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
         setUpPrawnAuditTreeView(false);
@@ -98,21 +98,26 @@ public class SessionAuditController implements Initializable {
         delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
         delimiterComboBox.getSelectionModel().select(sampleNameDelimiter);
+        updateDelimiterChoice(sampleNameDelimiter);
 
         delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                     final String oldvalue, final String newvalue) {
                 sampleNameDelimiter = newvalue.trim();
-                squidProject.updateFiltersForUnknownNames(new HashMap<>());
-                squidProject.setDelimiterForUnknownNames(newvalue);
-                squidProject.getTask().setChanged(true);
-                setUpPrawnAuditTreeView(false);
-                refreshView();
+                updateDelimiterChoice(newvalue.trim());
             }
         });
 
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
 
+    }
+
+    private void updateDelimiterChoice(String delimiter) {       
+        squidProject.updateFiltersForUnknownNames(new HashMap<>());
+        squidProject.setDelimiterForUnknownNames(delimiter);
+        squidProject.getTask().setChanged(true);
+        setUpPrawnAuditTreeView(false);
+        refreshView();
     }
 
     /**

@@ -186,7 +186,7 @@ public class TaskSquid25 implements Serializable {
                     firstRow++;
                 }
 
-                // these switches split into a//n array of length equations mius 1 in Squid2.20 due to missing count entry
+                // these switches split into an array of length equations mius 1 in Squid2.20 due to missing count entry
                 switchST = lines[firstRow + 28].split("\t");
 
                 String[] switchSA = lines[firstRow + 29].split("\t");
@@ -443,6 +443,12 @@ public class TaskSquid25 implements Serializable {
             if (unBracketed.matches("[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*")) {
                 retVal = retVal.replace(matcher.group(), unBracketed);
             }
+        }
+        
+        squid25FunctionPattern = Pattern.compile("(\\[\\\"total\\s*)(\\d+\\.*\\d*\\s*)(cts\\/sec\\\"])", Pattern.CASE_INSENSITIVE);
+        matcher = squid25FunctionPattern.matcher(retVal);
+        while (matcher.find()){
+            retVal = retVal.replace(matcher.group(), "TotalCPS([\""+ matcher.group(2).trim() + "\"])");
         }
 
         return retVal;
