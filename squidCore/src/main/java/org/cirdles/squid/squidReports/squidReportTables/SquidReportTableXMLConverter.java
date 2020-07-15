@@ -9,6 +9,8 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.tasks.Task;
 
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+
 import java.util.LinkedList;
 
 public class SquidReportTableXMLConverter implements Converter {
@@ -27,6 +29,10 @@ public class SquidReportTableXMLConverter implements Converter {
             context.convertAnother(cat);
             writer.endNode();
         }
+        writer.endNode();
+        
+        writer.startNode("reportSpotTarget");
+        writer.setValue(table.getReportSpotTarget().toString());
         writer.endNode();
 
         writer.startNode("isDefault");
@@ -51,8 +57,14 @@ public class SquidReportTableXMLConverter implements Converter {
             reader.moveUp();
         }
         reader.moveUp();
-
+        
         reader.moveDown();
+        if(reader.getNodeName().equals("reportSpotTarget")) {
+            table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
+            reader.moveUp();
+            reader.moveDown();
+        }
+ 
         table.setIsDefault(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 

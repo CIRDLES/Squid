@@ -38,6 +38,7 @@ import java.util.Objects;
 
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -55,6 +56,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     // Fields
     private String reportTableName;
     private LinkedList<SquidReportCategoryInterface> reportCategories;
+    private SpotTypes reportSpotTarget;
     private boolean isDefault;
 
     private int version;
@@ -62,13 +64,14 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private SquidReportTable() {
     }
 
-    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault) {
-        this(reportTableName, reportCategories, isDefault, 0);
+    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, SpotTypes reportSpotTarget, boolean isDefault) {
+        this(reportTableName, reportCategories, reportSpotTarget, isDefault, 0);
     }
 
-    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault, int version) {
+    private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, SpotTypes reportSpotTarget, boolean isDefault, int version) {
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
+        this.reportSpotTarget = reportSpotTarget;
         this.isDefault = isDefault;
         this.version = version;
     }
@@ -101,26 +104,26 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
-        return new SquidReportTable(reportTableName, new LinkedList<>(), false);
+        return new SquidReportTable(reportTableName, new LinkedList<>(), null, false);
     }
 
     public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
         String reportTableName = "Default Squid3 Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
 
-        return new SquidReportTable(reportTableName, reportCategories, true);
+        return new SquidReportTable(reportTableName, reportCategories, SpotTypes.REFERENCE_MATERIAL, true);
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) {
         String reportTableName = "Default Squid3 Report Table for Unknowns";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknown(task);
 
-        return new SquidReportTable(reportTableName, reportCategories, true);
+        return new SquidReportTable(reportTableName, reportCategories, SpotTypes.UNKNOWN, true);
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task, int version) {
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknownSquidFilter(task);
-        return new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
+        return new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, SpotTypes.UNKNOWN, false, version);
     }
 
     public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
@@ -351,6 +354,22 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories) {
         this.reportCategories = reportCategories;
     }
+    
+    /**
+     * @return the reportSpotTarget
+     */
+    @Override
+    public SpotTypes getReportSpotTarget(){
+        return this.reportSpotTarget;
+    }
+    
+    /**
+     * @param reportSpotTarget the reportSpotTarget to set
+     */
+    @Override
+    public void setReportSpotTarget(SpotTypes reportSpotTarget){
+        this.reportSpotTarget = reportSpotTarget;
+    }
 
     public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
@@ -386,6 +405,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
             cats.add(cat.clone());
         }
         table.setReportCategories(cats);
+        table.setReportSpotTarget(reportSpotTarget);
         table.setIsDefault(isDefault);
 
         return table;

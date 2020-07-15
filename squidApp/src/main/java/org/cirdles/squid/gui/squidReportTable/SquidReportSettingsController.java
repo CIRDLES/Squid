@@ -57,6 +57,7 @@ import java.net.URL;
 import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -1095,6 +1096,9 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
         table.setReportCategories(new LinkedList<>(cats));
         table.setReportTableName(reportTableCB.getSelectionModel().getSelectedItem().getReportTableName());
+        String reportSpotTarget = isRefMat ? "REFERENCE_MATERIAL" : "UNKNOWN";
+        reportTableCB.getSelectionModel().getSelectedItem().setReportSpotTarget(SpotTypes.valueOf(reportSpotTarget));
+        table.setReportSpotTarget(reportTableCB.getSelectionModel().getSelectedItem().getReportSpotTarget());
         table.setVersion(reportTableCB.getSelectionModel().getSelectedItem().getVersion());
         return table;
     }
@@ -1125,6 +1129,12 @@ public class SquidReportSettingsController implements Initializable {
                 SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
+                if(isRefMat) { 
+                    table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+                }
+                else{
+                    table.setReportSpotTarget(SpotTypes.UNKNOWN);
+                }
                 getTables().add(table);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(table);
@@ -1209,6 +1219,42 @@ public class SquidReportSettingsController implements Initializable {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
+                if (table.getReportSpotTarget() == null) {
+                    table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+                    
+                    boolean hasExclusiveSquidSwitchSA = false;
+                    Iterator<SquidReportCategoryInterface> squidReportCategoryIterator = table.getReportCategories().iterator();
+                    Iterator<SquidReportColumnInterface> squidReportColumnIterator;
+                    while (squidReportCategoryIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
+                        squidReportColumnIterator = squidReportCategoryIterator.next().getCategoryColumns().iterator();
+                        SquidReportColumnInterface col;
+                        ExpressionTreeInterface exp;
+                        while(squidReportColumnIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
+                            col = squidReportColumnIterator.next();
+                            exp = task.findNamedExpression(col.getExpressionName());
+                            if (exp.isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                                hasExclusiveSquidSwitchSA = true;
+                                table.setReportSpotTarget(SpotTypes.UNKNOWN);
+                                isRefMat = false;
+                            }
+                        }
+                    }
+                }
+                
+                if (isRefMat) {
+                    refMatRadioButton.fire();
+                }
+                else {
+                    unknownsRadioButton.fire();
+                }
+                    
+                populateSquidReportTableChoiceBox();
+                selectSquidReportTableByPriors();
+                populateExpressionListViews();
+                populateIsotopesListView();
+                populateRatiosListView();
+                populateSpotMetaDataListView();
+                
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(table);
                 if (indexOfSameNameTable >= 0) {
