@@ -1215,11 +1215,12 @@ public class SquidReportSettingsController implements Initializable {
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
+        
         if (file != null) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
-                if (table.getReportSpotTarget() == null) {
+                if (table.getReportSpotTarget().equals(SpotTypes.NONE)) {
                     table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
                     
                     boolean hasExclusiveSquidSwitchSA = false;
@@ -1235,26 +1236,32 @@ public class SquidReportSettingsController implements Initializable {
                             if (exp.isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
                                 hasExclusiveSquidSwitchSA = true;
                                 table.setReportSpotTarget(SpotTypes.UNKNOWN);
-                                isRefMat = false;
                             }
                         }
                     }
-                }
-                
-                if (isRefMat) {
-                    refMatRadioButton.fire();
-                }
-                else {
-                    unknownsRadioButton.fire();
-                }
                     
-                populateSquidReportTableChoiceBox();
-                selectSquidReportTableByPriors();
-                populateExpressionListViews();
-                populateIsotopesListView();
-                populateRatiosListView();
-                populateSpotMetaDataListView();
+                    
+                }
                 
+                if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                    isRefMat = false;
+                    unknownsRadioButton.fire();
+                    selectSquidReportTableByPriors();
+                    populateExpressionListViews();
+                    populateIsotopesListView();
+                    populateRatiosListView();
+                    populateSpotMetaDataListView();
+                }
+                else if (!isRefMat && !table.getReportSpotTarget().equals(SpotTypes.UNKNOWN)) {
+                    isRefMat = true;
+                    refMatRadioButton.fire();
+                    selectSquidReportTableByPriors();
+                    populateExpressionListViews();
+                    populateIsotopesListView();
+                    populateRatiosListView();
+                    populateSpotMetaDataListView();
+                }
+
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(table);
                 if (indexOfSameNameTable >= 0) {

@@ -32,7 +32,7 @@ public class SquidReportTableXMLConverter implements Converter {
         writer.endNode();
         
         writer.startNode("reportSpotTarget");
-        writer.setValue(table.getReportSpotTarget().toString());
+        writer.setValue(table.getReportSpotTarget().name());
         writer.endNode();
 
         writer.startNode("isDefault");
@@ -58,6 +58,7 @@ public class SquidReportTableXMLConverter implements Converter {
         }
         reader.moveUp();
         
+        // Backwards compatibility with report tables prior to https://github.com/drakene/Squid/commit/e34db8df0f6de6dc95e30a4ac5a93738e250ee2c
         reader.moveDown();
         if(reader.getNodeName().equals("reportSpotTarget")) {
             table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
