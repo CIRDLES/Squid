@@ -93,6 +93,9 @@ public final class Squid3Constants {
 
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
             = "Schema/SquidTask_ExpressionXMLSchema.xsd";
+    
+    public static final String URL_STRING_FOR_SQUIDTASK_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL
+            = "Schema/SquidTask_SquidReportTableXMLSchema.xsd";
 
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};

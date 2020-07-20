@@ -32,6 +32,12 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface.formatBigDecimalForPublicationSigDigMode;
@@ -42,6 +48,17 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "", propOrder = {
+    "expressionName",
+    "units",
+    "uncertaintyColumn",
+    "amUncertaintyColumn",
+    "uncertaintyDirective",
+    "countOfSignificantDigits",
+    "visible",
+    "footnoteSpec"
+})
 public class SquidReportColumn implements Serializable, SquidReportColumnInterface {
 
     private static final long serialVersionUID = -4256285353332428810L;
@@ -51,19 +68,32 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private transient boolean amIsotopicRatio;
     // provides for multi-row column headers
     private transient String[] columnHeaders;
-
+    
+    @XmlElement(name = "expressionName", required = true)
     private String expressionName;
+    
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
+    @XmlElement(name = "units", required = false)
     private String units;
 
     // optional uncertainty column
+    @XmlElement(name = "uncertaintyColumn", required = false)
     private SquidReportColumnInterface uncertaintyColumn;
+    
+    @XmlElement(name = "amUncertaintyColumn", required = true)
     private boolean amUncertaintyColumn;
+    
     // 1 sigma abs or pct if uncertainty column
+    @XmlElement(name = "uncertaintyDirective", required = false)
     private String uncertaintyDirective;
-
+    
+    @XmlElement(name = "countOfSignificantDigits", required = true)
     private int countOfSignificantDigits;
+    
+    @XmlElement(name = "visible", required = true)
     private boolean visible;
+    
+    @XmlElement(name = "footnoteSpec", required = false)
     private String footnoteSpec;
 
     private SquidReportColumn() {
@@ -465,5 +495,17 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         result = 31 * result + Arrays.hashCode(getColumnHeaders());
         return result;
 
+    }
+    
+    // See https://stackoverflow.com/questions/4101718/jaxb-cant-handle-interfaces
+    public static class Adapter extends XmlAdapter<SquidReportColumn, SquidReportColumnInterface>{
+        @Override
+        public SquidReportColumnInterface unmarshal(SquidReportColumn col){
+            return col;
+        }
+        @Override
+        public SquidReportColumn marshal(SquidReportColumnInterface col){
+            return (SquidReportColumn)col;
+        }
     }
 }

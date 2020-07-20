@@ -50,11 +50,16 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import org.cirdles.squid.constants.Squid3Constants;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
@@ -63,6 +68,8 @@ import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
+import org.xml.sax.SAXException;
+
 
 /**
  * FXML Controller class
@@ -1210,9 +1217,12 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void importOnAction(ActionEvent event) {
         File file = null;
+        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
-        } catch (IOException e) {
+            final Schema schema = sf.newSchema(new File("C:\\Users\\Noah\\CIRDLES\\Squid\\squidCore\\build\\resources\\main\\org\\cirdles\\squid\\schema\\SquidTask_SquidReportTableXMLSchema.xsd"));
+            FileValidator.validateFileIsXMLSerializedEntity(file, schema);
+        } catch (IOException | SAXException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         
@@ -1246,15 +1256,13 @@ public class SquidReportSettingsController implements Initializable {
                 if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = false;
                     unknownsRadioButton.fire();
-                    selectSquidReportTableByPriors();
-                    populateExpressionListViews();
-                    populateIsotopesListView();
-                    populateRatiosListView();
-                    populateSpotMetaDataListView();
-                }
-                else if (!isRefMat && !table.getReportSpotTarget().equals(SpotTypes.UNKNOWN)) {
-                    isRefMat = true;
-                    refMatRadioButton.fire();
+                    
+                    if (!isRefMat && table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                        isRefMat = true;
+                        refMatRadioButton.fire();
+
+                    }
+                    
                     selectSquidReportTableByPriors();
                     populateExpressionListViews();
                     populateIsotopesListView();

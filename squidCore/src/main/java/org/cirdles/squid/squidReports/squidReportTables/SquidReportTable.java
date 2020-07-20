@@ -36,6 +36,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
@@ -43,6 +50,15 @@ import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "", propOrder = {
+    "reportTableName",
+    "reportCategories",
+    "reportSpotTarget",
+    "isDefault",
+    "version"
+})
+@XmlRootElement(name = "squid_report_table")
 public class SquidReportTable implements Serializable, SquidReportTableInterface {
 
     private static final long serialVersionUID = 1685572683987304408L;
@@ -54,11 +70,19 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
 
     // Fields
+    @XmlElement(name = "reportTableName", required = true)
     private String reportTableName;
+    
+    @XmlElement(name = "reportCategory", required = true)
     private LinkedList<SquidReportCategoryInterface> reportCategories;
+    
+    @XmlElement(name = "reportSpotTarget", required = false) // Backwards compatibility with report tables prior to https://github.com/drakene/Squid/commit/e34db8df0f6de6dc95e30a4ac5a93738e250ee2c
     private SpotTypes reportSpotTarget;
+    
+    @XmlElement(name = "isDefault", required = true)
     private boolean isDefault;
-
+    
+    @XmlElement(name = "version", required = false)
     private int version;
 
     private SquidReportTable() {
@@ -378,7 +402,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public boolean isDefault() {
         return isDefault;
     }
-
+    
     @Override
     public void customizeXstream(XStream xstream) {
         xstream.registerConverter(new SquidReportTableXMLConverter());

@@ -38,6 +38,10 @@ public class SquidReportTableXMLConverter implements Converter {
         writer.startNode("isDefault");
         writer.setValue(Boolean.toString(table.isDefault()));
         writer.endNode();
+        
+        writer.startNode("version");
+        writer.setValue(Integer.toString(table.getVersion()));
+        writer.endNode();
     }
 
     @Override
@@ -67,6 +71,10 @@ public class SquidReportTableXMLConverter implements Converter {
         }
  
         table.setIsDefault(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+        
+        reader.moveDown();
+        table.setVersion(Integer.parseInt(reader.getValue()));
         reader.moveUp();
 
         return table;
