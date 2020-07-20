@@ -36,6 +36,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
@@ -48,8 +49,9 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
+import org.cirdles.squid.utilities.fileUtilities.ZipUtility;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
-import static org.cirdles.squid.web.ZipUtility.extractZippedFile;
 import org.xml.sax.SAXException;
 
 /**
@@ -92,7 +94,7 @@ public class SquidReportingService {
             fileName = myFileName;
         }
 
-        SquidProject squidProject = new SquidProject(myProjectName);
+        SquidProject squidProject = new SquidProject(myProjectName, GEOCHRON);
         prawnFileHandler = squidProject.getPrawnFileHandler();
 
         CalamariFileUtilities.initSampleParametersModels();
@@ -146,7 +148,7 @@ public class SquidReportingService {
             task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
 
             Path calamariReportsFolderAliasParent = Files.createTempDirectory("reports-destination");
-            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve("Squid3 Reports from Web Service");
+            Path calamariReportsFolderAlias = calamariReportsFolderAliasParent.resolve("Squid3ReportsFromWebService");
             File reportsDestinationFile = calamariReportsFolderAlias.toFile();
 
             reportsEngine = prawnFileHandler.getReportsEngine();

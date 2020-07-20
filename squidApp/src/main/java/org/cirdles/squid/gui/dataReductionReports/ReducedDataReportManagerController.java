@@ -42,7 +42,7 @@ public class ReducedDataReportManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         reportTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
-        if (squidProject.getTask().getExpressionByName("ParentElement_ConcenConst").amHealthy()) {
+        if (squidProject.projectIsHealthyGeochronMode() || !squidProject.isTypeGeochron()) {
             // TODO: fix demeters law violation
             squidProject.getTask().produceSummaryReportsForGUI();
             reportTextArea.setText(

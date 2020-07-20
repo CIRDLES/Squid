@@ -88,8 +88,9 @@ public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
         plotOptions.put(TITLE, title);
         plotOptions.put(CONCORDIA_LINE, false);
         plotOptions.put(POINTS, true);
-        plotOptions.put(ELLIPSES, true);
-        plotOptions.put(ELLIPSES_FILL, "red");
+        plotOptions.put(ELLIPSES, false);
+        plotOptions.put(UNCTBARS, true);
+        plotOptions.put(UNCTBARS_FILL, "red");
 
         plotOptions.put(MCLEAN_REGRESSION, false);
         plotOptions.put(MCLEAN_REGRESSION_ENVELOPE, false);
@@ -108,11 +109,11 @@ public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
         List<Node> controls = super.toolbarControlsFactory();
 
         if (hasUncertainties) {
-            CheckBox ellipsesCheckBox = new CheckBox("Ellipses:");
-            formatNode(ellipsesCheckBox, 75);
-            ellipsesCheckBox.setSelected((Boolean) getPlotOptions().get(ELLIPSES));
-            ellipsesCheckBox.setOnAction(mouseEvent -> {
-                setProperty(ELLIPSES, ellipsesCheckBox.isSelected());
+            CheckBox unctbarsCheckBox = new CheckBox("Unct Bars:");
+            formatNode(unctbarsCheckBox, 80);
+            unctbarsCheckBox.setSelected((Boolean) getPlotOptions().get(UNCTBARS));
+            unctbarsCheckBox.setOnAction(mouseEvent -> {
+                setProperty(UNCTBARS, unctbarsCheckBox.isSelected());
             });
 
             ChoiceBox<Uncertainty> uncertaintyChoiceBox = new ChoiceBox<>(FXCollections.observableArrayList(retrievePlottingUncertainties()));
@@ -135,16 +136,16 @@ public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
                 }
             });
 
-            ColorPicker ellipsesColorPicker = new ColorPicker(Color.valueOf(((String) getPlotOptions().get(ELLIPSES_FILL)).replaceAll("#", "0x")));
-            ellipsesColorPicker.setPrefWidth(100);
-            ellipsesColorPicker.setOnAction(mouseEvent -> {
+            ColorPicker unctbarsColorPicker = new ColorPicker(Color.valueOf(((String) getPlotOptions().get(UNCTBARS_FILL)).replaceAll("#", "0x")));
+            unctbarsColorPicker.setPrefWidth(100);
+            unctbarsColorPicker.setOnAction(mouseEvent -> {
                 // to satisfy D3
-                setProperty(ELLIPSES_FILL, ellipsesColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
+                setProperty(UNCTBARS_FILL, unctbarsColorPicker.getValue().toString().substring(0, 8).replaceAll("0x", "#"));
             });
 
-            controls.add(ellipsesCheckBox);
+            controls.add(unctbarsCheckBox);
             controls.add(uncertaintyChoiceBox);
-            controls.add(ellipsesColorPicker);
+            controls.add(unctbarsColorPicker);
         }
 
         Label dataPointsLabel = new Label(" DataPoints:");

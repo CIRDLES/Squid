@@ -458,8 +458,12 @@ public class CalamariReportsEngine implements Serializable {
      */
     private void reportWithinSpotRatiosAtInterpolatedTimes(ShrimpFraction shrimpFraction) {
 
-        int nDodCount = shrimpFraction.getIsotopicRatiosII().iterator().next().getRatEqTime().size();
-
+        int nDodCount = 0;
+        try {
+            nDodCount = shrimpFraction.getIsotopicRatiosII().iterator().next().getRatEqTime().size();
+        } catch (Exception e) {
+        }
+        
         for (int nDodNum = 0; nDodNum < nDodCount; nDodNum++) {
             StringBuilder dataLine = new StringBuilder();
             if (doWriteReportFiles) {

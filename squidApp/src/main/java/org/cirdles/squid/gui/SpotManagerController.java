@@ -38,6 +38,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
@@ -134,20 +135,16 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private ComboBox<String> sampleNameComboBox;
-    @FXML
-    private Button viewRMmodelButton;
-    @FXML
-    private Button viewCMmodelButton;
-    @FXML
-    private Button refreshRMmodelButton;
-    @FXML
-    private Button refreshRMmodelButton2;
 
     private List<PrawnFile.Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
     private MenuItem spotContextMenuItem1R;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
+    @FXML
+    private HBox refMatChooserHBox;
+    @FXML
+    private SplitPane refMatSplitPane;
 
     /**
      * Initializes the controller class.
@@ -157,6 +154,10 @@ public class SpotManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        if (!squidProject.isTypeGeochron()) {
+            refMatChooserHBox.setVisible(false);
+        }
         setUpShrimpFractionListHeaders();
         saveSpotNameButton.setDisable(true);
         setFilteredSpotsAsRefMatButton.setDisable(true);

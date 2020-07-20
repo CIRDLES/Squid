@@ -83,6 +83,9 @@ public class TaskDesign implements Serializable {
     
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel commonPbModel;
+    
+    // part of savable defaults
+    protected String analystName;
 
     /**
      * Creates a new instance of TaskDesign
@@ -122,6 +125,8 @@ public class TaskDesign implements Serializable {
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
 
         indexOfBackgroundSpecies = 5;
+        
+        this.analystName = "";
 
         buildShrimpSpeciesNodeMap();
     }
@@ -470,5 +475,22 @@ public class TaskDesign implements Serializable {
      */
     public void setCommonPbModel(ParametersModel commonPbModel) {
         this.commonPbModel = commonPbModel;
+    }
+
+    /**
+     * @return the analystName
+     */
+    public String getAnalystName() {
+        if (analystName == null){
+            analystName = "";
+        }
+        return analystName;
+    }
+
+    /**
+     * @param analystName the analystName to set
+     */
+    public void setAnalystName(String analystName) {
+        this.analystName = analystName;
     }
 }

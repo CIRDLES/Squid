@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
  *
@@ -31,8 +32,9 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     private int massStationIndex;
 
     private final String massStationLabel;
-    private final String elementLabel;
+    private String elementLabel;
     private String isotopeLabel;
+    private String isotopeAMU;
     private String taskIsotopeLabel;
 
     private boolean isBackground;
@@ -47,6 +49,10 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
     private boolean viewedAsGraph;
 
+    // added July 2020 to accommodate Ratio mode
+    private boolean numeratorRole;
+    private boolean denominatorRole;
+
     public MassStationDetail(
             int massStationIndex,
             String massStationLabel,
@@ -59,6 +65,7 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         this.massStationIndex = massStationIndex;
         this.massStationLabel = massStationLabel;
         this.isotopeLabel = isotopeLabel;
+        this.isotopeAMU = isotopeLabel;
         this.taskIsotopeLabel = isotopeLabel;
         this.elementLabel = elementLabel;
         this.isBackground = isBackground;
@@ -73,6 +80,8 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
         // default value
         this.viewedAsGraph = centeringTimeSec > 0.0;
+        this.numeratorRole = true;
+        this.denominatorRole = true;
     }
 
     @Override
@@ -87,8 +96,12 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MassStationDetail)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MassStationDetail)) {
+            return false;
+        }
         MassStationDetail that = (MassStationDetail) o;
         return massStationIndex == that.massStationIndex;
     }
@@ -146,6 +159,17 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     /**
+     * @return the isotopeAMU
+     */
+    public String getIsotopeAMU() {
+        // backwards compatitble July 2020
+        if (isotopeAMU == null) {
+            isotopeAMU = "n/a";
+        }
+        return isotopeAMU;
+    }
+
+    /**
      * @return the taskIsotopeLabel
      */
     public String getTaskIsotopeLabel() {
@@ -159,11 +183,23 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         taskIsotopeLabel = label;
     }
 
+    public void updateTaskIsotopeLabelForBackground(String nominalMass) {
+        taskIsotopeLabel = DEFAULT_BACKGROUND_MASS_LABEL + " (" + nominalMass + ")";
+    }
+
     /**
      * @return the elementLabel
      */
     public String getElementLabel() {
         return elementLabel;
+    }
+
+    /**
+     *
+     * @param elementLabel
+     */
+    public void setElementLabel(String elementLabel) {
+        this.elementLabel = elementLabel;
     }
 
     /**
@@ -248,6 +284,34 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         return String.format("%1$-" + 8 + "s", massStationLabel)
                 + String.format("%1$-" + 7 + "s", isotopeLabel)
                 + (autoCentered() ? "auto-centered" : "");
+    }
+
+    /**
+     * @return the numeratorRole
+     */
+    public boolean isNumeratorRole() {
+        return numeratorRole;
+    }
+
+    /**
+     * @param numeratorRole the numeratorRole to set
+     */
+    public void setNumeratorRole(boolean numeratorRole) {
+        this.numeratorRole = numeratorRole;
+    }
+
+    /**
+     * @return the denominatorRole
+     */
+    public boolean isDenominatorRole() {
+        return denominatorRole;
+    }
+
+    /**
+     * @param denominatorRole the denominatorRole to set
+     */
+    public void setDenominatorRole(boolean denominatorRole) {
+        this.denominatorRole = denominatorRole;
     }
 
 }

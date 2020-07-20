@@ -87,6 +87,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 /**
  * FXML Controller class
@@ -294,7 +295,9 @@ public class TaskDesignerController implements Initializable {
         List<String> allMasses = new ArrayList<>();
         allMasses.addAll(REQUIRED_NOMINAL_MASSES);
         allMasses.addAll(taskDesigner.getNominalMasses());
-        Collections.sort(allMasses);
+        
+        Collections.sort(allMasses, new IntuitiveStringComparator<>());
+
         allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         if (taskDesigner.getIndexOfBackgroundSpecies() >= 0) {
             allMasses.add((allMasses.size() > taskDesigner.getIndexOfBackgroundSpecies()
@@ -650,7 +653,7 @@ public class TaskDesignerController implements Initializable {
                 masses.addAll(REQUIRED_NOMINAL_MASSES);
                 masses.addAll(taskDesigner.getNominalMasses());
                 masses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-                Collections.sort(masses);
+                Collections.sort(masses, new IntuitiveStringComparator<>());
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
                 for (String mass : masses) {
