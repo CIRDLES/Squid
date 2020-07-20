@@ -59,10 +59,11 @@ public final class PrawnFileUtilities {
      * from first run table and assumes all run tables have identical labels
      * across all runs.
      *
+     * @param indexOfBackgroundSpecies the value of indexOfBackgroundSpecies
      * @param runs
-     * @return Map<Integer, MassStationDetail>
+     * @return the java.util.Map<java.lang.Integer,org.cirdles.squid.shrimp.MassStationDetail>
      */
-    public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(List<Run> runs) {
+    public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(int indexOfBackgroundSpecies, List<Run> runs) {
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
 
         // prepare map from first run table
@@ -83,7 +84,8 @@ public final class PrawnFileUtilities {
             }
             
 
-            boolean isBackground = massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
+            boolean isBackground = (index == indexOfBackgroundSpecies);//     massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
+            
             String uThBearingName = UThBearingEnum.N.getName();
             if (elementLabel.matches("(.*)(238|254|270|U)(.*)")) {
                 uThBearingName = UThBearingEnum.U.getName();

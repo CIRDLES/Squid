@@ -16,6 +16,8 @@
 package org.cirdles.squid.projects;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,7 +58,6 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
@@ -214,13 +215,12 @@ public final class SquidProject implements Serializable {
             if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
                 List<String> nominalMasses = new ArrayList<>();
                 for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
-                    String proposedName = ssm.getMassStationSpeciesName();
-                    if (proposedName.toUpperCase(Locale.ENGLISH).startsWith("B")) {
-                        proposedName = BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
-                    } else {
-                        proposedName = proposedName.replace(ssm.getElementName(), "");
-                    }
-                    nominalMasses.add(proposedName);
+                    // no background assumed
+                    String proposedNominalMassName
+                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
+                                    .get(ssm.getMassStationIndex())
+                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+                    nominalMasses.add(proposedNominalMassName);
                 }
                 this.task.setNominalMasses(nominalMasses);
 
@@ -298,6 +298,7 @@ public final class SquidProject implements Serializable {
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
             if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
                 task.setIndexOfTaskBackgroundMass(i);
+                task.setIndexOfBackgroundSpecies(i);
                 break;
             }
         }

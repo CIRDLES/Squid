@@ -1348,7 +1348,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void createMapOfIndexToMassStationDetails() {
         if (prawnFile != null) {
-            mapOfIndexToMassStationDetails = PrawnFileUtilities.createMapOfIndexToMassStationDetails(prawnFile.getRun());
+            mapOfIndexToMassStationDetails
+                    = PrawnFileUtilities.createMapOfIndexToMassStationDetails(indexOfBackgroundSpecies, prawnFile.getRun());
         }
     }
 
@@ -1498,7 +1499,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     massStationDetail.setIsotopeLabel(ssm.getIsotopeName());
                     if (nominalMasses.size() > 0) {
                         if (indexOfTaskBackgroundMass == index) {
-                            massStationDetail.setTaskIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
+                            massStationDetail.updateTaskIsotopeLabelForBackground(nominalMasses.get(index));
                         } else {
                             try {
                                 massStationDetail.setTaskIsotopeLabel(nominalMasses.get(index));
@@ -1688,7 +1689,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         if (ssm != null) {
             ssm.setIsBackground(true);
-            mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex()).setIsBackground(true);
+            ssm.setNumeratorRole(false);
+            ssm.setDenominatorRole(false);
+            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(ssm.getMassStationIndex());
+            massStationDetail.setIsBackground(true);
+            massStationDetail.setNumeratorRole(false);
+            massStationDetail.setDenominatorRole(false);
         }
 
         return retVal;
@@ -2800,6 +2806,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @return
      */
+    public int getIndexOfTaskBackgroundMass() {
+        return indexOfTaskBackgroundMass;
+    }
+
+    /**
+     *
+     * @return
+     */
     @Override
     public String getParentNuclide() {
         return parentNuclide;
@@ -2877,6 +2891,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public List<String> getNominalMasses() {
         return nominalMasses;
+    }
+
+    public String findNominalMassOfTaskBackgroundMass() {
+        return nominalMasses.get(indexOfTaskBackgroundMass);
     }
 
     /**

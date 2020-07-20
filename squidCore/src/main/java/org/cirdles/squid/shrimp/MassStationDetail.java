@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
  *
@@ -31,8 +32,9 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     private int massStationIndex;
 
     private final String massStationLabel;
-    private final String elementLabel;
+    private String elementLabel;
     private String isotopeLabel;
+    private String isotopeAMU;
     private String taskIsotopeLabel;
 
     private boolean isBackground;
@@ -63,6 +65,7 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         this.massStationIndex = massStationIndex;
         this.massStationLabel = massStationLabel;
         this.isotopeLabel = isotopeLabel;
+        this.isotopeAMU = isotopeLabel;
         this.taskIsotopeLabel = isotopeLabel;
         this.elementLabel = elementLabel;
         this.isBackground = isBackground;
@@ -156,6 +159,17 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     /**
+     * @return the isotopeAMU
+     */
+    public String getIsotopeAMU() {
+        // backwards compatitble July 2020
+        if (isotopeAMU == null) {
+            isotopeAMU = "n/a";
+        }
+        return isotopeAMU;
+    }
+
+    /**
      * @return the taskIsotopeLabel
      */
     public String getTaskIsotopeLabel() {
@@ -169,11 +183,23 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         taskIsotopeLabel = label;
     }
 
+    public void updateTaskIsotopeLabelForBackground(String nominalMass) {
+        taskIsotopeLabel = DEFAULT_BACKGROUND_MASS_LABEL + " (" + nominalMass + ")";
+    }
+
     /**
      * @return the elementLabel
      */
     public String getElementLabel() {
         return elementLabel;
+    }
+
+    /**
+     *
+     * @param elementLabel
+     */
+    public void setElementLabel(String elementLabel) {
+        this.elementLabel = elementLabel;
     }
 
     /**

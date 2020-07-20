@@ -70,7 +70,7 @@
                               <ListView fx:id="ratioExpressionsListView" />
                            </content>
                         </TitledPane>
-                        <TitledPane animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Species)">
+                        <TitledPane animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Data Isotope Labels)">
                            <content>
                               <ListView fx:id="isotopesExpressionsListView" />
                            </content>

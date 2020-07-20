@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.web;
 
-import org.cirdles.squid.utilities.fileUtilities.ZipUtility;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +49,9 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
+import org.cirdles.squid.utilities.fileUtilities.ZipUtility;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
+import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
 import org.xml.sax.SAXException;
 
 /**
