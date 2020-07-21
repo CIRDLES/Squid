@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="squid_report_table">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="reportTableName" type="xs:string"/>
+        <xs:element name="reportCategory" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="displayName" type="xs:string"/>
+              <xs:element name="categoryColumn" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="expressionName" type="xs:string"/>
+                    <xs:element name="units" type="xs:string" minOccurs="0"/>
+                    <xs:element name="uncertaintyColumn" minOccurs="0"/>
+                    <xs:element name="amUncertaintyColumn" type="xs:boolean"/>
+                    <xs:element name="uncertaintyDirective" type="xs:string" minOccurs="0"/>
+                    <xs:element name="countOfSignificantDigits" type="xs:int"/>
+                    <xs:element name="visible" type="xs:boolean"/>
+                    <xs:element name="footnoteSpec" type="xs:string" minOccurs="0"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="visible" type="xs:boolean"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="reportSpotTarget" type="spotTypes" minOccurs="0"/>
+        <xs:element name="isDefault" type="xs:boolean"/>
+        <xs:element name="version" type="xs:int"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:simpleType name="spotTypes">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="REFERENCE_MATERIAL"/>
+      <xs:enumeration value="UNKNOWN"/>
+      <xs:enumeration value="NONE"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
