@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="projectManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<GridPane hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
         <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
@@ -34,13 +34,14 @@
     <children>
         <HBox GridPane.columnIndex="1">
             <children>
-                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="900.0" text="Project &gt; Data/Manage Spots and Reference Materials &gt; Data/Manage Sample Naming" />
+                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="970.0" text="Project  &gt; Data / Manage Sample Naming  &gt; Data / Manage Spots and Reference Materials" />
+            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: red;" text="Geochron Mode" />
             </children>
         </HBox>
         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <children>
                 <TextField fx:id="projectNameText" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" HBox.hgrow="ALWAYS" />
-                <Label text="Analyst Name:" />
+                <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Analyst Name:" />
                 <TextField fx:id="analystNameText" prefHeight="27.0" prefWidth="322.0" promptText="Your name" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
@@ -51,7 +52,7 @@
         </HBox>
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Data File:" GridPane.rowIndex="3" />
-        <Label fx:id="softwareVersionLabel1" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Software:" GridPane.rowIndex="4" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Software:" GridPane.rowIndex="4" />
         <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
             <children>
                 <Label fx:id="softwareVersionLabel" text="Version:" />
@@ -99,9 +100,9 @@
         <children>
             <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
             <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
-            <Label style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
-            <Label layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
-            <HBox alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Label fx:id="preferredIndexIsotopeLabel" style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
+            <Label fx:id="weightedMeanRefMatLabel" layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
+            <HBox fx:id="isotopeHBox" alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <children>
                     <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
                         <toggleGroup>
@@ -138,7 +139,7 @@
                     <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
                 </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <HBox fx:id="weightedMeansHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                 <children>
                     <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
                     <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Minimum external 1sigma % err for 206Pb/238U:" translateX="20.0" />
@@ -149,7 +150,7 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                 <children>
-                    <Label contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="338.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Default Common Pb Model:" wrapText="true" />
+                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="338.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Default Common Pb Model:" wrapText="true" />
                     <Label prefHeight="29.0" prefWidth="321.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Physical Constants Model:" translateX="10.0" />
                 </children>
                <padding>

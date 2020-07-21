@@ -22,15 +22,22 @@
                     <items>
                         <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="New Squid Project">
+                        <Menu mnemonicParsing="false" text="New Squid GEOCHRON Project">
                             <items>
                                 <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
+                        <MenuItem fx:id="newSquidProjectFromZippedPrawnMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromZippedPrawnAction" text="From a single Zipped Prawn XML file" />
                                 <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
                                 <SeparatorMenuItem />
                                 <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File" />
                                 <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="(Beta) From Recent OP File" />
                             </items>
                         </Menu>
+                  <Menu mnemonicParsing="false" text="New Squid RATIO Project &lt;BETA&gt;">
+                     <items>
+                        <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false" onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file" />
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
                         <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
@@ -55,7 +62,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#manageTaskMenuItemAction" text="Manage Current Task" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#showTaskDesignerAction" text="New Task using Task Design Assistant" />
+                        <MenuItem fx:id="newTaskUsingDesignerMenuItem" mnemonicParsing="false" onAction="#showTaskDesignerAction" text="New Task using Task Design Assistant" />
                         <MenuItem fx:id="newSquid3TaskFromPrefsMenuItem" mnemonicParsing="false" onAction="#newSquid3TaskFromPrefsMenuItemAction" text="New Squid Task from Task Designer" visible="false" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Squid Task from Task Library" />
@@ -105,14 +112,14 @@
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
+                                <MenuItem fx:id="refMatConcordiaMenuItem" mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
                         <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
+                                <MenuItem fx:id="unknownConcordiaMenuItem" mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
                             </items>
                         </Menu>

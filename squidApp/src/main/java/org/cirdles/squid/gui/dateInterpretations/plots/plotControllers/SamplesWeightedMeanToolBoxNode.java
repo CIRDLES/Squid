@@ -221,8 +221,9 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         // build spot tree for sample
         sampleItem = new CheckBoxTreeItem<>(sampleNode);
         sampleItem.setSelected(false);
+        sampleItem.setExpanded(true);
         PlotsController.spotsTreeViewCheckBox.setRoot(sampleItem);
-        PlotsController.spotsTreeViewCheckBox.setShowRoot(false);
+        PlotsController.spotsTreeViewCheckBox.setShowRoot(true);
         PlotsController.currentlyPlottedSampleTreeNode = sampleItem;
 
         for (int i = 0; i < fractionNodesWM.size(); i++) {

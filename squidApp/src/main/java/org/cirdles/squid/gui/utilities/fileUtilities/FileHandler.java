@@ -113,6 +113,29 @@ public class FileHandler {
         return retVal;
     }
 
+    public static File selectZippedPrawnXMLFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Zipped Prawn XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Zipped Prawn XML files", "*.zip"));
+        File initDirectory = new File(squidPersistentState.getMRUPrawnFileFolderPath());
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
+
+        File zippedPrawnXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (zippedPrawnXMLFileNew != null) {
+            if (zippedPrawnXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".zip")) {
+                retVal = zippedPrawnXMLFileNew;
+            } else {
+                throw new IOException("Filename does not end with '.zip'");
+            }
+        }
+
+        return retVal;
+    }
+
     public static List<File> selectForJoinTwoPrawnXMLFiles(Window ownerWindow)
             throws IOException, JAXBException, SAXException {
         List<File> retVal = new ArrayList<>();
@@ -285,8 +308,8 @@ public class FileHandler {
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
-        chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory() ?
-                squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + System.getProperty("user.home")));
+        chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()
+                ? squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + System.getProperty("user.home")));
 
         retVal = chooser.showDialog(ownerWindow);
 
@@ -310,7 +333,6 @@ public class FileHandler {
         }
 
         //directory chooser doesn't have an option to set initial folder name, find solution
-
         retVal = chooser.showDialog(ownerWindow);
 
         if (retVal != null) {
@@ -398,8 +420,7 @@ public class FileHandler {
 
         return fc.showSaveDialog(ownerWindow);
     }
-    */
-
+     */
     public static File selectOPFile(Window ownerWindow) throws IOException {
         File retVal;
 

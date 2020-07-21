@@ -30,6 +30,7 @@ import org.cirdles.squid.tasks.expressions.Expression;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.layout.RowConstraints;
 
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
@@ -54,12 +55,6 @@ public class TaskManagerController implements Initializable {
     private GridPane taskManagerGridPane;
     @FXML
     private TextField taskNameTextField;
-    @FXML
-    private RadioButton geochronTaskTypeRadioButton;
-    @FXML
-    private ToggleGroup taskTypeToggleGroup;
-    @FXML
-    private RadioButton generalTaskTypeRadioButton;
     @FXML
     private TextField authorsNameTextField;
     @FXML
@@ -90,6 +85,10 @@ public class TaskManagerController implements Initializable {
     private Label parentConcExpressionLabel;
     @FXML
     private Label parentConcLabel;
+    @FXML
+    private GridPane directivesGridPane;
+    @FXML
+    private Label projectModeLabel;
 
     /**
      * Initializes the controller class.
@@ -103,6 +102,7 @@ public class TaskManagerController implements Initializable {
             task = squidProject.getTask();
             USE_SIG_FIG_15 = task.isRoundingForSquid3();
             task.setupSquidSessionSpecsAndReduceAndReport(false);
+            projectModeLabel.setText(squidProject.getProjectType().getProjectName() + " Mode");
             populateTaskFields();
             setupListeners();
         } else {
@@ -120,13 +120,12 @@ public class TaskManagerController implements Initializable {
         labNameTextField.setText(task.getLabName());
         provenanceTextField.setText(task.getProvenance());
 
-        if (task.getTaskType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) != 0) {
-            generalTaskTypeRadioButton.setSelected(true);
-        } else {
-            geochronTaskTypeRadioButton.setSelected(true);
-        }
-
         taskAuditTextArea.setText(task.printTaskAudit());
+
+        if (!squidProject.isTypeGeochron()) {
+            int indexChildDirectives = taskManagerGridPane.getChildren().indexOf(directivesGridPane);
+            taskManagerGridPane.getChildren().get(indexChildDirectives).setVisible(false);
+        }
 
         populateDirectives();
     }
@@ -163,7 +162,10 @@ public class TaskManagerController implements Initializable {
         updateDirectiveButtons();
 
         // Directives fields
-        ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
+        try {
+            ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
+        } catch (Exception e) {
+        }
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
@@ -241,7 +243,6 @@ public class TaskManagerController implements Initializable {
                 task.setProvenance(newValue);
             }
         });
-
     }
 
     @FXML
@@ -259,17 +260,4 @@ public class TaskManagerController implements Initializable {
         populateDirectives();
         taskAuditTextArea.setText(task.printTaskAudit());
     }
-
-    @FXML
-    private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
-        task.setChanged(true);
-    }
-
-    @FXML
-    private void generalTaskTypeRadioButtonAction(ActionEvent event) {
-        task.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
-        task.setChanged(true);
-    }
-
 }

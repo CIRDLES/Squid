@@ -459,17 +459,24 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
     }
 
     private void showSpotLabelOnGraph(GraphicsContext g2d, int spotIndex) {
-        g2d.setFont(Font.font("SansSerif", 10));
-        g2d.setFill(Paint.valueOf("BLACK"));
-        Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());
-        text.applyCss();
-        g2d.rotate(-90);
-        g2d.fillText(
-                prawnFileRuns.get(spotIndex).getPar().get(0).getValue(),
-                -70,//-text.getLayoutBounds().getWidth() - 5,
-                mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[spotIndex] + 4])
-        );
-        g2d.rotate(90);
+        if (countOfScansCumulative.length > spotIndex) {
+            g2d.setFont(Font.font("SansSerif", 10));
+            g2d.setFill(Paint.valueOf("BLACK"));
+            Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());
+            text.applyCss();
+            g2d.rotate(-90);
+
+            int onPeakAcquireTimesIndex = countOfScansCumulative[spotIndex] + 4;
+            if (onPeakAcquireTimesIndex >= myOnPeakNormalizedAquireTimes.length) {
+                onPeakAcquireTimesIndex = myOnPeakNormalizedAquireTimes.length - 1;
+            }
+            g2d.fillText(
+                    prawnFileRuns.get(spotIndex).getPar().get(0).getValue(),
+                    -70,//-text.getLayoutBounds().getWidth() - 5,
+                    mapX(myOnPeakNormalizedAquireTimes[onPeakAcquireTimesIndex])
+            );
+            g2d.rotate(90);
+        }
     }
 
     /**

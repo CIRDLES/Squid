@@ -37,7 +37,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private String fractionID;
     private int spotNumber;
-    // for tracking time spotIndex of spot in set of unknowns as 1-based index
+    // for tracking time spotIndex of spot in all sets of spots as 1-based index
     private int spotIndex;
     private String nameOfMount;
     private long dateTimeMilliseconds;

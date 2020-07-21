@@ -16,16 +16,23 @@
 package org.cirdles.squid.projects;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
 
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -49,6 +56,7 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -94,7 +102,14 @@ public final class SquidProject implements Serializable {
     private boolean useSBM;
     private boolean userLinFits;
 
-    public SquidProject() {
+    private TaskTypeEnum projectType;
+
+    /**
+     *
+     * @param projectType the value of projectType
+     */
+    public SquidProject(TaskTypeEnum projectType) {
+        this.projectType = projectType;
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
         this.prawnSourceFile = new File("");
@@ -105,7 +120,7 @@ public final class SquidProject implements Serializable {
 
         this.sessionDurationHours = 0.0;
 
-        this.projectChanged = false;
+        SquidProject.projectChanged = false;
 
         this.referenceMaterialModel = new ReferenceMaterialModel();
         this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
@@ -120,8 +135,10 @@ public final class SquidProject implements Serializable {
         this.selectedIndexIsotope = taskDesignDefault.getSelectedIndexIsotope();
         this.useSBM = taskDesignDefault.isUseSBM();
         this.userLinFits = taskDesignDefault.isUserLinFits();
+        this.analystName = taskDesignDefault.getAnalystName();
 
         this.task = new Task("New Task", prawnFileHandler.getNewReportsEngine());
+        this.task.setTaskType(projectType);
         this.task.setReferenceMaterialModel(this.referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
         this.task.setPhysicalConstantsModel(physicalConstantsModel);
@@ -130,11 +147,31 @@ public final class SquidProject implements Serializable {
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
                 = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
+
     }
-    
-    public SquidProject(String projectName){
-        this();
+
+    /**
+     *
+     * @param projectName the value of projectName
+     * @param projectType the value of projectType
+     */
+    public SquidProject(String projectName, TaskTypeEnum projectType) {
+        this(projectType);
         this.projectName = projectName;
+    }
+
+    /**
+     * @return the projectType
+     */
+    public TaskTypeEnum getProjectType() {
+        if (projectType == null) {
+            projectType = GEOCHRON;
+        }
+        return projectType;
+    }
+
+    public boolean isTypeGeochron() {
+        return (projectType.equals(GEOCHRON));
     }
 
     public Map< String, TaskInterface> getTaskLibrary() {
@@ -158,7 +195,11 @@ public final class SquidProject implements Serializable {
         this.task.setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
-    public void initializeTaskAndReduceData() {
+    /**
+     *
+     * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
+     */
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
         if (task != null) {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
@@ -169,6 +210,22 @@ public final class SquidProject implements Serializable {
             task.updateAllExpressions(true);
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+            // autogenerate task basics for type General = Ratio mode
+            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
+                List<String> nominalMasses = new ArrayList<>();
+                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
+                    // no background assumed
+                    String proposedNominalMassName
+                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
+                                    .get(ssm.getMassStationIndex())
+                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+                    nominalMasses.add(proposedNominalMassName);
+                }
+                this.task.setNominalMasses(nominalMasses);
+
+                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
+            }
         }
     }
 
@@ -191,14 +248,14 @@ public final class SquidProject implements Serializable {
         this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
         this.task.applyDirectives();
-        initializeTaskAndReduceData();
+        initializeTaskAndReduceData(false);
     }
 
     public void createTaskFromImportedSquid25Task(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
-        // if Task is ashort of nominal masses, add them
+        // if Task is short of nominal masses, add them
         int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
             SquidMessageDialog.showWarningDialog(
@@ -241,6 +298,7 @@ public final class SquidProject implements Serializable {
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
             if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
                 task.setIndexOfTaskBackgroundMass(i);
+                task.setIndexOfBackgroundSpecies(i);
                 break;
             }
         }
@@ -293,7 +351,7 @@ public final class SquidProject implements Serializable {
         this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         this.task.applyDirectives();
 
-        initializeTaskAndReduceData();
+        initializeTaskAndReduceData(false);
     }
 
     public void setupPrawnOPFile(File opFileNew)
@@ -390,6 +448,15 @@ public final class SquidProject implements Serializable {
     public void autoDivideSamples() {
         this.filtersForUnknownNames = new HashMap<>();
         if (task.getShrimpFractions() != null) {
+            // July 2020 add in delimiter suggester
+            Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
+            Matcher matcher
+                    = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
+            if (matcher.find()) {
+                int s = matcher.start();
+                delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
+            }
+
             boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
             for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
                 // determine flavor
@@ -541,6 +608,10 @@ public final class SquidProject implements Serializable {
         }
 
         return listOfUnknownsBySample;
+    }
+
+    public boolean projectIsHealthyGeochronMode() {
+        return isTypeGeochron() && task.getExpressionByName("ParentElement_ConcenConst").amHealthy();
     }
 
     public String getPrawnSourceFileName() {
