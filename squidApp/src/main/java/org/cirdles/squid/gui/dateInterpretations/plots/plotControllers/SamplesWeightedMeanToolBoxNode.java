@@ -29,11 +29,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -131,26 +128,25 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         VBox sortingToolBox = sortedVBox();
         VBox saveAsToolBox = saveAsVBox();
 
-        Path separator1 = separator();
-        Path separator2 = separator();
-        Path separator3 = separator();
-        Path separator4 = separator();
+        Path separator1 = separator(60.0F);
+        Path separator2 = separator(60.0F);
+        Path separator3 = separator(60.0F);
+        Path separator4 = separator(60.0F);
 
         getChildren().addAll(samplesToolBox, separator1, domainToolBox, separator2, filterToolBox, separator3, sortingToolBox, separator4, saveAsToolBox);
 
         setAlignment(Pos.CENTER);
     }
 
-    private Path separator() {
-        Path separator = new Path();
-        separator.getElements().add(new MoveTo(2.0f, 0.0f));
-        separator.getElements().add(new VLineTo(60.0f));
-        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
-        separator.setStrokeWidth(2);
-
-        return separator;
-    }
-
+//    private Path separator() {
+//        Path separator = new Path();
+//        separator.getElements().add(new MoveTo(2.0f, 0.0f));
+//        separator.getElements().add(new VLineTo(60.0f));
+//        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
+//        separator.setStrokeWidth(2);
+//
+//        return separator;
+//    }
     private VBox samplesVBox() {
         VBox sampleNameToolBox = new VBox(2);
 
@@ -706,14 +702,6 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         } catch (IOException e) {
             SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
         }
-    }
-
-    private void formatNode(Control control, int width) {
-        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
-        control.setPrefWidth(width);
-        control.setMinWidth(USE_PREF_SIZE);
-        control.setPrefHeight(23);
-        control.setMinHeight(USE_PREF_SIZE);
     }
 
     /**

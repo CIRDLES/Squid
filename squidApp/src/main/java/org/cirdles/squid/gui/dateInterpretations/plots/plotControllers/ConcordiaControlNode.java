@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
@@ -54,7 +55,14 @@ public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
             isotopeChoiceHBox = new RefMatConcordiaToolBoxNode(plotsController);
         }
 
-        getChildren().addAll(isotopeChoiceHBox);
+        CheckBox showExcludedSpotsCheckBox = new CheckBox("Plot Excluded");
+        showExcludedSpotsCheckBox.setSelected(true);
+        formatNode(showExcludedSpotsCheckBox, 100);
+        showExcludedSpotsCheckBox.setOnAction(mouseEvent -> {
+            plotsController.showExcludedSpots(showExcludedSpotsCheckBox.isSelected());
+        });
+
+        getChildren().addAll(showExcludedSpotsCheckBox, separator(20.0F), isotopeChoiceHBox);
     }
 
 }
