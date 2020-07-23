@@ -155,7 +155,7 @@ public class SquidReportingService {
             prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(fileName);
             reportsEngine.setFolderToWriteCalamariReports(reportsDestinationFile);
 
-            ((Task) task).initTaskDefaultSquidReportTables(false);
+            ((Task) task).initTaskDefaultSquidReportTables(true);
 
             if (squidProject.hasReportsFolder()) {
                 squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
