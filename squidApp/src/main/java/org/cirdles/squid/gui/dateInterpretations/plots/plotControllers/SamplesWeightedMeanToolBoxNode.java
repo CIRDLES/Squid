@@ -103,7 +103,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables();
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         categorySortComboBox.getSelectionModel().selectFirst();

@@ -2549,11 +2549,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return calls.toString();
     }
 
-    public SquidReportTableInterface initTaskDefaultSquidReportTables() {
-        if (squidReportTablesRefMat == null) {
+    /**
+     *
+     * @param updateDefaultReports the value of updateDefaultReports
+     */
+    public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
+        if (updateDefaultReports || squidReportTablesRefMat == null) {
             this.squidReportTablesRefMat = new ArrayList<>();
         }
-        if (squidReportTablesUnknown == null) {
+        if (updateDefaultReports || squidReportTablesUnknown == null) {
             this.squidReportTablesUnknown = new ArrayList<>();
         }
 

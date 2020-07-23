@@ -28,7 +28,7 @@ import java.util.Arrays;
 public class ReportSerializerToCSV {
 
     public static void writeCSVReport(boolean rawOutput, File csvFile, String[][] reportFractions) {
-
+        
         int firstColumnShown = 2;
         PrintWriter outputWriter = null;
 

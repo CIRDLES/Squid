@@ -170,7 +170,7 @@ public class SquidReportSettingsController implements Initializable {
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
 
-        ((Task) task).initTaskDefaultSquidReportTables();
+        ((Task) task).initTaskDefaultSquidReportTables(true);
 
         isRefMat = true;
 
@@ -1342,47 +1342,27 @@ public class SquidReportSettingsController implements Initializable {
 
     @FXML
     public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
-        SquidReportTableInterface reportTable = createCopyOfUpdatedSquidReportTable();
-        String baseFileName;
-        String[][] textArray;
 
-        File reportTableFile = null;
-        if (isRefMat) {
-            reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
-
-//            textArray = SquidReportTableHelperMethods.processReportTextArray(
-//                    SquidReportTableLauncher.ReportTableTab.refMatCustom,
-//                    reportTable,
-//                    null);
-//            baseFileName = (squidProject.getProjectName()
-//                    + "_RefMat_"
-//                    + reportTable.getReportTableName())
-//                    .replaceAll("\\s+", "_")
-//                    + ".csv";
-        } else {
-            reportTableFile = squidProject.produceSelectedUnknownsReportCSV();
-//            textArray = SquidReportTableHelperMethods.processReportTextArray(
-//                    SquidReportTableLauncher.ReportTableTab.unknownCustom,
-//                    reportTable,
-//                    spotsChoiceBox.getValue());
-//            baseFileName = (squidProject.getProjectName()
-//                    + "_Unknowns_"
-//                    + reportTable.getReportTableName() + "_"
-//                    + ((spotsChoiceBox.getValue().compareToIgnoreCase("unknowns") == 0) ? "ALL" : spotsChoiceBox.getValue()))
-//                    .replaceAll("\\s+", "_")
-//                    + ".csv";
-//            reportTableFile
-//                = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
-        }
-
-        if (reportTableFile != null) {
-            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
-        } else {
+        if (isEditing.getValue()) {
             SquidMessageDialog.showInfoDialog(
-                    "An Error Occurred.\n",
-                    primaryStageWindow);
-        }
+                        "Please save the report first.\n",
+                        primaryStageWindow);
+        } else {
+            File reportTableFile = null;
+            if (isRefMat) {
+                reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
+            } else {
+                reportTableFile = squidProject.produceSelectedUnknownsReportCSV();
+            }
 
+            if (reportTableFile != null) {
+                SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "An Error Occurred.\n",
+                        primaryStageWindow);
+            }
+        }
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
