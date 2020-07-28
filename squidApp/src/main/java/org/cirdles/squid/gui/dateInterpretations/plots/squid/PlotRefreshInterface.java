@@ -28,4 +28,5 @@ public interface PlotRefreshInterface {
     public void showActivePlot();
     public void setXAxisExpressionName(String xAxisExpressionName);
     public void setYAxisExpressionName(String yAxisExpressionName);
+    public void showExcludedSpots(boolean doShow);
 }

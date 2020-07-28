@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -20,6 +21,7 @@
     <children>
         <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
+            <Label text="Manage Report Templates" />
                 <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New" HBox.hgrow="ALWAYS">
                     <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -35,7 +37,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
                 </Button>
-                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction" text="Restore" HBox.hgrow="ALWAYS">
+                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction" text="Cancel / Undo" HBox.hgrow="ALWAYS">
                     <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </HBox.margin>
@@ -68,43 +70,47 @@
                     </HBox.margin>
                 </Button>
             </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
         </HBox>
         <SplitPane fx:id="mainPane" dividerPositions="0.4559" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
             <items>
                 <VBox maxWidth="480.0" minWidth="480.0" prefWidth="480.0" styleClass="backgroundCalamari">
                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="530.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
+                        <HBox alignment="CENTER_LEFT" prefHeight="114.0" prefWidth="470.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
                             <children>
-                                <VBox alignment="CENTER_LEFT" maxHeight="87.0" maxWidth="121.0" minHeight="62.0" prefHeight="74.0" prefWidth="121.0" spacing="7.0" HBox.hgrow="NEVER">
+                                <VBox alignment="CENTER_LEFT" maxHeight="87.0" maxWidth="138.0" minHeight="62.0" prefHeight="74.0" prefWidth="138.0" spacing="5.0" HBox.hgrow="NEVER">
                                     <children>
-                                        <Label style="-fx-font-size: 14;" text="Target:" />
-                                        <RadioButton fx:id="refMatRadioButton" minWidth="85.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" prefHeight="18.0" prefWidth="85.0" selected="true" text="Ref Mat" translateX="10.0" translateY="-4.0">
+                                        <Label style="-fx-font-size: 14;" text="Choose Target:" />
+                                        <RadioButton fx:id="refMatRadioButton" minWidth="85.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" prefHeight="18.0" prefWidth="85.0" text="Ref Mat" translateX="10.0" translateY="-4.0">
                                             <toggleGroup>
                                                 <ToggleGroup fx:id="refMatUnknownsToggleGroup" />
                                             </toggleGroup>
                                         </RadioButton>
-                                        <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" text="Unknown" toggleGroup="$refMatUnknownsToggleGroup" translateX="10.0" translateY="-8.0" />
+                                        <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" selected="true" text="Unknown" toggleGroup="$refMatUnknownsToggleGroup" translateX="10.0" />
+                                          <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" translateX="8.0" />
                                     </children>
                                 </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" />
                                 <VBox alignment="CENTER" prefHeight="74.0" prefWidth="387.0">
                                     <children>
+                              <Label style="-fx-font-size: 14;" text="Choose Report Template for Target:" />
                                         <HBox fx:id="settingsAndSpotsCB" alignment="CENTER_LEFT" prefWidth="420.0">
                                             <children>
-                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" prefHeight="23.0" prefWidth="381.0" HBox.hgrow="ALWAYS">
+                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" prefHeight="23.0" prefWidth="355.0" translateX="-5.0" HBox.hgrow="ALWAYS">
                                                     <HBox.margin>
                                                         <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                                     </HBox.margin>
                                                 </ChoiceBox>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER_LEFT" minHeight="31.0" prefHeight="31.0" prefWidth="420.0" VBox.vgrow="NEVER">
+                                        <HBox alignment="CENTER" minHeight="31.0" prefHeight="31.0" prefWidth="420.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" HBox.hgrow="NEVER">
-                                                    <HBox.margin>
-                                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
-                                                    </HBox.margin>
-                                                </ChoiceBox>
-                                                <Button fx:id="viewButton" alignment="CENTER" minWidth="85.0" mnemonicParsing="false" onAction="#viewOnAction" prefHeight="31.0" prefWidth="112.0" text="View">
+                                                <Button fx:id="viewButton" alignment="CENTER" minWidth="85.0" mnemonicParsing="false" onAction="#viewOnAction" prefHeight="31.0" prefWidth="112.0" text="View" translateX="-5.0">
                                                     <HBox.margin>
                                                         <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                                     </HBox.margin>
@@ -123,7 +129,7 @@
                                 <Insets bottom="10.0" left="5.0" />
                             </padding>
                         </HBox>
-                        <Accordion fx:id="expressionsAccordion" maxWidth="480.0" minWidth="480.0" prefWidth="480.0" VBox.vgrow="SOMETIMES">
+                        <Accordion fx:id="expressionsAccordion" maxWidth="480.0" minWidth="480.0" prefHeight="585.0" prefWidth="480.0" VBox.vgrow="SOMETIMES">
                             <panes>
                                 <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
                                     <content>
@@ -177,13 +183,13 @@
                 </VBox>
                 <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="693.0" prefWidth="777.0">
                     <items>
-                        <TitledPane animated="false" collapsible="false" text="Categories">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" text="Categories - used to organize template columns. Drag as needed to organize Categories. Right mouse click to rename or delete.">
                             <content>
                                 <VBox>
                                     <children>
-                                        <HBox alignment="CENTER_LEFT" VBox.vgrow="NEVER">
+                                        <HBox alignment="CENTER_LEFT" maxHeight="700.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0" promptText="Enter Category Name Here" HBox.hgrow="ALWAYS" />
+                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0" promptText="Create additional category names here as needed, then select to add columns." HBox.hgrow="ALWAYS" />
                                                 <Button mnemonicParsing="false" onAction="#createCategoryOnAction" text="Create Category" />
                                             </children>
                                             <opaqueInsets>
@@ -193,7 +199,7 @@
                                                 <Insets right="5.0" />
                                             </padding>
                                         </HBox>
-                                        <ListView fx:id="categoryListView" prefHeight="158.0" prefWidth="585.0" />
+                                        <ListView fx:id="categoryListView" maxHeight="700.0" prefHeight="700.0" prefWidth="585.0" />
                                     </children>
                                 </VBox>
                             </content>
@@ -201,11 +207,11 @@
                                 <Insets right="5.0" />
                             </padding>
                         </TitledPane>
-                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" text="Columns">
+                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" maxHeight="700.0" text="Columns - for a category, drag and drop expression(s) from the the lists on left and then drag as needed within the column.">
                             <content>
                                 <VBox>
                                     <children>
-                                        <ListView fx:id="columnListView" prefHeight="204.0" prefWidth="704.0" />
+                                        <ListView fx:id="columnListView" maxHeight="700.0" prefHeight="700.0" prefWidth="704.0" />
                                     </children>
                                 </VBox>
                             </content>
@@ -213,11 +219,11 @@
                                 <Insets right="5.0" />
                             </padding>
                         </TitledPane>
-                        <TitledPane animated="false" collapsible="false" prefHeight="208.0" prefWidth="687.0" text="Column Details">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" prefHeight="208.0" prefWidth="687.0" text="Column Details - peek at the values in each column.">
                             <content>
                                 <VBox>
                                     <children>
-                                        <TextArea id="squidReportSettingsColumnDetailsTextArea" fx:id="columnDetailsTextArea" editable="false" />
+                                        <TextArea id="squidReportSettingsColumnDetailsTextArea" fx:id="columnDetailsTextArea" editable="false" maxHeight="700.0" prefHeight="700.0" />
                                     </children>
                                 </VBox>
                             </content>

@@ -56,9 +56,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+<<<<<<< HEAD
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+=======
+import javafx.scene.input.DataFormat;
+>>>>>>> 1dc46abc61f1e5b7d69b60ef994d8d159f29ec68
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
@@ -178,9 +182,10 @@ public class SquidReportSettingsController implements Initializable {
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
 
-        ((Task) task).initTaskDefaultSquidReportTables();
+        ((Task) task).initTaskDefaultSquidReportTables(true);
 
-        isRefMat = true;
+        isRefMat = false;
+        spotsChoiceBox.setVisible(true);
 
         selectedRefMatReportModel = task.getSelectedRefMatReportModel();
         selectedUnknownReportModel = task.getSelectedUnknownReportModel();
@@ -192,9 +197,6 @@ public class SquidReportSettingsController implements Initializable {
         initReportTableCB();
         initSpotChoiceBox();
 
-        // update
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
-
         initSelectionActions();
         initListViews();
 
@@ -204,8 +206,6 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-
-        spotsChoiceBox.setVisible(false);
     }
 
     private void initCategoryTextField() {
@@ -306,7 +306,7 @@ public class SquidReportSettingsController implements Initializable {
     private void initListViews() {
         nuSwitchedExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         nuSwitchedExpressionsListView.setCellFactory(new ExpressionCellFactory());
-        nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        nuSwitchedExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         //Same listener for each category
         nuSwitchedExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
@@ -322,7 +322,7 @@ public class SquidReportSettingsController implements Initializable {
 
         builtInExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         builtInExpressionsListView.setCellFactory(new ExpressionCellFactory());
-        builtInExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        builtInExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         builtInExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
@@ -337,7 +337,7 @@ public class SquidReportSettingsController implements Initializable {
 
         customExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         customExpressionsListView.setCellFactory(new ExpressionCellFactory());
-        customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
@@ -353,7 +353,7 @@ public class SquidReportSettingsController implements Initializable {
         // REFERERENCE MATERIAL VALUES
         referenceMaterialsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         referenceMaterialsListView.setCellFactory(new ExpressionCellFactory());
-        referenceMaterialsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        referenceMaterialsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         referenceMaterialsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
@@ -368,7 +368,7 @@ public class SquidReportSettingsController implements Initializable {
         // PARAMETER VALUES
         parametersListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         parametersListView.setCellFactory(new ExpressionCellFactory());
-        parametersListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        parametersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         parametersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
@@ -386,7 +386,7 @@ public class SquidReportSettingsController implements Initializable {
         //RATIOS
         ratioExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         ratioExpressionsListView.setCellFactory(new StringCellFactory());
-        ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ratioExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ratioExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -409,7 +409,7 @@ public class SquidReportSettingsController implements Initializable {
         //ISOTOPES
         isotopesExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         isotopesExpressionsListView.setCellFactory(new StringCellFactory());
-        isotopesExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        isotopesExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         isotopesExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -430,7 +430,7 @@ public class SquidReportSettingsController implements Initializable {
         //Spot Meta Data
         spotMetaDataExpressionsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
         spotMetaDataExpressionsListView.setCellFactory(new StringCellFactory());
-        spotMetaDataExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        spotMetaDataExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         spotMetaDataExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -465,51 +465,7 @@ public class SquidReportSettingsController implements Initializable {
                     || nv.getDisplayName().compareTo("Raw Ratios") == 0
                     || nv.getDisplayName().compareTo("Corr. Ratios") == 0));
         });
-        /*
-        AtomicDouble scrollAmount = new AtomicDouble(0.0);
-        Thread catScrollThread = new Thread(() -> {
-            final ScrollBar catScrollBar = (ScrollBar) categoryListView.lookup(".scroll-bar:vertical");
-            if (catScrollBar != null) {
-                while (true) {
-                    double newScrollValue = catScrollBar.getValue() + scrollAmount.get() * .1;
-                    if (newScrollValue > catScrollBar.getMax()) {
-                        newScrollValue = catScrollBar.getMax();
-                    } else if (newScrollValue < catScrollBar.getMin()) {
-                        newScrollValue = catScrollBar.getMin();
-                    }
-                    categoryListView.scrollTo(categoryListView.getItems().size() - 1);
-                    try {
-                        Thread.sleep(1000000);
-                    } catch (InterruptedException e) {
-                    }
-                }
-            }
-        });
-        catScrollThread.setPriority(Thread.MAX_PRIORITY);
-        categoryListView.addEventHandler(MouseEvent.ANY, event -> {
-            double location = event.getY();
-            double height = categoryListView.getHeight();
-            if (event.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
-                catScrollThread.interrupt();
-                System.out.println("interrupted");
-            } else if (location < height / 4) {
-                scrollAmount.set(-(height / 4 - location));
-                if (!catScrollThread.isAlive()) {
-                    catScrollThread.start();
-                    System.out.println("started");
-                }
-            } else if (location > height * .75) {
-                scrollAmount.set(location - height * .75);
-                if (!catScrollThread.isAlive()) {
-                    catScrollThread.start();
-                    System.out.println("started");
-                }
-            } else {
-                catScrollThread.interrupt();
-                System.out.println("interrupted");
-            }
-        });
-         */
+
         populateCategoryListView();
 
         //Squid Report Columns
@@ -523,15 +479,20 @@ public class SquidReportSettingsController implements Initializable {
         columnListView.setOnDragOver(event -> {
             if (selectedCategory.getValue() != null
                     && !selectedCategoryIsFixedCategory.getValue()
-                    && event.getDragboard() != null && event.getDragboard().hasString()) {
+                    && event.getDragboard() != null && (event.getDragboard().hasString() || event.getDragboard().hasContent(STRING_LIST))) {
                 event.acceptTransferModes(TransferMode.COPY);
             }
         });
         columnListView.setOnDragDropped(event -> {
             boolean success = false;
             if (event.getTransferMode().equals(TransferMode.COPY) && !selectedCategoryIsFixedCategory.getValue()) {
-                SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
-                columnListView.getItems().add(col);
+                @SuppressWarnings("unchecked")
+                SquidReportColumnInterface col = null;
+                for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                    col = SquidReportColumn.createSquidReportColumn(colName);
+                    columnListView.getItems().add(col);
+                }
+
                 columnListView.getSelectionModel().select(col);
                 success = true;
                 isEditing.setValue(true);
@@ -808,13 +769,6 @@ public class SquidReportSettingsController implements Initializable {
                             }
                             sb.append(formatter.toString());
                         }
-
-//                        for (int i = 0; i < results[0].length; i++) {
-//                            try {
-//                                sb.append(String.format("%1$-23s", squid3RoundedToSize(results[0][i], sigDigits)));
-//                            } catch (Exception e) {
-//                            }
-//                        }
                         sb.append("\n");
                     }
                 } else {
@@ -1133,7 +1087,7 @@ public class SquidReportSettingsController implements Initializable {
         dialog.showAndWait().ifPresent(name -> {
 
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
                 if(isRefMat) { 
@@ -1146,6 +1100,11 @@ public class SquidReportSettingsController implements Initializable {
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(table);
                 isEditing.setValue(true);
+
+                // set up default as example
+                SquidReportCategoryInterface cat = SquidReportCategory.createReportCategory("Default Category");
+                categoryListView.getItems().add(cat);
+                categoryListView.getSelectionModel().selectFirst();
             }
         });
     }
@@ -1413,47 +1372,27 @@ public class SquidReportSettingsController implements Initializable {
 
     @FXML
     public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
-        SquidReportTableInterface reportTable = createCopyOfUpdatedSquidReportTable();
-        String baseFileName;
-        String[][] textArray;
 
-        File reportTableFile = null;
-        if (isRefMat) {
-            reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
-
-//            textArray = SquidReportTableHelperMethods.processReportTextArray(
-//                    SquidReportTableLauncher.ReportTableTab.refMatCustom,
-//                    reportTable,
-//                    null);
-//            baseFileName = (squidProject.getProjectName()
-//                    + "_RefMat_"
-//                    + reportTable.getReportTableName())
-//                    .replaceAll("\\s+", "_")
-//                    + ".csv";
-        } else {
-            reportTableFile = squidProject.produceSelectedUnknownsReportCSV();
-//            textArray = SquidReportTableHelperMethods.processReportTextArray(
-//                    SquidReportTableLauncher.ReportTableTab.unknownCustom,
-//                    reportTable,
-//                    spotsChoiceBox.getValue());
-//            baseFileName = (squidProject.getProjectName()
-//                    + "_Unknowns_"
-//                    + reportTable.getReportTableName() + "_"
-//                    + ((spotsChoiceBox.getValue().compareToIgnoreCase("unknowns") == 0) ? "ALL" : spotsChoiceBox.getValue()))
-//                    .replaceAll("\\s+", "_")
-//                    + ".csv";
-//            reportTableFile
-//                = squidProject.getPrawnFileHandler().getReportsEngine().writeReportTableFilesPerSquid3(textArray, baseFileName);
-        }
-
-        if (reportTableFile != null) {
-            SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
-        } else {
+        if (isEditing.getValue()) {
             SquidMessageDialog.showInfoDialog(
-                    "An Error Occurred.\n",
+                    "Please save the report first.\n",
                     primaryStageWindow);
-        }
+        } else {
+            File reportTableFile = null;
+            if (isRefMat) {
+                reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
+            } else {
+                reportTableFile = squidProject.produceSelectedUnknownsReportCSV();
+            }
 
+            if (reportTableFile != null) {
+                SquidMessageDialog.showSavedAsDialog(reportTableFile, primaryStageWindow);
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "An Error Occurred.\n",
+                        primaryStageWindow);
+            }
+        }
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {
@@ -1705,7 +1644,7 @@ public class SquidReportSettingsController implements Initializable {
                 }
             };
             cell.setOnDragOver(event -> {
-                if (event.getDragboard().hasString() && event.getGestureSource() != cell && !selectedCategoryIsFixedCategory.getValue()) {
+                if ((event.getDragboard().hasString() || event.getDragboard().hasContent(STRING_LIST)) && event.getGestureSource() != cell && !selectedCategoryIsFixedCategory.getValue()) {
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
                 event.consume();
@@ -1713,14 +1652,14 @@ public class SquidReportSettingsController implements Initializable {
 
             cell.setOnDragEntered(event -> {
                 if (event.getGestureSource() != cell
-                        && event.getDragboard().hasString()) {
+                        && (event.getDragboard().hasString() || event.getDragboard().hasContent(STRING_LIST))) {
                     cell.setOpacity(0.3);
                 }
             });
 
             cell.setOnDragExited(event -> {
                 if (event.getGestureSource() != cell
-                        && event.getDragboard().hasString()) {
+                        && (event.getDragboard().hasString() || event.getDragboard().hasContent(STRING_LIST))) {
                     cell.setOpacity(1);
                 }
             });
@@ -1730,17 +1669,22 @@ public class SquidReportSettingsController implements Initializable {
                 if (!selectedCategoryIsFixedCategory.getValue()) {
                     ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
                     if (event.getTransferMode().equals(TransferMode.COPY)) {
-                        SquidReportColumnInterface col = SquidReportColumn.createSquidReportColumn(event.getDragboard().getString());
-                        if (cell.getItem() != null) {
-                            items.add(items.indexOf(cell.getItem()), col);
-                        } else {
-                            items.add(col);
+                        @SuppressWarnings("unchecked")
+                        SquidReportColumnInterface col = null;
+                        for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                            col = SquidReportColumn.createSquidReportColumn(colName);
+                            if (cell.getItem() != null) {
+                                items.add(items.indexOf(cell.getItem()), col);
+                            } else {
+                                items.add(col);
+                            }
                         }
                         columnListView.getSelectionModel().select(col);
                         success = true;
                         event.consume();
                         isEditing.setValue(true);
                     } else {
+                        // MOVE
                         for (int i = 0; i < items.size(); i++) {
                             if (items.get(i).getExpressionName().equals(event.getDragboard().getString())) {
                                 SquidReportColumnInterface col = items.get(i);
@@ -1830,7 +1774,6 @@ public class SquidReportSettingsController implements Initializable {
     private class StringCellFactory implements Callback<ListView<String>, ListCell<String>> {
 
         public StringCellFactory() {
-
         }
 
         @Override
@@ -1851,14 +1794,31 @@ public class SquidReportSettingsController implements Initializable {
 
             };
             cell.setOnDragDetected(event -> {
-                if (!cell.isEmpty()) {
-                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.putString(cell.getItem());
-                    db.setContent(cc);
-                    cell.setCursor(Cursor.CLOSED_HAND);
+
+                // Make sure at least one item is selected
+                int selectedCount = param.getSelectionModel().getSelectedIndices().size();
+
+                if (selectedCount == 0) {
+                    event.consume();
+                    return;
                 }
+
+                // Initiate a drag-and-drop gesture
+                Dragboard dragboard = cell.startDragAndDrop(TransferMode.COPY);
+                dragboard.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+
+                // Put the the selected items to the dragboard
+                List<String> selectedItems = getSelectedExpressionStrings(param);
+
+                ClipboardContent content = new ClipboardContent();
+                content.putString(null);
+                content.put(STRING_LIST, selectedItems);
+
+                dragboard.setContent(content);
+
+                cell.setCursor(Cursor.CLOSED_HAND);
+
+                event.consume();
             });
 
             cell.setOnDragDone((event) -> {
@@ -1926,14 +1886,34 @@ public class SquidReportSettingsController implements Initializable {
                 }
             };
             cell.setOnDragDetected(event -> {
-                if (!cell.isEmpty()) {
-                    Dragboard db = cell.startDragAndDrop(TransferMode.COPY);
-                    db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.putString(cell.getItem().getName());
-                    db.setContent(cc);
-                    cell.setCursor(Cursor.CLOSED_HAND);
+                // Make sure at least one item is selected
+                int selectedCount = param.getSelectionModel().getSelectedIndices().size();
+
+                if (selectedCount == 0) {
+                    event.consume();
+                    return;
                 }
+
+                // Initiate a drag-and-drop gesture
+                Dragboard dragboard = cell.startDragAndDrop(TransferMode.COPY);
+                dragboard.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+
+                // Put the the selected items to the dragboard
+                List<Expression> selectedItems = getSelectedExpressions(param);
+                List<String> selectedItemNames = new ArrayList<>();
+                for (Expression exp : selectedItems) {
+                    selectedItemNames.add(exp.getName());
+                }
+
+                ClipboardContent content = new ClipboardContent();
+                content.putString(null);
+                content.put(STRING_LIST, selectedItemNames);
+
+                dragboard.setContent(content);
+
+                cell.setCursor(Cursor.CLOSED_HAND);
+
+                event.consume();
             });
 
             cell.setOnDragDone((event) -> {
@@ -1958,6 +1938,24 @@ public class SquidReportSettingsController implements Initializable {
             return cell;
         }
 
+    }
+
+    static final DataFormat STRING_LIST = new DataFormat("StringList");
+
+    private List<String> getSelectedExpressionStrings(ListView<String> listView) {
+        // Return the list of selected expressions in ArrayList, so it is
+        // serializable and can be stored in a Dragboard.
+        List<String> list = new ArrayList<>(listView.getSelectionModel().getSelectedItems());
+
+        return list;
+    }
+
+    private List<Expression> getSelectedExpressions(ListView<Expression> listView) {
+        // Return the list of selected expressions in ArrayList, so it is
+        // serializable and can be stored in a Dragboard.
+        List<Expression> list = new ArrayList<>(listView.getSelectionModel().getSelectedItems());
+
+        return list;
     }
 
     @FXML

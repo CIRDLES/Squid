@@ -142,6 +142,8 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
 
     @Override
     public void initReportColumn(TaskInterface task) {
+        String expressionNameCustom = expressionName;
+        
         // extract properties of expTree
         expTree = task.findNamedExpression(expressionName);
         if (expTree instanceof SpotFieldNode) {
@@ -150,7 +152,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             // default view of species nodes
             ((ShrimpSpeciesNode) expTree).setMethodNameForShrimpFraction("getTotalCps");
             ((Task) task).evaluateTaskExpression(expTree);
-            expressionName = "total_" + expressionName + "_cts_/sec";
+            expressionNameCustom = "total_" + expressionName + "_cts_/sec";
         }
 
         amIsotopicRatio = false;
@@ -175,7 +177,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         for (int i = 0; i < HEADER_ROW_COUNT; i++) {
             columnHeaders[i] = "";
         }
-        String[] headers = expressionName.split("_");
+        String[] headers = expressionNameCustom.split("_");
         int headerRowCount = headers.length;
         int headerRow = 4;
         for (int i = headerRowCount; i > 0; i--) {

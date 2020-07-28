@@ -125,7 +125,7 @@
                         </Menu>
                     </items>
                 </Menu>
-                <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Report Tables">
+                <Menu fx:id="manageReportsMenu" mnemonicParsing="false" onMenuValidation="#reportsMenuSelectedAction" text="Reports">
                     <items>
                         <MenuItem disable="false" mnemonicParsing="false" onAction="#reportLayoutManagerOnAction" text="Custom Report Builder" />
                         <Menu mnemonicParsing="false" text="Summary Expressions and Values">
@@ -137,9 +137,9 @@
                         <MenuItem mnemonicParsing="false" onAction="#produceProjectAuditReportAction" text="Project Audit" />
                         <MenuItem mnemonicParsing="false" onAction="#produceTaskSummaryReportAction" text="Task Audit" />
                         <MenuItem mnemonicParsing="false" onAction="#generateAllReportsAction" text="Generate All Reports" />
-                        <Menu mnemonicParsing="false" text="Misc. Report Tables">
+                        <Menu mnemonicParsing="false" text="Misc. Reports">
                             <items>
-                              <Menu mnemonicParsing="false" text="Quick View Report Tables">
+                              <Menu mnemonicParsing="false" text="Quick View Reports">
                                   <items>
                                       <Menu mnemonicParsing="false" text="Reference Materials">
                                           <items>
