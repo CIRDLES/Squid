@@ -34,7 +34,7 @@ public class SquidReportTableXSDValidationTest {
             final File squidReportTableSchema = squidReportTableExtractor.extractResourceAsFile("SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
             System.out.println(squidReportTableSchema.getName());
-            final File defaultRefMatXML = squidReportTableExtractor.extractResourceAsFile("DefaultRefMat.xml");
+            final File defaultRefMatXML = squidReportTableExtractor.extractResourceAsFile("defaultRefMat.xml");
             System.out.println(defaultRefMatXML.getName());
             validates = FileValidator.validateFileIsXMLSerializedEntity(defaultRefMatXML, schema);
             System.out.println(Boolean.toString(validates));
