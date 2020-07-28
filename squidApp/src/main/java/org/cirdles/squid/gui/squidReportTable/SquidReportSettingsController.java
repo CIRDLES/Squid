@@ -59,10 +59,10 @@ import java.util.*;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import org.cirdles.squid.constants.Squid3Constants;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -1218,15 +1218,16 @@ public class SquidReportSettingsController implements Initializable {
     private void importOnAction(ActionEvent event) {
         File file = null;
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        boolean validates = false;
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
-            final Schema schema = sf.newSchema(new File("C:\\Users\\Noah\\CIRDLES\\Squid\\squidCore\\build\\resources\\main\\org\\cirdles\\squid\\schema\\SquidTask_SquidReportTableXMLSchema.xsd"));
-            FileValidator.validateFileIsXMLSerializedEntity(file, schema);
+            final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
+            validates = FileValidator.validateFileIsXMLSerializedEntity(file, schema);
         } catch (IOException | SAXException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
         
-        if (file != null) {
+        if (validates == true) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
@@ -1338,6 +1339,15 @@ public class SquidReportSettingsController implements Initializable {
                     reportTableCB.getSelectionModel().select(table);
                 }
             }
+        }
+        else if (file != null) {
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Report table contained in \"");
+            errorMessage.append(file.getName());
+            errorMessage.append("\" could not validate against local schema (");
+            errorMessage.append(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL);
+            errorMessage.append(")");
+            SquidMessageDialog.showWarningDialog(errorMessage.toString(), primaryStageWindow);
         }
     }
 

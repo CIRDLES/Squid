@@ -94,8 +94,11 @@ public final class Squid3Constants {
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
             = "Schema/SquidTask_ExpressionXMLSchema.xsd";
     
-    public static final String URL_STRING_FOR_SQUIDTASK_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL
-            = "C:\\Users\\Noah\\CIRDLES\\Squid\\squidCore\\build\\resources\\main\\org\\cirdles\\squid\\schema\\SquidTask_SquidReportTableXMLSchema.xsd";
+//    public static final String URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_REMOTE
+//            = "Schema/SquidReportTable.xsd";
+    
+    public static final String URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL
+            = "Schema/SquidReportTable.xsd";
 
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
@@ -291,7 +294,7 @@ public final class Squid3Constants {
 
     public final static String SUPERSCRIPT_R_FOR_REFMAT = "á´¿";//\u1D3F";
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
-    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "áµ?";//\u1D41";
+    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ï¿½?";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
     // http://science.sciencemag.org/content/335/6076/1610

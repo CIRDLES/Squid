@@ -100,8 +100,9 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     // Fields
     @XmlElement(name = "displayName", required = true)
     private String displayName;
-
-    @XmlElement(name = "categoryColumn", required = true)
+    
+    @XmlElementWrapper(name = "categoryColumns")
+    @XmlElement(name = "SquidReportColumn", required = true)
     private LinkedList<SquidReportColumnInterface> categoryColumns;
     
     @XmlElement(name = "visible")

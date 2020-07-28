@@ -25,7 +25,7 @@ public class SquidReportTableXMLConverter implements Converter {
         writer.startNode("reportCategories");
         LinkedList<SquidReportCategoryInterface> reportCategories = table.getReportCategories();
         for (SquidReportCategoryInterface cat : reportCategories) {
-            writer.startNode("reportCategory");
+            writer.startNode("SquidReportCategory");
             context.convertAnother(cat);
             writer.endNode();
         }

@@ -251,6 +251,15 @@ public class CalamariFileUtilities {
                 } else {
                     //System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
                 }
+                
+                File squidReportTableSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
+                File squidReportTableSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidReportTable.xsd");
+
+                if (squidReportTableSchemaResource.renameTo(squidReportTableSchema)) {
+                    System.out.println("SquidReportTable.xsd added.");
+                } else {
+                    System.out.println("Failed to add SquidReportTable.xsd.");
+                }
             }
         } catch (IOException iOException) {
         }

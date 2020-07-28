@@ -58,7 +58,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
     "isDefault",
     "version"
 })
-@XmlRootElement(name = "squid_report_table")
+@XmlRootElement(name = "SquidReportTable")
 public class SquidReportTable implements Serializable, SquidReportTableInterface {
 
     private static final long serialVersionUID = 1685572683987304408L;
@@ -73,7 +73,8 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     @XmlElement(name = "reportTableName", required = true)
     private String reportTableName;
     
-    @XmlElement(name = "reportCategory", required = true)
+    @XmlElementWrapper(name = "reportCategories")
+    @XmlElement(name = "SquidReportCategory", required = true)
     private LinkedList<SquidReportCategoryInterface> reportCategories;
     
     @XmlElement(name = "reportSpotTarget", required = false) // Backwards compatibility with report tables prior to https://github.com/drakene/Squid/commit/e34db8df0f6de6dc95e30a4ac5a93738e250ee2c
