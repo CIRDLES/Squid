@@ -501,7 +501,7 @@ public final class SquidProject implements Serializable {
             String[][] report = reportSettings.reportSpotsInCustomTable(
                     reportSettings, task, task.getReferenceMaterialSpots());
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, (projectName + "_RefMatReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+                    report, (projectName + "_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
         }
         return reportTableFile;
     }
@@ -534,13 +534,31 @@ public final class SquidProject implements Serializable {
 
     public File produceSelectedUnknownsReportCSV()
             throws IOException {
+        return produceTargetedSelectedUnknownsReportCSV("UNKNOWNS");
+//
+//        File reportTableFile = null;
+//        if (task.getUnknownSpots().size() > 0) {
+//            SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
+//            String[][] report = reportSettings.reportSpotsInCustomTable(
+//                    reportSettings, task, task.getUnknownSpots());
+//            reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
+//                    report, (projectName + "_UnknownsReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+//        }
+//        return reportTableFile;
+    }
+
+    public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
+            throws IOException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
             String[][] report = reportSettings.reportSpotsInCustomTable(
-                    reportSettings, task, task.getUnknownSpots());
+                    reportSettings, task, task.getMapOfUnknownsBySampleNames().get(nameOfTargetSample));
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, (projectName + "_UnknownsReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+                    report, 
+                    (projectName + "_" 
+                            + reportSettings.getReportTableName()).replaceAll("\\s+", "_") 
+                            + "_" + ((nameOfTargetSample.equalsIgnoreCase("Unknowns"))?"ALL":nameOfTargetSample) + ".csv");
         }
         return reportTableFile;
     }

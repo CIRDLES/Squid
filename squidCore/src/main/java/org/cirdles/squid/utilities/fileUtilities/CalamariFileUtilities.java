@@ -24,7 +24,6 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.tasks.expressions.ExpressionPublisher;
 import org.cirdles.squid.utilities.FileUtilities;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +32,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import org.cirdles.squid.projects.SquidProject;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 
 /**
@@ -41,6 +41,7 @@ import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 public class CalamariFileUtilities {
 
     private static File exampleFolder;
+    private static File demoSquidProjectsFolder;
     private static File schemaFolder;
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
     public static File SQUID_PARAMETER_MODELS_FOLDER = new File("SquidParameterModels");
@@ -75,6 +76,43 @@ public class CalamariFileUtilities {
                         if (fileNames.get(i).trim().length() > 0) {
                             File prawnFileResource = prawnFileResourceExtractor.extractResourceAsFile(fileNames.get(i));
                             File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+
+                            if (prawnFileResource.renameTo(prawnFile)) {
+                                //System.out.println("PrawnFile added: " + fileNames.get(i));
+                            } else {
+                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+            }
+
+        }
+    }
+
+    /**
+     * Provides a clean copy of demo Squid project file(s) every time Squid
+     * runs.
+     */
+    public static void initDemoSquidProjectFiles() {
+        ResourceExtractor prawnFileResourceExtractor
+                = new ResourceExtractor(SquidProject.class);
+
+        Path listOfSquidProjectFiles = prawnFileResourceExtractor.extractResourceAsPath("listOfSquidProjectFiles.txt");
+        if (listOfSquidProjectFiles != null) {
+            demoSquidProjectsFolder = new File("DemoSquid3ProjectFiles");
+            try {
+                if (demoSquidProjectsFolder.exists()) {
+                    FileUtilities.recursiveDelete(demoSquidProjectsFolder.toPath());
+                }
+                if (demoSquidProjectsFolder.mkdir()) {
+                    List<String> fileNames = Files.readAllLines(listOfSquidProjectFiles, ISO_8859_1);
+                    for (int i = 0; i < fileNames.size(); i++) {
+                        // test for empty string
+                        if (fileNames.get(i).trim().length() > 0) {
+                            File prawnFileResource = prawnFileResourceExtractor.extractResourceAsFile(fileNames.get(i));
+                            File prawnFile = new File(demoSquidProjectsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
                                 //System.out.println("PrawnFile added: " + fileNames.get(i));
