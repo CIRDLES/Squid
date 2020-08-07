@@ -360,13 +360,20 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             text.setText("err 68");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
-
+            if (adaptToAgeInMA) {
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+            }
             text.setText("err 95");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+            if (adaptToAgeInMA) {
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
+            }
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);

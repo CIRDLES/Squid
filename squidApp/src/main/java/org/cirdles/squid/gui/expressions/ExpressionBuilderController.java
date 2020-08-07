@@ -2080,6 +2080,7 @@ public class ExpressionBuilderController implements Initializable {
         boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("AGE");
         boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("LAMBDA2");
         boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
+        boolean isWM = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("WM");
 
         String[][] labels;
         try {
@@ -2107,6 +2108,9 @@ public class ExpressionBuilderController implements Initializable {
             if (labels[0].length > 2) {
                 labels[0][2] += " (Ma)";
             }
+            if (labels[0].length > 3) {
+                labels[0][3] += " (Ma)";
+            }
         }
 
         if (isLambda) {
@@ -2128,8 +2132,14 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("[").append(i).append("] ");
                 sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
                 sb.append(": ");
+                // only convert age fields not MSWD and prob
+                if (i < 4){
                 sb.append(squid3RoundedToSize(
                         spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
+                } else {
+                    sb.append(squid3RoundedToSize(
+                        spotSummary.getValues()[0][i], 15));
+                }
             } else {
                 sb.append("Undefined Expression or Function");
             }

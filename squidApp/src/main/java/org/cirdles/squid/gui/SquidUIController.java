@@ -1378,7 +1378,8 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+            File summaryFile = 
+                    squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
