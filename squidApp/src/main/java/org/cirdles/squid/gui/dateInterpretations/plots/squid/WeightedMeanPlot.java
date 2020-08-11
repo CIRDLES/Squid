@@ -325,7 +325,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.setFill(Paint.valueOf("RED"));
 
-        g2d.fillText(plotTitle, 45, 45);
+        g2d.fillText(plotTitle 
+                + (referenceMaterialAge > 0.0 ? " (" +new BigDecimal(referenceMaterialAge).movePointLeft(6).toBigInteger().toString()
+                + " Ma)" : ""), 45, 45);
 
         g2d.setFill(Paint.valueOf("RED"));
 
@@ -477,7 +479,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     Math.abs(mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1])
                             - mapY(weightedMeanStats[0] - 2.0 * weightedMeanStats[1])));
         } else {
-            g2d.strokeLine(mapX(minX), mapY(referenceMaterialAge), mapX(maxX), mapY(referenceMaterialAge));
+            g2d.setStroke(Paint.valueOf("Blue"));
+            g2d.strokeLine(mapX(minX) - 15f, mapY(referenceMaterialAge), mapX(maxX) + 15f, mapY(referenceMaterialAge));
         }
 
         g2d.setFill(Paint.valueOf("BLACK"));
