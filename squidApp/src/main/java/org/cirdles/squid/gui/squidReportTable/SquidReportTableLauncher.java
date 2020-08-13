@@ -67,6 +67,7 @@ public class SquidReportTableLauncher {
         Stage activeStage = refMatStage;
         if (tab.equals(unknownCustom)) {
             activeStage = unknownsStage;
+            unknownsStage.setTitle("Squid 3 Report for " + SquidReportTableController.unknownSpot);
         }
 
         if (activeStage.isShowing()) {

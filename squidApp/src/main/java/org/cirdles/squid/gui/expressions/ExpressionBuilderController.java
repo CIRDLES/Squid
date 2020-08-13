@@ -94,6 +94,7 @@ import static org.cirdles.squid.gui.SquidUIController.createCopyToClipboardConte
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.*;
+import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import static org.cirdles.squid.tasks.expressions.functions.Function.*;
 import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
@@ -1914,16 +1915,18 @@ public class ExpressionBuilderController implements Initializable {
                 List<ShrimpFractionExpressionInterface> selectedSpots = spotSummaryDetail.getSelectedSpots();
                 ExpressionTree expTree = (ExpressionTree) exp.getExpressionTree();
                 ExpressionTreeInterface etWMChild1 = null;
-                ExpressionTreeInterface etWMChild2 = null;
+
+                boolean isAgeExpression = false;
+                // only provide spot details for WeightedMean expressions for now
                 if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
                     etWMChild1 = expTree.getChildrenET().get(0);
-                    etWMChild2 = expTree.getChildrenET().get(1);
+                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
                 }
 
                 CheckBox mainCB;
                 List<CheckBox> cbs = new ArrayList<>();
 
-                if (etWMChild1 == null || etWMChild2 == null) {
+                if (etWMChild1 == null) {
                     mainCB = new CheckBox(String.format(columnsFormat2, "All", "Spot name"));
                 } else {
                     mainCB = new CheckBox(String.format(columnsFormat1, "All", "Spot name", "Value", "%err"));
@@ -1948,24 +1951,32 @@ public class ExpressionBuilderController implements Initializable {
                     int index = i;
                     ShrimpFractionExpressionInterface spot = selectedSpots.get(i);
                     String value = "";
-                    String err = "";
+                    String pctErr = "";
 
                     CheckBox cb;
 
-                    if (etWMChild1 == null || etWMChild2 == null) {
+                    if (etWMChild1 == null) {
                         cb = new CheckBox(String.format(columnsFormat2, "#" + i, spot.getFractionID()));
+                    } else if (stringIsSquidRatio(etWMChild1.getName())) {
+                        double[][] ratioValues
+                                = Arrays.stream(spot
+                                        .getIsotopicRatioValuesByStringName(etWMChild1.getName())).toArray(double[][]::new);
+                        value = "" + squid3RoundedToSize(ratioValues[0][0], 15);
+                        pctErr = "" + squid3RoundedToSize(
+                                Math.abs(ratioValues[0][1] / ratioValues[0][0]) * 100.0, 15);
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, pctErr));
                     } else {
                         Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
                         for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
                             if (entry.getKey().getName().equals(etWMChild1.getName())) {
-                                value = "" + squid3RoundedToSize(entry.getValue()[0][0], 15);
-                            }
-                            if (entry.getKey().getName().equals(etWMChild2.getName())) {
-                                err = "" + squid3RoundedToSize(entry.getValue()[0][0], 15);
+                                value = "" + squid3RoundedToSize(entry.getValue()[0][0] / (isAgeExpression ? 1e6 : 1), 15);
+                                pctErr = "" + squid3RoundedToSize(
+                                        Math.abs(entry.getValue()[0][1] / entry.getValue()[0][0]) * 100.0, 15);
                             }
                         }
-                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, err));
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, pctErr));
                     }
+
                     cbs.add(cb);
 
                     cb.setStyle(PEEK_LIST_CSS_STYLE_SPECS);
@@ -2080,6 +2091,7 @@ public class ExpressionBuilderController implements Initializable {
         boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("AGE");
         boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("LAMBDA2");
         boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
+        boolean isWM = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("WM");
 
         String[][] labels;
         try {
@@ -2107,6 +2119,9 @@ public class ExpressionBuilderController implements Initializable {
             if (labels[0].length > 2) {
                 labels[0][2] += " (Ma)";
             }
+            if (labels[0].length > 3) {
+                labels[0][3] += " (Ma)";
+            }
         }
 
         if (isLambda) {
@@ -2128,8 +2143,14 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("[").append(i).append("] ");
                 sb.append(String.format("%1$-" + 16 + "s", labels[0][i]));
                 sb.append(": ");
-                sb.append(squid3RoundedToSize(
-                        spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
+                // only convert age fields not MSWD and prob
+                if (i < 4) {
+                    sb.append(squid3RoundedToSize(
+                            spotSummary.getValues()[0][i] / (isAge ? 1.0e6 : ((isLambda ? 1.0e-6 : 1.0))), 15));
+                } else {
+                    sb.append(squid3RoundedToSize(
+                            spotSummary.getValues()[0][i], 15));
+                }
             } else {
                 sb.append("Undefined Expression or Function");
             }
@@ -3524,8 +3545,8 @@ public class ExpressionBuilderController implements Initializable {
                         // show in BLUE custom sample WM Expressions
                         if (expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                                 && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc)
-                                && SampleAgeTypesEnum.isReservedName(expression.getName())) {
+                                && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc) //                                && SampleAgeTypesEnum.isReservedName(expression.getName())
+                                ) {
                             setTextFill(BLUE);
                         } else {
                             setTextFill(BLACK);

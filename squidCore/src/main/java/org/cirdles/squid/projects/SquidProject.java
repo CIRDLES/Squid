@@ -446,37 +446,39 @@ public final class SquidProject implements Serializable {
      * First guess using default delimiter
      */
     public void autoDivideSamples() {
-        this.filtersForUnknownNames = new HashMap<>();
-        if (task.getShrimpFractions() != null) {
-            // July 2020 add in delimiter suggester
-            Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
-            Matcher matcher
-                    = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
-            if (matcher.find()) {
-                int s = matcher.start();
-                delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
-            }
-
-            boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
-            for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
-                // determine flavor
-                int delimiterIndex;
-                if (delimiterIsNumber) {
-                    delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
-                } else {
-                    delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+        if (task.getShrimpFractions().size() > 0) {
+            this.filtersForUnknownNames = new HashMap<>();
+            if (task.getShrimpFractions() != null) {
+                // July 2020 add in delimiter suggester
+                Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
+                Matcher matcher
+                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
+                if (matcher.find()) {
+                    int s = matcher.start();
+                    delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
                 }
 
-                String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
-                        ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
-                if (filtersForUnknownNames.containsKey(sampleName)) {
-                    filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
-                } else {
-                    filtersForUnknownNames.put(sampleName, 1);
+                boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+                for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
+                    // determine flavor
+                    int delimiterIndex;
+                    if (delimiterIsNumber) {
+                        delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+                    } else {
+                        delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+                    }
+
+                    String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
+                            ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
+                    if (filtersForUnknownNames.containsKey(sampleName)) {
+                        filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+                    } else {
+                        filtersForUnknownNames.put(sampleName, 1);
+                    }
                 }
+                task.setFiltersForUnknownNames(filtersForUnknownNames);
+                task.generateMapOfUnknownsBySampleNames();
             }
-            task.setFiltersForUnknownNames(filtersForUnknownNames);
-            task.generateMapOfUnknownsBySampleNames();
         }
     }
 
@@ -501,7 +503,7 @@ public final class SquidProject implements Serializable {
             String[][] report = reportSettings.reportSpotsInCustomTable(
                     reportSettings, task, task.getReferenceMaterialSpots());
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, (projectName + "_RefMatReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+                    report, (projectName + "_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
         }
         return reportTableFile;
     }
@@ -534,13 +536,22 @@ public final class SquidProject implements Serializable {
 
     public File produceSelectedUnknownsReportCSV()
             throws IOException {
+        return produceTargetedSelectedUnknownsReportCSV("UNKNOWNS");
+    }
+
+    public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
+            throws IOException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
             String[][] report = reportSettings.reportSpotsInCustomTable(
-                    reportSettings, task, task.getUnknownSpots());
+                    reportSettings, task, task.getMapOfUnknownsBySampleNames().get(nameOfTargetSample));
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
-                    report, (projectName + "_UnknownsReport_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
+                    report,
+                    (projectName
+                            + "_"
+                            + reportSettings.getReportTableName()).replaceAll("\\s+", "_")
+                    + "_" + ((nameOfTargetSample.equalsIgnoreCase("Unknowns")) ? "ALL" : nameOfTargetSample) + ".csv");
         }
         return reportTableFile;
     }

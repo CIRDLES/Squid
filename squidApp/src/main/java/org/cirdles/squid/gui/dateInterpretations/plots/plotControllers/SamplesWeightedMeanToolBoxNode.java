@@ -60,11 +60,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.text.TextAlignment;
 
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -107,13 +109,14 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         categorySortComboBox.getSelectionModel().selectFirst();
-        expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
+        expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
 
         categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         //Category Housekeeping : No Time, Ages is first
         categoryComboBox.getItems().remove(0);
         categoryComboBox.getSelectionModel().selectFirst();
-        expressionComboBox.setItems(FXCollections.observableArrayList(categoryComboBox.getSelectionModel().getSelectedItem().getCategoryColumns()));
+        expressionComboBox.setItems(FXCollections.observableArrayList(
+                categoryComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
 
     }
 
@@ -127,26 +130,22 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         VBox filterToolBox = filterVBox();
         VBox sortingToolBox = sortedVBox();
         VBox saveAsToolBox = saveAsVBox();
+        VBox publishExpressionToolBox = publishExpressionVBox();
 
         Path separator1 = separator(60.0F);
         Path separator2 = separator(60.0F);
         Path separator3 = separator(60.0F);
         Path separator4 = separator(60.0F);
+        Path separator5 = separator(60.0F);
 
-        getChildren().addAll(samplesToolBox, separator1, domainToolBox, separator2, filterToolBox, separator3, sortingToolBox, separator4, saveAsToolBox);
+        getChildren().addAll(
+                samplesToolBox, separator1, domainToolBox, separator2,
+                filterToolBox, separator3, sortingToolBox, separator4,
+                saveAsToolBox, separator5, publishExpressionToolBox);
 
         setAlignment(Pos.CENTER);
     }
 
-//    private Path separator() {
-//        Path separator = new Path();
-//        separator.getElements().add(new MoveTo(2.0f, 0.0f));
-//        separator.getElements().add(new VLineTo(60.0f));
-//        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
-//        separator.setStrokeWidth(2);
-//
-//        return separator;
-//    }
     private VBox samplesVBox() {
         VBox sampleNameToolBox = new VBox(2);
 
@@ -305,7 +304,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 if (newValue != null) {
                     // first get columns from category   
                     expressionComboBox.getSelectionModel().clearSelection();
-                    expressionComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumns()));
+                    expressionComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumnsSorted()));
 
                     // special case when Ages is picked, we look up stored WM for age name in sample
                     if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
@@ -326,7 +325,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             }
         });
 
-        formatNode(expressionComboBox, 180);
+        formatNode(expressionComboBox, 170);
         expressionComboBox.setPromptText("Expression");
         expressionComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
@@ -368,8 +367,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                         .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
                                                 selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
-                        spotSummaryDetailsWM.rejectNone();
-                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
+//                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
+                        if (filterInfoCheckBox.isSelected()) {
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
+                        }
 
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
 
@@ -386,7 +387,15 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
 
-                        updateSampleFromSlider(probabilitySlider.getValue());
+//                        updateSampleFromSlider(probabilitySlider.getValue());
+                        // if value is unchanged, then we need to force update
+                        if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
+                            updateSampleFromSlider(probabilitySlider.getValue());
+                        } else {
+                            // this also forces an update
+                            probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
+                        }
+
                     }
 
                     // sort by selected sort expression
@@ -535,7 +544,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             public void changed(ObservableValue<? extends SquidReportCategoryInterface> observable, SquidReportCategoryInterface oldValue, SquidReportCategoryInterface newValue) {
                 // first get columns from category   
                 expressionSortComboBox.getSelectionModel().clearSelection();
-                expressionSortComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumns()));
+                expressionSortComboBox.setItems(FXCollections.observableArrayList(newValue.getCategoryColumnsSorted()));
 
                 // special case when Ages is picked, we look up stored WM for age name in sample
                 if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
@@ -548,7 +557,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             }
         });
 
-        formatNode(expressionSortComboBox, 180);
+        formatNode(expressionSortComboBox, 170);
         expressionSortComboBox.setPromptText("Expression");
         expressionSortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
@@ -609,27 +618,32 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         });
 
         saveDataHBox.getChildren().addAll(saveToNewFileButton, appendToFileButton);
-//
-//        HBox saveImageHBox = new HBox(5);
-//        Label saveImageLabel = new Label("Save WM Image as:");
-//        saveImageLabel.setAlignment(Pos.CENTER_RIGHT);
-//        formatNode(saveImageLabel, 125);
-//
-//        Button saveAsSVGFileButton = new Button("SVG");
-//        formatNode(saveAsSVGFileButton, 50);
-//        saveAsSVGFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-//        saveAsSVGFileButton.setDisable(true);
-//
-//        Button saveAsPDFFileButton = new Button("PDF");
-//        formatNode(saveAsPDFFileButton, 50);
-//        saveAsPDFFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-//        saveAsPDFFileButton.setDisable(true);
-//
-//        saveImageHBox.getChildren().addAll(saveImageLabel, saveAsSVGFileButton, saveAsPDFFileButton);
-
         saveAsToolBox.getChildren().addAll(saveWMStatsLabel, saveDataHBox);
 
         return saveAsToolBox;
+    }
+
+    private VBox publishExpressionVBox() {
+        VBox publishExpression = new VBox(2);
+
+        Button showInExpressionsButton = new Button("Show WM in Expressions");
+        formatNode(showInExpressionsButton, 80);
+        showInExpressionsButton.setPrefHeight(60);
+        showInExpressionsButton.setMinHeight(USE_PREF_SIZE);
+        showInExpressionsButton.setWrapText(true);
+        showInExpressionsButton.setTextAlignment(TextAlignment.CENTER);
+        showInExpressionsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        showInExpressionsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
+                        sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
+            }
+        });
+
+        publishExpression.getChildren().addAll(showInExpressionsButton);
+
+        return publishExpression;
     }
 
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {

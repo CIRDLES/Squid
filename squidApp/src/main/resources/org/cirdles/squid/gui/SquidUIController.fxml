@@ -40,9 +40,11 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
                         <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDemoSquiProjectAction" text="Open Demonstration Squid Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
                         <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />

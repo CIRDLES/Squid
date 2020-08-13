@@ -1308,7 +1308,7 @@ public class SquidReportSettingsController implements Initializable {
             if (isRefMat) {
                 reportTableFile = squidProject.produceSelectedReferenceMaterialReportCSV();
             } else {
-                reportTableFile = squidProject.produceSelectedUnknownsReportCSV();
+                reportTableFile = squidProject.produceTargetedSelectedUnknownsReportCSV(spotsChoiceBox.getValue());
             }
 
             if (reportTableFile != null) {
