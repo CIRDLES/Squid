@@ -292,6 +292,7 @@ public class SquidUIController implements Initializable {
         squidLabDataMenu.setDisable(false);
 
         CalamariFileUtilities.initExamplePrawnFiles();
+        CalamariFileUtilities.initDemoSquidProjectFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initXSLTML();
@@ -1377,7 +1378,8 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+            File summaryFile = 
+                    squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
@@ -1887,6 +1889,14 @@ public class SquidUIController implements Initializable {
     @FXML
     private void citeSquidAction(ActionEvent event) {
         BrowserControl.showURI("https://doi.org/10.11636/133870");
+    }
+
+    @FXML
+    private void openDemoSquiProjectAction(ActionEvent event) {
+        try {
+            openProject("DemoSquid3ProjectFiles/SQUID3_demo_file.squid");
+        } catch (IOException iOException) {
+        }
     }
 
     private class HighlightMainMenu {

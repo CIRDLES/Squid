@@ -2032,34 +2032,47 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     public SpotSummaryDetails evaluateSelectedExpressionWeightedMeanForUnknownGroup(
             String expressionName,
-            String groupName,
+            String sampleName,
             List<ShrimpFractionExpressionInterface> spotsForExpression) {
+
+        Expression expressionWM = constructCustomWMExpression(expressionName, sampleName);
+
         SpotSummaryDetails spotSummaryDetails = null;
-
-        // calculate weighted mean of selected expressionName without auto-rejection
-        Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
-                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
-
-        expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
-        expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
-
-        updateSingleExpression(expressionWM);
-
         try {
             evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
-            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
-            //TODO: feb 2020 under discussion on how to expose these
-            if ((expressionName.toUpperCase().contains("AGE"))
-                    && !namedExpressionsMap.containsKey(expressionWM.getName())) {
-                // add expression to working list if it is a Sample Age WM - others not available
-                removeExpression(expressionWM, false);
-                addExpression(expressionWM, false);
-            }
+            spotSummaryDetails
+                    = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
         } catch (SquidException squidException) {
         }
 
         return spotSummaryDetails;
+    }
+
+    private Expression constructCustomWMExpression(String expressionName, String sampleName) {
+        // calculate weighted mean of selected expressionName without auto-rejection
+        Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
+                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
+
+        expressionWM.getExpressionTree().setUnknownsGroupSampleName(sampleName);
+        expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
+
+        updateSingleExpression(expressionWM);
+
+        return expressionWM;
+    }
+
+    public void includeCustomWMExpressionByName(String expressionName) {
+        Expression exp = getExpressionByName(expressionName);
+        if (exp == null) {
+            String[] wmExpNameArray = expressionName.split("_WM_");
+            exp = constructCustomWMExpression(wmExpNameArray[0], wmExpNameArray[1]);
+        }
+
+        if (!namedExpressionsMap.containsKey(exp.getName())) {
+            removeExpression(exp, false);
+            addExpression(exp, false);
+        }
     }
 
     /**
