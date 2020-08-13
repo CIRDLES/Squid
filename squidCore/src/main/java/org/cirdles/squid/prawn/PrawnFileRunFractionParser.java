@@ -156,7 +156,7 @@ public class PrawnFileRunFractionParser {
                 shrimpFraction.setReducedPkHt(reducedPkHt);
                 shrimpFraction.setReducedPkHtFerr(reducedPkHtFerr);
             }
-            
+
             shrimpFraction.setCountOfNonPositiveSBMCounts(countOfNonPositiveSBMCounts);
 
             // determine reference material status
@@ -183,9 +183,15 @@ public class PrawnFileRunFractionParser {
         nScans = Integer.parseInt(runFraction.getPar().get(3).getValue());
         deadTimeNanoseconds = Integer.parseInt(runFraction.getPar().get(4).getValue());
         sbmZeroCps = Integer.parseInt(runFraction.getPar().get(5).getValue());
-        stageX = Integer.parseInt(runFraction.getPar().get(10).getValue());
-        stageY = Integer.parseInt(runFraction.getPar().get(11).getValue());
-        stageZ = Integer.parseInt(runFraction.getPar().get(12).getValue());
+        if (runFraction.getPar().size() > 12) {
+            stageX = Integer.parseInt(runFraction.getPar().get(10).getValue());
+            stageY = Integer.parseInt(runFraction.getPar().get(11).getValue());
+            stageZ = Integer.parseInt(runFraction.getPar().get(12).getValue());
+        } else {
+            stageX = 0;
+            stageY = 0;
+            stageZ = 0;
+        }
 
         runTableEntries = runFraction.getRunTable().getEntry();
         scans = runFraction.getSet().getScan();
@@ -409,9 +415,9 @@ public class PrawnFileRunFractionParser {
         for (int scanNum = 0; scanNum < nScans; scanNum++) {
             for (int speciesMeasurementIndex = 0; speciesMeasurementIndex < nSpecies; speciesMeasurementIndex++) {
                 if (speciesMeasurementIndex != indexOfBackgroundSpecies) {
-                    
+
                     // July 2020 bug fix for no background case: indexOfBackgroundSpecies = -1
-                    int operativeIndexOfBackgroundSpecies = (indexOfBackgroundSpecies <  0) ? speciesMeasurementIndex : indexOfBackgroundSpecies;
+                    int operativeIndexOfBackgroundSpecies = (indexOfBackgroundSpecies < 0) ? speciesMeasurementIndex : indexOfBackgroundSpecies;
                     // correct PeakCps to NetPkCps
                     pkNetCps[scanNum][speciesMeasurementIndex] = pkCps[scanNum][speciesMeasurementIndex] - backgroundCps;
                     sumOfCorrectedPeaks[speciesMeasurementIndex] += pkNetCps[scanNum][speciesMeasurementIndex];
@@ -756,8 +762,7 @@ public class PrawnFileRunFractionParser {
         int countOfNonPositiveSBMCounts = 0;
 
         // extracted from https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-EqnInterp
-        // design decision to pre-compute all to store with shrimpFraction and enable on-tthe-fly tasks
-
+        // design decision to pre-compute all to store with shrimpFraction and enable on-the-fly tasks
         boolean singleScan = (nScans == 1);
 //        int sIndx = singleScan ? 1 : nScans - 1;
         reducedPkHt = new double[nScans][nSpecies];

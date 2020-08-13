@@ -3535,7 +3535,8 @@ public class ExpressionBuilderController implements Initializable {
                         if (expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                                 && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
                                 && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc)
-                                && SampleAgeTypesEnum.isReservedName(expression.getName())) {
+//                                && SampleAgeTypesEnum.isReservedName(expression.getName())
+                                ) {
                             setTextFill(BLUE);
                         } else {
                             setTextFill(BLACK);

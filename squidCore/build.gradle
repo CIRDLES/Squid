@@ -63,10 +63,10 @@ generateGrammarSource {
 }
 
 
-//configurations.all {
-//    // Check for updates every build when 0 or not when 2628000
-//    resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
-//}
+configurations.all {
+    // Check for updates every build when 0 or not when 2628000
+    resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
+}
 
 def timestamp() {
     new SimpleDateFormat("dd MMMM yyyy").format(new Date())

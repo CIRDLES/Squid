@@ -22,12 +22,16 @@ import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLCon
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import org.cirdles.squid.tasks.expressions.Expression;
 
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -129,6 +133,24 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     @Override
     public LinkedList<SquidReportColumnInterface> getCategoryColumns() {
         return categoryColumns;
+    }
+
+    public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted() {
+        LinkedList<SquidReportColumnInterface> sortedColumns
+                = (LinkedList<SquidReportColumnInterface>) categoryColumns.clone();
+
+        Collections.sort(sortedColumns, new Comparator<SquidReportColumnInterface>() {
+            @Override
+            public int compare(SquidReportColumnInterface col1, SquidReportColumnInterface col2) {
+                IntuitiveStringComparator<String> intuitiveStringComparator
+                        = new IntuitiveStringComparator<>();
+                return intuitiveStringComparator.compare(
+                        col1.getExpressionName().toLowerCase(),
+                        col2.getExpressionName().toLowerCase());
+            }
+        });
+
+        return sortedColumns;
     }
 
     /**
