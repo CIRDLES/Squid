@@ -79,6 +79,8 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
@@ -90,7 +92,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.prawn.PrawnFile;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
 /**
@@ -991,7 +992,7 @@ public class SquidUIController implements Initializable {
 
     private void launchExpressionBuilder() {
         // present warning if needed
-        if (squidProject.isTypeGeochron() &&   !squidProject.projectIsHealthyGeochronMode()) {
+        if (squidProject.isTypeGeochron() && !squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         }
@@ -1378,8 +1379,8 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = 
-                    squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+            File summaryFile
+                    = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
@@ -1894,7 +1895,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void openDemoSquiProjectAction(ActionEvent event) {
         try {
-            openProject("DemoSquid3ProjectFiles/SQUID3_demo_file.squid");
+            openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
         } catch (IOException iOException) {
         }
     }
