@@ -16,21 +16,23 @@
 package org.cirdles.squid.tasks.squidTask25;
 
 import java.io.Serializable;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 
 /**
  *
  * @author James F. Bowring
  */
-public class TaskSquid25Equation implements Serializable {
+public class TaskSquid25Equation implements ExpressionSpecInterface, Serializable {
 
-    private final String excelEquationString;
-    private final String equationName;
-    private final boolean eqnSwitchST;
-    private final boolean eqnSwitchSA;
-    private final boolean eqnSwitchConcST;
-    private final boolean eqnSwitchSC;
-    private final boolean eqnSwitchNU;
-    private final boolean eqnSwitchSpecialBuiltin;
+    private final String excelExpressionString;
+    private final String expressionName;
+    private final boolean squidSwitchSTReferenceMaterialCalculation;
+    private final boolean squidSwitchSAUnknownCalculation;
+    private final boolean squidSwitchConcentrationReferenceMaterialCalculation;
+    private final boolean squidSwitchSCSummaryCalculation;
+    private final boolean squidSwitchNU;
+    private final boolean squidSpecialUPbThExpression;
+    private final String notes;
 
     public TaskSquid25Equation(
             String excelEquationString,
@@ -39,75 +41,82 @@ public class TaskSquid25Equation implements Serializable {
             boolean eqnSwitchSA,
             boolean eqnSwitchSC,
             boolean eqnSwitchNU,
-            boolean eqnSwitchSpecialBuiltin,
-            boolean eqnSwitchConcST) {
+            String notes) {
 
-        this.excelEquationString = excelEquationString;
-        this.equationName = equationName;
-        this.eqnSwitchST = eqnSwitchST;
-        this.eqnSwitchSA = eqnSwitchSA;
-        this.eqnSwitchSC = eqnSwitchSC;
-        this.eqnSwitchNU = eqnSwitchNU;
-        this.eqnSwitchSpecialBuiltin = eqnSwitchSpecialBuiltin;
-        this.eqnSwitchConcST = eqnSwitchConcST;
+        this.excelExpressionString = excelEquationString;
+        this.expressionName = equationName;
+        this.squidSwitchSTReferenceMaterialCalculation = eqnSwitchST;
+        this.squidSwitchSAUnknownCalculation = eqnSwitchSA;
+        this.squidSwitchSCSummaryCalculation = eqnSwitchSC;
+        this.squidSwitchNU = eqnSwitchNU;
+        this.squidSpecialUPbThExpression = false;
+        this.squidSwitchConcentrationReferenceMaterialCalculation = false;
+        this.notes = notes;
     }
 
     /**
-     * @return the excelEquationString
+     * @return the excelExpressionString
      */
-    public String getExcelEquationString() {
-        return excelEquationString;
+    public String getExcelExpressionString() {
+        return excelExpressionString;
     }
 
     /**
-     * @return the equationName
+     * @return the expressionName
      */
-    public String getEquationName() {
-        return equationName;
+    public String getExpressionName() {
+        return expressionName;
     }
 
     /**
-     * @return the eqnSwitchST
+     * @return the squidSwitchSTReferenceMaterialCalculation
      */
-    public boolean isEqnSwitchST() {
-        return eqnSwitchST;
+    public boolean isSquidSwitchSTReferenceMaterialCalculation() {
+        return squidSwitchSTReferenceMaterialCalculation;
     }
 
     /**
-     * @return the eqnSwitchSA
+     * @return the squidSwitchSAUnknownCalculation
      */
-    public boolean isEqnSwitchSA() {
-        return eqnSwitchSA;
+    public boolean isSquidSwitchSAUnknownCalculation() {
+        return squidSwitchSAUnknownCalculation;
     }
 
     /**
-     * @return the eqnSwitchNU
+     * @return the squidSwitchNU
      */
-    public boolean isEqnSwitchNU() {
-        return eqnSwitchNU;
+    public boolean isSquidSwitchNU() {
+        return squidSwitchNU;
     }
 
     /**
-     * @return the eqnSwitchSC
+     * @return the squidSwitchSCSummaryCalculation
      */
-    public boolean isEqnSwitchSC() {
-        return eqnSwitchSC;
+    public boolean isSquidSwitchSCSummaryCalculation() {
+        return squidSwitchSCSummaryCalculation;
     }
 
     /**
      *
      * @return
      */
-    public boolean isEqnSwitchSpecialBuiltin() {
-        return eqnSwitchSpecialBuiltin;
+    public boolean isSquidSpecialUPbThExpression() {
+        return squidSpecialUPbThExpression;
     }
 
     /**
      * 
      * @return 
      */
-    public boolean isEqnSwitchConcST() {
-        return eqnSwitchConcST;
+    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation() {
+        return squidSwitchConcentrationReferenceMaterialCalculation;
+    }
+
+    /**
+     * @return the notes
+     */
+    public String getNotes() {
+        return notes;
     }
 
 }

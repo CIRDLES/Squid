@@ -208,7 +208,6 @@ public class SquidUIController implements Initializable {
     private Label russian;
     @FXML
     private Label spanish;
-    @FXML
     private MenuItem newSquid3TaskFromPrefsMenuItem;
     @FXML
     private SeparatorMenuItem dataSeparatorMenuItem;
@@ -280,11 +279,10 @@ public class SquidUIController implements Initializable {
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
         //Task menu
-        newSquid3TaskFromPrefsMenuItem.setDisable(false);
-        selectSquid3TaskFromLibraryMenu.setDisable(true);
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
-        importSquid3TaskMenuItem.setDisable(true);
-        exportSquid3TaskMenuItem.setDisable(true);
+        importSquid3TaskMenuItem.setDisable(false);
+        exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -1144,10 +1142,20 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
+        } catch (IOException iOException) {
+        }
     }
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            File taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
+            squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
+            launchTaskManager();
+        } catch (IOException | JAXBException | SAXException iOException) {
+        }
     }
 
     @FXML
@@ -1813,27 +1821,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
-        // check the mass count
-        boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
-                + REQUIRED_NOMINAL_MASSES.size()));
-        if (valid) {
-            squidProject.createNewTask();
-            squidProject.getTask().updateTaskFromTaskDesign(
-                    SquidPersistentState.getExistingPersistentState().getTaskDesign());
-            launchTaskManager();
-        } else {
-            SquidMessageDialog.showInfoDialog(
-                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the Task Designer specifies "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
-                    + ".",
-                    null);
-        }
-    }
-
-    @FXML
     private void showTaskDesignerAction(ActionEvent event) {
         launchTaskDesigner();
     }
@@ -1898,6 +1885,10 @@ public class SquidUIController implements Initializable {
             openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
         } catch (IOException iOException) {
         }
+    }
+
+    @FXML
+    private void loadTaskFromLibraryAction(ActionEvent event) {
     }
 
     private class HighlightMainMenu {

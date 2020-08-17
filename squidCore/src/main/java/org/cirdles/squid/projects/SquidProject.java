@@ -46,8 +46,6 @@ import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
-import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.xml.sax.SAXException;
@@ -58,8 +56,11 @@ import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstantExpression;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -271,28 +272,35 @@ public final class SquidProject implements Serializable {
         }
 
         // need to remove stored expression results on fractions to clear the decks
-        this.task.getShrimpFractions().forEach((spot) -> {
+        task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
 
-        this.task = new Task(
+        task = new Task(
                 taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
-        this.task.setTaskType(taskSquid25.getTaskType());
-        this.task.setDescription(taskSquid25.getTaskDescription());
-        this.task.setProvenance(taskSquid25.getSquidTaskFileName());
-        this.task.setAuthorName(taskSquid25.getAuthorName());
-        this.task.setLabName(taskSquid25.getLabName());
-        this.task.setNominalMasses(taskSquid25.getNominalMasses());
-        this.task.setRatioNames(taskSquid25.getRatioNames());
-        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-        this.task.setFiltersForUnknownNames(filtersForUnknownNames);
-        this.task.setParentNuclide(taskSquid25.getParentNuclide());
-        this.task.setDirectAltPD(taskSquid25.isDirectAltPD());
+        task.setTaskType(taskSquid25.getTaskType());
+        task.setDescription(taskSquid25.getTaskDescription());
+        task.setProvenance(taskSquid25.getSquidTaskFileName());
+        task.setAuthorName(taskSquid25.getAuthorName());
+        task.setLabName(taskSquid25.getLabName());
+        task.setNominalMasses(taskSquid25.getNominalMasses());
+        task.setRatioNames(taskSquid25.getRatioNames());
+        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        task.setFiltersForUnknownNames(filtersForUnknownNames);
+        task.setParentNuclide(taskSquid25.getParentNuclide());
+        task.setDirectAltPD(taskSquid25.isDirectAltPD());
 
-        this.task.setReferenceMaterialModel(referenceMaterialModel);
-        this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
+        task.setExtPErrTh(extPErrTh);
+        task.setExtPErrU(extPErrU);
+        task.setSelectedIndexIsotope(selectedIndexIsotope);
+        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+        task.setUseSBM(useSBM);
+        task.setUserLinFits(userLinFits);
+
+        task.setReferenceMaterialModel(referenceMaterialModel);
+        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
         // determine index of background mass as specified in task
         for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
@@ -304,27 +312,12 @@ public final class SquidProject implements Serializable {
         }
 
         // first pass
-        this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
+        task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(false);
 
         List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
         for (TaskSquid25Equation task25Eqn : task25Equations) {
-            Expression expression = this.task.generateExpressionFromRawExcelStyleText(task25Eqn.getEquationName(),
-                    task25Eqn.getExcelEquationString(),
-                    task25Eqn.isEqnSwitchNU(),
-                    false, false);
-
-            expression.setNotes("Custom expression imported from Squid2 task " + taskSquid25.getTaskName() + " .");
-
-            ExpressionTreeInterface expressionTree = expression.getExpressionTree();
-            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(task25Eqn.isEqnSwitchST());
-            expressionTree.setSquidSwitchSAUnknownCalculation(task25Eqn.isEqnSwitchSA());
-            expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(task25Eqn.isEqnSwitchConcST());
-
-            expressionTree.setSquidSwitchSCSummaryCalculation(task25Eqn.isEqnSwitchSC());
-            expressionTree.setSquidSpecialUPbThExpression(task25Eqn.isEqnSwitchSpecialBuiltin());
-
-            this.task.getTaskExpressionsOrdered().add(expression);
+            ((Task) task).makeCustomExpression(task25Eqn);
         }
 
         List<String> constantNames = taskSquid25.getConstantNames();
@@ -332,24 +325,67 @@ public final class SquidProject implements Serializable {
         for (int i = 0; i < constantNames.size(); i++) {
 
             // March 2019 moved imported constants to be custom expressions
-            Expression customConstant = this.task.generateExpressionFromRawExcelStyleText(constantNames.get(i),
+            ExpressionSpecInterface constantSpec = specifyConstantExpression(
+                    constantNames.get(i),
                     constantValues.get(i),
-                    false, false, false);
-
-            customConstant.setNotes("Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " .");
-
-            ExpressionTreeInterface expressionTree = customConstant.getExpressionTree();
-            expressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
-            expressionTree.setSquidSwitchSAUnknownCalculation(true);
-            expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
-
-            expressionTree.setSquidSwitchSCSummaryCalculation(true);
-            expressionTree.setSquidSpecialUPbThExpression(false);
-            task.getTaskExpressionsOrdered().add(customConstant);
+                    "Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " ."
+            );
+            ((Task) task).makeCustomExpression(constantSpec);
         }
 
         this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         this.task.applyDirectives();
+
+        initializeTaskAndReduceData(false);
+    }
+
+    public void createTaskFromSerializedTaskXML(String fileName) {
+        // need to remove stored expression results on fractions to clear the decks
+        this.task.getShrimpFractions().forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+            spot.getTaskExpressionsEvaluationsPerSpot().clear();
+        });
+
+        // assume existing or default task
+        task = (Task) ((XMLSerializerInterface) task).readXMLObject(fileName, false);
+        task.setPrawnFile(prawnFile);
+        task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
+
+        // if Task is short of nominal masses, add them
+        int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
+        if (prawnSpeciesCount != task.getNominalMasses().size()) {
+            SquidMessageDialog.showWarningDialog(
+                    "The PrawnFile has "
+                    + prawnSpeciesCount
+                    + " mass stations and the Task has "
+                    + task.getNominalMasses().size()
+                    + " masses - please confirm.",
+                    null);
+            for (int i = 0; i < (prawnSpeciesCount - task.getNominalMasses().size()); i++) {
+                task.getNominalMasses().add("DUMMY" + (i + 1));
+            }
+        }
+
+        task.setExtPErrTh(extPErrTh);
+        task.setExtPErrU(extPErrU);
+        task.setIndexOfTaskBackgroundMass(task.getIndexOfBackgroundSpecies());
+        task.setSelectedIndexIsotope(selectedIndexIsotope);
+        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+        task.setUseSBM(useSBM);
+        task.setUserLinFits(userLinFits);
+
+        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        task.setFiltersForUnknownNames(filtersForUnknownNames);
+
+        task.setReferenceMaterialModel(referenceMaterialModel);
+        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
+
+        // first pass
+        task.setChanged(true);
+        task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+        task.applyDirectives();
 
         initializeTaskAndReduceData(false);
     }
