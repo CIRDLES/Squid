@@ -79,7 +79,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
@@ -91,8 +90,9 @@ import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.prawn.PrawnFile;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
+import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
 
 /**
  * FXML Controller class
@@ -295,6 +295,7 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initXSLTML();
+        CalamariFileUtilities.initSquidTaskLibraryFiles();
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
@@ -370,16 +371,23 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildTaskLibraryMenu() {
-        selectSquid3TaskFromLibraryMenu.setDisable(true);
-
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
         selectSquid3TaskFromLibraryMenu.getItems().clear();
-        Map<String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
-        for (Map.Entry<String, TaskInterface> entry : taskLibrary.entrySet()) {
-            MenuItem menuItem = new MenuItem(entry.getKey());
+
+        List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
+        for (String fileName : taskLibraryFileNamesList) {
+            MenuItem menuItem = new MenuItem(fileName.replace(".xml", ""));
             menuItem.setOnAction((ActionEvent t) -> {
-                // get a new library
-                squidProject.loadAndInitializeLibraryTask(squidProject.getTaskLibrary().get(menuItem.getText()));
-                launchTaskManager();
+                try {
+                    squidProject.createTaskFromSerializedTaskXML(
+                            SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
+                            + File.separator + fileName);
+                    launchTaskManager();
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showInfoDialog(
+                            "Squid cannot load Task: " + fileName.replace("/", "\n/"), primaryStageWindow);
+                }
+
             });
             selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
         }
@@ -1150,11 +1158,16 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+        File taskXMLFile = null;
         try {
-            File taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
+            taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
             squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
             launchTaskManager();
-        } catch (IOException | JAXBException | SAXException iOException) {
+        } catch (IOException | JAXBException | SAXException | SquidException | NullPointerException iOException) {
+            SquidMessageDialog.showInfoDialog(
+                    "Squid cannot load Task: " 
+                            + taskXMLFile.getAbsolutePath().replace("/", "\n/"), 
+                    primaryStageWindow);
         }
     }
 
@@ -1316,7 +1329,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void ludwigLibraryJavaDocAction(ActionEvent event) {
-        BrowserControl.showURI(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
+        BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
 
     @FXML

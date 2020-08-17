@@ -33,10 +33,12 @@ public final class Squid3Constants {
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "Schema");
     public static final File DEMO_SQUID_PROJECTS_FOLDER
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "DemoSquid3ProjectFiles");
-    public static final File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER 
+    public static final File LUDWIGLIBRARY_JAVADOC_FOLDER 
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc");;
     public static final File SQUID_PARAMETER_MODELS_FOLDER
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getName() + File.separator + "SquidParameterModels");
+    public static final File SQUID_TASK_LIBRARY_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getName() + File.separator + "SquidTaskLibrary");
 
     /**
      *

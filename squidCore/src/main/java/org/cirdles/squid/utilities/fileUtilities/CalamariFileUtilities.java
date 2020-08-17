@@ -32,13 +32,15 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.NAME_OF_SQUID_RESOURCES_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.SCHEMA_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_PARAMETER_MODELS_FOLDER;
 import org.cirdles.squid.projects.SquidProject;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
+import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
+import org.cirdles.squid.tasks.Task;
 
 /**
  * @author bowring
@@ -50,6 +52,8 @@ public class CalamariFileUtilities {
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
     public static File XSLTMLFolder;
+
+    public static List<String> taskLibraryFileNamesList;
 
     static {
         NAME_OF_SQUID_RESOURCES_FOLDER.mkdir();
@@ -80,9 +84,7 @@ public class CalamariFileUtilities {
                             File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
-                                //System.out.println("PrawnFile added: " + fileNames.get(i));
                             } else {
-                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
                             }
                         }
                     }
@@ -116,9 +118,40 @@ public class CalamariFileUtilities {
                             File prawnFile = new File(DEMO_SQUID_PROJECTS_FOLDER.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
-                                //System.out.println("PrawnFile added: " + fileNames.get(i));
                             } else {
-                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+            }
+        }
+    }
+
+    /**
+     * Provides a clean copy of Squid Task Library file(s) every time Squid
+     * runs.
+     */
+    public static void initSquidTaskLibraryFiles() {
+        ResourceExtractor taskFileResourceExtractor
+                = new ResourceExtractor(Task.class);
+
+        Path listOfTaskXMLFiles = taskFileResourceExtractor.extractResourceAsPath("listOfTaskXMLFiles.txt");
+        if (listOfTaskXMLFiles != null) {
+            try {
+                if (SQUID_TASK_LIBRARY_FOLDER.exists()) {
+                    FileUtilities.recursiveDelete(SQUID_TASK_LIBRARY_FOLDER.toPath());
+                }
+                if (SQUID_TASK_LIBRARY_FOLDER.mkdir()) {
+                    taskLibraryFileNamesList = Files.readAllLines(listOfTaskXMLFiles, ISO_8859_1);
+                    for (int i = 0; i < taskLibraryFileNamesList.size(); i++) {
+                        // test for empty string
+                        if (taskLibraryFileNamesList.get(i).trim().length() > 0) {
+                            File taskXMLFileResource = taskFileResourceExtractor.extractResourceAsFile(taskLibraryFileNamesList.get(i));
+                            File taskFile = new File(SQUID_TASK_LIBRARY_FOLDER.getCanonicalPath() + File.separator + taskLibraryFileNamesList.get(i));
+
+                            if (taskXMLFileResource.renameTo(taskFile)) {
+                            } else {
                             }
                         }
                     }
@@ -293,16 +326,16 @@ public class CalamariFileUtilities {
     public static void loadJavadoc() {
 
         try {
-            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
-                FileUtilities.recursiveDelete(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.toPath());
+            if (LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+                FileUtilities.recursiveDelete(LUDWIGLIBRARY_JAVADOC_FOLDER.toPath());
             }
-            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
+            if (LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
                 File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.1.0-javadoc.jar");
-                File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
+                File ludwigLibraryJavadoc = new File(LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
 
                 if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
                     try {
-                        unpackZipFile(ludwigLibraryJavadoc, DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER);
+                        unpackZipFile(ludwigLibraryJavadoc, LUDWIGLIBRARY_JAVADOC_FOLDER);
                     } catch (IOException iOException) {
                     }
                 } else {

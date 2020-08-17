@@ -274,7 +274,15 @@ public enum RunParameterNames implements Serializable {
      *
      */
     @XmlEnumValue("right_mount_owner")
-    right_mount_owner("right_mount_owner");
+    right_mount_owner("right_mount_owner"),
+    /**
+     * 
+     */
+    @XmlEnumValue("raster_time_sec")
+    raster_time_sec("raster_time_sec"),
+    @XmlEnumValue("raster_after_burn_time_sec")
+    raster_after_burn_time_sec("raster_after_burn_time_sec");
+    
     private final String value;
 
     RunParameterNames(String v) {

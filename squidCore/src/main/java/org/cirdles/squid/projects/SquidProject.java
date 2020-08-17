@@ -175,27 +175,6 @@ public final class SquidProject implements Serializable {
         return (projectType.equals(GEOCHRON));
     }
 
-    public Map< String, TaskInterface> getTaskLibrary() {
-        Map< String, TaskInterface> builtInTasks = new HashMap<>();
-
-        return builtInTasks;
-    }
-
-    public void loadAndInitializeLibraryTask(TaskInterface task) {
-        this.task = task;
-        task.setPrawnFile(prawnFile);
-        this.task.setReportsEngine(prawnFileHandler.getReportsEngine());
-        this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-        this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-        this.task.setFiltersForUnknownNames(filtersForUnknownNames);
-        // first pass
-        this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
-        this.task.updateAllExpressions(true);
-        this.task.setChanged(true);
-        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
-    }
-
     /**
      *
      * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
@@ -339,55 +318,68 @@ public final class SquidProject implements Serializable {
         initializeTaskAndReduceData(false);
     }
 
-    public void createTaskFromSerializedTaskXML(String fileName) {
+    public void createTaskFromSerializedTaskXML(String fileName)
+        throws SquidException {
         // need to remove stored expression results on fractions to clear the decks
-        this.task.getShrimpFractions().forEach((spot) -> {
+        task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
 
         // assume existing or default task
-        task = (Task) ((XMLSerializerInterface) task).readXMLObject(fileName, false);
-        task.setPrawnFile(prawnFile);
-        task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
-
-        // if Task is short of nominal masses, add them
-        int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
-        if (prawnSpeciesCount != task.getNominalMasses().size()) {
-            SquidMessageDialog.showWarningDialog(
-                    "The PrawnFile has "
-                    + prawnSpeciesCount
-                    + " mass stations and the Task has "
-                    + task.getNominalMasses().size()
-                    + " masses - please confirm.",
-                    null);
-            for (int i = 0; i < (prawnSpeciesCount - task.getNominalMasses().size()); i++) {
-                task.getNominalMasses().add("DUMMY" + (i + 1));
-            }
+        TaskInterface currentTask = task;
+        try {
+            task = (Task) ((XMLSerializerInterface) task).readXMLObject(fileName, false);
+        } catch (com.thoughtworks.xstream.mapper.CannotResolveClassException e) {
+            task = currentTask;
+            throw new SquidException(fileName);
         }
+        
+        if (task == null) {
+            task = currentTask;
+            throw new SquidException(fileName);
+        } else {
+            task.setPrawnFile(prawnFile);
+            task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
 
-        task.setExtPErrTh(extPErrTh);
-        task.setExtPErrU(extPErrU);
-        task.setIndexOfTaskBackgroundMass(task.getIndexOfBackgroundSpecies());
-        task.setSelectedIndexIsotope(selectedIndexIsotope);
-        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
-        task.setUseSBM(useSBM);
-        task.setUserLinFits(userLinFits);
+            // if Task is short of nominal masses, add them
+            int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
+            if (prawnSpeciesCount != task.getNominalMasses().size()) {
+                SquidMessageDialog.showWarningDialog(
+                        "The PrawnFile has "
+                        + prawnSpeciesCount
+                        + " mass stations and the Task has "
+                        + task.getNominalMasses().size()
+                        + " masses - please confirm.",
+                        null);
+                for (int i = 0; i < (prawnSpeciesCount - task.getNominalMasses().size()); i++) {
+                    task.getNominalMasses().add("DUMMY" + (i + 1));
+                }
+            }
 
-        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-        task.setFiltersForUnknownNames(filtersForUnknownNames);
+            task.setExtPErrTh(extPErrTh);
+            task.setExtPErrU(extPErrU);
+            task.setIndexOfTaskBackgroundMass(task.getIndexOfBackgroundSpecies());
+            task.setSelectedIndexIsotope(selectedIndexIsotope);
+            task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+            task.setUseSBM(useSBM);
+            task.setUserLinFits(userLinFits);
 
-        task.setReferenceMaterialModel(referenceMaterialModel);
-        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
+            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+            task.setFiltersForUnknownNames(filtersForUnknownNames);
 
-        // first pass
-        task.setChanged(true);
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
+            task.setReferenceMaterialModel(referenceMaterialModel);
+            task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
-        task.applyDirectives();
+            // first pass
+            task.setChanged(true);
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
 
-        initializeTaskAndReduceData(false);
+            task.applyDirectives();
+
+            initializeTaskAndReduceData(false);
+        }
     }
 
     public void setupPrawnOPFile(File opFileNew)
