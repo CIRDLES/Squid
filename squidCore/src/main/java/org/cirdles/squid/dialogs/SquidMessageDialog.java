@@ -68,7 +68,10 @@ public class SquidMessageDialog extends Alert {
      * @param owner
      */
     public static void showInfoDialog(String message, Window owner) {
-        Alert alert = new SquidMessageDialog(Alert.AlertType.INFORMATION, message, "Squid3 informs you:", owner);
+        Alert alert = new SquidMessageDialog(
+                Alert.AlertType.INFORMATION, 
+                message, 
+                "Squid3 informs you:", owner);
         alert.showAndWait();
     }
 

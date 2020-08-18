@@ -32,8 +32,15 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.NAME_OF_SQUID_RESOURCES_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SCHEMA_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PARAMETER_MODELS_FOLDER;
 import org.cirdles.squid.projects.SquidProject;
 import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
+import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
+import org.cirdles.squid.tasks.Task;
 
 /**
  * @author bowring
@@ -41,16 +48,15 @@ import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
 public class CalamariFileUtilities {
 
     private static File exampleFolder;
-    private static File demoSquidProjectsFolder;
-    private static File schemaFolder;
-    public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
-    public static File SQUID_PARAMETER_MODELS_FOLDER = new File("SquidParameterModels");
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
-    private static File XSLTMLFolder;
+    public static File XSLTMLFolder;
+
+    public static List<String> taskLibraryFileNamesList;
 
     static {
+        NAME_OF_SQUID_RESOURCES_FOLDER.mkdir();
         SQUID_PARAMETER_MODELS_FOLDER.mkdir();
     }
 
@@ -64,7 +70,7 @@ public class CalamariFileUtilities {
 
         Path listOfPrawnFiles = prawnFileResourceExtractor.extractResourceAsPath("listOfPrawnFiles.txt");
         if (listOfPrawnFiles != null) {
-            exampleFolder = new File("ExamplePrawnXMLFiles");
+            exampleFolder = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "ExamplePrawnXMLFiles");
             try {
                 if (exampleFolder.exists()) {
                     FileUtilities.recursiveDelete(exampleFolder.toPath());
@@ -78,9 +84,7 @@ public class CalamariFileUtilities {
                             File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
-                                //System.out.println("PrawnFile added: " + fileNames.get(i));
                             } else {
-                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
                             }
                         }
                     }
@@ -101,30 +105,59 @@ public class CalamariFileUtilities {
 
         Path listOfSquidProjectFiles = prawnFileResourceExtractor.extractResourceAsPath("listOfSquidProjectFiles.txt");
         if (listOfSquidProjectFiles != null) {
-            demoSquidProjectsFolder = new File("DemoSquid3ProjectFiles");
             try {
-                if (demoSquidProjectsFolder.exists()) {
-                    FileUtilities.recursiveDelete(demoSquidProjectsFolder.toPath());
+                if (DEMO_SQUID_PROJECTS_FOLDER.exists()) {
+                    FileUtilities.recursiveDelete(DEMO_SQUID_PROJECTS_FOLDER.toPath());
                 }
-                if (demoSquidProjectsFolder.mkdir()) {
+                if (DEMO_SQUID_PROJECTS_FOLDER.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfSquidProjectFiles, ISO_8859_1);
                     for (int i = 0; i < fileNames.size(); i++) {
                         // test for empty string
                         if (fileNames.get(i).trim().length() > 0) {
                             File prawnFileResource = prawnFileResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File prawnFile = new File(demoSquidProjectsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                            File prawnFile = new File(DEMO_SQUID_PROJECTS_FOLDER.getCanonicalPath() + File.separator + fileNames.get(i));
 
                             if (prawnFileResource.renameTo(prawnFile)) {
-                                //System.out.println("PrawnFile added: " + fileNames.get(i));
                             } else {
-                                //System.out.println("PrawnFile failed to add: " + fileNames.get(i));
                             }
                         }
                     }
                 }
             } catch (IOException iOException) {
             }
+        }
+    }
 
+    /**
+     * Provides a clean copy of Squid Task Library file(s) every time Squid
+     * runs.
+     */
+    public static void initSquidTaskLibraryFiles() {
+        ResourceExtractor taskFileResourceExtractor
+                = new ResourceExtractor(Task.class);
+
+        Path listOfTaskXMLFiles = taskFileResourceExtractor.extractResourceAsPath("listOfTaskXMLFiles.txt");
+        if (listOfTaskXMLFiles != null) {
+            try {
+                if (SQUID_TASK_LIBRARY_FOLDER.exists()) {
+                    FileUtilities.recursiveDelete(SQUID_TASK_LIBRARY_FOLDER.toPath());
+                }
+                if (SQUID_TASK_LIBRARY_FOLDER.mkdir()) {
+                    taskLibraryFileNamesList = Files.readAllLines(listOfTaskXMLFiles, ISO_8859_1);
+                    for (int i = 0; i < taskLibraryFileNamesList.size(); i++) {
+                        // test for empty string
+                        if (taskLibraryFileNamesList.get(i).trim().length() > 0) {
+                            File taskXMLFileResource = taskFileResourceExtractor.extractResourceAsFile(taskLibraryFileNamesList.get(i));
+                            File taskFile = new File(SQUID_TASK_LIBRARY_FOLDER.getCanonicalPath() + File.separator + taskLibraryFileNamesList.get(i));
+
+                            if (taskXMLFileResource.renameTo(taskFile)) {
+                            } else {
+                            }
+                        }
+                    }
+                }
+            } catch (IOException iOException) {
+            }
         }
     }
 
@@ -133,7 +166,7 @@ public class CalamariFileUtilities {
 
         Path listOfXSLTMLFiles = extractor.extractResourceAsPath("listOfXSLTMLFiles.txt");
         if (listOfXSLTMLFiles != null) {
-            XSLTMLFolder = new File("XSLTML");
+            XSLTMLFolder = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "XSLTML");
             try {
                 if (XSLTMLFolder.exists()) {
                     FileUtilities.recursiveDelete(XSLTMLFolder.toPath());
@@ -157,9 +190,7 @@ public class CalamariFileUtilities {
             } catch (IOException iOException) {
                 iOException.printStackTrace();
             }
-
         }
-
     }
 
     public static void initSampleParametersModels() {
@@ -168,7 +199,7 @@ public class CalamariFileUtilities {
 
         Path listOfPhysicalConstants = physConstResourceExtractor.extractResourceAsPath("listOfSquidPhysicalConstantsModels.txt");
         if (listOfPhysicalConstants != null) {
-            physicalConstantsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidPhysicalConstantsModels");
+            physicalConstantsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidPhysicalConstantsModels");
             try {
                 if (physicalConstantsFolder.exists()) {
                     FileUtilities.recursiveDelete(physicalConstantsFolder.toPath());
@@ -199,7 +230,7 @@ public class CalamariFileUtilities {
 
         Path listOfReferenceMaterials = refMatResourceExtractor.extractResourceAsPath("listOfSquidReferenceMaterials.txt");
         if (listOfReferenceMaterials != null) {
-            referenceMaterialsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidReferenceMaterialModels");
+            referenceMaterialsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidReferenceMaterialModels");
             try {
                 if (referenceMaterialsFolder.exists()) {
                     FileUtilities.recursiveDelete(referenceMaterialsFolder.toPath());
@@ -230,7 +261,7 @@ public class CalamariFileUtilities {
 
         Path listOfCommonPbModels = commonPbResourceExtractor.extractResourceAsPath("listOfSquidCommonPbModels.txt");
         if (listOfCommonPbModels != null) {
-            commonPbModelsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidCommonPbModels");
+            commonPbModelsFolder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidCommonPbModels");
             try {
                 if (commonPbModelsFolder.exists()) {
                     FileUtilities.recursiveDelete(commonPbModelsFolder.toPath());
@@ -265,15 +296,13 @@ public class CalamariFileUtilities {
     public static void loadShrimpPrawnFileSchema() {
         ResourceExtractor prawnFileResourceExtractor
                 = new ResourceExtractor(Squid.class);
-
-        schemaFolder = new File("Schema");
         try {
-            if (schemaFolder.exists()) {
-                FileUtilities.recursiveDelete(schemaFolder.toPath());
+            if (SCHEMA_FOLDER.exists()) {
+                FileUtilities.recursiveDelete(SCHEMA_FOLDER.toPath());
             }
-            if (schemaFolder.mkdir()) {
+            if (SCHEMA_FOLDER.mkdir()) {
                 File shrimpPrawnFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN.xsd");
-                File shrimpPrawnFileSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
+                File shrimpPrawnFileSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
 
                 if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
                     //System.out.println("SHRIMP_PRAWN.xsd added.");
@@ -282,7 +311,7 @@ public class CalamariFileUtilities {
                 }
 
                 File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
-                File shrimpExpressionSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
+                File shrimpExpressionSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
 
                 if (shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema)) {
                     //System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
@@ -295,18 +324,18 @@ public class CalamariFileUtilities {
     }
 
     public static void loadJavadoc() {
-        DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER = new File("LudwigLibraryJavadoc");
+
         try {
-            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
-                FileUtilities.recursiveDelete(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.toPath());
+            if (LUDWIGLIBRARY_JAVADOC_FOLDER.exists()) {
+                FileUtilities.recursiveDelete(LUDWIGLIBRARY_JAVADOC_FOLDER.toPath());
             }
-            if (DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
+            if (LUDWIGLIBRARY_JAVADOC_FOLDER.mkdir()) {
                 File ludwigLibraryJavadocResource = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsFile("javadoc/LudwigLibrary-1.1.0-javadoc.jar");
-                File ludwigLibraryJavadoc = new File(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
+                File ludwigLibraryJavadoc = new File(LUDWIGLIBRARY_JAVADOC_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc.jar");
 
                 if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
                     try {
-                        unpackZipFile(ludwigLibraryJavadoc, DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER);
+                        unpackZipFile(ludwigLibraryJavadoc, LUDWIGLIBRARY_JAVADOC_FOLDER);
                     } catch (IOException iOException) {
                     }
                 } else {

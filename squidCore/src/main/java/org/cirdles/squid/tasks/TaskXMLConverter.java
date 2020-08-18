@@ -22,7 +22,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
-import org.cirdles.squid.tasks.expressions.Expression;
+import java.util.Map;
+import java.util.TreeMap;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.tasks.expressions.ExpressionSpec;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
@@ -50,7 +54,7 @@ public class TaskXMLConverter implements Converter {
     /**
      * checks the argument <code>clazz</code> against <code>Task</code>'s
      * <code>Class</code>. Used to ensure that the object about to be
- marshalled/unmarshalled is of the correct taskType.
+     * marshalled/unmarshalled is of the correct taskType.
      *
      * @pre argument <code>clazz</code> is a valid <code>Class</code>
      * @post    <code>boolean</code> is returned comparing <code>clazz</code>
@@ -88,8 +92,56 @@ public class TaskXMLConverter implements Converter {
         writer.setValue(task.getName());
         writer.endNode();
 
-        writer.startNode("taskExpressionsOrdered");
-        context.convertAnother(task.getTaskExpressionsOrdered());
+        writer.startNode("taskType");
+        writer.setValue(task.getTaskType().name());
+        writer.endNode();
+
+        writer.startNode("description");
+        writer.setValue(task.getDescription());
+        writer.endNode();
+
+        writer.startNode("authorName");
+        writer.setValue(task.getAuthorName());
+        writer.endNode();
+
+        writer.startNode("labName");
+        writer.setValue(task.getLabName());
+        writer.endNode();
+
+        writer.startNode("provenance");
+        writer.setValue(task.getProvenance());
+        writer.endNode();
+
+        writer.startNode("dateRevised");
+        writer.setValue(String.valueOf(task.getDateRevised()));
+        writer.endNode();
+
+        writer.startNode("parentNuclide");
+        writer.setValue(task.getParentNuclide());
+        writer.endNode();
+
+        writer.startNode("directAltPD");
+        writer.setValue(String.valueOf(task.isDirectAltPD()));
+        writer.endNode();
+
+        writer.startNode("nominalMasses");
+        context.convertAnother(task.getNominalMasses());
+        writer.endNode();
+
+        writer.startNode("indexOfBackgroundSpecies");
+        writer.setValue(String.valueOf(task.getIndexOfBackgroundSpecies()));
+        writer.endNode();
+
+        writer.startNode("ratioNames");
+        context.convertAnother(task.getRatioNames());
+        writer.endNode();
+
+        writer.startNode("specialSquidFourExpressionsMap");
+        context.convertAnother(task.getSpecialSquidFourExpressionsMap());
+        writer.endNode();
+
+        writer.startNode("customExpressions");
+        context.convertAnother(((Task) task).getTaskCustomExpressionsOrdered());
         writer.endNode();
 
     }
@@ -117,16 +169,88 @@ public class TaskXMLConverter implements Converter {
         task.setName(reader.getValue());
         reader.moveUp();
 
-        List<Expression> taskExpressions = new ArrayList<>();
+        reader.moveDown();
+        task.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setDescription(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setAuthorName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setLabName(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setProvenance(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setDateRevised(Long.parseLong(reader.getValue()));
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setParentNuclide(reader.getValue());
+        reader.moveUp();
+
+        reader.moveDown();
+        task.setDirectAltPD(Boolean.parseBoolean(reader.getValue()));
+        reader.moveUp();
+
+        List<String> nominalMasses = new ArrayList<>();
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
-            Expression exp = new Expression();
-            exp = (Expression) context.convertAnother(exp, Expression.class);
-            taskExpressions.add((Expression)exp);
+            nominalMasses.add(reader.getValue());
             reader.moveUp();
         }
-        task.setTaskExpressionsOrdered(taskExpressions);
+        reader.moveUp();
+        task.setNominalMasses(nominalMasses);
+
+        reader.moveDown();
+        task.setIndexOfBackgroundSpecies(Integer.parseInt(reader.getValue()));
+        reader.moveUp();
+
+        List<String> ratioNames = new ArrayList<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+            ratioNames.add(reader.getValue());
+            reader.moveUp();
+        }
+        reader.moveUp();
+        task.setRatioNames(ratioNames);
+
+        Map<String, String> specialSquidFourExpressionsMap = new TreeMap<>();
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+            reader.moveDown();
+            String key = reader.getValue();
+            reader.moveUp();
+            reader.moveDown();
+            String value = reader.getValue();
+            specialSquidFourExpressionsMap.put(key, value);
+            reader.moveUp();
+            reader.moveUp();
+        }
+        reader.moveUp();
+        task.setSpecialSquidFourExpressionsMap(specialSquidFourExpressionsMap);
+        
+        // for custom expressions, we retrieve the expressionspec and build expression
+        reader.moveDown();
+        while (reader.hasMoreChildren()) {
+            reader.moveDown();
+            ExpressionSpecInterface expressionSpec = new ExpressionSpec();
+            expressionSpec = (ExpressionSpecInterface) context.convertAnother(expressionSpec, ExpressionSpec.class);
+            ((Task)task).makeCustomExpression(expressionSpec);
+            reader.moveUp();
+        }
+        reader.moveUp();
 
         return task;
     }

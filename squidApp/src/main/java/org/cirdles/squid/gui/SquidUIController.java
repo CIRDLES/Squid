@@ -79,6 +79,7 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
@@ -89,9 +90,9 @@ import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import org.cirdles.squid.prawn.PrawnFile;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
+import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
 
 /**
  * FXML Controller class
@@ -207,7 +208,6 @@ public class SquidUIController implements Initializable {
     private Label russian;
     @FXML
     private Label spanish;
-    @FXML
     private MenuItem newSquid3TaskFromPrefsMenuItem;
     @FXML
     private SeparatorMenuItem dataSeparatorMenuItem;
@@ -279,11 +279,10 @@ public class SquidUIController implements Initializable {
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
         //Task menu
-        newSquid3TaskFromPrefsMenuItem.setDisable(false);
-        selectSquid3TaskFromLibraryMenu.setDisable(true);
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
-        importSquid3TaskMenuItem.setDisable(true);
-        exportSquid3TaskMenuItem.setDisable(true);
+        importSquid3TaskMenuItem.setDisable(false);
+        exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -296,6 +295,7 @@ public class SquidUIController implements Initializable {
         CalamariFileUtilities.loadShrimpPrawnFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initXSLTML();
+        CalamariFileUtilities.initSquidTaskLibraryFiles();
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
@@ -371,16 +371,23 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildTaskLibraryMenu() {
-        selectSquid3TaskFromLibraryMenu.setDisable(true);
-
+        selectSquid3TaskFromLibraryMenu.setDisable(false);
         selectSquid3TaskFromLibraryMenu.getItems().clear();
-        Map<String, TaskInterface> taskLibrary = squidProject.getTaskLibrary();
-        for (Map.Entry<String, TaskInterface> entry : taskLibrary.entrySet()) {
-            MenuItem menuItem = new MenuItem(entry.getKey());
+
+        List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
+        for (String fileName : taskLibraryFileNamesList) {
+            MenuItem menuItem = new MenuItem(fileName.replace(".xml", ""));
             menuItem.setOnAction((ActionEvent t) -> {
-                // get a new library
-                squidProject.loadAndInitializeLibraryTask(squidProject.getTaskLibrary().get(menuItem.getText()));
-                launchTaskManager();
+                try {
+                    squidProject.createTaskFromSerializedTaskXML(
+                            SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
+                            + File.separator + fileName);
+                    launchTaskManager();
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showInfoDialog(
+                            "Squid cannot load Task: " + fileName.replace("/", "\n/"), primaryStageWindow);
+                }
+
             });
             selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
         }
@@ -991,7 +998,7 @@ public class SquidUIController implements Initializable {
 
     private void launchExpressionBuilder() {
         // present warning if needed
-        if (squidProject.isTypeGeochron() &&   !squidProject.projectIsHealthyGeochronMode()) {
+        if (squidProject.isTypeGeochron() && !squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
                     primaryStageWindow);
         }
@@ -1143,10 +1150,25 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void exportSquid3TaskMenuItemAction(ActionEvent event) {
+        try {
+            FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
+        } catch (IOException iOException) {
+        }
     }
 
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
+        File taskXMLFile = null;
+        try {
+            taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
+            squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
+            launchTaskManager();
+        } catch (IOException | JAXBException | SAXException | SquidException | NullPointerException iOException) {
+            SquidMessageDialog.showInfoDialog(
+                    "Squid cannot load Task: " 
+                            + taskXMLFile.getAbsolutePath().replace("/", "\n/"), 
+                    primaryStageWindow);
+        }
     }
 
     @FXML
@@ -1307,7 +1329,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void ludwigLibraryJavaDocAction(ActionEvent event) {
-        BrowserControl.showURI(DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
+        BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
 
     @FXML
@@ -1378,8 +1400,8 @@ public class SquidUIController implements Initializable {
     @FXML
     private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
         if (squidProject.hasReportsFolder()) {
-            File summaryFile = 
-                    squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
+            File summaryFile
+                    = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
         } else {
             showReportsWarning();
@@ -1812,27 +1834,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquid3TaskFromPrefsMenuItemAction(ActionEvent event) {
-        // check the mass count
-        boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
-                + REQUIRED_NOMINAL_MASSES.size()));
-        if (valid) {
-            squidProject.createNewTask();
-            squidProject.getTask().updateTaskFromTaskDesign(
-                    SquidPersistentState.getExistingPersistentState().getTaskDesign());
-            launchTaskManager();
-        } else {
-            SquidMessageDialog.showInfoDialog(
-                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the Task Designer specifies "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
-                    + ".",
-                    null);
-        }
-    }
-
-    @FXML
     private void showTaskDesignerAction(ActionEvent event) {
         launchTaskDesigner();
     }
@@ -1894,9 +1895,13 @@ public class SquidUIController implements Initializable {
     @FXML
     private void openDemoSquiProjectAction(ActionEvent event) {
         try {
-            openProject("DemoSquid3ProjectFiles/SQUID3_demo_file.squid");
+            openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
         } catch (IOException iOException) {
         }
+    }
+
+    @FXML
+    private void loadTaskFromLibraryAction(ActionEvent event) {
     }
 
     private class HighlightMainMenu {

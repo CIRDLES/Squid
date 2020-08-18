@@ -81,6 +81,9 @@ squidCore/Hf1sabserr.png
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/*.xls
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/listOfXSLTMLFiles.txt
 
+!squidCore/src/main/resources/org/cirdles/squid/tasks/*.xml
+!squidCore/src/main/resources/org/cirdles/squid/tasks/listOfTaskXMLFiles.txt
+
 
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterialModels/*
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/physicalConstantsModels/*
