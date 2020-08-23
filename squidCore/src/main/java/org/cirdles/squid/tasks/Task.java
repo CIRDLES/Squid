@@ -66,25 +66,16 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
-import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
-import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -134,6 +125,10 @@ import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
+import org.cirdles.squid.tasks.expressions.ExpressionSpec;
+import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpression;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
@@ -403,6 +398,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         return retVal;
+    }
+
+    public void saveTaskToXML(File taskFileXML) {
+        serializeXMLObject(taskFileXML.getAbsolutePath());
     }
 
     public List<ParametersModel> verifySquidLabDataParameters() {
@@ -1363,6 +1362,32 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    /**
+     * Builds a custom expression from a specification and adds it to task
+     *
+     * @param expressionSpec
+     */
+    public void makeCustomExpression(ExpressionSpecInterface expressionSpec) {
+        Expression expression
+                = generateExpressionFromRawExcelStyleText(
+                        expressionSpec.getExpressionName(),
+                        expressionSpec.getExcelExpressionString(),
+                        expressionSpec.isSquidSwitchNU(),
+                        false, false);
+
+        expression.setNotes(expressionSpec.getNotes());
+
+        ExpressionTreeInterface expressionTree = expression.getExpressionTree();
+        expressionTree.setSquidSwitchSTReferenceMaterialCalculation(expressionSpec.isSquidSwitchSTReferenceMaterialCalculation());
+        expressionTree.setSquidSwitchSAUnknownCalculation(expressionSpec.isSquidSwitchSAUnknownCalculation());
+        expressionTree.setSquidSwitchConcentrationReferenceMaterialCalculation(expressionSpec.isSquidSwitchConcentrationReferenceMaterialCalculation());
+
+        expressionTree.setSquidSwitchSCSummaryCalculation(expressionSpec.isSquidSwitchSCSummaryCalculation());
+        expressionTree.setSquidSpecialUPbThExpression(expressionSpec.isSquidSpecialUPbThExpression());
+
+        taskExpressionsOrdered.add(expression);
+    }
+
     @Override
     public String listBuiltInExpressions() {
         StringBuilder expressionList = new StringBuilder();
@@ -1821,34 +1846,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void customizeXstream(XStream xstream) {
-        xstream.registerConverter(new ShrimpSpeciesNodeXMLConverter());
-        xstream.alias("ShrimpSpeciesNode", ShrimpSpeciesNode.class);
 
-        xstream.registerConverter(new ConstantNodeXMLConverter());
-        xstream.alias("ConstantNode", ConstantNode.class);
-
-        xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
-        xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
-        xstream.alias("VariableNodeForPerSpotTaskExpressions", VariableNodeForPerSpotTaskExpressions.class);
-        xstream.alias("VariableNodeForIsotopicRatios", VariableNodeForIsotopicRatios.class);
-
-        xstream.registerConverter(new OperationXMLConverter());
-        xstream.registerConverter(new FunctionXMLConverter());
-
-        xstream.registerConverter(new ExpressionTreeXMLConverter());
-        xstream.alias("ExpressionTree", ExpressionTree.class);
+        xstream.registerConverter(new ExpressionSpecXMLConverter());
+        xstream.alias("ExpressionSpec", ExpressionSpec.class);
 
         xstream.registerConverter(new TaskXMLConverter());
         xstream.alias("Task", Task.class);
         xstream.alias("Task", this.getClass());
 
-        xstream.registerConverter(new SquidReportTableXMLConverter());
-        xstream.registerConverter(new SquidReportCategoryXMLConverter());
-        xstream.registerConverter(new SquidReportColumnXMLConverter());
-
         // Note: http://cristian.sulea.net/blog.php?p=2014-11-12-xstream-object-references
         xstream.setMode(XStream.NO_REFERENCES);
+    }
 
+    @Override
+    public String customizeXML(String xml) {
+        String retVal
+                = "<?xml version=\"1.0\"?>\n"
+                + "<!-- SQUID3_TASK_SPECIFICATION_FILE -->\n"
+                + "<!-- visit: github.com/CIRDLES/Squid -->\n"
+                + xml;
+        return retVal;
     }
 
     @Override
@@ -2032,34 +2049,47 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     public SpotSummaryDetails evaluateSelectedExpressionWeightedMeanForUnknownGroup(
             String expressionName,
-            String groupName,
+            String sampleName,
             List<ShrimpFractionExpressionInterface> spotsForExpression) {
+
+        Expression expressionWM = constructCustomWMExpression(expressionName, sampleName);
+
         SpotSummaryDetails spotSummaryDetails = null;
-
-        // calculate weighted mean of selected expressionName without auto-rejection
-        Expression expressionWM = buildExpression(expressionName + "_WM_" + groupName,
-                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
-
-        expressionWM.getExpressionTree().setUnknownsGroupSampleName(groupName);
-        expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
-
-        updateSingleExpression(expressionWM);
-
         try {
             evaluateExpressionForSpotSet(expressionWM.getExpressionTree(), spotsForExpression);
-            spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
-            //TODO: feb 2020 under discussion on how to expose these
-            if ((expressionName.toUpperCase().contains("AGE"))
-                    && !namedExpressionsMap.containsKey(expressionWM.getName())) {
-                // add expression to working list if it is a Sample Age WM - others not available
-                removeExpression(expressionWM, false);
-                addExpression(expressionWM, false);
-            }
+            spotSummaryDetails
+                    = taskExpressionsEvaluationsPerSpotSet.get(expressionWM.getExpressionTree().getName());
         } catch (SquidException squidException) {
         }
 
         return spotSummaryDetails;
+    }
+
+    private Expression constructCustomWMExpression(String expressionName, String sampleName) {
+        // calculate weighted mean of selected expressionName without auto-rejection
+        Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
+                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
+
+        expressionWM.getExpressionTree().setUnknownsGroupSampleName(sampleName);
+        expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
+
+        updateSingleExpression(expressionWM);
+
+        return expressionWM;
+    }
+
+    public void includeCustomWMExpressionByName(String expressionName) {
+        Expression exp = getExpressionByName(expressionName);
+        if (exp == null) {
+            String[] wmExpNameArray = expressionName.split("_WM_");
+            exp = constructCustomWMExpression(wmExpNameArray[0], wmExpNameArray[1]);
+        }
+
+        if (!namedExpressionsMap.containsKey(exp.getName())) {
+            removeExpression(exp, false);
+            addExpression(exp, false);
+        }
     }
 
     /**
@@ -2549,11 +2579,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return calls.toString();
     }
 
-    public SquidReportTableInterface initTaskDefaultSquidReportTables() {
-        if (squidReportTablesRefMat == null) {
+    /**
+     *
+     * @param updateDefaultReports the value of updateDefaultReports
+     */
+    public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
+        if (updateDefaultReports || squidReportTablesRefMat == null) {
             this.squidReportTablesRefMat = new ArrayList<>();
         }
-        if (squidReportTablesUnknown == null) {
+        if (updateDefaultReports || squidReportTablesUnknown == null) {
             this.squidReportTablesUnknown = new ArrayList<>();
         }
 
@@ -3024,6 +3058,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public List<Expression> getTaskExpressionsOrdered() {
         return taskExpressionsOrdered;
+    }
+
+    public List<ExpressionSpecInterface> getTaskCustomExpressionsOrdered() {
+        List<ExpressionSpecInterface> taskCustomExpressionsOrdered = new ArrayList<>();
+        for (Expression exp : taskExpressionsOrdered) {
+            if (exp.isCustom()) {
+                taskCustomExpressionsOrdered.add(specifyExpression(exp));
+            }
+        }
+
+        return taskCustomExpressionsOrdered;
     }
 
     @Override
@@ -3586,5 +3631,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         System.out.println(result);
         return result;
+    }
+
+    public static void main(String[] args) {
+        SquidProject sp = new SquidProject(GEOCHRON);
+        TaskInterface task = sp.getTask();
+        task.setNominalMasses(REQUIRED_NOMINAL_MASSES);
+        task.setRatioNames(REQUIRED_RATIO_NAMES);
+
+        ((XMLSerializerInterface) task).serializeXMLObject("TASK.xml");
+
     }
 }

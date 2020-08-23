@@ -41,6 +41,7 @@ public interface SquidReportCategoryInterface extends XMLSerializerInterface {
      * @return the categoryColumns
      */
     public LinkedList<SquidReportColumnInterface> getCategoryColumns();
+    public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted();
 
     /**
      * @param categoryColumns the categoryColumns to set

@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
+import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  * @author James F. Bowring
@@ -226,6 +227,54 @@ public class FileHandler {
             squidPersistentState.updateExpressionListMRU(expressionFileXML);
             ((XMLSerializerInterface) expression)
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
+        }
+
+        return retVal;
+    }
+
+    public static File saveTaskFileXML(TaskInterface task, Window ownerWindow)
+            throws IOException {
+
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid Task '.xml' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Task '.xml' files", "*.xml"));
+        File mruFolder = new File(squidPersistentState.getMRUTaskXMLFolderPath());
+        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
+        fileChooser.setInitialFileName(task.getName().replaceAll(" ", "_") + ".xml");
+
+        File taskFileXML = fileChooser.showSaveDialog(ownerWindow);
+
+        if (taskFileXML != null) {
+            retVal = taskFileXML;
+            squidPersistentState.updateTaskXMLFileListMRU(taskFileXML);
+            ((XMLSerializerInterface) task)
+                    .serializeXMLObject(taskFileXML.getAbsolutePath());
+        }
+
+        return retVal;
+    }
+
+    public static File selectTaskXMLFile(Window ownerWindow)
+            throws IOException, JAXBException, SAXException {
+        File retVal = null;
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Squid Task XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Task XML files", "*.xml"));
+        File initDirectory = new File(squidPersistentState.getMRUTaskXMLFolderPath());
+        fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
+
+        File taskXMLFileNew = fileChooser.showOpenDialog(ownerWindow);
+
+        if (taskXMLFileNew != null) {
+            if (taskXMLFileNew.getName().toLowerCase(Locale.US).endsWith(".xml")) {
+                squidPersistentState.setMRUTaskXMLFolderPath(taskXMLFileNew.getParent());
+                retVal = taskXMLFileNew;
+            } else {
+                throw new IOException("Filename does not end with '.xml'");
+            }
         }
 
         return retVal;

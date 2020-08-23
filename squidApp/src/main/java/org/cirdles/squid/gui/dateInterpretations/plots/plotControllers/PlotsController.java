@@ -32,7 +32,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBoxTreeItem;
@@ -84,6 +83,7 @@ import static org.cirdles.topsoil.Variable.Y;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.AbstractTopsoilPlot;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION;
+import static org.cirdles.topsoil.plot.PlotOption.SHOW_UNINCLUDED;
 
 /**
  *
@@ -136,6 +136,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     public void setYAxisExpressionName(String yAxisExpressionName) {
         PlotsController.yAxisExpressionName = yAxisExpressionName;
         showActivePlot();
+    }
+
+    @Override
+    public void showExcludedSpots(boolean doShow) {
+        plot.setProperty(SHOW_UNINCLUDED.getTitle(), doShow);
     }
 
     public static enum PlotTypes {
@@ -496,6 +501,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }
 
         rootData = new ArrayList<>();
+        plot = rootPlot;
 
         List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
 
@@ -690,10 +696,13 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
      * @param hasData the value of hasData
      */
     private void provisionAnyTwoToolbox(boolean hasData) {
-        plot.setProperty(
-                MCLEAN_REGRESSION.getTitle(),
-                hasData && (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION));
-        //  refreshPlot();
+
+        if (plot instanceof AbstractTopsoilPlot) {
+            plot.setProperty(
+                    MCLEAN_REGRESSION.getTitle(),
+                    hasData && (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION));
+        }
+
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }

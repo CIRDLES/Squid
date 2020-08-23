@@ -25,14 +25,8 @@ import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.VLineTo;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
@@ -54,6 +48,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
     private PlotRefreshInterface plotsController;
     protected boolean hasData;
     private CheckBox regressionCheckBox;
+    private static boolean plotExcluded = true;
 
     /**
      *
@@ -96,6 +91,16 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
             }
         }
 
+        CheckBox showExcludedSpotsCheckBox = new CheckBox("Plot Excluded");
+        showExcludedSpotsCheckBox.setSelected(plotExcluded);
+        formatNode(showExcludedSpotsCheckBox, 100);
+        showExcludedSpotsCheckBox.setOnAction(mouseEvent -> {
+            plotsController.showExcludedSpots(showExcludedSpotsCheckBox.isSelected());
+            plotExcluded = showExcludedSpotsCheckBox.isSelected();
+        });
+
+        getChildren().addAll(showExcludedSpotsCheckBox, separator(20.0F));
+
         Label xAxisChooseLabel = new Label("Choose X-axis expression:");
         formatNode(xAxisChooseLabel, 160);
 
@@ -118,10 +123,9 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
             plotsController.setYAxisExpressionName(newValue);
         });
 
-        getChildren().addAll(
-                yAxisChooseLabel, yAxisExpressionComboBox,
+        getChildren().addAll(yAxisChooseLabel, yAxisExpressionComboBox,
                 xAxisChooseLabel, xAxisExpressionComboBox,
-                separator());
+                separator(20.0F));
 
         regressionCheckBox = new CheckBox("2D Regression");
         regressionCheckBox.setSelected(false);
@@ -148,28 +152,10 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
                         .and(new SimpleBooleanProperty(((AbstractTopsoilPlot) PlotsController.plot).isHasUncertainties())))
         );
         getChildren().add(regressionUnctEnvelopeCheckBox);
-        
+
         Label announce = new Label(" * Means coming soon!");
         formatNode(yAxisChooseLabel, 160);
         getChildren().add(announce);
-    }
-
-    private void formatNode(Control control, int width) {
-        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
-        control.setPrefWidth(width);
-        control.setMinWidth(USE_PREF_SIZE);
-        control.setPrefHeight(23);
-        control.setMinHeight(USE_PREF_SIZE);
-    }
-
-    private Path separator() {
-        Path separator = new Path();
-        separator.getElements().add(new MoveTo(2.0f, 0.0f));
-        separator.getElements().add(new VLineTo(20.0f));
-        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
-        separator.setStrokeWidth(2);
-
-        return separator;
     }
 
     /**

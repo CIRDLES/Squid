@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.constants;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
@@ -24,6 +25,20 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  * @author bowring
  */
 public final class Squid3Constants {
+
+    // Aug 2020 migrate from CalamariFileUtilities
+    public static final File NAME_OF_SQUID_RESOURCES_FOLDER
+            = new File("Squid3_Resources");
+    public static final File SCHEMA_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "Schema");
+    public static final File DEMO_SQUID_PROJECTS_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "DemoSquid3ProjectFiles");
+    public static final File LUDWIGLIBRARY_JAVADOC_FOLDER 
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc");;
+    public static final File SQUID_PARAMETER_MODELS_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getName() + File.separator + "SquidParameterModels");
+    public static final File SQUID_TASK_LIBRARY_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getName() + File.separator + "SquidTaskLibrary");
 
     /**
      *
@@ -53,7 +68,7 @@ public final class Squid3Constants {
             = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SHRIMP_PRAWN.xsd";
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
-            = "Schema/SHRIMP_PRAWN.xsd";
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SHRIMP_PRAWN.xsd";
 
     public static final String SQUID_LAB_DATA_SERIALIZED_NAME = "SquidLabData.ser";
 
@@ -92,7 +107,7 @@ public final class Squid3Constants {
             = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd";
 
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
-            = "Schema/SquidTask_ExpressionXMLSchema.xsd";
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd";
 
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
@@ -102,6 +117,7 @@ public final class Squid3Constants {
     }
 
     public static final String DUPLICATE_STRING = "-DUP-";
+
     /**
      * Misspelling is sticky because of serialization.
      */

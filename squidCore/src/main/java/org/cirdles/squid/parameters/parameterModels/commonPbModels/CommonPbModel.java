@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.math.BigDecimal;
 import java.util.*;
-import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.SQUID_PARAMETER_MODELS_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.SQUID_PARAMETER_MODELS_FOLDER;
 
 /**
  * @author ryanb
@@ -71,7 +71,7 @@ public class CommonPbModel extends ParametersModel {
     }
 
     public static List<ParametersModel> getDefaultModels() {
-        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getName() + File.separator + "SquidCommonPbModels");
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidCommonPbModels");
         List<ParametersModel> models = new ArrayList<>();
         if (folder.exists()) {
             File[] files = folder.listFiles(new FilenameFilter() {

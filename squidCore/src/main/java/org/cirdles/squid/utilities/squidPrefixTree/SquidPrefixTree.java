@@ -272,7 +272,7 @@ public class SquidPrefixTree {
 
         StringBuilder scansCountsBuffer = new StringBuilder();
         mapOfScansFrequencies.keySet().forEach((count) -> {
-            scansCountsBuffer.append("[").append(String.format("%1$ 2d", count)).append(" in ").append(String.format("%1$ 3d", mapOfScansFrequencies.get(count))).append("]");
+            scansCountsBuffer.append("[").append(String.format("%1$ 2d", count)).append(" in ").append(String.format("%1$ 2d", mapOfScansFrequencies.get(count))).append("]");
         });
         String scansCounts = scansCountsBuffer.toString();
 

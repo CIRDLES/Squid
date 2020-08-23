@@ -26,10 +26,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -98,25 +95,15 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         HBox corrChoiceHBox = new RefMatWeightedMeanToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
 
-        Path separator1 = separator();
-        Path separator2 = separator();
-        Path separator3 = separator();
+        Path separator1 = separator(20.0F);
+        Path separator2 = separator(20.0F);
+        Path separator3 = separator(20.0F);
 
         getChildren().addAll(
                 autoExcludeSpotsCheckBox, showExcludedSpotsCheckBox,
                 separator1, plotChoiceHBox,
                 separator2, corrChoiceHBox,
                 separator3, sortingToolBox);
-    }
-
-    private Path separator() {
-        Path separator = new Path();
-        separator.getElements().add(new MoveTo(2.0f, 0.0f));
-        separator.getElements().add(new VLineTo(20.0f));
-        separator.setStroke(new Color(251 / 255, 109 / 255, 66 / 255, 1));
-        separator.setStrokeWidth(2);
-
-        return separator;
     }
 
     private CheckBox autoExcludeSpotsCheckBox() {
@@ -226,14 +213,6 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         return sortingHBox;
     }
 
-    private void formatNode(Control control, int width) {
-        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
-        control.setPrefWidth(width);
-        control.setMinWidth(USE_PREF_SIZE);
-        control.setPrefHeight(23);
-        control.setMinHeight(USE_PREF_SIZE);
-    }
-
     /**
      * @param spotSummaryDetails the value of spotSummaryDetails
      */
@@ -266,7 +245,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
                         valueFromNode2 = ((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
                                 .getTaskExpressionsEvaluationsPerSpotByField(selectedFieldName)[0][0];
                     }
-                    
+
                     return Double.compare(valueFromNode1, valueFromNode2);
                 });
             } catch (Exception e) {

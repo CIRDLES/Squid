@@ -76,8 +76,13 @@ squidCore/Hf1sabserr.png
 !squidCore/src/main/resources/org/cirdles/squid/prawn/*.squid
 !squidCore/src/main/resources/org/cirdles/squid/javadoc/*.jar
 !squidCore/src/main/resources/org/cirdles/squid/projects/Z626611PKPERM1.squid
+!squidCore/src/main/resources/org/cirdles/squid/projects/SQUID3_demo_file.squid
+!squidCore/src/main/resources/org/cirdles/squid/projects/listOfSquidProjectFiles.txt
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/*.xls
 !squidCore/src/main/resources/org/cirdles/squid/tasks/expressions/listOfXSLTMLFiles.txt
+
+!squidCore/src/main/resources/org/cirdles/squid/tasks/*.xml
+!squidCore/src/main/resources/org/cirdles/squid/tasks/listOfTaskXMLFiles.txt
 
 
 !squidCore/src/main/resources/org/cirdles/squid/parameters/parameterModels/referenceMaterialModels/*
