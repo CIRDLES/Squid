@@ -605,6 +605,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         try {
             shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units);
         } catch (Exception e) {
+            System.out.println("SHIT");
         }
 
         return new BigDecimal(value).movePointRight(shiftPointRightCount);

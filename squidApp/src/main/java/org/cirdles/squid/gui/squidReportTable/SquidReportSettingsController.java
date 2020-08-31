@@ -56,9 +56,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;

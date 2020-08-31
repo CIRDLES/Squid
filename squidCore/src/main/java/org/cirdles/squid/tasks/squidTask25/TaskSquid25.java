@@ -233,7 +233,7 @@ public class TaskSquid25 implements Serializable {
                                 switchUN,
                                 Boolean.parseBoolean(switchSC[i + (isSquid2_20 ? 1 : 2)]),
                                 Boolean.parseBoolean(switchNU[i + (isSquid2_20 ? 1 : 2)]),
-                                false, false));
+                                "Custom expression imported from Squid2 task " + taskSquid25.getTaskName() + " ."));
                     } else {
                         System.out.println("BAD EXP   " + equations[i + 2]);
                     }

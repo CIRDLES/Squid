@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!-- SQUID3_TASK_SPECIFICATION_FILE -->
+<!-- visit: github.com/CIRDLES/Squid -->
+<Task>
+  <name>Monazite 11pk Pb/U &amp; Pb/Th</name>
+  <taskType>GEOCHRON</taskType>
+  <description></description>
+  <authorName>Andrew Cross</authorName>
+  <labName>AJC-GA</labName>
+  <provenance></provenance>
+  <dateRevised>0</dateRevised>
+  <parentNuclide>238</parentNuclide>
+  <directAltPD>true</directAltPD>
+  <nominalMasses>
+    <string>203</string>
+    <string>204</string>
+    <string>BKG</string>
+    <string>206</string>
+    <string>207</string>
+    <string>208</string>
+    <string>232</string>
+    <string>238</string>
+    <string>254</string>
+    <string>264</string>
+    <string>270</string>
+  </nominalMasses>
+  <indexOfBackgroundSpecies>2</indexOfBackgroundSpecies>
+  <ratioNames>
+    <string>203/270</string>
+    <string>204/206</string>
+    <string>204/208</string>
+    <string>206/254</string>
+    <string>206/270</string>
+    <string>207/206</string>
+    <string>208/206</string>
+    <string>208/264</string>
+    <string>232/203</string>
+    <string>254/203</string>
+    <string>264/203</string>
+    <string>264/232</string>
+    <string>264/254</string>
+    <string>270/203</string>
+    <string>270/254</string>
+  </ratioNames>
+  <specialSquidFourExpressionsMap>
+    <entry>
+      <string>232Th238U_DEFAULT</string>
+      <string>[&quot;264/254&quot;]*4.011</string>
+    </entry>
+    <entry>
+      <string>ParentElement_ConcenConst</string>
+      <string>1/[&quot;203/270&quot;]</string>
+    </entry>
+    <entry>
+      <string>Uncor_206Pb238U_CalibConst</string>
+      <string>[&quot;206/270&quot;]</string>
+    </entry>
+    <entry>
+      <string>Uncor_208Pb232Th_CalibConst</string>
+      <string>[&quot;208/264&quot;]</string>
+    </entry>
+  </specialSquidFourExpressionsMap>
+  <customExpressions/>
+</Task>

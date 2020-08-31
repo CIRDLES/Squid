@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.XSLTMLFolder;
 
 public class ExpressionPublisher {
 
@@ -47,7 +48,8 @@ public class ExpressionPublisher {
             StringReader inputReader = new StringReader(input);
             Source inputSource = new StreamSource(inputReader);
 
-            Transformer transformer = transformerFactory.newTransformer(new StreamSource("XSLTML/mmltex.xsl"));
+            Transformer transformer = transformerFactory.newTransformer(
+                    new StreamSource(XSLTMLFolder.getAbsolutePath() + File.separator + "mmltex.xsl"));
             transformer.transform(inputSource, result);
 
             retVal = resultWriter.toString().replaceAll("\\%", "\\\\%");
