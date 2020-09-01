@@ -60,6 +60,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import static org.cirdles.squid.parameters.util.RadDates.age206_238r;
 import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
 import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
+import static org.cirdles.squid.parameters.util.ReferenceMaterialEnum.r238_235s;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.SquidProject;
 
@@ -145,6 +146,8 @@ public class SpotManagerController implements Initializable {
     private HBox refMatChooserHBox;
     @FXML
     private SplitPane refMatSplitPane;
+    @FXML
+    private Label u238u235NatAbunLabel;
 
     /**
      * Initializes the controller class.
@@ -465,6 +468,9 @@ public class SpotManagerController implements Initializable {
                         pb208Th232AgeLabel.setText(
                                 ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName())
                                         .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        u238u235NatAbunLabel.setText(
+                                ((ReferenceMaterialModel) newValue).getDatumByName(r238_235s.getName())
+                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
