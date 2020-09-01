@@ -49,7 +49,6 @@ import org.cirdles.squid.tasks.Task;
 public class CalamariFileUtilities {
 
     private static File exampleFolder;
-    private static File demoSquidProjectsFolder;
     private static File schemaFolder;
     public static File DEFAULT_LUDWIGLIBRARY_JAVADOC_FOLDER;
     public static File SQUID_PARAMETER_MODELS_FOLDER = new File("SquidParameterModels");
