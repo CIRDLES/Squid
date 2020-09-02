@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import static javafx.scene.paint.Color.BLACK;
 import javafx.util.Callback;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -175,6 +177,8 @@ public class SpotManagerController implements Initializable {
             setUpPrawnFile();
         } catch (SquidException squidException) {
         }
+
+        alertForZeroNaturalUranium();
     }
 
     private void setUpSampleNamesComboBox() {
@@ -188,7 +192,6 @@ public class SpotManagerController implements Initializable {
                     protected void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         setText(item);
-                        //setTextFill(RED);
                     }
                 };
                 return cell;
@@ -451,6 +454,17 @@ public class SpotManagerController implements Initializable {
                 + String.format("%1$-" + 12 + "s", "Time"));
     }
 
+    private void alertForZeroNaturalUranium() {
+        // alert if zero
+        if (((ReferenceMaterialModel) refMatModelComboBox.valueProperty().getValue()).getDatumByName(r238_235s.getName())
+                .getValue().compareTo(BigDecimal.ZERO) == 0) {
+            u238u235NatAbunLabel.setText("ZERO !!");
+            u238u235NatAbunLabel.setStyle(u238u235NatAbunLabel.getStyle() + " -fx-text-fill: red;");
+        } else {
+            u238u235NatAbunLabel.setTextFill(BLACK);
+        }
+    }
+
     private void setUpParametersModelsComboBoxes() {
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
@@ -472,11 +486,10 @@ public class SpotManagerController implements Initializable {
                                 ((ReferenceMaterialModel) newValue).getDatumByName(r238_235s.getName())
                                         .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
+                        alertForZeroNaturalUranium();
+
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-
-//                        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
-//                        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
                     }
                 });
 
@@ -498,9 +511,6 @@ public class SpotManagerController implements Initializable {
 
                         squidProject.setConcentrationReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-
-//                        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
-//                        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
                     }
                 });
 

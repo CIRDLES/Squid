@@ -92,7 +92,7 @@ public class SessionAuditController implements Initializable {
 
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-        setUpPrawnAuditTreeView(false);
+//////        setUpPrawnAuditTreeView(false);
 
         ObservableList<String> delimitersList = FXCollections.observableArrayList(SampleNameDelimitersEnum.names());
         delimiterComboBox.setItems(delimitersList);
