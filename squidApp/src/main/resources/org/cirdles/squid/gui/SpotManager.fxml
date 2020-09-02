@@ -23,7 +23,7 @@
                <children>
                   <HBox>
                      <children>
-                        <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0" text="Data &gt; Spot Naming and Reference Materials" translateX="25.0" />
+                        <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0" text="Task &gt; Manage Task" translateX="25.0" />
                      </children>
                   </HBox>
                   <VBox VBox.vgrow="ALWAYS">
@@ -31,14 +31,14 @@
                         <HBox prefHeight="28.0" prefWidth="480.0" spacing="30.0">
                            <children>
                               <Label style="-fx-font-family: SansSerif; -fx-font-size: 15;" text="Filter Spots by Sample name:" />
-                              <ComboBox fx:id="sampleNameComboBox" prefHeight="27.0" prefWidth="168.0" promptText="Sample Name" />
+                              <ComboBox fx:id="sampleNameComboBox" prefHeight="27.0" prefWidth="133.0" promptText="Sample Name" />
+                              <Label fx:id="spotsShownLabel" minWidth="115.0" prefHeight="23.0" prefWidth="115.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="5.0">
+                        <HBox alignment="CENTER_LEFT" maxHeight="2.0" minHeight="2.0" prefHeight="2.0" prefWidth="216.0" spacing="5.0" visible="false" VBox.vgrow="NEVER">
                            <children>
-                              <Label minWidth="213.0" prefHeight="28.0" prefWidth="241.0" style="-fx-font-size: 15;" text="Filter Spots by typing spot prefix:" />
-                              <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="144.0" promptText="type here" HBox.hgrow="ALWAYS" />
-                              <Label fx:id="spotsShownLabel" minWidth="115.0" prefHeight="23.0" prefWidth="115.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
+                              <Label minWidth="213.0" prefHeight="28.0" prefWidth="241.0" style="-fx-font-size: 15;" text="Filter Spots by typing spot prefix:" visible="false" />
+                              <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="144.0" promptText="type here" visible="false" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
