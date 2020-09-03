@@ -55,10 +55,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableXMLConverter;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -131,6 +128,7 @@ import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
+import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 
 /**
  *
@@ -2068,8 +2066,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private Expression constructCustomWMExpression(String expressionName, String sampleName) {
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
-                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
+                "WtdAv([\"" + expressionName + "\"])", false, true, true);
+//                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        expressionWM.setNotes("Expression generated from the Samples Weighted Mean screen under Interpretations.");
 
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(sampleName);
         expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
@@ -2207,6 +2206,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     // because they are still logged in rejectedIndices
                     spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
                 }
+            }
+
+            // Sep 2020 switched to SqWtdAv for Samples with no auto reject
+            if (((ExpressionTree) expressionTree).getOperation() instanceof SqWtdAv) {
+                // we use the user's stored rejections and do not do autorejection
+                spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
+                noReject = true;
             }
 
             values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, this));
