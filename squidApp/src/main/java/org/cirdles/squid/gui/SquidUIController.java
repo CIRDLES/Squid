@@ -1165,8 +1165,8 @@ public class SquidUIController implements Initializable {
             launchTaskManager();
         } catch (IOException | JAXBException | SAXException | SquidException | NullPointerException iOException) {
             SquidMessageDialog.showInfoDialog(
-                    "Squid cannot load Task: " 
-                            + taskXMLFile.getAbsolutePath().replace("/", "\n/"), 
+                    "Squid cannot load Task: "
+                    + taskXMLFile.getAbsolutePath().replace("/", "\n/"),
                     primaryStageWindow);
         }
     }

@@ -131,12 +131,8 @@ public class CommonLeadAssignmentController implements Initializable {
         // prime StaceyKramer
         StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
 
-        try {
-            StaceyKramerCommonLeadModel.updateU_Ratio(
-                    squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
-        } catch (SquidException squidException) {
-            showWarningDialog(squidException.getMessage(), primaryStageWindow);
-        }
+        StaceyKramerCommonLeadModel.updateU_Ratio(
+                squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
 
         setupAgeTypes();
 

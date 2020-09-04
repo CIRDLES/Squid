@@ -71,6 +71,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         return name.compareTo(o.getName());
     }
 
+    @Override
     public boolean equals(Object o) {
         boolean retVal = o instanceof ValueModel;
         if (retVal && ((ValueModel) o).getName().compareTo(name) != 0) {

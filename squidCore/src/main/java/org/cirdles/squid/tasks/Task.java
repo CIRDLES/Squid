@@ -2588,6 +2588,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      * @param updateDefaultReports the value of updateDefaultReports
+     * @return 
      */
     public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
         if (updateDefaultReports || squidReportTablesRefMat == null) {

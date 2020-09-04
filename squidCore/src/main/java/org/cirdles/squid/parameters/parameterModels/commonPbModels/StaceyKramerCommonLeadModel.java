@@ -44,14 +44,10 @@ public class StaceyKramerCommonLeadModel {
         lambd232 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_232.getName()).getValue().doubleValue();
     }
 
-    public static void updateU_Ratio(double u_ratio)
-            throws SquidException {
+    public static void updateU_Ratio(double u_ratio){
         U_RATIO = u_ratio;
         if (u_ratio == 0.0) {
             U_RATIO = REF_238U235U_DEFAULT;
-            throw new SquidException("Your Reference Material model contains a zero value for U_ratio: 238-U/235-U,\n"
-                    + "so 137.818 will be used instead.\n"
-                    + "Please update your model.");
         }
     }
 

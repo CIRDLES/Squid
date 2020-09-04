@@ -47,6 +47,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import static javafx.scene.paint.Color.BLACK;
 import javafx.util.Callback;
+import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -150,6 +151,8 @@ public class SpotManagerController implements Initializable {
     private SplitPane refMatSplitPane;
     @FXML
     private Label u238u235NatAbunLabel;
+    @FXML
+    private Label defaultValueLabel;
 
     /**
      * Initializes the controller class.
@@ -458,10 +461,12 @@ public class SpotManagerController implements Initializable {
         // alert if zero
         if (((ReferenceMaterialModel) refMatModelComboBox.valueProperty().getValue()).getDatumByName(r238_235s.getName())
                 .getValue().compareTo(BigDecimal.ZERO) == 0) {
-            u238u235NatAbunLabel.setText("ZERO !!");
+            u238u235NatAbunLabel.setText(REF_238U235U_DEFAULT + "");
+            defaultValueLabel.setVisible(true);
             u238u235NatAbunLabel.setStyle(u238u235NatAbunLabel.getStyle() + " -fx-text-fill: red;");
         } else {
             u238u235NatAbunLabel.setTextFill(BLACK);
+            defaultValueLabel.setVisible(false);
         }
     }
 

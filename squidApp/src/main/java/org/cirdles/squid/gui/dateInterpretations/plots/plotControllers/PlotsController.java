@@ -752,7 +752,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                 plotToolBar.getItems().clear();
                 plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-//                plotToolBar.setPadding(Insets.EMPTY);
 
             } catch (Exception e) {
             }
