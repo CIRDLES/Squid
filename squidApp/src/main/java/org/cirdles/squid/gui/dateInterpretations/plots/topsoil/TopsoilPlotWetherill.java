@@ -81,7 +81,7 @@ public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
         plotOptions.put(MCLEAN_REGRESSION, false);
         plotOptions.put(MCLEAN_REGRESSION_ENVELOPE, false);
 
-        plotOptions.put(UNCERTAINTY, Uncertainty.ONE_SIGMA_ABSOLUTE);
+        plotOptions.put(UNCERTAINTY, Uncertainty.TWO_SIGMA_ABSOLUTE);
 
         plotOptions.put(LAMBDA_U234, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_234.getName()).getValue().doubleValue());
         plotOptions.put(LAMBDA_U235, physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_235.getName()).getValue().doubleValue());

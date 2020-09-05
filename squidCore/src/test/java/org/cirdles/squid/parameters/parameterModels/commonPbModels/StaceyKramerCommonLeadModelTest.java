@@ -61,10 +61,9 @@ public class StaceyKramerCommonLeadModelTest {
         ParametersModel physicalConstantsModel
                 = PhysicalConstantsModel.getDefaultModel("EARTHTIME Physical Constants Model", "1.1");
         StaceyKramerCommonLeadModel.updatePhysicalConstants(physicalConstantsModel);
-        try {
-            StaceyKramerCommonLeadModel.updateU_Ratio(137.88);
-        } catch (SquidException squidException) {
-        }
+
+        StaceyKramerCommonLeadModel.updateU_Ratio(137.88);
+
         double targetAge = 3.7E9;
         double[] expResult = new double[]{11.152, 12.998, 31.23};
         double[] result

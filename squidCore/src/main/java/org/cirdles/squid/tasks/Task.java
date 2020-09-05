@@ -34,6 +34,7 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -250,6 +251,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     protected OvercountCorrectionTypes overcountCorrectionType;
 
+    // Sept 2020 to support stickiness of choices for the plot any 2 feature of interpretations
+    protected String xAxisExpressionName;
+    protected String yAxisExpressionName;
+
     public Task() {
         this("New Task", null, null);
     }
@@ -456,12 +461,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
             String methodName = gettersAndSetters[i].getName();
+            
             try {
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
+                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 } else if (methodName.startsWith("is")) {
+                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
@@ -470,6 +478,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
             }
         }
+        
+        // need to remove stored expression results on fractions to clear the decks
+        shrimpFractions.forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+            spot.getTaskExpressionsEvaluationsPerSpot().clear();
+        });
 
         List<String> allMasses = new ArrayList<>();
         allMasses.addAll(REQUIRED_NOMINAL_MASSES);
@@ -480,6 +494,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         if (indexOfBackgroundSpecies >= 0) {
             nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
+            indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
         }
 
         List<String> allRatios = new ArrayList<>();
@@ -489,13 +504,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Collections.sort(ratioNames);
 
         setChanged(true);
+        squidSpeciesModelList.clear();
+        buildSquidSpeciesModelList();
         generateConstants();
         generateParameters();
         generateSpotLookupFields();
 
-        // first pass
-        setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport(false);
+        initializeTaskAndReduceData(false);
     }
 
     @Override
@@ -541,6 +556,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
         taskDesign.setRatioNames(myRatioNames);
 
+    }
+
+    /**
+     *
+     * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
+     */
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
+
+        // four passes needed for percolating results
+        updateAllExpressions(true);
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport(false);
+
+        // autogenerate task basics for type General = Ratio mode
+        if (autoGenerateNominalMasses && taskType.equals(GENERAL)) {
+            List<String> nominalMasses = new ArrayList<>();
+            for (SquidSpeciesModel ssm : getSquidSpeciesModelList()) {
+                // no background assumed
+                String proposedNominalMassName
+                        = new BigDecimal(getMapOfIndexToMassStationDetails()
+                                .get(ssm.getMassStationIndex())
+                                .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+                nominalMasses.add(proposedNominalMassName);
+            }
+            setNominalMasses(nominalMasses);
+
+            initializeSquidSpeciesModelsRatioMode(true, false, true, false);
+        }
     }
 
     private void generateConstants() {
@@ -2588,7 +2631,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      * @param updateDefaultReports the value of updateDefaultReports
-     * @return 
+     * @return
      */
     public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
         if (updateDefaultReports || squidReportTablesRefMat == null) {
@@ -3648,5 +3691,39 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         ((XMLSerializerInterface) task).serializeXMLObject("TASK.xml");
 
+    }
+
+    /**
+     * @return the xAxisExpressionName
+     */
+    public String getxAxisExpressionName() {
+        if (xAxisExpressionName == null) {
+            xAxisExpressionName = "204/206";
+        }
+        return xAxisExpressionName;
+    }
+
+    /**
+     * @param xAxisExpressionName the xAxisExpressionName to set
+     */
+    public void setxAxisExpressionName(String xAxisExpressionName) {
+        this.xAxisExpressionName = xAxisExpressionName;
+    }
+
+    /**
+     * @return the yAxisExpressionName
+     */
+    public String getyAxisExpressionName() {
+        if (yAxisExpressionName == null) {
+            yAxisExpressionName = "204/206";
+        }
+        return yAxisExpressionName;
+    }
+
+    /**
+     * @param yAxisExpressionName the yAxisExpressionName to set
+     */
+    public void setyAxisExpressionName(String yAxisExpressionName) {
+        this.yAxisExpressionName = yAxisExpressionName;
     }
 }
