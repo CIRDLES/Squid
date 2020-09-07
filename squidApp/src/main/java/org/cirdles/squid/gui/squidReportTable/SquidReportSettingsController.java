@@ -1222,11 +1222,13 @@ public class SquidReportSettingsController implements Initializable {
 
                     }
                     
+                    populateSquidReportTableChoiceBox();
                     selectSquidReportTableByPriors();
                     populateExpressionListViews();
                     populateIsotopesListView();
                     populateRatiosListView();
                     populateSpotMetaDataListView();
+                    
                 }
 
                 final List<SquidReportTableInterface> tables = getTables();

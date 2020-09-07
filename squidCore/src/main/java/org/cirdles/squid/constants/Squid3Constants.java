@@ -107,13 +107,37 @@ public final class Squid3Constants {
             = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd";
 
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
-            = "Schema/SquidTask_ExpressionXMLSchema.xsd";
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd";
     
+    /**
+     *
+     */
+//    public static final String XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_REMOTE_SCHEMA
+//            = "<?xml version=\"1.0\"?>\n"
+//            + "<!-- SQUIDTASK_EXPRESSION_DATA_FILE -->\n"
+//            + "<Expression xmlns=\"https://raw.githubusercontent.com\"\n"
+//            + " xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+//            + " xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+//            + " xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+//            + "                                https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidReportTable.xsd\">";
+
+    public static final String XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDREPORTTABLE_DATA_FILE -->\n"
+            + "<SquidReportTable xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SquidReportTable.xsd\">";
+    
+    /**
+     *
+     */
 //    public static final String URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_REMOTE
 //            = "Schema/SquidReportTable.xsd";
     
     public static final String URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL
-            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd";
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidReportTable.xsd";
 
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
@@ -310,7 +334,7 @@ public final class Squid3Constants {
 
     public final static String SUPERSCRIPT_R_FOR_REFMAT = "ᴿ";//\u1D3F";
     public final static String SUPERSCRIPT_C_FOR_CONCREFMAT = "\u1D9c";
-    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "�?";//\u1D41";
+    public final static String SUPERSCRIPT_U_FOR_UNKNOWN = "ᵁ";//\u1D41";
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
     // http://science.sciencemag.org/content/335/6076/1610

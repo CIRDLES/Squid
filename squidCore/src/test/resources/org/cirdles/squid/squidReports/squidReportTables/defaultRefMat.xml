@@ -1,4 +1,10 @@
-<SquidReportTable>
+<?xml version="1.0"?>
+<!-- SQUIDREPORTTABLE_DATA_FILE -->
+<SquidReportTable xmlns="https://raw.githubusercontent.com"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://raw.githubusercontent.com
+                               ..schema/SquidReportTable.xsd">
   <reportTableName>Default Squid3 Report Table for Reference Materials</reportTableName>
   <reportCategories>
     <SquidReportCategory>

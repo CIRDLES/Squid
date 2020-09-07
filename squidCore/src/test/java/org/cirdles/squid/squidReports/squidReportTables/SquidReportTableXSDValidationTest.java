@@ -20,26 +20,20 @@ import org.xml.sax.SAXException;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Noah
  */
 public class SquidReportTableXSDValidationTest {
-   @Test
+    @Test
     public void defaultRefMatTableTest(){
-        System.out.println("Testing for defaultRefMat...");
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         ResourceExtractor squidReportTableExtractor = new ResourceExtractor(SquidReportTableXSDValidationTest.class);
         boolean validates = false;
         try {
             final File squidReportTableSchema = squidReportTableExtractor.extractResourceAsFile("SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
-            System.out.println(squidReportTableSchema.getName());
             final File defaultRefMatXML = squidReportTableExtractor.extractResourceAsFile("defaultRefMat.xml");
-            System.out.println(defaultRefMatXML.getName());
             validates = FileValidator.validateFileIsXMLSerializedEntity(defaultRefMatXML, schema);
-            System.out.println(Boolean.toString(validates));
         } catch (SAXException e) {
-            System.out.println("Failed to validate against schema");
         }
         finally {
             assertTrue(validates);

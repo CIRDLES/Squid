@@ -324,7 +324,7 @@ public class CalamariFileUtilities {
                 }
                 
                 File squidReportTableSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
-                File squidReportTableSchema = new File(schemaFolder.getCanonicalPath() + File.separator + "SquidReportTable.xsd");
+                File squidReportTableSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidReportTable.xsd");
 
                 if (squidReportTableSchemaResource.renameTo(squidReportTableSchema)) {
                     System.out.println("SquidReportTable.xsd added.");

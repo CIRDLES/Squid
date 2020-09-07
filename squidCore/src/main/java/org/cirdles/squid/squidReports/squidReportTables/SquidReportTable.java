@@ -46,6 +46,7 @@ import javax.xml.bind.annotation.XmlType;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -402,6 +403,14 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     public boolean isDefault() {
         return isDefault;
+    }
+    
+    @Override
+    public String customizeXML(String xml) {
+        String xmlR = xml;
+        xmlR = xmlR.replaceFirst("<SquidReportTable>",
+                XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+        return xmlR;
     }
     
     @Override
