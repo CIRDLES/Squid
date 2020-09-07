@@ -126,19 +126,19 @@ public class RatiosManagerController implements Initializable {
 //                indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
 //                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
 
-                if (squidSpeciesList.get(i).isNumeratorRole()) {
-                    Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
-                    ratiosGridPane.add(rowBackgroundLabel, 0, rowCounter + 1);
-                    rowButtons.add(null);
-                    rowCounter++;
-                }
-
-                if (squidSpeciesList.get(i).isDenominatorRole()) {
-                    Label colBackgroundLabel = new SquidLabel(0, colCounter + 1, squidSpeciesList.get(i).getIsotopeName());
-                    ratiosGridPane.add(colBackgroundLabel, colCounter + 1, 0);
-                    colButtons.add(null);
-                    colCounter++;
-                }
+//                if (squidSpeciesList.get(i).isNumeratorRole()) {
+//                    Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
+//                    ratiosGridPane.add(rowBackgroundLabel, 0, rowCounter + 1);
+//                    rowButtons.add(null);
+//                    rowCounter++;
+//                }
+//
+//                if (squidSpeciesList.get(i).isDenominatorRole()) {
+//                    Label colBackgroundLabel = new SquidLabel(0, colCounter + 1, squidSpeciesList.get(i).getIsotopeName());
+//                    ratiosGridPane.add(colBackgroundLabel, colCounter + 1, 0);
+//                    colButtons.add(null);
+//                    colCounter++;
+//                }
 
             } else {
                 if (squidSpeciesList.get(i).isNumeratorRole()) {
@@ -179,8 +179,14 @@ public class RatiosManagerController implements Initializable {
                                 selected);
                         ratiosGridPane.add(ratioButton, colCounter + 1, rowCounter + 1);
                         if (!selected) {
-                            ((SquidRowColButton)rowButtons.get(rowCounter)).setSelected(false);
-                            ((SquidRowColButton)colButtons.get(colCounter)).setSelected(false);
+                            try {
+                                ((SquidRowColButton) rowButtons.get(rowCounter)).setSelected(false);
+                            } catch (Exception e) {
+                            }
+                            try {
+                                ((SquidRowColButton) colButtons.get(colCounter)).setSelected(false);
+                            } catch (Exception e) {
+                            }
                         }
                     }
                     colCounter = colCounter + (squidSpeciesList.get(j).isDenominatorRole() ? 1 : 0);
