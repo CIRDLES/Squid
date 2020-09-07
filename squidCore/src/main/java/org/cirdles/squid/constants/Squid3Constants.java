@@ -112,6 +112,26 @@ public final class Squid3Constants {
     public static final String URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL
             = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd";
 
+    /**
+     *
+     */
+    public static final String XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUIDREPORTTABLE_DATA_FILE -->\n"
+            + "<SquidReportTable xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SquidReportTable.xsd\">";
+
+    /**
+     *
+     */
+    public static final String URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidReportTable.xsd";
+    /**
+     *
+     */
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
         "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
 
@@ -316,7 +336,8 @@ public final class Squid3Constants {
 
     public static enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),
-        UNKNOWN("UNKNOWNS");
+        UNKNOWN("UNKNOWNS"),
+        NONE("NONE");
 
         private String plotType;
 

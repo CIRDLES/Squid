@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -139,6 +140,16 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      * @param reportCategories the reportCategories to set
      */
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories);
+    
+    /**
+     * @return the reportSpotTarget
+     */
+    public SpotTypes getReportSpotTarget();
+    
+    /**
+     * @param reportSpotTarget the reportSpotTarget to set
+     */
+    public void setReportSpotTarget(SpotTypes reportSpotTarget);
 
     public void setIsDefault(boolean isDefault);
 

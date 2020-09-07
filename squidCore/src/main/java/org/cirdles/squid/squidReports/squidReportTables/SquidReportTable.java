@@ -36,12 +36,31 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+
+@XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "", propOrder = {
+    "reportTableName",
+    "reportCategories",
+    "reportSpotTarget",
+    "isDefault",
+    "version"
+})
+@XmlRootElement(name = "SquidReportTable")
 public class SquidReportTable implements Serializable, SquidReportTableInterface {
 
     private static final long serialVersionUID = 1685572683987304408L;
@@ -53,10 +72,20 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
 
     // Fields
+    @XmlElement(name = "reportTableName", required = true)
     private String reportTableName;
+
+    @XmlElementWrapper(name = "reportCategories")
+    @XmlElement(name = "reportCategory", required = true)
     private LinkedList<SquidReportCategoryInterface> reportCategories;
+
+    @XmlElement(name = "reportSpotTarget", required = false) // Backwards compatibility with report tables prior to ...
+    private SpotTypes reportSpotTarget;
+
+    @XmlElement(name = "isDefault", required = true)
     private boolean isDefault;
 
+    @XmlElement(name = "version", required = false)
     private int version;
 
     private SquidReportTable() {
@@ -188,7 +217,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 //            if ((!expTree.isSquidSwitchSCSummaryCalculation())
 //                    && (expTree.isSquidSwitchSTReferenceMaterialCalculation())) {
 //                custom_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(expTree.getName()));
-//            }    
+//            }
 //        }
 //        reportCategoriesRefMat.add(custom_RM);
         return reportCategoriesRefMat;
@@ -351,6 +380,22 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories) {
         this.reportCategories = reportCategories;
     }
+    
+    /**
+     * @return the reportSpotTarget
+     */
+    @Override
+    public SpotTypes getReportSpotTarget(){
+        return this.reportSpotTarget;
+    }
+    
+    /**
+     * @param reportSpotTarget the reportSpotTarget to set
+     */
+    @Override
+    public void setReportSpotTarget(SpotTypes reportSpotTarget){
+        this.reportSpotTarget = reportSpotTarget;
+    }
 
     public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
@@ -358,6 +403,14 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     public boolean isDefault() {
         return isDefault;
+    }
+
+    @Override
+    public String customizeXML(String xml) {
+        String xmlR = xml;
+        xmlR = xmlR.replaceFirst("<SquidReportTable>",
+                XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+        return xmlR;
     }
 
     @Override

@@ -50,14 +50,23 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import org.xml.sax.SAXException;
+
 import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -195,7 +204,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-        
+
         // disable refmat if none
         refMatRadioButton.setDisable(task.getReferenceMaterialSpots().isEmpty());
     }
@@ -1159,15 +1168,62 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void importOnAction(ActionEvent event) {
         File file = null;
+        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        boolean tableValidates = false;
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
-        } catch (IOException e) {
+            final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
+            tableValidates = FileValidator.validateFileIsXMLSerializedEntity(file, schema);
+        } catch (IOException | SAXException e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
         }
-        if (file != null) {
+        if (file != null && tableValidates) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
+                // Handle case of report table without reportSpotTarget attribute
+                if (table.getReportSpotTarget().equals(SpotTypes.NONE)) {
+                    table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+
+                    boolean hasExclusiveSquidSwitchSA = false; // Does the expression only operate on unknown spots?
+                    Iterator<SquidReportCategoryInterface> squidReportCategoryIterator = table.getReportCategories().iterator();
+                    Iterator<SquidReportColumnInterface> squidReportColumnIterator;
+                    while (squidReportCategoryIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
+                        squidReportColumnIterator = squidReportCategoryIterator.next().getCategoryColumns().iterator();
+                        SquidReportColumnInterface col;
+                        ExpressionTreeInterface exp;
+                        while(squidReportColumnIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
+                            col = squidReportColumnIterator.next();
+                            exp = task.findNamedExpression(col.getExpressionName());
+                            if (exp.isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
+                                hasExclusiveSquidSwitchSA = true;
+                                table.setReportSpotTarget(SpotTypes.UNKNOWN);
+                            }
+                        }
+                    }
+
+
+                }
+                // Switch to spot target of imported report table if necessary
+                if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                    isRefMat = false;
+                    unknownsRadioButton.fire();
+
+                    if (!isRefMat && table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                        isRefMat = true;
+                        refMatRadioButton.fire();
+
+                    }
+
+                    populateSquidReportTableChoiceBox();
+                    selectSquidReportTableByPriors();
+                    populateExpressionListViews();
+                    populateIsotopesListView();
+                    populateRatiosListView();
+                    populateSpotMetaDataListView();
+
+                }
+
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(table);
                 if (indexOfSameNameTable >= 0) {
@@ -1440,7 +1496,7 @@ public class SquidReportSettingsController implements Initializable {
                 } else if (event.isSecondaryButtonDown()) {
                     ContextMenu contextMenu = new ContextMenu();
 
-                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table 
+                    // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table
                     showContextMenu = true;
                     if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()) {
                         if ((cell.getItem().getDisplayName().compareTo("Time") == 0)
