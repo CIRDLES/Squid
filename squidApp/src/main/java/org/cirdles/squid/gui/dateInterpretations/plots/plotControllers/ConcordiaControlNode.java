@@ -29,6 +29,8 @@ public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
 
     private PlotRefreshInterface plotsController;
 
+    private CheckBox showExcludedSpotsCheckBox;
+    
     public ConcordiaControlNode(PlotRefreshInterface plotsController) {
         super(4);
 
@@ -55,7 +57,7 @@ public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
             isotopeChoiceHBox = new RefMatConcordiaToolBoxNode(plotsController);
         }
 
-        CheckBox showExcludedSpotsCheckBox = new CheckBox("Plot Excluded");
+        showExcludedSpotsCheckBox = new CheckBox("Plot Excluded");
         showExcludedSpotsCheckBox.setSelected(true);
         formatNode(showExcludedSpotsCheckBox, 100);
         showExcludedSpotsCheckBox.setOnAction(mouseEvent -> {
@@ -64,5 +66,4 @@ public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
 
         getChildren().addAll(showExcludedSpotsCheckBox, separator(20.0F), isotopeChoiceHBox);
     }
-
 }

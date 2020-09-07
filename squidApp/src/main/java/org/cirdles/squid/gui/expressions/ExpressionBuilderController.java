@@ -103,6 +103,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
+import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
@@ -1922,6 +1923,11 @@ public class ExpressionBuilderController implements Initializable {
                     etWMChild1 = expTree.getChildrenET().get(0);
                     isAgeExpression = exp.getName().toUpperCase().contains("AGE");
                 }
+                // SqWtdAv is used for Sample weighted means
+                if (expTree.getOperation() instanceof SqWtdAv && exp.amHealthy() && expTree.getChildrenET().size() >= 1) {
+                    etWMChild1 = expTree.getChildrenET().get(0);
+                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
+                }
 
                 CheckBox mainCB;
                 List<CheckBox> cbs = new ArrayList<>();
@@ -1956,7 +1962,7 @@ public class ExpressionBuilderController implements Initializable {
                     CheckBox cb;
 
                     if (etWMChild1 == null) {
-                        cb = new CheckBox(String.format(columnsFormat2, "#" + i, spot.getFractionID()));
+                        cb = new CheckBox(String.format(columnsFormat2, "#" + spot.getSpotIndex(), spot.getFractionID()));
                     } else if (stringIsSquidRatio(etWMChild1.getName())) {
                         double[][] ratioValues
                                 = Arrays.stream(spot
@@ -1964,7 +1970,7 @@ public class ExpressionBuilderController implements Initializable {
                         value = "" + squid3RoundedToSize(ratioValues[0][0], 15);
                         pctErr = "" + squid3RoundedToSize(
                                 Math.abs(ratioValues[0][1] / ratioValues[0][0]) * 100.0, 15);
-                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, pctErr));
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + spot.getSpotIndex(), spot.getFractionID(), value, pctErr));
                     } else {
                         Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
                         for (Entry<ExpressionTreeInterface, double[][]> entry : map.entrySet()) {
@@ -1974,7 +1980,7 @@ public class ExpressionBuilderController implements Initializable {
                                         Math.abs(entry.getValue()[0][1] / entry.getValue()[0][0]) * 100.0, 15);
                             }
                         }
-                        cb = new CheckBox(String.format(columnsFormat1, "#" + i, spot.getFractionID(), value, pctErr));
+                        cb = new CheckBox(String.format(columnsFormat1, "#" + spot.getSpotIndex(), spot.getFractionID(), value, pctErr));
                     }
 
                     cbs.add(cb);
@@ -2157,7 +2163,7 @@ public class ExpressionBuilderController implements Initializable {
             sb.append("\n");
         }
 
-        // handle special cases
+        // handle special cases with lists of indices
         if (labels.length > 1) {
             sb.append("\t");
             sb.append("    ");
@@ -2168,7 +2174,7 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("None");
             } else {
                 for (int j = 0; j < spotSummary.getValues()[1].length; j++) {
-                    sb.append((int) (spotSummary.getValues()[1][j])).append(" ");
+                    sb.append((int) (spotSummary.getValues()[1][j] + 1)).append(" ");
                 }
             }
             sb.append("\n");
@@ -2184,18 +2190,18 @@ public class ExpressionBuilderController implements Initializable {
                 sb.append("None");
             } else {
                 for (int j = 0; j < spotSummary.getValues()[2].length; j++) {
-                    sb.append((int) (spotSummary.getValues()[2][j])).append(" ");
+                    sb.append((int) (spotSummary.getValues()[2][j] + 1)).append(" ");
                 }
             }
             sb.append("\n");
         }
 
         if (spotSummary.isManualRejectionEnabled()) {
-            sb.append("\tManually rejected: ");
+            sb.append("\tManual reject indices: ");
             boolean rejected = false;
             for (int i = 0; i < spotSummary.getRejectedIndices().length; i++) {
                 if (spotSummary.getRejectedIndices()[i]) {
-                    sb.append(i).append(" ");
+                    sb.append(i + 1).append(" ");
                     rejected = true;
                 }
             }
@@ -3542,10 +3548,10 @@ public class ExpressionBuilderController implements Initializable {
                             showToolTip(event, this, toolTip);
                         });
 
-                        // show in BLUE custom sample WM Expressions
+                        // show in BLUE custom sample WM Expressions using SqWtdAv or WtdAv
                         if (expression.getExpressionTree().isSquidSwitchSCSummaryCalculation()
                                 && expression.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                                && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof WtdMeanACalc) //                                && SampleAgeTypesEnum.isReservedName(expression.getName())
+                                && (((ExpressionTree) expression.getExpressionTree()).getOperation() instanceof SqWtdAv) //                                && SampleAgeTypesEnum.isReservedName(expression.getName())
                                 ) {
                             setTextFill(BLUE);
                         } else {

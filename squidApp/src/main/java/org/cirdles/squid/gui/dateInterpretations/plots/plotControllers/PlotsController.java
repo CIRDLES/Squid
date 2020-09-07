@@ -32,6 +32,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.CheckBoxTreeItem;
@@ -42,9 +43,13 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import static javafx.scene.paint.Color.RED;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
@@ -129,12 +134,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     @Override
     public void setXAxisExpressionName(String xAxisExpressionName) {
         PlotsController.xAxisExpressionName = xAxisExpressionName;
+        ((Task)squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
         showActivePlot();
     }
 
     @Override
     public void setYAxisExpressionName(String yAxisExpressionName) {
         PlotsController.yAxisExpressionName = yAxisExpressionName;
+        ((Task)squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
         showActivePlot();
     }
 
@@ -188,8 +195,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
-        xAxisExpressionName = "Choose X";
-        yAxisExpressionName = "Choose Y";
+        xAxisExpressionName = ((Task)squidProject.getTask()).getxAxisExpressionName();
+        yAxisExpressionName = ((Task)squidProject.getTask()).getyAxisExpressionName();
 
         showActivePlot();
     }
@@ -437,9 +444,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }));
 
         spotListAnchorPane.getChildren().clear();
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
         spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
         spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
-        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
 
         // dec 2018 improvement suggested by Nicole Rayner to use checkboxes to select members
         // thus selecting tree item displays it and checkbox (see above) for a sample will
@@ -659,9 +666,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }));
 
         spotListAnchorPane.getChildren().clear();
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
         spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
         spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
-        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
 
         spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
             @Override
@@ -752,7 +759,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                 plotToolBar.getItems().clear();
                 plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
-//                plotToolBar.setPadding(Insets.EMPTY);
 
             } catch (Exception e) {
             }
@@ -872,9 +878,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 }
 
                 spotListAnchorPane.getChildren().clear();
+                spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
                 spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
                 spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
-                spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
+
             } else {
                 TreeItem<SampleTreeNodeInterface> rootItemWM
                         = new TreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
@@ -919,9 +926,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 }
 
                 spotListAnchorPane.getChildren().clear();
+                spotListAnchorPane.getChildren().add(spotsTreeViewString);
                 spotsTreeViewString.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
                 spotsTreeViewString.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
-                spotListAnchorPane.getChildren().add(spotsTreeViewString);
+
             }
         } catch (Exception e) {
         }
@@ -992,9 +1000,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }));
 
         spotListAnchorPane.getChildren().clear();
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
         spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
         spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
-        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
 
         refreshPlot();
 

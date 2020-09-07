@@ -171,7 +171,7 @@ public class SquidReportSettingsController implements Initializable {
         // update
         task.setupSquidSessionSpecsAndReduceAndReport(false);
 
-        ((Task) task).initTaskDefaultSquidReportTables(true);
+        ((Task) task).initTaskDefaultSquidReportTables(false);
 
         isRefMat = false;
         spotsChoiceBox.setVisible(true);
@@ -195,6 +195,9 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
+        
+        // disable refmat if none
+        refMatRadioButton.setDisable(task.getReferenceMaterialSpots().isEmpty());
     }
 
     private void initCategoryTextField() {

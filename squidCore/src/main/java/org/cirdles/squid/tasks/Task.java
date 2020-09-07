@@ -34,6 +34,7 @@ import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -55,10 +56,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryXMLConverter;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableXMLConverter;
 import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -131,6 +129,7 @@ import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
+import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 
 /**
  *
@@ -251,6 +250,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected SquidReportTableInterface selectedUnknownReportModel;
 
     protected OvercountCorrectionTypes overcountCorrectionType;
+
+    // Sept 2020 to support stickiness of choices for the plot any 2 feature of interpretations
+    protected String xAxisExpressionName;
+    protected String yAxisExpressionName;
 
     public Task() {
         this("New Task", null, null);
@@ -458,12 +461,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
             String methodName = gettersAndSetters[i].getName();
+            
             try {
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
+                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 } else if (methodName.startsWith("is")) {
+                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
@@ -472,6 +478,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
             }
         }
+        
+        // need to remove stored expression results on fractions to clear the decks
+        shrimpFractions.forEach((spot) -> {
+            spot.getTaskExpressionsForScansEvaluated().clear();
+            spot.getTaskExpressionsEvaluationsPerSpot().clear();
+        });
 
         List<String> allMasses = new ArrayList<>();
         allMasses.addAll(REQUIRED_NOMINAL_MASSES);
@@ -482,6 +494,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         if (indexOfBackgroundSpecies >= 0) {
             nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
+            indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
         }
 
         List<String> allRatios = new ArrayList<>();
@@ -491,13 +504,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Collections.sort(ratioNames);
 
         setChanged(true);
+        squidSpeciesModelList.clear();
+        buildSquidSpeciesModelList();
         generateConstants();
         generateParameters();
         generateSpotLookupFields();
 
-        // first pass
-        setChanged(true);
-        setupSquidSessionSpecsAndReduceAndReport(false);
+        initializeTaskAndReduceData(false);
     }
 
     @Override
@@ -543,6 +556,34 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
         taskDesign.setRatioNames(myRatioNames);
 
+    }
+
+    /**
+     *
+     * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
+     */
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
+
+        // four passes needed for percolating results
+        updateAllExpressions(true);
+        setChanged(true);
+        setupSquidSessionSpecsAndReduceAndReport(false);
+
+        // autogenerate task basics for type General = Ratio mode
+        if (autoGenerateNominalMasses && taskType.equals(GENERAL)) {
+            List<String> nominalMasses = new ArrayList<>();
+            for (SquidSpeciesModel ssm : getSquidSpeciesModelList()) {
+                // no background assumed
+                String proposedNominalMassName
+                        = new BigDecimal(getMapOfIndexToMassStationDetails()
+                                .get(ssm.getMassStationIndex())
+                                .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+                nominalMasses.add(proposedNominalMassName);
+            }
+            setNominalMasses(nominalMasses);
+
+            initializeSquidSpeciesModelsRatioMode(true, false, true, false);
+        }
     }
 
     private void generateConstants() {
@@ -2068,8 +2109,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private Expression constructCustomWMExpression(String expressionName, String sampleName) {
         // calculate weighted mean of selected expressionName without auto-rejection
         Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
-                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        expressionWM.setNotes("Expression generated from the Samples Weighted Mean user interface.");
+                "WtdAv([\"" + expressionName + "\"])", false, true, true);
+//                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
+        expressionWM.setNotes("Expression generated from the Samples Weighted Mean screen under Interpretations.");
 
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(sampleName);
         expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);
@@ -2207,6 +2249,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     // because they are still logged in rejectedIndices
                     spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
                 }
+            }
+
+            // Sep 2020 switched to SqWtdAv for Samples with no auto reject
+            if (((ExpressionTree) expressionTree).getOperation() instanceof SqWtdAv) {
+                // we use the user's stored rejections and do not do autorejection
+                spotsUsedForCalculation = spotSummaryDetails.retrieveActiveSpots();
+                noReject = true;
             }
 
             values = convertObjectArrayToDoubles(expressionTree.eval(spotsUsedForCalculation, this));
@@ -2582,6 +2631,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      * @param updateDefaultReports the value of updateDefaultReports
+     * @return
      */
     public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
         if (updateDefaultReports || squidReportTablesRefMat == null) {
@@ -3641,5 +3691,39 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         ((XMLSerializerInterface) task).serializeXMLObject("TASK.xml");
 
+    }
+
+    /**
+     * @return the xAxisExpressionName
+     */
+    public String getxAxisExpressionName() {
+        if (xAxisExpressionName == null) {
+            xAxisExpressionName = "204/206";
+        }
+        return xAxisExpressionName;
+    }
+
+    /**
+     * @param xAxisExpressionName the xAxisExpressionName to set
+     */
+    public void setxAxisExpressionName(String xAxisExpressionName) {
+        this.xAxisExpressionName = xAxisExpressionName;
+    }
+
+    /**
+     * @return the yAxisExpressionName
+     */
+    public String getyAxisExpressionName() {
+        if (yAxisExpressionName == null) {
+            yAxisExpressionName = "204/206";
+        }
+        return yAxisExpressionName;
+    }
+
+    /**
+     * @param yAxisExpressionName the yAxisExpressionName to set
+     */
+    public void setyAxisExpressionName(String yAxisExpressionName) {
+        this.yAxisExpressionName = yAxisExpressionName;
     }
 }

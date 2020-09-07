@@ -92,13 +92,13 @@ public class SessionAuditController implements Initializable {
 
         prawnAuditTreeCheckBox.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         prawnAuditTreeCheckBox.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
-//////        setUpPrawnAuditTreeView(false);
+        setUpPrawnAuditTreeView(false);
 
         ObservableList<String> delimitersList = FXCollections.observableArrayList(SampleNameDelimitersEnum.names());
         delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
         delimiterComboBox.getSelectionModel().select(sampleNameDelimiter);
-        updateDelimiterChoice(sampleNameDelimiter);
+////        updateDelimiterChoice(sampleNameDelimiter);
 
         delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
@@ -112,7 +112,7 @@ public class SessionAuditController implements Initializable {
 
     }
 
-    private void updateDelimiterChoice(String delimiter) {       
+    private void updateDelimiterChoice(String delimiter) {
         squidProject.updateFiltersForUnknownNames(new HashMap<>());
         squidProject.setDelimiterForUnknownNames(delimiter);
         squidProject.getTask().setChanged(true);
@@ -358,17 +358,21 @@ public class SessionAuditController implements Initializable {
         for (String name : workingListOfSelectedNames.keySet()) {
             totalCount += workingListOfSelectedNames.get(name);
         }
-        summaryLabel.setText(
-                "  Sample count = "
-                + workingListOfSelectedNames.size()
-                + "  Covering "
-                + totalCount
-                + " of "
-                + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
-                + " spots."
-                + (hasDuplicates ? "  Please remove duplicate spot names." : ""));
+        if (totalCount == squidProject.getTask().getShrimpFractions().size()) {
+            summaryLabel.setText(
+                    "  Sample count = "
+                    + workingListOfSelectedNames.size()
+                    + "  Covering "
+                    + totalCount
+                    + " of "
+                    + prawnAuditTreeCheckBox.getRoot().getValue().getCountOfIncludedSpots()
+                    + " spots."
+                    + (hasDuplicates ? "  Please remove duplicate spot names." : ""));
 
-        squidProject.getTask().setChanged(true);
+            squidProject.getTask().setChanged(true);
+            
+            squidProject.updateFiltersForUnknownNames(workingListOfSelectedNames);
+        }
     }
 
     // classes to support tree with checkboxes

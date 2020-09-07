@@ -776,7 +776,7 @@ public class TaskDesignerController implements Initializable {
                 == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
                 + REQUIRED_NOMINAL_MASSES.size()));
         if (valid) {
-            squidProject.createNewTask();
+//            squidProject.createNewTask();
             squidProject.getTask().updateTaskFromTaskDesign(
                     SquidPersistentState.getExistingPersistentState().getTaskDesign());
             MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()

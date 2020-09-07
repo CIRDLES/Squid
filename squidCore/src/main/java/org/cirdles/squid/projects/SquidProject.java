@@ -185,27 +185,30 @@ public final class SquidProject implements Serializable {
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
             task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-            this.task.setFiltersForUnknownNames(filtersForUnknownNames);
-            // four passes needed for percolating results
-            task.updateAllExpressions(true);
-            task.setChanged(true);
-            task.setupSquidSessionSpecsAndReduceAndReport(false);
+            task.setFiltersForUnknownNames(filtersForUnknownNames);
 
-            // autogenerate task basics for type General = Ratio mode
-            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
-                List<String> nominalMasses = new ArrayList<>();
-                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
-                    // no background assumed
-                    String proposedNominalMassName
-                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
-                                    .get(ssm.getMassStationIndex())
-                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
-                    nominalMasses.add(proposedNominalMassName);
-                }
-                this.task.setNominalMasses(nominalMasses);
+            ((Task) task).initializeTaskAndReduceData(autoGenerateNominalMasses);
 
-                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
-            }
+//            // four passes needed for percolating results
+//            task.updateAllExpressions(true);
+//            task.setChanged(true);
+//            task.setupSquidSessionSpecsAndReduceAndReport(false);
+//
+//            // autogenerate task basics for type General = Ratio mode
+//            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
+//                List<String> nominalMasses = new ArrayList<>();
+//                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
+//                    // no background assumed
+//                    String proposedNominalMassName
+//                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
+//                                    .get(ssm.getMassStationIndex())
+//                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+//                    nominalMasses.add(proposedNominalMassName);
+//                }
+//                this.task.setNominalMasses(nominalMasses);
+//
+//                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
+//            }
         }
     }
 
@@ -319,7 +322,7 @@ public final class SquidProject implements Serializable {
     }
 
     public void createTaskFromSerializedTaskXML(String fileName)
-        throws SquidException {
+            throws SquidException {
         // need to remove stored expression results on fractions to clear the decks
         task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
@@ -334,7 +337,7 @@ public final class SquidProject implements Serializable {
             task = currentTask;
             throw new SquidException(fileName);
         }
-        
+
         if (task == null) {
             task = currentTask;
             throw new SquidException(fileName);
@@ -373,6 +376,7 @@ public final class SquidProject implements Serializable {
             task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
 
             // first pass
+            task.getSquidSpeciesModelList().clear();
             task.setChanged(true);
             task.setupSquidSessionSpecsAndReduceAndReport(false);
 

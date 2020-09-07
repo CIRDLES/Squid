@@ -225,7 +225,7 @@ public abstract class BuiltInExpressionsFactory {
 
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
-        
+
         ExpressionTreeInterface expSpotIndex = buildSpotNode("getSpotIndex");
         spotLookupFields.put(expSpotIndex.getName(), expSpotIndex);
 
@@ -428,18 +428,22 @@ public abstract class BuiltInExpressionsFactory {
 
         double lookup238U235U = ((ReferenceMaterialModel) referenceMaterialModel)
                 .getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue();
+        boolean usedDefaultValue = false;
         if (lookup238U235U == 0.0) {
             /*
             Noah McLean 6 Feb 2019: There should be a place to enter a r238 235s for each ref material. 
             Default for ref materials where there is no r238 235s should be 137.818, which is 
             the global average of zircon measurements.
              */
+            // as of Sept 2020, community wants 137.88
             lookup238U235U = REF_238U235U_DEFAULT;
+            usedDefaultValue = true;
         }
         Expression expressionPresent238U235U = buildExpression(REF_238U235U,
                 String.valueOf(lookup238U235U), true, true, true);
         expressionPresent238U235U.setReferenceMaterialValue(true);
-        expressionPresent238U235U.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+        expressionPresent238U235U.setSourceModelNameAndVersion(usedDefaultValue ? "used Default Value because model " + sourceModelNameAndVersion + " has zero value." : sourceModelNameAndVersion);
+                
         referenceMaterialValues.add(expressionPresent238U235U);
 
         sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();
@@ -1509,11 +1513,10 @@ public abstract class BuiltInExpressionsFactory {
         Expression expressionNetAlpha = buildExpression(DEFRAD_206PB204PB,
                 TOTAL_206_204 + "-" + COM_64, false, true, false);
         samRadiogenicCols.add(expressionNetAlpha);
-        
+
 //        Expression expressionNetAlpha = buildExpression(DEFRAD_206PB204PB,
 //                "IF((" + TOTAL_206_204 + "-" + COM_64 + ")<0.0, 0.0," + TOTAL_206_204 + "-" + COM_64 + ")", false, true, false);
 //        samRadiogenicCols.add(expressionNetAlpha);
-
         Expression expressionBeta = buildExpression(TOTAL_207_204,
                 "[" + R207206 + "]/[" + R204206 + "]", false, true, false);
         samRadiogenicCols.add(expressionBeta);

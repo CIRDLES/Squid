@@ -16,6 +16,8 @@
 package org.cirdles.squid.constants;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
@@ -33,8 +35,9 @@ public final class Squid3Constants {
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "Schema");
     public static final File DEMO_SQUID_PROJECTS_FOLDER
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "DemoSquid3ProjectFiles");
-    public static final File LUDWIGLIBRARY_JAVADOC_FOLDER 
-            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc");;
+    public static final File LUDWIGLIBRARY_JAVADOC_FOLDER
+            = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getAbsolutePath() + File.separator + "LudwigLibraryJavadoc");
+    ;
     public static final File SQUID_PARAMETER_MODELS_FOLDER
             = new File(NAME_OF_SQUID_RESOURCES_FOLDER.getName() + File.separator + "SquidParameterModels");
     public static final File SQUID_TASK_LIBRARY_FOLDER
@@ -308,7 +311,8 @@ public final class Squid3Constants {
     public final static String SUPERSCRIPT_SPACE = " ";//\u02C9";
 
     // http://science.sciencemag.org/content/335/6076/1610
-    public final static double REF_238U235U_DEFAULT = 137.818;
+    // however during discussions with users set to old Ludwig value 137.88
+    public static double REF_238U235U_DEFAULT = (new BigDecimal(137.88)).setScale(2, RoundingMode.HALF_UP).doubleValue();   // 137.88;//137.818;
 
     public static enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),

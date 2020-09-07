@@ -1,9 +1,7 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyListProperty;
 import javafx.beans.property.ReadOnlyMapProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
@@ -12,7 +10,6 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import org.cirdles.topsoil.Variable;
 import static org.cirdles.topsoil.Variable.SIGMA_X;
 import static org.cirdles.topsoil.Variable.SIGMA_Y;
@@ -67,7 +63,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
         dataEntries.setAll(entries);
     }
-    
+
     public final void setDataEntries(List<DataEntry> dataEntries) {
         this.dataEntries.setAll(dataEntries);
     }
@@ -78,7 +74,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     public final Map<PlotOption<?>, Object> getPlotOptions() {
         return options.get();
     }
-
+   
     public final void setPlotOptions(PlotOptions options) {
         this.options.putAll(options);
     }
@@ -88,8 +84,6 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
             setProperty(entry.getKey(), entry.getValue());
         }
     }
-
-//    private BooleanProperty isLoading = new SimpleBooleanProperty(false);
 
     public AbstractTopsoilPlot() {
         this.hasUncertainties = true;
@@ -117,9 +111,6 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         if (plot == null) {
             PlotOptions myPlotOptions = new PlotOptions(options.get());
             plot = new PlotView(PlotType.SCATTER, myPlotOptions, getData());
-            CompletableFuture<Void> loadFuture = plot.getLoadFuture();
-//            isLoading.set(!loadFuture.isDone());
-//            loadFuture.whenComplete(((aVoid, throwable) -> isLoading.set(false)));
             dataEntries.addListener((ListChangeListener<DataEntry>) c -> {
                 plot.setData(dataEntries);
             });
@@ -132,8 +123,6 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
     @Override
     public List<Node> toolbarControlsFactory() {
-//        Text loadingIndicator = new Text("Loading...");
-//        loadingIndicator.visibleProperty().bind(isLoading);
 
         Button saveToSVGButton = new Button("Save as SVG");
         saveToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 2 2 2 2;");
@@ -154,29 +143,32 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         Button recenterButton = new Button("Re-center");
         recenterButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 2 2 2 2;");
         recenterButton.setOnAction(mouseEvent -> {
-            if (plot != null) {
-                plot.call(PlotFunction.Scatter.RECENTER);
-            }
+            recenterPlot();
         });
 
         List<Node> controls = new ArrayList<>(Arrays.asList(
-//                loadingIndicator,
                 saveToSVGButton,
                 recenterButton
         ));
 
         return controls;
     }
-    
-    protected Uncertainty[] retrievePlottingUncertainties(){
+
+    public void recenterPlot() {
+        if (plot != null) {
+            plot.call(PlotFunction.Scatter.RECENTER);
+        }
+    }
+
+    protected Uncertainty[] retrievePlottingUncertainties() {
         List<Uncertainty> plottingUncertList = new ArrayList<>();
-        for (Uncertainty entry : Uncertainty.values()){
-            if (!entry.getName().contains("(%)")){
+        for (Uncertainty entry : Uncertainty.values()) {
+            if (!entry.getName().contains("(%)")) {
                 plottingUncertList.add(entry);
             }
-        }        
-        
-        Uncertainty [] plottingUncertArray = new Uncertainty[plottingUncertList.size()];
+        }
+
+        Uncertainty[] plottingUncertArray = new Uncertainty[plottingUncertList.size()];
         plottingUncertArray = plottingUncertList.toArray(plottingUncertArray);
         return plottingUncertArray;
     }
