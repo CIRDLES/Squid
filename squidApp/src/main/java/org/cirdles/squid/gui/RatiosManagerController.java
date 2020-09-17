@@ -125,7 +125,7 @@ public class RatiosManagerController implements Initializable {
             if (squidSpeciesList.get(i).getIsBackground()) {
 //                indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
 //                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
-
+//
 //                if (squidSpeciesList.get(i).isNumeratorRole()) {
 //                    Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
 //                    ratiosGridPane.add(rowBackgroundLabel, 0, rowCounter + 1);

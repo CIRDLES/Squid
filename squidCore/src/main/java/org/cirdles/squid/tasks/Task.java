@@ -454,6 +454,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return retVal;
     }
 
+    /**
+     *
+     * @param taskDesign the value of taskDesign
+     */
     @Override
     public void updateTaskFromTaskDesign(TaskDesign taskDesign) {
 
@@ -461,15 +465,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
             String methodName = gettersAndSetters[i].getName();
-            
+
             try {
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
-                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 } else if (methodName.startsWith("is")) {
-                    System.out.println(">>>  " + methodName);
                     this.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
@@ -478,7 +480,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
             }
         }
-        
+
         // need to remove stored expression results on fractions to clear the decks
         shrimpFractions.forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
@@ -510,11 +512,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         generateParameters();
         generateSpotLookupFields();
 
+        for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
+            taskExpressionsOrdered.add(customExp);
+        }
+
         initializeTaskAndReduceData(false);
     }
 
+    /**
+     *
+     * @param taskDesign the value of taskDesign
+     * @param includeCustomExp the value of includeCustomExp
+     */
     @Override
-    public void updateTaskDesignFromTask(TaskDesign taskDesign) {
+    public void updateTaskDesignFromTask(TaskDesign taskDesign, boolean includeCustomExp) {
 
         Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
@@ -555,6 +566,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         myRatioNames.addAll(ratioNames);
         myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
         taskDesign.setRatioNames(myRatioNames);
+
+        if (includeCustomExp) {
+            taskDesign.setCustomTaskExpressions(getCustomTaskExpressions());
+        } else {
+            taskDesign.setCustomTaskExpressions(new ArrayList<>());
+        }
 
     }
 
@@ -1579,6 +1596,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     massStationDetail.setIsBackground(ssm.getIsBackground());
                     if (ssm.getIsBackground()) {
                         indexOfBackgroundSpecies = massStationDetail.getMassStationIndex();
+                        indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
+                        ssm.setNumeratorRole(false);
+                        ssm.setDenominatorRole(false);
                     }
 
                     massStationDetail.setuThBearingName(ssm.getuThBearingName());
@@ -1603,6 +1623,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private void updateTask() {
         changed = true;
+
+        // Sept 2020 - need to comb out bad ratios accidentally introduced
+        List<String> badRatios = new ArrayList<>();
+        for (String ratio : ratioNames) {
+            if (ratio.toUpperCase(Locale.ENGLISH).contains("BKG")) {
+                badRatios.add(ratio);
+            }
+        }
+        for (String ratio : badRatios) {
+            ratioNames.remove(ratio);
+        }
 
         applyDirectives();
 

@@ -169,6 +169,8 @@ public class TaskDesignerController implements Initializable {
     private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
     @FXML
     private Button fromCurrentTaskBtn;
+    @FXML
+    private Button fromCurrentTaskPlusExpBtn;
 
     {
         addBtnHBox.setAlignment(Pos.CENTER);
@@ -232,6 +234,7 @@ public class TaskDesignerController implements Initializable {
         String den = denLabel.getText();
         boolean valid = (num.compareTo(den) != 0)
                 && !taskDesigner.getRatioNames().contains(num + "/" + den)
+                && !REQUIRED_RATIO_NAMES.contains(num + "/" + den)
                 && num.length() > 0 && den.length() > 0;
         addBtn.setDisable(!valid);
     }
@@ -295,7 +298,7 @@ public class TaskDesignerController implements Initializable {
         List<String> allMasses = new ArrayList<>();
         allMasses.addAll(REQUIRED_NOMINAL_MASSES);
         allMasses.addAll(taskDesigner.getNominalMasses());
-        
+
         Collections.sort(allMasses, new IntuitiveStringComparator<>());
 
         allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
@@ -753,7 +756,13 @@ public class TaskDesignerController implements Initializable {
 
     @FXML
     private void currentTaskAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner);
+        SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, false);
+        initTaskDesign();
+    }
+
+    @FXML
+    private void currentTaskPlusExpAction(ActionEvent event) {
+        SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, true);
         initTaskDesign();
     }
 
@@ -776,9 +785,8 @@ public class TaskDesignerController implements Initializable {
                 == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
                 + REQUIRED_NOMINAL_MASSES.size()));
         if (valid) {
-//            squidProject.createNewTask();
-            squidProject.getTask().updateTaskFromTaskDesign(
-                    SquidPersistentState.getExistingPersistentState().getTaskDesign());
+            squidProject.createNewTask();
+            squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign());
             MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                     .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
             menuItemTaskManager.fire();

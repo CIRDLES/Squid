@@ -682,9 +682,18 @@ public interface TaskInterface {
      */
     public Map<String, String> getSpecialSquidFourExpressionsMap();
 
+    /**
+     *
+     * @param taskDesign the value of taskDesign
+     */
     public void updateTaskFromTaskDesign(TaskDesign taskDesign);
 
-    public void updateTaskDesignFromTask(TaskDesign taskDesign);
+    /**
+     *
+     * @param taskDesign the value of taskDesign
+     * @param includeCustomExp the value of includeCustomExp
+     */
+    public void updateTaskDesignFromTask(TaskDesign taskDesign, boolean includeCustomExp);
 
     /**
      * @return the delimiterForUnknownNames

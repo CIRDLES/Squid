@@ -93,6 +93,7 @@ import org.cirdles.squid.prawn.PrawnFile;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 
 /**
  * FXML Controller class
@@ -997,9 +998,15 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchExpressionBuilder() {
+        
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        squidProject.getTask().updateAllExpressions(true);
+        
         // present warning if needed
         if (squidProject.isTypeGeochron() && !squidProject.projectIsHealthyGeochronMode()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes (press red button) to initialize expressions\n"
+                    + " and confirm the ratios in ParentElement_ConcenConst = \n" 
+                    + "\t\t" + ((Expression)squidProject.getTask().getExpressionByName(PARENT_ELEMENT_CONC_CONST)).getExcelExpressionString(),
                     primaryStageWindow);
         }
 
