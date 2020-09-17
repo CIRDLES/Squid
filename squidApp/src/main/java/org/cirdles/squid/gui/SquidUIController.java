@@ -79,6 +79,8 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
@@ -94,6 +96,7 @@ import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZipped
 import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  * FXML Controller class
@@ -113,6 +116,8 @@ public class SquidUIController implements Initializable {
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
     public static List<PrawnFile.Run> selectedRunsForRestore = new ArrayList<>();
+
+    private static Map<String, String> taskLibraryDescriptions = new HashMap<>();
 
     @FXML
     private Menu projectMenu;
@@ -372,12 +377,38 @@ public class SquidUIController implements Initializable {
     }
 
     private void buildTaskLibraryMenu() {
+        if (taskLibraryDescriptions.isEmpty()) {
+            List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
+            for (String fileName : taskLibraryFileNamesList) {
+                TaskInterface workingTask
+                        = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
+                                + File.separator + fileName, false);
+                taskLibraryDescriptions.put(fileName, (workingTask.getDescription().length() == 0) ? "No description provided" : workingTask.getDescription());
+            }
+        }
+
         selectSquid3TaskFromLibraryMenu.setDisable(false);
         selectSquid3TaskFromLibraryMenu.getItems().clear();
 
         List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
         for (String fileName : taskLibraryFileNamesList) {
-            MenuItem menuItem = new MenuItem(fileName.replace(".xml", ""));
+            CustomMenuItem menuItem = new CustomMenuItem(new Label(fileName.replace(".xml", "")));
+            menuItem.setMnemonicParsing(false);
+            Tooltip toolTip = new Tooltip(taskLibraryDescriptions.get(fileName));
+            Tooltip.install(menuItem.getContent(), toolTip);
+            menuItem.getContent().setOnMouseMoved(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    toolTip.show(menuItem.getContent(), event.getScreenX(), event.getScreenY() + 15);
+                }
+            });
+            menuItem.getContent().setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    toolTip.hide();
+                }
+            });
+
             menuItem.setOnAction((ActionEvent t) -> {
                 try {
                     squidProject.createTaskFromSerializedTaskXML(
@@ -998,15 +1029,15 @@ public class SquidUIController implements Initializable {
     }
 
     private void launchExpressionBuilder() {
-        
+
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         squidProject.getTask().updateAllExpressions(true);
-        
+
         // present warning if needed
         if (squidProject.isTypeGeochron() && !squidProject.projectIsHealthyGeochronMode()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes (press red button) to initialize expressions\n"
-                    + " and confirm the ratios in ParentElement_ConcenConst = \n" 
-                    + "\t\t" + ((Expression)squidProject.getTask().getExpressionByName(PARENT_ELEMENT_CONC_CONST)).getExcelExpressionString(),
+                    + " and confirm the ratios in ParentElement_ConcenConst = \n"
+                    + "\t\t" + ((Expression) squidProject.getTask().getExpressionByName(PARENT_ELEMENT_CONC_CONST)).getExcelExpressionString(),
                     primaryStageWindow);
         }
 
