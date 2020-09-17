@@ -333,11 +333,7 @@ public class SquidUIController implements Initializable {
             thread.start();
         });
     }
-
-    public static void launchTaskManagerStatic() {
-
-    }
-
+    
     private void buildProjectMenuMRU() {
         openRecentSquidProjectMenu.setDisable(false);
 
@@ -1194,6 +1190,8 @@ public class SquidUIController implements Initializable {
             FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
         } catch (IOException iOException) {
         }
+        // refresh task name if necessary
+        launchTaskManager();
     }
 
     @FXML
