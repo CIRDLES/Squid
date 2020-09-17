@@ -79,6 +79,8 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
@@ -1197,10 +1199,27 @@ public class SquidUIController implements Initializable {
     @FXML
     private void importSquid3TaskMenuItemAction(ActionEvent event) {
         File taskXMLFile = null;
+        BooleanProperty proceed = new SimpleBooleanProperty(false);
         try {
             taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
-            squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
-            launchTaskManager();
+            // Add in peek window to confirm details of choice
+            TaskInterface peekTask = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(taskXMLFile.getAbsolutePath(), false);
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Task Description: \n\n"
+                    + ((peekTask.getDescription().length() ==0)? "No description provided." : peekTask.getDescription())
+                    + "\n\n\tProceed to load task?");
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait().ifPresent(action -> {
+                if (action == ButtonType.OK) {
+                    proceed.set(true);
+                }
+            });
+
+            if (proceed.get()) {
+                squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
+                launchTaskManager();
+            }
         } catch (IOException | JAXBException | SAXException | SquidException | NullPointerException iOException) {
             SquidMessageDialog.showInfoDialog(
                     "Squid cannot load Task: "
