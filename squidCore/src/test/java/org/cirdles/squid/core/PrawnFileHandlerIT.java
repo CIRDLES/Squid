@@ -17,9 +17,6 @@ package org.cirdles.squid.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -31,10 +28,6 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.shrimp.SquidSessionModel;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
@@ -63,9 +56,6 @@ import org.junit.runners.MethodSorters;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class PrawnFileHandlerIT {
-
-    private static final String PRAWN_FILE_RESOURCE
-            = "/org/cirdles/squid/prawn/100142_G6147_10111109.43.xml";
 
     private static final String PRAWN_FILE_RESOURCE_Z6266
             = "/org/cirdles/squid/prawn/836_1_2016_Nov_28_09.50.xml";
@@ -161,57 +151,11 @@ public class PrawnFileHandlerIT {
     @Test
     public void writesReportsFromPrawnFile() throws Exception {
         prawnFileHandler.getReportsEngine().setFolderToWriteCalamariReports(reportsFolder);
-        File prawnFile = RESOURCE_EXTRACTOR.extractResourceAsFile(PRAWN_FILE_RESOURCE);
-        prawnFileHandler.initReportsEngineWithCurrentPrawnFileName(PRAWN_FILE_RESOURCE);
-
-        ShrimpDataFileInterface prawnFileData
-                = prawnFileHandler.unmarshallPrawnFileXML(prawnFile.getAbsolutePath(), true);
-
-        List<SquidSpeciesModel> squidSpeciesModelList = new ArrayList<>();
-        squidSpeciesModelList.add(new SquidSpeciesModel(0, "196Zr2O", "196", "Zr2O", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(1, "204Pb", "204", "Pb", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(2, "Bkgnd", "Bkgnd", "Bkgnd", true, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(3, "206Pb", "206", "Pb", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(4, "207Pb", "207", "Pb", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(5, "208Pb", "208", "Pb", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(6, "238U", "238", "U", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(7, "248ThO", "248", "ThO", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(8, "254UO", "254", "UO", false, "No", false));
-        squidSpeciesModelList.add(new SquidSpeciesModel(9, "270UO2", "270", "UO2", false, "No", false));
-
-        List<SquidRatiosModel> squidRatiosModelList = new ArrayList<>();
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(1), squidSpeciesModelList.get(3), 0));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(4), squidSpeciesModelList.get(3), 1));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(5), squidSpeciesModelList.get(3), 2));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(0), 3));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(6), 4));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(8), squidSpeciesModelList.get(6), 5));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(7), squidSpeciesModelList.get(8), 6));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(9), 7));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(9), squidSpeciesModelList.get(8), 8));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(3), squidSpeciesModelList.get(8), 9));
-        squidRatiosModelList.add(new SquidRatiosModel(squidSpeciesModelList.get(6), squidSpeciesModelList.get(3), 10));
 
         CalamariReportsEngine reportsEngine = prawnFileHandler.getReportsEngine();
-        TaskInterface task = new Task("New Task", reportsEngine);
-
-        task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
-        task.setUseSBM(true);
-        task.setUserLinFits(false);
-        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
-        task.setSquidAllowsAutoExclusionOfSpots(true);
-        task.setExtPErrU(0.75);
-        task.setExtPErrTh(0.75);
-        task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
-        task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-        task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-        task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-
-        SquidSessionModel squidSessionModel = new SquidSessionModel(squidSpeciesModelList, squidRatiosModelList, true, false, 2, "T", "", new HashMap<>());
-        List<ShrimpFractionExpressionInterface> shrimpFractions = task.processRunFractions(prawnFileData, squidSessionModel);
 
         try {
-            reportsEngine.produceReports(shrimpFractions, true, false);
+            reportsEngine.produceReports(squidProjectZ6266.getTask().getShrimpFractions(), true, false);
         } catch (IOException iOException) {
         }
 
@@ -481,7 +425,7 @@ public class PrawnFileHandlerIT {
      */
     @Test
     public void tM_testingOutputForZ6266Perm3_4corrRM() throws Exception {
-        System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm2 with 4cor reference materials.");
+        System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm3 with 4cor reference materials.");
         // change selected index isotope
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);

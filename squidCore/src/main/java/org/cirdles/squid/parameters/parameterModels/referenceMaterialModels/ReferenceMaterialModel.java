@@ -287,7 +287,7 @@ public class ReferenceMaterialModel extends ParametersModel {
 
                 double varianceR207_235r = V.times(covModel.getMatrix()).times(V.transpose()).get(0, 0);
 
-                r207_235r.setOneSigma(new BigDecimal(Math.sqrt(varianceR207_235r)));
+                r207_235r.setOneSigma(new BigDecimal(StrictMath.sqrt(varianceR207_235r)));
 
             } catch (Exception e) {
             }

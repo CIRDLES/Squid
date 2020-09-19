@@ -59,7 +59,7 @@ public class Ln extends Function {
 
         double retVal;
         try {
-            retVal = Math.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+            retVal = StrictMath.log(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (SquidException se) {
             retVal = 0.0;
         }

@@ -121,7 +121,7 @@ public class VariableNodeForSummary extends ExpressionTree {
 
             if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                 // index should be 1 from constructor
-                valuesAll[0][1] = Math.abs(valuesAll[0][1] / valuesAll[0][0] * 100.0);
+                valuesAll[0][1] = StrictMath.abs(valuesAll[0][1] / valuesAll[0][0] * 100.0);
             }
 
             values = clone2dArray(valuesAll);

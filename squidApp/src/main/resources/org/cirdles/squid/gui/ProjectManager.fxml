@@ -121,12 +121,6 @@
                         </toggleGroup>
                     </RadioButton>
                     <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSBM" />
-                    <RadioButton fx:id="roundingSquid25" mnemonicParsing="false" onAction="#roundingSquid25Action" prefHeight="30.0" prefWidth="153.0" selected="true" text="Squid2.5 rounding" textFill="#f80202" translateX="100.0">
-                        <toggleGroup>
-                            <ToggleGroup fx:id="roundingToggleGroup" />
-                        </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="roundingSquid3" mnemonicParsing="false" onAction="#roundingSquid3Action" prefHeight="29.0" prefWidth="156.0" text="Squid3 rounding" textFill="#f50303" toggleGroup="$roundingToggleGroup" translateX="100.0" />
                 </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

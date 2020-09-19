@@ -53,9 +53,9 @@ public final class WeightedMeanCalculators {
         double[] mswdRatList = new double[]{0.0, 0.1, 0.15, 0.2, 0.2, 0.25};
 
         double mswdRatToler = (n > 7) ? 0.3 : mswdRatList[n - avg1LinRegr2 - 1];
-//        int maxRej = (int) Math.ceil((n - avg1LinRegr2) / 8.0);
+//        int maxRej = (int) StrictMath.ceil((n - avg1LinRegr2) / 8.0);
         // incorrect statement found by Griffin Hiers Feb 2017
-        int maxRej = 1 + (int) Math.floor((n - avg1LinRegr2) / 8.0);
+        int maxRej = 1 + (int) StrictMath.floor((n - avg1LinRegr2) / 8.0);
 
         double minProb = 0.1;
 
@@ -76,9 +76,9 @@ public final class WeightedMeanCalculators {
             sigmaY[i] = sigRho[i][i];
         }
 
-        double f = Math.max(Utilities.median(sigmaY), 1e-10);
+        double f = StrictMath.max(Utilities.median(sigmaY), 1e-10);
         for (int i = 0; i < n; i++) {
-            sigRho1[i][i] = Math.max(sigRho1[i][i], f);
+            sigRho1[i][i] = StrictMath.max(sigRho1[i][i], f);
             sigRho2[i][i] = sigRho1[i][i];
         }
 
@@ -149,7 +149,7 @@ public final class WeightedMeanCalculators {
                 minMSWD = mswdW[0];
 
                 for (int i = 1; i < (n + 1); i++) {
-                    double mswdRat = mswdW[i] / Math.max(1e-32, mswdW[0]);
+                    double mswdRat = mswdW[i] / StrictMath.max(1e-32, mswdW[0]);
                     if ((mswdRat < mswdRatToler) && (mswdW[i] < minMSWD) && (probW[i] > minProb)) {
 //                        rej[i] = true; not used
 //                        wLrej++; not used
@@ -202,10 +202,10 @@ public final class WeightedMeanCalculators {
         }
 
         if (probfit < 0.05) {
-            sigmaIntercept *= Math.sqrt(mswd);
+            sigmaIntercept *= StrictMath.sqrt(mswd);
 
             if (linReg) {
-                wtdLinCorrResults.setSigmaSlope(wtdLinCorrResults.getSigmaSlope() * Math.sqrt(mswd));
+                wtdLinCorrResults.setSigmaSlope(wtdLinCorrResults.getSigmaSlope() * StrictMath.sqrt(mswd));
             }
         }
 
@@ -255,8 +255,8 @@ public final class WeightedMeanCalculators {
         RealMatrix fischer = new BlockRealMatrix(new double[][]{{mX, pX / 2.0}, {pX / 2.0, w}});
         RealMatrix fischerInv = MatrixUtils.inverse(fischer);
 
-        double slopeSig = Math.sqrt(fischerInv.getEntry(0, 0));
-        double interceptSig = Math.sqrt(fischerInv.getEntry(1, 1));
+        double slopeSig = StrictMath.sqrt(fischerInv.getEntry(0, 0));
+        double interceptSig = StrictMath.sqrt(fischerInv.getEntry(1, 1));
         double slopeInterceptCov = fischerInv.getEntry(0, 1);
 
         RealMatrix resid = new BlockRealMatrix(n, 1);
@@ -374,7 +374,7 @@ public final class WeightedMeanCalculators {
         // test denom
         if (denom > 0.0) {
             double meanVal = numer / denom / 2.0;
-            double meanValSigma = Math.sqrt(1.0 / denom);
+            double meanValSigma = StrictMath.sqrt(1.0 / denom);
 
             double[][] unwtdResidsArray = new double[n][1];
             for (int i = 0; i < n; i++) {

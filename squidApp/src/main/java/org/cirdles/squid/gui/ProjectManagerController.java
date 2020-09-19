@@ -22,7 +22,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -32,14 +31,12 @@ import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.HBox;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.projects.SquidProject;
-import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.USE_SIG_FIG_15;
 
 /**
  * FXML Controller class
@@ -82,12 +79,6 @@ public class ProjectManagerController implements Initializable {
     private RadioButton noSBMRadioButton;
     @FXML
     private ToggleGroup toggleGroupSBM;
-    @FXML
-    private RadioButton roundingSquid25;
-    @FXML
-    private RadioButton roundingSquid3;
-    @FXML
-    private ToggleGroup roundingToggleGroup;
     @FXML
     private RadioButton linearRegressionRatioCalcRadioButton;
     @FXML
@@ -137,7 +128,7 @@ public class ProjectManagerController implements Initializable {
         taskDesign = SquidUIController.squidPersistentState.getTaskDesign();
 
         if (task != null) {
-            roundingSquid3.setSelected(task.isRoundingForSquid3());
+//            roundingSquid3.setSelected(task.isRoundingForSquid3());
             setUpParametersModelsComboBoxes();
             if (squidProject.isUseSBM()) {
                 yesSBMRadioButton.setSelected(true);
@@ -375,22 +366,22 @@ public class ProjectManagerController implements Initializable {
         task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
     }
-
-    @FXML
-    private void roundingSquid25Action(ActionEvent event) {
-        USE_SIG_FIG_15 = false;
-        task.setRoundingForSquid3(false);
-        task.setChanged(true);
-        task.setupSquidSessionSpecsAndReduceAndReport(true);
-    }
-
-    @FXML
-    private void roundingSquid3Action(ActionEvent event) {
-        USE_SIG_FIG_15 = true;
-        task.setRoundingForSquid3(true);
-        task.setChanged(true);
-        task.setupSquidSessionSpecsAndReduceAndReport(true);
-    }
+//
+//    @FXML
+//    private void roundingSquid25Action(ActionEvent event) {
+//        USE_SIG_FIG_15 = false;
+//        task.setRoundingForSquid3(false);
+//        task.setChanged(true);
+//        task.setupSquidSessionSpecsAndReduceAndReport(true);
+//    }
+//
+//    @FXML
+//    private void roundingSquid3Action(ActionEvent event) {
+//        USE_SIG_FIG_15 = true;
+//        task.setRoundingForSquid3(true);
+//        task.setChanged(true);
+//        task.setupSquidSessionSpecsAndReduceAndReport(true);
+//    }
 
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {

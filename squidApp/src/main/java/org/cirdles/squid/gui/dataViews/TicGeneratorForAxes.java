@@ -56,12 +56,12 @@ public class TicGeneratorForAxes {
         ticRange = niceNum(axisMax - axisMin, true);
         d = niceNum(ticRange / (numberTics - 1), false);
         // the following changes did not work and I reverted on Dec 27 2019
-//        ticMin = Math.floor(Math.ceil(axisMin) / d) * d;
-//        ticMax = Math.ceil(Math.ceil(axisMax) / d) * d;
-        ticMin = Math.floor(axisMin / d) * d;
-        ticMax = Math.ceil(axisMax / d) * d;
+//        ticMin = StrictMath.floor(StrictMath.ceil(axisMin) / d) * d;
+//        ticMax = StrictMath.ceil(StrictMath.ceil(axisMax) / d) * d;
+        ticMin = StrictMath.floor(axisMin / d) * d;
+        ticMax = StrictMath.ceil(axisMax / d) * d;
 
-        nfrac = (int) Math.max(-Math.floor(Math.log10(d)), 0);
+        nfrac = (int) StrictMath.max(-StrictMath.floor(StrictMath.log10(d)), 0);
 
         BigDecimal[] tics = new BigDecimal[0];
 
@@ -133,8 +133,8 @@ public class TicGeneratorForAxes {
         double nf;
         /* nice, rounded fraction */
 
-        expv = (int) Math.floor(Math.log10(x));
-        f = x / Math.pow(10.0, expv);
+        expv = (int) StrictMath.floor(StrictMath.log10(x));
+        f = x / StrictMath.pow(10.0, expv);
         /* between 1 and 10 */
         if (round) {
             if (f < 1.5) {
@@ -159,6 +159,6 @@ public class TicGeneratorForAxes {
 
         }
 
-        return nf * Math.pow(10.0, expv);
+        return nf * StrictMath.pow(10.0, expv);
     }
 }

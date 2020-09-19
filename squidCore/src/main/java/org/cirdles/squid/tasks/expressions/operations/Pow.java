@@ -72,7 +72,7 @@ public class Pow extends Operation {
             } else {
                 term2 = (double) term2Object;
             }
-            retVal = Math.pow(term1, term2);
+            retVal = StrictMath.pow(term1, term2);
         } catch (SquidException | NullPointerException squidException) {
             retVal = 0.0;
         }

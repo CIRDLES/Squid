@@ -170,21 +170,21 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
             if ( matrix.get( colA, colA ) == 0.0 ) {
                 dOldInvert.set( i, i, 0.0 );
             } else {
-                dOldInvert.set( i, i, 1.0 / Math.sqrt( matrix.get( colA, colA ) ) );
+                dOldInvert.set( i, i, 1.0 / StrictMath.sqrt( matrix.get( colA, colA ) ) );
             }
 
             // set dNew diagonal to one-sigmas
             if ( i == 0 ) {
-                sigmaConverter = oneSigma.doubleValue() / Math.sqrt( matrix.get( colA, colA ) );
+                sigmaConverter = oneSigma.doubleValue() / StrictMath.sqrt( matrix.get( colA, colA ) );
             }
             if ( lockVariancesTogether ) {
                 dNew.set( i, i, //
-                        sigmaConverter * Math.sqrt( matrix.get( colA, colA ) ) );
+                        sigmaConverter * StrictMath.sqrt( matrix.get( colA, colA ) ) );
             } else {
                 if ( i == 0 ) {
                     dNew.set( 0, 0, oneSigma.doubleValue() );
                 } else {
-                    dNew.set( i, i, Math.sqrt( matrix.get( colA, colA ) ) );
+                    dNew.set( i, i, StrictMath.sqrt( matrix.get( colA, colA ) ) );
                 }
             }
 
@@ -245,7 +245,7 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
 
             // set dInvert diagonal to inverse of one-sigmas (0 for div by 0)
             try {
-                dInvert.set( i, i, 1.0 / Math.sqrt( matrix.get( colA, colA ) ) );
+                dInvert.set( i, i, 1.0 / StrictMath.sqrt( matrix.get( colA, colA ) ) );
             } catch (Exception e) {
                 dInvert.set( i, i, 0.0 );
             }
@@ -265,7 +265,7 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
 
         for (int i = 0; i < rhos.getRowDimension() - 1; i ++) {
             for (int j = i + 1; j < rhos.getColumnDimension(); j ++) {
-                if ( Math.abs( rhos.get( i, j ) ) > 1.0 ) {
+                if ( StrictMath.abs( rhos.get( i, j ) ) > 1.0 ) {
                     // bad rhos
                     if ( retval.length() == 0 ) {
                         retval += "For fraction " + fractionID + ", the out-of-range calculated correlation coefficient between inputs<br> ";

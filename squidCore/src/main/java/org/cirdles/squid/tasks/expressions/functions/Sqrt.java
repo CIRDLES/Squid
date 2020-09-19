@@ -58,7 +58,7 @@ public class Sqrt extends Function {
 
         double retVal;
         try {
-            retVal = Math.sqrt(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+            retVal = StrictMath.sqrt(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (Exception e) {
             retVal = 0.0;
         }

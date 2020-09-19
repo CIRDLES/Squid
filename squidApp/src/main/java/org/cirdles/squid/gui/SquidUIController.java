@@ -333,7 +333,7 @@ public class SquidUIController implements Initializable {
             thread.start();
         });
     }
-    
+
     private void buildProjectMenuMRU() {
         openRecentSquidProjectMenu.setDisable(false);
 
@@ -1205,7 +1205,7 @@ public class SquidUIController implements Initializable {
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                     "Task Description: \n\n"
-                    + ((peekTask.getDescription().length() ==0)? "No description provided." : peekTask.getDescription())
+                    + ((peekTask.getDescription().length() == 0) ? "No description provided." : peekTask.getDescription())
                     + "\n\n\tProceed to load task?");
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait().ifPresent(action -> {
@@ -1858,6 +1858,10 @@ public class SquidUIController implements Initializable {
             squidProject.setConcentrationReferenceMaterialModel(task.getConcentrationReferenceMaterialModel());
 
             if (SquidProject.isProjectChanged()) {
+                // next two lines make sure 15-digit rounding is used by reprocessing data
+                task.setChanged(true);
+                task.setupSquidSessionSpecsAndReduceAndReport(true);
+
                 SquidMessageDialog.showInfoDialog(
                         "The task has been updated for this version of Squid3.\n"
                         + "Please save Project.",

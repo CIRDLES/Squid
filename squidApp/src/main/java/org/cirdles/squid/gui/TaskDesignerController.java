@@ -716,7 +716,7 @@ public class TaskDesignerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             String index = bkgIndexString.getText();
             try {
-                int bkgIndex = Math.abs(Integer.parseInt(index));
+                int bkgIndex = StrictMath.abs(Integer.parseInt(index));
                 taskDesigner.setIndexOfBackgroundSpecies(bkgIndex - 1);
                 populateMasses();
             } catch (NumberFormatException numberFormatException) {
