@@ -56,7 +56,7 @@ public class SpotGroupProcessor {
         int countOfAcceptedSpots = 0;
         for (int i = 0; i < spotSummaryDetailsWM.getRejectedIndices().length; i++) {
             // reject spot if value is less than or equal to the 1-sigma abs unct > 
-            spotSummaryDetailsWM.getRejectedIndices()[i] = (spotSummaryDetailsWM.getValues()[0][0] <= Math.abs(spotSummaryDetailsWM.getValues()[0][1]));
+            spotSummaryDetailsWM.getRejectedIndices()[i] = (spotSummaryDetailsWM.getValues()[0][0] <= StrictMath.abs(spotSummaryDetailsWM.getValues()[0][1]));
             countOfAcceptedSpots += spotSummaryDetailsWM.getRejectedIndices()[i] ? 0 : 1;
         }
         
@@ -117,7 +117,7 @@ public class SpotGroupProcessor {
                             }
                             double valueOfSelectedSpot = valueAndUnctOfSelectedSpot[0];
                             double oneSigmaAbsUnctOfSelectedSpot = valueAndUnctOfSelectedSpot[1];
-                            double wtdResidual = Math.abs((valueOfSelectedSpot - median) / oneSigmaAbsUnctOfSelectedSpot);
+                            double wtdResidual = StrictMath.abs((valueOfSelectedSpot - median) / oneSigmaAbsUnctOfSelectedSpot);
                             if (wtdResidual > currentMaxResidual) {
                                 currentMaxResidual = wtdResidual;
                                 indexToReject = indexOfSpots;

@@ -434,8 +434,8 @@ public class ExpressionBuilderController implements Initializable {
 
         task = squidProject.getTask();
         // update
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
-        task.updateAllExpressions(true);
+        //task.setupSquidSessionSpecsAndReduceAndReport(false);
+//        task.updateAllExpressions(true);
 
         initPropertyBindings();
         initListViews();
@@ -1969,7 +1969,7 @@ public class ExpressionBuilderController implements Initializable {
                                         .getIsotopicRatioValuesByStringName(etWMChild1.getName())).toArray(double[][]::new);
                         value = "" + squid3RoundedToSize(ratioValues[0][0], 15);
                         pctErr = "" + squid3RoundedToSize(
-                                Math.abs(ratioValues[0][1] / ratioValues[0][0]) * 100.0, 15);
+                                StrictMath.abs(ratioValues[0][1] / ratioValues[0][0]) * 100.0, 15);
                         cb = new CheckBox(String.format(columnsFormat1, "#" + spot.getSpotIndex(), spot.getFractionID(), value, pctErr));
                     } else {
                         Map<ExpressionTreeInterface, double[][]> map = spot.getTaskExpressionsEvaluationsPerSpot();
@@ -1977,7 +1977,7 @@ public class ExpressionBuilderController implements Initializable {
                             if (entry.getKey().getName().equals(etWMChild1.getName())) {
                                 value = "" + squid3RoundedToSize(entry.getValue()[0][0] / (isAgeExpression ? 1e6 : 1), 15);
                                 pctErr = "" + squid3RoundedToSize(
-                                        Math.abs(entry.getValue()[0][1] / entry.getValue()[0][0]) * 100.0, 15);
+                                        StrictMath.abs(entry.getValue()[0][1] / entry.getValue()[0][0]) * 100.0, 15);
                             }
                         }
                         cb = new CheckBox(String.format(columnsFormat1, "#" + spot.getSpotIndex(), spot.getFractionID(), value, pctErr));
@@ -2447,7 +2447,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     private double calcPercentUnct(double[] valueModel) {
-        return Math.abs(valueModel[1] / valueModel[0] * 100.0);
+        return StrictMath.abs(valueModel[1] / valueModel[0] * 100.0);
     }
 
     private ContextMenu createExpressionTextNodeContextMenu(ExpressionTextNode etn) {

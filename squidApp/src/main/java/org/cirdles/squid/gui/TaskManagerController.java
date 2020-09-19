@@ -24,13 +24,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.RowConstraints;
 
 import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
@@ -38,7 +36,6 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.USE_SIG_FIG_15;
 
 /**
  * FXML Controller class
@@ -100,7 +97,7 @@ public class TaskManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
-            USE_SIG_FIG_15 = task.isRoundingForSquid3();
+            // Sept 2020 v1.5.8 this is true USE_SIG_FIG_15 = task.isRoundingForSquid3();
             task.setupSquidSessionSpecsAndReduceAndReport(false);
             projectModeLabel.setText(squidProject.getProjectType().getProjectName() + " Mode");
             populateTaskFields();

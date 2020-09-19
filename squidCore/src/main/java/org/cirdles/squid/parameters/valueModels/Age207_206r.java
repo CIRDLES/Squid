@@ -81,14 +81,14 @@ public class Age207_206r extends ValueModel implements
             // xn = 5.0e8;
             // Noah correction sept 2013
             // xn = 10^9 * (4.5695 - 5.3011*exp(-5.4731*r207_206r) )
-            xn = 10.0e9 * (4.5695 - 5.3011 * (Math.exp(-5.4731 * r207_206rDouble)));
+            xn = 10.0e9 * (4.5695 - 5.3011 * (StrictMath.exp(-5.4731 * r207_206rDouble)));
         }
 
         for (int i = 0; i
                 < 35; i++) {
 
-            double expLambda238xnMinus1 = Math.expm1(lambda238.getValue().doubleValue() * xn);
-            double expLambda235xnMinus1 = Math.expm1(lambda235.getValue().doubleValue() * xn);
+            double expLambda238xnMinus1 = StrictMath.expm1(lambda238.getValue().doubleValue() * xn);
+            double expLambda235xnMinus1 = StrictMath.expm1(lambda235.getValue().doubleValue() * xn);
 
             double new10
                     = (expLambda235xnMinus1
@@ -152,7 +152,7 @@ public class Age207_206r extends ValueModel implements
                         //
                         //
                         //
-                        Math.expm1(lambda238.getValue().doubleValue()//
+                        StrictMath.expm1(lambda238.getValue().doubleValue()//
                                 * getValue().doubleValue()), new MathContext(15, RoundingMode.HALF_UP));
 
         BigDecimal BDexpLambda235xnMinus1 = //
@@ -160,7 +160,7 @@ public class Age207_206r extends ValueModel implements
                         //
                         //
                         //
-                        Math.expm1(lambda235.getValue().doubleValue()//
+                        StrictMath.expm1(lambda235.getValue().doubleValue()//
                                 * getValue().doubleValue()), new MathContext(15, RoundingMode.HALF_UP));
 
         BigDecimal denominator = //

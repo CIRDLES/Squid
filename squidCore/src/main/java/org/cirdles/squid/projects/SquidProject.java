@@ -16,8 +16,6 @@
 package org.cirdles.squid.projects;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,7 +29,6 @@ import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -54,7 +51,6 @@ import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstantExpression;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;

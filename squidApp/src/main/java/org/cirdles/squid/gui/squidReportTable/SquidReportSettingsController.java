@@ -887,7 +887,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private double calcPercentUnct(double[] valueModel) {
-        return Math.abs(valueModel[1] / valueModel[0] * 100.0);
+        return StrictMath.abs(valueModel[1] / valueModel[0] * 100.0);
     }
 
     private void selectInAllPanes(Expression exp, boolean scrollIfAlreadySelected) {

@@ -137,7 +137,7 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
         if ((number.compareTo(BigDecimal.ZERO) == 0)//
                 || // jan 2011 to trap for absurdly small uncertainties
-                (number.abs().doubleValue() < Math.pow(10, -1 * 15))) {
+                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
             return "0";
         } else {
             return number.round(new MathContext(//

@@ -242,7 +242,10 @@ public class FileHandler {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Task '.xml' files", "*.xml"));
         File mruFolder = new File(squidPersistentState.getMRUTaskXMLFolderPath());
         fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
-        fileChooser.setInitialFileName(task.getName().replaceAll(" ", "_") + ".xml");
+        
+        // uipdate task name to match file name
+        task.setName(task.getName().replaceAll(" ", "_").replaceAll("/", "-").replaceAll("\\\\", "-"));
+        fileChooser.setInitialFileName(task.getName() + ".xml");
 
         File taskFileXML = fileChooser.showSaveDialog(ownerWindow);
 

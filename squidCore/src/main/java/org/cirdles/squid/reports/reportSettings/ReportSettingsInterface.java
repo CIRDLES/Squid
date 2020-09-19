@@ -634,10 +634,10 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         if (!retVal[4][columnCount].trim().equalsIgnoreCase("Fraction")) {// (columnCount > 2) {
             // July 2017 removed trim() calls here
             int padLeft
-                    = Math.max(minWide,//
-                            Math.max(retVal[1][columnCount].length(), //
-                                    Math.max(retVal[2][columnCount].length(), //
-                                            Math.max(retVal[3][columnCount].length(),
+                    = StrictMath.max(minWide,//
+                            StrictMath.max(retVal[1][columnCount].length(), //
+                                    StrictMath.max(retVal[2][columnCount].length(), //
+                                            StrictMath.max(retVal[3][columnCount].length(),
                                                     retVal[4][columnCount].length() + retVal[6][columnCount].length() / 2))))//footnote length counts as half
                     - retVal[FRACTION_DATA_START_ROW][columnCount].length();
 

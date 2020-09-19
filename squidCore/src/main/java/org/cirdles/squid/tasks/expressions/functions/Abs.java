@@ -60,7 +60,7 @@ public class Abs extends Function {
         double retVal;
         try {
             double number = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
-            retVal = Math.abs(number);
+            retVal = StrictMath.abs(number);
             ;
         } catch (SquidException se) {
             retVal = 0.0;

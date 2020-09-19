@@ -75,7 +75,7 @@ public class Equal extends Operation {
                 term2 = (double) term2Object;
             }
 
-            retVal = Math.abs(term1 - term2) < SQUID_TINY_VALUE;
+            retVal = StrictMath.abs(term1 - term2) < SQUID_TINY_VALUE;
         } catch (NullPointerException | SquidException e) {
             retVal = false;
         }

@@ -235,7 +235,7 @@ public class WtdMeanACalc extends Function {
         // perform rejections if allowed
         if (!noReject) {
             for (int i = 0; i < countOfValues; i++) {
-                if ((Math.abs(oneSigmaPctUnct[i] - medianEr) > 10.0 * nMadd) || (oneSigmaPctUnct[i] == 0)) {
+                if ((StrictMath.abs(oneSigmaPctUnct[i] - medianEr) > 10.0 * nMadd) || (oneSigmaPctUnct[i] == 0)) {
                     largeErRegN++;
                     largeErrRejIndexList.add((double) i);
                 }

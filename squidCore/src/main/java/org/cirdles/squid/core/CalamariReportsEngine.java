@@ -194,17 +194,17 @@ public class CalamariReportsEngine implements Serializable {
                 throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
             }
             retVal = reportsFolder;
-        }
 
-        // get docs for folder
-        Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/SquidPerScanReportsDocumentation.pdf");
-        Path newFile = Paths.get(folderToWriteCalamariReportsPath, "SquidPerScanReportsDocumentation.pdf");
-        try (OutputStream os = new FileOutputStream(newFile.toFile())) {
+            // get docs for folder
+            Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/SquidPerScanReportsDocumentation.pdf");
+            Path newFile = Paths.get(folderToWriteCalamariReportsPath, "SquidPerScanReportsDocumentation.pdf");
+            try (OutputStream os = new FileOutputStream(newFile.toFile())) {
 
-            Files.copy(resourcePath, os);
+                Files.copy(resourcePath, os);
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
 
         prepSpeciesReportFiles(shrimpFractionUnknown);
@@ -463,7 +463,7 @@ public class CalamariReportsEngine implements Serializable {
             nDodCount = shrimpFraction.getIsotopicRatiosII().iterator().next().getRatEqTime().size();
         } catch (Exception e) {
         }
-        
+
         for (int nDodNum = 0; nDodNum < nDodCount; nDodNum++) {
             StringBuilder dataLine = new StringBuilder();
             if (doWriteReportFiles) {
@@ -623,7 +623,7 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     private double calculatePercentUncertainty(double ratioVal, double ratioFractErr) {
-        return 100.0 * ((ratioVal == 0) ? 1.0 : Math.abs(ratioFractErr / ratioVal));
+        return 100.0 * ((ratioVal == 0) ? 1.0 : StrictMath.abs(ratioFractErr / ratioVal));
     }
 
     private void prepSpeciesReportFiles(ShrimpFraction shrimpFraction) throws IOException {
@@ -736,7 +736,7 @@ public class CalamariReportsEngine implements Serializable {
         while (squidRatiosIterator.hasNext()) {
             SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
                     unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".InterpTime");
                     unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(displayNameNoSpaces).append(".Value");
@@ -762,7 +762,7 @@ public class CalamariReportsEngine implements Serializable {
             // prepare headers for any UNKNOWN task expressions
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated = shrimpFractionUnknown.getTaskExpressionsForScansEvaluated();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-                String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                String expressionName = taskExpressionEval.getExpression().getName().substring(0, StrictMath.min(20, taskExpressionEval.getExpression().getName().length()));
                 if (doWriteReportFiles) {
                     unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
                     unknownHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
@@ -780,7 +780,7 @@ public class CalamariReportsEngine implements Serializable {
             // prepare headers for any REFMAT task expressions
             taskExpressionsEvaluated = shrimpFractionRefMat.getTaskExpressionsForScansEvaluated();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
-                String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                String expressionName = taskExpressionEval.getExpression().getName().substring(0, StrictMath.min(20, taskExpressionEval.getExpression().getName().length()));
                 if (doWriteReportFiles) {
                     refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Time");
                     refMatHeaderWithinSpotRatios_PerScanMinus1.append(", ").append(expressionName).append(".Value");
@@ -833,7 +833,7 @@ public class CalamariReportsEngine implements Serializable {
         while (squidRatiosIterator.hasNext()) {
             SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
                 if (doWriteReportFiles) {
                     unknownHeaderMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".MinIndex");
                     unknownHeaderMeanRatios_PerSpot.append(", ").append(displayNameNoSpaces).append(".Value");
@@ -859,7 +859,7 @@ public class CalamariReportsEngine implements Serializable {
             // for unknowns
             Map<ExpressionTreeInterface, double[][]> spotExpressions = shrimpFractionUnknown.getTaskExpressionsEvaluationsPerSpot();
             for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-                String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
+                String expressionName = entry.getKey().getName().substring(0, StrictMath.min(20, entry.getKey().getName().length()));
                 double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
                     unknownHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".Value");
@@ -885,7 +885,7 @@ public class CalamariReportsEngine implements Serializable {
             // for reference materials ********************************************************************************
             spotExpressions = shrimpFractionRefMat.getTaskExpressionsEvaluationsPerSpot();
             for (Map.Entry<ExpressionTreeInterface, double[][]> entry : spotExpressions.entrySet()) {
-                String expressionName = entry.getKey().getName().substring(0, Math.min(20, entry.getKey().getName().length()));
+                String expressionName = entry.getKey().getName().substring(0, StrictMath.min(20, entry.getKey().getName().length()));
                 double[] expressionResults = entry.getValue()[0];
                 if (doWriteReportFiles) {
                     refMatHeaderMeanRatios_PerSpot.append(", ").append(expressionName).append(".Value");
@@ -1052,9 +1052,8 @@ public class CalamariReportsEngine implements Serializable {
         writer.println("Normalize Ion Counts for SBM");
         writer.println((squidProject.getTask().isUseSBM() ? "yes" : "no") + "\n");
 
-        writer.println("rounding");
-        writer.println("squid " + (squidProject.getTask().isRoundingForSquid3() ? "3" : "2.5") + "\n");
-
+//        writer.println("rounding");
+//        writer.println("squid " + (squidProject.getTask().isRoundingForSquid3() ? "3" : "2.5") + "\n");
         writer.println("Ratio Calculation Method");
         writer.println(squidProject.getTask().isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)" + "\n");
 

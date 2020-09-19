@@ -301,7 +301,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             // handle case of last age
             if (index == -1) {
-                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
+                if ((StrictMath.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
                     index = myOnPeakNormalizedAquireTimes.length - 1;
                 }
             }
@@ -476,7 +476,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapX(minX),
                     mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1]),
                     graphWidth,
-                    Math.abs(mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1])
+                    StrictMath.abs(mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1])
                             - mapY(weightedMeanStats[0] - 2.0 * weightedMeanStats[1])));
         } else {
             g2d.setStroke(Paint.valueOf("Blue"));
@@ -497,13 +497,13 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapX(minX),
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
                     graphWidth,
-                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+                    StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             g2d.setFill(new Color(1, 1, 224 / 255, 0.1));
             g2d.fillRect(
                     mapX(minX),
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
                     graphWidth,
-                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+                    StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             g2d.setFill(Paint.valueOf("BLACK"));
 
             // ticsY         
@@ -566,7 +566,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         text.setText(switchRefMatViewToCalibConstLookupString + (switchRefMatViewToCalibConstLookupString.contains("Age") ? " (Ma)" : ""));
 
         textWidth = (int) text.getLayoutBounds().getWidth();
-        int plotHeight = (int) Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue()));
+        int plotHeight = (int) StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue()));
         int offset = (plotHeight - textWidth) / 2;
         g2d.rotate(-90);
         g2d.fillText(text.getText(), -(mapY(ticsY[0].doubleValue())) + offset, 25);
@@ -609,7 +609,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 3,
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
                     6,
-                    Math.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+                    StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
             if (rejectedIndices[indexOfSelectedSpot]) {
                 g2d.setFill(Paint.valueOf("BLUE"));
             } else {
@@ -723,8 +723,8 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         for (int i = 0; i < myOnPeakData.length; i++) {
             if (doPlotRejectedSpots || !rejectedIndices[i]) {
-                minY = Math.min(minY, myOnPeakData[i] - onPeakTwoSigma[i]);
-                maxY = Math.max(maxY, myOnPeakData[i] + onPeakTwoSigma[i]);
+                minY = StrictMath.min(minY, myOnPeakData[i] - onPeakTwoSigma[i]);
+                maxY = StrictMath.max(maxY, myOnPeakData[i] + onPeakTwoSigma[i]);
             }
         }
 

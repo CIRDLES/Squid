@@ -74,7 +74,7 @@ public class Round extends Function {
             }
 
             if (term2Object instanceof Double) {
-                sigDigits = (int) Math.floor(((Double) term2Object).doubleValue());
+                sigDigits = (int) StrictMath.floor(((Double) term2Object).doubleValue());
             } else {
                 sigDigits = (Integer) term2Object;
             }

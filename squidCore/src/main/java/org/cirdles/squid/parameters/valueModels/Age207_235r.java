@@ -68,7 +68,7 @@ public class Age207_235r extends ValueModel implements
                     //
                     //
                     //
-                    Math.log1p( r207_235r.getValue().doubleValue() ) //
+                    StrictMath.log1p( r207_235r.getValue().doubleValue() ) //
                     / lambda235.getValue().doubleValue(), new MathContext(15, RoundingMode.HALF_UP) ) );
         } catch (Exception e) {
             setValue( BigDecimal.ZERO );
@@ -87,7 +87,7 @@ public class Age207_235r extends ValueModel implements
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda235";//dAge207_235r__dLambda235
             try {
-                BigDecimal dAge207_235r__dLambda235 =new BigDecimal( Math.log1p( r207_235r.getValue().doubleValue() ), new MathContext(15, RoundingMode.HALF_UP) ).negate().//
+                BigDecimal dAge207_235r__dLambda235 =new BigDecimal( StrictMath.log1p( r207_235r.getValue().doubleValue() ), new MathContext(15, RoundingMode.HALF_UP) ).negate().//
                         divide(lambda235.getValue().pow( 2 ), new MathContext(15, RoundingMode.HALF_UP) );
                 parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge207_235r__dLambda235 );
             } catch (Exception e) {

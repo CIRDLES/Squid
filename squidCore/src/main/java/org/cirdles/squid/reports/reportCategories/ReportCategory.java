@@ -121,7 +121,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
                     //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
                     //     needsLead, needsUranium
-                    String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                    String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
                     String[] columnSpec = new String[]{
                         "",
                         "",
@@ -158,7 +158,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
                     //     footnoteSpec, visible, useArbitrary? for value, digitcount value, unct visible (if required), description where needed,
                     //     needsLead, needsUranium
-                    String expressionName = taskExpressionEval.getExpression().getName().substring(0, Math.min(20, taskExpressionEval.getExpression().getName().length()));
+                    String expressionName = taskExpressionEval.getExpression().getName().substring(0, StrictMath.min(20, taskExpressionEval.getExpression().getName().length()));
                     String[] columnSpec = new String[]{
                         "",
                         "",
