@@ -122,6 +122,66 @@ public class SquidUIController implements Initializable {
     private static Map<String, String> taskLibraryDescriptions = new HashMap<>();
 
     @FXML
+    private ImageView squidImageView;
+
+    private static GridPane projectManagerUI;
+
+    private static VBox sessionAuditUI;
+    private static ScrollPane massesAuditUI;
+    private static HBox spotManagerUI;
+
+    private static GridPane taskManagerUI;
+    private static GridPane taskDesignerUI;
+    public static Node taskFolderBrowserUI;
+
+    private static VBox isotopesManagerUI;
+    private static ScrollPane ratiosManagerUI;
+
+    private static SplitPane expressionBuilderUI;
+
+    private static AnchorPane squidReportSettingsUI;
+
+    private static Pane reductionManagerUI;
+    private static Pane reducedDataReportManagerUI;
+    public static Node plotUI;
+    public static VBox countCorrectionsUI;
+    public static VBox commonLeadAssignmentUI;
+    public static VBox weightedMeansUI;
+
+    public static String projectFileName;
+
+    @FXML
+    private Label chinese;
+    @FXML
+    private Label japanese;
+    @FXML
+    private Label korean;
+    @FXML
+    private MenuItem choosePrawnFileMenuItem;
+    @FXML
+    private MenuItem auditRawDataMenuItem;
+    @FXML
+    private Label polish;
+    @FXML
+    private Label portuguese;
+    @FXML
+    private Label russian;
+    @FXML
+    private Label spanish;
+
+    @FXML
+    private SeparatorMenuItem dataSeparatorMenuItem;
+    @FXML
+    private Menu manageInterpretationsMenu;
+
+    public static ParametersLauncher parametersLauncher;
+    public static SquidReportTableLauncher squidReportTableLauncher;
+    public static HighlightMainMenu menuHighlighter;
+
+    public static int squidProjectOriginalHash;
+    public boolean runSaveMenuDisableCheck;
+
+    @FXML
     private Menu projectMenu;
     @FXML
     private Menu openRecentOPFileMenu;
@@ -129,8 +189,7 @@ public class SquidUIController implements Initializable {
     private MenuItem newSquidProjectFromOPFileMenuItem;
     @FXML
     private Menu manageExpressionsMenu;
-    @FXML
-    private Menu manageTasksMenu;
+
     @FXML
     private MenuItem newSquidProjectMenuItem;
     @FXML
@@ -157,33 +216,31 @@ public class SquidUIController implements Initializable {
     private MenuItem savePrawnFileCopyMenuItem;
 
     @FXML
-    private ImageView squidImageView;
+    private Menu openRecentSquidProjectMenu;
 
-    private static GridPane projectManagerUI;
+    @FXML
+    private Menu openRecentExpressionFileMenu;
+    @FXML
+    private Menu squidLabDataMenu;
+    @FXML
+    private Menu commonPbMenu;
+    @FXML
+    private MenuItem newSquidProjectFromZippedPrawnMenuItem;
+    @FXML
+    private MenuItem newSquidRatioProjectMenuItem;
 
-    private static VBox sessionAuditUI;
-    private static ScrollPane massesAuditUI;
-    private static HBox spotManagerUI;
+    @FXML
+    private MenuItem refMatConcordiaMenuItem;
+    @FXML
+    private MenuItem unknownConcordiaMenuItem;
 
-    private static GridPane taskManagerUI;
-    private static GridPane taskDesignerUI;
-
-    private static VBox isotopesManagerUI;
-    private static ScrollPane ratiosManagerUI;
-
-    private static SplitPane expressionBuilderUI;
-
-    private static AnchorPane squidReportSettingsUI;
-
-    private static Pane reductionManagerUI;
-    private static Pane reducedDataReportManagerUI;
-    public static Node plotUI;
-    public static VBox countCorrectionsUI;
-    public static VBox commonLeadAssignmentUI;
-    public static VBox weightedMeansUI;
-
-    public static String projectFileName;
-
+    // Task Menus ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    @FXML
+    private Menu manageTasksMenu;
+    @FXML
+    private MenuItem newTaskUsingDesignerMenuItem;
+    @FXML
+    private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private MenuItem importSquid25TaskMenuItem;
     @FXML
@@ -191,55 +248,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem importSquid3TaskMenuItem;
     @FXML
-    private Menu openRecentSquidProjectMenu;
-    @FXML
-    private Menu selectSquid3TaskFromLibraryMenu;
-    @FXML
-    private Menu openRecentExpressionFileMenu;
-    @FXML
-    private Menu squidLabDataMenu;
-    @FXML
-    private Label chinese;
-    @FXML
-    private Label japanese;
-    @FXML
-    private Label korean;
-    @FXML
-    private MenuItem choosePrawnFileMenuItem;
-    @FXML
-    private MenuItem auditRawDataMenuItem;
-    @FXML
-    private Label polish;
-    @FXML
-    private Label portuguese;
-    @FXML
-    private Label russian;
-    @FXML
-    private Label spanish;
-    private MenuItem newSquid3TaskFromPrefsMenuItem;
-    @FXML
-    private SeparatorMenuItem dataSeparatorMenuItem;
-    @FXML
-    private Menu manageInterpretationsMenu;
-
-    public static ParametersLauncher parametersLauncher;
-    public static SquidReportTableLauncher squidReportTableLauncher;
-    public static HighlightMainMenu menuHighlighter;
-
-    public static int squidProjectOriginalHash;
-    public boolean runSaveMenuDisableCheck;
-    @FXML
-    private Menu commonPbMenu;
-    @FXML
-    private MenuItem newSquidProjectFromZippedPrawnMenuItem;
-    @FXML
-    private MenuItem newSquidRatioProjectMenuItem;
-    @FXML
-    private MenuItem newTaskUsingDesignerMenuItem;
-    @FXML
-    private MenuItem refMatConcordiaMenuItem;
-    @FXML
-    private MenuItem unknownConcordiaMenuItem;
+    private MenuItem browseTaskFolderTaskMenuItem;
 
     /**
      * Initializes the controller class.
@@ -512,6 +521,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(weightedMeansUI);
 
         mainPane.getChildren().remove(taskDesignerUI);
+        mainPane.getChildren().remove(taskFolderBrowserUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -982,6 +992,46 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    private void launchTaskDesigner() {
+        mainPane.getChildren().remove(taskDesignerUI);
+        try {
+            taskDesignerUI = FXMLLoader.load(getClass().getResource("TaskDesigner.fxml"));
+            taskDesignerUI.setId("TaskDesigner");
+
+            AnchorPane.setLeftAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setRightAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setTopAnchor(taskDesignerUI, 0.0);
+            AnchorPane.setBottomAnchor(taskDesignerUI, 0.0);
+
+            mainPane.getChildren().add(taskDesignerUI);
+            showUI(taskDesignerUI);
+
+            menuHighlighter.highlight(manageTasksMenu);
+        } catch (IOException | RuntimeException iOException) {
+            //System.out.println("TaskDesigner >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchTaskFolderBrowser() {
+        mainPane.getChildren().remove(taskFolderBrowserUI);
+        try {
+            taskFolderBrowserUI = FXMLLoader.load(getClass().getResource("TaskFolderBrowser.fxml"));
+            taskFolderBrowserUI.setId("TaskFolderBrowser");
+
+            AnchorPane.setLeftAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setRightAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setTopAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setBottomAnchor(taskFolderBrowserUI, 0.0);
+
+            mainPane.getChildren().add(taskFolderBrowserUI);
+            showUI(taskFolderBrowserUI);
+
+            menuHighlighter.highlight(manageTasksMenu);
+        } catch (IOException | RuntimeException iOException) {
+            //System.out.println("taskFolderBrowserUI >>>>   " + iOException.getMessage());
+        }
+    }
+
     private void launchIsotopesManager() {
         try {
             isotopesManagerUI = FXMLLoader.load(getClass().getResource("IsotopesManager.fxml"));
@@ -1075,26 +1125,6 @@ public class SquidUIController implements Initializable {
             menuHighlighter.highlight(manageReportsMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("reducedDataReportManagerUI >>>>   " + iOException.getMessage());
-        }
-    }
-
-    private void launchTaskDesigner() {
-        mainPane.getChildren().remove(taskDesignerUI);
-        try {
-            taskDesignerUI = FXMLLoader.load(getClass().getResource("TaskDesigner.fxml"));
-            taskDesignerUI.setId("TaskDesigner");
-
-            AnchorPane.setLeftAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setRightAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setTopAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setBottomAnchor(taskDesignerUI, 0.0);
-
-            mainPane.getChildren().add(taskDesignerUI);
-            showUI(taskDesignerUI);
-
-            menuHighlighter.highlight(manageTasksMenu);
-        } catch (IOException | RuntimeException iOException) {
-            //System.out.println("TaskDesigner >>>>   " + iOException.getMessage());
         }
     }
 
@@ -1960,7 +1990,12 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void loadTaskFromLibraryAction(ActionEvent event) {
+    private void browseTaskFolderTaskMenuItemAction(ActionEvent event) {
+        File tasksFolder = FileHandler.selectTasksFolderForBrowsing(primaryStageWindow);
+        if (tasksFolder != null) {
+            TaskFolderBrowserController.tasksFolder = tasksFolder;
+            launchTaskFolderBrowser();
+        } 
     }
 
     private class HighlightMainMenu {

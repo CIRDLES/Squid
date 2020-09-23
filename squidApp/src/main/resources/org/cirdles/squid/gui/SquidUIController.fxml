@@ -66,8 +66,10 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="newTaskUsingDesignerMenuItem" mnemonicParsing="false" onAction="#showTaskDesignerAction" text="New Task using Task Design Assistant" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" onAction="#loadTaskFromLibraryAction" text="Load Task from Squid Task Library" />
+                        <Menu fx:id="selectSquid3TaskFromLibraryMenu" mnemonicParsing="false" text="Load Task from Squid Task Library" />
                         <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Load Task from Squid Task '.xml' File" />
+                  <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false" onAction="#browseTaskFolderTaskMenuItemAction" text="Browse Folder of Squid Tasks" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Load Task from Squid 2.* Task Excel File" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Save Task to Squid Task '.xml' File" />

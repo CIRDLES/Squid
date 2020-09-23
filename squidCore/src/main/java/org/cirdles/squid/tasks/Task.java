@@ -3707,8 +3707,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged,
                 specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum,
                 providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName,
-                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType,
-                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
+                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+//                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         System.out.println(result);
         return result;

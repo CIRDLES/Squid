@@ -362,7 +362,7 @@ public class TaskDesignerController implements Initializable {
         }
     }
 
-    private StackPane makeMassStackPane(String massName, String color) {
+    public static StackPane makeMassStackPane(String massName, String color) {
         Text massText = new Text(massName);
         massText.setFont(new Font("Monospaced Bold", 12));
         if (massName.compareTo(DEFAULT_BACKGROUND_MASS_LABEL) == 0) {
@@ -381,7 +381,7 @@ public class TaskDesignerController implements Initializable {
         return mass;
     }
 
-    private VBox makeRatioVBox(String ratioName) {
+    public static VBox makeRatioVBox(String ratioName) {
         String[] numDen = ratioName.split("/");
         Text num = new Text(numDen[0]);
         num.setFont(new Font("Monospaced Bold", 12));

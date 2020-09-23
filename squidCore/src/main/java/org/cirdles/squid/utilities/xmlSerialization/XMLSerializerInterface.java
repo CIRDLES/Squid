@@ -80,7 +80,7 @@ public interface XMLSerializerInterface {
             customizeXstream(xstream);
 
             myModelClassInstance = xstream.fromXML(reader);
-        } catch (IOException iOException) {
+        } catch (Exception  iOException) {
             // do nothing for now
         }
 
