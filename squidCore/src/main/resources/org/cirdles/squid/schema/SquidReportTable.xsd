@@ -1,66 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-           attributeFormDefault="unqualified" 
-           elementFormDefault="qualified" 
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
-    <xs:annotation>
-        <xs:documentation xml:lang="en">
-            This schema defines the contents of a Squid Report Table.
+    
+  <xs:annotation>
+    <xs:documentation xml:lang="en">
+      This schema defines the contents of a Squid Report Table.
 
-            Copyright 2019-2020 CIRDLES.org
+      Copyright 2019-2020 CIRDLES.org
 
-            Licensed under the Apache License, Version 2.0 (the "License");
-            you may not use this file except in compliance with the License.
-            You may obtain a copy of the License at
+      Licensed under the Apache License, Version 2.0 (the "License");
+      you may not use this file except in compliance with the License.
+      You may obtain a copy of the License at
 
-            http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
-            Unless required by applicable law or agreed to in writing, software
-            distributed under the License is distributed on an "AS IS" BASIS,
-            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-            See the License for the specific language governing permissions and
-            limitations under the License.
+      Unless required by applicable law or agreed to in writing, software
+      distributed under the License is distributed on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+      See the License for the specific language governing permissions and
+      limitations under the License.
 
-            Author: James F. Bowring[smtp:bowring@gmail.com]
-            Created: September.2020
-            
-        </xs:documentation>
-    </xs:annotation> 
+      Author: James F. Bowring[smtp:bowring@gmail.com]
+      Created: September.2020
 
+    </xs:documentation>
+  </xs:annotation>
+  
   <xs:element name="SquidReportTable">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="reportTableName" type="xs:string"/>
-        <xs:element name="reportCategories" minOccurs="0">
+        <xs:element name="reportTableName" type="xs:string" />
+        <xs:element name="reportCategories">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="SquidReportCategory" maxOccurs="unbounded">
+              <xs:element maxOccurs="unbounded" name="reportCategory">
                 <xs:complexType>
                   <xs:sequence>
-                    <xs:element name="displayName" type="xs:string"/>
-                    <xs:element name="categoryColumns" minOccurs="0">
+                    <xs:element name="displayName" type="xs:string" />
+                    <xs:element name="categoryColumns">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element name="SquidReportColumn" maxOccurs="unbounded">
+                          <xs:element maxOccurs="unbounded" name="SquidReportColumn">
                             <xs:complexType>
                               <xs:sequence>
-                                <xs:element name="expressionName" type="xs:string"/>
+                                <xs:element name="expressionName" type="xs:string" />
                                 <xs:element name="units" type="xs:string" minOccurs="0"/>
-                                <xs:element name="uncertaintyColumn" minOccurs="0"/>
-                                <xs:element name="amUncertaintyColumn" type="xs:boolean"/>
+                                <xs:element name="uncertaintyColumn" type="xs:string" minOccurs="0"/>
+                                <xs:element name="amUncertaintyColumn" type="xs:boolean" />
                                 <xs:element name="uncertaintyDirective" type="xs:string" minOccurs="0"/>
-                                <xs:element name="countOfSignificantDigits" type="xs:int"/>
-                                <xs:element name="visible" type="xs:boolean"/>
-                                <xs:element name="footnoteSpec" type="xs:string" minOccurs="0"/>
+                                <xs:element name="countOfSignificantDigits" type="xs:int" />
+                                <xs:element name="visible" type="xs:boolean" />
+                                <xs:element name="footnoteSpec" minOccurs="0"/>
                               </xs:sequence>
                             </xs:complexType>
                           </xs:element>
                         </xs:sequence>
                       </xs:complexType>
                     </xs:element>
-                    <xs:element name="visible" type="xs:boolean"/>
+                    <xs:element name="visible" type="xs:boolean" />
                   </xs:sequence>
                 </xs:complexType>
               </xs:element>
@@ -68,8 +69,8 @@
           </xs:complexType>
         </xs:element>
         <xs:element name="reportSpotTarget" type="spotTypes" minOccurs="0"/>
-        <xs:element name="isDefault" type="xs:boolean"/>
-        <xs:element name="version" type="xs:int"/>
+        <xs:element name="isDefault" type="xs:boolean" />
+        <xs:element name="version" type="xs:int" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -81,4 +82,5 @@
       <xs:enumeration value="NONE"/>
     </xs:restriction>
   </xs:simpleType>
+  
 </xs:schema>

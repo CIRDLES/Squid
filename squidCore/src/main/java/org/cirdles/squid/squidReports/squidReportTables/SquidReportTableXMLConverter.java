@@ -73,6 +73,9 @@ public class SquidReportTableXMLConverter implements Converter {
             reader.moveUp();
             reader.moveDown();
         }
+        else{
+            table.setReportSpotTarget(SpotTypes.NONE);
+        }
 
         table.setIsDefault(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();

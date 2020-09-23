@@ -26,12 +26,13 @@ public class SquidReportTableXSDValidationTest {
     @Test
     public void defaultRefMatTableTest(){
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        ResourceExtractor squidReportTableExtractor = new ResourceExtractor(SquidReportTableXSDValidationTest.class);
+        ResourceExtractor squidReportTableSchemaExtractor = new ResourceExtractor(Squid.class);
+        ResourceExtractor testSquidReportTableExtractor = new ResourceExtractor(SquidReportTableXSDValidationTest.class);
         boolean validates = false;
         try {
-            final File squidReportTableSchema = squidReportTableExtractor.extractResourceAsFile("SquidReportTable.xsd");
+            final File squidReportTableSchema = squidReportTableSchemaExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
-            final File defaultRefMatXML = squidReportTableExtractor.extractResourceAsFile("defaultRefMat.xml");
+            final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("Default Squid3 Report Table for Reference Materials Test1.xml");
             validates = FileValidator.validateFileIsXMLSerializedEntity(defaultRefMatXML, schema);
         } catch (SAXException e) {
         }
