@@ -70,7 +70,7 @@ public class Log extends Function {
 
         double retVal;
         try {
-            retVal = Math.log10(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+            retVal = StrictMath.log10(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (SquidException se) {
             retVal = 0.0;
         }

@@ -136,7 +136,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
                         if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                             // index should be 1 from constructor
-                            values[1] = Math.abs(values[1] / values[0] * 100.0);
+                            values[1] = StrictMath.abs(values[1] / values[0] * 100.0);
                         }
 
                         // july 2018

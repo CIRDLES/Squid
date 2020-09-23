@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskDesignerController">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
         <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
@@ -206,6 +206,7 @@
                 <Label prefHeight="28.0" prefWidth="188.0" style="-fx-font-size: 14;" text="Reset Masses &amp; Ratios from:" />
                 <Button mnemonicParsing="false" onAction="#blankTaskAction" prefHeight="30.0" text="Blank" />
                 <Button fx:id="fromCurrentTaskBtn" mnemonicParsing="false" onAction="#currentTaskAction" prefHeight="30.0" text="Current Task" />
+            <Button fx:id="fromCurrentTaskPlusExpBtn" layoutX="291.0" layoutY="10.0" mnemonicParsing="false" onAction="#currentTaskPlusExpAction" prefHeight="30.0" text="Current Task+Exp" />
                 <Button mnemonicParsing="false" onAction="#mass9TaskAction" prefHeight="30.0" text="Default 9-mass" />
                 <Button mnemonicParsing="false" onAction="#mass10TaskAction" prefHeight="30.0" text="Default 10-mass" />
                 <Button mnemonicParsing="false" onAction="#mass11TaskAction" prefHeight="30.0" text="Default 11-mass" />

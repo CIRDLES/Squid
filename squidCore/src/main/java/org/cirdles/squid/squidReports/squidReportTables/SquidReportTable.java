@@ -341,7 +341,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         while (squidRatiosIterator.hasNext()) {
             SquidRatiosModel entry = squidRatiosIterator.next();
             if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, Math.min(20, entry.getDisplayNameNoSpaces().length()));
+                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
                 rawNuclideRatios.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(displayNameNoSpaces));
             }
         }

@@ -58,7 +58,7 @@ public class Exp extends Function {
 
         double retVal;
         try {
-            retVal = Math.exp(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
+            retVal = StrictMath.exp(convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0]);
         } catch (Exception e) {
             retVal = 0.0;
         }

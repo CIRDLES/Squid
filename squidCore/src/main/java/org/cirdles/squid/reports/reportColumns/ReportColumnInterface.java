@@ -341,7 +341,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             retVal = numericString.substring(0, totalStringLength - 1);
         } else {
             // pad left
-            retVal = twentyFiveSpaces.substring(0, Math.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
+            retVal = twentyFiveSpaces.substring(0, StrictMath.abs(countOfLeadingDigits - indexOfPoint)) + numericString;
         }
 
         // pad right
@@ -713,7 +713,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
         if ((number.compareTo(BigDecimal.ZERO) == 0)//
                 || // jan 2011 to trap for absurdly small uncertainties
-                (number.abs().doubleValue() < Math.pow(10, -1 * 15))) {
+                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
             return "0";
         } else {
             return number.round(new MathContext(//

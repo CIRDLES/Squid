@@ -61,7 +61,7 @@ public class Max extends Function {
         try {
             double leftNumber = convertObjectArrayToDoubles(childrenET.get(0).eval(shrimpFractions, task)[0])[0];
             double rightNumber = convertObjectArrayToDoubles(childrenET.get(1).eval(shrimpFractions, task)[0])[0];
-            retVal = Math.max(leftNumber, rightNumber);
+            retVal = StrictMath.max(leftNumber, rightNumber);
         } catch (SquidException se) {
             retVal = 0.0;
         }

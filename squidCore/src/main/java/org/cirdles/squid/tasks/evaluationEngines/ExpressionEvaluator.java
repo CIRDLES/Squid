@@ -133,7 +133,7 @@ public class ExpressionEvaluator {
                     if (doProceed) {
                         double redPk1Ht = shrimpFraction.getReducedPkHt()[scanNum][isotopeIndices[i]];
 
-                        if (Math.abs(redPk1Ht - SQUID_ERROR_VALUE) < SQUID_EPSILON || Math.abs(redPk2Ht - SQUID_ERROR_VALUE) < SQUID_EPSILON) {
+                        if (StrictMath.abs(redPk1Ht - SQUID_ERROR_VALUE) < SQUID_EPSILON || StrictMath.abs(redPk2Ht - SQUID_ERROR_VALUE) < SQUID_EPSILON) {
                             doProceed = false;
                         }
 
@@ -146,7 +146,7 @@ public class ExpressionEvaluator {
                             } else {
                                 pkInterp[scanNum][isotopeIndices[i]] = (fractLessInterpTime * redPk1Ht) + (fractInterpTime * redPk2Ht);
                                 double pkF2 = shrimpFraction.getReducedPkHtFerr()[scanNum + 1][isotopeIndices[i]];
-                                pkInterpFerr[scanNum][isotopeIndices[i]] = Math.sqrt((fractLessInterpTime * pkF1) * (fractLessInterpTime * pkF1)
+                                pkInterpFerr[scanNum][isotopeIndices[i]] = StrictMath.sqrt((fractLessInterpTime * pkF1) * (fractLessInterpTime * pkF1)
                                         + (fractInterpTime * pkF2) * (fractInterpTime * pkF2));
                             }
                         }
@@ -188,12 +188,12 @@ public class ExpressionEvaluator {
 
                     } // end of visiting each isotope and perturbing equation
 
-                    eqFerr = Math.sqrt(fVar);
+                    eqFerr = StrictMath.sqrt(fVar);
 
                     // now that expression and its error are calculated
                     if (eqFerr != 0.0) {
                         eqValList.add(eqValTmp);
-                        absErrList.add(Math.abs(eqFerr * eqValTmp));
+                        absErrList.add(StrictMath.abs(eqFerr * eqValTmp));
                         fractErrList.add(eqFerr);
                         double totRatTime = 0.0;
                         int numPksInclDupes = 0;
@@ -247,7 +247,7 @@ public class ExpressionEvaluator {
                 double sigmaIntercept = wtdLinCorrResults.getSigmaIntercept();
 
                 meanEq = (slope * midTime) + wtdLinCorrResults.getIntercept();
-                meanEqSig = Math.sqrt((midTime * sigmaSlope * midTime * sigmaSlope)//
+                meanEqSig = StrictMath.sqrt((midTime * sigmaSlope * midTime * sigmaSlope)//
                         + sigmaIntercept * sigmaIntercept //
                         + 2.0 * midTime * wtdLinCorrResults.getCovSlopeInter());
 
@@ -263,7 +263,7 @@ public class ExpressionEvaluator {
 //            if (meanEq == 0.0) {
 //                eqValFerr = 1.0;
 //            } else {
-//                eqValFerr = Math.abs(meanEqSig / meanEq);
+//                eqValFerr = StrictMath.abs(meanEqSig / meanEq);
 //            }
 
             // for consistency with Bodorkos documentation
@@ -272,7 +272,7 @@ public class ExpressionEvaluator {
             double[] ratEqErr = new double[eqVal.length];
             for (int i = 0; i < ratEqErr.length; i++) {
                 // calculates 1 sigma abs unct
-                ratEqErr[i] = Math.abs(eqVal[i] * fractErr[i]);
+                ratEqErr[i] = StrictMath.abs(eqVal[i] * fractErr[i]);
             }
 
 //            // April 2017 rounding of ratEqVal, meanEq, and eqValFerr occurs within this constructor

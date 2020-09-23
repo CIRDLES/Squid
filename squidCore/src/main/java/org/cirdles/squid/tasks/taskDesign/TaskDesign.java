@@ -28,8 +28,8 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
@@ -80,12 +80,14 @@ public class TaskDesign implements Serializable {
     protected int indexOfBackgroundSpecies;
 
     protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
-    
+
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel commonPbModel;
-    
+
     // part of savable defaults
     protected String analystName;
+
+    private List<Expression> customTaskExpressions;
 
     /**
      * Creates a new instance of TaskDesign
@@ -115,7 +117,7 @@ public class TaskDesign implements Serializable {
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
-        
+
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
@@ -125,8 +127,10 @@ public class TaskDesign implements Serializable {
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
 
         indexOfBackgroundSpecies = 5;
-        
+
         this.analystName = "";
+
+        this.customTaskExpressions = new ArrayList<>();
 
         buildShrimpSpeciesNodeMap();
     }
@@ -481,7 +485,7 @@ public class TaskDesign implements Serializable {
      * @return the analystName
      */
     public String getAnalystName() {
-        if (analystName == null){
+        if (analystName == null) {
             analystName = "";
         }
         return analystName;
@@ -492,5 +496,22 @@ public class TaskDesign implements Serializable {
      */
     public void setAnalystName(String analystName) {
         this.analystName = analystName;
+    }
+
+    /**
+     * @return the customTaskExpressions
+     */
+    public List<Expression> getCustomTaskExpressions() {
+        if (customTaskExpressions == null) {
+            customTaskExpressions = new ArrayList<>();
+        }
+        return customTaskExpressions;
+    }
+
+    /**
+     * @param customTaskExpressions the customTaskExpressions to set
+     */
+    public void setCustomTaskExpressions(List<Expression> customTaskExpressions) {
+        this.customTaskExpressions = customTaskExpressions;
     }
 }

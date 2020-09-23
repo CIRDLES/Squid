@@ -95,6 +95,7 @@ public class Divide extends Operation {
 
         // April 2017 constrain quotient to mimic VBA results for isotopic ratios
         // by providing only 12 significant digits per Simon Bodorkos
+        // deprecated sept 202 v1.5.8 with all 15 digit rounding
         if (childrenET.get(0) instanceof ShrimpSpeciesNode) {
             retVal = squid3RoundedToSize(retVal, 12);
         }

@@ -194,7 +194,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         if ((number.compareTo(BigDecimal.ZERO) == 0)//
                 || // jan 2011 to trap for absurdly small uncertainties
                 // july 2011 added abs to handle negative values in tripoli alphas
-                (number.abs().doubleValue() < Math.pow(10, -1 * 15))) {
+                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
             return "0";
         } else {
             return number.round(new MathContext(//

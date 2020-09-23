@@ -295,7 +295,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
             // handle case of last age
             if (index == -1) {
-                if ((Math.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
+                if ((StrictMath.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
                     index = myOnPeakNormalizedAquireTimes.length - 1;
                 }
             }
@@ -364,7 +364,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                 g2d.fillRect(
                         mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]]) - 2f,
                         0,
-                        Math.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index + 1] - 1])
+                        StrictMath.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index + 1] - 1])
                                 - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]])) + 4f,
                         height);
             }
@@ -525,14 +525,14 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         // on peak
         for (int i = 0; i < myOnPeakData.length; i++) {
-            minMassAMU = Math.min(minMassAMU, myOnPeakData[i]);
-            maxMassAMU = Math.max(maxMassAMU, myOnPeakData[i]);
+            minMassAMU = StrictMath.min(minMassAMU, myOnPeakData[i]);
+            maxMassAMU = StrictMath.max(maxMassAMU, myOnPeakData[i]);
         }
         peakTukeysMeanAndUnct = SquidMathUtils.tukeysBiweight(myOnPeakData, 9.0);
 
         // force plot max and min
-        minY = Math.min(minMassAMU, peakTukeysMeanAndUnct[0]) - 0.0002;
-        maxY = Math.max(maxMassAMU, peakTukeysMeanAndUnct[0]) + 0.0002;
+        minY = StrictMath.min(minMassAMU, peakTukeysMeanAndUnct[0]) - 0.0002;
+        maxY = StrictMath.max(maxMassAMU, peakTukeysMeanAndUnct[0]) + 0.0002;
 
         // adjust margins
         double yMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minY, maxY, 0.05);
