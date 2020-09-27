@@ -1697,12 +1697,19 @@ public class SquidUIController implements Initializable {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 
             File[] files;
+            LinkedList<File> validatedFiles = new LinkedList<File>();
             try {
                 final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
-                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml")
-                        && FileValidator.validateFileIsXMLSerializedEntity(f, schema));
-            } catch (SAXException e) {
                 files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
+                for (File file : files) {
+                    try{
+                        FileValidator.validateFileIsXMLSerializedEntity(file, schema);
+                        validatedFiles.add(file);
+                    }
+                    catch (SAXException|IOException e){
+                    }   
+                }
+            } catch (SAXException e) {
             }
 
             final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
@@ -1717,9 +1724,9 @@ public class SquidUIController implements Initializable {
             alert.initOwner(primaryStage.getScene().getWindow());
             alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
             alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
-            for (int i = 0; i < files.length; i++) {
+            for (File file : validatedFiles) {
                 try {
-                    final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
+                    final Expression exp = (Expression) (new Expression()).readXMLObject(file.getAbsolutePath(), false);
 
                     if (expressions.contains(exp)) {
                         if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
@@ -1762,7 +1769,7 @@ public class SquidUIController implements Initializable {
                         expressions.add(exp);
                     }
                 } catch (Exception e) {
-                    System.out.println(files[i].getName() + " custom expression not added");
+                    System.out.println(file.getName() + " custom expression not added");
                 }
             }
 

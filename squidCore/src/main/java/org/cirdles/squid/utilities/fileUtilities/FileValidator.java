@@ -86,16 +86,13 @@ public class FileValidator {
     }
     */
 
-    public static boolean validateFileIsXMLSerializedEntity(File serializedFile, Schema schema) {
+    public static boolean validateFileIsXMLSerializedEntity(File serializedFile, Schema schema) 
+    throws SAXException, IOException {
         boolean retVal = false;
         Source source = new StreamSource(serializedFile);
         Validator validator = schema.newValidator();
-        try {
-            validator.validate(source);
-            retVal = true;
-        } catch (SAXException | IOException e) {
-            e.printStackTrace();
-        }
+        validator.validate(source);
+        retVal = true;
         return retVal;
     }
 }

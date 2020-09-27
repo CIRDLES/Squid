@@ -6,6 +6,7 @@
 package org.cirdles.squid.squidReports.squidReportTables;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
@@ -34,7 +35,7 @@ public class SquidReportTableXSDValidationTest {
             final Schema schema = sf.newSchema(squidReportTableSchema);
             final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("DefaultSquid3ReportTableforReferenceMaterialsTest.xml");
             validates = FileValidator.validateFileIsXMLSerializedEntity(defaultRefMatXML, schema);
-        } catch (SAXException e) {
+        } catch (SAXException|IOException e) {
         }
         finally {
             assertTrue(validates);
