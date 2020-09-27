@@ -1201,29 +1201,30 @@ public class SquidReportSettingsController implements Initializable {
                             }
                         }
                     }
-
-
                 }
+                
                 // Switch to spot target of imported report table if necessary
+                boolean switchButton = false;
                 if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = false;
                     unknownsRadioButton.fire();
-
-                    if (!isRefMat && table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
-                        isRefMat = true;
-                        refMatRadioButton.fire();
-
-                    }
-
+                    switchButton = true;
+                }   
+                else if (!isRefMat && table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                    isRefMat = true;
+                    refMatRadioButton.fire();
+                    switchButton = true;
+                }
+                
+                if (switchButton){
                     populateSquidReportTableChoiceBox();
                     selectSquidReportTableByPriors();
                     populateExpressionListViews();
                     populateIsotopesListView();
                     populateRatiosListView();
                     populateSpotMetaDataListView();
-
                 }
-
+                
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(table);
                 if (indexOfSameNameTable >= 0) {
