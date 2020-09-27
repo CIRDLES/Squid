@@ -1175,7 +1175,7 @@ public class SquidReportSettingsController implements Initializable {
             final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
             tableValidates = FileValidator.validateFileIsXMLSerializedEntity(file, schema);
         } catch (IOException | SAXException e) {
-            SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
+            SquidMessageDialog.showWarningDialog("Table could not be validated against schema...", primaryStageWindow);
         }
         if (file != null && tableValidates) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
