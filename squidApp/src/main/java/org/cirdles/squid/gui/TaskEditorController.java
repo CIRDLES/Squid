@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +42,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -67,7 +69,6 @@ import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
@@ -85,6 +86,9 @@ import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -94,10 +98,11 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class TaskDesignerController implements Initializable {
+public class TaskEditorController implements Initializable {
 
     private TaskDesign taskDesigner;
 
+    public static TaskInterface existingTaskToEdit = null;
     // handle for closing stage when Squid closes
     public static final Stage ADD_RATIOS_STAGE = new Stage();
 
@@ -143,6 +148,12 @@ public class TaskDesignerController implements Initializable {
     private Button chooseMassesButton;
     @FXML
     private Button chooseRatiosButton;
+    @FXML
+    private TextField taskNameTextField;
+    @FXML
+    private TextField taskDescriptionTextField;
+    @FXML
+    private TextField provenanceTextField;
 
     private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
@@ -167,10 +178,20 @@ public class TaskDesignerController implements Initializable {
     private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
     private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
     private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
+
+    public static Squid3Constants.TaskEditTypeEnum editType = Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
     @FXML
-    private Button fromCurrentTaskBtn;
+    private TextArea customExpressionTextArea;
     @FXML
-    private Button fromCurrentTaskPlusExpBtn;
+    private Label directivesLabel;
+    @FXML
+    private Label primaryDPLabel;
+    @FXML
+    private Label secondaryDPLabel;
+
+    private boolean amGeochronMode;
+    @FXML
+    private Text hintLabel;
 
     {
         addBtnHBox.setAlignment(Pos.CENTER);
@@ -246,12 +267,42 @@ public class TaskDesignerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
 
+        taskDesigner = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+        switch (editType) {
+            case EDIT_CURRENT:
+                squidProject.getTask().updateTaskDesignFromTask(taskDesigner, true);
+                break;
+            case EDIT_COPY_CURRENT:
+                SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, true);
+                taskDesigner.setName("COPY_OF_" + taskDesigner.getName());
+                break;
+            case EDIT_COPY_CURRENT_NO_EXP:
+                SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, false);
+                taskDesigner.setName("COPY_OF_" + taskDesigner.getName());
+                break;
+            case EDIT_EMPTY:
+                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
+                break;
+            case EDIT_DEFAULT_9_MASS:
+                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
+                break;
+            case EDIT_DEFAULT_10_MASS:
+                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
+                break;
+            case EDIT_DEFAULT_11_MASS:
+                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
+                break;
+            case EDIT_EXISTING_TASK:
+                existingTaskToEdit.updateTaskDesignFromTask(taskDesigner, true);
+                break;
+        }
+        amGeochronMode = taskDesigner.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
+
         initTaskDesign();
     }
 
     private void initTaskDesign() {
         taskDesigner = SquidPersistentState.getExistingPersistentState().getTaskDesign();
-
         // update to project having parameters spring 2020
         taskDesigner.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
         taskDesigner.setCommonPbModel(squidProject.getCommonPbModel());
@@ -264,6 +315,9 @@ public class TaskDesignerController implements Initializable {
 
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getTaskType().getName())).setSelected(true);
 
+        taskNameTextField.setText(taskDesigner.getName());
+        taskDescriptionTextField.setText(taskDesigner.getDescription());
+        provenanceTextField.setText(taskDesigner.getDescription());
         authorsNameTextField.setText(taskDesigner.getAuthorName());
         labNameTextField.setText(taskDesigner.getLabName());
 
@@ -272,10 +326,31 @@ public class TaskDesignerController implements Initializable {
         populateMasses();
         populateRatios();
 
-        namedExpressionsMap = taskDesigner.buildNamedExpressionsMap();
+        if (amGeochronMode) {
+            namedExpressionsMap = taskDesigner.buildNamedExpressionsMap();
+            populateDirectives();
+            showPermutationPlayers();
+        } else {
+            uncorrConstPbUlabel.setVisible(false);
+            uncorrConstPbThlabel.setVisible(false);
+            th232U238Label.setVisible(false);
+            parentConcLabel.setVisible(false);
+            uncorrConstPbUExpressionText.setVisible(false);
+            uncorrConstPbThExpressionText.setVisible(false);
+            parentConcExpressionText.setVisible(false);
+            pb208Th232ExpressionText.setVisible(false);
+            ((RadioButton) taskManagerGridPane.lookup("#232")).setVisible(false);
+            ((RadioButton) taskManagerGridPane.lookup("#238")).setVisible(false);
+            ((RadioButton) taskManagerGridPane.lookup("#direct")).setVisible(false);
+            ((RadioButton) taskManagerGridPane.lookup("#indirect")).setVisible(false);
+            directivesLabel.setVisible(false);
+            primaryDPLabel.setVisible(false);
+            secondaryDPLabel.setVisible(false);
+            hintLabel.setVisible(false);
 
-        populateDirectives();
-        showPermutationPlayers();
+        }
+
+        populateCustomExpressionsText();
 
         chooseMassesButton.setOnMouseClicked((event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
@@ -292,26 +367,52 @@ public class TaskDesignerController implements Initializable {
         });
     }
 
+    private void populateCustomExpressionsText() {
+        StringBuilder customExp = new StringBuilder();
+        customExp.append("List of Custom Expression Names: \n");
+        int counter = 0;
+        for (Expression exp : taskDesigner.getCustomTaskExpressions()) {
+            counter++;
+            customExp.append("\t").append(exp.getName()).append(genSpaces(exp.getName()));
+            if (counter % 3 == 0) {
+                customExp.append("\n");
+            }
+        }
+
+        customExpressionTextArea.setText(customExp.toString());
+    }
+
+    private String genSpaces(String name) {
+        String retVal = "";
+        for (int i = name.length(); i < 25; i++) {
+            retVal += " ";
+        }
+        return retVal;
+    }
+
     private void populateMasses() {
         defaultMassesListTextFlow.getChildren().clear();
         defaultMassesListTextFlow.setMaxHeight(30);
         List<String> allMasses = new ArrayList<>();
-        allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        if (amGeochronMode) {
+            allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        }
         allMasses.addAll(taskDesigner.getNominalMasses());
 
         Collections.sort(allMasses, new IntuitiveStringComparator<>());
 
-        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-        if (taskDesigner.getIndexOfBackgroundSpecies() >= 0) {
-            allMasses.add((allMasses.size() > taskDesigner.getIndexOfBackgroundSpecies()
-                    ? taskDesigner.getIndexOfBackgroundSpecies() : allMasses.size()),
-                    DEFAULT_BACKGROUND_MASS_LABEL);
-        }
-
+//        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+//        if (taskDesigner.getIndexOfBackgroundSpecies() >= 0) {
+//            allMasses.add((allMasses.size() > taskDesigner.getIndexOfBackgroundSpecies()
+//                    ? taskDesigner.getIndexOfBackgroundSpecies() : allMasses.size()),
+//                    DEFAULT_BACKGROUND_MASS_LABEL);
+//        }
         int count = 1;
         for (String mass : allMasses) {
             StackPane massText;
-            if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+            if (count == taskDesigner.getIndexOfBackgroundSpecies() + 1) {
+                massText = makeMassStackPane(mass, "Aquamarine");
+            } else if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
                 massText = makeMassStackPane(mass, "pink");
             } else {
                 massText = makeMassStackPane(mass, "white");
@@ -321,6 +422,7 @@ public class TaskDesignerController implements Initializable {
                         undoMassesList.add(0, massText);
                         taskDesigner.removeNominalMass(mass);
                         namedExpressionsMap = taskDesigner.buildNamedExpressionsMap();
+                        populateMasses();
                         populateRatios();
                         refreshExpressionAudits();
                     }
@@ -336,11 +438,14 @@ public class TaskDesignerController implements Initializable {
         defaultRatiosListTextFlow.setMaxHeight(30);
         List<String> ratioNamesR = REQUIRED_RATIO_NAMES;
         int count = 1;
-        for (String ratioName : ratioNamesR) {
-            VBox ratio = makeRatioVBox(ratioName);
-            ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
-            ratio.setTranslateX(1 * count++);
-            defaultRatiosListTextFlow.getChildren().add(ratio);
+
+        if (amGeochronMode) {
+            for (String ratioName : ratioNamesR) {
+                VBox ratio = makeRatioVBox(ratioName);
+                ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
+                ratio.setTranslateX(1 * count++);
+                defaultRatiosListTextFlow.getChildren().add(ratio);
+            }
         }
 
         List<String> ratioNames = taskDesigner.getRatioNames();
@@ -365,9 +470,9 @@ public class TaskDesignerController implements Initializable {
     public static StackPane makeMassStackPane(String massName, String color) {
         Text massText = new Text(massName);
         massText.setFont(new Font("Monospaced Bold", 12));
-        if (massName.compareTo(DEFAULT_BACKGROUND_MASS_LABEL) == 0) {
-            massText.setFill(Paint.valueOf("red"));
-        }
+//        if (massName.compareTo(DEFAULT_BACKGROUND_MASS_LABEL) == 0) {
+//            massText.setFill(Paint.valueOf("red"));
+//        }
 
         Shape circle = new Ellipse(15, 15, 20, 14);
         circle.setFill(Paint.valueOf(color));
@@ -405,7 +510,6 @@ public class TaskDesignerController implements Initializable {
     private void populateDirectives() {
         updateDirectiveButtons();
 
-        fromCurrentTaskBtn.setDisable(squidProject == null);
         ((RadioButton) taskManagerGridPane.lookup("#" + taskDesigner.getParentNuclide())).setSelected(true);
         ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskDesigner.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
@@ -446,6 +550,17 @@ public class TaskDesignerController implements Initializable {
     }
 
     private void setupListeners() {
+        taskNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            taskDesigner.setName(newValue);
+        });
+
+        taskDescriptionTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            taskDesigner.setDescription(newValue);
+        });
+
+        provenanceTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            taskDesigner.setProvenance(newValue);
+        });
 
         authorsNameTextField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             taskDesigner.setAuthorName(newValue);
@@ -655,8 +770,9 @@ public class TaskDesignerController implements Initializable {
                 List<String> masses = new ArrayList<>();
                 masses.addAll(REQUIRED_NOMINAL_MASSES);
                 masses.addAll(taskDesigner.getNominalMasses());
-                masses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+                //                 DEFAULT_BACKGROUND_MASS_LABEL);
                 Collections.sort(masses, new IntuitiveStringComparator<>());
+                masses.remove(taskDesigner.getIndexOfBackgroundSpecies());
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
                 for (String mass : masses) {
@@ -697,11 +813,15 @@ public class TaskDesignerController implements Initializable {
         massName.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             massName.setPrefWidth((massName.getText().trim().length() + 2) * massName.getFont().getSize());
         });
-        MenuItem menuItem = new MenuItem("Add mass", massName);
+        MenuItem menuItem = new MenuItem("Add masses separated by commas", massName);
         menuItem.setOnAction((evt) -> {
             String mass = massName.getText();
             if (mass.length() > 0) {
-                taskDesigner.addNominalMass(mass);
+                // split on commas
+                String [] massesAdded = massName.getText().split(",");
+                for (int i = 0; i < massesAdded.length; i ++){
+                    taskDesigner.addNominalMass(massesAdded[i].trim());
+                }
             }
             populateMasses();
         });
@@ -743,61 +863,53 @@ public class TaskDesignerController implements Initializable {
     }
 
     @FXML
-    private void blankTaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
-        initTaskDesign();
-    }
+    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) {
+        if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
+            // check the mass count
+            boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
+                    == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
+                    + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
+            if (valid) {
+                squidProject.createNewTask();
+                squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), false);
+                MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
+                        .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
+                menuItemTaskManager.fire();
 
-    @FXML
-    private void mass11TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
-        initTaskDesign();
-    }
-
-    @FXML
-    private void currentTaskAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, false);
-        initTaskDesign();
-    }
-
-    @FXML
-    private void currentTaskPlusExpAction(ActionEvent event) {
-        SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskDesigner, true);
-        initTaskDesign();
-    }
-
-    @FXML
-    private void mass9TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
-        initTaskDesign();
-    }
-
-    @FXML
-    private void mass10TaskAction(ActionEvent event) {
-        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
-        initTaskDesign();
-    }
-
-    @FXML
-    private void newTaskFromThisDesignAction(ActionEvent event) {
-        // check the mass count
-        boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
-                + REQUIRED_NOMINAL_MASSES.size()));
-        if (valid) {
-            squidProject.createNewTask();
-            squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign());
-            MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
-                    .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
-            menuItemTaskManager.fire();
-
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
+                        + " masses, but the Task Designer specifies "
+                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                        + ".",
+                        primaryStageWindow);
+            }
         } else {
             SquidMessageDialog.showInfoDialog(
-                    "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                    + " masses, but the Task Designer specifies "
-                    + (REQUIRED_NOMINAL_MASSES.size() + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                    "The data file is type  " + squidProject.getTask().getTaskType()
+                    + ", but the Task Designer specifies type "
+                    + SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType()
                     + ".",
                     primaryStageWindow);
         }
     }
+
+    @FXML
+    private void saveThisTaskAsXMLFileAction(ActionEvent event) {
+        TaskInterface task = new Task();
+        task.updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), true);
+        try {
+            FileHandler.saveTaskFileXML(task, SquidUI.primaryStageWindow);
+            taskNameTextField.setText(task.getName());
+        } catch (IOException iOException) {
+        }
+    }
+
+    @FXML
+    private void viewCurrentTaskAction(ActionEvent event) {
+        MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
+                .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
+        menuItemTaskManager.fire();
+    }
+
 }

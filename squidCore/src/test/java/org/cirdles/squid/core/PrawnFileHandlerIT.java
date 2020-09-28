@@ -108,7 +108,7 @@ public class PrawnFileHandlerIT {
         SquidProject.setProjectChanged(true);
         TaskInterface task = new Task("test", prawnFileDataZ6266, prawnFileHandler.getReportsEngine());
 
-        task.updateTaskFromTaskDesign(new TaskDesign11Mass());
+        task.updateTaskFromTaskDesign(new TaskDesign11Mass(), false);
 
         squidProjectZ6266.setTask(task);
 

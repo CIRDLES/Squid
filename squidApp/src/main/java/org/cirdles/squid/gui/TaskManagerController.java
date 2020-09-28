@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.IOException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -34,6 +35,7 @@ import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
@@ -125,6 +127,26 @@ public class TaskManagerController implements Initializable {
         }
 
         populateDirectives();
+    }
+
+    @FXML
+    private void editCurrentTaskAction(ActionEvent event) {
+        MenuItem menuItemTaskEditorHidden = ((MenuBar) SquidUI.primaryStage.getScene()
+                .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(1);
+        menuItemTaskEditorHidden.fire();
+    }
+
+    @FXML
+    private void saveCurrentTaskAction(ActionEvent event) {
+        try {
+            FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
+        } catch (IOException iOException) {
+        }
+        
+        // refresh view
+        MenuItem menuItemTaskViewer = ((MenuBar) SquidUI.primaryStage.getScene()
+                .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
+        menuItemTaskViewer.fire();
     }
 
     class MyConverter extends StringConverter<Double> {

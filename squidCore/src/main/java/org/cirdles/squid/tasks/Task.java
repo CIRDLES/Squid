@@ -457,9 +457,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      * @param taskDesign the value of taskDesign
+     * @param taskSkeleton the value of taskSkeleton
      */
     @Override
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign) {
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) {
 
         Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
@@ -487,36 +488,45 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
 
+        boolean amGeochronMode = (taskType.equals(TaskTypeEnum.GEOCHRON));
         List<String> allMasses = new ArrayList<>();
-        allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        if (amGeochronMode) {
+            allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        }
         allMasses.addAll(nominalMasses);
         nominalMasses = allMasses;
         Collections.sort(nominalMasses);
 
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         if (indexOfBackgroundSpecies >= 0) {
-            nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
+//            nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
             indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
         }
 
         List<String> allRatios = new ArrayList<>();
-        allRatios.addAll(REQUIRED_RATIO_NAMES);
+        if (amGeochronMode) {
+            allRatios.addAll(REQUIRED_RATIO_NAMES);
+        }
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
         Collections.sort(ratioNames);
 
         setChanged(true);
-        squidSpeciesModelList.clear();
-        buildSquidSpeciesModelList();
-        generateConstants();
-        generateParameters();
-        generateSpotLookupFields();
+        if (!taskSkeleton) {
+            squidSpeciesModelList.clear();
+            buildSquidSpeciesModelList();
+            generateConstants();
+            generateParameters();
+            generateSpotLookupFields();
+        }
 
         for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
             taskExpressionsOrdered.add(customExp);
         }
 
-        initializeTaskAndReduceData(false);
+        if (!taskSkeleton) {
+            initializeTaskAndReduceData(false);
+        }
     }
 
     /**
@@ -556,10 +566,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<String> myNominalMasses = new ArrayList<>();
         myNominalMasses.addAll(nominalMasses);
         myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
-        if (indexOfBackgroundSpecies >= 0 && indexOfBackgroundSpecies < myNominalMasses.size()) {
-            myNominalMasses.remove(indexOfBackgroundSpecies - 1);
-        }
-        myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
+//        if (indexOfBackgroundSpecies >= 0 && indexOfBackgroundSpecies < myNominalMasses.size()) {
+//            myNominalMasses.remove(indexOfBackgroundSpecies - 1);
+//        }
+//        myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
         taskDesign.setNominalMasses(myNominalMasses);
 
         List<String> myRatioNames = new ArrayList<>();

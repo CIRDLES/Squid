@@ -7,7 +7,10 @@ package org.cirdles.squid.gui;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,13 +19,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -32,11 +39,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.TaskEditorController.makeMassStackPane;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
+import org.cirdles.squid.tasks.expressions.Expression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
@@ -44,7 +55,9 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -55,7 +68,9 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 public class TaskFolderBrowserController implements Initializable {
 
     private List<TaskInterface> taskFilesInFolder = new ArrayList<>();
-    public static File tasksFolder;
+    // folder or file
+    public static File tasksBrowserTarget;
+    public static String tasksBrowserType = ".xml";
 
     private ListView<TaskInterface> listViewOfTasksInFolder;
 
@@ -111,6 +126,16 @@ public class TaskFolderBrowserController implements Initializable {
     private Label parentConcLabel;
     @FXML
     private ToggleGroup dirctALTtoggleGroup;
+    @FXML
+    private TextArea customExpressionTextArea;
+
+    private boolean amGeochronMode;
+    @FXML
+    private Label directivesLabel;
+    @FXML
+    private Label primaryDPLabel;
+    @FXML
+    private Label secondaryDPLabel;
 
     /**
      * Initializes the controller class.
@@ -122,75 +147,194 @@ public class TaskFolderBrowserController implements Initializable {
 
     private void populateListOfTasks() {
 
-        nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksFolder.getName());
-
         taskFilesInFolder = new ArrayList<>();
-        if (tasksFolder != null) {
-            // collect Tasks if any
-            for (File file : tasksFolder.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File file, String name) {
-                    return name.toLowerCase().endsWith(".xml");
-                }
-            }
-            )) {
-                // check if task 
-                try {
-                    TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
-                    if (task != null) {
-                        taskFilesInFolder.add(task);
+        if (tasksBrowserTarget != null) {
+            if (tasksBrowserType.compareToIgnoreCase(".xml") == 0) {
+                if (tasksBrowserTarget.isDirectory()) {
+                    nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
+                    // collect Tasks if any
+                    for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File file, String name) {
+                            return name.toLowerCase().endsWith(".xml");
+                        }
                     }
-                } catch (Exception /*| com.thoughtworks.xstream.mapper.CannotResolveClassException*/ e) {
-//                    System.out.println(">>BAD FILE");
+                    )) {
+                        // check if task 
+                        try {
+                            TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
+                            if (task != null) {
+                                taskFilesInFolder.add(task);
+                            }
+                        } catch (Exception e) {
+                        }
+                    };
+                } else {
+                    nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
+                    // check if task 
+                    try {
+                        TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
+                        if (task != null) {
+                            taskFilesInFolder.add(task);
+                        }
+                    } catch (Exception e) {
+                    }
                 }
-            };
+            } else {
+                // case of excel squid25 tasks
+                Path path = null;
+                try {
+                    path = Files.createTempDirectory("convertedTasks");
+                } catch (IOException iOException) {
+                }
+                if (tasksBrowserTarget.isDirectory()) {
+                    nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
 
-        }
+                    // collect Tasks if any
+                    for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File file, String name) {
+                            return name.toLowerCase().endsWith(".xls");
+                        }
+                    }
+                    )) {
+                        // check if task 
+                        try {
+                            // first convert to xml
+                            TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(file);
+                            TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
+                            File tempTaskFile = new File(path.toString() + File.separator + taskSquid25.getTaskName() + ".xml");
+                            ((XMLSerializerInterface) taskFromSquid25)
+                                    .serializeXMLObject(tempTaskFile.getAbsolutePath());
 
-        listViewOfTasksInFolder = new ListView<>();
-        listViewOfTasksInFolder.setCellFactory(
-                (parameter)
-                -> new TaskDisplayName()
-        );
+                            TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
+                            if (task != null) {
+                                taskFilesInFolder.add(task);
+                            }
+                        } catch (Exception e) {
+                        }
+                    };
 
-        ObservableList<TaskInterface> items = FXCollections.observableArrayList(taskFilesInFolder);
-        IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
-        items = items.sorted((TaskInterface task1, TaskInterface task2) -> {
-            return intuitiveStringComparator.compare(task1.getName(), task2.getName());
-        });
-        listViewOfTasksInFolder.setItems(items);
-        listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TaskInterface>() {
-            @Override
-            public void changed(ObservableValue<? extends TaskInterface> observable, TaskInterface oldValue, TaskInterface selectedTask) {
-                taskNameTextField.setText(selectedTask.getName());
-                projectModeLabel.setText(((Task) selectedTask).getTaskType().getName());
-                taskDescriptionTextField.setText(selectedTask.getDescription());
-                authorsNameTextField.setText(selectedTask.getAuthorName());
-                labNameTextField.setText(selectedTask.getLabName());
-                provenanceTextField.setText(selectedTask.getProvenance());
-                populateMasses(selectedTask);
-                populateRatios(selectedTask);
-                populateDirectives(selectedTask);
-                showPermutationPlayers();
+                } else {
+                    nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
+                    // check if task 
+                    try {
+                        // first convert to xml
+                        TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(tasksBrowserTarget);
+                        TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
+                        File tempTaskFile = new File(path.toString() + File.separator + taskSquid25.getTaskName() + ".xml");
+                        ((XMLSerializerInterface) taskFromSquid25)
+                                .serializeXMLObject(tempTaskFile.getAbsolutePath());
 
+                        TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
+                        if (task != null) {
+                            taskFilesInFolder.add(task);
+                        }
+                    } catch (Exception e) {
+                    }
+                }
             }
-        });
-
-        if (taskFilesInFolder.size() > 0) {
-            listViewOfTasksInFolder.getSelectionModel().selectFirst();
         }
 
-        taskListAnchorPane.getChildren().add(listViewOfTasksInFolder);
+        if (taskFilesInFolder.isEmpty()) {
+            SquidMessageDialog.showWarningDialog("No valid Squid3 tasks found.", primaryStageWindow);
 
-        taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
-        taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
-        listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
-        listViewOfTasksInFolder.prefWidthProperty().bind(taskListAnchorPane.prefWidthProperty());
+            nameOfTasksFolderLabel.setText("No Valid Squid3 Tasks Selected");
 
-        taskDetailAnchorPane.prefHeightProperty().bind(taskScrollPane.heightProperty());
-        taskDetailAnchorPane.prefWidthProperty().bind(taskScrollPane.widthProperty());
-        taskManagerGridPane.prefHeightProperty().bind(taskDetailAnchorPane.heightProperty());
-        taskManagerGridPane.prefWidthProperty().bind(taskDetailAnchorPane.widthProperty());
+        } else {
+
+            listViewOfTasksInFolder = new ListView<>();
+            listViewOfTasksInFolder.setCellFactory(
+                    (parameter)
+                    -> new TaskDisplayName()
+            );
+
+            ObservableList<TaskInterface> items = FXCollections.observableArrayList(taskFilesInFolder);
+            IntuitiveStringComparator<String> intuitiveStringComparator = new IntuitiveStringComparator<>();
+            items = items.sorted((TaskInterface task1, TaskInterface task2) -> {
+                return intuitiveStringComparator.compare(task1.getName(), task2.getName());
+            });
+            listViewOfTasksInFolder.setItems(items);
+            listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TaskInterface>() {
+                @Override
+                public void changed(ObservableValue<? extends TaskInterface> observable, TaskInterface oldValue, TaskInterface selectedTask) {
+                    taskNameTextField.setText(selectedTask.getName());
+                    projectModeLabel.setText(((Task) selectedTask).getTaskType().getName());
+                    taskDescriptionTextField.setText(selectedTask.getDescription());
+                    authorsNameTextField.setText(selectedTask.getAuthorName());
+                    labNameTextField.setText(selectedTask.getLabName());
+                    provenanceTextField.setText(selectedTask.getProvenance());
+                    amGeochronMode = selectedTask.getTaskType().compareTo(Squid3Constants.TaskTypeEnum.GEOCHRON) == 0;
+
+                    populateMasses(selectedTask);
+                    populateRatios(selectedTask);
+
+                    if (amGeochronMode) {
+                        populateDirectives(selectedTask);
+                        showPermutationPlayers();
+                    } else {
+                        uncorrConstPbUlabel.setVisible(false);
+                        uncorrConstPbThlabel.setVisible(false);
+                        th232U238Label.setVisible(false);
+                        parentConcLabel.setVisible(false);
+                        uncorrConstPbUExpressionText.setVisible(false);
+                        uncorrConstPbThExpressionText.setVisible(false);
+                        parentConcExpressionText.setVisible(false);
+                        pb208Th232ExpressionText.setVisible(false);
+                        ((RadioButton) taskManagerGridPane.lookup("#232")).setVisible(false);
+                        ((RadioButton) taskManagerGridPane.lookup("#238")).setVisible(false);
+                        ((RadioButton) taskManagerGridPane.lookup("#direct")).setVisible(false);
+                        ((RadioButton) taskManagerGridPane.lookup("#indirect")).setVisible(false);
+                        directivesLabel.setVisible(false);
+                        primaryDPLabel.setVisible(false);
+                        secondaryDPLabel.setVisible(false);
+
+                    }
+
+                    populateCustomExpressionsText(selectedTask);
+
+                }
+            });
+
+            if (taskFilesInFolder.size() > 0) {
+                listViewOfTasksInFolder.getSelectionModel().selectFirst();
+            }
+
+            taskListAnchorPane.getChildren().add(listViewOfTasksInFolder);
+
+            taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
+            taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
+            listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
+            listViewOfTasksInFolder.prefWidthProperty().bind(taskListAnchorPane.prefWidthProperty());
+
+            taskDetailAnchorPane.prefHeightProperty().bind(taskScrollPane.heightProperty());
+            taskDetailAnchorPane.prefWidthProperty().bind(taskScrollPane.widthProperty());
+            taskManagerGridPane.prefHeightProperty().bind(taskDetailAnchorPane.heightProperty());
+            taskManagerGridPane.prefWidthProperty().bind(taskDetailAnchorPane.widthProperty());
+        }
+    }
+
+    private void populateCustomExpressionsText(TaskInterface task) {
+        StringBuilder customExp = new StringBuilder();
+        customExp.append("List of Custom Expression Names: \n");
+        int counter = 0;
+        for (Expression exp : task.getCustomTaskExpressions()) {
+            counter++;
+            customExp.append("\t").append(exp.getName()).append(genSpaces(exp.getName()));
+            if (counter % 3 == 0) {
+                customExp.append("\n");
+            }
+        }
+
+        customExpressionTextArea.setText(customExp.toString());
+    }
+
+    private String genSpaces(String name) {
+        String retVal = "";
+        for (int i = name.length(); i < 25; i++) {
+            retVal += " ";
+        }
+        return retVal;
     }
 
     private void populateMasses(TaskInterface task) {
@@ -201,19 +345,26 @@ public class TaskFolderBrowserController implements Initializable {
 
         Collections.sort(allMasses, new IntuitiveStringComparator<>());
 
-        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-        if (task.getIndexOfBackgroundSpecies() >= 0) {
-            allMasses.add((allMasses.size() > task.getIndexOfBackgroundSpecies()
-                    ? task.getIndexOfBackgroundSpecies() : allMasses.size()),
-                    DEFAULT_BACKGROUND_MASS_LABEL);
-        }
+//        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
+//        if (task.getIndexOfBackgroundSpecies() >= 0) {
+//            allMasses.add((allMasses.size() > task.getIndexOfBackgroundSpecies()
+//                    ? task.getIndexOfBackgroundSpecies() : allMasses.size()),
+//                    DEFAULT_BACKGROUND_MASS_LABEL);
+//        }
         int count = 1;
         for (String mass : allMasses) {
             StackPane massText;
-            if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
-                massText = TaskDesignerController.makeMassStackPane(mass, "pink");
+            if (count == task.getIndexOfBackgroundSpecies() + 1) {
+                massText = makeMassStackPane(mass, "Aquamarine");
+            } else if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+                massText = makeMassStackPane(mass, "pink");
             } else {
-                massText = TaskDesignerController.makeMassStackPane(mass, "white");
+                massText = makeMassStackPane(mass, "white");
+
+//            if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+//                massText = TaskEditorController.makeMassStackPane(mass, "pink");
+//            } else {
+//                massText = TaskEditorController.makeMassStackPane(mass, "white");
             }
             massText.setTranslateX(1 * count++);
             defaultMassesListTextFlow.getChildren().add(massText);
@@ -227,7 +378,7 @@ public class TaskFolderBrowserController implements Initializable {
         int count = 1;
         List<String> ratioNames = task.getRatioNames();
         for (String ratioName : ratioNames) {
-            VBox ratio = TaskDesignerController.makeRatioVBox(ratioName);
+            VBox ratio = TaskEditorController.makeRatioVBox(ratioName);
             if (REQUIRED_RATIO_NAMES.contains(ratioName)) {
                 ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
             } else {
@@ -244,54 +395,6 @@ public class TaskFolderBrowserController implements Initializable {
         ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
         ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
-//
-//    private Expression makeExpression(String expressionName, final String expressionString) {
-//        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
-//    }
-//
-//    private void buildShrimpSpeciesNodeMap(TaskInterface task) {
-//        shrimpSpeciesNodeMap = new TreeMap<>();
-//        for (int i = 0; i < REQUIRED_NOMINAL_MASSES.size(); i++) {
-//            shrimpSpeciesNodeMap.put(
-//                    REQUIRED_NOMINAL_MASSES.get(i),
-//                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(REQUIRED_NOMINAL_MASSES.get(i)), "getPkInterpScanArray"));
-//        }
-//        for (int i = 0; i < task.getNominalMasses().size(); i++) {
-//            shrimpSpeciesNodeMap.put(
-//                    task.getNominalMasses().get(i),
-//                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(task.getNominalMasses().get(i)), "getPkInterpScanArray"));
-//        }
-//    }
-//
-//    private Map<String, ExpressionTreeInterface> buildNamedExpressionsMap(TaskInterface task) {
-//        buildShrimpSpeciesNodeMap(task);
-//
-//        Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-//
-//        for (int i = 0; i < REQUIRED_RATIO_NAMES.size(); i++) {
-//            String[] numDem = REQUIRED_RATIO_NAMES.get(i).split("/");
-//            ExpressionTreeInterface ratio = new ExpressionTree(
-//                    REQUIRED_RATIO_NAMES.get(i),
-//                    shrimpSpeciesNodeMap.get(numDem[0]),
-//                    shrimpSpeciesNodeMap.get(numDem[1]),
-//                    Operation.divide());
-//            ratio.setSquidSwitchSAUnknownCalculation(true);
-//            ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
-//            namedExpressionsMap.put(REQUIRED_RATIO_NAMES.get(i), ratio);
-//        }
-//        for (int i = 0; i < task.getRatioNames().size(); i++) {
-//            String[] numDem = task.getRatioNames().get(i).split("/");
-//            ExpressionTreeInterface ratio = new ExpressionTree(
-//                    task.getRatioNames().get(i),
-//                    shrimpSpeciesNodeMap.get(numDem[0]),
-//                    shrimpSpeciesNodeMap.get(numDem[1]),
-//                    Operation.divide());
-//            ratio.setSquidSwitchSAUnknownCalculation(true);
-//            ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
-//            namedExpressionsMap.put(task.getRatioNames().get(i), ratio);
-//        }
-//        return namedExpressionsMap;
-//    }
 
     private void populateDirectives(TaskInterface task) {
         updateDirectiveButtons(task);
@@ -345,6 +448,55 @@ public class TaskFolderBrowserController implements Initializable {
         expressionText.setStyle((player ? playerStyle : notPlayerStyle));
         if (!player) {
             expressionText.setText("Not Used");
+        }
+    }
+
+    @FXML
+    private void editTaskAction(ActionEvent event) {
+        TaskEditorController.existingTaskToEdit = listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue();
+        MenuItem menuItemExistingTaskEditorHidden = ((MenuBar) SquidUI.primaryStage.getScene()
+                .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(2);
+        menuItemExistingTaskEditorHidden.fire();
+    }
+
+    @FXML
+    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) {
+        if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
+            // check the mass count
+            boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
+                    == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
+                    + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
+            if (valid) {
+                squidProject.createNewTask();
+                squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), false);
+                MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
+                        .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
+                menuItemTaskManager.fire();
+
+            } else {
+                SquidMessageDialog.showInfoDialog(
+                        "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
+                        + " masses, but the Task Designer specifies "
+                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                        + ".",
+                        primaryStageWindow);
+            }
+        } else {
+            SquidMessageDialog.showInfoDialog(
+                    "The data file is type  " + squidProject.getTask().getTaskType()
+                    + ", but the Task Designer specifies type "
+                    + SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType()
+                    + ".",
+                    primaryStageWindow);
+        }
+    }
+
+    @FXML
+    private void saveThisTaskAsXMLFileAction(ActionEvent event) {
+        try {
+            FileHandler.saveTaskFileXML(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue(), SquidUI.primaryStageWindow);
+            taskNameTextField.setText(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue().getName());
+        } catch (IOException iOException) {
         }
     }
 

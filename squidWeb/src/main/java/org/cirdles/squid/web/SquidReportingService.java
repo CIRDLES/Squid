@@ -126,7 +126,7 @@ public class SquidReportingService {
 
             squidProject.updateFilterForRefMatSpotNames(refMatFilter);
             squidProject.updateFilterForRefMatSpotNames(concRefMatFilter);
-            squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+            squidProject.replaceCurrentTaskWithImportedSquid25Task(squidTaskFile);
 
             TaskInterface task = squidProject.getTask();
 
