@@ -337,4 +337,25 @@ public final class Squid3Constants {
         FR_207,
         FR_208;
     }
+
+    public enum TaskEditTypeEnum {
+        EDIT_CURRENT("EDIT_CURRENT"),
+        EDIT_COPY_CURRENT("EDIT_COPY_CURRENT"),
+        EDIT_COPY_CURRENT_NO_EXP("EDIT_COPY_CURRENT_NO_EXP"),
+        EDIT_EMPTY("EDIT_EMPTY"),
+        EDIT_DEFAULT_9_MASS("EDIT_DEFAULT_9_MASS"),
+        EDIT_DEFAULT_10_MASS("EDIT_DEFAULT_10_MASS"),
+        EDIT_DEFAULT_11_MASS("EDIT_DEFAULT_11_MASS"),
+        EDIT_EXISTING_TASK("EDIT_EXISTING_TASK");
+
+        private final String name;
+
+        private TaskEditTypeEnum(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
 }

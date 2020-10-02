@@ -31,11 +31,13 @@ public class TaskDesignBlank extends TaskDesign {
 
     public TaskDesignBlank() { 
 
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{DEFAULT_BACKGROUND_MASS_LABEL}));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
         
-        indexOfBackgroundSpecies = 5;
+        this.name = "New empty Geochron task";
+        
+        indexOfBackgroundSpecies = -1;
         
         this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, "");
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, "");

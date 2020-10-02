@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0"
-            minWidth="900.0"
-            prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidLabData.css"
-            xmlns="http://javafx.com/javafx/10.0.1"
-            fx:controller="org.cirdles.squid.gui.parameters.ParametersManagerGUIController">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidLabData.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.parameters.ParametersManagerGUIController">
     <children>
-        <TextField id="laboratoryTextField" fx:id="labNameTextField" prefHeight="26.0" prefWidth="562.0"
-                   AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0"/>
-        <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="45.0" prefHeight="455.0" prefWidth="657.0"
-                 tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                 AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="45.0">
+        <TabPane fx:id="rootTabPane" layoutX="2.0" layoutY="4.0" prefHeight="591.0" prefWidth="890.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="4.0">
             <tabs>
                 <Tab fx:id="refMatTab" text="Reference Material Models">
                     <content>
@@ -22,73 +35,41 @@
                                     <menus>
                                         <Menu fx:id="refMatFileMenu" mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#refMatImpXMLAction"
-                                                          text="Import Reference Material Model from XML File"/>
-                                                <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction"
-                                                          text="Export Current Reference Material Model as XML File"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem mnemonicParsing="false"
-                                                          onAction="#importETReduxReferenceMaterial"
-                                                          text="Import ETRedux Reference Material Model"/>
+                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCopy" text="New Reference Material Model from Copy of Current Model" />
+                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false" onAction="#refMateEditEmptyMod" text="New Empty Reference Material Model" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem mnemonicParsing="false" onAction="#refMatImpXMLAction" text="Import Reference Material Model from XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#importETReduxReferenceMaterial" text="Import ETRedux Reference Material Model" />
+                                                <MenuItem mnemonicParsing="false" onAction="#refMatExpXMLAction" text="Export Current Reference Material Model as XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#refMatExportAllAction" text="Export All Reference Material Models to Folder as XML Files" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false" onAction="#refMatRemoveCurrMod" text="Remove Current Reference Material Model (for editable models only)" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem fx:id="saveAndRegCurrRefMat" mnemonicParsing="false"
-                                                          onAction="#refMatSaveAndRegisterEdit"
-                                                          text="Save and Register Current Edit of Reference Material Model"/>
-                                                <MenuItem fx:id="canEditOfRefMat" mnemonicParsing="false"
-                                                          onAction="#refMatCancelEdit"
-                                                          text="Cancel Edit of Reference Material Model"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="remCurrRefMat" mnemonicParsing="false"
-                                                          onAction="#refMatRemoveCurrMod"
-                                                          text="Remove Current Reference Material Model (for editable models only)"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="editCurrRefMat" mnemonicParsing="false"
-                                                          onAction="#refMatEditCurrMod"
-                                                          text="Edit Current Reference Material Model (for editable models only)"/>
-                                                <MenuItem fx:id="editCopyOfCurrRefMat" mnemonicParsing="false"
-                                                          onAction="#refMatEditCopy"
-                                                          text="Edit Copy of Current Reference Material Model"/>
-                                                <MenuItem fx:id="editNewEmptyRefMat" mnemonicParsing="false"
-                                                          onAction="#refMateEditEmptyMod"
-                                                          text="Edit New Empty Reference Material Model"/>
+                                                <MenuItem fx:id="editCurrRefMat" mnemonicParsing="false" onAction="#refMatEditCurrMod" text="Edit Current Reference Material Model (for editable models only)" />
+                                                <MenuItem fx:id="canEditOfRefMat" mnemonicParsing="false" onAction="#refMatCancelEdit" text="Cancel Edit of Reference Material Model" />
+                                                <MenuItem fx:id="saveAndRegCurrRefMat" mnemonicParsing="false" onAction="#refMatSaveAndRegisterEdit" text="Save and Register Current Edit of Reference Material Model" />
                                             </items>
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <TabPane fx:id="refMatTabPane" layoutX="14.0" layoutY="112.0"
-                                         tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
-                                         AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-                                         AnchorPane.topAnchor="130.0">
+                                <TabPane fx:id="refMatTabPane" layoutX="14.0" layoutY="112.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab fx:id="refMatDataTab" text="Data">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0"
-                                                                   prefHeight="170.0" prefWidth="200.0"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0"
-                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                              AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="refMatDataTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="refMatDataNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#refMatDataNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="refMatDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatDataNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="refMatDataSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="refMatDataSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -101,29 +82,17 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0"
-                                                                   prefHeight="200.0" prefWidth="200.0"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="refMatCorrTable" layoutX="20.0" layoutY="30.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="refMatCorrNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#refMatCorrNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="refMatCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCorrNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="refMatCorrSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="refMatCorrSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Correlations | Note: correlations matrix is positive definite"/>
+                                                                <Label text="Correlations | Note: correlations matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -134,27 +103,18 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatCovTable" AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="refMatCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="refMatCovNotationButton" maxHeight="30.0"
-                                                                        minHeight="30.0" mnemonicParsing="false"
-                                                                        onAction="#refMatCovNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="refMatCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatCovNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="refMatCovSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="refMatCovSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Covariances | Note: covariances matrix is positive definite"/>
+                                                                <Label text="Covariances | Note: covariances matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -165,30 +125,18 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="refMatConcentrationsTable"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" layoutX="-56.0" layoutY="-35.0"
-                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                              AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="refMatConcentrationsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" layoutX="-56.0" layoutY="-35.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="refMatConcentrationsNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#refMatConcentrationsNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="refMatConcentrationsNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refMatConcentrationsNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="refMatConcSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="refMatConcSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Units are Parts Per Million"/>
+                                                                <Label text="Units are Parts Per Million" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -199,27 +147,14 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="UUTable" layoutX="14.0" layoutY="22.0"
-                                                                   prefHeight="170.0" prefWidth="200.0"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0"
-                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                              AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="UUTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="UUNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#UUNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="UUNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#UUNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="UUSigFigSpinner"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="UUSigFigSpinner" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -232,12 +167,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea id="dates" fx:id="apparentDatesTextArea"
-                                                                  editable="false" prefHeight="200.0" prefWidth="200.0"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.leftAnchor="5.0"
-                                                                  AnchorPane.rightAnchor="5.0"
-                                                                  AnchorPane.topAnchor="5.0"/>
+                                                        <TextArea id="dates" fx:id="apparentDatesTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -245,47 +175,28 @@
                                         <Tab fx:id="refMatRefDatesTab" text="Reference Dates">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                                    <TableView fx:id="refDatesTable" layoutX="14.0" layoutY="22.0"
-                                                               prefHeight="170.0" prefWidth="200.0"
-                                                               AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
-                                                               AnchorPane.rightAnchor="5.0"
-                                                               AnchorPane.topAnchor="30.4"/>
-                                                    <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0"
-                                                          spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                          AnchorPane.topAnchor="0.0">
+                                                    <TableView fx:id="refDatesTable" layoutX="14.0" layoutY="22.0" prefHeight="170.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                    <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="-25.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                         <children>
 
-                                                            <Button fx:id="refDatesNotationButton"
-                                                                    maxHeight="30.0" minHeight="30.0"
-                                                                    mnemonicParsing="false"
-                                                                    onAction="#refDatesNotationAction"
-                                                                    prefHeight="30.0" prefWidth="200"
-                                                                    text="Use Standard Notation"/>
+                                                            <Button fx:id="refDatesNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#refDatesNotationAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                             <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                 <children>
-                                                                    <Label text="SigFigs:"/>
-                                                                    <Spinner fx:id="refDatesSigFigSpinner"
-                                                                             prefWidth="80.0"/>
+                                                                    <Label text="SigFigs:" />
+                                                                    <Spinner fx:id="refDatesSigFigSpinner" prefWidth="80.0" />
                                                                 </children>
                                                             </HBox>
                                                             <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                                 <children>
-                                                                    <Label text="Units: "/>
-                                                                    <RadioButton fx:id="refDatesARadioButton" text="a"
-                                                                                 onAction="#refDatesARadioButtonOnAction">
+                                                                    <Label text="Units: " />
+                                                                    <RadioButton fx:id="refDatesARadioButton" onAction="#refDatesARadioButtonOnAction" text="a">
                                                                         <toggleGroup>
-                                                                            <ToggleGroup
-                                                                                    fx:id="refDatesUnitsToggleGroup"/>
+                                                                            <ToggleGroup fx:id="refDatesUnitsToggleGroup" />
                                                                         </toggleGroup>
                                                                     </RadioButton>
-                                                                    <RadioButton fx:id="refDatesKARadioButton" text="Ka"
-                                                                                 toggleGroup="$refDatesUnitsToggleGroup"
-                                                                                 onAction="#refDatesKARadioButtonOnAction"/>
-                                                                    <RadioButton fx:id="refDatesMARadioButton" text="Ma"
-                                                                                 toggleGroup="$refDatesUnitsToggleGroup"
-                                                                                 onAction="#refDatesMARadioButtonOnAction"
-                                                                                 selected="true"/>
+                                                                    <RadioButton fx:id="refDatesKARadioButton" onAction="#refDatesKARadioButtonOnAction" text="Ka" toggleGroup="$refDatesUnitsToggleGroup" />
+                                                                    <RadioButton fx:id="refDatesMARadioButton" onAction="#refDatesMARadioButtonOnAction" selected="true" text="Ma" toggleGroup="$refDatesUnitsToggleGroup" />
                                                                 </children>
                                                             </HBox>
                                                         </children>
@@ -297,19 +208,10 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0"
-                                                                  prefWidth="400.0" promptText="add references here"
-                                                                  wrapText="true" AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <TextArea fx:id="refMatCommentsArea" layoutX="10.0"
-                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="400.0"
-                                                                  promptText="add comments here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
-                                                               AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0"/>
-                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
-                                                               AnchorPane.topAnchor="0.0"/>
+                                                        <TextArea fx:id="refMatReferencesArea" layoutX="430.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="refMatCommentsArea" layoutX="10.0" layoutY="104.0" prefHeight="200.0" prefWidth="400.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -318,49 +220,39 @@
                                 </TabPane>
 
                                 <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
-                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT"
-                                           GridPane.rowIndex="0"/>
-                                    <TextField fx:id="refMatModelName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                                    <TextField fx:id="refMatModelName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                    <Label text="Version:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"
-                                           GridPane.rowIndex="0"/>
+                                    <Label text="Version:" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
                                     <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
-                                        <TextField fx:id="refMatVersion" prefHeight="26.0" prefWidth="75.0"/>
-                                        <Label fx:id="refMatIsEditableLabel" textFill="RED"/>
+                                        <TextField fx:id="refMatVersion" prefHeight="26.0" prefWidth="75.0" />
+                                        <Label fx:id="refMatIsEditableLabel" textFill="RED" />
                                     </HBox>
 
-                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
-                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                                    <TextField fx:id="refMatLabName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <TextField fx:id="refMatLabName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                    <Label text="Date Certified:" GridPane.columnIndex="3" GridPane.halignment="RIGHT"
-                                           GridPane.rowIndex="1"/>
-                                    <TextField fx:id="refMatDateCertified" prefWidth="200" GridPane.columnIndex="4"
-                                               GridPane.rowIndex="1"/>
+                                    <Label text="Date Certified:" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <TextField fx:id="refMatDateCertified" prefWidth="200" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                     <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
+                                        <RowConstraints />
+                                        <RowConstraints />
                                     </rowConstraints>
                                 </GridPane>
-                                <HBox alignment="CENTER_LEFT" layoutX="45.0" layoutY="-26.0" spacing="5.0"
-                                      AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
+                                <HBox alignment="CENTER_LEFT" layoutX="45.0" layoutY="-26.0" spacing="5.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
-                                        <Label text="Choose Reference Material Model:"/>
-                                        <ChoiceBox fx:id="refMatCB" prefWidth="380.0"/>
-                                        <CheckBox fx:id="refMatReferenceDatesCheckbox" mnemonicParsing="false"
-                                                  onAction="#refMatReferenceDatesCheckBoxOnAction"
-                                                  text="Reference Dates" visible="false"/>
+                                        <Label text="Choose Reference Material Model:" />
+                                        <ChoiceBox fx:id="refMatCB" prefHeight="27.0" prefWidth="446.0" />
+                                        <CheckBox fx:id="refMatReferenceDatesCheckbox" mnemonicParsing="false" onAction="#refMatReferenceDatesCheckBoxOnAction" text="Reference Dates" visible="false" />
                                     </children>
                                 </HBox>
                             </children>
@@ -375,70 +267,41 @@
                                     <menus>
                                         <Menu fx:id="commonPbFileMenu" mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#commonPbImpXMLAction"
-                                                          text="Import Common Pb Model from XML File"/>
-                                                <MenuItem mnemonicParsing="false" onAction="#commonPbExpXMLAction"
-                                                          text="Export Current Common Pb Model as XML File"/>
+                                                <MenuItem fx:id="editCopyOfCommonPb" mnemonicParsing="false" onAction="#commonPbEditCopy" text="New Common Pb Model from Copy of Current Model" />
+                                                <MenuItem fx:id="editNewEmptyCommonPb" mnemonicParsing="false" onAction="#commonPbEditEmptyMod" text="New Empty Common Pb Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem mnemonicParsing="false" onAction="#commonPbImpXMLAction" text="Import Common Pb Model from XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#commonPbExpXMLAction" text="Export Current Common Pb Model as XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#commonPbExportAllAction" text="Export All Common Pb Models to Folder as XML Files" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem fx:id="remCurrCommonPb" mnemonicParsing="false" onAction="#commonPbRemoveCurrMod" text="Remove Current Common Pb Model from Lab Data (for editable models only)" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem fx:id="saveAndRegCommonPbMenuItem" mnemonicParsing="false"
-                                                          onAction="#commonPbSaveAndRegisterEdit"
-                                                          text="Save and Register Current Edit of Common Pb Model"/>
-                                                <MenuItem fx:id="cancelEditOfCommonPb" mnemonicParsing="false"
-                                                          onAction="#commonPbCancelEdit"
-                                                          text="Cancel Edit of Common Pb Model"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="remCurrCommonPb" mnemonicParsing="false"
-                                                          onAction="#commonPbRemoveCurrMod"
-                                                          text="Remove Current Common Pb Model from Lab Data (for editable models only)"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="editCurrCommonPb" mnemonicParsing="false"
-                                                          onAction="#commonPbEditCurrMod"
-                                                          text="Edit Current Common Pb Model (for editable models only)"/>
-                                                <MenuItem fx:id="editCopyOfCommonPb" mnemonicParsing="false"
-                                                          onAction="#commonPbEditCopy"
-                                                          text="Edit Copy of Current Common Pb Model"/>
-                                                <MenuItem fx:id="editNewEmptyCommonPb" mnemonicParsing="false"
-                                                          onAction="#commonPbEditEmptyMod"
-                                                          text="Edit New Empty Common Pb Model"/>
+                                                <MenuItem fx:id="editCurrCommonPb" mnemonicParsing="false" onAction="#commonPbEditCurrMod" text="Edit Current Common Pb Model (for editable models only)" />
+                                                <MenuItem fx:id="cancelEditOfCommonPb" mnemonicParsing="false" onAction="#commonPbCancelEdit" text="Cancel Edit of Common Pb Model" />
+                                                <MenuItem fx:id="saveAndRegCommonPbMenuItem" mnemonicParsing="false" onAction="#commonPbSaveAndRegisterEdit" text="Save and Register Current Edit of Common Pb Model" />
                                             </items>
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0"
-                                         tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
-                                         AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-                                         AnchorPane.topAnchor="130.0">
+                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="commonPbDataTable" layoutX="14.0"
-                                                                   layoutY="26.0" prefHeight="336.0" prefWidth="871.0"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0"
-                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                              AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="commonPbDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="commonPbDataNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#commonPbDataNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="commonPbDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#commonPbDataNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="commonPbDataSigFigs"
-                                                                                 prefHeight="26.0" prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="commonPbDataSigFigs" prefHeight="26.0" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -451,30 +314,19 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="commonPbCorrTable"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="commonPbCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="commonPbCorrNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#commonPbCorrNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="commonPbCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#commonPbCorrNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="commonPbCorrSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="commonPbCorrSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Correlations | Note: correlation matrix is positive definite"/>
+                                                                <Label text="Correlations | Note: correlation matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -485,30 +337,19 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="commonPbCovTable"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="commonPbCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="commonPbCovNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#commonPbCovNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="commonPbCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#commonPbCovNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="commonPbCovSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="commonPbCovSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Covariances | Note: covariance matrix is positive definite"/>
+                                                                <Label text="Covariances | Note: covariance matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -519,20 +360,10 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TextArea fx:id="commonPbReferencesArea" layoutX="430.0"
-                                                                  prefHeight="200.0" prefWidth="400.0"
-                                                                  promptText="add references here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <TextArea fx:id="commonPbCommentsArea" layoutX="4.0"
-                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="336.0"
-                                                                  promptText="add comments here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
-                                                               AnchorPane.topAnchor="0.0"/>
-                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
-                                                               AnchorPane.topAnchor="0.0"/>
+                                                        <TextArea fx:id="commonPbReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="commonPbCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="336.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -540,49 +371,41 @@
                                     </tabs>
                                 </TabPane>
                                 <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
-                                    <Label text="Model Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
-                                    <TextField fx:id="commonPbModelName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                    <Label text="Model Name:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                                    <TextField fx:id="commonPbModelName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
 
                                     <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
                                         <children>
-                                            <TextField fx:id="commonPbVersion" prefHeight="26.0" prefWidth="75.0"/>
-                                            <Label fx:id="commonPbIsEditableLabel" textFill="RED"/>
+                                            <TextField fx:id="commonPbVersion" prefHeight="26.0" prefWidth="75.0" />
+                                            <Label fx:id="commonPbIsEditableLabel" textFill="RED" />
                                         </children>
                                     </HBox>
 
-                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
-                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                                    <TextField fx:id="commonPbLabName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <TextField fx:id="commonPbLabName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                                    <TextField fx:id="commonPbDateCertified" prefWidth="200" GridPane.columnIndex="4"
-                                               GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <TextField fx:id="commonPbDateCertified" prefWidth="200" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                     <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
+                                        <RowConstraints />
+                                        <RowConstraints />
                                     </rowConstraints>
                                 </GridPane>
-                                <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
-                                      AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
+                                <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
-                                        <Label text="Choose Common Pb Model:"/>
-                                        <ChoiceBox fx:id="commonPbCB" prefWidth="380.0"/>
+                                        <Label text="Choose Common Pb Model:" />
+                                        <ChoiceBox fx:id="commonPbCB" prefHeight="27.0" prefWidth="439.0" />
                                     </children>
                                 </HBox>
                             </children>
@@ -597,96 +420,54 @@
                                     <menus>
                                         <Menu fx:id="physConstFileMenu" mnemonicParsing="false" text="File">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction"
-                                                          text="Import Physical Constants Model from XML File"/>
-                                                <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction"
-                                                          text="Export Current Physical Constants Model as XML File"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem mnemonicParsing="false"
-                                                          onAction="#importETReduxPhysicalConstantsModel"
-                                                          text="Import ETRedux Physical Constants Model"/>
+                                                <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCopy" text="New Physical Constants Model from Copy of Current Model" />
+                                                <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false" onAction="#physConstEditEmptyMod" text="New Empty Physical Constants Model" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem mnemonicParsing="false" onAction="#physConstImpXMLAction" text="Import Physical Constants Model from XML File" />
+                                                <MenuItem mnemonicParsing="false" onAction="#importETReduxPhysicalConstantsModel" text="Import ETRedux Physical Constants Model" />
+                                                <MenuItem mnemonicParsing="false" onAction="#physConstExpXMLAction" text="Export Current Physical Constants Model as XML File" />
+                                    <MenuItem mnemonicParsing="false" onAction="#phyConstExportAllAction" text="Export All Physical Constants Models to Folder as XML Files" />
+                                                <SeparatorMenuItem mnemonicParsing="false" />
+                                                <MenuItem fx:id="remCurrPhysConst" mnemonicParsing="false" onAction="#physConstRemoveCurrMod" text="Remove Current Physical Constants Model from Lab Data (for editable models only)" />
                                             </items>
                                         </Menu>
                                         <Menu mnemonicParsing="false" text="Edit">
                                             <items>
-                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstSaveAndRegisterEdit"
-                                                          text="Save and Register Current Edit of Physical Constants Model"/>
-                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstCancelEdit"
-                                                          text="Cancel Edit of Physical Constants Model"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="remCurrPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstRemoveCurrMod"
-                                                          text="Remove Current Physical Constants Model from Lab Data (for editable models only)"/>
-                                                <SeparatorMenuItem mnemonicParsing="false"/>
-                                                <MenuItem fx:id="editCurrPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstEditCurrMod"
-                                                          text="Edit Current Physical Constants Model (for editable models only)"/>
-                                                <MenuItem fx:id="editCopyOfCurrPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstEditCopy"
-                                                          text="Edit Copy of Current Physical Constants Model"/>
-                                                <MenuItem fx:id="editNewEmpPhysConst" mnemonicParsing="false"
-                                                          onAction="#physConstEditEmptyMod"
-                                                          text="Edit New Empty Physical Constants Model"/>
+                                                <MenuItem fx:id="editCurrPhysConst" mnemonicParsing="false" onAction="#physConstEditCurrMod" text="Edit Current Physical Constants Model (for editable models only)" />
+                                                <MenuItem fx:id="cancelEditOfPhysConst" mnemonicParsing="false" onAction="#physConstCancelEdit" text="Cancel Edit of Physical Constants Model" />
+                                                <MenuItem fx:id="saveAndRegCurrPhysConst" mnemonicParsing="false" onAction="#physConstSaveAndRegisterEdit" text="Save and Register Current Edit of Physical Constants Model" />
                                             </items>
                                         </Menu>
                                     </menus>
                                 </MenuBar>
-                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0"
-                                         tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
-                                         AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
-                                         AnchorPane.topAnchor="130.0">
+                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="130.0">
                                     <tabs>
                                         <Tab text="Data">
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstDataTable" layoutX="14.0"
-                                                                   layoutY="26.0" prefHeight="336.0" prefWidth="871.0"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0"
-                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
-                                                              AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="physConstDataTable" layoutX="14.0" layoutY="26.0" prefHeight="336.0" prefWidth="871.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="physConstDataNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#physConstDataNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="physConstDataNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstDataNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="physConstDataSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="physConstDataSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
                                                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                                     <children>
-                                                                        <Label text="Units: "/>
-                                                                        <RadioButton fx:id="physConstDataARadioButton"
-                                                                                     text="a"
-                                                                                     onAction="#physConstDataARadioButtonOnAction"
-                                                                                     selected="true">
+                                                                        <Label text="Units: " />
+                                                                        <RadioButton fx:id="physConstDataARadioButton" onAction="#physConstDataARadioButtonOnAction" selected="true" text="a">
                                                                             <toggleGroup>
-                                                                                <ToggleGroup
-                                                                                        fx:id="physConstDataUnitsToggleGroup"/>
+                                                                                <ToggleGroup fx:id="physConstDataUnitsToggleGroup" />
                                                                             </toggleGroup>
                                                                         </RadioButton>
-                                                                        <RadioButton fx:id="physConstDataKARadioButton"
-                                                                                     text="Ka"
-                                                                                     toggleGroup="$physConstDataUnitsToggleGroup"
-                                                                                     onAction="#physConstDataKARadioButtonOnAction"/>
-                                                                        <RadioButton fx:id="physConstDataMARadioButton"
-                                                                                     text="Ma"
-                                                                                     toggleGroup="$physConstDataUnitsToggleGroup"
-                                                                                     onAction="#physConstDataMARadioButtonOnAction"/>
+                                                                        <RadioButton fx:id="physConstDataKARadioButton" onAction="#physConstDataKARadioButtonOnAction" text="Ka" toggleGroup="$physConstDataUnitsToggleGroup" />
+                                                                        <RadioButton fx:id="physConstDataMARadioButton" onAction="#physConstDataMARadioButtonOnAction" text="Ma" toggleGroup="$physConstDataUnitsToggleGroup" />
                                                                     </children>
                                                                 </HBox>
                                                             </children>
@@ -699,30 +480,19 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstCorrTable"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="physConstCorrTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="physConstCorrNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#physConstCorrNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="physConstCorrNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCorrNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="physConstCorrSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="physConstCorrSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Correlations | Note: correlation matrix is positive definite"/>
+                                                                <Label text="Correlations | Note: correlation matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -733,30 +503,19 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="physConstCovTable"
-                                                                   AnchorPane.bottomAnchor="5.0"
-                                                                   AnchorPane.leftAnchor="5.0"
-                                                                   AnchorPane.rightAnchor="5.0"
-                                                                   AnchorPane.topAnchor="30.4"/>
-                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
-                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                        <TableView fx:id="physConstCovTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="30.4" />
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                             <children>
 
-                                                                <Button fx:id="physConstCovNotationButton"
-                                                                        maxHeight="30.0" minHeight="30.0"
-                                                                        mnemonicParsing="false"
-                                                                        onAction="#physConstCovNotationOnAction"
-                                                                        prefHeight="30.0" prefWidth="200"
-                                                                        text="Use Standard Notation"/>
+                                                                <Button fx:id="physConstCovNotationButton" maxHeight="30.0" minHeight="30.0" mnemonicParsing="false" onAction="#physConstCovNotationOnAction" prefHeight="30.0" prefWidth="200" text="Use Standard Notation" />
 
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
-                                                                        <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="physConstCovSigFigs"
-                                                                                 prefWidth="80.0"/>
+                                                                        <Label text="SigFigs:" />
+                                                                        <Spinner fx:id="physConstCovSigFigs" prefWidth="80.0" />
                                                                     </children>
                                                                 </HBox>
-                                                                <Label text="Covariances | Note: covariance matrix is positive definite"/>
+                                                                <Label text="Covariances | Note: covariance matrix is positive definite" />
                                                             </children>
                                                         </HBox>
                                                     </children>
@@ -767,18 +526,9 @@
                                             <content>
                                                 <AnchorPane>
                                                     <children>
-                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
-                                                                    vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
+                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <content>
-                                                                <AnchorPane fx:id="referencesPane" prefHeight="357.0"
-                                                                            prefWidth="879.0"
-                                                                            AnchorPane.bottomAnchor="0.0"
-                                                                            AnchorPane.leftAnchor="0.0"
-                                                                            AnchorPane.rightAnchor="0.0"
-                                                                            AnchorPane.topAnchor="0.0"/>
+                                                                <AnchorPane fx:id="referencesPane" prefHeight="357.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                             </content>
                                                         </ScrollPane>
                                                     </children>
@@ -789,18 +539,9 @@
                                             <content>
                                                 <AnchorPane>
                                                     <children>
-                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER"
-                                                                    vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0"
-                                                                    AnchorPane.leftAnchor="0.0"
-                                                                    AnchorPane.rightAnchor="0.0"
-                                                                    AnchorPane.topAnchor="0.0">
+                                                        <ScrollPane id="physConstReferencesPane" hbarPolicy="NEVER" vbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <content>
-                                                                <AnchorPane fx:id="molarMassesPane" prefHeight="357.0"
-                                                                            prefWidth="879.0"
-                                                                            AnchorPane.bottomAnchor="0.0"
-                                                                            AnchorPane.leftAnchor="0.0"
-                                                                            AnchorPane.rightAnchor="0.0"
-                                                                            AnchorPane.topAnchor="0.0"/>
+                                                                <AnchorPane fx:id="molarMassesPane" prefHeight="357.0" prefWidth="879.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                             </content>
                                                         </ScrollPane>
                                                     </children>
@@ -811,20 +552,10 @@
                                             <content>
                                                 <AnchorPane>
                                                     <children>
-                                                        <TextArea fx:id="physConstReferencesArea" layoutX="430.0"
-                                                                  prefHeight="200.0" prefWidth="400.0"
-                                                                  promptText="add references here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <TextArea fx:id="physConstCommentsArea" layoutX="4.0"
-                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="336.0"
-                                                                  promptText="add comments here" wrapText="true"
-                                                                  AnchorPane.bottomAnchor="5.0"
-                                                                  AnchorPane.topAnchor="20.0"/>
-                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
-                                                               AnchorPane.topAnchor="0.0"/>
-                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
-                                                               AnchorPane.topAnchor="0.0"/>
+                                                        <TextArea fx:id="physConstReferencesArea" layoutX="430.0" prefHeight="200.0" prefWidth="400.0" promptText="add references here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <TextArea fx:id="physConstCommentsArea" layoutX="4.0" layoutY="104.0" prefHeight="200.0" prefWidth="336.0" promptText="add comments here" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.topAnchor="20.0" />
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments" AnchorPane.topAnchor="0.0" />
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References" AnchorPane.topAnchor="0.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </content>
@@ -832,48 +563,40 @@
                                     </tabs>
                                 </TabPane>
                                 <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
-                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT"
-                                           GridPane.rowIndex="0"/>
-                                    <TextField fx:id="physConstModelName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                    <Label text="Model Name:" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
+                                    <TextField fx:id="physConstModelName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+                                    <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="0" />
                                     <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
                                         <children>
-                                            <TextField fx:id="physConstVersion" prefHeight="26.0" prefWidth="75.0"/>
-                                            <Label fx:id="physConstIsEditableLabel" textFill="RED"/>
+                                            <TextField fx:id="physConstVersion" prefHeight="26.0" prefWidth="75.0" />
+                                            <Label fx:id="physConstIsEditableLabel" textFill="RED" />
                                         </children>
                                     </HBox>
 
-                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                    <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
-                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
-                                           GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
-                                    <TextField fx:id="physConstLabName" prefHeight="26.0" prefWidth="400.0"
-                                               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                    <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                    <TextField fx:id="physConstLabName" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
-                                           GridPane.rowIndex="1"/>
-                                    <TextField fx:id="physConstDateCertified" prefWidth="200" GridPane.columnIndex="4"
-                                               GridPane.rowIndex="1"/>
+                                    <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <TextField fx:id="physConstDateCertified" prefWidth="200" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                     <columnConstraints>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
-                                        <ColumnConstraints/>
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
+                                        <ColumnConstraints />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints/>
-                                        <RowConstraints/>
+                                        <RowConstraints />
+                                        <RowConstraints />
                                     </rowConstraints>
                                 </GridPane>
-                                <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
-                                      AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
+                                <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
                                     <children>
-                                        <Label text="Choose Physical Constants Model:"/>
-                                        <ChoiceBox fx:id="physConstCB" prefWidth="380.0"/>
+                                        <Label text="Choose Physical Constants Model:" />
+                                        <ChoiceBox fx:id="physConstCB" prefHeight="27.0" prefWidth="406.0" />
                                     </children>
                                 </HBox>
                             </children>
@@ -882,7 +605,5 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <Label id="labNameLabel" prefHeight="18.0" prefWidth="74.0" text="Lab Name:" AnchorPane.leftAnchor="10.0"
-               AnchorPane.topAnchor="10.0"/>
     </children>
 </AnchorPane>

@@ -74,6 +74,7 @@ import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
@@ -81,8 +82,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
@@ -97,7 +96,10 @@ import org.cirdles.squid.prawn.PrawnFile;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
+import org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum;
+import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
@@ -112,6 +114,7 @@ public class SquidUIController implements Initializable {
     static {
         CalamariFileUtilities.initSampleParametersModels();
         squidLabData = SquidLabData.getExistingSquidLabData();
+        squidLabData.testVersionAndUpdate();
     }
 
     public static SquidProject squidProject;
@@ -122,6 +125,66 @@ public class SquidUIController implements Initializable {
     private static Map<String, String> taskLibraryDescriptions = new HashMap<>();
 
     @FXML
+    private ImageView squidImageView;
+
+    private static GridPane projectManagerUI;
+
+    private static VBox sessionAuditUI;
+    private static ScrollPane massesAuditUI;
+    private static HBox spotManagerUI;
+
+    private static GridPane taskManagerUI;
+    private static GridPane taskEditorUI;
+    public static Node taskFolderBrowserUI;
+
+    private static VBox isotopesManagerUI;
+    private static ScrollPane ratiosManagerUI;
+
+    private static SplitPane expressionBuilderUI;
+
+    private static AnchorPane squidReportSettingsUI;
+
+    private static Pane reductionManagerUI;
+    private static Pane reducedDataReportManagerUI;
+    public static Node plotUI;
+    public static VBox countCorrectionsUI;
+    public static VBox commonLeadAssignmentUI;
+    public static VBox weightedMeansUI;
+
+    public static String projectFileName;
+
+    @FXML
+    private Label chinese;
+    @FXML
+    private Label japanese;
+    @FXML
+    private Label korean;
+    @FXML
+    private MenuItem choosePrawnFileMenuItem;
+    @FXML
+    private MenuItem auditRawDataMenuItem;
+    @FXML
+    private Label polish;
+    @FXML
+    private Label portuguese;
+    @FXML
+    private Label russian;
+    @FXML
+    private Label spanish;
+
+    @FXML
+    private SeparatorMenuItem dataSeparatorMenuItem;
+    @FXML
+    private Menu manageInterpretationsMenu;
+
+    public static ParametersLauncher parametersLauncher;
+    public static SquidReportTableLauncher squidReportTableLauncher;
+    public static HighlightMainMenu menuHighlighter;
+
+    public static int squidProjectOriginalHash;
+    public boolean runSaveMenuDisableCheck;
+
+    @FXML
     private Menu projectMenu;
     @FXML
     private Menu openRecentOPFileMenu;
@@ -129,8 +192,7 @@ public class SquidUIController implements Initializable {
     private MenuItem newSquidProjectFromOPFileMenuItem;
     @FXML
     private Menu manageExpressionsMenu;
-    @FXML
-    private Menu manageTasksMenu;
+
     @FXML
     private MenuItem newSquidProjectMenuItem;
     @FXML
@@ -157,33 +219,28 @@ public class SquidUIController implements Initializable {
     private MenuItem savePrawnFileCopyMenuItem;
 
     @FXML
-    private ImageView squidImageView;
+    private Menu openRecentSquidProjectMenu;
 
-    private static GridPane projectManagerUI;
+    @FXML
+    private Menu openRecentExpressionFileMenu;
+    private Menu squidLabDataMenu;
+    @FXML
+    private Menu commonPbMenu;
+    @FXML
+    private MenuItem newSquidProjectFromZippedPrawnMenuItem;
+    @FXML
+    private MenuItem newSquidRatioProjectMenuItem;
 
-    private static VBox sessionAuditUI;
-    private static ScrollPane massesAuditUI;
-    private static HBox spotManagerUI;
+    @FXML
+    private MenuItem refMatConcordiaMenuItem;
+    @FXML
+    private MenuItem unknownConcordiaMenuItem;
 
-    private static GridPane taskManagerUI;
-    private static GridPane taskDesignerUI;
-
-    private static VBox isotopesManagerUI;
-    private static ScrollPane ratiosManagerUI;
-
-    private static SplitPane expressionBuilderUI;
-
-    private static AnchorPane squidReportSettingsUI;
-
-    private static Pane reductionManagerUI;
-    private static Pane reducedDataReportManagerUI;
-    public static Node plotUI;
-    public static VBox countCorrectionsUI;
-    public static VBox commonLeadAssignmentUI;
-    public static VBox weightedMeansUI;
-
-    public static String projectFileName;
-
+    // Task Menus ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    @FXML
+    private Menu manageTasksMenu;
+    private MenuItem newTaskUsingDesignerMenuItem;
+    private Menu selectSquid3TaskFromLibraryMenu;
     @FXML
     private MenuItem importSquid25TaskMenuItem;
     @FXML
@@ -191,55 +248,9 @@ public class SquidUIController implements Initializable {
     @FXML
     private MenuItem importSquid3TaskMenuItem;
     @FXML
-    private Menu openRecentSquidProjectMenu;
+    private MenuItem browseTaskFolderTaskMenuItem;
     @FXML
-    private Menu selectSquid3TaskFromLibraryMenu;
-    @FXML
-    private Menu openRecentExpressionFileMenu;
-    @FXML
-    private Menu squidLabDataMenu;
-    @FXML
-    private Label chinese;
-    @FXML
-    private Label japanese;
-    @FXML
-    private Label korean;
-    @FXML
-    private MenuItem choosePrawnFileMenuItem;
-    @FXML
-    private MenuItem auditRawDataMenuItem;
-    @FXML
-    private Label polish;
-    @FXML
-    private Label portuguese;
-    @FXML
-    private Label russian;
-    @FXML
-    private Label spanish;
-    private MenuItem newSquid3TaskFromPrefsMenuItem;
-    @FXML
-    private SeparatorMenuItem dataSeparatorMenuItem;
-    @FXML
-    private Menu manageInterpretationsMenu;
-
-    public static ParametersLauncher parametersLauncher;
-    public static SquidReportTableLauncher squidReportTableLauncher;
-    public static HighlightMainMenu menuHighlighter;
-
-    public static int squidProjectOriginalHash;
-    public boolean runSaveMenuDisableCheck;
-    @FXML
-    private Menu commonPbMenu;
-    @FXML
-    private MenuItem newSquidProjectFromZippedPrawnMenuItem;
-    @FXML
-    private MenuItem newSquidRatioProjectMenuItem;
-    @FXML
-    private MenuItem newTaskUsingDesignerMenuItem;
-    @FXML
-    private MenuItem refMatConcordiaMenuItem;
-    @FXML
-    private MenuItem unknownConcordiaMenuItem;
+    private MenuItem browseTaskFolderTaskMenuItem1;
 
     /**
      * Initializes the controller class.
@@ -287,16 +298,12 @@ public class SquidUIController implements Initializable {
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
         //Task menu
-        selectSquid3TaskFromLibraryMenu.setDisable(false);
         importSquid25TaskMenuItem.setDisable(false);
         importSquid3TaskMenuItem.setDisable(false);
         exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
-
-        //Parameters Menu
-        squidLabDataMenu.setDisable(false);
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.initDemoSquidProjectFiles();
@@ -374,55 +381,54 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void buildTaskLibraryMenu() {
-        if (taskLibraryDescriptions.isEmpty()) {
-            List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
-            for (String fileName : taskLibraryFileNamesList) {
-                TaskInterface workingTask
-                        = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
-                                + File.separator + fileName, false);
-                taskLibraryDescriptions.put(fileName, (workingTask.getDescription().length() == 0) ? "No description provided" : workingTask.getDescription());
-            }
-        }
-
-        selectSquid3TaskFromLibraryMenu.setDisable(false);
-        selectSquid3TaskFromLibraryMenu.getItems().clear();
-
-        List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
-        for (String fileName : taskLibraryFileNamesList) {
-            CustomMenuItem menuItem = new CustomMenuItem(new Label(fileName.replace(".xml", "")));
-            menuItem.setMnemonicParsing(false);
-            Tooltip toolTip = new Tooltip(taskLibraryDescriptions.get(fileName));
-            Tooltip.install(menuItem.getContent(), toolTip);
-            menuItem.getContent().setOnMouseMoved(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    toolTip.show(menuItem.getContent(), event.getScreenX(), event.getScreenY() + 15);
-                }
-            });
-            menuItem.getContent().setOnMouseExited(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    toolTip.hide();
-                }
-            });
-
-            menuItem.setOnAction((ActionEvent t) -> {
-                try {
-                    squidProject.createTaskFromSerializedTaskXML(
-                            SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
-                            + File.separator + fileName);
-                    launchTaskManager();
-                } catch (SquidException squidException) {
-                    SquidMessageDialog.showInfoDialog(
-                            "Squid cannot load Task: " + fileName.replace("/", "\n/"), primaryStageWindow);
-                }
-
-            });
-            selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
-        }
-    }
-
+//    private void buildTaskLibraryMenu() {
+//        if (taskLibraryDescriptions.isEmpty()) {
+//            List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
+//            for (String fileName : taskLibraryFileNamesList) {
+//                TaskInterface workingTask
+//                        = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
+//                                + File.separator + fileName, false);
+//                taskLibraryDescriptions.put(fileName, (workingTask.getDescription().length() == 0) ? "No description provided" : workingTask.getDescription());
+//            }
+//        }
+//
+//        selectSquid3TaskFromLibraryMenu.setDisable(false);
+//        selectSquid3TaskFromLibraryMenu.getItems().clear();
+//
+//        List<String> taskLibraryFileNamesList = CalamariFileUtilities.taskLibraryFileNamesList;
+//        for (String fileName : taskLibraryFileNamesList) {
+//            CustomMenuItem menuItem = new CustomMenuItem(new Label(fileName.replace(".xml", "")));
+//            menuItem.setMnemonicParsing(false);
+//            Tooltip toolTip = new Tooltip(taskLibraryDescriptions.get(fileName));
+//            Tooltip.install(menuItem.getContent(), toolTip);
+//            menuItem.getContent().setOnMouseMoved(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    toolTip.show(menuItem.getContent(), event.getScreenX(), event.getScreenY() + 15);
+//                }
+//            });
+//            menuItem.getContent().setOnMouseExited(new EventHandler<MouseEvent>() {
+//                @Override
+//                public void handle(MouseEvent event) {
+//                    toolTip.hide();
+//                }
+//            });
+//
+//            menuItem.setOnAction((ActionEvent t) -> {
+//                try {
+//                    squidProject.createTaskFromSerializedTaskXML(
+//                            SQUID_TASK_LIBRARY_FOLDER.getAbsolutePath()
+//                            + File.separator + fileName);
+//                    launchTaskViewer();
+//                } catch (SquidException squidException) {
+//                    SquidMessageDialog.showInfoDialog(
+//                            "Squid cannot load Task: " + fileName.replace("/", "\n/"), primaryStageWindow);
+//                }
+//
+//            });
+//            selectSquid3TaskFromLibraryMenu.getItems().add(menuItem);
+//        }
+//    }
     private void buildExpressionMenuMRU() {
 
         openRecentExpressionFileMenu.getItems().clear();
@@ -463,7 +469,7 @@ public class SquidUIController implements Initializable {
             projectManagerMenuItem.setDisable(false);
 
             managePrawnFileMenu.setDisable(false);
-            buildTaskLibraryMenu();
+//            buildTaskLibraryMenu();
             manageTasksMenu.setDisable(false);
             manageRatiosMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
@@ -511,7 +517,8 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(commonLeadAssignmentUI);
         mainPane.getChildren().remove(weightedMeansUI);
 
-        mainPane.getChildren().remove(taskDesignerUI);
+        mainPane.getChildren().remove(taskEditorUI);
+        mainPane.getChildren().remove(taskFolderBrowserUI);
 
         saveSquidProjectMenuItem.setDisable(true);
         saveAsSquidProjectMenuItem.setDisable(true);
@@ -541,9 +548,6 @@ public class SquidUIController implements Initializable {
         removeAllManagers();
 
         squidProject = new SquidProject(projectType);
-
-        newTaskUsingDesignerMenuItem.setDisable(projectType.equals(GENERAL));
-        //importSquid25TaskMenuItem.setDisable(projectType.equals(GENERAL));
 
         // this updates output folder for reports to current version
         CalamariFileUtilities.initCalamariReportsFolder(squidProject.getPrawnFileHandler(), new File(projectFileName).getParentFile());
@@ -780,9 +784,6 @@ public class SquidUIController implements Initializable {
                 launchProjectManager();
                 saveSquidProjectMenuItem.setDisable(false);
 
-                newTaskUsingDesignerMenuItem.setDisable(!squidProject.isTypeGeochron());
-                //importSquid25TaskMenuItem.setDisable(!squidProject.isTypeGeochron());
-
                 customizeDataMenu();
 
                 // this updates output folder for reports to current version
@@ -796,7 +797,6 @@ public class SquidUIController implements Initializable {
                 throw new IOException();
             }
         }
-
     }
 
     private void customizeDataMenu() {
@@ -955,7 +955,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    public void launchTaskManager() {
+    public void launchTaskViewer() {
         ManageRefMatWarning();
 
         mainPane.getChildren().remove(taskManagerUI);
@@ -979,6 +979,51 @@ public class SquidUIController implements Initializable {
             menuHighlighter.highlight(manageTasksMenu);
         } catch (IOException | RuntimeException iOException) {
             //System.out.println("TaskManager >>>>   " + iOException.getMessage());
+        }
+    }
+
+    /**
+     *
+     * @param editType the value of editType
+     */
+    public void launchTaskEditor(TaskEditTypeEnum editType) {
+        mainPane.getChildren().remove(taskEditorUI);
+        try {
+            TaskEditorController.editType = editType;
+            taskEditorUI = FXMLLoader.load(getClass().getResource("TaskEditor.fxml"));
+            taskEditorUI.setId("TaskEditor");
+
+            AnchorPane.setLeftAnchor(taskEditorUI, 0.0);
+            AnchorPane.setRightAnchor(taskEditorUI, 0.0);
+            AnchorPane.setTopAnchor(taskEditorUI, 0.0);
+            AnchorPane.setBottomAnchor(taskEditorUI, 0.0);
+
+            mainPane.getChildren().add(taskEditorUI);
+            showUI(taskEditorUI);
+
+            menuHighlighter.highlight(manageTasksMenu);
+        } catch (IOException | RuntimeException iOException) {
+            //System.out.println("TaskEditor >>>>   " + iOException.getMessage());
+        }
+    }
+
+    private void launchTaskFolderBrowser() {
+        mainPane.getChildren().remove(taskFolderBrowserUI);
+        try {
+            taskFolderBrowserUI = FXMLLoader.load(getClass().getResource("TaskFolderBrowser.fxml"));
+            taskFolderBrowserUI.setId("TaskFolderBrowser");
+
+            AnchorPane.setLeftAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setRightAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setTopAnchor(taskFolderBrowserUI, 0.0);
+            AnchorPane.setBottomAnchor(taskFolderBrowserUI, 0.0);
+
+            mainPane.getChildren().add(taskFolderBrowserUI);
+            showUI(taskFolderBrowserUI);
+
+            menuHighlighter.highlight(manageTasksMenu);
+        } catch (IOException | RuntimeException iOException) {
+            //System.out.println("taskFolderBrowserUI >>>>   " + iOException.getMessage());
         }
     }
 
@@ -1078,26 +1123,6 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchTaskDesigner() {
-        mainPane.getChildren().remove(taskDesignerUI);
-        try {
-            taskDesignerUI = FXMLLoader.load(getClass().getResource("TaskDesigner.fxml"));
-            taskDesignerUI.setId("TaskDesigner");
-
-            AnchorPane.setLeftAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setRightAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setTopAnchor(taskDesignerUI, 0.0);
-            AnchorPane.setBottomAnchor(taskDesignerUI, 0.0);
-
-            mainPane.getChildren().add(taskDesignerUI);
-            showUI(taskDesignerUI);
-
-            menuHighlighter.highlight(manageTasksMenu);
-        } catch (IOException | RuntimeException iOException) {
-            //System.out.println("TaskDesigner >>>>   " + iOException.getMessage());
-        }
-    }
-
     @FXML
     private void projectManagerMenuItemAction(ActionEvent event) {
         launchProjectManager();
@@ -1152,11 +1177,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void manageTaskMenuItemAction(ActionEvent event) {
-        launchTaskManager();
-    }
-
-    @FXML
     private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
         try {
             File prawnXMLFileNew = FileHandler.savePrawnXMLFile(squidProject, primaryStageWindow);
@@ -1173,14 +1193,28 @@ public class SquidUIController implements Initializable {
         ManageRefMatWarning();
 
         try {
-            File squidTaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
-            if (squidTaskFile != null) {
-                squidPersistentState.updateTaskListMRU(squidTaskFile);
-                squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
-                launchTaskManager();
+            File squid25TaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
+            if (squid25TaskFile != null) {
+//                TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squid25TaskFile);
+//
+//                TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
+//
+//                Path path = Files.createTempDirectory("convertedTasks");
+//
+//                File tempTaskFile = new File(path.toString() + File.pathSeparator + taskSquid25.getTaskName() + ".xml");
+//                ((XMLSerializerInterface) taskFromSquid25)
+//                        .serializeXMLObject(tempTaskFile.getAbsolutePath());
+
+                squidPersistentState.updateTaskListMRU(squid25TaskFile);
+                TaskFolderBrowserController.tasksBrowserTarget = squid25TaskFile;
+                TaskFolderBrowserController.tasksBrowserType = ".xls";
+                launchTaskFolderBrowser();
+
+//                squidProject.replaceCurrentTaskWithImportedSquid25Task(squid25TaskFile);
+//                launchTaskViewer();
             }
         } catch (SquidException | IOException | JAXBException | SAXException iOException) {
-
+            SquidMessageDialog.showWarningDialog(iOException.getMessage(), primaryStageWindow);
         }
     }
 
@@ -1191,7 +1225,7 @@ public class SquidUIController implements Initializable {
         } catch (IOException iOException) {
         }
         // refresh task name if necessary
-        launchTaskManager();
+        launchTaskViewer();
     }
 
     @FXML
@@ -1200,29 +1234,38 @@ public class SquidUIController implements Initializable {
         BooleanProperty proceed = new SimpleBooleanProperty(false);
         try {
             taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
-            // Add in peek window to confirm details of choice
-            TaskInterface peekTask = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(taskXMLFile.getAbsolutePath(), false);
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Task Description: \n\n"
-                    + ((peekTask.getDescription().length() == 0) ? "No description provided." : peekTask.getDescription())
-                    + "\n\n\tProceed to load task?");
-            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-            alert.showAndWait().ifPresent(action -> {
-                if (action == ButtonType.OK) {
-                    proceed.set(true);
-                }
-            });
+            TaskFolderBrowserController.tasksBrowserTarget = taskXMLFile;
+            TaskFolderBrowserController.tasksBrowserType = ".xml";
+            launchTaskFolderBrowser();
 
-            if (proceed.get()) {
-                squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
-                launchTaskManager();
+//            // Add in peek window to confirm details of choice
+//            TaskInterface peekTask = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(taskXMLFile.getAbsolutePath(), false);
+//
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+//                    "Task Description: \n\n"
+//                    + ((peekTask.getDescription().length() == 0) ? "No description provided." : peekTask.getDescription())
+//                    + "\n\n\tProceed to load task?");
+//            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+//            alert.showAndWait().ifPresent(action -> {
+//                if (action == ButtonType.OK) {
+//                    proceed.set(true);
+//                }
+//            });
+//
+//            if (proceed.get()) {
+//                squidProject.createTaskFromSerializedTaskXML(taskXMLFile.getAbsolutePath());
+//                launchTaskViewer();
+//            }
+        } catch (IOException | JAXBException | SAXException | NullPointerException iOException) {
+            if (taskXMLFile != null) {
+                SquidMessageDialog.showInfoDialog(
+                        "Squid cannot load Task: "
+                        + taskXMLFile.getAbsolutePath().replace("/", "\n/"),
+                        primaryStageWindow);
+            } else {
+                SquidMessageDialog.showWarningDialog(iOException.getMessage(), primaryStageWindow);
             }
-        } catch (IOException | JAXBException | SAXException | SquidException | NullPointerException iOException) {
-            SquidMessageDialog.showInfoDialog(
-                    "Squid cannot load Task: "
-                    + taskXMLFile.getAbsolutePath().replace("/", "\n/"),
-                    primaryStageWindow);
         }
     }
 
@@ -1342,6 +1385,11 @@ public class SquidUIController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
+        @FXML
+    private void visitCIRDLESAction(ActionEvent event) {
+          BrowserControl.showURI("https://CIRDLES.org");
+    }
+
     @FXML
     private void showSquid3GithubRepo(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid");
@@ -1382,7 +1430,6 @@ public class SquidUIController implements Initializable {
         showUI(expressionBuilderUI);
     }
 
-    @FXML
     private void ludwigLibraryJavaDocAction(ActionEvent event) {
         BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
@@ -1830,18 +1877,13 @@ public class SquidUIController implements Initializable {
                     primaryStageWindow);
         }
     }
-
-    @FXML
-    private void listBuiltinExpressionsAction(ActionEvent event) {
-        System.out.println(squidProject.getTask().listBuiltInExpressions());
-    }
-
+    
     private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
 
             SquidProject.setProjectChanged(((Task) task).synchronizeTaskVersion());
-
+            
             (((Task) task).verifySquidLabDataParameters()).forEach(model -> {
                 if (model instanceof PhysicalConstantsModel) {
                     squidLabData.addPhysicalConstantsModel(model);
@@ -1890,11 +1932,6 @@ public class SquidUIController implements Initializable {
         contextMenu.getItems().addAll(copyAll, copyAsCsv);
 
         textArea.setContextMenu(contextMenu);
-    }
-
-    @FXML
-    private void showTaskDesignerAction(ActionEvent event) {
-        launchTaskDesigner();
     }
 
     @FXML
@@ -1959,9 +1996,81 @@ public class SquidUIController implements Initializable {
         }
     }
 
+    // Task actions ************************************************************
     @FXML
-    private void loadTaskFromLibraryAction(ActionEvent event) {
+    private void browseSquidTasksLibrary(ActionEvent event) {
+        if (SQUID_TASK_LIBRARY_FOLDER != null) {
+            TaskFolderBrowserController.tasksBrowserTarget = SQUID_TASK_LIBRARY_FOLDER;
+            TaskFolderBrowserController.tasksBrowserType = ".xml";
+            launchTaskFolderBrowser();
+        }
     }
+
+    @FXML
+    private void browseTaskFolderTaskMenuItemAction(ActionEvent event) {
+        File tasksBrowserTarget = FileHandler.selectTasksFolderForBrowsing(primaryStageWindow);
+        if (tasksBrowserTarget != null) {
+            TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
+            TaskFolderBrowserController.tasksBrowserType = ".xml";
+            launchTaskFolderBrowser();
+        }
+    }
+
+    @FXML
+    private void browseSquid25TaskFolderMenuItemAction(ActionEvent event) {
+        File tasksBrowserTarget = FileHandler.selectTasksFolderForBrowsing(primaryStageWindow);
+        if (tasksBrowserTarget != null) {
+            TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
+            TaskFolderBrowserController.tasksBrowserType = ".xls";
+            launchTaskFolderBrowser();
+        }
+    }
+
+    @FXML
+    private void viewTaskMenuItemAction(ActionEvent event) {
+        launchTaskViewer();
+    }
+
+    @FXML
+    private void editTaskMenuItemAction(ActionEvent event) {
+        launchTaskEditor(EDIT_CURRENT);
+    }
+
+    @FXML
+    private void editEmptyTaskAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_EMPTY);
+    }
+
+    @FXML
+    private void editCopyCurrentTaskAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT);
+    }
+
+    @FXML
+    private void editCopyCurrentTaskNoExpAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT_NO_EXP);
+    }
+
+    @FXML
+    private void editDefault9MassTaskAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_DEFAULT_9_MASS);
+    }
+
+    @FXML
+    private void editDefault10MassTaskAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_DEFAULT_10_MASS);
+    }
+
+    @FXML
+    private void editDefault11MassTaskAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_DEFAULT_11_MASS);
+    }
+
+    @FXML
+    private void editExistingTaskMenuItemAction(ActionEvent event) {
+        launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
+    }
+
 
     private class HighlightMainMenu {
 

@@ -383,19 +383,25 @@ public abstract class BuiltInExpressionsFactory {
 
         String sourceModelNameAndVersion = concReferenceMaterialModel.getModelNameWithVersion();
 
-        Expression expressionStdUConcPpm = buildExpression(REF_U_CONC_PPM,
-                String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
-                        .getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
-        expressionStdUConcPpm.setReferenceMaterialValue(true);
-        expressionStdUConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
-        parameterValues.add(expressionStdUConcPpm);
+        if (((ReferenceMaterialModel) concReferenceMaterialModel)
+                .getConcentrationByName("concU").getValue().doubleValue() > 0.0) {
+            Expression expressionStdUConcPpm = buildExpression(REF_U_CONC_PPM,
+                    String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                            .getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
+            expressionStdUConcPpm.setReferenceMaterialValue(true);
+            expressionStdUConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+            parameterValues.add(expressionStdUConcPpm);
+        }
 
-        Expression expressionStdThConcPpm = buildExpression(REF_TH_CONC_PPM,
-                String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
-                        .getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
-        expressionStdThConcPpm.setReferenceMaterialValue(true);
-        expressionStdThConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
-        parameterValues.add(expressionStdThConcPpm);
+        if (((ReferenceMaterialModel) concReferenceMaterialModel)
+                .getConcentrationByName("concTh").getValue().doubleValue() > 0.0) {
+            Expression expressionStdThConcPpm = buildExpression(REF_TH_CONC_PPM,
+                    String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                            .getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
+            expressionStdThConcPpm.setReferenceMaterialValue(true);
+            expressionStdThConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
+            parameterValues.add(expressionStdThConcPpm);
+        }
 
         return parameterValues;
     }
@@ -443,7 +449,7 @@ public abstract class BuiltInExpressionsFactory {
                 String.valueOf(lookup238U235U), true, true, true);
         expressionPresent238U235U.setReferenceMaterialValue(true);
         expressionPresent238U235U.setSourceModelNameAndVersion(usedDefaultValue ? "used Default Value because model " + sourceModelNameAndVersion + " has zero value." : sourceModelNameAndVersion);
-                
+
         referenceMaterialValues.add(expressionPresent238U235U);
 
         sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();

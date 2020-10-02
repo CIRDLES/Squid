@@ -667,8 +667,6 @@ public interface TaskInterface {
      */
     public void setExtPErrTh(double extPErrTh);
 
-    public String listBuiltInExpressions();
-
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
 
     /**
@@ -685,8 +683,9 @@ public interface TaskInterface {
     /**
      *
      * @param taskDesign the value of taskDesign
+     * @param taskSkeleton the value of taskSkeleton
      */
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign);
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton);
 
     /**
      *

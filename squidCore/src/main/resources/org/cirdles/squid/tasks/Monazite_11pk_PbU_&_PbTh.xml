@@ -2,7 +2,7 @@
 <!-- SQUID3_TASK_SPECIFICATION_FILE -->
 <!-- visit: github.com/CIRDLES/Squid -->
 <Task>
-  <name>Monazite 11pk Pb/U &amp; Pb/Th</name>
+  <name>Monazite_11pk_PbU_&amp;_PbTh</name>
   <taskType>GEOCHRON</taskType>
   <description></description>
   <authorName>Andrew Cross</authorName>
@@ -14,7 +14,7 @@
   <nominalMasses>
     <string>203</string>
     <string>204</string>
-    <string>BKG</string>
+    <string>204.1</string>
     <string>206</string>
     <string>207</string>
     <string>208</string>

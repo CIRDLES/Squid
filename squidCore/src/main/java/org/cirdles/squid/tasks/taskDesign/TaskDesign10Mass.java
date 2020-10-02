@@ -33,13 +33,16 @@ public class TaskDesign10Mass extends TaskDesign {
     public TaskDesign10Mass() {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254", "270"}));
+            //            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254", "270"}));
+            "204.1", "196", "238", "248", "254", "270"}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-            "238/196", "206/238", "208/248", "254/238", "248/254", "206/254", "206/270", "270/254" }));
+            "238/196", "206/238", "208/248", "254/238", "248/254", "206/254", "206/270", "270/254"}));
+
+        this.name = "New 10 mass task";
 
         indexOfBackgroundSpecies = 2;
-        
+
         this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^2");
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]");

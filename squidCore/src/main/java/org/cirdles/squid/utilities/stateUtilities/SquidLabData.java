@@ -41,21 +41,46 @@ public class SquidLabData implements Serializable {
     private ParametersModel refMatConcDefault;
     private ParametersModel physConstDefault;
 
+    private static  int CURRENT_VERSION = 16;
+    private int version;
+
     public SquidLabData() {
         laboratoryName = "Your lab";
-        referenceMaterials = ReferenceMaterialModel.getDefaultModels();
+
+        referenceMaterials = new ArrayList<>();
+        physicalConstantsModels = new ArrayList<>();
+        commonPbModels = new ArrayList<>();
+        
+        updateSquidLabData();
+    }
+
+    private void updateSquidLabData() {
+        referenceMaterials.removeAll(ReferenceMaterialModel.getDefaultModels());
+        referenceMaterials.addAll(ReferenceMaterialModel.getDefaultModels());
         referenceMaterials.sort(new ParametersModelComparator());
-        physicalConstantsModels = PhysicalConstantsModel.getDefaultModels();
+        
+        physicalConstantsModels.removeAll(PhysicalConstantsModel.getDefaultModels());
+        physicalConstantsModels.addAll(PhysicalConstantsModel.getDefaultModels());
         physicalConstantsModels.sort(new ParametersModelComparator());
-        commonPbModels = CommonPbModel.getDefaultModels();
+        
+        commonPbModels.removeAll(CommonPbModel.getDefaultModels());
+        commonPbModels.addAll(CommonPbModel.getDefaultModels());
         commonPbModels.sort(new ParametersModelComparator());
 
         physConstDefault = PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0");
-        refMatDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
-        refMatConcDefault = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
-        commonPbDefault = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
+        refMatDefault = ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0");
+        refMatConcDefault = ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0");
+        commonPbDefault = CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0");
+
+        version = CURRENT_VERSION;
 
         storeState();
+    }
+    
+    public void testVersionAndUpdate(){
+        if (version < CURRENT_VERSION){
+            updateSquidLabData();
+        }
     }
 
     public static SquidLabData getExistingSquidLabData() {
@@ -94,7 +119,7 @@ public class SquidLabData implements Serializable {
     public ParametersModel getCommonPbDefault() {
         ParametersModel retVal;
         if (commonPbDefault == null) {
-            retVal = CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0");
+            retVal = CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0");
         } else {
             retVal = commonPbDefault;
         }
@@ -108,7 +133,7 @@ public class SquidLabData implements Serializable {
     public ParametersModel getRefMatDefault() {
         ParametersModel retVal;
         if (refMatDefault == null) {
-            retVal = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0");
         } else {
             retVal = refMatDefault;
         }
@@ -122,7 +147,7 @@ public class SquidLabData implements Serializable {
     public ParametersModel getRefMatConcDefault() {
         ParametersModel retVal;
         if (refMatConcDefault == null) {
-            retVal = ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0");
+            retVal = ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0");
         } else {
             retVal = refMatConcDefault;
         }
@@ -264,5 +289,15 @@ public class SquidLabData implements Serializable {
 
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
+    }
+
+    /**
+     * @return the version
+     */
+    public int getVersion() {
+        if (version == 0) {
+            version = 1;
+        }
+        return version;
     }
 }

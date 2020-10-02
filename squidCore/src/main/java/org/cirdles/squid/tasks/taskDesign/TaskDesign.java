@@ -57,6 +57,10 @@ public class TaskDesign implements Serializable {
     protected static final long serialVersionUID = -936841271782482788L;
 
     // instance variables
+    protected String name;
+    protected String description;
+    protected String provenance;
+
     protected TaskTypeEnum taskType;
     protected String authorName;
     protected String labName;
@@ -93,6 +97,10 @@ public class TaskDesign implements Serializable {
      * Creates a new instance of TaskDesign
      */
     public TaskDesign() {
+        this.name = "";
+        this.description = "";
+        this.provenance = "";
+
         this.taskType = TaskTypeEnum.GEOCHRON;
         this.authorName = "";
         this.labName = "";
@@ -173,6 +181,9 @@ public class TaskDesign implements Serializable {
             ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
             namedExpressionsMap.put(ratioNames.get(i), ratio);
         }
+        for (Expression exp : customTaskExpressions){
+            namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
+        }
         return namedExpressionsMap;
     }
 
@@ -193,6 +204,48 @@ public class TaskDesign implements Serializable {
      */
     public void setTaskType(TaskTypeEnum taskType) {
         this.taskType = taskType;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * @param description the description to set
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    /**
+     * @return the provenance
+     */
+    public String getProvenance() {
+        return provenance;
+    }
+
+    /**
+     * @param provenance the provenance to set
+     */
+    public void setProvenance(String provenance) {
+        this.provenance = provenance;
     }
 
     /**

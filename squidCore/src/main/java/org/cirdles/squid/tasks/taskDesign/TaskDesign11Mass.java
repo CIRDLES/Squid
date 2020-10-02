@@ -35,11 +35,13 @@ public class TaskDesign11Mass extends TaskDesign {
     public TaskDesign11Mass() {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            DEFAULT_BACKGROUND_MASS_LABEL, "190", "195.8", "195.9", "238", "248", "254"}));
+            "204.1", "190", "195.8", "195.9", "238", "248", "254"}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
             "190/195.8", "195.9/195.8", "238/195.8", "248/195.8", "206/238", "254/238", "208/248", "206/254", "248/254"}));
 
+        this.name = "New 11 mass task";
+        
         indexOfBackgroundSpecies = 4;
 
         this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
