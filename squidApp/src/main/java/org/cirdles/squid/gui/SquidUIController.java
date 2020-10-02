@@ -114,6 +114,7 @@ public class SquidUIController implements Initializable {
     static {
         CalamariFileUtilities.initSampleParametersModels();
         squidLabData = SquidLabData.getExistingSquidLabData();
+        squidLabData.testVersionAndUpdate();
     }
 
     public static SquidProject squidProject;
@@ -1887,7 +1888,7 @@ public class SquidUIController implements Initializable {
             TaskInterface task = squidProject.getTask();
 
             SquidProject.setProjectChanged(((Task) task).synchronizeTaskVersion());
-
+            
             (((Task) task).verifySquidLabDataParameters()).forEach(model -> {
                 if (model instanceof PhysicalConstantsModel) {
                     squidLabData.addPhysicalConstantsModel(model);

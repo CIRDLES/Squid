@@ -1,2 +1,5 @@
-Zircon-91500 v.1.0.xml
-GA Accepted BR266 v.1.0.xml
+44069 ID-TIMS (424.86 Ma) v.1.0.xml
+M127 ID-TIMS (524.36 Ma) v.1.0.xml
+R33 ID-TIMS (419.26 Ma) v.1.0.xml
+TEMORA2 ID-TIMS (416.78 Ma) v.1.0.xml
+z6266 ID-TIMS (559.0 Ma) v.1.0.xml

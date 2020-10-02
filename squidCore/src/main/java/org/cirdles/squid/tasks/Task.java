@@ -128,6 +128,8 @@ import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpressi
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 
@@ -1077,14 +1079,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         if (concentrationReferenceMaterialModelChanged) {
+            // sept 2020 per nicole rayner, if no concentration model, 
+            // or either value is zero, kill the expressions with zeroes
+            Expression expRemove = getExpressionByName(REF_U_CONC_PPM);
+            removeExpression(expRemove, false);
+            expRemove = getExpressionByName(REF_TH_CONC_PPM);
+            removeExpression(expRemove, false);
+
             SortedSet<Expression> updatedConcReferenceMaterialExpressions
                     = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
             Iterator<Expression> updatedConcReferenceMaterialExpressionsIterator = updatedConcReferenceMaterialExpressions.iterator();
             while (updatedConcReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
-                removeExpression(exp, false);
                 addExpression(exp, false);
-                //updateAffectedExpressions(exp, false);
             }
             concentrationReferenceMaterialModelChanged = false;
         }

@@ -39,6 +39,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
+import javafx.stage.DirectoryChooser;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
@@ -133,8 +134,6 @@ public class ParametersManagerGUIController implements Initializable {
     private TextField refMatVersion;
     @FXML
     private TextField refMatDateCertified;
-    @FXML
-    private TextField labNameTextField;
     @FXML
     private TextArea physConstReferencesArea;
     @FXML
@@ -355,7 +354,6 @@ public class ParametersManagerGUIController implements Initializable {
 
         setUpTabs();
         setUpApparentDatesTabSelection();
-        setUpLaboratoryName();
         setUpDatesCheckboxVisibilityListener();
     }
 
@@ -498,9 +496,9 @@ public class ParametersManagerGUIController implements Initializable {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (ParametersModel mod : physConstModels) {
             if (mod.equals(squidLabData.getPhysConstDefault())) {
-                cbList.add(mod.getModelNameWithVersion() + " - default");
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod) + " -default");
             } else {
-                cbList.add(mod.getModelNameWithVersion());
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod));
             }
         }
         physConstCB.setItems(cbList);
@@ -529,9 +527,9 @@ public class ParametersManagerGUIController implements Initializable {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (ParametersModel mod : refMatModels) {
             if (mod.equals(squidLabData.getRefMatDefault())) {
-                cbList.add(mod.getModelNameWithVersion() + " - default");
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod) + " - default");
             } else {
-                cbList.add(mod.getModelNameWithVersion());
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod));
             }
         }
         refMatCB.setItems(cbList);
@@ -566,13 +564,18 @@ public class ParametersManagerGUIController implements Initializable {
         }
     }
 
+    private String isBuiltin(ParametersModel mod) {
+        return mod.isEditable() ? "" : " <Built-in>";
+    }
+
     private void setUpCommonPbCBItems() {
         final ObservableList<String> cbList = FXCollections.observableArrayList();
         for (ParametersModel mod : commonPbModels) {
+
             if (mod.equals(squidLabData.getCommonPbDefault())) {
-                cbList.add(mod.getModelNameWithVersion() + " - default");
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod) + " - default");
             } else {
-                cbList.add(mod.getModelNameWithVersion());
+                cbList.add(mod.getModelNameWithVersion() + isBuiltin(mod));
             }
         }
         commonPbCB.setItems(cbList);
@@ -1196,19 +1199,6 @@ public class ParametersManagerGUIController implements Initializable {
         date.setText(dateCertified);
         com.setText(comments);
         ref.setText(references);
-    }
-
-    private void setUpLaboratoryName() {
-        labNameTextField.setText(squidLabData.getLaboratoryName());
-        labNameTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                if (!newPropertyValue && !squidLabData.getLaboratoryName().equals(labNameTextField.getText())) {
-                    squidLabData.setLaboratoryName(labNameTextField.getText());
-                    squidLabData.storeState();
-                }
-            }
-        });
     }
 
     private static String getRatioVisibleName(String ratio) {
@@ -2856,6 +2846,43 @@ public class ParametersManagerGUIController implements Initializable {
     public void physConstDataMARadioButtonOnAction(ActionEvent actionEvent) {
         physConstDataUnits = Units.ma;
         setUpPhysConstData();
+    }
+
+    @FXML
+    private void refMatExportAllAction(ActionEvent event) {
+        exportAllRefMatFiles(refMatModels);
+    }
+
+    @FXML
+    private void commonPbExportAllAction(ActionEvent event) {
+        exportAllRefMatFiles(commonPbModels);
+    }
+
+    @FXML
+    private void phyConstExportAllAction(ActionEvent event) {
+        exportAllRefMatFiles(physConstModels);
+    }
+
+    private void exportAllRefMatFiles(List<ParametersModel> parameterModels) {
+
+        File parametgerModelsFilesFolder;
+
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select Export Folder for Parameter Model files");
+        File userHome = new File(File.separator + System.getProperty("user.home"));
+        chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
+
+        //directory chooser doesn't have an option to set initial folder name, find solution
+        parametgerModelsFilesFolder = chooser.showDialog(squidLabDataWindow);
+        if (parametgerModelsFilesFolder != null) { // not cancelled
+            for (ParametersModel parameterModel : parameterModels) {
+                File parameterModelFile = new File(parametgerModelsFilesFolder.getAbsolutePath()
+                        + File.separator
+                        + parameterModel.getModelNameWithVersion().replaceAll("/", "").replaceAll("\\\\", "")
+                        + ".xml");
+                parameterModel.serializeXMLObject(parameterModelFile.getAbsolutePath());
+            }
+        }
     }
 
     public enum Units {

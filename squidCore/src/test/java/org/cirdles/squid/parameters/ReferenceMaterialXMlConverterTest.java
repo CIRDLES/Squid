@@ -21,7 +21,7 @@ public class ReferenceMaterialXMlConverterTest {
         try {
             ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterialModel.class);
 
-            File initialFile = extractor.extractResourceAsFile("Zircon-91500 v.1.0.xml");
+            File initialFile = extractor.extractResourceAsFile("z6266 ID-TIMS (559.0 Ma) v.1.0.xml");
             ParametersModel model = (ReferenceMaterialModel) (new ReferenceMaterialModel()).readXMLObject(initialFile.getAbsolutePath(), false);
 
             File convertedFile = new File("zirconCopy.xml");

@@ -124,9 +124,15 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setExtPErrU(0.75);
         squidProjectZ6266.getTask().setExtPErrTh(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
-        squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
-        squidProjectZ6266.getTask().setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-        squidProjectZ6266.getTask().setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+        squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
+
+        // modified sept 202 to accommodate old tests and new models
+        ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterialModel.class);
+        File testingModelFile = extractor.extractResourceAsFile("GA Accepted BR266 v.1.0.xml");
+        ReferenceMaterialModel testingModel = new ReferenceMaterialModel();
+        testingModel = (ReferenceMaterialModel) testingModel.readXMLObject(testingModelFile.getAbsolutePath(), false);
+        squidProjectZ6266.getTask().setReferenceMaterialModel(testingModel);
+        squidProjectZ6266.getTask().setConcentrationReferenceMaterialModel(testingModel);
 
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
 

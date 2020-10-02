@@ -1,0 +1,47 @@
+<CommonPbModel>
+  <modelName>Stacey-Kramers@424.86Ma (44069)</modelName>
+  <labName>Geoscience Australia</labName>
+  <version>1.0</version>
+  <dateCertified>2020-08-12</dateCertified>
+  <comments></comments>
+  <references></references>
+  <values>
+    <ValueModel>
+      <name>r206_204b</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>18.040</value>
+      <oneSigma>0</oneSigma>
+    </ValueModel>
+    <ValueModel>
+      <name>r207_204b</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>15.591972</value>
+      <oneSigma>0</oneSigma>
+    </ValueModel>
+    <ValueModel>
+      <name>r207_206b</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>0.8643</value>
+      <oneSigma>0</oneSigma>
+    </ValueModel>
+    <ValueModel>
+      <name>r208_204b</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>37.844312</value>
+      <oneSigma>0</oneSigma>
+    </ValueModel>
+    <ValueModel>
+      <name>r208_206b</name>
+      <uncertaintyType>ABS</uncertaintyType>
+      <reference></reference>
+      <value>2.0978</value>
+      <oneSigma>0</oneSigma>
+    </ValueModel>
+  </values>
+  <rhos/>
+  <isEditable>false</isEditable>
+</CommonPbModel>
