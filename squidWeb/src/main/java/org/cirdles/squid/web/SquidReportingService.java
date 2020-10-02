@@ -126,16 +126,16 @@ public class SquidReportingService {
 
             squidProject.updateFilterForRefMatSpotNames(refMatFilter);
             squidProject.updateFilterForRefMatSpotNames(concRefMatFilter);
-            squidProject.createTaskFromImportedSquid25Task(squidTaskFile);
+            squidProject.replaceCurrentTaskWithImportedSquid25Task(squidTaskFile);
 
             TaskInterface task = squidProject.getTask();
 
             // hard-wired for now
             task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
-            task.setCommonPbModel(CommonPbModel.getDefaultModel("GA Common Lead 2018", "1.0"));
+            task.setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
             task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
-            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
-            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("GA Accepted BR266", "1.0"));
+            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
+            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
 
             task.setExtPErrU(0.75);
             task.setExtPErrTh(0.75);

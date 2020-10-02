@@ -411,7 +411,9 @@ public class ProjectManagerController implements Initializable {
         taskDesign.setExtPErrU(assignedExternalErrUSpinner.getValue());
 
         taskDesign.setPhysicalConstantsModel(physConstModelComboBox.getValue());
+        squidLabData.setPhysConstDefault(physConstModelComboBox.getValue());
         taskDesign.setCommonPbModel(commonPbModelComboBox.getValue());
+        squidLabData.setCommonPbDefault(commonPbModelComboBox.getValue());
 
         taskDesign.setAnalystName(analystNameText.getText());
 

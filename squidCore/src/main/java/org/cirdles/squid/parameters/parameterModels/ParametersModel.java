@@ -213,7 +213,7 @@ public abstract class ParametersModel implements
         xstream.registerConverter(new CommonPbModelXMLConverter());
         xstream.alias("CommonPbModel", CommonPbModel.class);
     }
-
+    
     public String getComments() {
         return comments;
     }

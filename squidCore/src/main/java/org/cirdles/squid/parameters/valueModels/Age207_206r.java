@@ -40,11 +40,11 @@ public class Age207_206r extends ValueModel implements
     private final static String NAME = RadDates.age207_206r.getName();
     private final static String UNCT_TYPE = "ABS";
     // Instance variables
-    private ValueModel r238_235s;
-    private ValueModel r207_206r;
-    private ValueModel age206_238r;
-    private ValueModel lambda235;
-    private ValueModel lambda238;
+    private transient ValueModel r238_235s;
+    private transient ValueModel r207_206r;
+    private transient ValueModel age206_238r;
+    private transient ValueModel lambda235;
+    private transient ValueModel lambda238;
 
     /**
      * Creates a new instance of Age207_206r

@@ -1,1 +1,4 @@
-GA Common Lead 2018 v.1.0.xml
+Stacey-Kramers@416.78Ma (TEMORA2) v.1.0.xml
+Stacey-Kramers@419.26Ma (R33) v.1.0.xml
+Stacey-Kramers@424.86Ma (44069) v.1.0.xml
+Stacey-Kramers@559.0Ma (z6266) v.1.0.xml

@@ -230,7 +230,65 @@ public final class SquidProject implements Serializable {
         initializeTaskAndReduceData(false);
     }
 
-    public void createTaskFromImportedSquid25Task(File squidTaskFile) {
+    public TaskInterface makeTaskFromSquid25Task(TaskSquid25 taskSquid25) {
+        TaskInterface taskFromSquid25 = new Task(taskSquid25.getTaskName());
+
+        taskFromSquid25.setTaskType(taskSquid25.getTaskType());
+        taskFromSquid25.setDescription(taskSquid25.getTaskDescription());
+        taskFromSquid25.setProvenance(taskSquid25.getSquidTaskFileName());
+        taskFromSquid25.setAuthorName(taskSquid25.getAuthorName());
+        taskFromSquid25.setLabName(taskSquid25.getLabName());
+        taskFromSquid25.setNominalMasses(taskSquid25.getNominalMasses());
+        taskFromSquid25.setRatioNames(taskSquid25.getRatioNames());
+        taskFromSquid25.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+        taskFromSquid25.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+        taskFromSquid25.setFiltersForUnknownNames(filtersForUnknownNames);
+        taskFromSquid25.setParentNuclide(taskSquid25.getParentNuclide());
+        taskFromSquid25.setDirectAltPD(taskSquid25.isDirectAltPD());
+
+        taskFromSquid25.setExtPErrTh(extPErrTh);
+        taskFromSquid25.setExtPErrU(extPErrU);
+        taskFromSquid25.setSelectedIndexIsotope(selectedIndexIsotope);
+        taskFromSquid25.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+        taskFromSquid25.setUseSBM(useSBM);
+        taskFromSquid25.setUserLinFits(userLinFits);
+
+        taskFromSquid25.setReferenceMaterialModel(referenceMaterialModel);
+        taskFromSquid25.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
+
+        // determine index of background mass as specified in task
+        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
+            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
+                taskFromSquid25.setIndexOfTaskBackgroundMass(i);
+                taskFromSquid25.setIndexOfBackgroundSpecies(i);
+                break;
+            }
+        }
+
+        List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
+        for (TaskSquid25Equation task25Eqn : task25Equations) {
+            ((Task) taskFromSquid25).makeCustomExpression(task25Eqn);
+        }
+
+        List<String> constantNames = taskSquid25.getConstantNames();
+        List<String> constantValues = taskSquid25.getConstantValues();
+        for (int i = 0; i < constantNames.size(); i++) {
+
+            // March 2019 moved imported constants to be custom expressions
+            ExpressionSpecInterface constantSpec = specifyConstantExpression(
+                    constantNames.get(i),
+                    constantValues.get(i),
+                    "Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " ."
+            );
+            ((Task) taskFromSquid25).makeCustomExpression(constantSpec);
+        }
+
+        taskFromSquid25.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
+
+        return taskFromSquid25;
+    }
+
+    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
@@ -255,63 +313,70 @@ public final class SquidProject implements Serializable {
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
 
-        task = new Task(
-                taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
-        task.setTaskType(taskSquid25.getTaskType());
-        task.setDescription(taskSquid25.getTaskDescription());
-        task.setProvenance(taskSquid25.getSquidTaskFileName());
-        task.setAuthorName(taskSquid25.getAuthorName());
-        task.setLabName(taskSquid25.getLabName());
-        task.setNominalMasses(taskSquid25.getNominalMasses());
-        task.setRatioNames(taskSquid25.getRatioNames());
-        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-        task.setFiltersForUnknownNames(filtersForUnknownNames);
-        task.setParentNuclide(taskSquid25.getParentNuclide());
-        task.setDirectAltPD(taskSquid25.isDirectAltPD());
+//        task = new Task(
+//                taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
+        task = makeTaskFromSquid25Task(taskSquid25);
 
-        task.setExtPErrTh(extPErrTh);
-        task.setExtPErrU(extPErrU);
-        task.setSelectedIndexIsotope(selectedIndexIsotope);
-        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
-        task.setUseSBM(useSBM);
-        task.setUserLinFits(userLinFits);
+        task.setPrawnFile(prawnFile);
+        task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
 
-        task.setReferenceMaterialModel(referenceMaterialModel);
-        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
-
-        // determine index of background mass as specified in task
-        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
-            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
-                task.setIndexOfTaskBackgroundMass(i);
-                task.setIndexOfBackgroundSpecies(i);
-                break;
-            }
-        }
-
+//        task.setTaskType(taskSquid25.getTaskType());
+//        task.setDescription(taskSquid25.getTaskDescription());
+//        task.setProvenance(taskSquid25.getSquidTaskFileName());
+//        task.setAuthorName(taskSquid25.getAuthorName());
+//        task.setLabName(taskSquid25.getLabName());
+//        task.setNominalMasses(taskSquid25.getNominalMasses());
+//        task.setRatioNames(taskSquid25.getRatioNames());
+//        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
+//        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
+//        task.setFiltersForUnknownNames(filtersForUnknownNames);
+//        task.setParentNuclide(taskSquid25.getParentNuclide());
+//        task.setDirectAltPD(taskSquid25.isDirectAltPD());
+//
+//        task.setExtPErrTh(extPErrTh);
+//        task.setExtPErrU(extPErrU);
+//        task.setSelectedIndexIsotope(selectedIndexIsotope);
+//        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
+//        task.setUseSBM(useSBM);
+//        task.setUserLinFits(userLinFits);
+//
+//        task.setReferenceMaterialModel(referenceMaterialModel);
+//        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
+//
+//        // determine index of background mass as specified in task
+//        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
+//            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
+//                task.setIndexOfTaskBackgroundMass(i);
+//                task.setIndexOfBackgroundSpecies(i);
+//                break;
+//            }
+//        }
+//
+////        // first pass
+////        task.setChanged(true);
+////        task.setupSquidSessionSpecsAndReduceAndReport(false);
+//        List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
+//        for (TaskSquid25Equation task25Eqn : task25Equations) {
+//            ((Task) task).makeCustomExpression(task25Eqn);
+//        }
+//
+//        List<String> constantNames = taskSquid25.getConstantNames();
+//        List<String> constantValues = taskSquid25.getConstantValues();
+//        for (int i = 0; i < constantNames.size(); i++) {
+//
+//            // March 2019 moved imported constants to be custom expressions
+//            ExpressionSpecInterface constantSpec = specifyConstantExpression(
+//                    constantNames.get(i),
+//                    constantValues.get(i),
+//                    "Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " ."
+//            );
+//            ((Task) task).makeCustomExpression(constantSpec);
+//        }
+//
+//        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         // first pass
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(false);
-
-        List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
-        for (TaskSquid25Equation task25Eqn : task25Equations) {
-            ((Task) task).makeCustomExpression(task25Eqn);
-        }
-
-        List<String> constantNames = taskSquid25.getConstantNames();
-        List<String> constantValues = taskSquid25.getConstantValues();
-        for (int i = 0; i < constantNames.size(); i++) {
-
-            // March 2019 moved imported constants to be custom expressions
-            ExpressionSpecInterface constantSpec = specifyConstantExpression(
-                    constantNames.get(i),
-                    constantValues.get(i),
-                    "Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " ."
-            );
-            ((Task) task).makeCustomExpression(constantSpec);
-        }
-
-        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         this.task.applyDirectives();
 
         initializeTaskAndReduceData(false);

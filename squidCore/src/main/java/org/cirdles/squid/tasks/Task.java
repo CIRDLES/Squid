@@ -128,6 +128,8 @@ import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpressi
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 
@@ -457,9 +459,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      *
      * @param taskDesign the value of taskDesign
+     * @param taskSkeleton the value of taskSkeleton
      */
     @Override
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign) {
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) {
 
         Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
@@ -487,36 +490,42 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
         });
 
+        boolean amGeochronMode = (taskType.equals(TaskTypeEnum.GEOCHRON));
         List<String> allMasses = new ArrayList<>();
-        allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        if (amGeochronMode) {
+            allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        }
         allMasses.addAll(nominalMasses);
         nominalMasses = allMasses;
         Collections.sort(nominalMasses);
 
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-        if (indexOfBackgroundSpecies >= 0) {
-            nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
-            indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
-        }
+        indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
 
         List<String> allRatios = new ArrayList<>();
-        allRatios.addAll(REQUIRED_RATIO_NAMES);
+        if (amGeochronMode) {
+            allRatios.addAll(REQUIRED_RATIO_NAMES);
+        }
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
         Collections.sort(ratioNames);
 
         setChanged(true);
-        squidSpeciesModelList.clear();
-        buildSquidSpeciesModelList();
-        generateConstants();
-        generateParameters();
-        generateSpotLookupFields();
+        if (!taskSkeleton) {
+            squidSpeciesModelList.clear();
+            buildSquidSpeciesModelList();
+            generateConstants();
+            generateParameters();
+            generateSpotLookupFields();
+        }
 
         for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
             taskExpressionsOrdered.add(customExp);
         }
 
-        initializeTaskAndReduceData(false);
+        if (!taskSkeleton) {
+            initializeTaskAndReduceData(false);
+        }
     }
 
     /**
@@ -556,10 +565,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<String> myNominalMasses = new ArrayList<>();
         myNominalMasses.addAll(nominalMasses);
         myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
-        if (indexOfBackgroundSpecies >= 0 && indexOfBackgroundSpecies < myNominalMasses.size()) {
-            myNominalMasses.remove(indexOfBackgroundSpecies - 1);
-        }
-        myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
         taskDesign.setNominalMasses(myNominalMasses);
 
         List<String> myRatioNames = new ArrayList<>();
@@ -896,9 +901,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filterForRefMatSpotNames,
                         filterForConcRefMatSpotNames,
                         filtersForUnknownNames);
-
-                // temporary hack because of switch to 1-based spotIndex
-//                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() != 2;
             }
 
             if (requiresChanges || prawnChanged || forceReprocess) {
@@ -1067,14 +1069,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         if (concentrationReferenceMaterialModelChanged) {
+            // sept 2020 per nicole rayner, if no concentration model, 
+            // or either value is zero, kill the expressions with zeroes
+            Expression expRemove = getExpressionByName(REF_U_CONC_PPM);
+            removeExpression(expRemove, false);
+            expRemove = getExpressionByName(REF_TH_CONC_PPM);
+            removeExpression(expRemove, false);
+
             SortedSet<Expression> updatedConcReferenceMaterialExpressions
                     = BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
             Iterator<Expression> updatedConcReferenceMaterialExpressionsIterator = updatedConcReferenceMaterialExpressions.iterator();
             while (updatedConcReferenceMaterialExpressionsIterator.hasNext()) {
                 Expression exp = updatedConcReferenceMaterialExpressionsIterator.next();
-                removeExpression(exp, false);
                 addExpression(exp, false);
-                //updateAffectedExpressions(exp, false);
             }
             concentrationReferenceMaterialModelChanged = false;
         }
@@ -1276,7 +1283,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void processAndSortExpressions() {
         assembleNamedExpressionsMap();
         reorderExpressions();
-//        assembleNamedExpressionsMap();
         buildExpressions();
     }
 
@@ -1444,89 +1450,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         expressionTree.setSquidSpecialUPbThExpression(expressionSpec.isSquidSpecialUPbThExpression());
 
         taskExpressionsOrdered.add(expression);
-    }
-
-    @Override
-    public String listBuiltInExpressions() {
-        StringBuilder expressionList = new StringBuilder();
-
-        // order by ConcRefMat then RU then R then U
-        List<Expression> taskExpressionsOrderedByTarget = new ArrayList<>();
-        taskExpressionsOrderedByTarget.addAll(taskExpressionsOrdered);
-        Collections.sort(taskExpressionsOrderedByTarget, ((o1, o2) -> {
-            // ConcRefMat
-            if (o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                    && !o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                return -1;
-                // ConcRefMat
-            } else if (!o1.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()
-                    && o2.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                return 1;
-                //RU
-            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                // RU
-            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    && (!o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    || !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation())) {
-                return -1;
-                // R
-            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    && o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && !o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-                // R
-            } else if (o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && !o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                return -1;
-                // U
-            } else if (!o1.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o1.getExpressionTree().isSquidSwitchSAUnknownCalculation()
-                    && !o2.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()
-                    && o2.getExpressionTree().isSquidSwitchSAUnknownCalculation()) {
-                return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
-            } else {
-                return 1;
-            }
-
-        }));
-
-        expressionList.append("Built-in Expressions Sorted by Target Sample Type\n");
-
-        for (int i = 0; i < taskExpressionsOrderedByTarget.size(); i++) {
-            ExpressionTreeInterface expTree = taskExpressionsOrderedByTarget.get(i).getExpressionTree();
-            if (expTree.isSquidSpecialUPbThExpression()) {
-                if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                    expressionList.append("C");
-                } else {
-                    expressionList.append(" ");
-                }
-                if (expTree.isSquidSwitchSTReferenceMaterialCalculation()) {
-                    expressionList.append("R");
-                } else {
-                    expressionList.append(" ");
-                }
-                if (expTree.isSquidSwitchSAUnknownCalculation()) {
-                    expressionList.append("U");
-                } else {
-                    expressionList.append(" ");
-                }
-
-                expressionList.append("\t").append(expTree.getName());
-                if (taskExpressionsOrderedByTarget.get(i).aliasedExpression()) {
-                    expressionList.append("  ALIASED");
-                }
-                expressionList.append("\n");
-            }
-        }
-        return expressionList.toString();
     }
 
     @Override
@@ -3707,8 +3630,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged,
                 specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum,
                 providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName,
-                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType,
-                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
+                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+//                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         System.out.println(result);
         return result;
