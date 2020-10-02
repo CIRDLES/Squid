@@ -500,10 +500,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         Collections.sort(nominalMasses);
 
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-        if (indexOfBackgroundSpecies >= 0) {
-//            nominalMasses.add(indexOfBackgroundSpecies, DEFAULT_BACKGROUND_MASS_LABEL);
-            indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
-        }
+        indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
 
         List<String> allRatios = new ArrayList<>();
         if (amGeochronMode) {
@@ -568,10 +565,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<String> myNominalMasses = new ArrayList<>();
         myNominalMasses.addAll(nominalMasses);
         myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
-//        if (indexOfBackgroundSpecies >= 0 && indexOfBackgroundSpecies < myNominalMasses.size()) {
-//            myNominalMasses.remove(indexOfBackgroundSpecies - 1);
-//        }
-//        myNominalMasses.add(DEFAULT_BACKGROUND_MASS_LABEL);
         taskDesign.setNominalMasses(myNominalMasses);
 
         List<String> myRatioNames = new ArrayList<>();
@@ -908,9 +901,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         filterForRefMatSpotNames,
                         filterForConcRefMatSpotNames,
                         filtersForUnknownNames);
-
-                // temporary hack because of switch to 1-based spotIndex
-//                requiresChanges = requiresChanges || ((ShrimpFraction) this.referenceMaterialSpots.get(1)).getSpotIndex() != 2;
             }
 
             if (requiresChanges || prawnChanged || forceReprocess) {
@@ -1293,7 +1283,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void processAndSortExpressions() {
         assembleNamedExpressionsMap();
         reorderExpressions();
-//        assembleNamedExpressionsMap();
         buildExpressions();
     }
 

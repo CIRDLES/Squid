@@ -305,9 +305,6 @@ public class SquidUIController implements Initializable {
         // Expression menu
         buildExpressionMenuMRU();
 
-        //Parameters Menu
-//        squidLabDataMenu.setDisable(false);
-
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.initDemoSquidProjectFiles();
         CalamariFileUtilities.loadShrimpPrawnFileSchema();

@@ -198,6 +198,8 @@ public class SquidReportSettingsController implements Initializable {
         
         // disable refmat if none
         refMatRadioButton.setDisable(task.getReferenceMaterialSpots().isEmpty());
+        
+        columnDetailsTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
     }
 
     private void initCategoryTextField() {
@@ -649,7 +651,7 @@ public class SquidReportSettingsController implements Initializable {
         if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
-        sb.append(String.format("%1$-" + 15 + "s", "SpotName"));
+        sb.append(String.format("%1$-" + 18 + "s", "SpotName"));
         String[][] resultLabels;
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
