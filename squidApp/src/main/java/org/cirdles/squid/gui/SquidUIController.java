@@ -223,7 +223,6 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private Menu openRecentExpressionFileMenu;
-    @FXML
     private Menu squidLabDataMenu;
     @FXML
     private Menu commonPbMenu;
@@ -307,7 +306,7 @@ public class SquidUIController implements Initializable {
         buildExpressionMenuMRU();
 
         //Parameters Menu
-        squidLabDataMenu.setDisable(false);
+//        squidLabDataMenu.setDisable(false);
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.initDemoSquidProjectFiles();
@@ -1389,6 +1388,11 @@ public class SquidUIController implements Initializable {
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
+        @FXML
+    private void visitCIRDLESAction(ActionEvent event) {
+          BrowserControl.showURI("https://CIRDLES.org");
+    }
+
     @FXML
     private void showSquid3GithubRepo(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid");
@@ -1429,7 +1433,6 @@ public class SquidUIController implements Initializable {
         showUI(expressionBuilderUI);
     }
 
-    @FXML
     private void ludwigLibraryJavaDocAction(ActionEvent event) {
         BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
@@ -1877,12 +1880,7 @@ public class SquidUIController implements Initializable {
                     primaryStageWindow);
         }
     }
-
-    @FXML
-    private void listBuiltinExpressionsAction(ActionEvent event) {
-        System.out.println(squidProject.getTask().listBuiltInExpressions());
-    }
-
+    
     private void synchronizeTaskLabDataAndSquidVersion() {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
@@ -2075,6 +2073,7 @@ public class SquidUIController implements Initializable {
     private void editExistingTaskMenuItemAction(ActionEvent event) {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
     }
+
 
     private class HighlightMainMenu {
 

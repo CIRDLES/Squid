@@ -185,47 +185,31 @@
                         <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                 </Menu>
-                <Menu fx:id="squidLabDataMenu" mnemonicParsing="false" text="Resources">
-                    <items>
-                        <Menu mnemonicParsing="false" text="Parameter Models">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
-                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
-                                <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Online Resources">
-                            <items>
-
-                                <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
-                                <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
-                                <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
-
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Javadoc">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="Ludwig Library" />
-                            </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Developer Tools" visible="false">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#listBuiltinExpressionsAction" text="List Built-in Expressions" />
-                            </items>
-                        </Menu>
-                    </items>
-                </Menu>
+                  <Menu mnemonicParsing="false" text="Parameters">
+                      <items>
+                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                      </items>
+                  </Menu>
             <Menu mnemonicParsing="false" text="About">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
                   <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
+
+                          <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
+                          <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#visitCIRDLESAction" text="CIRDLES.org" />
+                          <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
                </items>
             </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
 
-                        <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" />
+                        <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" visible="false" />
                         <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
 
