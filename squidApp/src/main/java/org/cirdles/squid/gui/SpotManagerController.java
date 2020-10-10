@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -48,6 +49,7 @@ import javafx.scene.layout.HBox;
 import static javafx.scene.paint.Color.BLACK;
 import javafx.util.Callback;
 import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -185,8 +187,12 @@ public class SpotManagerController implements Initializable {
     }
 
     private void setUpSampleNamesComboBox() {
-        sampleNameComboBox.setItems(FXCollections.observableArrayList(
-                (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0])));
+        String allSamples = "All Samples";
+        String[] samples = (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
+        List<String> samplesList = new ArrayList<String>(Arrays.asList(samples));
+        samplesList.add(0, allSamples);
+        
+        sampleNameComboBox.setItems(FXCollections.observableArrayList(samplesList));
         sampleNameComboBox.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
@@ -206,11 +212,13 @@ public class SpotManagerController implements Initializable {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                         if ((newValue != null) && (newValue.length() > 0)) {
-                            filterSpotNameText.setText(newValue);
+                            filterSpotNameText.setText(newValue.startsWith(allSamples)? "" : newValue);
                             filterRuns(filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
                         }
                     }
                 });
+        
+        sampleNameComboBox.getSelectionModel().selectFirst();
     }
 
     private void setUpPrawnFile() throws SquidException {
