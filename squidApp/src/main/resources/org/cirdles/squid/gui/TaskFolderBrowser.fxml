@@ -219,9 +219,9 @@
                               <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Actions:" GridPane.rowIndex="10" />
                               <ToolBar maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1085.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" GridPane.columnIndex="1" GridPane.rowIndex="10">
                                  <items>
-                                    <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#editTaskAction" text="Edit Task" />
-                                    <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
-                                    <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid Task '.xml' file" />
+                                    <Button fx:id="editTaskButton" layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#editTaskAction" text="Edit Task" />
+                                    <Button fx:id="replaceTaskButton" mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
+                                    <Button fx:id="saveTaskButton" layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid Task '.xml' file" />
                                  </items>
                               </ToolBar>
                               <TextArea fx:id="customExpressionTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="9" />
