@@ -71,20 +71,15 @@
                       <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskNoExpAction" text="Current Task without custom expressions" />
                         <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskAction" text="Current Task including custom expressions" />
                         <MenuItem mnemonicParsing="false" onAction="#editEmptyTaskAction" text="Empty Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault9MassTaskAction" text="Squid Default 9-mass Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault10MassTaskAction" text="Squid Default 10-mass Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault11MassTaskAction" text="Squid Default 11-mass Task" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Browse, Load, or Edit Task files">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#browseSquidTasksLibrary" text="Squid Tasks Library" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false" onAction="#browseTaskFolderTaskMenuItemAction" text="Squid Tasks Folder" />
-                              <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Single Squid Task '.xml' File" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="browseTaskFolderTaskMenuItem1" mnemonicParsing="false" onAction="#browseSquid25TaskFolderMenuItemAction" text="Squid 2.5 Tasks Folder" />
-                              <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Single Squid 2.* Task '.xls' File" />
+                        <MenuItem mnemonicParsing="false" onAction="#browseSquidTasksLibrary" text="Squid3 Built-in Tasks Library" />
+                        <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false" onAction="#browseTaskFolderTaskMenuItemAction" text="Squid3 Custom Tasks Folder" />
+                              <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Single Squid Task '.xml' File" visible="false" />
+                        <MenuItem fx:id="browseTaskFolderTaskMenuItem1" mnemonicParsing="false" onAction="#browseSquid25TaskFolderMenuItemAction" text="Squid2.5 Custom Tasks Folder" />
+                              <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Single Squid 2.* Task '.xls' File" visible="false" />
                     </items>
                   </Menu>
                     </items>

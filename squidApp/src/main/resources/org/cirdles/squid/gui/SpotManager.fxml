@@ -23,7 +23,7 @@
                <children>
                   <HBox>
                      <children>
-                        <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0" text="Task &gt; Manage Task" translateX="25.0" />
+                        <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0" text="Task &gt; View, New or Browse" translateX="25.0" />
                      </children>
                   </HBox>
                   <VBox VBox.vgrow="ALWAYS">

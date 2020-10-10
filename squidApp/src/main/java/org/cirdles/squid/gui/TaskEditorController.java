@@ -317,7 +317,7 @@ public class TaskEditorController implements Initializable {
 
         taskNameTextField.setText(taskDesigner.getName());
         taskDescriptionTextField.setText(taskDesigner.getDescription());
-        provenanceTextField.setText(taskDesigner.getDescription());
+        provenanceTextField.setText(taskDesigner.getProvenance());
         authorsNameTextField.setText(taskDesigner.getAuthorName());
         labNameTextField.setText(taskDesigner.getLabName());
 
@@ -818,8 +818,8 @@ public class TaskEditorController implements Initializable {
             String mass = massName.getText();
             if (mass.length() > 0) {
                 // split on commas
-                String [] massesAdded = massName.getText().split(",");
-                for (int i = 0; i < massesAdded.length; i ++){
+                String[] massesAdded = massName.getText().split(",");
+                for (int i = 0; i < massesAdded.length; i++) {
                     taskDesigner.addNominalMass(massesAdded[i].trim());
                 }
             }
@@ -867,11 +867,19 @@ public class TaskEditorController implements Initializable {
         if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                    == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
+                    == (taskDesigner.getNominalMasses().size()
                     + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
             if (valid) {
+                // detect if masses or ratios have changed before reconstruction
+                boolean noChange = ((Task)squidProject.getTask()).taskDesignDiffersFromTask(taskDesigner);
+
                 squidProject.createNewTask();
-                squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), false);
+                squidProject.getTask().updateTaskFromTaskDesign(taskDesigner, false);
+                
+                if (noChange){
+                    ((Task)squidProject.getTask()).applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+                }
+                
                 MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                         .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
                 menuItemTaskManager.fire();
@@ -880,7 +888,7 @@ public class TaskEditorController implements Initializable {
                 SquidMessageDialog.showInfoDialog(
                         "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
                         + " masses, but the Task Designer specifies "
-                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + taskDesigner.getNominalMasses().size())
                         + ".",
                         primaryStageWindow);
             }

@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
@@ -84,13 +85,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
@@ -127,9 +125,15 @@ import org.cirdles.squid.tasks.expressions.ExpressionSpec;
 import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpression;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 
@@ -463,7 +467,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     @Override
     public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) {
-
+        
         Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
         for (int i = 0; i < gettersAndSetters.length; i++) {
@@ -471,9 +475,28 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             try {
                 if (methodName.startsWith("get") && !methodName.contains("Class")) {
-                    this.getClass().getMethod(
+
+                    Method methSetPref = this.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
-                            gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
+                            gettersAndSetters[i].getReturnType());
+
+                    Method methGetTask = taskDesign.getClass().getMethod(methodName);
+                    Object retrieved = methGetTask.invoke(taskDesign, new Object[0]);
+                    if (retrieved instanceof Map) {
+                        Map<String, String> copyMap = new TreeMap<>();
+                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        for (Map.Entry<String, String> mapEntry : entries) {
+                            copyMap.put(mapEntry.getKey(), mapEntry.getValue());
+                        }
+                        methSetPref.invoke(this, copyMap);
+                    } else {
+                        methSetPref.invoke(this, methGetTask.invoke(taskDesign, new Object[0]));
+                    }
+
+////                    this.getClass().getMethod(
+////                            methodName.replaceFirst("get", "set"),
+////                            gettersAndSetters[i].getReturnType())
+////                            .invoke(this, gettersAndSetters[i].invoke(taskDesign, new Object[0]));
                 } else if (methodName.startsWith("is")) {
                     this.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
@@ -545,9 +568,18 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Method methSetPref = taskDesign.getClass().getMethod(
                             methodName.replaceFirst("get", "set"),
                             gettersAndSetters[i].getReturnType());
-                    Method methGetTask = this.getClass().getMethod(
-                            methodName);
-                    methSetPref.invoke(taskDesign, methGetTask.invoke(this, new Object[0]));
+                    Method methGetTask = this.getClass().getMethod(methodName);
+                    Object retrieved = methGetTask.invoke(this, new Object[0]);
+                    if (retrieved instanceof Map) {
+                        Map<String, String> copyMap = new TreeMap<>();
+                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        for (Map.Entry<String, String> mapEntry : entries) {
+                            copyMap.put(mapEntry.getKey(), mapEntry.getValue());
+                        }
+                        methSetPref.invoke(taskDesign, copyMap);
+                    } else {
+                        methSetPref.invoke(taskDesign, methGetTask.invoke(this, new Object[0]));
+                    }
                 } else if (methodName.startsWith("is")) {
                     Method methSetPref = taskDesign.getClass().getMethod(
                             methodName.replaceFirst("is", "set"),
@@ -578,6 +610,42 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             taskDesign.setCustomTaskExpressions(new ArrayList<>());
         }
 
+    }
+
+    public boolean taskDesignDiffersFromTask(TaskDesign taskDesign) {
+        boolean noChange = false;
+//        if (taskType.equals(TaskTypeEnum.GEOCHRON)) {           
+            List<String> taskMasses = getNominalMasses();
+            List<String> designerMasses = taskDesign.getNominalMasses();
+            designerMasses.addAll(REQUIRED_NOMINAL_MASSES);
+            noChange = taskMasses.containsAll(designerMasses) && designerMasses.containsAll(taskMasses);
+
+            List<String> taskRatios = getRatioNames();
+            List<String> designerRatios = taskDesign.getRatioNames();
+            designerRatios.addAll(REQUIRED_RATIO_NAMES);
+            noChange = noChange && taskRatios.containsAll(designerRatios) && designerRatios.containsAll(taskRatios);
+
+//            // test background index and 4 horsemen and directives
+//            noChange = noChange && (isDirectAltPD() == taskDesign.isDirectAltPD());
+//            noChange = noChange && (isPbU() == taskDesign.isPbU());
+//            noChange = noChange
+//                    && (getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST).compareToIgnoreCase(
+//                            taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST)) == 0);
+//            noChange = noChange
+//                    && (getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST).compareToIgnoreCase(
+//                            taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST)) == 0);
+//            noChange = noChange
+//                    && (getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT).compareToIgnoreCase(
+//                            taskDesign.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT)) == 0);
+//            noChange = noChange
+//                    && (getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST).compareToIgnoreCase(
+//                            taskDesign.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST)) == 0);
+//            
+            noChange = noChange && (getIndexOfBackgroundSpecies() == taskDesign.getIndexOfBackgroundSpecies());
+
+            System.out.println("nochange = " + noChange);
+//        }
+        return noChange;
     }
 
     /**
