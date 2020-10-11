@@ -1816,6 +1816,8 @@ public class SquidUIController implements Initializable {
                 // next two lines make sure 15-digit rounding is used by reprocessing data
                 task.setChanged(true);
                 task.setupSquidSessionSpecsAndReduceAndReport(true);
+                
+                ((Task) task).initTaskDefaultSquidReportTables(true);
 
                 SquidMessageDialog.showInfoDialog(
                         "The task has been updated for this version of Squid3.\n"

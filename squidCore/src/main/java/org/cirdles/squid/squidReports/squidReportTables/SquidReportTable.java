@@ -267,6 +267,11 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         }
         reportCategoriesUnknown.add(custom);
 
+        SquidReportCategoryInterface metaData = createReportCategory("Meta Data");
+        metaData.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("CommonPbCorrMetaData"));
+        metaData.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn("OverCtCorr"));
+        reportCategoriesUnknown.add(metaData);
+
         return reportCategoriesUnknown;
     }
 

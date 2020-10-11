@@ -113,11 +113,7 @@
                 </Menu>
             <Menu fx:id="commonPbMenu" mnemonicParsing="false" text="Common Pb">
               <items>
-                  <Menu mnemonicParsing="false" text="Unknowns">
-                    <items>
-                                <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="204 Count Corrections &amp; Assign Common Lead Ratios" />
-                    </items>
-                  </Menu>
+                          <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="Unknowns: 204 Count Corrections &amp; Assign Common Lead Ratios" />
               </items>
             </Menu>
                 <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">

@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import java.util.List;
 import java.util.Map;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -116,6 +117,8 @@ public interface ShrimpFractionExpressionInterface {
      */
     public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
 
+    public Map<ExpressionTreeInterface, String> getTaskExpressionsMetaDataPerSpot();
+
     /**
      * Used by reflection in expression evaluations by VariableNode, for example
      *
@@ -130,10 +133,12 @@ public interface ShrimpFractionExpressionInterface {
      */
     public String getNameOfMount();
 
+    public long getDateTimeMillisecondsLong();
+    
     /**
      * @return the dateTimeMilliseconds
      */
-    public long getDateTimeMilliseconds();
+    public String getDateTimeMilliseconds();
 
     public String getDateTime();
 
@@ -274,6 +279,20 @@ public interface ShrimpFractionExpressionInterface {
      * @return the commonLeadSpecsForSpot
      */
     public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot();
+
+    /**
+     * @return the overcountCorrectionIsotope
+     */
+    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope();
+
+    /**
+     * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
+     */
+    public void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope);
+    
+    public String getOverCtCorr();
+
+    public String getCommonPbCorrMetaData();
 
     public String getSelectedAgeExpressionName();
 }
