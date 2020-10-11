@@ -50,12 +50,8 @@ public class SquidPersistentState implements Serializable {
     private List<String> MRUPrawnFileList;
     private String MRUPrawnFileFolderPath;
 
-    private File MRUTaskFile;
-    private List<String> MRUTaskList;
     private String MRUTaskFolderPath;
-    
-    private File MRUSquidTaskFile;
-    private List<String> MRUSquidTaskList;
+
     private String MRUSquidTaskFolderPath;
 
     private File MRUExpressionFile;
@@ -100,12 +96,8 @@ public class SquidPersistentState implements Serializable {
         MRUPrawnFileList = new ArrayList<>();
         MRUPrawnFileFolderPath = "";
 
-        MRUTaskFile = null;
-        MRUTaskList = new ArrayList<>();
         MRUTaskFolderPath = "";
-        
-        MRUSquidTaskFile = null;
-        MRUSquidTaskList = new ArrayList<>();
+
         MRUSquidTaskFolderPath = "";
 
         MRUExpressionFile = null;
@@ -196,7 +188,7 @@ public class SquidPersistentState implements Serializable {
     private void initMRULists() {
         MRUProjectList = new ArrayList<>(MRU_COUNT);
         MRUPrawnFileList = new ArrayList<>(MRU_COUNT);
-        MRUTaskList = new ArrayList<>(MRU_COUNT);
+//        MRUTaskList = new ArrayList<>(MRU_COUNT);
         MRUExpressionList = new ArrayList<>(MRU_COUNT);
     }
 
@@ -412,93 +404,12 @@ public class SquidPersistentState implements Serializable {
         return MRUPrawnFileFolderPath;
     }
 
+    // MRU Squid 2.5 Task Data ********************************************************
     /**
      * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
      */
     public void setMRUPrawnFileFolderPath(String MRUPrawnFileFolderPath) {
         this.MRUPrawnFileFolderPath = MRUPrawnFileFolderPath;
-    }
-
-    // MRU Task Data ********************************************************
-    /**
-     * @param taskFileMRU
-     */
-    public void updateTaskListMRU(File taskFileMRU) {
-
-        if (MRUTaskList == null) {
-            MRUTaskList = new ArrayList<>(MRU_COUNT);
-        }
-
-        if (taskFileMRU != null) {
-            try {
-                // remove if exists in MRU list
-                String MRUTaskFileName = taskFileMRU.getCanonicalPath();
-                MRUTaskList.remove(MRUTaskFileName);
-                MRUTaskList.add(0, MRUTaskFileName);
-
-                // trim list
-                if (MRUTaskList.size() > MRU_COUNT) {
-                    MRUTaskList.remove(MRU_COUNT);
-                }
-
-                // update MRU folder
-                MRUTaskFolderPath = taskFileMRU.getParent();
-
-                // update current file
-                MRUTaskFile = taskFileMRU;
-
-            } catch (IOException iOException) {
-            }
-        }
-
-        // save
-        try {
-            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
-        } catch (SquidException squidException) {
-        }
-    }
-
-    public void removeFileNameFromTaskListMRU(String mruTaskFileName) {
-        MRUTaskList.remove(mruTaskFileName);
-    }
-
-    public void cleanTaskListMRU() {
-        cleanListMRU(MRUTaskList);
-    }
-
-    public void removeTaskFileNameFromMRU(String taskFileName) {
-        MRUTaskList.remove(taskFileName);
-    }
-
-    /**
-     * @return the MRUTaskFile
-     */
-    public File getMRUTaskFile() {
-        return MRUTaskFile;
-    }
-
-    /**
-     * @param MRUTaskFile the MRUTaskFile to set
-     */
-    public void setMRUTaskFile(File MRUTaskFile) {
-        this.MRUTaskFile = MRUTaskFile;
-    }
-
-    /**
-     * @return the MRUTaskList
-     */
-    public List<String> getMRUTaskList() {
-        if (MRUTaskList == null) {
-            MRUTaskList = null;
-        }
-        return MRUTaskList;
-    }
-
-    /**
-     * @param MRUTaskList the MRUTaskList to set
-     */
-    public void setMRUTaskList(ArrayList<String> MRUTaskList) {
-        this.MRUTaskList = MRUTaskList;
     }
 
     /**
@@ -520,86 +431,6 @@ public class SquidPersistentState implements Serializable {
     
     
     // MRU Squid Task Data ********************************************************
-    /**
-     * @param squidTaskFileMRU
-     */
-    public void updateSquidTaskListMRU(File squidTaskFileMRU) {
-
-        if (MRUSquidTaskList == null) {
-            MRUSquidTaskList = new ArrayList<>(MRU_COUNT);
-        }
-
-        if (squidTaskFileMRU != null) {
-            try {
-                // remove if exists in MRU list
-                String MRUSquidTaskFileName = squidTaskFileMRU.getCanonicalPath();
-                MRUSquidTaskList.remove(MRUSquidTaskFileName);
-                MRUSquidTaskList.add(0, MRUSquidTaskFileName);
-
-                // trim list
-                if (MRUSquidTaskList.size() > MRU_COUNT) {
-                    MRUSquidTaskList.remove(MRU_COUNT);
-                }
-
-                // update MRU folder
-                MRUSquidTaskFolderPath = squidTaskFileMRU.getParent();
-
-                // update current file
-                MRUSquidTaskFile = squidTaskFileMRU;
-
-            } catch (IOException iOException) {
-            }
-        }
-
-        // save
-        try {
-            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
-        } catch (SquidException squidException) {
-        }
-    }
-
-    public void removeFileNameFromSquidTaskListMRU(String mruSquidTaskFileName) {
-        MRUSquidTaskList.remove(mruSquidTaskFileName);
-    }
-
-    public void cleanSquidTaskListMRU() {
-        cleanListMRU(MRUSquidTaskList);
-    }
-
-    public void removeSquidTaskFileNameFromMRU(String taskFileName) {
-        MRUSquidTaskList.remove(taskFileName);
-    }
-
-    /**
-     * @return the MRUTaskFile
-     */
-    public File getMRUSquidTaskFile() {
-        return MRUSquidTaskFile;
-    }
-
-    /**
-     * @param MRUTaskFile the MRUTaskFile to set
-     */
-    public void setMRUSquidTaskFile(File MRUSquidTaskFile) {
-        this.MRUSquidTaskFile = MRUSquidTaskFile;
-    }
-
-    /**
-     * @return the MRUTaskList
-     */
-    public List<String> getMRUSquidTaskList() {
-        if (MRUSquidTaskList == null) {
-            MRUSquidTaskList = null;
-        }
-        return MRUSquidTaskList;
-    }
-
-    /**
-     * @param MRUTaskList the MRUTaskList to set
-     */
-    public void setMRUSquidTaskList(ArrayList<String> MRUSquidTaskList) {
-        this.MRUSquidTaskList = MRUSquidTaskList;
-    }
 
     /**
      * @return the MRUTaskFolderPath

@@ -237,12 +237,6 @@ public class SquidUIController implements Initializable {
     @FXML
     private Menu manageTasksMenu;
     @FXML
-    private MenuItem importSquid25TaskMenuItem;
-    @FXML
-    private MenuItem exportSquid3TaskMenuItem;
-    @FXML
-    private MenuItem importSquid3TaskMenuItem;
-    @FXML
     private MenuItem browseTaskFolderTaskMenuItem;
     @FXML
     private MenuItem browseTaskFolderTaskMenuItem1;
@@ -292,10 +286,6 @@ public class SquidUIController implements Initializable {
 
         // Prawn File Menu Items
         savePrawnFileCopyMenuItem.setDisable(false);
-        //Task menu
-        importSquid25TaskMenuItem.setDisable(false);
-        importSquid3TaskMenuItem.setDisable(false);
-        exportSquid3TaskMenuItem.setDisable(false);
 
         // Expression menu
         buildExpressionMenuMRU();
@@ -1133,56 +1123,6 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void importSquid25TaskMenuItemAction(ActionEvent event) {
-        ManageRefMatWarning();
-
-        try {
-            File squid25TaskFile = FileHandler.selectSquid25TaskFile(squidProject, primaryStageWindow);
-            if (squid25TaskFile != null) {
-                squidPersistentState.updateTaskListMRU(squid25TaskFile);
-                TaskFolderBrowserController.tasksBrowserTarget = squid25TaskFile;
-                TaskFolderBrowserController.tasksBrowserType = ".xls";
-                launchTaskFolderBrowser();
-            }
-        } catch (SquidException | IOException | JAXBException | SAXException iOException) {
-            SquidMessageDialog.showWarningDialog(iOException.getMessage(), primaryStageWindow);
-        }
-    }
-
-    @FXML
-    private void exportSquid3TaskMenuItemAction(ActionEvent event) {
-        try {
-            FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
-        } catch (IOException iOException) {
-        }
-        // refresh task name if necessary
-        launchTaskViewer();
-    }
-
-    @FXML
-    private void importSquid3TaskMenuItemAction(ActionEvent event) {
-        File taskXMLFile = null;
-        BooleanProperty proceed = new SimpleBooleanProperty(false);
-        try {
-            taskXMLFile = FileHandler.selectTaskXMLFile(SquidUI.primaryStageWindow);
-
-            TaskFolderBrowserController.tasksBrowserTarget = taskXMLFile;
-            TaskFolderBrowserController.tasksBrowserType = ".xml";
-            launchTaskFolderBrowser();
-
-        } catch (IOException | JAXBException | SAXException | NullPointerException iOException) {
-            if (taskXMLFile != null) {
-                SquidMessageDialog.showInfoDialog(
-                        "Squid cannot load Task: "
-                        + taskXMLFile.getAbsolutePath().replace("/", "\n/"),
-                        primaryStageWindow);
-            } else {
-                SquidMessageDialog.showWarningDialog(iOException.getMessage(), primaryStageWindow);
-            }
-        }
-    }
-
-    @FXML
     private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
         try {
             File expressionFileXML = FileHandler.selectExpressionXMLFile(primaryStageWindow);
@@ -1911,7 +1851,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void browseTaskFolderTaskMenuItemAction(ActionEvent event) {
-        File tasksBrowserTarget = FileHandler.selectTasksFolderForBrowsing(primaryStageWindow);
+        File tasksBrowserTarget = FileHandler.selectSquid3TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
             TaskFolderBrowserController.tasksBrowserType = ".xml";
@@ -1921,7 +1861,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void browseSquid25TaskFolderMenuItemAction(ActionEvent event) {
-        File tasksBrowserTarget = FileHandler.selectTasksFolderForBrowsing(primaryStageWindow);
+        File tasksBrowserTarget = FileHandler.selectSquid25TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
             TaskFolderBrowserController.tasksBrowserType = ".xls";
