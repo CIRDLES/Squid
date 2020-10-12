@@ -136,10 +136,10 @@
                            <children>
                               <Label text="Select Isotopic RM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
                               <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0" style="-fx-font-size: 12;" text="206Pb/238U date (Ma):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="149.0" style="-fx-font-size: 12;" text="207Pb/206Pb date (Ma):" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="136.0" style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="141.0" prefHeight="28.0" prefWidth="136.0" style="-fx-font-size: 12;" text="238U/235U (nat abun):" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="206Pb/238U date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="207Pb/206Pb date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="141.0" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="238U/235U (nat abun):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                  <GridPane.margin>
                                     <Insets top="5.0" />
                                  </GridPane.margin></Label>
@@ -153,7 +153,7 @@
                               <Label fx:id="pb208Th232AgeLabel" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
                                  <children>
-                                    <Button minWidth="172.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="172.0" text="Refresh RM Model" />
+                                    <Button minWidth="172.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="172.0" text="Refresh RM Model" visible="false" />
                                  </children>
                               </HBox>
                               <Label fx:id="u238u235NatAbunLabel" layoutX="168.0" layoutY="140.0" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6">
@@ -240,7 +240,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                        <children>
-                                          <Button minWidth="183.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="183.0" text="Refresh CRM Model" />
+                                          <Button minWidth="183.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="183.0" text="Refresh CRM Model" visible="false" />
                                        </children>
                                     </HBox>
                                  </children>

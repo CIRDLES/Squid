@@ -1045,11 +1045,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         if (refreshReferenceMaterialsModel) {
-            models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
-            referenceMaterialModel = findModelByName(models, referenceMaterialModel);
+//            models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
+//            referenceMaterialModel = findModelByName(models, referenceMaterialModel);
             referenceMaterialModelChanged = true;
 
-            concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
+////            concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
             concentrationReferenceMaterialModelChanged = true;
         }
 
@@ -2681,22 +2681,39 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return
      */
     public SquidReportTableInterface initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
-        if (updateDefaultReports || squidReportTablesRefMat == null) {
+        if (squidReportTablesRefMat == null) {
             this.squidReportTablesRefMat = new ArrayList<>();
         }
-        if (updateDefaultReports || squidReportTablesUnknown == null) {
+
+        SquidReportTableInterface holdReportForChange = null;
+        for (SquidReportTableInterface squidReport : squidReportTablesRefMat) {
+            if (squidReport.isDefault() && !squidReport.amWeightedMeanPlotAndSortReport()) {
+                holdReportForChange = squidReport;
+                break;
+            }
+        }
+
+        if (holdReportForChange != null) {
+            squidReportTablesRefMat.remove(holdReportForChange);
+        }
+        squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
+
+        if (squidReportTablesUnknown == null) {
             this.squidReportTablesUnknown = new ArrayList<>();
         }
 
-        if (squidReportTablesRefMat.isEmpty()) {
-            squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
-            selectedRefMatReportModel = squidReportTablesRefMat.get(0);
+        holdReportForChange = null;
+        for (SquidReportTableInterface squidReport : squidReportTablesUnknown) {
+            if (squidReport.isDefault() && !squidReport.amWeightedMeanPlotAndSortReport()) {
+                holdReportForChange = squidReport;
+                break;
+            }
         }
 
-        if (squidReportTablesUnknown.isEmpty()) {
-            squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
-            selectedUnknownReportModel = squidReportTablesUnknown.get(0);
+        if (holdReportForChange != null) {
+            squidReportTablesUnknown.remove(holdReportForChange);
         }
+        squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
 
         return initSquidWeightedMeanPlotSortTable();
     }

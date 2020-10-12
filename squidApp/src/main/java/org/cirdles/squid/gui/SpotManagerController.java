@@ -48,8 +48,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import static javafx.scene.paint.Color.BLACK;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -156,6 +156,10 @@ public class SpotManagerController implements Initializable {
     @FXML
     private Label defaultValueLabel;
 
+    // save style from age labels
+    private String savedAgeLabelStyle;
+    private String savedAgeLabelStyleWithRed;
+
     /**
      * Initializes the controller class.
      *
@@ -164,6 +168,9 @@ public class SpotManagerController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        savedAgeLabelStyle = pbb206U238AgeLabel.getStyle();
+        savedAgeLabelStyleWithRed = savedAgeLabelStyle + " -fx-text-fill: red;";
 
         if (!squidProject.isTypeGeochron()) {
             refMatChooserHBox.setVisible(false);
@@ -191,7 +198,7 @@ public class SpotManagerController implements Initializable {
         String[] samples = (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
         List<String> samplesList = new ArrayList<String>(Arrays.asList(samples));
         samplesList.add(0, allSamples);
-        
+
         sampleNameComboBox.setItems(FXCollections.observableArrayList(samplesList));
         sampleNameComboBox.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
@@ -212,12 +219,12 @@ public class SpotManagerController implements Initializable {
                     @Override
                     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                         if ((newValue != null) && (newValue.length() > 0)) {
-                            filterSpotNameText.setText(newValue.startsWith(allSamples)? "" : newValue);
+                            filterSpotNameText.setText(newValue.startsWith(allSamples) ? "" : newValue);
                             filterRuns(filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
                         }
                     }
                 });
-        
+
         sampleNameComboBox.getSelectionModel().selectFirst();
     }
 
@@ -482,19 +489,59 @@ public class SpotManagerController implements Initializable {
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+        refMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
+            @Override
+            public String toString(ParametersModel model) {
+                if (model == null) {
+                    return null;
+                } else {
+                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+                }
+            }
+
+            @Override
+            public ParametersModel fromString(String userId) {
+                return null;
+            }
+        });
+
+        updateViewRM();
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
                     if (newValue != null) {
-                        pbb206U238AgeLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName())
-                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                        pb207Pb206AgeLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName())
-                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                        pb208Th232AgeLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName())
-                                        .getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+
+                        String[] audit = ((ReferenceMaterialModel) newValue).auditAndTempUpdateRefMatModel().split("Audit:");
+                        String[] flags = audit[0].split(";");
+
+                        if (flags[0].contains("F")) {
+                            SquidMessageDialog.showInfoDialog(
+                                    "This reference material model is missing meaningful age data. \n"
+                                    + "Please choose another model.\n\n",
+                                    primaryStageWindow);
+                        } else {
+                            if (audit[0].contains("1")) {
+                                SquidMessageDialog.showInfoDialog(
+                                        "This reference material model is missing key age(s), so Squid is \n"
+                                        + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
+                                        + audit[1],
+                                        primaryStageWindow);
+                            }
+                        }
+
+                        BigDecimal age206_238rModel = ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName()).getValue();
+                        BigDecimal age207_206rModel = ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName()).getValue();
+                        BigDecimal age208_232rModel = ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName()).getValue();
+
+                        pbb206U238AgeLabel.setText(age206_238rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        pbb206U238AgeLabel.setStyle((flags[0].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
+                        pb207Pb206AgeLabel.setText(age207_206rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        pb207Pb206AgeLabel.setStyle((flags[1].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
+                        pb208Th232AgeLabel.setText(age208_232rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                        pb208Th232AgeLabel.setStyle((flags[2].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
                         u238u235NatAbunLabel.setText(
                                 ((ReferenceMaterialModel) newValue).getDatumByName(r238_235s.getName())
                                         .getValue().setScale(3, RoundingMode.HALF_UP).toString());
@@ -503,14 +550,29 @@ public class SpotManagerController implements Initializable {
 
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
+                        squidProject.getTask().refreshParametersFromModels(false, false, true);
                     }
                 });
-
-        updateViewRM();
 
         // ConcentrationReferenceMaterials
         concRefMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
+        concRefMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
+            @Override
+            public String toString(ParametersModel model) {
+                if (model == null) {
+                    return null;
+                } else {
+                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+                }
+            }
+
+            @Override
+            public ParametersModel fromString(String userId) {
+                return null;
+            }
+        });
+        updateViewCM();
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
@@ -524,10 +586,9 @@ public class SpotManagerController implements Initializable {
 
                         squidProject.setConcentrationReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
+                        squidProject.getTask().refreshParametersFromModels(false, false, true);
                     }
                 });
-
-        updateViewCM();
     }
 
     @FXML
@@ -657,22 +718,22 @@ public class SpotManagerController implements Initializable {
     private void viewRMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
-        squidProject.getTask().refreshParametersFromModels(false, false, true);
-        updateViewRM();
+//        squidProject.getTask().refreshParametersFromModels(false, false, true);
+//        updateViewRM();
     }
 
     @FXML
     private void viewCMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
-        squidProject.getTask().refreshParametersFromModels(false, false, true);
-        updateViewCM();
+//        squidProject.getTask().refreshParametersFromModels(false, false, true);
+//        updateViewCM();
     }
 
     @FXML
     private void refreshRMmodelButton(ActionEvent event) {
         squidProject.getTask().refreshParametersFromModels(false, false, true);
-        updateViewRM();
-        updateViewCM();
+//        updateViewRM();
+//        updateViewCM();
     }
 }
