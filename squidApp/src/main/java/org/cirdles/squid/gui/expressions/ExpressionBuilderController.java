@@ -2427,12 +2427,7 @@ public class ExpressionBuilderController implements Initializable {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
-                            if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
-                                sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
-                            } else {
                                 formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
-                            }
-
                             sb.append(formatter.toString());
                         }
 

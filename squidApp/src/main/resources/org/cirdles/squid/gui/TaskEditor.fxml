@@ -221,7 +221,7 @@
       <ToolBar maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1085.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="TOP">
          <items>
             <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#viewCurrentTaskAction" text="View Current Task" />
-            <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Replace and then View Current Task" />
+            <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
             <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid Task '.xml' file" />
          </items>
       </ToolBar>

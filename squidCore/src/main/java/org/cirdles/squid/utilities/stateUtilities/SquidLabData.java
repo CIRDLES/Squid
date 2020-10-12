@@ -41,7 +41,7 @@ public class SquidLabData implements Serializable {
     private ParametersModel refMatConcDefault;
     private ParametersModel physConstDefault;
 
-    private static  int CURRENT_VERSION = 16;
+    private static  int CURRENT_VERSION = 17;
     private int version;
 
     public SquidLabData() {

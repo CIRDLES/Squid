@@ -75,6 +75,10 @@ public class TaskDesign implements Serializable {
 
     protected String delimiterForUnknownNames;
     protected String parentNuclide;
+
+    public boolean isPbU() {
+        return (parentNuclide.contains("238"));
+    }
     protected boolean directAltPD;
 
     protected Map<String, String> specialSquidFourExpressionsMap;
@@ -181,7 +185,7 @@ public class TaskDesign implements Serializable {
             ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
             namedExpressionsMap.put(ratioNames.get(i), ratio);
         }
-        for (Expression exp : customTaskExpressions){
+        for (Expression exp : customTaskExpressions) {
             namedExpressionsMap.put(exp.getName(), exp.getExpressionTree());
         }
         return namedExpressionsMap;

@@ -410,6 +410,7 @@ public interface TaskInterface {
         getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
+            spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
         // clear task expressions
         setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
@@ -668,6 +669,8 @@ public interface TaskInterface {
     public void setExtPErrTh(double extPErrTh);
 
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
+    
+    public Map<String, ExpressionTreeInterface> getNamedSpotMetaDataFieldsMap();
 
     /**
      * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap

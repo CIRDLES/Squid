@@ -25,26 +25,26 @@
                         <Menu mnemonicParsing="false" text="New Squid GEOCHRON Project">
                             <items>
                                 <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
-                        <MenuItem fx:id="newSquidProjectFromZippedPrawnMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromZippedPrawnAction" text="From a single Zipped Prawn XML file" />
+                                <MenuItem fx:id="newSquidProjectFromZippedPrawnMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromZippedPrawnAction" text="From a single Zipped Prawn XML file" />
                                 <MenuItem fx:id="newSquidProjectByJoinMenuItem" mnemonicParsing="false" onAction="#newSquidProjectByJoinAction" text="By Joining two Prawn XML files" />
                                 <SeparatorMenuItem />
                                 <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File" />
                                 <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="(Beta) From Recent OP File" />
                             </items>
                         </Menu>
-                  <Menu mnemonicParsing="false" text="New Squid RATIO Project &lt;BETA&gt;">
-                     <items>
-                        <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false" onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file" />
-                     </items>
-                  </Menu>
-                  <SeparatorMenuItem mnemonicParsing="false" />
+                        <Menu mnemonicParsing="false" text="New Squid RATIO Project &lt;BETA&gt;">
+                            <items>
+                                <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false" onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file" />
+                            </items>
+                        </Menu>
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
                         <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
-                  <MenuItem mnemonicParsing="false" onAction="#openDemoSquiProjectAction" text="Open Demonstration Squid Project" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDemoSquiProjectAction" text="Open Demonstration Squid Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
                         <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
-                  <SeparatorMenuItem mnemonicParsing="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
@@ -63,30 +63,22 @@
                 <Menu fx:id="manageTasksMenu" mnemonicParsing="false" text="Task--&gt;">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#viewTaskMenuItemAction" text="View Current Task" />
-                  <MenuItem mnemonicParsing="false" onAction="#editTaskMenuItemAction" text="SAVE THIS Edit Current Task" visible="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#editExistingTaskMenuItemAction" text="SAVE THIS Edit Existing Task" visible="false" />
-                        <MenuItem fx:id="exportSquid3TaskMenuItem" mnemonicParsing="false" onAction="#exportSquid3TaskMenuItemAction" text="Save  Current Task to Squid Task '.xml' File" visible="false" />
-                  <Menu mnemonicParsing="false" text="New Task from ...">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskNoExpAction" text="Current Task without custom expressions" />
-                        <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskAction" text="Current Task including custom expressions" />
-                        <MenuItem mnemonicParsing="false" onAction="#editEmptyTaskAction" text="Empty Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault9MassTaskAction" text="Squid Default 9-mass Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault10MassTaskAction" text="Squid Default 10-mass Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#editDefault11MassTaskAction" text="Squid Default 11-mass Task" />
-                    </items>
-                  </Menu>
-                  <Menu mnemonicParsing="false" text="Browse, Load, or Edit Task files">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#browseSquidTasksLibrary" text="Squid Tasks Library" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false" onAction="#browseTaskFolderTaskMenuItemAction" text="Squid Tasks Folder" />
-                              <MenuItem fx:id="importSquid3TaskMenuItem" mnemonicParsing="false" onAction="#importSquid3TaskMenuItemAction" text="Single Squid Task '.xml' File" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="browseTaskFolderTaskMenuItem1" mnemonicParsing="false" onAction="#browseSquid25TaskFolderMenuItemAction" text="Squid 2.5 Tasks Folder" />
-                              <MenuItem fx:id="importSquid25TaskMenuItem" mnemonicParsing="false" onAction="#importSquid25TaskMenuItemAction" text="Single Squid 2.* Task '.xls' File" />
-                    </items>
-                  </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#editTaskMenuItemAction" text="SAVE THIS Edit Current Task" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#editExistingTaskMenuItemAction" text="SAVE THIS Edit Existing Task" visible="false" />                        
+                        <Menu mnemonicParsing="false" text="New Task from ...">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskNoExpAction" text="Current Task without custom expressions" />
+                                <MenuItem mnemonicParsing="false" onAction="#editCopyCurrentTaskAction" text="Current Task including custom expressions" />
+                                <MenuItem mnemonicParsing="false" onAction="#editEmptyTaskAction" text="Empty Task" />
+                            </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Browse, Load, or Edit Task files">
+                            <items>
+                                <MenuItem mnemonicParsing="false" onAction="#browseSquidTasksLibrary" text="Squid3 Built-in Tasks Library" />
+                                <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false" onAction="#browseTaskFolderTaskMenuItemAction" text="Squid3 Custom Tasks Folder" />
+                                <MenuItem fx:id="browseTaskFolderTaskMenuItem1" mnemonicParsing="false" onAction="#browseSquid25TaskFolderMenuItemAction" text="Squid2.5 Custom Tasks Folder" />
+                            </items>
+                        </Menu>
                     </items>
                 </Menu>
                 <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes &amp; Ratios">
@@ -116,22 +108,18 @@
 
                     </items>
                 </Menu>
-            <Menu fx:id="commonPbMenu" mnemonicParsing="false" text="Common Pb">
-              <items>
-                  <Menu mnemonicParsing="false" text="Unknowns">
+                <Menu fx:id="commonPbMenu" mnemonicParsing="false" text="Common Pb">
                     <items>
-                                <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="204 Count Corrections &amp; Assign Common Lead Ratios" />
+                        <MenuItem mnemonicParsing="false" onAction="#assignCommonLeadRatiosAction" text="Unknowns: 204 Count Corrections &amp; Assign Common Lead Ratios" />
                     </items>
-                  </Menu>
-              </items>
-            </Menu>
+                </Menu>
                 <Menu fx:id="manageInterpretationsMenu" mnemonicParsing="false" text="Interpretations">
                     <items>
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
                                 <MenuItem fx:id="refMatConcordiaMenuItem" mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
-                        <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
+                                <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
                             </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="Unknowns">
@@ -156,26 +144,26 @@
                         <MenuItem mnemonicParsing="false" onAction="#generateAllReportsAction" text="Generate All Reports" />
                         <Menu mnemonicParsing="false" text="Misc. Reports">
                             <items>
-                              <Menu mnemonicParsing="false" text="Quick View Reports">
-                                  <items>
-                                      <Menu mnemonicParsing="false" text="Reference Materials">
-                                          <items>
-                                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
-                                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
-                                          </items>
-                                      </Menu>
-                                      <Menu mnemonicParsing="false" text="Unknowns">
-                                          <items>
-                                              <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
-                                              <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
-                                          </items>
-                                      </Menu>
-                                  </items>
-                              </Menu>
+                                <Menu mnemonicParsing="false" text="Quick View Reports">
+                                    <items>
+                                        <Menu mnemonicParsing="false" text="Reference Materials">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosReferenceMatMenutItemAction" text="within Spots" />
+                                                <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosReferenceMatMenutItemAction" text="per Spot" />
+                                            </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="Unknowns">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" onAction="#showWithinSpotRatiosUnknownsMenutItemAction" text="within Spots" />
+                                                <MenuItem mnemonicParsing="false" onAction="#showMeanRatiosUnknownMenutItemAction" text="per Spot" />
+                                            </items>
+                                        </Menu>
+                                    </items>
+                                </Menu>
                                 <MenuItem mnemonicParsing="false" onAction="#referenceMaterialsReportTableAction" text="Reference Materials - per Squid2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsReportTableAction" text="Unknowns - per Squid 2.*" />
                                 <MenuItem mnemonicParsing="false" onAction="#unknownsBySampleReportTableAction" text="Unknowns - by Sample for use by ET_Redux and Topsoil" />
-                              <MenuItem mnemonicParsing="false" onAction="#producePerScanReportsAction" text="Per Scan Reports Bundle" />
+                                <MenuItem mnemonicParsing="false" onAction="#producePerScanReportsAction" text="Per Scan Reports Bundle" />
                             </items>
                         </Menu>
                     </items>
@@ -185,27 +173,27 @@
                         <MenuItem mnemonicParsing="false" text="Action 1" />
                     </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Parameters">
-                      <items>
-                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
-                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
-                          <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
-                      </items>
-                  </Menu>
-            <Menu mnemonicParsing="false" text="About">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
-                  <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
+                <Menu mnemonicParsing="false" text="Parameters">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerRefMat" text="Reference Material Models" />
+                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerCommonPbModels" text="Common Pb Models" />
+                        <MenuItem mnemonicParsing="false" onAction="#openParametersManagerPhysConst" text="Physical Constants Models" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="About">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#aboutSquidAction" text="About Squid3" />
+                        <MenuItem mnemonicParsing="false" onAction="#citeSquidAction" text="How to Cite Squid3" />
 
-                          <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
-                          <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#visitCIRDLESAction" text="CIRDLES.org" />
-                          <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
-               </items>
-            </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#showSquid3GithubRepo" text="Squid3 GitHub Repository" />
+                        <MenuItem mnemonicParsing="false" onAction="#showSquid3DevNotes" text="Squid3 Development Notes" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#visitCIRDLESAction" text="CIRDLES.org" />
+                        <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
+                    </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
 

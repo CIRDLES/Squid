@@ -60,7 +60,7 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public static final String[][] ReportCategory_SpotFundamentals = new String[][]{
-        {"", "", "", "Date/Time", "", "getDateTimeMilliseconds", "<DATE>", "",
+        {"", "", "", "Date/Time", "", "getDateTimeMillisecondsLong", "<DATE>", "",
             "", "true", "false", "0", "", "", "false", "false"
         },
         {"", "", "", "Hours", "", "getHours", "<DOUBLE>", "",
