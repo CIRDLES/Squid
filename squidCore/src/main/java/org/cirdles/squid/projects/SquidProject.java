@@ -311,6 +311,7 @@ public final class SquidProject implements Serializable {
         task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
+            spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
 
 //        task = new Task(
@@ -388,6 +389,7 @@ public final class SquidProject implements Serializable {
         task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
+            spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
 
         // assume existing or default task

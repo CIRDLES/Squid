@@ -195,10 +195,10 @@ public class SquidReportSettingsController implements Initializable {
         } else if (!customExpressionsListView.getItems().isEmpty()) {
             selectInAllPanes(customExpressionsListView.getItems().get(0), true);
         }
-        
+
         // disable refmat if none
         refMatRadioButton.setDisable(task.getReferenceMaterialSpots().isEmpty());
-        
+
         columnDetailsTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
     }
 
@@ -538,6 +538,7 @@ public class SquidReportSettingsController implements Initializable {
     private void populateSpotMetaDataListView() {
         final ObservableList<String> obList = FXCollections.observableArrayList();
         task.getNamedSpotLookupFieldsMap().forEach((key, value) -> obList.add(value.getName()));
+        task.getNamedSpotMetaDataFieldsMap().forEach((key, value) -> obList.add(value.getName()));
         obList.sort(new IntuitiveStringComparator<>());
         spotMetaDataExpressionsListView.setItems(obList);
     }
@@ -857,30 +858,37 @@ public class SquidReportSettingsController implements Initializable {
                 // Spot metadata fields
                 sb.append(String.format("%1$-23s", expTree.getName()));
                 sb.append("\n");
+
+                // force evaluation
+                ((Task) task).evaluateTaskExpression(expTree);
+
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
-                    // force evaluation
-                    ((Task) task).evaluateTaskExpression(expTree);
-                    try {
-                        double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+//                    // force evaluation
+//                    ((Task) task).evaluateTaskExpression(expTree);
 
-                        if (!Double.isFinite(results[0][0])) {
-                            sb.append("NaN");
-                        } else {
-                            Formatter formatter = new Formatter();
-                            if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
-                                sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
+                    // check for special text metadata
+                    if (spot.getTaskExpressionsMetaDataPerSpot().get(expTree) != null) {
+                        String metaData = spot.getTaskExpressionsMetaDataPerSpot().get(expTree);
+                        sb.append(String.format("%1$-" + 20 + "s", metaData));
+                        sb.append("\n");
+                    } else {
+                        try {
+                            double[][] results
+                                    = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+
+                            if (!Double.isFinite(results[0][0])) {
+                                sb.append("NaN");
                             } else {
+                                Formatter formatter = new Formatter();
                                 formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
+                                sb.append(formatter.toString());
                             }
 
-                            sb.append(formatter.toString());
+                        } catch (Exception e) {
                         }
-
-                    } catch (Exception e) {
+                        sb.append("\n");
                     }
-                    sb.append("\n");
                 }
             }
         }

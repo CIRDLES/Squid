@@ -40,6 +40,8 @@ public class ReferenceMaterialModel extends ParametersModel {
     private ConcurrentMap<String, BigDecimal> parDerivTerms;
     private boolean referenceDates;
 
+    private transient StringBuilder flags;
+
     public ReferenceMaterialModel() {
         super();
         referenceDates = false;
@@ -106,6 +108,72 @@ public class ReferenceMaterialModel extends ParametersModel {
         model.setDates(dateModels);
 
         return model;
+    }
+
+    public String auditAndTempUpdateRefMatModel() {
+        if (flags == null) {
+            flags = new StringBuilder("");
+            StringBuilder audit = new StringBuilder("");
+
+            String[] flagsArray = new String[]{"F;", "F;", "F;"};
+            // flags will be of form 0;1;F;* denoting dates[0,1,3] as 0 = no change; 1 = change; F = bad Model
+
+            // empty audit = healthy
+            // oct 2020 per Nicole and Simon
+            // if 7/6 and/or 8/32 = 0, use the 6/38 age for both/either
+            // if 6/38 AND 7/6 = 0, use 8/32 age
+            // if 7/6 = 0, use 6/38 age
+            //     
+//         dates[0] = new Age206_238r();
+//        dates[1] = new Age207_206r();
+//        dates[2] = new Age207_235r();
+//        dates[3] = new Age208_232r();
+            if (dates[0].hasPositiveValue()) {
+                flagsArray[0] = "0;";
+                if (!dates[1].hasPositiveValue()) {
+                    dates[1].setValue(dates[0].getValue());
+                    dates[1].setOneSigma(dates[0].getOneSigmaABS());
+                    flagsArray[1] = "1;";
+                    audit.append("Age 207/206 set to Age 206/238\n");
+                } else {
+                    flagsArray[1] = "0;";
+                }
+
+                if (!dates[3].hasPositiveValue()) {
+                    dates[3].setValue(dates[0].getValue());
+                    dates[3].setOneSigma(dates[0].getOneSigmaABS());
+                    flagsArray[2] = "1;";
+                    audit.append("Age 208/232 set to Age 206/238\n");
+                } else {
+                    flagsArray[2] = "0;";
+                }
+            }
+
+            if (dates[3].hasPositiveValue()) {
+//            flagsArray[2] = "0;";
+                if (!dates[0].hasPositiveValue()) {
+                    dates[0].setValue(dates[3].getValue());
+                    dates[0].setOneSigma(dates[3].getOneSigmaABS());
+                    flagsArray[0] = "1;";
+                    audit.append("Age 206/238 set to Age 208/232\n");
+                } else {
+                    flagsArray[0] = "0;";
+                }
+
+                if (!dates[1].hasPositiveValue()) {
+                    dates[1].setValue(dates[3].getValue());
+                    dates[1].setOneSigma(dates[3].getOneSigmaABS());
+                    flagsArray[1] = "1;";
+                    audit.append("Age 207/206 set to Age 208/232\n");
+                } else {
+//                flagsArray[1] = "0;";
+                }
+            }
+
+            flags.append(flagsArray[0]).append(flagsArray[1]).append(flagsArray[2]).append("Audit:").append(audit).append("\n");
+        }
+
+        return flags.toString();
     }
 
     private void generateDefaultValueModels() {

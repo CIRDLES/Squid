@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -59,6 +60,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
 import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
@@ -143,6 +145,12 @@ public class TaskFolderBrowserController implements Initializable {
     private Label primaryDPLabel;
     @FXML
     private Label secondaryDPLabel;
+    @FXML
+    private Button editTaskButton;
+    @FXML
+    private Button replaceTaskButton;
+    @FXML
+    private Button saveTaskButton;
 
     /**
      * Initializes the controller class.
@@ -263,9 +271,17 @@ public class TaskFolderBrowserController implements Initializable {
         }
 
         if (taskFilesInFolder.isEmpty()) {
-            SquidMessageDialog.showWarningDialog("No valid Squid3 tasks found.", primaryStageWindow);
-
-            nameOfTasksFolderLabel.setText("No Valid Squid3 Tasks Selected");
+            if (tasksBrowserType.compareToIgnoreCase(".xml") == 0) {
+                SquidMessageDialog.showWarningDialog("No valid Squid3 tasks found.", primaryStageWindow);
+                nameOfTasksFolderLabel.setText("No Valid Squid3 Tasks Selected");
+            } else {
+                SquidMessageDialog.showWarningDialog("No valid Squid2.5 tasks found.", primaryStageWindow);
+                nameOfTasksFolderLabel.setText("No Valid Squid2.5 Tasks Selected");
+            }
+            
+            editTaskButton.setDisable(true);
+            replaceTaskButton.setDisable(true);
+            saveTaskButton.setDisable(true);
 
         } else {
 
@@ -487,14 +503,19 @@ public class TaskFolderBrowserController implements Initializable {
 
     @FXML
     private void updateCurrentTaskWithThisTaskAction(ActionEvent event) {
-        if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
+
+        TaskInterface chosenTask = listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue();
+        TaskDesign taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+
+        if (squidProject.getTask().getTaskType().equals(chosenTask.getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
-                    == (SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size()
-                    + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
+                    == (chosenTask.getNominalMasses().size()));
             if (valid) {
+                chosenTask.updateTaskDesignFromTask(taskEditor, true);
                 squidProject.createNewTask();
-                squidProject.getTask().updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), false);
+                squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
+
                 MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                         .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
                 menuItemTaskManager.fire();
@@ -502,16 +523,16 @@ public class TaskFolderBrowserController implements Initializable {
             } else {
                 SquidMessageDialog.showInfoDialog(
                         "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                        + " masses, but the Task Designer specifies "
-                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + SquidPersistentState.getExistingPersistentState().getTaskDesign().getNominalMasses().size())
+                        + " masses, but this task has "
+                        + chosenTask.getNominalMasses().size()
                         + ".",
                         primaryStageWindow);
             }
         } else {
             SquidMessageDialog.showInfoDialog(
-                    "The data file is type  " + squidProject.getTask().getTaskType()
-                    + ", but the Task Designer specifies type "
-                    + SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType()
+                    "The Project is type  " + squidProject.getTask().getTaskType()
+                    + ", but this task is type "
+                    + chosenTask.getTaskType()
                     + ".",
                     primaryStageWindow);
         }

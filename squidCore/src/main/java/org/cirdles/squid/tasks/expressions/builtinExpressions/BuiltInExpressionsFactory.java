@@ -220,9 +220,8 @@ public abstract class BuiltInExpressionsFactory {
     public static Map<String, ExpressionTreeInterface> generateSpotLookupFields() {
         Map<String, ExpressionTreeInterface> spotLookupFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-        ExpressionTreeInterface expDateTime = buildSpotNode("getDateTimeMilliseconds");
-        spotLookupFields.put(expDateTime.getName(), expDateTime);
-
+//        ExpressionTreeInterface expDateTime = buildSpotNode("getDateTimeMilliseconds");
+//        spotLookupFields.put(expDateTime.getName(), expDateTime);
         ExpressionTreeInterface expHours = buildSpotNode("getHours");
         spotLookupFields.put(expHours.getName(), expHours);
 
@@ -273,6 +272,22 @@ public abstract class BuiltInExpressionsFactory {
         spotLookupFields.put(expCom_84.getName(), expCom_84);
 
         return spotLookupFields;
+    }
+
+    public static Map<String, ExpressionTreeInterface> generateSpotMetaDataFields() {
+        Map<String, ExpressionTreeInterface> spotMetaDataFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        // Oct 2020 special metadata fields for reports
+        ExpressionTreeInterface commPbCorrMetaData = buildSpotNode("getCommonPbCorrMetaData");
+        spotMetaDataFields.put(commPbCorrMetaData.getName(), commPbCorrMetaData);
+
+        ExpressionTreeInterface overCountCorrMetaData = buildSpotNode("getOverCtCorr");
+        spotMetaDataFields.put(overCountCorrMetaData.getName(), overCountCorrMetaData);
+
+        ExpressionTreeInterface expDateTime = buildSpotNode("getDateTimeMilliseconds");
+        spotMetaDataFields.put(expDateTime.getName(), expDateTime);
+
+        return spotMetaDataFields;
     }
 
     public static SortedSet<Expression> updatePhysicalConstantsParameterValuesFromModel(PhysicalConstantsModel physicalConstantsModel) {
