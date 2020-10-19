@@ -118,6 +118,37 @@ public final class Squid3Constants {
     public static String[] getDEFAULT_RATIOS_LIST_FOR_10_SPECIES() {
         return DEFAULT_RATIOS_LIST_FOR_10_SPECIES.clone();
     }
+    
+    /**
+     *
+     */
+    public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_REMOTE_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- Squid Task XML File -->\n"
+            + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_XMLSchema.xsd\">";
+
+    public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SQUID3_TASK_SPECIFICATION_FILE -->\n"
+            + "<!-- visit: github.com/CIRDLES/Squid -->\n"
+            + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SquidTask_XMLSchema.xsd\">";
+
+    /**
+     *
+     */
+    public static final String URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_REMOTE
+            = "https://raw.githubusercontent.com/CIRDLES/Squid/master/squidCore/src/main/resources/org/cirdles/squid/schema/SquidTask_XMLSchema.xsd";
+
+    public static final String URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_LOCAL
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SquidTask_XMLSchema.xsd";
 
     public static final String DUPLICATE_STRING = "-DUP-";
 

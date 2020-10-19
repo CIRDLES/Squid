@@ -5,6 +5,8 @@
  */
 package org.cirdles.squid.tasks;
 
+import java.io.File;
+
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -29,14 +31,16 @@ public class TaskXMLValidationTest {
         ResourceExtractor schemaResourceExtractor = new ResourceExtractor(Squid.class);
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
-            Schema taskXMLSchema = sf.newSchema(schemaResourceExtractor.extractResourceAsFile("schema/SquidTask_XMLSchema.xsd"));
+            Schema taskXMLSchema = sf.newSchema(
+                    schemaResourceExtractor.extractResourceAsFile(
+                            "schema/SquidTask_XMLSchema.xsd"));
+            File taskFile = taskResourceExtractor.extractResourceAsFile(
+                            "Z6266_=_11pk_Perm1.xml");
             assertTrue(FileValidator.validateFileIsXMLSerializedEntity(
-                    taskResourceExtractor.extractResourceAsFile(
-                            "Z6266_=_11pk_Perm1.xml"), taskXMLSchema));
+                    taskFile, taskXMLSchema));
             
         }
         catch(SAXException e){
-            System.out.println("Failed to instantiate taskXMLSchema object");
         }
            
     }   
