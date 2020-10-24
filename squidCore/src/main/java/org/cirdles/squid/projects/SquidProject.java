@@ -691,6 +691,8 @@ public final class SquidProject implements Serializable {
             sb.append("\tParameter Models:\n");
             sb.append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
             sb.append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion()).append("\n");
         }
 
         return sb.toString();
