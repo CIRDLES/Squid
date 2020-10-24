@@ -544,8 +544,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public double[] getNscansTimesCountTimeSec() {
         int piNscans = timeStampSec.length;
-        double[] product = new double[piNscans];
-        for (int i = 0; i < piNscans; i++) {
+        double[] product = new double[countTimeSec.length];
+        for (int i = 0; i < countTimeSec.length; i++) {
             product[i] = piNscans * countTimeSec[i];
         }
 
