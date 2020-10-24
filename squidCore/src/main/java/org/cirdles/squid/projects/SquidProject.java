@@ -631,7 +631,7 @@ public final class SquidProject implements Serializable {
 
     public File produceSelectedUnknownsReportCSV()
             throws IOException {
-        return produceTargetedSelectedUnknownsReportCSV("UNKNOWNS");
+        return produceTargetedSelectedUnknownsReportCSV(SpotTypes.UNKNOWN.getSpotTypeName());
     }
 
     public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
@@ -706,7 +706,7 @@ public final class SquidProject implements Serializable {
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
-            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getPlotType()) != 0) {
+            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
                 ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
                 listOfUnknownsBySample.add(dummyForSample);
                 listOfUnknownsBySample.addAll(entry.getValue());

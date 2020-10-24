@@ -146,7 +146,7 @@ public class ExpressionPublisher {
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSTReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>RefMat</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchSAUnknownCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
-                + "<label>" + ((exp.isCustom()) ? "sample: " + exp.getExpressionTree().getUnknownsGroupSampleName().replaceAll(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), "all") : "Unknown") + "</label>\n"
+                + "<label>" + ((exp.isCustom()) ? "sample: " + exp.getExpressionTree().getUnknownsGroupSampleName().replaceAll(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), "all") : "Unknown") + "</label>\n"
                 + "<input type=\"checkbox\" " + ((exp.getExpressionTree().isSquidSwitchConcentrationReferenceMaterialCalculation()) ? "checked=\"\"" : "") + " onClick=\"return false\"/>\n"
                 + "<label>Conc RefMat</label>\n"
                 + "<label style=\"font: 18px arial; padding-left: 5px;\">Type:</label>\n"

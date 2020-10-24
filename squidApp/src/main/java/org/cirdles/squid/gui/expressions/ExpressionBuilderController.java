@@ -493,7 +493,7 @@ public class ExpressionBuilderController implements Initializable {
                 .and(refMatSwitchCheckBox.selectedProperty().not()).and(selectedExpressionIsBuiltIn.not()));
         unknownGroupsComboBox.setItems(FXCollections.observableArrayList(
                 (String[]) task.getMapOfUnknownsBySampleNames().keySet().toArray(new String[0])));
-        unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getPlotType());
+        unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getSpotTypeName());
         unknownGroupsComboBox.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> param) {
@@ -1234,7 +1234,7 @@ public class ExpressionBuilderController implements Initializable {
                 expressionTextFlow.getChildren().clear();
                 refMatSwitchCheckBox.setSelected(false);
                 unknownsSwitchCheckBox.setSelected(false);
-                unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getPlotType());
+                unknownGroupsComboBox.setValue(SpotTypes.UNKNOWN.getSpotTypeName());
                 concRefMatSwitchCheckBox.setSelected(false);
                 selectedExpressionIsEditable.set(false);
                 selectedExpressionIsBuiltIn.set(false);
@@ -2427,7 +2427,7 @@ public class ExpressionBuilderController implements Initializable {
                             sb.append("NaN");
                         } else {
                             Formatter formatter = new Formatter();
-                                formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
+                            formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
                             sb.append(formatter.toString());
                         }
 

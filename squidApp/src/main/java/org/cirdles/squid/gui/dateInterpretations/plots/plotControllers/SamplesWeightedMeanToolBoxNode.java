@@ -155,7 +155,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
         // case of sample names chosen remove the redundant superset
         if (mapOfSpotsBySampleNames.size() > 1) {
-            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName());
         }
 
         formatNode(sampleComboBox, 100);

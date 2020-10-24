@@ -5,6 +5,7 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.util.List;
+import org.cirdles.squid.constants.Squid3Constants;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -35,7 +36,7 @@ public class SquidReportTableHelperMethods {
     }
 
     private static void filterShrimpFractionsBySpot(List<ShrimpFractionExpressionInterface> spots, String unknownSpot) {
-        if (unknownSpot.compareToIgnoreCase("UNKNOWNS") != 0) {
+        if (unknownSpot.compareToIgnoreCase(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
             for (int i = 0; i < spots.size(); i++) {
                 ShrimpFractionExpressionInterface spot = spots.get(i);
                 if (!spot.getFractionID().startsWith(unknownSpot)) {

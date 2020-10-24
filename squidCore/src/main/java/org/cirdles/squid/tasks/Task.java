@@ -577,7 +577,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(this, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -763,7 +763,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
         // first put full set
-        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), unknownSpots);
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
@@ -899,7 +899,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (String sampleName : mapOfUnknownsBySampleNames.keySet()) {
-            if (sampleName.compareTo(UNKNOWN.getPlotType()) != 0) {
+            if (sampleName.compareTo(UNKNOWN.getSpotTypeName()) != 0) {
                 summary.append("\n\t")
                         .append("\"")
                         .append(sampleName)
@@ -1841,7 +1841,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
-            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
+            // oct 2020 added in TotalCps because a bug developed in version 1.5.11 that broke the expression manager peeks
+            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm, "getTotalCps");
             namedExpressionsMap.put(spm.getIsotopeName(), shrimpSpeciesNode);
         }
 
@@ -3439,7 +3440,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             mapOfUnknownsBySampleNames = new TreeMap<>();
         }
         // safety feature
-        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), unknownSpots);
         return mapOfUnknownsBySampleNames;
     }
 
@@ -3685,6 +3686,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedRefMatReportModel
      */
     public SquidReportTableInterface getSelectedRefMatReportModel() {
+        if(selectedRefMatReportModel == null){
+            selectedRefMatReportModel = SquidReportTable.createDefaultSquidReportTableRefMat(this);
+        }
         return selectedRefMatReportModel;
     }
 
@@ -3699,6 +3703,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedUnknownReportModel
      */
     public SquidReportTableInterface getSelectedUnknownReportModel() {
+        if(selectedUnknownReportModel == null){
+            selectedUnknownReportModel = SquidReportTable.createDefaultSquidReportTableUnknown(this);
+        }
         return selectedUnknownReportModel;
     }
 

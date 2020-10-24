@@ -58,6 +58,7 @@ import java.util.*;
 import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -514,8 +515,10 @@ public class SquidReportSettingsController implements Initializable {
     private void initSpotChoiceBox() {
         ObservableList<String> spots = FXCollections.observableArrayList();
         task.getMapOfUnknownsBySampleNames().keySet().forEach(val -> spots.add(val));
+        spots.remove(SpotTypes.UNKNOWN.getSpotTypeName());
+        spots.add(0, SpotTypes.UNKNOWN.getSpotTypeName());
         spotsChoiceBox.setItems(spots);
-        spotsChoiceBox.getSelectionModel().select("UNKNOWNS");
+        spotsChoiceBox.getSelectionModel().select(SpotTypes.UNKNOWN.getSpotTypeName());
         spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> {
             Platform.runLater(() -> populateColumnDetails());
         });
@@ -599,7 +602,7 @@ public class SquidReportSettingsController implements Initializable {
                     List<ShrimpFractionExpressionInterface> unSpots
                             = task.getMapOfUnknownsBySampleNames().get(exp.getUnknownsGroupSampleName());
                     String spot = spotsChoiceBox.getValue();
-                    if (spot.compareToIgnoreCase("UNKNOWNS") != 0) {
+                    if (spot.compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
                         List<ShrimpFractionExpressionInterface> spotsToBeUsed = new ArrayList<>();
                         unSpots.forEach(unSpot -> {
                             if (unSpot.getFractionID().startsWith(spot)) {

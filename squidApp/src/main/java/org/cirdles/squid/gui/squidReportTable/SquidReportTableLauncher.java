@@ -73,7 +73,7 @@ public class SquidReportTableLauncher {
         if (activeStage.isShowing()) {
             activeStage.close();
         }
-        
+
         try {
             Scene scene = new Scene(loader.load());
             activeStage.setScene(scene);
