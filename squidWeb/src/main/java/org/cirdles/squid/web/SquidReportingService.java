@@ -146,7 +146,7 @@ public class SquidReportingService {
             File physConstModelFile = extractor.extractResourceAsFile("Squid 2.5 Default Physical Constants Model v.1.0.xml");
             PhysicalConstantsModel physConstModel = new PhysicalConstantsModel();
             physConstModel = (PhysicalConstantsModel) physConstModel.readXMLObject(physConstModelFile.getAbsolutePath(), false);
-            task.setCommonPbModel(physConstModel);
+            task.setPhysicalConstantsModel(physConstModel);
 //            task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
 
             extractor = new ResourceExtractor(ReferenceMaterialModel.class);
