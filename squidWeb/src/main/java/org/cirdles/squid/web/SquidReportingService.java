@@ -98,7 +98,7 @@ public class SquidReportingService {
         SquidProject squidProject = new SquidProject(myProjectName, GEOCHRON);
         prawnFileHandler = squidProject.getPrawnFileHandler();
 
-        CalamariFileUtilities.initSampleParametersModels();
+////////        CalamariFileUtilities.initSampleParametersModels();
 
         Path reportsZip = null;
         Path reportsFolder = null;

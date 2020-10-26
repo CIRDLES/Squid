@@ -258,7 +258,8 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         List<Expression> customExpressions = task.getCustomTaskExpressions();
         for (Expression exp : customExpressions) {
             ExpressionTreeInterface expTree = exp.getExpressionTree();
-            if ((!expTree.isSquidSwitchSCSummaryCalculation())
+            if (expTree.amHealthy()
+                    && (!expTree.isSquidSwitchSCSummaryCalculation())
                     && !(expTree instanceof ConstantNode)
                     && !(((ExpressionTreeBuilderInterface) expTree).getOperation() instanceof Value)
                     && (expTree.isSquidSwitchSAUnknownCalculation())) {

@@ -156,7 +156,7 @@
                                         <ListView fx:id="isotopesExpressionsListView" />
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields">
+                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields &amp; Common Lead Specs">
                                     <content>
                                         <ListView fx:id="spotMetaDataExpressionsListView" />
                                     </content>
