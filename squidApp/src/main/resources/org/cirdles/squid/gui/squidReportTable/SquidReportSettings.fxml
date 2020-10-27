@@ -21,7 +21,7 @@
     <children>
         <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-            <Label text="Manage Report Templates" />
+                <Label text="Manage Report Templates" />
                 <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New" HBox.hgrow="ALWAYS">
                     <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -70,12 +70,12 @@
                     </HBox.margin>
                 </Button>
             </children>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <padding>
-            <Insets left="20.0" />
-         </padding>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+            <padding>
+                <Insets left="20.0" />
+            </padding>
         </HBox>
         <SplitPane fx:id="mainPane" dividerPositions="0.4559" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
             <items>
@@ -92,16 +92,16 @@
                                             </toggleGroup>
                                         </RadioButton>
                                         <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" selected="true" text="Unknown" toggleGroup="$refMatUnknownsToggleGroup" translateX="10.0" />
-                                          <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" translateX="8.0" />
+                                        <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" translateX="8.0" />
                                     </children>
                                 </VBox>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                <Separator orientation="VERTICAL" prefHeight="200.0" />
                                 <VBox alignment="CENTER" prefHeight="74.0" prefWidth="387.0">
                                     <children>
-                              <Label style="-fx-font-size: 14;" text="Choose Report Template for Target:" />
-                                        <HBox fx:id="settingsAndSpotsCB" alignment="CENTER_LEFT" prefWidth="420.0">
+                                        <Label style="-fx-font-size: 14;" text="Choose Report Template for Target:" />
+                                        <HBox fx:id="settingsAndSpotsCB" alignment="CENTER_LEFT" prefWidth="420.0" translateX="5.0">
                                             <children>
-                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" prefHeight="23.0" prefWidth="355.0" translateX="-5.0" HBox.hgrow="ALWAYS">
+                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" prefHeight="23.0" prefWidth="345.0" translateX="-5.0" HBox.hgrow="ALWAYS">
                                                     <HBox.margin>
                                                         <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                                                     </HBox.margin>
@@ -110,17 +110,17 @@
                                         </HBox>
                                         <HBox alignment="CENTER" minHeight="31.0" prefHeight="31.0" prefWidth="420.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <Button fx:id="viewButton" alignment="CENTER" minWidth="85.0" mnemonicParsing="false" onAction="#viewOnAction" prefHeight="31.0" prefWidth="112.0" text="View" translateX="-5.0">
-                                                    <HBox.margin>
-                                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
-                                                    </HBox.margin>
+                                                <Button fx:id="makeDefaultButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#makeDefaultAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="Make Default" />
+                                                <Button fx:id="viewButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#viewOnAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="View">
+
                                                 </Button>
-                                                <Button fx:id="exportCSVButton" alignment="CENTER" minWidth="130.0" mnemonicParsing="false" onAction="#exportCSVOnAction" text="Create CSV">
-                                                    <HBox.margin>
-                                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
-                                                    </HBox.margin>
+                                                <Button fx:id="exportCSVButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#exportCSVOnAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="Create CSV">
+
                                                 </Button>
                                             </children>
+                                 <VBox.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </VBox.margin>
                                         </HBox>
                                     </children>
                                 </VBox>

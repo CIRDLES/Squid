@@ -46,7 +46,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     private static final long serialVersionUID = 1685572683987304408L;
 
-    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 4;
+    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 6;
     public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
 
     public final static int HEADER_ROW_COUNT = 7;
@@ -56,6 +56,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private String reportTableName;
     private LinkedList<SquidReportCategoryInterface> reportCategories;
     private boolean isDefault;
+    private boolean isLabDataDefault;
 
     private int version;
 
@@ -70,6 +71,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
         this.isDefault = isDefault;
+        this.isLabDataDefault = false;
         this.version = version;
     }
 
@@ -358,12 +360,28 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportCategories = reportCategories;
     }
 
+    @Override
     public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 
+    @Override
     public boolean isDefault() {
         return isDefault;
+    }
+
+    /**
+     * @return the isLabDataDefault
+     */
+    public boolean isIsLabDataDefault() {
+        return isLabDataDefault;
+    }
+
+    /**
+     * @param isLabDataDefault the isLabDataDefault to set
+     */
+    public void setIsLabDataDefault(boolean isLabDataDefault) {
+        this.isLabDataDefault = isLabDataDefault;
     }
 
     @Override

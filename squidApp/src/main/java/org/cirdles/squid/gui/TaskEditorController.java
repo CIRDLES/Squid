@@ -42,6 +42,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
@@ -87,6 +89,7 @@ import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
@@ -192,6 +195,8 @@ public class TaskEditorController implements Initializable {
     private boolean amGeochronMode;
     @FXML
     private Text hintLabel;
+    @FXML
+    private Spinner<Integer> backgroundIndexSpinner;
 
     {
         addBtnHBox.setAlignment(Pos.CENTER);
@@ -355,7 +360,7 @@ public class TaskEditorController implements Initializable {
         chooseMassesButton.setOnMouseClicked((event) -> {
             if (event.getButton().equals(MouseButton.PRIMARY)) {
                 massesCM = createChooseMassesContextMenu();
-                massesCM.show(chooseMassesButton, Side.TOP, 0, -50);
+                massesCM.show(chooseMassesButton, Side.TOP, 0, -15);
             }
         });
 
@@ -364,6 +369,22 @@ public class TaskEditorController implements Initializable {
                 ratiosCM = createChooseRatiosContextMenu();
                 ratiosCM.show(chooseRatiosButton, Side.TOP, 0, -50);
             }
+        });
+
+        SpinnerValueFactory<Integer> valueFactoryTh
+                = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 25, squidProject.getTask().getIndexOfBackgroundSpecies() + 1, 1);
+        backgroundIndexSpinner.setValueFactory(valueFactoryTh);
+        backgroundIndexSpinner.valueProperty().addListener((ObservableValue<? extends Integer> observable,
+                Integer oldValue, Integer newValue) -> {
+
+            if (newValue == 0) {
+                taskEditor.setIndexOfBackgroundSpecies(-1);
+            } else if (newValue > taskEditor.getNominalMasses().size() + REQUIRED_NOMINAL_MASSES.size()) {
+                taskEditor.setIndexOfBackgroundSpecies(taskEditor.getNominalMasses().size() + REQUIRED_NOMINAL_MASSES.size() - 1);
+            } else {
+                taskEditor.setIndexOfBackgroundSpecies(newValue - 1);
+            }
+            populateMasses();
         });
     }
 
@@ -813,7 +834,7 @@ public class TaskEditorController implements Initializable {
         massName.textProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
             massName.setPrefWidth((massName.getText().trim().length() + 2) * massName.getFont().getSize());
         });
-        MenuItem menuItem = new MenuItem("Add masses separated by commas", massName);
+        MenuItem menuItem = new MenuItem("<== Type Masses separated by commas and then click here to add them.", massName);
         menuItem.setOnAction((evt) -> {
             String mass = massName.getText();
             if (mass.length() > 0) {
@@ -843,7 +864,7 @@ public class TaskEditorController implements Initializable {
                 // do nothing
             }
         });
-        itemsForThisNode.add(menuItem);
+        //itemsForThisNode.add(menuItem);
 
         menuItem = new MenuItem("Restore mass");
         menuItem.setDisable(undoMassesList.isEmpty());
@@ -855,7 +876,7 @@ public class TaskEditorController implements Initializable {
                 populateMasses();
             }
         });
-        itemsForThisNode.add(menuItem);
+        //itemsForThisNode.add(menuItem);
 
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().setAll(itemsForThisNode);
@@ -871,15 +892,15 @@ public class TaskEditorController implements Initializable {
                     + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
             if (valid) {
                 // detect if masses or ratios have changed before reconstruction
-                boolean noChange = ((Task)squidProject.getTask()).taskDesignDiffersFromTask(taskEditor);
+                boolean noChange = ((Task) squidProject.getTask()).taskDesignDiffersFromTask(taskEditor);
 
                 squidProject.createNewTask();
                 squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
-                
-                if (noChange){
-                    ((Task)squidProject.getTask()).applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+
+                if (noChange) {
+                    ((Task) squidProject.getTask()).applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
                 }
-                
+
                 MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                         .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
                 menuItemTaskManager.fire();

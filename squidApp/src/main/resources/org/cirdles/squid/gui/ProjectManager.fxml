@@ -144,8 +144,8 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                 <children>
-                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="338.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Default Common Pb Model:" wrapText="true" />
-                    <Label prefHeight="29.0" prefWidth="321.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Physical Constants Model:" translateX="10.0" />
+                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="374.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Default Common Pb Model:" wrapText="true" />
+                    <Label prefHeight="29.0" prefWidth="238.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Physical Constants Model:" translateX="10.0" />
                 </children>
                <padding>
                   <Insets left="5.0" />
@@ -153,19 +153,16 @@
             </HBox>
             
             <Label alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="195.0" style="-fx-font-size: 14;" text="Parameter Models:" GridPane.rowIndex="5" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                    <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Common Lead Model" />
-                    <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Physical Constants Model" />
-                    <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0" prefWidth="115.0" style="-fx-padding: 0 0 0 0;" text="Refresh  Models">
+                    <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="390.0" promptText="Common Lead Model" />
+                    <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="390.0" promptText="Physical Constants Model" />
+                    <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0" prefWidth="115.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 12;" text="Refresh  Models">
                         <HBox.margin>
-                            <Insets left="30.0" />
+                            <Insets />
                         </HBox.margin>
                     </Button>
                </children>
-               <padding>
-                  <Insets left="15.0" />
-               </padding>
             </HBox>
         </children>
 
