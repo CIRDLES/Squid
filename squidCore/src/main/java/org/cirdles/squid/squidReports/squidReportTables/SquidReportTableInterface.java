@@ -125,9 +125,9 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      * @param reportTableName the reportTableName to set
      */
     public void setReportTableName(String reportTableName);
-    
+
     public boolean amWeightedMeanPlotAndSortReport();
-    
+
     public void formatWeightedMeanPlotAndSortReport();
 
     /**
@@ -143,6 +143,16 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
     public void setIsDefault(boolean isDefault);
 
     public boolean isDefault();
+
+    /**
+     * @return the isLabDataDefault
+     */
+    public boolean isIsLabDataDefault();
+
+    /**
+     * @param isLabDataDefault the isLabDataDefault to set
+     */
+    public void setIsLabDataDefault(boolean isLabDataDefault);
 
     public boolean equals(Object ob);
 

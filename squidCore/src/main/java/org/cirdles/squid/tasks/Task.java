@@ -147,6 +147,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
+    
+    public static SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     /**
      *
@@ -424,7 +426,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ParametersModel physConst = getPhysicalConstantsModel();
         ParametersModel commonPbMod = getCommonPbModel();
 
-        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
+//        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
         if (physConst == null) {
             setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
@@ -1033,13 +1035,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<ParametersModel> models = null;
 
         if (refreshCommonLeadModel) {
-            models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
+            models = squidLabData.getCommonPbModels();
             commonPbModel = findModelByName(models, commonPbModel);
             commonPbModelChanged = true;
         }
 
         if (refreshPhysicalConstantsModel) {
-            models = SquidLabData.getExistingSquidLabData().getPhysicalConstantsModels();
+            models = squidLabData.getPhysicalConstantsModels();
             physicalConstantsModel = findModelByName(models, physicalConstantsModel);
             physicalConstantsModelChanged = true;
         }
@@ -2731,16 +2733,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-        if (containsFilterReport
-                && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
+        if (containsFilterReport){
+               // && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
             squidReportTablesUnknown.remove(squidWeightedMeanPlotSortTable);
             containsFilterReport = false;
         }
 
         if (!containsFilterReport) {
-            squidWeightedMeanPlotSortTable
-                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
-            squidWeightedMeanPlotSortTable.setIsDefault(false);
+            squidWeightedMeanPlotSortTable = squidLabData.getSpecialWMSortingReportTable();
+            if (squidWeightedMeanPlotSortTable == null) {
+                squidWeightedMeanPlotSortTable
+                        = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
+                squidWeightedMeanPlotSortTable.setIsDefault(false);
+                squidLabData.setSpecialWMSortingReportTable(squidWeightedMeanPlotSortTable);
+            }
             squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
         }
 
@@ -3686,7 +3692,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedRefMatReportModel
      */
     public SquidReportTableInterface getSelectedRefMatReportModel() {
-        if(selectedRefMatReportModel == null){
+        if (selectedRefMatReportModel == null) {
             selectedRefMatReportModel = SquidReportTable.createDefaultSquidReportTableRefMat(this);
         }
         return selectedRefMatReportModel;
@@ -3703,7 +3709,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedUnknownReportModel
      */
     public SquidReportTableInterface getSelectedUnknownReportModel() {
-        if(selectedUnknownReportModel == null){
+        if (selectedUnknownReportModel == null) {
             selectedUnknownReportModel = SquidReportTable.createDefaultSquidReportTableUnknown(this);
         }
         return selectedUnknownReportModel;

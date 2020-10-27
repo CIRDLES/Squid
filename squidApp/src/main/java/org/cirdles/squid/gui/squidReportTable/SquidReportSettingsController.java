@@ -64,6 +64,7 @@ import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 /**
  * FXML Controller class
@@ -164,6 +165,8 @@ public class SquidReportSettingsController implements Initializable {
     private boolean isRefMat;
     private SquidReportTableInterface selectedRefMatReportModel;
     private SquidReportTableInterface selectedUnknownReportModel;
+    @FXML
+    private Button makeDefaultButton;
 
     //INIT
     @Override
@@ -260,7 +263,7 @@ public class SquidReportSettingsController implements Initializable {
         reportTableCB.setConverter(new StringConverter<SquidReportTableInterface>() {
             @Override
             public String toString(SquidReportTableInterface object) {
-                return object.getReportTableName();
+                return (object.isIsLabDataDefault() ? (object.getReportTableName() + " <Lab Default>") : object.getReportTableName());
             }
 
             @Override
@@ -275,10 +278,13 @@ public class SquidReportSettingsController implements Initializable {
                 if (isRefMat) {
                     selectedRefMatReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedRefMatReportModel(selectedRefMatReportModel);
+                    makeDefaultButton.setDisable(selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport());
                 } else {
                     selectedUnknownReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
+                    makeDefaultButton.setDisable(selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport());
                 }
+
             }
         });
         populateSquidReportTableChoiceBox();
@@ -1052,8 +1058,26 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private List<SquidReportTableInterface> getTables() {
-        return isRefMat ? task.getSquidReportTablesRefMat()
+
+        List<SquidReportTableInterface> tables = isRefMat ? task.getSquidReportTablesRefMat()
                 : task.getSquidReportTablesUnknown();
+
+        SquidReportTableInterface saveTable = null;
+        for (SquidReportTableInterface table : tables) {
+            if (table.isIsLabDataDefault()) {
+                saveTable = table;
+            }
+        }
+
+        if (saveTable != null) {
+            tables.remove(saveTable);
+        }
+
+        if (Task.squidLabData.getDefaultReportTable() != null) {
+            tables.add(Task.squidLabData.getDefaultReportTable());
+        }
+
+        return tables;
     }
 
     private SquidReportTableInterface createCopyOfUpdatedSquidReportTable() {
@@ -1277,6 +1301,7 @@ public class SquidReportSettingsController implements Initializable {
             SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
             if (table.amWeightedMeanPlotAndSortReport()) {
                 table.formatWeightedMeanPlotAndSortReport();
+                Task.squidLabData.setSpecialWMSortingReportTable(table);
             }
             List<SquidReportTableInterface> tables = getTables();
             int location = tables.indexOf(table);
@@ -1335,6 +1360,15 @@ public class SquidReportSettingsController implements Initializable {
                         primaryStageWindow);
             }
         }
+    }
+
+    @FXML
+    private void makeDefaultAction(ActionEvent event) {
+        SquidReportTableInterface defaultReportTable = reportTableCB.getSelectionModel().getSelectedItem();
+
+        Task.squidLabData.getDefaultReportTable().setIsLabDataDefault(false);
+        defaultReportTable.setIsLabDataDefault(true);
+        Task.squidLabData.setDefaultReportTable(defaultReportTable);
     }
 
     private class SquidReportCategoryInterfaceCellFactory implements Callback<ListView<SquidReportCategoryInterface>, ListCell<SquidReportCategoryInterface>> {

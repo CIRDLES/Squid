@@ -1509,8 +1509,9 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(plotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         if (confirmReduction()) {
-            launchInterpretations();
             PlotsController.currentlyPlottedSampleTreeNode = null;
+            launchInterpretations();
+            
             showUI(plotUI);
             menuHighlighter.highlight(manageInterpretationsMenu);
         }

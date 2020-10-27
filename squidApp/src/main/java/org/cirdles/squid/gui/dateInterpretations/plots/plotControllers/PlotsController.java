@@ -134,14 +134,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     @Override
     public void setXAxisExpressionName(String xAxisExpressionName) {
         PlotsController.xAxisExpressionName = xAxisExpressionName;
-        ((Task)squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
+        ((Task) squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
         showActivePlot();
     }
 
     @Override
     public void setYAxisExpressionName(String yAxisExpressionName) {
         PlotsController.yAxisExpressionName = yAxisExpressionName;
-        ((Task)squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
+        ((Task) squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
         showActivePlot();
     }
 
@@ -195,8 +195,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
-        xAxisExpressionName = ((Task)squidProject.getTask()).getxAxisExpressionName();
-        yAxisExpressionName = ((Task)squidProject.getTask()).getyAxisExpressionName();
+        xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
+        yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
         showActivePlot();
     }
@@ -337,6 +337,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
             sampleItem.setSelected(true);
             rootItem.getChildren().add(sampleItem);
+            if (currentlyPlottedSampleTreeNode == null) {
+                currentlyPlottedSampleTreeNode = sampleItem;
+            }
 
             List<Map<String, Object>> myData = new ArrayList<>();
 
