@@ -487,9 +487,10 @@ public class SquidReportSettingsController implements Initializable {
         columnListView.setOnDragDropped(event -> {
             boolean success = false;
             if (event.getTransferMode().equals(TransferMode.COPY) && !selectedCategoryIsFixedCategory.getValue()) {
-                @SuppressWarnings("unchecked")
                 SquidReportColumnInterface col = null;
-                for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                @SuppressWarnings("unchecked") List<String> listOfExp = 
+                                ((List<String>) event.getDragboard().getContent(STRING_LIST));
+                for (String colName : listOfExp) {
                     col = SquidReportColumn.createSquidReportColumn(colName);
                     columnListView.getItems().add(col);
                 }
@@ -1645,9 +1646,10 @@ public class SquidReportSettingsController implements Initializable {
                 if (!selectedCategoryIsFixedCategory.getValue()) {
                     ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
                     if (event.getTransferMode().equals(TransferMode.COPY)) {
-                        @SuppressWarnings("unchecked")
                         SquidReportColumnInterface col = null;
-                        for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                        @SuppressWarnings("unchecked") List<String> listOfExp = 
+                                ((List<String>) event.getDragboard().getContent(STRING_LIST));
+                        for (String colName : listOfExp) {
                             col = SquidReportColumn.createSquidReportColumn(colName);
                             if (cell.getItem() != null) {
                                 items.add(items.indexOf(cell.getItem()), col);
