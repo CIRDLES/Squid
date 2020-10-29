@@ -647,74 +647,78 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
     }
 
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
-        String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
-        String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
+        if (squidProject.hasReportsFolder()) {
+            String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
+            String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
 
-        try {
-            File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
-            if (reportFile != null) {
-                BooleanProperty writeReport = new SimpleBooleanProperty(true);
-                BooleanProperty doAppendProperty = new SimpleBooleanProperty(doAppend);
-                boolean confirmedExists = false;
-                OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                if (reportFile.exists()) {
-                    switch (osType) {
-                        case Windows:
-                            if (!FileUtilities.isFileClosedWindows(reportFile)) {
-                                SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
-                                writeReport.setValue(false);
-                            }
-                            break;
-                        case MacOS:
-                        case Linux:
-                            if (!FileUtilities.isFileClosedUnix(reportFile)) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+            try {
+                File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
+                if (reportFile != null) {
+                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                    BooleanProperty doAppendProperty = new SimpleBooleanProperty(doAppend);
+                    boolean confirmedExists = false;
+                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                    if (reportFile.exists()) {
+                        switch (osType) {
+                            case Windows:
+                                if (!FileUtilities.isFileClosedWindows(reportFile)) {
+                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                    writeReport.setValue(false);
+                                }
+                                break;
+                            case MacOS:
+                            case Linux:
+                                if (!FileUtilities.isFileClosedUnix(reportFile)) {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                    alert.showAndWait().ifPresent(action -> {
+                                        if (action != ButtonType.OK) {
+                                            writeReport.setValue(false);
+                                        }
+                                    });
+                                    confirmedExists = true;
+                                }
+                                break;
+                        }
+                    }
+                    if (writeReport.getValue()) {
+                        if (reportFile.exists() && !doAppendProperty.getValue()) {
+                            if (!confirmedExists) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                        "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
-                                    if (action != ButtonType.OK) {
+                                    if (action.equals(ButtonType.CANCEL)) {
                                         writeReport.setValue(false);
                                     }
                                 });
-                                confirmedExists = true;
                             }
-                            break;
-                    }
-                }
-                if (writeReport.getValue()) {
-                    if (reportFile.exists() && !doAppendProperty.getValue()) {
-                        if (!confirmedExists) {
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "It appears that a weighted means report already exists. "
-                                    + "Would you like to overwrite it?");
+                        } else if (!reportFile.exists() && doAppendProperty.getValue()) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. "
+                                    + "Would you like to create a new report?");
                             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                             alert.showAndWait().ifPresent(action -> {
-                                if (action.equals(ButtonType.CANCEL)) {
-                                    writeReport.setValue(false);
+                                if (action.equals(ButtonType.OK)) {
+                                    doAppendProperty.setValue(false);
                                 }
                             });
                         }
-                    } else if (!reportFile.exists() && doAppendProperty.getValue()) {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "A weighted means report doesn't seem to exist. "
-                                + "Would you like to create a new report?");
-                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                        alert.showAndWait().ifPresent(action -> {
-                            if (action.equals(ButtonType.OK)) {
-                                doAppendProperty.setValue(false);
-                            }
-                        });
-                    }
-                    if (writeReport.getValue()) {
-                        squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
-                        SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
+                        if (writeReport.getValue()) {
+                            squidProject.getPrawnFileHandler().getReportsEngine().writeSquidWeightedMeanReportToFile(report, reportFile, doAppendProperty.getValue());
+                            SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
+                        }
                     }
                 }
+            } catch (NoSuchFileException e) {
+                SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
+            } catch (java.nio.file.FileSystemException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
+            } catch (IOException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
             }
-        } catch (NoSuchFileException e) {
-            SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
-        } catch (java.nio.file.FileSystemException e) {
-            SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
-        } catch (IOException e) {
-            SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
 
