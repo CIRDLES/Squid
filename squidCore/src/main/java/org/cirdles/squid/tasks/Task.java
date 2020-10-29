@@ -489,7 +489,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(taskDesign, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -579,7 +579,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(this, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
+                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }

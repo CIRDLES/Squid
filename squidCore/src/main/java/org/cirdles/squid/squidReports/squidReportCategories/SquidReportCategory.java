@@ -135,20 +135,18 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         return categoryColumns;
     }
 
+    @Override
     public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted() {
-        LinkedList<SquidReportColumnInterface> sortedColumns
+        @SuppressWarnings("unchecked") LinkedList<SquidReportColumnInterface> sortedColumns
                 = (LinkedList<SquidReportColumnInterface>) categoryColumns.clone();
 
         if (this.displayName.compareToIgnoreCase("Time") != 0) {
-            Collections.sort(sortedColumns, new Comparator<SquidReportColumnInterface>() {
-                @Override
-                public int compare(SquidReportColumnInterface col1, SquidReportColumnInterface col2) {
-                    IntuitiveStringComparator<String> intuitiveStringComparator
-                            = new IntuitiveStringComparator<>();
-                    return intuitiveStringComparator.compare(
-                            col1.getExpressionName().toLowerCase(),
-                            col2.getExpressionName().toLowerCase());
-                }
+            Collections.sort(sortedColumns, (SquidReportColumnInterface col1, SquidReportColumnInterface col2) -> {
+                IntuitiveStringComparator<String> intuitiveStringComparator
+                        = new IntuitiveStringComparator<>();
+                return intuitiveStringComparator.compare(
+                        col1.getExpressionName().toLowerCase(),
+                        col2.getExpressionName().toLowerCase());
             });
         }
 

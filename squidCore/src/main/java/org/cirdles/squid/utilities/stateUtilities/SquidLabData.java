@@ -47,6 +47,7 @@ public class SquidLabData implements Serializable {
     
     private SquidReportTableInterface specialWMSortingReportTable;
     private SquidReportTableInterface defaultReportTable;
+    private SquidReportTableInterface defaultReportTableRM;
 
     public SquidLabData() {
         laboratoryName = "Your lab";
@@ -80,6 +81,7 @@ public class SquidLabData implements Serializable {
         
         specialWMSortingReportTable = null;
         defaultReportTable = null;
+        defaultReportTableRM = null;
 
         storeState();
     }
@@ -335,4 +337,22 @@ public class SquidLabData implements Serializable {
     public void setDefaultReportTable(SquidReportTableInterface defaultReportTable) {
         this.defaultReportTable = defaultReportTable;
     }
+
+    /**
+     * 
+     * @return the defaultReportTableRM
+     */
+    public SquidReportTableInterface getDefaultReportTableRM() {
+        return defaultReportTableRM;
+    }
+
+    /**
+     * 
+     * @param defaultReportTableRM the defaultReportTableRM to set
+     */
+    public void setDefaultReportTableRM(SquidReportTableInterface defaultReportTableRM) {
+        this.defaultReportTableRM = defaultReportTableRM;
+    }
+    
+    
 }

@@ -75,11 +75,21 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.version = version;
     }
 
+    public SquidReportTableInterface copy(){       
+        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
+        reportCategories.forEach(cat -> cats.add(cat.clone()));
+        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isDefault, version);
+        table.setIsLabDataDefault(isLabDataDefault);
+        
+        return table;
+    }
+    
     @Override
     public boolean amWeightedMeanPlotAndSortReport() {
         return reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0;
     }
 
+    @Override
     public void formatWeightedMeanPlotAndSortReport() {
         // force Time and Ages categories to top of categories list
         SquidReportCategoryInterface timeCat = null;
