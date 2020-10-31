@@ -323,9 +323,9 @@ public class CalamariFileUtilities {
                 File squidTaskSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidTask_XMLSchema.xsd");
 
                 if (squidTaskSchemaResource.renameTo(squidTaskSchema)) {
-                    //System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
+                    //System.out.println("SquidTask_XMLSchema.xsd added.");
                 } else {
-                    //System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
+                    //System.out.println("Failed to add SquidTask_XMLSchema.xsd.");
                 }
             }
         } catch (IOException iOException) {

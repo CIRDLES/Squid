@@ -1,11 +1,7 @@
 <?xml version="1.0"?>
 <!-- SQUID3_TASK_SPECIFICATION_FILE -->
 <!-- visit: github.com/CIRDLES/Squid -->
-<Task xmlns="https://raw.githubusercontent.com"
-      xmlns:xs="http://www.w3.org/2001/XMLSchema"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="https://raw.githubusercontent.com
-                          ../schema/SquidTask_XMLSchema.xsd">
+<Task>
   <name>Z6266_=_11pk_Perm1</name>
   <taskType>GEOCHRON</taskType>
   <description>11-peak zircon (189-254), primary 206/238, secondary (208/232) calibrated indirectly, via 232Th/238U</description>

@@ -5,7 +5,11 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
@@ -43,6 +47,7 @@ import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -184,9 +189,11 @@ public class TaskFolderBrowserController implements Initializable {
                     )) {
                         // check if task 
                         try {
-                            if (FileValidator.validateFileIsXMLSerializedEntity(file, taskXMLSchema)){
+                            // Backwards compatibility prior to task-xml-validation
+                            File temp = fixXMLFileHeader(file);
+                            if (FileValidator.validateFileIsXMLSerializedEntity(temp, taskXMLSchema)){
                                 TaskInterface task = (Task) ((XMLSerializerInterface)
-                                        squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
+                                        squidProject.getTask()).readXMLObject(temp.getAbsolutePath(), false);
                                 if (task != null) {
                                     taskFilesInFolder.add(task);
                                 }
@@ -198,9 +205,10 @@ public class TaskFolderBrowserController implements Initializable {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
                     // check if task 
                     try {
-                        if (FileValidator.validateFileIsXMLSerializedEntity(tasksBrowserTarget, taskXMLSchema)){
+                        File temp = fixXMLFileHeader(tasksBrowserTarget);
+                        if (FileValidator.validateFileIsXMLSerializedEntity(temp, taskXMLSchema)){
                             TaskInterface task = (Task) ((XMLSerializerInterface)
-                                    squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
+                                    squidProject.getTask()).readXMLObject(temp.getAbsolutePath(), false);
                             if (task != null) {
                                 taskFilesInFolder.add(task);
                             }
@@ -235,12 +243,9 @@ public class TaskFolderBrowserController implements Initializable {
                             ((XMLSerializerInterface) taskFromSquid25)
                                     .serializeXMLObject(tempTaskFile.getAbsolutePath());
 
-                            if (FileValidator.validateFileIsXMLSerializedEntity(tempTaskFile, taskXMLSchema)){
-                                TaskInterface task = (Task) ((XMLSerializerInterface)
-                                        squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
-                                if (task != null) {
-                                    taskFilesInFolder.add(task);
-                                }
+                            TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
+                            if (task != null) {
+                                taskFilesInFolder.add(task);
                             }
                         } catch (Exception e) {
                         }
@@ -257,12 +262,9 @@ public class TaskFolderBrowserController implements Initializable {
                         ((XMLSerializerInterface) taskFromSquid25)
                                 .serializeXMLObject(tempTaskFile.getAbsolutePath());
 
-                        if (FileValidator.validateFileIsXMLSerializedEntity(tempTaskFile, taskXMLSchema)){
-                            TaskInterface task = (Task) ((XMLSerializerInterface)
-                                    squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
-                            if (task != null) {
-                                taskFilesInFolder.add(task);
-                            }
+                        TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
+                        if (task != null) {
+                            taskFilesInFolder.add(task);
                         }
                     } catch (Exception e) {
                     }
@@ -491,6 +493,45 @@ public class TaskFolderBrowserController implements Initializable {
         if (!player) {
             expressionText.setText("Not Used");
         }
+    }
+    
+    private File fixXMLFileHeader(File XMLFile) { 
+        FileReader reader;
+        FileWriter writer;
+        BufferedReader buffIn = null;
+        BufferedWriter buffOut = null;
+        File tempTaskXML = null;
+        
+        try {
+            tempTaskXML = File.createTempFile("tempTaskXML", ".tmp");
+            reader = new FileReader(XMLFile);
+            writer = new FileWriter(tempTaskXML);
+            buffIn = new BufferedReader(reader);
+            buffOut = new BufferedWriter(writer);
+            
+            String line;
+            while((line = buffIn.readLine()) != null){
+                line = line.replaceFirst("<Task>",
+                    XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA);
+                buffOut.write(line);
+                buffOut.newLine();
+            }
+            buffIn.close();
+            buffOut.close();
+        } catch(IOException e) {
+        } finally {
+            try {
+                if (buffIn != null) {
+                    buffIn.close();
+                }
+                if (buffOut != null) {
+                    buffOut.close();
+                }
+            } catch(IOException e){
+            }
+        }
+
+        return tempTaskXML;
     }
 
     @FXML
