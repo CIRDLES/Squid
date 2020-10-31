@@ -62,7 +62,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     @Override
-    public boolean equals(Object obj) {       
+    public boolean equals(Object obj) {
         boolean retVal = false;
         if (this == obj) {
             retVal = true;
@@ -70,7 +70,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
             retVal = super.equals(obj);
         }
 
-        return retVal; 
+        return retVal;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
             if (((ExpressionTree) parentET).getOperation() instanceof ShrimpSpeciesNodeFunction) {
                 retVal = ((ShrimpSpeciesNodeFunction) ((ExpressionTree) parentET).getOperation()).getMethodNameForShrimpFraction().length() > 0;
             } else {
-                retVal =  (methodNameForShrimpFraction.length() > 0);
+                retVal = (methodNameForShrimpFraction.length() > 0);
             }
         } else {
             // Node is top of expressiontree
@@ -128,7 +128,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
         return false;
     }
-    
+
     @Override
     public boolean usesOtherExpression() {
         return false;
@@ -219,15 +219,13 @@ public class ShrimpSpeciesNode extends ExpressionTree {
      */
     @Override
     public String getName() {
-        return  isotopeName;//   squidSpeciesModel.getMassStationSpeciesName();
+        return isotopeName;//   squidSpeciesModel.getMassStationSpeciesName();
     }
 
     @Override
     public void setName(String name) {
         isotopeName = name;
     }
-    
-    
 
     /**
      * @param squidSpeciesModel

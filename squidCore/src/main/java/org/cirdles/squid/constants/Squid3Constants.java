@@ -356,14 +356,14 @@ public final class Squid3Constants {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),
         UNKNOWN("UNKNOWNS");
 
-        private String plotType;
+        private String spotTypeName;
 
-        private SpotTypes(String plotType) {
-            this.plotType = plotType;
+        private SpotTypes(String spotType) {
+            this.spotTypeName = spotType;
         }
 
-        public String getPlotType() {
-            return plotType;
+        public String getSpotTypeName() {
+            return spotTypeName;
         }
     }
 

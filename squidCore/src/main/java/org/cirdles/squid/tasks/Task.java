@@ -148,6 +148,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
+    
+    public static SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     /**
      *
@@ -425,7 +427,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ParametersModel physConst = getPhysicalConstantsModel();
         ParametersModel commonPbMod = getCommonPbModel();
 
-        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
+//        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
         if (physConst == null) {
             setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
@@ -488,7 +490,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(taskDesign, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -578,7 +580,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(this, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -764,7 +766,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         mapOfUnknownsBySampleNames = new TreeMap<>(intuitiveStringComparator);
         // walk chosen sample names (excluding reference materials) and get list of spots belonging to each
         // first put full set
-        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), unknownSpots);
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
@@ -900,7 +902,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (String sampleName : mapOfUnknownsBySampleNames.keySet()) {
-            if (sampleName.compareTo(UNKNOWN.getPlotType()) != 0) {
+            if (sampleName.compareTo(UNKNOWN.getSpotTypeName()) != 0) {
                 summary.append("\n\t")
                         .append("\"")
                         .append(sampleName)
@@ -1034,13 +1036,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<ParametersModel> models = null;
 
         if (refreshCommonLeadModel) {
-            models = SquidLabData.getExistingSquidLabData().getCommonPbModels();
+            models = squidLabData.getCommonPbModels();
             commonPbModel = findModelByName(models, commonPbModel);
             commonPbModelChanged = true;
         }
 
         if (refreshPhysicalConstantsModel) {
-            models = SquidLabData.getExistingSquidLabData().getPhysicalConstantsModels();
+            models = squidLabData.getPhysicalConstantsModels();
             physicalConstantsModel = findModelByName(models, physicalConstantsModel);
             physicalConstantsModelChanged = true;
         }
@@ -1842,7 +1844,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (SquidSpeciesModel spm : squidSpeciesModelList) {
-            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm);
+            // oct 2020 added in TotalCps because a bug developed in version 1.5.11 that broke the expression manager peeks
+            ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildShrimpSpeciesNode(spm, "getTotalCps");
             namedExpressionsMap.put(spm.getIsotopeName(), shrimpSpeciesNode);
         }
 
@@ -2731,16 +2734,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-        if (containsFilterReport
-                && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
+        if (containsFilterReport){
+               // && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
             squidReportTablesUnknown.remove(squidWeightedMeanPlotSortTable);
             containsFilterReport = false;
         }
 
         if (!containsFilterReport) {
-            squidWeightedMeanPlotSortTable
-                    = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
-            squidWeightedMeanPlotSortTable.setIsDefault(false);
+            squidWeightedMeanPlotSortTable = squidLabData.getSpecialWMSortingReportTable();
+            if (squidWeightedMeanPlotSortTable == null) {
+                squidWeightedMeanPlotSortTable
+                        = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
+                squidWeightedMeanPlotSortTable.setIsDefault(false);
+                squidLabData.setSpecialWMSortingReportTable(squidWeightedMeanPlotSortTable);
+            }
             squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
         }
 
@@ -3440,7 +3447,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             mapOfUnknownsBySampleNames = new TreeMap<>();
         }
         // safety feature
-        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getPlotType(), unknownSpots);
+        mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), unknownSpots);
         return mapOfUnknownsBySampleNames;
     }
 
@@ -3686,6 +3693,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedRefMatReportModel
      */
     public SquidReportTableInterface getSelectedRefMatReportModel() {
+        if (selectedRefMatReportModel == null) {
+            selectedRefMatReportModel = SquidReportTable.createDefaultSquidReportTableRefMat(this);
+        }
         return selectedRefMatReportModel;
     }
 
@@ -3700,6 +3710,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the selectedUnknownReportModel
      */
     public SquidReportTableInterface getSelectedUnknownReportModel() {
+        if (selectedUnknownReportModel == null) {
+            selectedUnknownReportModel = SquidReportTable.createDefaultSquidReportTableUnknown(this);
+        }
         return selectedUnknownReportModel;
     }
 

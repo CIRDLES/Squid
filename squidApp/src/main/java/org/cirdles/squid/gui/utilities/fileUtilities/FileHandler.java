@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**

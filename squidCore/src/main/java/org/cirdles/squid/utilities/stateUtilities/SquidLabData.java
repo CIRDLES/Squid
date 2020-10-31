@@ -20,6 +20,7 @@ import java.util.List;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 /**
  * @author ryanb
@@ -41,8 +42,12 @@ public class SquidLabData implements Serializable {
     private ParametersModel refMatConcDefault;
     private ParametersModel physConstDefault;
 
-    private static  int CURRENT_VERSION = 17;
+    private static  int CURRENT_VERSION = 18;
     private int version;
+    
+    private SquidReportTableInterface specialWMSortingReportTable;
+    private SquidReportTableInterface defaultReportTable;
+    private SquidReportTableInterface defaultReportTableRM;
 
     public SquidLabData() {
         laboratoryName = "Your lab";
@@ -73,6 +78,10 @@ public class SquidLabData implements Serializable {
         commonPbDefault = CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0");
 
         version = CURRENT_VERSION;
+        
+        specialWMSortingReportTable = null;
+        defaultReportTable = null;
+        defaultReportTableRM = null;
 
         storeState();
     }
@@ -300,4 +309,50 @@ public class SquidLabData implements Serializable {
         }
         return version;
     }
+
+    /**
+     * @return the specialWMSortingReportTable
+     */
+    public SquidReportTableInterface getSpecialWMSortingReportTable() {
+        return specialWMSortingReportTable;
+    }
+
+    /**
+     * @param specialWMSortingReportTable the specialWMSortingReportTable to set
+     */
+    public void setSpecialWMSortingReportTable(SquidReportTableInterface specialWMSortingReportTable) {
+        this.specialWMSortingReportTable = specialWMSortingReportTable;
+    }
+
+    /**
+     * @return the defaultReportTable
+     */
+    public SquidReportTableInterface getDefaultReportTable() {
+        return defaultReportTable;
+    }
+
+    /**
+     * @param defaultReportTable the defaultReportTable to set
+     */
+    public void setDefaultReportTable(SquidReportTableInterface defaultReportTable) {
+        this.defaultReportTable = defaultReportTable;
+    }
+
+    /**
+     * 
+     * @return the defaultReportTableRM
+     */
+    public SquidReportTableInterface getDefaultReportTableRM() {
+        return defaultReportTableRM;
+    }
+
+    /**
+     * 
+     * @param defaultReportTableRM the defaultReportTableRM to set
+     */
+    public void setDefaultReportTableRM(SquidReportTableInterface defaultReportTableRM) {
+        this.defaultReportTableRM = defaultReportTableRM;
+    }
+    
+    
 }

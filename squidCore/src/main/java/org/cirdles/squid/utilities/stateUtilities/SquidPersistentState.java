@@ -428,10 +428,8 @@ public class SquidPersistentState implements Serializable {
     public void setMRUTaskFolderPath(String MRUTaskFolderPath) {
         this.MRUTaskFolderPath = MRUTaskFolderPath;
     }
-    
-    
-    // MRU Squid Task Data ********************************************************
 
+    // MRU Squid Task Data ********************************************************
     /**
      * @return the MRUTaskFolderPath
      */
@@ -697,7 +695,7 @@ public class SquidPersistentState implements Serializable {
         MRUOPFileList.remove(opFileName);
     }
 
-        // MRU TaskXML File Data ***************************************************
+    // MRU TaskXML File Data ***************************************************
     /**
      * @param PrawnFileMRU
      */
@@ -790,7 +788,7 @@ public class SquidPersistentState implements Serializable {
     public void setMRUTaskXMLFolderPath(String MRUTaskXMLFolderPath) {
         this.MRUTaskXMLFolderPath = MRUTaskXMLFolderPath;
     }
-    
+
     public void removeTaskXMLFileNameFromMRU(String taskXMLFileName) {
         MRUTaskXMLList.remove(taskXMLFileName);
     }

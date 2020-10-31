@@ -134,14 +134,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     @Override
     public void setXAxisExpressionName(String xAxisExpressionName) {
         PlotsController.xAxisExpressionName = xAxisExpressionName;
-        ((Task)squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
+        ((Task) squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
         showActivePlot();
     }
 
     @Override
     public void setYAxisExpressionName(String yAxisExpressionName) {
         PlotsController.yAxisExpressionName = yAxisExpressionName;
-        ((Task)squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
+        ((Task) squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
         showActivePlot();
     }
 
@@ -195,8 +195,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
-        xAxisExpressionName = ((Task)squidProject.getTask()).getxAxisExpressionName();
-        yAxisExpressionName = ((Task)squidProject.getTask()).getyAxisExpressionName();
+        xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
+        yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
         showActivePlot();
     }
@@ -265,7 +265,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
             mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
             // case of sample names chosen
             if (mapOfSpotsBySampleNames.size() > 1) {
-                mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getPlotType());
+                mapOfSpotsBySampleNames.remove(SpotTypes.UNKNOWN.getSpotTypeName());
             }
         } else {
             // ref mat
@@ -284,7 +284,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
 
         rootPlot = generateConcordiaPlot(
-                fractionTypeSelected.getPlotType(), allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
+                fractionTypeSelected.getSpotTypeName(), allUnknownOrRefMatShrimpFractions, physicalConstantsModel);
 
         rootData = new ArrayList<>();
 
@@ -292,7 +292,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
         // build out set of rootData for samples
         CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
-                = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getPlotType()));
+                = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getSpotTypeName()));
         chosenSample = rootItem;
         rootItem.setExpanded(true);
         rootItem.setIndependent(true);
@@ -337,6 +337,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     = new CheckBoxTreeItem<>(new SampleNode(entry.getKey()));
             sampleItem.setSelected(true);
             rootItem.getChildren().add(sampleItem);
+            if (currentlyPlottedSampleTreeNode == null) {
+                currentlyPlottedSampleTreeNode = sampleItem;
+            }
 
             List<Map<String, Object>> myData = new ArrayList<>();
 
@@ -458,7 +461,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 rootPlot.setData(rootData);
                 try {
                     if (newValue.getValue() instanceof SampleNode) {
-                        if (newValue.getValue().getNodeName().equals("UNKNOWNS")) {
+                        if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
                             plot = rootPlot;
                         } else if (chosenSample != newValue) {
                             plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + topsoilPlotFlavor);
@@ -514,7 +517,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
         // build out set of rootData for samples
         CheckBoxTreeItem<SampleTreeNodeInterface> rootItem
-                = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getPlotType()));
+                = new CheckBoxTreeItem<>(new SampleNode(fractionTypeSelected.getSpotTypeName()));
         chosenSample = rootItem;
         rootItem.setExpanded(true);
         rootItem.setIndependent(true);
@@ -677,7 +680,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 rootPlot.setData(rootData);
                 try {
                     if (newValue.getValue() instanceof SampleNode) {
-                        if (newValue.getValue().getNodeName().equals("UNKNOWNS")) {
+                        if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
                             plot = rootPlot;
                         } else if (chosenSample != newValue) {
                             plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + xAxisExpressionName + yAxisExpressionName);

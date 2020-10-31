@@ -42,11 +42,11 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class SquidReportTable implements Serializable, SquidReportTableInterface {
+public class SquidReportTable implements Serializable, SquidReportTableInterface, Comparable<SquidReportTableInterface> {
 
     private static final long serialVersionUID = 1685572683987304408L;
 
-    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 4;
+    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 6;
     public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
 
     public final static int HEADER_ROW_COUNT = 7;
@@ -56,6 +56,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private String reportTableName;
     private LinkedList<SquidReportCategoryInterface> reportCategories;
     private boolean isDefault;
+    private boolean isLabDataDefault;
 
     private int version;
 
@@ -70,14 +71,55 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
         this.isDefault = isDefault;
+        this.isLabDataDefault = false;
         this.version = version;
     }
+
+    public SquidReportTableInterface copy() {
+        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
+        reportCategories.forEach(cat -> cats.add(cat.clone()));
+        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isDefault, version);
+        table.setIsLabDataDefault(isLabDataDefault);
+
+        return table;
+    }
+
+    @Override
+    public int compareTo(SquidReportTableInterface srt)
+            throws ClassCastException {
+        String tableName = srt.getReportTableName();
+        return this.getReportTableName().trim().
+                compareToIgnoreCase(tableName.trim());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SquidReportTableInterface)) {
+            return false;
+        }
+        SquidReportTableInterface that = (SquidReportTable) o;
+        return reportTableName.compareTo(that.getReportTableName()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return reportTableName.hashCode();
+    }
+//    public boolean equals(Object ob) {
+//        return ob != null
+//                && ob instanceof SquidReportTable
+//                && ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
+//    }
 
     @Override
     public boolean amWeightedMeanPlotAndSortReport() {
         return reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0;
     }
 
+    @Override
     public void formatWeightedMeanPlotAndSortReport() {
         // force Time and Ages categories to top of categories list
         SquidReportCategoryInterface timeCat = null;
@@ -105,14 +147,14 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
-        String reportTableName = "Default Squid3 Report Table for Reference Materials";
+        String reportTableName = "Builtin Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
 
         return new SquidReportTable(reportTableName, reportCategories, true);
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) {
-        String reportTableName = "Default Squid3 Report Table for Unknowns";
+        String reportTableName = "Builtin Report Table for Unknowns";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknown(task);
 
         return new SquidReportTable(reportTableName, reportCategories, true);
@@ -258,7 +300,8 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         List<Expression> customExpressions = task.getCustomTaskExpressions();
         for (Expression exp : customExpressions) {
             ExpressionTreeInterface expTree = exp.getExpressionTree();
-            if ((!expTree.isSquidSwitchSCSummaryCalculation())
+            if (expTree.amHealthy()
+                    && (!expTree.isSquidSwitchSCSummaryCalculation())
                     && !(expTree instanceof ConstantNode)
                     && !(((ExpressionTreeBuilderInterface) expTree).getOperation() instanceof Value)
                     && (expTree.isSquidSwitchSAUnknownCalculation())) {
@@ -357,12 +400,28 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.reportCategories = reportCategories;
     }
 
+    @Override
     public void setIsDefault(boolean isDefault) {
         this.isDefault = isDefault;
     }
 
+    @Override
     public boolean isDefault() {
         return isDefault;
+    }
+
+    /**
+     * @return the isLabDataDefault
+     */
+    public boolean isIsLabDataDefault() {
+        return isLabDataDefault;
+    }
+
+    /**
+     * @param isLabDataDefault the isLabDataDefault to set
+     */
+    public void setIsLabDataDefault(boolean isLabDataDefault) {
+        this.isLabDataDefault = isLabDataDefault;
     }
 
     @Override
@@ -375,12 +434,6 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
         xstream.registerConverter(new SquidReportColumnXMLConverter());
         xstream.alias("SquidReportColumn", SquidReportColumn.class);
-    }
-
-    public boolean equals(Object ob) {
-        return ob != null
-                && ob instanceof SquidReportTable
-                && ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
     }
 
     public SquidReportTable clone() {
@@ -408,10 +461,5 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
      */
     public void setVersion(int version) {
         this.version = version;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getReportTableName(), getReportCategories(), isDefault(), getVersion());
     }
 }
