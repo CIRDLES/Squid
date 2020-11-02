@@ -180,7 +180,7 @@ public class ExpressionTree
         this.squidSwitchSCSummaryCalculation = false;
         this.squidSwitchSTReferenceMaterialCalculation = false;
         this.squidSwitchSAUnknownCalculation = false;
-        this.unknownsGroupSampleName = Squid3Constants.SpotTypes.UNKNOWN.getPlotType();
+        this.unknownsGroupSampleName = Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName();
         this.squidSpecialUPbThExpression = false;
         this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
@@ -427,7 +427,7 @@ public class ExpressionTree
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
                     ? (unknownsGroupSampleName
-                            .compareTo(SpotTypes.UNKNOWN.getPlotType()) == 0 ? "UNKNOWN:    " : ("UNK(" + unknownsGroupSampleName) + "):") : "";
+                            .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK(" + unknownsGroupSampleName) + "):") : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)

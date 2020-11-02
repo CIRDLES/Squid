@@ -141,7 +141,7 @@ public class CommonLeadAssignmentController implements Initializable {
         // case of sample names chosen
         if (mapOfSpotsBySampleNames.size() > 1) {
             // task.getMapOfUnknownsBySampleNames restores this global set
-            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName());
         }
 
         mapOfWeightedMeansBySampleNames = new TreeMap<>();
@@ -237,8 +237,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         CommonLeadSampleTreeInterface toolBarSampleType
                 = new CommonLeadSampleToolBar(
-                        Squid3Constants.SpotTypes.UNKNOWN.getPlotType(),
-                        mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getPlotType()));
+                        Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(),
+                        mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName()));
         toolBarSampleType.getCommonLeadModels().disableProperty().setValue(true);
         TreeItem<CommonLeadSampleTreeInterface> rootItemSamples = new TreeItem<>(toolBarSampleType);
 

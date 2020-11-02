@@ -31,7 +31,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,8 +39,6 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
@@ -491,11 +488,11 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File selectTasksFolderForBrowsing(Window ownerWindow) {
+    public static File selectSquid3TasksFolderForBrowsing(Window ownerWindow) {
         File tasksFolder;
 
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select Tasks Folder");
+        chooser.setTitle("Select Squid3 Tasks Folder");
         File recentFolder = new File(squidPersistentState.getMRUSquidTaskFolderPath());
         if (recentFolder.isDirectory()) {
             chooser.setInitialDirectory(recentFolder);
@@ -508,6 +505,28 @@ public class FileHandler {
         tasksFolder = chooser.showDialog(ownerWindow);
         if (tasksFolder != null) { // not cancelled
             squidPersistentState.setMRUSquidTaskFolderPath(tasksFolder.getAbsolutePath());
+        }
+
+        return tasksFolder;
+    }
+
+    public static File selectSquid25TasksFolderForBrowsing(Window ownerWindow) {
+        File tasksFolder;
+
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Select Squid25 Tasks Folder");
+        File recentFolder = new File(squidPersistentState.getMRUTaskFolderPath());
+        if (recentFolder.isDirectory()) {
+            chooser.setInitialDirectory(recentFolder);
+        } else {
+            File userHome = new File(File.separator + System.getProperty("user.home"));
+            chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
+        }
+
+        //directory chooser doesn't have an option to set initial folder name, find solution
+        tasksFolder = chooser.showDialog(ownerWindow);
+        if (tasksFolder != null) { // not cancelled
+            squidPersistentState.setMRUTaskFolderPath(tasksFolder.getAbsolutePath());
         }
 
         return tasksFolder;

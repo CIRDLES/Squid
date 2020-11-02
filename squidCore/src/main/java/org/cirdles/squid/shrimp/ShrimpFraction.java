@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
+import org.cirdles.squid.constants.Squid3Constants;
 
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -76,6 +77,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
     private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
+    private Map<ExpressionTreeInterface, String> taskExpressionsMetaDataPerSpot;
 
     private boolean selected;
 
@@ -83,6 +85,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     // sept 2019 to accommodate the customization of individual sample spots  
     private CommonLeadSpecsForSpot commonLeadSpecsForSpot;
+
+    // oct 2020 to support meta data in reports
+    private Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope;
 
     /**
      *
@@ -126,11 +131,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this.taskExpressionsForScansEvaluated = new ArrayList<>();
 
         this.taskExpressionsEvaluationsPerSpot = new HashMap<>();
+        this.taskExpressionsMetaDataPerSpot = new HashMap<>();
 
         this.selected = true;
         this.countOfNonPositiveSBMCounts = 0;
 
         this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
+
+        this.overcountCorrectionIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
     }
 
     /**
@@ -233,8 +241,16 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the dateTimeMilliseconds
      */
     @Override
-    public long getDateTimeMilliseconds() {
+    public long getDateTimeMillisecondsLong() {
         return dateTimeMilliseconds;
+    }
+    
+       /**
+     * @return the dateTimeMilliseconds
+     */
+    @Override
+    public String getDateTimeMilliseconds() {
+        return getDateTime();
     }
 
     @Override
@@ -528,8 +544,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     @Override
     public double[] getNscansTimesCountTimeSec() {
         int piNscans = timeStampSec.length;
-        double[] product = new double[piNscans];
-        for (int i = 0; i < piNscans; i++) {
+        double[] product = new double[countTimeSec.length];
+        for (int i = 0; i < countTimeSec.length; i++) {
             product[i] = piNscans * countTimeSec[i];
         }
 
@@ -725,6 +741,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         }
 
         return values;
+    }
+
+    @Override
+    public Map<ExpressionTreeInterface, String> getTaskExpressionsMetaDataPerSpot() {
+        if (taskExpressionsMetaDataPerSpot == null) {
+            taskExpressionsMetaDataPerSpot = new HashMap<>();
+        }
+        return taskExpressionsMetaDataPerSpot;
     }
 
     /**
@@ -958,6 +982,46 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return commonLeadSpecsForSpot;
     }
 
+    /**
+     * @return the overcountCorrectionIsotope
+     */
+    @Override
+    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() {
+        if (overcountCorrectionIsotope == null) {
+            overcountCorrectionIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
+        }
+        return overcountCorrectionIsotope;
+    }
+
+    /**
+     * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
+     */
+    @Override
+    public void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope) {
+        this.overcountCorrectionIsotope = overcountCorrectionIsotope;
+    }
+
+    public String getOverCtCorr() {
+        StringBuilder retVal = new StringBuilder();
+        switch (overcountCorrectionIsotope) {
+            case PB_204:
+                retVal.append("Original 204/206");
+                break;
+            case PB_207:
+                retVal.append("Corrected from 207");
+                break;
+            case PB_208:
+                retVal.append("Corrected from 208");
+                break;
+        }
+        return retVal.toString();
+    }
+
+    @Override
+    public String getCommonPbCorrMetaData() {
+        return commonLeadSpecsForSpot.correctionMetaData();
+    }
+
     @Override
     public String getSelectedAgeExpressionName() {
         if (commonLeadSpecsForSpot == null) {
@@ -968,7 +1032,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(), getDateTimeMilliseconds(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(), getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(), getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(), isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(), getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(), isSelected(), getCountOfNonPositiveSBMCounts(), getCommonLeadSpecsForSpot());
+        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(), getDateTimeMillisecondsLong(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(), getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(), getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(), isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(), getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(), isSelected(), getCountOfNonPositiveSBMCounts(), getCommonLeadSpecsForSpot());
         result = 31 * result + Arrays.hashCode(getCountTimeSec());
         result = 31 * result + Arrays.hashCode(getNamesOfSpecies());
         result = 31 * result + Arrays.hashCode(getRawPeakData());

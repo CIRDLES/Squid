@@ -19,6 +19,7 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterfac
 
 import java.net.URL;
 import java.util.*;
+import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.gui.squidReportTable.TextArrayManager.textArrayManagerInitialize;
 
 /**
@@ -43,7 +44,7 @@ public class SquidReportTableController implements Initializable {
 
     public static SquidReportTableLauncher.ReportTableTab typeOfController;
     public static SquidReportTableInterface squidReportTable;
-    public static String unknownSpot = "UNKNOWNS";
+    public static String unknownSpot = Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName();
 
     /**
      * Initializes the controller class.

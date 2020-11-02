@@ -311,6 +311,7 @@ public final class SquidProject implements Serializable {
         task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
+            spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
 
 //        task = new Task(
@@ -388,6 +389,7 @@ public final class SquidProject implements Serializable {
         task.getShrimpFractions().forEach((spot) -> {
             spot.getTaskExpressionsForScansEvaluated().clear();
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
+            spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
 
         // assume existing or default task
@@ -629,7 +631,7 @@ public final class SquidProject implements Serializable {
 
     public File produceSelectedUnknownsReportCSV()
             throws IOException {
-        return produceTargetedSelectedUnknownsReportCSV("UNKNOWNS");
+        return produceTargetedSelectedUnknownsReportCSV(SpotTypes.UNKNOWN.getSpotTypeName());
     }
 
     public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
@@ -689,6 +691,8 @@ public final class SquidProject implements Serializable {
             sb.append("\tParameter Models:\n");
             sb.append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
             sb.append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion()).append("\n");
+            sb.append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion()).append("\n");
         }
 
         return sb.toString();
@@ -704,7 +708,7 @@ public final class SquidProject implements Serializable {
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfUnknownsBySampleNames.entrySet()) {
-            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getPlotType()) != 0) {
+            if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
                 ShrimpFractionExpressionInterface dummyForSample = new ShrimpFraction(entry.getKey(), new TreeSet<>());
                 listOfUnknownsBySample.add(dummyForSample);
                 listOfUnknownsBySample.addAll(entry.getValue());

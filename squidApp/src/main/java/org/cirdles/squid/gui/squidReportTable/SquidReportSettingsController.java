@@ -65,8 +65,10 @@ import org.xml.sax.SAXException;
 import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL;
+
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -168,10 +170,13 @@ public class SquidReportSettingsController implements Initializable {
 
     private ObjectProperty<Boolean> isEditing = new SimpleObjectProperty<>();
     private ObjectProperty<Boolean> isDefault = new SimpleObjectProperty<>();
+    private ObjectProperty<Boolean> isDefaultLab = new SimpleObjectProperty<>();
 
     private boolean isRefMat;
     private SquidReportTableInterface selectedRefMatReportModel;
     private SquidReportTableInterface selectedUnknownReportModel;
+    @FXML
+    private Button makeDefaultButton;
 
     //INIT
     @Override
@@ -190,6 +195,7 @@ public class SquidReportSettingsController implements Initializable {
 
         initEditing();
         initDefault();
+        initDefaultLab();
         initCategoryTextField();
 
         initReportTableCB();
@@ -207,7 +213,7 @@ public class SquidReportSettingsController implements Initializable {
 
         // disable refmat if none
         refMatRadioButton.setDisable(task.getReferenceMaterialSpots().isEmpty());
-        
+
         columnDetailsTextArea.setStyle(SquidUI.PEEK_LIST_CSS_STYLE_SPECS);
     }
 
@@ -221,24 +227,29 @@ public class SquidReportSettingsController implements Initializable {
 
     private void processButtons() {
         if (isEditing.getValue()) {
-            Arrays.asList(newButton, copyButton, renameButton, deleteButton, exportButton, importButton, unknownsRadioButton, refMatRadioButton).
+            Arrays.asList(makeDefaultButton, newButton, copyButton, renameButton, deleteButton, exportButton, importButton, unknownsRadioButton, refMatRadioButton).
                     parallelStream().forEach(button -> button.setDisable(true));
             Arrays.asList(saveButton, restoreButton).forEach(button -> button.setDisable(false));
         } else if (isDefault.getValue()) {
-            Arrays.asList(saveButton, restoreButton, renameButton, deleteButton).
+            Arrays.asList(makeDefaultButton, saveButton, restoreButton, renameButton, deleteButton).
                     parallelStream().forEach(button -> button.setDisable(true));
             Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
                     parallelStream().forEach(button -> button.setDisable(false));
+        } else if (isDefaultLab.getValue()) {
+            Arrays.asList(makeDefaultButton, saveButton, restoreButton, deleteButton).
+                    parallelStream().forEach(button -> button.setDisable(true));
+            Arrays.asList( unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+                    parallelStream().forEach(button -> button.setDisable(false));
         } else {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
-            Arrays.asList(newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
+            Arrays.asList(makeDefaultButton, newButton, copyButton, renameButton, exportButton, importButton, refMatRadioButton, unknownsRadioButton).
                     parallelStream().forEach(button -> button.setDisable(false));
 
             if (!isRefMat
                     && reportTableCB.getSelectionModel().getSelectedItem().getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
-                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(true));
+                Arrays.asList(makeDefaultButton, deleteButton, renameButton).forEach(button -> button.setDisable(true));
             } else {
-                Arrays.asList(deleteButton, renameButton).forEach(button -> button.setDisable(false));
+                Arrays.asList(makeDefaultButton, deleteButton, renameButton).forEach(button -> button.setDisable(false));
             }
         }
     }
@@ -263,12 +274,17 @@ public class SquidReportSettingsController implements Initializable {
         isDefault.setValue(false);
         isDefault.addListener(ob -> processButtons());
     }
+    
+    private void initDefaultLab() {
+        isDefaultLab.setValue(false);
+        isDefaultLab.addListener(ob -> processButtons());
+    }
 
     private void initReportTableCB() {
         reportTableCB.setConverter(new StringConverter<SquidReportTableInterface>() {
             @Override
             public String toString(SquidReportTableInterface object) {
-                return object.getReportTableName();
+                return (object.isIsLabDataDefault() ? (object.getReportTableName() + " <Lab Default>") : object.getReportTableName());
             }
 
             @Override
@@ -279,14 +295,19 @@ public class SquidReportSettingsController implements Initializable {
         reportTableCB.getSelectionModel().selectedItemProperty().addListener(param -> {
             if (reportTableCB.getSelectionModel().getSelectedItem() != null) {
                 isDefault.setValue(reportTableCB.getSelectionModel().getSelectedItem().isDefault());
+                isDefaultLab.setValue(reportTableCB.getSelectionModel().getSelectedItem().isIsLabDataDefault());
+
                 populateCategoryListView();
                 if (isRefMat) {
                     selectedRefMatReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedRefMatReportModel(selectedRefMatReportModel);
+                    makeDefaultButton.setDisable(isDefaultLab.get());//    selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 } else {
                     selectedUnknownReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
+                    makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 }
+
             }
         });
         populateSquidReportTableChoiceBox();
@@ -295,11 +316,20 @@ public class SquidReportSettingsController implements Initializable {
 
     private void selectSquidReportTableByPriors() {
         SquidReportTableInterface selectedReportModel = (isRefMat) ? selectedRefMatReportModel : selectedUnknownReportModel;
-        if (selectedReportModel != null) {
+        SquidReportTableInterface defaultReportModel = (isRefMat) ? Task.squidLabData.getDefaultReportTableRM() : Task.squidLabData.getDefaultReportTable();
+
+        if (defaultReportModel != null) {
+            reportTableCB.getSelectionModel().select(defaultReportModel);
+        } else if (selectedReportModel != null) {
             reportTableCB.getSelectionModel().select(selectedReportModel);
         } else {
             reportTableCB.getSelectionModel().selectFirst();
         }
+
+        if (reportTableCB.getSelectionModel().getSelectedIndex() == -1) {
+            reportTableCB.getSelectionModel().selectFirst();
+        }
+        processButtons();
     }
 
     private void populateSquidReportTableChoiceBox() {
@@ -489,9 +519,11 @@ public class SquidReportSettingsController implements Initializable {
         columnListView.setOnDragDropped(event -> {
             boolean success = false;
             if (event.getTransferMode().equals(TransferMode.COPY) && !selectedCategoryIsFixedCategory.getValue()) {
-                @SuppressWarnings("unchecked")
                 SquidReportColumnInterface col = null;
-                for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                @SuppressWarnings("unchecked")
+                List<String> listOfExp
+                        = ((List<String>) event.getDragboard().getContent(STRING_LIST));
+                for (String colName : listOfExp) {
                     col = SquidReportColumn.createSquidReportColumn(colName);
                     columnListView.getItems().add(col);
                 }
@@ -523,8 +555,10 @@ public class SquidReportSettingsController implements Initializable {
     private void initSpotChoiceBox() {
         ObservableList<String> spots = FXCollections.observableArrayList();
         task.getMapOfUnknownsBySampleNames().keySet().forEach(val -> spots.add(val));
+        spots.remove(SpotTypes.UNKNOWN.getSpotTypeName());
+        spots.add(0, SpotTypes.UNKNOWN.getSpotTypeName());
         spotsChoiceBox.setItems(spots);
-        spotsChoiceBox.getSelectionModel().select("UNKNOWNS");
+        spotsChoiceBox.getSelectionModel().select(SpotTypes.UNKNOWN.getSpotTypeName());
         spotsChoiceBox.getSelectionModel().selectedItemProperty().addListener(val -> {
             Platform.runLater(() -> populateColumnDetails());
         });
@@ -547,6 +581,7 @@ public class SquidReportSettingsController implements Initializable {
     private void populateSpotMetaDataListView() {
         final ObservableList<String> obList = FXCollections.observableArrayList();
         task.getNamedSpotLookupFieldsMap().forEach((key, value) -> obList.add(value.getName()));
+        task.getNamedSpotMetaDataFieldsMap().forEach((key, value) -> obList.add(value.getName()));
         obList.sort(new IntuitiveStringComparator<>());
         spotMetaDataExpressionsListView.setItems(obList);
     }
@@ -607,7 +642,7 @@ public class SquidReportSettingsController implements Initializable {
                     List<ShrimpFractionExpressionInterface> unSpots
                             = task.getMapOfUnknownsBySampleNames().get(exp.getUnknownsGroupSampleName());
                     String spot = spotsChoiceBox.getValue();
-                    if (spot.compareToIgnoreCase("UNKNOWNS") != 0) {
+                    if (spot.compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
                         List<ShrimpFractionExpressionInterface> spotsToBeUsed = new ArrayList<>();
                         unSpots.forEach(unSpot -> {
                             if (unSpot.getFractionID().startsWith(spot)) {
@@ -866,30 +901,37 @@ public class SquidReportSettingsController implements Initializable {
                 // Spot metadata fields
                 sb.append(String.format("%1$-23s", expTree.getName()));
                 sb.append("\n");
+
+                // force evaluation
+                ((Task) task).evaluateTaskExpression(expTree);
+
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
-                    // force evaluation
-                    ((Task) task).evaluateTaskExpression(expTree);
-                    try {
-                        double[][] results
-                                = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+//                    // force evaluation
+//                    ((Task) task).evaluateTaskExpression(expTree);
 
-                        if (!Double.isFinite(results[0][0])) {
-                            sb.append("NaN");
-                        } else {
-                            Formatter formatter = new Formatter();
-                            if (expTree.getName().toUpperCase().contains("DATETIMEMILLISECONDS")) {
-                                sb.append(String.format("%1$-" + 20 + "s", spot.getDateTime()));
+                    // check for special text metadata
+                    if (spot.getTaskExpressionsMetaDataPerSpot().get(expTree) != null) {
+                        String metaData = spot.getTaskExpressionsMetaDataPerSpot().get(expTree);
+                        sb.append(String.format("%1$-" + 20 + "s", metaData));
+                        sb.append("\n");
+                    } else {
+                        try {
+                            double[][] results
+                                    = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+
+                            if (!Double.isFinite(results[0][0])) {
+                                sb.append("NaN");
                             } else {
+                                Formatter formatter = new Formatter();
                                 formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
+                                sb.append(formatter.toString());
                             }
 
-                            sb.append(formatter.toString());
+                        } catch (Exception e) {
                         }
-
-                    } catch (Exception e) {
+                        sb.append("\n");
                     }
-                    sb.append("\n");
                 }
             }
         }
@@ -1050,17 +1092,56 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private List<SquidReportTableInterface> getTables() {
-        return isRefMat ? task.getSquidReportTablesRefMat()
-                : task.getSquidReportTablesUnknown();
+
+        List<SquidReportTableInterface> tables
+                = isRefMat
+                        ? task.getSquidReportTablesRefMat()
+                        : task.getSquidReportTablesUnknown();
+
+        // remove labdatadefault
+        SquidReportTableInterface saveTable = null;
+        for (SquidReportTableInterface table : tables) {
+            if (table.isIsLabDataDefault()) {
+                saveTable = table;
+                break;
+            }
+        }
+
+        SquidReportTableInterface defaultRT;
+        if (isRefMat) {
+            defaultRT = Task.squidLabData.getDefaultReportTableRM();
+        } else {
+            defaultRT = Task.squidLabData.getDefaultReportTable();
+        }
+        if (saveTable != null) {
+            if (defaultRT != null) {
+                if (saveTable.getReportTableName().compareToIgnoreCase(defaultRT.getReportTableName()) != 0) {
+                    saveTable.setIsLabDataDefault(false);
+                    tables.add(defaultRT);
+                }
+            }
+        } else if (defaultRT != null) {
+            tables.remove(defaultRT);
+            tables.add(defaultRT);
+        }
+
+        // clean tables
+        List<SquidReportTableInterface> listWithoutDuplicates = new ArrayList<>(
+                new HashSet<>(tables));
+
+        tables.clear();
+        tables.addAll(listWithoutDuplicates);
+        return tables;
     }
 
     private SquidReportTableInterface createCopyOfUpdatedSquidReportTable() {
-        SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable("");
+        SquidReportTableInterface table = reportTableCB.getSelectionModel().getSelectedItem().copy();
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
-        table.setReportCategories(new LinkedList<>(cats));
-        table.setReportTableName(reportTableCB.getSelectionModel().getSelectedItem().getReportTableName());
-        table.setVersion(reportTableCB.getSelectionModel().getSelectedItem().getVersion());
+        table.setReportCategories(cats);
+        table.setIsDefault(false);
+        table.setIsLabDataDefault(false);
+
         return table;
     }
 
@@ -1323,6 +1404,7 @@ public class SquidReportSettingsController implements Initializable {
             SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
             if (table.amWeightedMeanPlotAndSortReport()) {
                 table.formatWeightedMeanPlotAndSortReport();
+                Task.squidLabData.setSpecialWMSortingReportTable(table);
             }
             List<SquidReportTableInterface> tables = getTables();
             int location = tables.indexOf(table);
@@ -1331,6 +1413,15 @@ public class SquidReportSettingsController implements Initializable {
             } else {
                 tables.add(table);
             }
+
+            if (table.isIsLabDataDefault()) {
+                if (isRefMat) {
+                    Task.squidLabData.setDefaultReportTableRM(table);
+                } else {
+                    Task.squidLabData.setDefaultReportTable(table);
+                }
+            }
+
             populateSquidReportTableChoiceBox();
             reportTableCB.getSelectionModel().select(table);
             isEditing.setValue(false);
@@ -1380,6 +1471,35 @@ public class SquidReportSettingsController implements Initializable {
                         "An Error Occurred.\n",
                         primaryStageWindow);
             }
+        }
+    }
+
+    @FXML
+    private void makeDefaultAction(ActionEvent event) {
+        SquidReportTableInterface defaultReportTableSpec = reportTableCB.getSelectionModel().getSelectedItem();
+        if (!defaultReportTableSpec.isIsLabDataDefault()) {
+            defaultReportTableSpec.setIsLabDataDefault(true);
+
+            SquidReportTableInterface defaultReport;
+            if (isRefMat) {
+                defaultReport = Task.squidLabData.getDefaultReportTableRM();
+            } else {
+                defaultReport = Task.squidLabData.getDefaultReportTable();
+            }
+
+            if ((defaultReport != null) && (!defaultReport.equals(defaultReportTableSpec))) {
+                defaultReport.setIsLabDataDefault(false);
+            }
+
+            if (isRefMat) {
+                Task.squidLabData.setDefaultReportTableRM(defaultReportTableSpec);
+            } else {
+                Task.squidLabData.setDefaultReportTable(defaultReportTableSpec);
+            }
+
+            // show new notation for default
+            populateSquidReportTableChoiceBox();
+            selectSquidReportTableByPriors();
         }
     }
 
@@ -1657,9 +1777,11 @@ public class SquidReportSettingsController implements Initializable {
                 if (!selectedCategoryIsFixedCategory.getValue()) {
                     ObservableList<SquidReportColumnInterface> items = columnListView.getItems();
                     if (event.getTransferMode().equals(TransferMode.COPY)) {
-                        @SuppressWarnings("unchecked")
                         SquidReportColumnInterface col = null;
-                        for (String colName : ((List<String>) event.getDragboard().getContent(STRING_LIST))) {
+                        @SuppressWarnings("unchecked")
+                        List<String> listOfExp
+                                = ((List<String>) event.getDragboard().getContent(STRING_LIST));
+                        for (String colName : listOfExp) {
                             col = SquidReportColumn.createSquidReportColumn(colName);
                             if (cell.getItem() != null) {
                                 items.add(items.indexOf(cell.getItem()), col);

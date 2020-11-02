@@ -16,6 +16,8 @@
 package org.cirdles.squid.shrimp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
@@ -67,6 +69,24 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.sampleAgeSK = 0.0;
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
+    }
+
+    public String correctionMetaData() {
+        StringBuilder metaData = new StringBuilder();
+
+        switch (methodSelected) {
+            case METHOD_COMMON_LEAD_MODEL:
+                metaData.append(commonLeadModel.getModelNameWithVersion());
+                break;
+            case METHOD_STACEY_KRAMER:
+                metaData.append("SK");
+                break;
+            case METHOD_STACEY_KRAMER_BY_GROUP:
+                metaData.append("SK @ " + (new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                break;
+        }
+
+        return metaData.toString();
     }
 
     /**

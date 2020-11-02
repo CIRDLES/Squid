@@ -201,7 +201,7 @@ public class ProjectManagerController implements Initializable {
 
         @Override
         public String toString(ParametersModel model) {
-            return model.getModelNameWithVersion();
+            return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
         }
 
         @Override

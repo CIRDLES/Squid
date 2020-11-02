@@ -339,14 +339,14 @@ public final class Squid3Constants {
         UNKNOWN("UNKNOWNS"),
         NONE("NONE");
 
-        private String plotType;
+        private String spotTypeName;
 
-        private SpotTypes(String plotType) {
-            this.plotType = plotType;
+        private SpotTypes(String spotType) {
+            this.spotTypeName = spotType;
         }
 
-        public String getPlotType() {
-            return plotType;
+        public String getSpotTypeName() {
+            return spotTypeName;
         }
     }
 

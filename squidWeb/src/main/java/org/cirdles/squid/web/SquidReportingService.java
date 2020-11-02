@@ -33,6 +33,7 @@ import java.util.EnumSet;
 import java.util.Set;
 import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
+import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
@@ -97,7 +98,7 @@ public class SquidReportingService {
         SquidProject squidProject = new SquidProject(myProjectName, GEOCHRON);
         prawnFileHandler = squidProject.getPrawnFileHandler();
 
-        CalamariFileUtilities.initSampleParametersModels();
+////////        CalamariFileUtilities.initSampleParametersModels();
 
         Path reportsZip = null;
         Path reportsFolder = null;
@@ -123,6 +124,7 @@ public class SquidReportingService {
             ShrimpDataFileInterface prawnFileData = prawnFileHandler.unmarshallPrawnFileXML(prawnFilePath.toString(), true);
             squidProject.setPrawnFile(prawnFileData);
             squidProject.setDelimiterForUnknownNames("-");
+            squidProject.preProcessPrawnSession();
 
             squidProject.updateFilterForRefMatSpotNames(refMatFilter);
             squidProject.updateFilterForRefMatSpotNames(concRefMatFilter);
@@ -132,10 +134,29 @@ public class SquidReportingService {
 
             // hard-wired for now
             task.setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
-            task.setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
-            task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
-            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
-            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
+
+            ResourceExtractor extractor = new ResourceExtractor(CommonPbModel.class);
+            File commPbModelFile = extractor.extractResourceAsFile("Stacey-Kramers@559.0Ma (z6266) v.1.0.xml");
+            CommonPbModel commPbModel = new CommonPbModel();
+            commPbModel = (CommonPbModel) commPbModel.readXMLObject(commPbModelFile.getAbsolutePath(), false);
+            task.setCommonPbModel(commPbModel);
+//            task.setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
+
+            extractor = new ResourceExtractor(PhysicalConstantsModel.class);
+            File physConstModelFile = extractor.extractResourceAsFile("Squid 2.5 Default Physical Constants Model v.1.0.xml");
+            PhysicalConstantsModel physConstModel = new PhysicalConstantsModel();
+            physConstModel = (PhysicalConstantsModel) physConstModel.readXMLObject(physConstModelFile.getAbsolutePath(), false);
+            task.setPhysicalConstantsModel(physConstModel);
+//            task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
+
+            extractor = new ResourceExtractor(ReferenceMaterialModel.class);
+            File refMatModelFile = extractor.extractResourceAsFile("z6266 ID-TIMS (559.0 Ma) v.1.0.xml");
+            ReferenceMaterialModel refMatModel = new ReferenceMaterialModel();
+            refMatModel = (ReferenceMaterialModel) refMatModel.readXMLObject(refMatModelFile.getAbsolutePath(), false);
+            task.setReferenceMaterialModel(refMatModel);
+            task.setConcentrationReferenceMaterialModel(refMatModel);
+//            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
+//            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
 
             task.setExtPErrU(0.75);
             task.setExtPErrTh(0.75);
