@@ -172,7 +172,7 @@ public class CountCorrectionsController implements Initializable {
 
                 TextFlow textFlowI = new TextFlow();
 
-                Text textSampleName = new Text(String.format("%1$-" + 28 + "s", spot.getFractionID()));
+                Text textSampleName = new Text(String.format("%1$-" + 40 + "s", spot.getFractionID()));
                 textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
                 textFlowI.getChildren().add(textSampleName);
 
