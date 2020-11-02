@@ -1130,7 +1130,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
         table.setReportCategories(cats);
         table.setIsDefault(false);
-        table.setIsLabDataDefault(false);
+        //table.setIsLabDataDefault(false);
 
         return table;
     }
