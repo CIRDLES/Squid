@@ -179,6 +179,9 @@ public class SquidReportSettingsController implements Initializable {
 
         isRefMat = false;
         spotsChoiceBox.setVisible(true);
+        isEditing.set(false);
+        isDefault.set(false);
+        isDefaultLab.set(false);
 
         selectedRefMatReportModel = task.getSelectedRefMatReportModel();
         selectedUnknownReportModel = task.getSelectedUnknownReportModel();
@@ -228,7 +231,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (isDefaultLab.getValue()) {
             Arrays.asList(makeDefaultButton, saveButton, restoreButton, deleteButton).
                     parallelStream().forEach(button -> button.setDisable(true));
-            Arrays.asList( unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
                     parallelStream().forEach(button -> button.setDisable(false));
         } else {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
@@ -264,10 +267,13 @@ public class SquidReportSettingsController implements Initializable {
         isDefault.setValue(false);
         isDefault.addListener(ob -> processButtons());
     }
-    
+
     private void initDefaultLab() {
         isDefaultLab.setValue(false);
-        isDefaultLab.addListener(ob -> processButtons());
+        try {
+            isDefaultLab.addListener(ob -> processButtons());
+        } catch (Exception e) {
+        }
     }
 
     private void initReportTableCB() {
@@ -291,11 +297,11 @@ public class SquidReportSettingsController implements Initializable {
                 if (isRefMat) {
                     selectedRefMatReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedRefMatReportModel(selectedRefMatReportModel);
-                    makeDefaultButton.setDisable(isDefaultLab.get());//    selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
+                    //makeDefaultButton.setDisable(isDefaultLab.get());//    selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 } else {
                     selectedUnknownReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
-                    makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
+                   // makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 }
 
             }
@@ -1091,9 +1097,11 @@ public class SquidReportSettingsController implements Initializable {
         // remove labdatadefault
         SquidReportTableInterface saveTable = null;
         for (SquidReportTableInterface table : tables) {
+            if (table.getReportTableName().compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0) {
+                table.setIsLabDataDefault(false);
+            }
             if (table.isIsLabDataDefault()) {
                 saveTable = table;
-                break;
             }
         }
 
@@ -1107,6 +1115,8 @@ public class SquidReportSettingsController implements Initializable {
             if (defaultRT != null) {
                 if (saveTable.getReportTableName().compareToIgnoreCase(defaultRT.getReportTableName()) != 0) {
                     saveTable.setIsLabDataDefault(false);
+                    tables.remove(saveTable);
+                    tables.remove(defaultRT);
                     tables.add(defaultRT);
                 }
             }
@@ -1161,6 +1171,7 @@ public class SquidReportSettingsController implements Initializable {
                 SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
+                table.setIsLabDataDefault(false);
                 getTables().add(table);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(table);
@@ -1186,6 +1197,7 @@ public class SquidReportSettingsController implements Initializable {
             } else {
                 SquidReportTableInterface copy = createCopyOfUpdatedSquidReportTable();
                 copy.setReportTableName(name);
+                copy.setIsLabDataDefault(false);
                 getTables().add(copy);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(copy);
@@ -1419,8 +1431,8 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void makeDefaultAction(ActionEvent event) {
         SquidReportTableInterface defaultReportTableSpec = reportTableCB.getSelectionModel().getSelectedItem();
-        if (!defaultReportTableSpec.isIsLabDataDefault()) {
-            defaultReportTableSpec.setIsLabDataDefault(true);
+        if (!defaultReportTableSpec.isIsLabDataDefault()
+                && !defaultReportTableSpec.isDefault()) {
 
             SquidReportTableInterface defaultReport;
             if (isRefMat) {
@@ -1432,7 +1444,7 @@ public class SquidReportSettingsController implements Initializable {
             if ((defaultReport != null) && (!defaultReport.equals(defaultReportTableSpec))) {
                 defaultReport.setIsLabDataDefault(false);
             }
-
+            defaultReportTableSpec.setIsLabDataDefault(true);
             if (isRefMat) {
                 Task.squidLabData.setDefaultReportTableRM(defaultReportTableSpec);
             } else {
