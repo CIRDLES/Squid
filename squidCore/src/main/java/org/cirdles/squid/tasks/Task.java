@@ -2727,6 +2727,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         boolean containsFilterReport = false;
         for (SquidReportTableInterface table : squidReportTablesUnknown) {
             if (table.getReportTableName().matches(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT)) {
+                table.setIsLabDataDefault(false);
                 squidWeightedMeanPlotSortTable = table;
                 containsFilterReport = true;
                 break;
@@ -2745,6 +2746,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 squidWeightedMeanPlotSortTable
                         = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
                 squidWeightedMeanPlotSortTable.setIsDefault(false);
+                squidWeightedMeanPlotSortTable.setIsLabDataDefault(false);
                 squidLabData.setSpecialWMSortingReportTable(squidWeightedMeanPlotSortTable);
             }
             squidReportTablesUnknown.add(squidWeightedMeanPlotSortTable);
