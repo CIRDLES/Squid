@@ -231,7 +231,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (isDefaultLab.getValue()) {
             Arrays.asList(makeDefaultButton, saveButton, restoreButton, deleteButton).
                     parallelStream().forEach(button -> button.setDisable(true));
-            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton, renameButton).
                     parallelStream().forEach(button -> button.setDisable(false));
         } else {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
