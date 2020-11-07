@@ -44,7 +44,7 @@
                     <xs:element name="categoryColumns">
                       <xs:complexType>
                         <xs:sequence>
-                          <xs:element maxOccurs="unbounded" name="SquidReportColumn">
+                          <xs:element maxOccurs="unbounded" name="SquidReportColumn" minOccurs="0">
                             <xs:complexType>
                               <xs:sequence>
                                 <xs:element name="expressionName" type="xs:string" />
