@@ -1140,7 +1140,7 @@ public class CalamariReportsEngine implements Serializable {
                 writer.println(String.join(", ", ((ExpressionTree) exp.getExpressionTree()).getOperation().getLabelsForOutputValues()[0]));
                 String values = "";
                 for (double val : spotSummary.getValues()[0]) {
-                    values += (isAge ? val * 1.0e-6 + " (Ma)" : val) + ", ";
+                    values += (isAge ? squid3RoundedToSize(val * 1.0e-6, 15) + " (Ma)" : squid3RoundedToSize(val, 15)) + ", ";
                 }
                 if (!values.isEmpty()) {
                     values = values.substring(0, values.length() - 2);

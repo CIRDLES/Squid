@@ -22,7 +22,12 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     compile project(":squidCore")
 
-    compile 'com.github.cirdles:topsoil:ce984a8ee8'  
+    compile 'com.github.cirdles:topsoil:eb2d729290'  
+}
+
+configurations.all {
+    // Check for updates every build when 0 or not when 2628000
+    resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
 }
 
 task fatAppJar(type: Jar) {

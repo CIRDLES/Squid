@@ -261,59 +261,63 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     public String cellEntryForSpot(ShrimpFractionExpressionInterface spot) {
         String retVal = "not init";
         if (expTree != null) {
-            double[][] results = new double[][]{{0, 0}, {0, 0}};
-            // TODO: check uncertainty directive
-
-            boolean success = true;
-            if (amIsotopicRatio) {
-                try {
-                    results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
-                } catch (Exception e) {
-                    success = false;
-                }
+            if (spot.getTaskExpressionsMetaDataPerSpot().get(expTree) != null) {
+                retVal = spot.getTaskExpressionsMetaDataPerSpot().get(expTree);
             } else {
-                try {
-                    results = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
-                } catch (Exception e) {
-                    success = false;
-                }
-            }
+                double[][] results = new double[][]{{0, 0}, {0, 0}};
+                // TODO: check uncertainty directive
 
-            if (success) {
-                if (amUncertaintyColumn) {
-                    double uncertainty;
+                boolean success = true;
+                if (amIsotopicRatio) {
                     try {
-                        if (uncertaintyDirective.compareToIgnoreCase(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
-                            uncertainty = results[0][1] / results[0][0] * 100.0;
-                            retVal = formatBigDecimalForPublicationSigDigMode(
-                                    new BigDecimal(uncertainty),
-                                    countOfSignificantDigits);
-                        } else {
-                            uncertainty = results[0][1];
-                            retVal = formatBigDecimalForPublicationSigDigMode(
-                                    new BigDecimal(uncertainty).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
-                                    countOfSignificantDigits);
-                        }
+                        results = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
                     } catch (Exception e) {
-                        // no uncertainty - let user know they should hide
-                        retVal = String.format("%1$-23s", "n/a");
+                        success = false;
                     }
                 } else {
-                    // first handle special cases
-                    if (expressionName.toUpperCase().contains("DATETIMEMILLISECONDS")) {
-                        retVal = spot.getDateTime();
-                    } else {
-                        if (Double.isFinite(results[0][0])){
-                        retVal = formatBigDecimalForPublicationSigDigMode(
-                                new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
-                                countOfSignificantDigits);
-                        } else {
-                            retVal = "NaN";
-                        }
+                    try {
+                        results = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
+                    } catch (Exception e) {
+                        success = false;
                     }
                 }
-            } else {
-                retVal = "not found";
+
+                if (success) {
+                    if (amUncertaintyColumn) {
+                        double uncertainty;
+                        try {
+                            if (uncertaintyDirective.compareToIgnoreCase(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
+                                uncertainty = results[0][1] / results[0][0] * 100.0;
+                                retVal = formatBigDecimalForPublicationSigDigMode(
+                                        new BigDecimal(uncertainty),
+                                        countOfSignificantDigits);
+                            } else {
+                                uncertainty = results[0][1];
+                                retVal = formatBigDecimalForPublicationSigDigMode(
+                                        new BigDecimal(uncertainty).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                        countOfSignificantDigits);
+                            }
+                        } catch (Exception e) {
+                            // no uncertainty - let user know they should hide
+                            retVal = String.format("%1$-23s", "n/a");
+                        }
+                    } else {
+                        // first handle special cases
+                        if (expressionName.toUpperCase().contains("DATETIMEMILLISECONDS")) {
+                            retVal = spot.getDateTime();
+                        } else {
+                            if (Double.isFinite(results[0][0])) {
+                                retVal = formatBigDecimalForPublicationSigDigMode(
+                                        new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                        countOfSignificantDigits);
+                            } else {
+                                retVal = "NaN";
+                            }
+                        }
+                    }
+                } else {
+                    retVal = "not found";
+                }
             }
         }
         return retVal;
@@ -490,7 +494,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     public String toString() {
         return expressionName;
     }
-
 
     @Override
     public int hashCode() {

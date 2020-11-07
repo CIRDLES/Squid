@@ -237,7 +237,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
         expTree.setSquidSwitchSCSummaryCalculation(false);
         expTree.setSquidSpecialUPbThExpression(true);
-        expTree.setUnknownsGroupSampleName(UNKNOWN.getPlotType());
+        expTree.setUnknownsGroupSampleName(UNKNOWN.getSpotTypeName());
 
         // to detect ratios of interest
         if (expTree instanceof BuiltInExpressionInterface) {

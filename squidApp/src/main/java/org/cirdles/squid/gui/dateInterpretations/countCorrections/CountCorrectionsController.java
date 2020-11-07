@@ -141,11 +141,11 @@ public class CountCorrectionsController implements Initializable {
         mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
         // case of sample names chosen
         if (mapOfSpotsBySampleNames.size() > 1) {
-            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+            mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName());
         }
 
         TextFlow textFlowSampleType = new TextFlow();
-        Text textUnknown = new Text(Squid3Constants.SpotTypes.UNKNOWN.getPlotType());
+        Text textUnknown = new Text(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName());
         textUnknown.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
         textFlowSampleType.getChildren().add(textUnknown);
         TreeItem<TextFlow> rootItemSamples = new TreeItem<>(textFlowSampleType);
@@ -172,7 +172,7 @@ public class CountCorrectionsController implements Initializable {
 
                 TextFlow textFlowI = new TextFlow();
 
-                Text textSampleName = new Text(String.format("%1$-" + 28 + "s", spot.getFractionID()));
+                Text textSampleName = new Text(String.format("%1$-" + 40 + "s", spot.getFractionID()));
                 textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
                 textFlowI.getChildren().add(textSampleName);
 

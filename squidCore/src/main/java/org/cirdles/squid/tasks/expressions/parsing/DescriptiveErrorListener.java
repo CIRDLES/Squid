@@ -48,7 +48,7 @@ public class DescriptiveErrorListener extends BaseErrorListener{
 //            sourceName = String.format("%s:%d:%d: ", sourceName, line, charPositionInLine);
 //        }
 
-        System.err.println("CUSTOM:  "  + "line " + line + ":" + charPositionInLine + " " + msg);
+//        System.err.println("CUSTOM:  "  + "line " + line + ":" + charPositionInLine + " " + msg);
         syntaxErrors = msg;
     }
 
