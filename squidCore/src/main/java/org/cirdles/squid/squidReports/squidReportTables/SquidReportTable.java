@@ -51,6 +51,10 @@ import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDRE
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+<<<<<<< HEAD
+=======
+
+>>>>>>> f45dedf9ecbfd8301a5db71e42dadc60b021ed49
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "", propOrder = {
     "reportTableName",

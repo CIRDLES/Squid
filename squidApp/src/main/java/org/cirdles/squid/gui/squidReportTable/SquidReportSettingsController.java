@@ -65,11 +65,18 @@ import org.xml.sax.SAXException;
 import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+<<<<<<< HEAD
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL;
 
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
+=======
+
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL;
+
+>>>>>>> f45dedf9ecbfd8301a5db71e42dadc60b021ed49
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
