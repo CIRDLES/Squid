@@ -1161,14 +1161,14 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void newOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model");
         dialog.setContentText("Name:");
 
         dialog.showAndWait().ifPresent(name -> {
 
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
                 table.setIsLabDataDefault(false);
@@ -1188,12 +1188,12 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void copyOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model Copy");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
                 SquidReportTableInterface copy = createCopyOfUpdatedSquidReportTable();
                 copy.setReportTableName(name);
@@ -1209,12 +1209,12 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void renameOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("new name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a new name for the Report Model");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
                 int selectedIndex = reportTableCB.getSelectionModel().getSelectedIndex();
                 reportTableCB.getSelectionModel().getSelectedItem().setReportTableName(name);
@@ -1272,13 +1272,13 @@ public class SquidReportSettingsController implements Initializable {
                     Alert alert;
                     if (sameNameTable.isDefault()) {
                         alert = new Alert(Alert.AlertType.WARNING,
-                                "A Squid Report Model already exists with this name. What do you want to do?",
+                                "A Squid3 Report Model already exists with this name. What do you want to do?",
                                 rename,
                                 ButtonType.CANCEL
                         );
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING,
-                                "A Squid Report Model already exists with this name. What do you want to do?",
+                                "A Squid3 Report Model already exists with this name. What do you want to do?",
                                 replace,
                                 rename,
                                 ButtonType.CANCEL
@@ -1295,7 +1295,7 @@ public class SquidReportSettingsController implements Initializable {
                             TextInputDialog dialog = new TextInputDialog(table.getReportTableName());
                             dialog.setTitle("Rename");
                             dialog.setHeaderText("Rename " + table.getReportTableName());
-                            dialog.setContentText("Enter the new Squid Report Model's name:");
+                            dialog.setContentText("Enter the new Squid3 Report Model's name:");
                             Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
                             TextField newName = null;
                             for (Node n : dialog.getDialogPane().getChildren()) {
@@ -1315,7 +1315,7 @@ public class SquidReportSettingsController implements Initializable {
                             if (result.isPresent()) {
                                 table.setReportTableName(result.get());
                                 if (tables.contains(table)) {
-                                    SquidMessageDialog.showWarningDialog("A Squid Report Model already exists with this name.", primaryStageWindow);
+                                    SquidMessageDialog.showWarningDialog("A Squid3 Report Model already exists with this name.", primaryStageWindow);
                                 } else {
                                     tables.add(table);
                                     populateSquidReportTableChoiceBox();
@@ -1339,12 +1339,12 @@ public class SquidReportSettingsController implements Initializable {
 
         if (currTable.isDefault()) {
             TextInputDialog dialog = new TextInputDialog("name goes here");
-            dialog.setTitle("Squid Report Model Name");
+            dialog.setTitle("Squid3 Report Model Name");
             dialog.setHeaderText("Enter a name for the new Report Model");
             dialog.setContentText("Name:");
             dialog.showAndWait().ifPresent(name -> {
                 if (getNamesOfTables().contains(name)) {
-                    SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                    SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
                 } else {
                     SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
                     table.setReportTableName(name);

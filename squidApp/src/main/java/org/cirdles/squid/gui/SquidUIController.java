@@ -500,7 +500,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    "Squid3 encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
         }
@@ -559,7 +559,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    "Squid3 encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
         }
@@ -591,7 +591,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    "Squid3 encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
         }
@@ -626,7 +626,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected file:\n\n"
+                    "Squid3 encountered an error while trying to open the selected file:\n\n"
                     + message,
                     primaryStageWindow);
         }
@@ -661,7 +661,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open and join the selected files:\n\n"
+                    "Squid3 encountered an error while trying to open and join the selected files:\n\n"
                     + message,
                     primaryStageWindow);
         }
@@ -765,7 +765,7 @@ public class SquidUIController implements Initializable {
         if (SquidProject.isProjectChanged()) {
 
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                    "Do you want to save Squid Project changes?",
+                    "Do you want to save Squid3 Project changes?",
                     ButtonType.YES,
                     ButtonType.NO
             );
@@ -1422,7 +1422,7 @@ public class SquidUIController implements Initializable {
     }
 
     private void showReportsWarning() {
-        SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+        SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
     }
 
     private void showManageIsotopesWarning() {
@@ -1726,7 +1726,7 @@ public class SquidUIController implements Initializable {
             }
 
             SquidMessageDialog.showWarningDialog(
-                    "Squid encountered an error while trying to open the selected Prawn File:\n\n"
+                    "Squid3 encountered an error while trying to open the selected Prawn File:\n\n"
                     + message,
                     primaryStageWindow);
         }

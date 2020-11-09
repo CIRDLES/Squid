@@ -718,7 +718,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
             }
         } else {
-            SquidMessageDialog.showWarningDialog("The Squid Project must be saved before reports can be written out.", primaryStageWindow);
+            SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
 

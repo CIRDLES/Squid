@@ -29,7 +29,7 @@ public class ParametersLauncher {
         squidLabDataStage.setMinHeight(600);
         squidLabDataStage.setMinWidth(900);
         squidLabDataStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-        squidLabDataStage.setTitle("Squid Parameters Manager");
+        squidLabDataStage.setTitle("Squid3 Parameters Manager");
 
         squidLabDataStage.setOnCloseRequest((WindowEvent e) -> {
             squidLabDataStage.hide();
