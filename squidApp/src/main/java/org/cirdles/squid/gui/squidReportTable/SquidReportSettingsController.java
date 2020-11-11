@@ -1179,6 +1179,12 @@ public class SquidReportSettingsController implements Initializable {
                 SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
+                if (isRefMat) {
+                    table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+                }
+                else {
+                    table.setReportSpotTarget(SpotTypes.UNKNOWN);
+                }
                 table.setIsLabDataDefault(false);
                 getTables().add(table);
                 populateSquidReportTableChoiceBox();
@@ -1248,9 +1254,10 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void exportOnAction(ActionEvent event) {
         try {
-            File file = FileHandler.saveSquidReportModelXMLFile(createCopyOfUpdatedSquidReportTable(), primaryStageWindow);
+            SquidReportTable table = (SquidReportTable) createCopyOfUpdatedSquidReportTable();
+            File file = FileHandler.saveSquidReportModelXMLFile(table, primaryStageWindow);
             if (file != null) {
-                reportTableCB.getSelectionModel().getSelectedItem().serializeXMLObject(file.getAbsolutePath());
+                table.serializeXMLObject(file.getAbsolutePath());
             }
         } catch (Exception e) {
             SquidMessageDialog.showWarningDialog(e.getMessage(), primaryStageWindow);
@@ -1274,29 +1281,8 @@ public class SquidReportSettingsController implements Initializable {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (table != null) {
-                // Handle case of report table without reportSpotTarget attribute
-                if (table.getReportSpotTarget().equals(SpotTypes.NONE)) {
-                    table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
 
-                    boolean hasExclusiveSquidSwitchSA = false; // Does the expression only operate on unknown spots?
-                    Iterator<SquidReportCategoryInterface> squidReportCategoryIterator = table.getReportCategories().iterator();
-                    Iterator<SquidReportColumnInterface> squidReportColumnIterator;
-                    while (squidReportCategoryIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
-                        squidReportColumnIterator = squidReportCategoryIterator.next().getCategoryColumns().iterator();
-                        SquidReportColumnInterface col;
-                        ExpressionTreeInterface exp;
-                        while(squidReportColumnIterator.hasNext() && !hasExclusiveSquidSwitchSA) {
-                            col = squidReportColumnIterator.next();
-                            exp = task.findNamedExpression(col.getExpressionName());
-                            if (exp.isSquidSwitchSAUnknownCalculation() && !exp.isSquidSwitchSTReferenceMaterialCalculation()) {
-                                hasExclusiveSquidSwitchSA = true;
-                                table.setReportSpotTarget(SpotTypes.UNKNOWN);
-                            }
-                        }
-                    }
-                }
-                
-                // Switch to spot target of imported report table if necessary
+                // Switch radio button to spot target of imported report table if necessary
                 boolean switchButton = false;
                 if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = false;
@@ -1316,7 +1302,7 @@ public class SquidReportSettingsController implements Initializable {
                     populateIsotopesListView();
                     populateRatiosListView();
                     populateSpotMetaDataListView();
-                }
+                } // End switch button
                 
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(table);

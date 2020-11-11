@@ -31,10 +31,6 @@ public class SquidReportTableXMLConverter implements Converter {
         }
         writer.endNode();
         
-
-        if (table.getReportSpotTarget() == null) {  // Backwards compatibility with report tables prior to ...
-            table.setReportSpotTarget(SpotTypes.NONE);
-        }
         writer.startNode("reportSpotTarget");
         writer.setValue(table.getReportSpotTarget().name());
         writer.endNode();
@@ -66,17 +62,11 @@ public class SquidReportTableXMLConverter implements Converter {
         }
         reader.moveUp();
 
-        // Backwards compatibility with report tables prior to ...
         reader.moveDown();
-        if(reader.getNodeName().equals("reportSpotTarget")) {
-            table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
-            reader.moveUp();
-            reader.moveDown();
-        }
-        else{
-            table.setReportSpotTarget(SpotTypes.NONE);
-        }
+        table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
+        reader.moveUp();
 
+        reader.moveDown();
         table.setIsDefault(Boolean.parseBoolean(reader.getValue()));
         reader.moveUp();
 

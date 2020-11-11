@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
 
 /**
@@ -78,14 +78,14 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     @XmlElement(name = "reportCategory", required = true)
     private LinkedList<SquidReportCategoryInterface> reportCategories;
 
-    @XmlElement(name = "reportSpotTarget", required = false) // Backwards compatibility with report tables prior to ...
+    @XmlElement(name = "reportSpotTarget", required = true) // Backwards compatibility with report tables prior to ...
     private SpotTypes reportSpotTarget;
 
     @XmlElement(name = "isDefault", required = true)
     private boolean isDefault;
     private boolean isLabDataDefault;
 
-    @XmlElement(name = "version", required = false)
+    @XmlElement(name = "version", required = true)
     private int version;
 
     private SquidReportTable() {
@@ -106,7 +106,8 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public SquidReportTableInterface copy() {
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         reportCategories.forEach(cat -> cats.add(cat.clone()));
-        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isDefault, version);
+        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, false, version);
+        table.setReportSpotTarget(reportSpotTarget);
         table.setIsLabDataDefault(isLabDataDefault);
 
         return table;
@@ -171,26 +172,32 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
-        return new SquidReportTable(reportTableName, new LinkedList<>(), false);
+        SquidReportTable table = new SquidReportTable(reportTableName, new LinkedList<>(), false);
+        table.setReportSpotTarget(SpotTypes.NONE);
+        return table;
     }
 
     public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) {
         String reportTableName = "Builtin Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
-
-        return new SquidReportTable(reportTableName, reportCategories, true);
+        SquidReportTable table = new SquidReportTable(reportTableName, reportCategories, true);
+        table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+        return table;
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) {
         String reportTableName = "Builtin Report Table for Unknowns";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknown(task);
-
-        return new SquidReportTable(reportTableName, reportCategories, true);
+        SquidReportTable table = new SquidReportTable(reportTableName, reportCategories, true);
+        table.setReportSpotTarget(SpotTypes.UNKNOWN);
+        return table;
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task, int version) {
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknownSquidFilter(task);
-        return new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
+        SquidReportTable table = new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
+        table.setReportSpotTarget(SpotTypes.UNKNOWN);
+        return table;
     }
 
     public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) {
