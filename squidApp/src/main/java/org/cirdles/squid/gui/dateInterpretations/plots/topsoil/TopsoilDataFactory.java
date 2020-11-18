@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +23,7 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_TERA_WASSERBURG;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
@@ -63,7 +62,7 @@ public class TopsoilDataFactory {
         return datum;
     }
 
-    public static Map<String, Object> prepareTerraWasserburgDatum(
+    public static Map<String, Object> prepareTeraWasserburgDatum(
             ShrimpFractionExpressionInterface shrimpFraction, String correction, boolean isUnknown) {
         // jan 2019 - there is a naming problem we are working on
         // TW is not defined for reference materials
@@ -73,7 +72,7 @@ public class TopsoilDataFactory {
         if (isUnknown) {
             ratioBase86 = R238U_206PB;
             ratioBase76 = R207PB_206PB;
-            errCorr = ERR_CORREL;
+            errCorr = ERR_CORREL_TERA_WASSERBURG;
         }
 
         Map<String, Object> datum = prepareDatum(shrimpFraction, correction, ratioBase86, ratioBase76, errCorr);
@@ -133,16 +132,19 @@ public class TopsoilDataFactory {
             datum.put(SIGMA_Y.getTitle(), 1.0 * yAxisValueAndUnct[1]);
         }
 
-        datum.put(RHO.getTitle(), 0.0);
-        
-        double[] plotRho;
-        try {
-            plotRho = shrimpFraction
-                    .getTaskExpressionsEvaluationsPerSpotByField(correction + rho)[0];
-            datum.put(RHO.getTitle(), plotRho[0]);
-        } catch (Exception e) {
+        if (rho.compareToIgnoreCase(ERR_CORREL_TERA_WASSERBURG) == 0) {
+            // Nov 2020 per Simon B , TW RHO = 0; see: https://github.com/CIRDLES/Squid/issues/531
+            datum.put(RHO.getTitle(), 0.0);
+        } else {
+            double[] plotRho;
+            try {
+                plotRho = shrimpFraction
+                        .getTaskExpressionsEvaluationsPerSpotByField(correction + rho)[0];
+                datum.put(RHO.getTitle(), plotRho[0]);
+            } catch (Exception e) {
+            }
         }
-        
+
         datum.put(VISIBLE.getTitle(), true);
         datum.put(SELECTED.getTitle(), true);
 

@@ -101,7 +101,7 @@ public class SamplesConcordiaToolBoxNode extends HBox {
         type1RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("C"));
         formatNode(type1RadioButton, 80);
 
-        type2RadioButton.setText("Terra-Wasserburg");
+        type2RadioButton.setText("Tera-Wasserburg");
         type2RadioButton.setUserData("TW");
         type2RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("TW"));
         formatNode(type2RadioButton, 120);
