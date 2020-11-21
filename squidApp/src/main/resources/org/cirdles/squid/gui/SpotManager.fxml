@@ -30,7 +30,7 @@
                      <children>
                         <HBox prefHeight="28.0" prefWidth="480.0" spacing="30.0">
                            <children>
-                              <Label style="-fx-font-family: SansSerif; -fx-font-size: 15;" text="Filter Spots by Sample name:" />
+                              <Label style="-fx-font-family: SansSerif; -fx-font-size: 15; -fx-text-fill: #c53d13 #c53d13; -fx-font-weight: SEMI_BOLD;" text="Filter Spots by Sample name:" />
                               <ComboBox fx:id="sampleNameComboBox" prefHeight="27.0" prefWidth="133.0" promptText="Sample Name" />
                               <Label fx:id="spotsShownLabel" minWidth="115.0" prefHeight="23.0" prefWidth="115.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
                            </children>
@@ -53,7 +53,7 @@
                         <Label style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
                         <HBox spacing="5.0">
                            <children>
-                              <Label style="-fx-font-family: SansSerif Bold; -fx-font-size: 14;" text="Edit Spot Name:" />
+                              <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-font-weight: SEMI_BOLD; -fx-text-fill: #c53d13;" text="Edit Spot Name:" />
                               <TextField fx:id="selectedSpotNameText" prefHeight="27.0" prefWidth="149.0" promptText="no spot selected" HBox.hgrow="ALWAYS" />
                               <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
                            </children>
@@ -134,7 +134,7 @@
                             <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Select Isotopic RM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+                              <Label style="-fx-text-fill: #c53d13;" text="Select Isotopic RM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
                               <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                               <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="206Pb/238U date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="207Pb/206Pb date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -227,7 +227,7 @@
                                     <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="172.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label text="Select  CRM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
+                                    <Label style="-fx-text-fill: #c53d13;" text="Select  CRM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
                                     <ComboBox fx:id="concRefMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Concentration RM Model" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                                     <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0" style="-fx-font-size: 12;" text="U (ppm):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                     <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0" style="-fx-font-size: 12;" text="Th (ppm):" GridPane.columnIndex="1" GridPane.rowIndex="4" />

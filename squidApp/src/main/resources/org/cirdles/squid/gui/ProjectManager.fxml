@@ -34,8 +34,8 @@
     <children>
         <HBox GridPane.columnIndex="1">
             <children>
-                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="970.0" text="Project  &gt; Data / Manage Sample Naming  &gt; Data / Manage Spots and Reference Materials" />
-            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: red;" text="Geochron Mode" />
+                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="956.0" text="Project  &gt; Data / Manage Sample Names  &gt; Data / Manage Spots and Reference Materials" />
+            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Geochron Mode" />
             </children>
         </HBox>
         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -144,8 +144,8 @@
             </HBox>
             <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
                 <children>
-                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="374.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Default Common Pb Model:" wrapText="true" />
-                    <Label prefHeight="29.0" prefWidth="238.0" style="-fx-font-size: 13; -fx-text-fill: red;" text="Specify Physical Constants Model:" translateX="10.0" />
+                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="374.0" style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Specify Default Common Pb Model:" wrapText="true" />
+                    <Label prefHeight="29.0" prefWidth="238.0" style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Specify Physical Constants Model:" translateX="10.0" />
                 </children>
                <padding>
                   <Insets left="5.0" />
