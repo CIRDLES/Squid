@@ -800,7 +800,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void onlineHelpAction(ActionEvent event) {
-        BrowserControl.showURI("http://cirdles.org/projects/squid/#Development");
+        BrowserControl.showURI("https://github.com/CIRDLES/Squid#readme"); //"http://cirdles.org/projects/squid/#Development");
     }
 
     @FXML
@@ -1511,7 +1511,7 @@ public class SquidUIController implements Initializable {
         if (confirmReduction()) {
             PlotsController.currentlyPlottedSampleTreeNode = null;
             launchInterpretations();
-            
+
             showUI(plotUI);
             menuHighlighter.highlight(manageInterpretationsMenu);
         }
@@ -1757,7 +1757,7 @@ public class SquidUIController implements Initializable {
                 // next two lines make sure 15-digit rounding is used by reprocessing data
                 task.setChanged(true);
                 task.setupSquidSessionSpecsAndReduceAndReport(true);
-                
+
                 ((Task) task).initTaskDefaultSquidReportTables(true);
 
                 SquidMessageDialog.showInfoDialog(

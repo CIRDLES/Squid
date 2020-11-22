@@ -56,7 +56,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#manageSpotsMenuItemAction" text="Manage Spots &amp; Reference Materials" />
                         <MenuItem fx:id="auditRawDataMenuItem" mnemonicParsing="false" onAction="#auditMassesMenuItemAction" text="Audit Raw Data" />
                         <SeparatorMenuItem fx:id="dataSeparatorMenuItem" mnemonicParsing="false" />
-                        <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn File ..." />
+                        <MenuItem fx:id="savePrawnFileCopyMenuItem" mnemonicParsing="false" onAction="#savePrawnFileCopyMenuItemAction" text="Save Project Data as Prawn Data File ..." />
                         <MenuItem fx:id="choosePrawnFileMenuItem" mnemonicParsing="false" onAction="#choosePrawnFileMenuItemAction" text="Replace Project Data with data from another Prawn File ..." />
                     </items>
                 </Menu>
@@ -197,7 +197,7 @@
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
 
-                        <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Online Help" visible="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Introduction and Guide to Menu" />
                         <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
 
