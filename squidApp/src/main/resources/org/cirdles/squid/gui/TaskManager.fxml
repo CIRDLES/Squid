@@ -33,7 +33,7 @@
       <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
             <TextField fx:id="taskNameTextField" prefHeight="27.0" prefWidth="877.0" promptText="Task name" HBox.hgrow="ALWAYS" />
-            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: red;" text="Geochron Mode" />
+            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Geochron Mode" />
          </children>
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Description:" GridPane.rowIndex="2" />
@@ -52,7 +52,7 @@
       <TextArea fx:id="taskAuditTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
       <HBox GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
          <children>
-            <Label fx:id="titleLabel" style="-fx-font-size: 14;" text="Task &gt; Isotopes &amp; Ratios/Manage Isotopes &gt; Isotopes &amp; Ratios/Manage Ratios" />
+            <Label fx:id="titleLabel" prefHeight="24.0" prefWidth="573.0" style="-fx-font-size: 14;" text="Task &gt; Isotopes / Map Isotopes from Data to Task" />
          </children>
       </HBox>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" GridPane.rowIndex="5" />

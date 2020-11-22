@@ -173,6 +173,7 @@ public class BuiltInExpressionsDataDictionary {
     // ************************* ERROR CORRELATIONS ****************************  
     public static final String ERR_CORREL_RM = "ErrCorrel_RM";
     public static final String ERR_CORREL = "ErrCorrel";
+    public static final String ERR_CORREL_TERA_WASSERBURG = "ZERO";
 
     // ************************* CALIBRATION CONSTANTS *************************   
     public static final String CALIB_CONST_206_238_ROOT = "206Pb238U";

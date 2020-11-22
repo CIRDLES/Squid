@@ -42,20 +42,20 @@ import static org.cirdles.topsoil.plot.PlotOption.*;
  *
  * @author James F. Bowring
  */
-public class TopsoilPlotTerraWasserburg extends AbstractTopsoilPlot {
+public class TopsoilPlotTeraWasserburg extends AbstractTopsoilPlot {
 
-    public TopsoilPlotTerraWasserburg() {
+    public TopsoilPlotTeraWasserburg() {
         this("placeholder");
     }
 
-    public TopsoilPlotTerraWasserburg(String title) {
+    public TopsoilPlotTeraWasserburg(String title) {
         this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
                 SquidLabData.getExistingSquidLabData().getPhysConstDefault()
         );
     }
 
-    public TopsoilPlotTerraWasserburg(
+    public TopsoilPlotTeraWasserburg(
             String title,
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             ParametersModel physicalConstantsModel) {

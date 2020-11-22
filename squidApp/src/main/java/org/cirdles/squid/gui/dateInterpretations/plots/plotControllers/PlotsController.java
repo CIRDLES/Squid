@@ -70,7 +70,7 @@ import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.MessagePlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotAnyTwo;
-import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTerraWasserburg;
+import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotTeraWasserburg;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDataFactory;
 import static org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
@@ -79,7 +79,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.WTDAV_PREFIX;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_U_PB;
-import static org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDataFactory.prepareTerraWasserburgDatum;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE_RM;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
@@ -89,6 +88,7 @@ import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterfac
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.AbstractTopsoilPlot;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION;
 import static org.cirdles.topsoil.plot.PlotOption.SHOW_UNINCLUDED;
+import static org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDataFactory.prepareTeraWasserburgDatum;
 
 /**
  *
@@ -152,7 +152,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
-        TERRA_WASSERBURG("TERRA_WASSERBURG"),
+        TERA_WASSERBURG("TERA_WASSERBURG"),
         WEIGHTED_MEAN("WEIGHTED_MEAN"),
         WEIGHTED_MEAN_SAMPLE("WEIGHTED_MEAN_SAMPLE"),
         ANY_TWO("ANY_TWO");
@@ -226,8 +226,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                         shrimpFractions, physicalConstantsModel);
             }
         } else {
-            plot = new TopsoilPlotTerraWasserburg(
-                    "Terra-Wasserburg Concordia of " + correction + " for " + plotType,
+            plot = new TopsoilPlotTeraWasserburg(
+                    "Tera-Wasserburg Concordia of " + correction + " for " + plotType,
                     shrimpFractions, physicalConstantsModel);
         }
 
@@ -1047,7 +1047,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     public void showActivePlot() {
         switch (plotTypeSelected) {
             case CONCORDIA:
-            case TERRA_WASSERBURG:
+            case TERA_WASSERBURG:
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
             case WEIGHTED_MEAN:
@@ -1076,7 +1076,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     this.datum = prepareWetherillDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
                     break;
                 case "TW":
-                    this.datum = prepareTerraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
+                    this.datum = prepareTeraWasserburgDatum(shrimpFraction, correction, !shrimpFraction.isReferenceMaterial());
                     break;
             }
 

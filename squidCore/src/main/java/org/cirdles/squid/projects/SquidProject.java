@@ -685,7 +685,7 @@ public final class SquidProject implements Serializable {
             sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
             sb.append("\tPreferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
             sb.append("\tWeighted Means of RefMat:\n");
-            sb.append("\t\tAllow Squid to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
+            sb.append("\t\tAllow Squid3 to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
             sb.append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU()).append("\n");
             sb.append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh()).append("\n");
             sb.append("\tParameter Models:\n");
