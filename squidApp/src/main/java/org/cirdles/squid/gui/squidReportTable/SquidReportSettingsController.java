@@ -1146,6 +1146,11 @@ public class SquidReportSettingsController implements Initializable {
         SquidReportTableInterface table = reportTableCB.getSelectionModel().getSelectedItem().copy();
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
+        if (isRefMat) {
+            table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
+        } else {
+            table.setReportSpotTarget(SpotTypes.UNKNOWN);
+        }
         table.setReportCategories(cats);
         table.setIsDefault(false);
         //table.setIsLabDataDefault(false);
@@ -1279,17 +1284,17 @@ public class SquidReportSettingsController implements Initializable {
         }
         if (file != null && tableValidates) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
-            final SquidReportTableInterface table = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
-            if (table != null) {
-
+            final SquidReportTableInterface IMPORTED_TABLE = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
+            if (IMPORTED_TABLE != null) {
+                IMPORTED_TABLE.setIsLabDataDefault(false); // Not serialized, so initialize to false and let user decide if table should be lab data default
                 // Switch radio button to spot target of imported report table if necessary
                 boolean switchButton = false;
-                if (isRefMat && !table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                if (isRefMat && !IMPORTED_TABLE.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = false;
                     unknownsRadioButton.fire();
                     switchButton = true;
                 }   
-                else if (!isRefMat && table.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                else if (!isRefMat && IMPORTED_TABLE.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = true;
                     refMatRadioButton.fire();
                     switchButton = true;
@@ -1305,7 +1310,7 @@ public class SquidReportSettingsController implements Initializable {
                 } // End switch button
                 
                 final List<SquidReportTableInterface> tables = getTables();
-                int indexOfSameNameTable = tables.indexOf(table);
+                int indexOfSameNameTable = tables.indexOf(IMPORTED_TABLE);
                 if (indexOfSameNameTable >= 0) {
                     SquidReportTableInterface sameNameTable = tables.get(indexOfSameNameTable);
 
@@ -1330,13 +1335,13 @@ public class SquidReportSettingsController implements Initializable {
                     alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
                     alert.showAndWait().ifPresent((t) -> {
                         if (t.equals(replace)) {
-                            tables.set(indexOfSameNameTable, table);
+                            tables.set(indexOfSameNameTable, IMPORTED_TABLE);
                             populateSquidReportTableChoiceBox();
-                            reportTableCB.getSelectionModel().select(table);
+                            reportTableCB.getSelectionModel().select(IMPORTED_TABLE);
                         } else if (t.equals(rename)) {
-                            TextInputDialog dialog = new TextInputDialog(table.getReportTableName());
+                            TextInputDialog dialog = new TextInputDialog(IMPORTED_TABLE.getReportTableName());
                             dialog.setTitle("Rename");
-                            dialog.setHeaderText("Rename " + table.getReportTableName());
+                            dialog.setHeaderText("Rename " + IMPORTED_TABLE.getReportTableName());
                             dialog.setContentText("Enter the new Squid3 Report Model's name:");
                             Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
                             TextField newName = null;
@@ -1347,29 +1352,29 @@ public class SquidReportSettingsController implements Initializable {
                             }
                             if (okBtn != null && newName != null) {
                                 newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                    table.setReportTableName(newValue);
-                                    okBtn.setDisable(tables.contains(table) || newValue.isEmpty());
+                                    IMPORTED_TABLE.setReportTableName(newValue);
+                                    okBtn.setDisable(tables.contains(IMPORTED_TABLE) || newValue.isEmpty());
                                 });
                             }
                             dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
                             dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
                             Optional<String> result = dialog.showAndWait();
                             if (result.isPresent()) {
-                                table.setReportTableName(result.get());
-                                if (tables.contains(table)) {
+                                IMPORTED_TABLE.setReportTableName(result.get());
+                                if (tables.contains(IMPORTED_TABLE)) {
                                     SquidMessageDialog.showWarningDialog("A Squid3 Report Model already exists with this name.", primaryStageWindow);
                                 } else {
-                                    tables.add(table);
+                                    tables.add(IMPORTED_TABLE);
                                     populateSquidReportTableChoiceBox();
-                                    reportTableCB.getSelectionModel().select(table);
+                                    reportTableCB.getSelectionModel().select(IMPORTED_TABLE);
                                 }
                             }
                         }
                     });
                 } else {
-                    tables.add(table);
+                    tables.add(IMPORTED_TABLE);
                     populateSquidReportTableChoiceBox();
-                    reportTableCB.getSelectionModel().select(table);
+                    reportTableCB.getSelectionModel().select(IMPORTED_TABLE);
                 }
             }
         }
