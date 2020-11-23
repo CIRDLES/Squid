@@ -43,7 +43,7 @@ public class SquidMessageDialog extends Alert {
         super(alertType);
         initOwner(owner);
         setTitle("Squid3 Alert");
-        setContentText(message);
+        setContentText((message == null) ? "Unknown error ..." : message);
         setHeaderText(headerText);
         initStyle(StageStyle.DECORATED);
         int countOfNewLines = 1;
