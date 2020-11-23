@@ -101,7 +101,7 @@ public class SamplesConcordiaToolBoxNode extends HBox {
         type1RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("C"));
         formatNode(type1RadioButton, 80);
 
-        type2RadioButton.setText("Terra-Wasserburg");
+        type2RadioButton.setText("Tera-Wasserburg");
         type2RadioButton.setUserData("TW");
         type2RadioButton.setSelected(PlotsController.topsoilPlotFlavor.equals("TW"));
         formatNode(type2RadioButton, 120);
@@ -143,7 +143,7 @@ public class SamplesConcordiaToolBoxNode extends HBox {
     }
 
     private void formatNode(Control control, int width) {
-        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
+        control.setStyle(control.getStyle() + "-font-family: 'Monospaced', 'SansSerif';-fx-font-size: 12px;-fx-font-weight: bold;");
         control.setPrefWidth(width);
         control.setMinWidth(USE_PREF_SIZE);
         control.setPrefHeight(23);

@@ -171,7 +171,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                             "Two Prawn XML files have been written:\n\n"
                             + "\t" + splitNames[0] + "\n"
                             + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {
@@ -198,7 +198,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                             "Two Prawn XML files have been written:\n\n"
                             + "\t" + splitNames[0] + "\n"
                             + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {

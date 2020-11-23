@@ -30,8 +30,8 @@ public class SquidReportTableLauncher {
         unknownsStage = new Stage();
         refMatStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
         unknownsStage.getIcons().add(new Image(SQUID_LOGO_SANS_TEXT_URL));
-        refMatStage.setTitle("Squid 3 Reference Materials");
-        unknownsStage.setTitle("Squid 3 Unknowns");
+        refMatStage.setTitle("Squid3 Reference Materials");
+        unknownsStage.setTitle("Squid3 Unknowns");
 
         refMatStage.setMinWidth(500);
         refMatStage.setWidth(1000);
@@ -67,7 +67,7 @@ public class SquidReportTableLauncher {
         Stage activeStage = refMatStage;
         if (tab.equals(unknownCustom)) {
             activeStage = unknownsStage;
-            unknownsStage.setTitle("Squid 3 Report for " + SquidReportTableController.unknownSpot);
+            unknownsStage.setTitle("Squid3 Report for " + SquidReportTableController.unknownSpot);
         }
 
         if (activeStage.isShowing()) {

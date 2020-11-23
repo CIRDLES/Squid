@@ -72,7 +72,7 @@ public class ExpressionPublisher {
         return "<!DOCTYPE html>\n"
                 + "<HTML lang=\"en\">\n<head>\n" +
                 "    <meta charset=\"utf-8\"/>\n" +
-                "    <title>Squid Expressions</title>\n" +
+                "    <title>Squid3 Expressions</title>\n" +
                 "    <style>\n" +
                 "        h1 {\n" +
                 "            padding-left: 30px;\n" +
