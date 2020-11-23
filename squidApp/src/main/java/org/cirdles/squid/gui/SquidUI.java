@@ -115,7 +115,7 @@ public final class SquidUI extends Application {
     public static void updateStageTitle(String fileName) {
         String fileSpec = "[Project File: NONE]";
         fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
-        primaryStage.setTitle("Squid 3  " + fileSpec);
+        primaryStage.setTitle("Squid3  " + fileSpec);
         SquidUIController.projectFileName = fileName;
     }
 
@@ -151,7 +151,7 @@ public final class SquidUI extends Application {
         // detect if running from jar file
         if (!verbose && (ClassLoader.getSystemResource("org/cirdles/squid/gui/SquidUI.class").toExternalForm().startsWith("jar"))) {
             System.out.println(
-                    "Running Squid from Jar file ... suppressing terminal output.\n"
+                    "Running Squid3 from Jar file ... suppressing terminal output.\n"
                     + "\t use '-verbose' argument after jar file name to enable terminal output.");
             System.setOut(new PrintStream(new OutputStream() {
                 public void write(int b) {

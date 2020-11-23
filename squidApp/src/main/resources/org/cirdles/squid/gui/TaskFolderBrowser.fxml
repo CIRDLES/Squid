@@ -221,7 +221,7 @@
                                  <items>
                                     <Button fx:id="editTaskButton" layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#editTaskAction" text="Edit Task" />
                                     <Button fx:id="replaceTaskButton" mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
-                                    <Button fx:id="saveTaskButton" layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid Task '.xml' file" />
+                                    <Button fx:id="saveTaskButton" layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid3 Task '.xml' file" />
                                  </items>
                               </ToolBar>
                               <TextArea fx:id="customExpressionTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="9" />

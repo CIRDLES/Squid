@@ -224,7 +224,7 @@
          <items>
             <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#viewCurrentTaskAction" text="View Current Task" />
             <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
-            <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid Task '.xml' file" />
+            <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid3 Task '.xml' file" />
          </items>
       </ToolBar>
       <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Actions:" GridPane.rowIndex="11" />

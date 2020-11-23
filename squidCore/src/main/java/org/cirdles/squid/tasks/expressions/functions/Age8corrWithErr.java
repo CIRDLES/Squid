@@ -37,7 +37,7 @@ public class Age8corrWithErr extends Function {
     /**
      * This method combines Ludwig's Age8Corr and AgeEr8Corr.
      *
-     * Ludwig specifies Age8Corr: Age from uncorrected Terra-Wasserburg ratios,
+     * Ludwig specifies Age8Corr: Age from uncorrected Tera-Wasserburg ratios,
      * assuming the specified common-Pb 207/206.
      *
      * Ludwig specifies AgeEr8Corr: Error in 208-corrected age (input-ratio

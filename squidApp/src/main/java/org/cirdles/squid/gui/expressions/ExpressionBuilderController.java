@@ -3206,7 +3206,7 @@ public class ExpressionBuilderController implements Initializable {
                 && !(((ExpressionTree) exp.getExpressionTree()).getLeftET() instanceof VariableNodeForIsotopicRatios)
                 && !(((ExpressionTree) exp.getExpressionTree()).getLeftET() instanceof SpotFieldNode)) {
             Alert alert = new Alert(Alert.AlertType.WARNING,
-                    "Squid recommends choosing the Summary Calculation switch ... make it so?",
+                    "Squid3 recommends choosing the Summary Calculation switch ... make it so?",
                     ButtonType.YES,
                     ButtonType.NO
             );

@@ -1060,7 +1060,7 @@ public class CalamariReportsEngine implements Serializable {
         writer.println("Preferred Index Isotope");
         writer.println(squidProject.getTask().getSelectedIndexIsotope().getName() + "\n");
 
-        writer.println("Allow squid to auto-reject spots");
+        writer.println("Allow Squid3 to auto-reject spots");
         writer.println(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots() + "\n");
 
         writer.println("minimum external 1sigma % err for 206Pb/238U");
