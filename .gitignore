@@ -96,6 +96,8 @@ squidCore/Hf1sabserr.png
 !squidApp/pomX.xml
 !squidCore/pomX.xml
 
+!gradle/wrapper/gradle-wrapper.jar
+
 
 # MACOS
 .DS_Store
