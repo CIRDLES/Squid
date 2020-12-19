@@ -23,6 +23,8 @@ dependencies {
     compile project(":squidCore")
 
     compile 'com.github.cirdles:topsoil:eb2d729290'  
+    
+    compile 'org.apache.xmlgraphics:batik-svg-dom:1.9.1'
 }
 
 configurations.all {

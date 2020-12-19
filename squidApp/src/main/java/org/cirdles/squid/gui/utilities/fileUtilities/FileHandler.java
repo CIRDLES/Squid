@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
@@ -461,6 +463,16 @@ public class FileHandler {
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Report Settings XML Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
+    }
+    
+    public static File saveWeightedMeanSVGFile(WeightedMeanPlot plot, Window ownerWindow) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Squid3 Weighted Mean Report SVG File '.svg");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Weighted Mean Report SVG Files", "*.svg"));
+        String initialName = plot.getPlotTitle().trim();
+        initialName = initialName.replace(" ", "_");
+        fileChooser.setInitialFileName(initialName + ".svg");
+        return fileChooser.showSaveDialog(ownerWindow);
     }
 
     /*

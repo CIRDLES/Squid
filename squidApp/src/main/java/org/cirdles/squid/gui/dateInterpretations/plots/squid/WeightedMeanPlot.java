@@ -15,7 +15,14 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
+import java.awt.Graphics2D;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -42,6 +49,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import org.apache.batik.apps.rasterizer.SVGConverter;
+import org.apache.batik.apps.rasterizer.SVGConverterException;
+import org.apache.batik.dom.GenericDOMImplementation;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.svggen.SVGGraphics2DIOException;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
@@ -51,6 +63,8 @@ import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.strin
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -626,6 +640,358 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
     }
+    
+    public void paint(Graphics2D g2d) {
+        g2d.clearRect(0, 0, (int)width, (int)height);
+        
+        g2d.setPaint(java.awt.Color.WHITE);
+        g2d.fillRect((int)0, (int)0, (int)width, (int)height);
+
+        // draw border
+        g2d.setPaint(java.awt.Color.BLACK);
+        g2d.setStroke(new java.awt.BasicStroke((float)1.0));
+        g2d.drawRect((int)1, (int)1, (int)width - 1, (int)height - 1);
+
+        g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.BOLD, 15));
+
+        //g2d.setStroke(Paint.valueOf("BLACK"));
+        g2d.setStroke(new java.awt.BasicStroke((float)0.5));
+
+        g2d.setPaint(java.awt.Color.RED);
+
+        g2d.drawString(plotTitle 
+                + (referenceMaterialAge > 0.0 ? " (" +new BigDecimal(referenceMaterialAge).movePointLeft(6).toBigInteger().toString()
+                + " Ma)" : ""), 45, 45);
+
+        g2d.setPaint(java.awt.Color.RED);
+
+        Text text = new Text();
+        text.setFont(Font.font("SansSerif", 15));
+        int rightOfText = 450;
+        int textWidth = 0;
+        int widthOffset = 10;
+        int currentTextHeightPixels = 75;
+        int heightOffset = 18;
+
+        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+            // section for sample wms
+            text.setText("Wtd Mean of " + ageOrValueLookupString);
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
+            if (adaptToAgeInMA) {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[0] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[0], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+            }
+
+            text.setText("1-sigmaAbs");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            if (adaptToAgeInMA) {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[1] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[1], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+            }
+
+            text.setText("err 68");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            if (adaptToAgeInMA) {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+            }
+            text.setText("err 95");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            if (adaptToAgeInMA) {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+
+            }
+            text.setText("MSWD");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(squid3RoundedToSize(weightedMeanStats[4], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("Prob. of fit");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(squid3RoundedToSize(weightedMeanStats[5], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("n");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(String.valueOf(countOfIncluded) + " of " + String.valueOf(shrimpFractions.size()), rightOfText + widthOffset, currentTextHeightPixels);
+
+        } else {
+
+            text.setText("Wtd Mean of Ref Mat Pb/" + ((String) (ageOrValueLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
+            g2d.drawString(Double.toString(weightedMeanStats[0]), rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("1%\u03C3 error of mean");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("1\u03C3  external spot-to-spot error");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("MSWD");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[4]), rightOfText + widthOffset, currentTextHeightPixels);
+
+            text.setText("Prob. of fit");
+            textWidth = (int) text.getLayoutBounds().getWidth();
+            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[5]), rightOfText + widthOffset, currentTextHeightPixels);
+
+        }
+
+        // plot data
+        g2d.setStroke(new java.awt.BasicStroke((float)2.0));
+        for (int i = 0; i < myOnPeakData.length; i++) {
+            if (rejectedIndices[i]) {
+                g2d.setPaint(java.awt.Color.BLUE);
+            } else {
+                g2d.setPaint(java.awt.Color.RED);
+            }
+            if (doPlotRejectedSpots || !rejectedIndices[i]) {
+                g2d.drawLine(
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]),
+                        (int)mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]),
+                        (int)mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
+                // - 2 sigma tic
+                g2d.drawLine(
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        (int)mapY(myOnPeakData[i] - onPeakTwoSigma[i]),
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        (int)mapY(myOnPeakData[i] - onPeakTwoSigma[i]));
+                // age tic
+                g2d.drawLine(
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        (int)mapY(myOnPeakData[i]),
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        (int)mapY(myOnPeakData[i]));
+                // + 2 sigma tic
+                g2d.drawLine(
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) - 1,
+                        (int)mapY(myOnPeakData[i] + onPeakTwoSigma[i]),
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]) + 1,
+                        (int)mapY(myOnPeakData[i] + onPeakTwoSigma[i]));
+            } else {
+                // leave a marker on bottom axis
+                g2d.drawLine(
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]),
+                        (int)mapY(ticsY[0].doubleValue()) - 1,
+                        (int)mapX(myOnPeakNormalizedAquireTimes[i]),
+                        (int)mapY(ticsY[0].doubleValue()) + 1);
+            }
+        }
+
+        // plot either the reference material age or the weighted mean
+        // standard age
+        g2d.setStroke(new java.awt.BasicStroke(0.5f));
+        g2d.setPaint(java.awt.Color.GREEN);
+        if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
+                || switchRefMatViewToCalibConst) {
+            g2d.drawLine(
+                    (int)mapX(minX), (int)mapY(weightedMeanStats[0]), (int)mapX(maxX), (int)mapY(weightedMeanStats[0]));
+            // show plus minus 2 sigma
+            g2d.setPaint(new java.awt.Color((float)(153.0 / 255.0), (float)1.0, (float)(204.0 / 255.0), (float)0.2));
+            g2d.fillRect(
+                    (int)mapX(minX),
+                    (int)mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1]),
+                    graphWidth,
+                    (int)StrictMath.abs(mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1])
+                            - mapY(weightedMeanStats[0] - 2.0 * weightedMeanStats[1])));
+        } else {
+            g2d.setPaint(java.awt.Color.BLUE);
+            g2d.drawLine((int)mapX(minX) - 15, (int)mapY(referenceMaterialAge), (int)mapX(maxX) + 15, (int)mapY(referenceMaterialAge));
+        }
+
+        g2d.setPaint(java.awt.Color.BLACK);
+        g2d.setFont(new java.awt.Font("Monospaced", java.awt.Font.BOLD, 14));
+        text.setText("2\u03C3 error bars");
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.drawString(text.getText(), leftMargin + graphWidth - textWidth, topMargin);
+
+        if (ticsY.length > 1) {
+            // border and fill
+            g2d.setStroke(new java.awt.BasicStroke(0.5f));
+            g2d.setPaint(java.awt.Color.BLACK);
+            g2d.drawRect(
+                    (int)mapX(minX),
+                    (int)mapY(ticsY[ticsY.length - 1].doubleValue()),
+                    graphWidth,
+                    (int)StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+            g2d.setPaint(new java.awt.Color((float)1, (float)1, (float)(224.0 / 255.0), (float)0.1));
+            g2d.fillRect(
+                    (int)mapX(minX),
+                    (int)mapY(ticsY[ticsY.length - 1].doubleValue()),
+                    graphWidth,
+                    (int)StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+            g2d.setPaint(java.awt.Color.BLACK);
+
+            // ticsY         
+            float verticalTextShift = 3.2f;
+            g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 10));
+            if (ticsY != null) {
+                for (int i = 0; i < ticsY.length; i++) {
+                    g2d.drawLine(
+                            (int)mapX(minX), (int)mapY(ticsY[i].doubleValue()), (int)mapX(maxX), (int)mapY(ticsY[i].doubleValue()));
+
+                    // left side
+                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                    } else {
+                        text.setText(ticsY[i].toString());
+                    }
+                    textWidth = (int) text.getLayoutBounds().getWidth();
+                    g2d.drawString(text.getText(),//
+                            (float) mapX(minX) - textWidth + 5f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+
+                    // right side
+                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                    } else {
+                        text.setText(ticsY[i].toString());
+                    }
+                    g2d.drawString(text.getText(),//
+                            (float) mapX(maxX) + 5f,
+                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                }
+            }
+        }
+        // ticsX 
+        if (ticsX != null) {
+            for (int i = 0; i < ticsX.length - 1; i++) {
+                try {
+                    g2d.drawLine(
+                            (int)mapX(ticsX[i].doubleValue()),
+                            (int)mapY(ticsY[0].doubleValue()),
+                            (int)mapX(ticsX[i].doubleValue()),
+                            (int)mapY(ticsY[0].doubleValue()) + 5);
+
+                    // bottom
+                    // feb 2020 force to appear as 1-based index
+                    boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
+                    String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
+                    g2d.drawString(xText,
+                            (float) mapX(ticsX[i].doubleValue()) - 5f,
+                            (float) mapY(ticsY[0].doubleValue()) + 15);
+
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 15));    //Font.font("SansSerif", 15));
+
+        // Y - label
+        text.setText(switchRefMatViewToCalibConstLookupString + (switchRefMatViewToCalibConstLookupString.contains("Age") ? " (Ma)" : ""));
+
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        int plotHeight = (int) StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue()));
+        int offset = (plotHeight - textWidth) / 2;
+        g2d.rotate(-90);
+        g2d.drawString(text.getText(), (int)-(mapY(ticsY[0].doubleValue())) + offset, 25);
+        g2d.rotate(90);
+
+        // X- label
+        StringBuilder description = new StringBuilder();
+        description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
+        text.setText(description.toString());
+
+        textWidth = (int) text.getLayoutBounds().getWidth();
+        g2d.drawString(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
+
+        // legend
+        text.setText("Legend:");
+        g2d.drawString(text.getText(), leftMargin + 225, topMargin + graphHeight + 80);
+
+        g2d.setPaint(java.awt.Color.RED);
+        text.setText("Included");
+        g2d.drawString(text.getText(), leftMargin + 325, topMargin + graphHeight + 80);
+
+        g2d.setPaint(java.awt.Color.BLUE);
+        text.setText("Excluded");
+        g2d.drawString(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
+
+        g2d.setPaint(java.awt.Color.BLACK);
+        g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 10));
+        g2d.drawString("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
+        g2d.drawString(" left = spot details", leftMargin + 0, topMargin + graphHeight + 70);
+        if (spotSummaryDetails.isManualRejectionEnabled()) {
+            g2d.drawString(" right = spot menu", leftMargin + 0, topMargin + graphHeight + 80);
+        }
+
+        // provide highlight and info about selected spot
+        g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11));
+        if (indexOfSelectedSpot >= 0) {
+            // gray spot rectangle
+            g2d.setPaint(new java.awt.Color((float)0.0, (float)0.0, (float)0.0, (float)0.2));
+            g2d.fillRect(
+                    (int)mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - 3,
+                    (int)mapY(ticsY[ticsY.length - 1].doubleValue()),
+                    6,
+                    (int)StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
+            if (rejectedIndices[indexOfSelectedSpot]) {
+                g2d.setPaint(java.awt.Color.BLUE);
+            } else {
+                g2d.setPaint(java.awt.Color.RED);
+            }
+
+            Text spotID = new Text(shrimpFractions.get(indexOfSelectedSpot).getFractionID());
+            spotID.applyCss();
+            g2d.drawString(
+                    shrimpFractions.get(indexOfSelectedSpot).getFractionID()
+                    + "  Age = " + makeAgeOrValueString(indexOfSelectedSpot),
+                    (int)(mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]) - spotID.getLayoutBounds().getWidth() - 25),
+                    (int)(mapY(minY) + 0 + spotID.getLayoutBounds().getHeight()));
+        }
+
+    }
+
+    public void outputToSVG(File file) {
+
+        // Get a DOMImplementation.
+        DOMImplementation domImpl
+                = GenericDOMImplementation.getDOMImplementation();
+
+        // Create an instance of org.w3c.dom.Document.
+        String svgNS = "http://www.w3.org/2000/svg";
+        Document document = domImpl.createDocument(svgNS, "svg", null);
+
+        // Create an instance of the SVG Generator.
+        SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
+
+        // Ask the test to render into the SVG Graphics2D implementation.
+        paint(svgGenerator);
+
+        // Finally, stream out SVG to the standard output using
+        // UTF-8 encoding.
+        boolean useCSS = true; // we want to use CSS style attributes
+
+        Writer out = null;
+        try {
+            out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
+        } catch (FileNotFoundException fileNotFoundException) {
+        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+        }
+        try {
+            svgGenerator.stream(out, useCSS);
+        } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+        }
+    }
 
     @Override
     public String makeAgeOrValueString(int index) {
@@ -776,7 +1142,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
 //    private SVGGraphics2D svgGenerator = null;
-    public void outputToSVG(File file) {
+//    public void outputToSVG(File file) {
 
 //        File file2 = new File("TEST.SVG");
 //        //Bounds dim = this.getBoundsInLocal();
@@ -1031,13 +1397,21 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 //            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
 //        }
 //    }
-    }
+//    }
 
     @Override
     public void setProperty(String key, Object datum) {
         getProperties().put(key, datum);
     }
-
+    
+    
+    /**
+     * @return the spotSummaryDetails
+     */
+    public String getPlotTitle() {
+       return plotTitle;
+    }
+    
     /**
      * @return the spotSummaryDetails
      */

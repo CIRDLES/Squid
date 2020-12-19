@@ -66,6 +66,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
@@ -130,7 +131,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         VBox filterToolBox = filterVBox();
         VBox sortingToolBox = sortedVBox();
         VBox saveAsToolBox = saveAsVBox();
-        VBox publishExpressionToolBox = publishExpressionVBox();
+        VBox publishExpressionToolBox = publishExpressionAndExportSVGVBox();
 
         Path separator1 = separator(60.0F);
         Path separator2 = separator(60.0F);
@@ -623,9 +624,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         return saveAsToolBox;
     }
 
-    private VBox publishExpressionVBox() {
-        VBox publishExpression = new VBox(2);
-
+    private VBox publishExpressionAndExportSVGVBox() {
+        VBox publishExpressionVbox = new VBox(2);
+        
+        HBox publishExpressionHbox = new HBox(5);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
         showInExpressionsButton.setPrefHeight(60);
@@ -641,9 +643,32 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             }
         });
 
-        publishExpression.getChildren().addAll(showInExpressionsButton);
+        Button exportToSVGButton = new Button("Export to SVG");
+        formatNode(exportToSVGButton, 80);
+        exportToSVGButton.setPrefHeight(60);
+        exportToSVGButton.setMinHeight(USE_PREF_SIZE);
+        exportToSVGButton.setWrapText(true);
+        exportToSVGButton.setTextAlignment(TextAlignment.CENTER);
+        exportToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        exportToSVGButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    WeightedMeanPlot SVGPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
+                    File file = FileHandler.saveWeightedMeanSVGFile(SVGPlot, primaryStageWindow);
+                    SVGPlot.outputToSVG(file);
+                }
+                catch(IOException ex) {
+                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                    ex.printStackTrace();
+                }  
+            }
+        });
+        
+        publishExpressionHbox.getChildren().addAll(showInExpressionsButton, exportToSVGButton);
+        publishExpressionVbox.getChildren().addAll(publishExpressionHbox);
 
-        return publishExpression;
+        return publishExpressionVbox;
     }
 
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
