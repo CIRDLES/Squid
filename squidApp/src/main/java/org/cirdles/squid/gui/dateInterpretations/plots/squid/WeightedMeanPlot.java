@@ -902,9 +902,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         textWidth = (int) text.getLayoutBounds().getWidth();
         int plotHeight = (int) StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue()));
         int offset = (plotHeight - textWidth) / 2;
-        g2d.rotate(-90);
+        g2d.rotate(-1.5708);
         g2d.drawString(text.getText(), (int)-(mapY(ticsY[0].doubleValue())) + offset, 25);
-        g2d.rotate(90);
+        g2d.rotate(1.5708);
 
         // X- label
         StringBuilder description = new StringBuilder();

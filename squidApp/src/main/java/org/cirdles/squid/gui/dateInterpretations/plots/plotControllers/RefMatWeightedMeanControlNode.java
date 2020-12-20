@@ -15,9 +15,13 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -27,6 +31,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Path;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
@@ -41,6 +47,7 @@ import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.defaultRefMatWMSortingCategories;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -94,16 +101,19 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         HBox plotChoiceHBox = plotChoiceHBox();
         HBox corrChoiceHBox = new RefMatWeightedMeanToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
+        HBox exportToSVGHBox = exportButtonHBox();
 
         Path separator1 = separator(20.0F);
         Path separator2 = separator(20.0F);
         Path separator3 = separator(20.0F);
+        Path separator4 = separator(20.0F);
 
         getChildren().addAll(
                 autoExcludeSpotsCheckBox, showExcludedSpotsCheckBox,
                 separator1, plotChoiceHBox,
                 separator2, corrChoiceHBox,
-                separator3, sortingToolBox);
+                separator3, sortingToolBox,
+                separator4, exportToSVGHBox);
     }
 
     private CheckBox autoExcludeSpotsCheckBox() {
@@ -211,6 +221,32 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         sortingHBox.getChildren().addAll(sortedByLabel, categorySortComboBox, expressionSortComboBox);
 
         return sortingHBox;
+    }
+    
+    private HBox exportButtonHBox() {
+        HBox exportHBox = new HBox(2);
+        
+        Button saveToNewFileButton = new Button("Export to SVG");
+        formatNode(saveToNewFileButton, 150);
+        saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    WeightedMeanPlot SVGPlot = (WeightedMeanPlot) PlotsController.plot;
+                    File file = FileHandler.saveWeightedMeanSVGFile(SVGPlot, primaryStageWindow);
+                    SVGPlot.outputToSVG(file);
+                }
+                catch(IOException ex) {
+                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                    ex.printStackTrace();
+                }  
+            }
+        });
+        
+        exportHBox.getChildren().addAll(saveToNewFileButton);
+        
+        return exportHBox;
     }
 
     /**
