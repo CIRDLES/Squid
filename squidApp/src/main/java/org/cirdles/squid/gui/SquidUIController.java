@@ -1257,6 +1257,12 @@ public class SquidUIController implements Initializable {
     private void showTopsoilGithubRepo(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
+        
+    @FXML
+    private void showLudwigLibraryGithubRepo(ActionEvent event) {
+        BrowserControl.showURI("https://github.com/CIRDLES/LudwigLibrary");
+    }
+
 
     private void launchInterpretations() {
         try {
@@ -1283,6 +1289,7 @@ public class SquidUIController implements Initializable {
         showUI(expressionBuilderUI);
     }
 
+    @FXML
     private void ludwigLibraryJavaDocAction(ActionEvent event) {
         BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
