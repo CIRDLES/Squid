@@ -708,6 +708,8 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
+                
+                selectedRunsForRestore.clear();
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();
