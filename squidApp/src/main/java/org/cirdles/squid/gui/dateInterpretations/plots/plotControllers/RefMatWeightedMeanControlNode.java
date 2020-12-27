@@ -185,10 +185,10 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
 
         HBox sortingHBox = new HBox(5);
 
-        Label sortedByLabel = new Label("Sorted Ascending by:");
-        formatNode(sortedByLabel, 125);
+        Label sortedByLabel = new Label("Sort ASC by:");
+        formatNode(sortedByLabel, 75);
 
-        formatNode(categorySortComboBox, 100);
+        formatNode(categorySortComboBox, 105);
         categorySortComboBox.setPromptText("Category");
 
         categorySortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -203,7 +203,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
             }
         });
 
-        formatNode(expressionSortComboBox, 115);
+        formatNode(expressionSortComboBox, 110);
         expressionSortComboBox.setPromptText("Expression");
         expressionSortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
@@ -226,8 +226,8 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
     private HBox exportButtonHBox() {
         HBox exportHBox = new HBox(2);
         
-        Button saveToNewFileButton = new Button("Export to SVG");
-        formatNode(saveToNewFileButton, 150);
+        Button saveToNewFileButton = new Button("To SVG");
+        formatNode(saveToNewFileButton, 53);
         saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override

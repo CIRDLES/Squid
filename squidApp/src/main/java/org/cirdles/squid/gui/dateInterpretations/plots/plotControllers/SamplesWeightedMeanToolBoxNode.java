@@ -630,7 +630,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         HBox publishExpressionHbox = new HBox(5);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
-        showInExpressionsButton.setPrefHeight(60);
+        showInExpressionsButton.setPrefHeight(40);
         showInExpressionsButton.setMinHeight(USE_PREF_SIZE);
         showInExpressionsButton.setWrapText(true);
         showInExpressionsButton.setTextAlignment(TextAlignment.CENTER);
@@ -642,10 +642,11 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
             }
         });
-
-        Button exportToSVGButton = new Button("Export to SVG");
+        
+        HBox exportToSVGHbox = new HBox(5);
+        Button exportToSVGButton = new Button("To SVG");
         formatNode(exportToSVGButton, 80);
-        exportToSVGButton.setPrefHeight(60);
+        exportToSVGButton.setPrefHeight(20);
         exportToSVGButton.setMinHeight(USE_PREF_SIZE);
         exportToSVGButton.setWrapText(true);
         exportToSVGButton.setTextAlignment(TextAlignment.CENTER);
@@ -665,8 +666,9 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             }
         });
         
-        publishExpressionHbox.getChildren().addAll(showInExpressionsButton, exportToSVGButton);
-        publishExpressionVbox.getChildren().addAll(publishExpressionHbox);
+        exportToSVGHbox.getChildren().addAll(exportToSVGButton);
+        publishExpressionHbox.getChildren().addAll(showInExpressionsButton);
+        publishExpressionVbox.getChildren().addAll(publishExpressionHbox, exportToSVGHbox);
 
         return publishExpressionVbox;
     }
