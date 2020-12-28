@@ -481,7 +481,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     public SquidReportColumn clone() {
         SquidReportColumnInterface col = createSquidReportColumn(expressionName);
         col.setUnits(units);
-        col.setUncertaintyColumn(uncertaintyColumn);
+        if (uncertaintyColumn != null){
+            col.setUncertaintyColumn(uncertaintyColumn.clone());
+        } else {
+            col.setUncertaintyColumn(null);
+        }
         col.setAmUncertaintyColumn(amUncertaintyColumn);
         col.setUncertaintyDirective(uncertaintyDirective);
         col.setCountOfSignificantDigits(countOfSignificantDigits);
