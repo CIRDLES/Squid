@@ -121,14 +121,6 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private ListView<Expression> builtInExpressionsListView;
     @FXML
-    private TitledPane referenceMaterialsTitledPane;
-    @FXML
-    private ListView<Expression> referenceMaterialsListView;
-    @FXML
-    private TitledPane parametersTitledPane;
-    @FXML
-    private ListView<Expression> parametersListView;
-    @FXML
     private TextField categoryTextField;
     @FXML
     private ListView<SquidReportCategoryInterface> categoryListView;
@@ -309,7 +301,7 @@ public class SquidReportSettingsController implements Initializable {
                 } else {
                     selectedUnknownReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
-                   // makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
+                    // makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 }
 
             }
@@ -376,37 +368,6 @@ public class SquidReportSettingsController implements Initializable {
         customExpressionsListView.setCellFactory(new ExpressionCellFactory());
         customExpressionsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
-            @Override
-            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if (newValue != null) {
-
-                    selectedExpression.set(newValue);
-
-                    selectInAllPanes(newValue, false);
-                }
-            }
-        });
-
-        // REFERERENCE MATERIAL VALUES
-        referenceMaterialsListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        referenceMaterialsListView.setCellFactory(new ExpressionCellFactory());
-        referenceMaterialsListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        referenceMaterialsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
-            @Override
-            public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
-                if (newValue != null) {
-
-                    selectedExpression.set(newValue);
-
-                    selectInAllPanes(newValue, false);
-                }
-            }
-        });
-        // PARAMETER VALUES
-        parametersListView.setStyle(SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS);
-        parametersListView.setCellFactory(new ExpressionCellFactory());
-        parametersListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        parametersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Expression>() {
             @Override
             public void changed(ObservableValue<? extends Expression> observable, Expression oldValue, Expression newValue) {
                 if (newValue != null) {
@@ -992,36 +953,6 @@ public class SquidReportSettingsController implements Initializable {
                 expressionsAccordion.setExpandedPane(customExpressionsTitledPane);
             }
         }
-
-        if (referenceMaterialsListView.getSelectionModel().getSelectedItem() == null
-                || !referenceMaterialsListView.getSelectionModel().getSelectedItem().equals(exp)) {
-            referenceMaterialsListView.getSelectionModel().clearSelection();
-            if (referenceMaterialsListView.getItems().contains(exp)) {
-                referenceMaterialsListView.getSelectionModel().select(exp);
-                referenceMaterialsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(referenceMaterialsTitledPane);
-            }
-        } else {
-            if (scrollIfAlreadySelected) {
-                referenceMaterialsListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(referenceMaterialsTitledPane);
-            }
-        }
-
-        if (parametersListView.getSelectionModel().getSelectedItem() == null
-                || !parametersListView.getSelectionModel().getSelectedItem().equals(exp)) {
-            parametersListView.getSelectionModel().clearSelection();
-            if (parametersListView.getItems().contains(exp)) {
-                parametersListView.getSelectionModel().select(exp);
-                parametersListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(parametersTitledPane);
-            }
-        } else {
-            if (scrollIfAlreadySelected) {
-                parametersListView.scrollTo(exp);
-                expressionsAccordion.setExpandedPane(parametersTitledPane);
-            }
-        }
     }
 
     //POPULATE LISTS
@@ -1046,17 +977,11 @@ public class SquidReportSettingsController implements Initializable {
         List<Expression> sortedNUSwitchedExpressionsList = new ArrayList<>();
         List<Expression> sortedBuiltInExpressionsList = new ArrayList<>();
         List<Expression> sortedCustomExpressionsList = new ArrayList<>();
-        List<Expression> sortedReferenceMaterialValuesList = new ArrayList<>();
-        List<Expression> sortedParameterValuesList = new ArrayList<>();
 
         for (Expression exp : namedExpressions) {
             if (exp.amHealthy() && exp.isSquidSwitchNU()
                     && !exp.aliasedExpression()) {
                 sortedNUSwitchedExpressionsList.add(exp);
-            } else if (exp.isReferenceMaterialValue() && exp.amHealthy()) {
-                sortedReferenceMaterialValuesList.add(exp);
-            } else if (exp.isParameterValue() && exp.amHealthy()) {
-                sortedParameterValuesList.add(exp);
             } else if (exp.getExpressionTree().isSquidSpecialUPbThExpression()
                     && exp.amHealthy()
                     && !exp.isSquidSwitchNU()
@@ -1078,14 +1003,6 @@ public class SquidReportSettingsController implements Initializable {
         items = FXCollections.observableArrayList(sortedCustomExpressionsList);
         customExpressionsListView.setItems(null);
         customExpressionsListView.setItems(items);
-
-        items = FXCollections.observableArrayList(sortedReferenceMaterialValuesList);
-        referenceMaterialsListView.setItems(null);
-        referenceMaterialsListView.setItems(items);
-
-        items = FXCollections.observableArrayList(sortedParameterValuesList);
-        parametersListView.setItems(null);
-        parametersListView.setItems(items);
     }
 
     private List<String> getNamesOfTables() {

@@ -129,7 +129,7 @@
                                 <Insets bottom="10.0" left="5.0" />
                             </padding>
                         </HBox>
-                        <Accordion fx:id="expressionsAccordion" maxWidth="480.0" minWidth="480.0" prefHeight="585.0" prefWidth="480.0" VBox.vgrow="SOMETIMES">
+                        <Accordion fx:id="expressionsAccordion" prefHeight="585.0" VBox.vgrow="SOMETIMES">
                             <panes>
                                 <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
                                     <content>
@@ -159,16 +159,6 @@
                                 <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields &amp; Common Lead Specs">
                                     <content>
                                         <ListView fx:id="spotMetaDataExpressionsListView" />
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="referenceMaterialsTitledPane" animated="false" expanded="false" prefHeight="324.0" prefWidth="265.0" style="-fx-font-size: 12; -fx-font-family: SansSerif; -fx-font-weight: bold;" text="Reference Material Values (see Task Mgr)">
-                                    <content>
-                                        <ListView fx:id="referenceMaterialsListView" />
-                                    </content>
-                                </TitledPane>
-                                <TitledPane fx:id="parametersTitledPane" animated="false" layoutX="10.0" layoutY="145.0" prefHeight="324.0" prefWidth="265.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Parameters (see Task Mgr)">
-                                    <content>
-                                        <ListView fx:id="parametersListView" />
                                     </content>
                                 </TitledPane>
                             </panes>
