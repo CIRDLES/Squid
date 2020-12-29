@@ -75,6 +75,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.version = version;
     }
 
+    @Override
     public SquidReportTableInterface copy() {
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         reportCategories.forEach(cat -> cats.add(cat.clone()));
@@ -108,11 +109,6 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public int hashCode() {
         return reportTableName.hashCode();
     }
-//    public boolean equals(Object ob) {
-//        return ob != null
-//                && ob instanceof SquidReportTable
-//                && ((SquidReportTableInterface) ob).getReportTableName().equals(reportTableName);
-//    }
 
     @Override
     public boolean amWeightedMeanPlotAndSortReport() {
