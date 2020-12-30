@@ -989,7 +989,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
         try {
             svgGenerator.stream(out, useCSS);
+            out.close();
         } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
+        } catch (IOException e) {
         }
     }
 

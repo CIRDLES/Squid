@@ -464,16 +464,6 @@ public class FileHandler {
 
         return fileChooser.showOpenDialog(ownerWindow);
     }
-    
-    public static File saveWeightedMeanSVGFile(WeightedMeanPlot plot, Window ownerWindow) throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid3 Weighted Mean Report SVG File '.svg");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Weighted Mean Report SVG Files", "*.svg"));
-        String initialName = plot.getPlotTitle().trim();
-        initialName = initialName.replace(" ", "_");
-        fileChooser.setInitialFileName(initialName + ".svg");
-        return fileChooser.showSaveDialog(ownerWindow);
-    }
 
     /*
     public static File saveExpressionHTMLFile(Expression exp, Window ownerWindow) {

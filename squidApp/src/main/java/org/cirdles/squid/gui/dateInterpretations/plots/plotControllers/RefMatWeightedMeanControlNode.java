@@ -17,11 +17,14 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,17 +33,19 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Path;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotSummaryDetails;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewCheckBox;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewString;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -48,6 +53,8 @@ import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCa
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.FileUtilities;
+import org.cirdles.squid.utilities.OsCheck;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -233,9 +240,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    WeightedMeanPlot SVGPlot = (WeightedMeanPlot) PlotsController.plot;
-                    File file = FileHandler.saveWeightedMeanSVGFile(SVGPlot, primaryStageWindow);
-                    SVGPlot.outputToSVG(file);
+                    writeWeightedMeanSVG();
                 }
                 catch(IOException ex) {
                     SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
@@ -247,6 +252,79 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         exportHBox.getChildren().addAll(saveToNewFileButton);
         
         return exportHBox;
+    }
+    
+    private void writeWeightedMeanSVG() throws IOException{
+        if (squidProject.hasReportsFolder()) {
+            WeightedMeanPlot myPlot = (WeightedMeanPlot) plot;
+            String expressionName = myPlot.getAgeOrValueLookupString().split(" ")[0];
+            TreeView<SampleTreeNodeInterface> activeTreeView = spotsTreeViewString;
+            if (!autoExcludeSpotsCheckBox().isSelected()) {
+                activeTreeView = spotsTreeViewCheckBox;
+            }
+            String reportFileName = "WM_" + "Sample_" + 
+                    activeTreeView.getRoot().getValue().getNodeName() + "_" + expressionName + ".svg";
+
+            try {
+                File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
+                if (reportFile != null) {
+                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                    boolean confirmedExists = false;
+                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                    if (reportFile.exists()) {
+                        switch (osType) {
+                            case Windows:
+                                if (!FileUtilities.isFileClosedWindows(reportFile)) {
+                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                    writeReport.setValue(false);
+                                }
+                                break;
+                            case MacOS:
+                            case Linux:
+                                if (!FileUtilities.isFileClosedUnix(reportFile)) {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                    alert.showAndWait().ifPresent(action -> {
+                                        if (action != ButtonType.OK) {
+                                            writeReport.setValue(false);
+                                        }
+                                    });
+                                    confirmedExists = true;
+                                }
+                                break;
+                        }
+                    }
+                    if (writeReport.getValue()) {
+                        if (reportFile.exists()) {
+                            if (!confirmedExists) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                        "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
+                                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                alert.showAndWait().ifPresent(action -> {
+                                    if (action.equals(ButtonType.CANCEL)) {
+                                        writeReport.setValue(false);
+                                    }
+                                });
+                            }
+                        }
+                        if (writeReport.getValue()) {
+                            myPlot.outputToSVG(reportFile);
+                            SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
+                        }
+                    }
+                }
+            } catch (NoSuchFileException e) {
+                SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
+            } catch (java.nio.file.FileSystemException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
+            } catch (IOException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
+            }
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+        
     }
 
     /**
