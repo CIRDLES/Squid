@@ -422,12 +422,6 @@ public class TaskEditorController implements Initializable {
 
         Collections.sort(allMasses, new IntuitiveStringComparator<>());
 
-//        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-//        if (taskEditor.getIndexOfBackgroundSpecies() >= 0) {
-//            allMasses.add((allMasses.size() > taskEditor.getIndexOfBackgroundSpecies()
-//                    ? taskEditor.getIndexOfBackgroundSpecies() : allMasses.size()),
-//                    DEFAULT_BACKGROUND_MASS_LABEL);
-//        }
         int count = 1;
         for (String mass : allMasses) {
             StackPane massText;
@@ -452,6 +446,10 @@ public class TaskEditorController implements Initializable {
             massText.setTranslateX(1 * count++);
             defaultMassesListTextFlow.getChildren().add(massText);
         }
+        // pad 
+        Label padLabel = new Label("        ");
+        padLabel.setTranslateX(1 * count++);
+        defaultMassesListTextFlow.getChildren().add(padLabel);
     }
 
     private void populateRatios() {
@@ -495,7 +493,7 @@ public class TaskEditorController implements Initializable {
 //            massText.setFill(Paint.valueOf("red"));
 //        }
 
-        Shape circle = new Ellipse(15, 15, 20, 14);
+        Shape circle = new Ellipse(15, 15, 20, 13);
         circle.setFill(Paint.valueOf(color));
         circle.setStroke(Paint.valueOf("black"));
         circle.setStrokeWidth(1);

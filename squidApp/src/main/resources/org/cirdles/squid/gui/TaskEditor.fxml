@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -31,9 +32,9 @@
         <RowConstraints valignment="CENTER" vgrow="NEVER" />
       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
         <RowConstraints valignment="CENTER" vgrow="NEVER" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="NEVER" />
+        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="TOP" vgrow="NEVER" />
         <RowConstraints minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="NEVER" />
-        <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" valignment="TOP" vgrow="NEVER" />
+        <RowConstraints maxHeight="55.0" minHeight="55.0" prefHeight="55.0" valignment="TOP" vgrow="NEVER" />
         <RowConstraints maxHeight="100.0" minHeight="120.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
         <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES" />
@@ -188,17 +189,25 @@
             </children>
         </GridPane>
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="6" />
-        <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1157.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+        <HBox alignment="CENTER_LEFT" prefHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <children>
-                <Button fx:id="chooseMassesButton" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses" />
-                <TextFlow fx:id="defaultMassesListTextFlow" prefHeight="30.0" prefWidth="1000.0" style="-fx-background-color: white; -fx-border-color: black;" />
+                <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses" />
+            <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
+               <content>
+                      <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="1000.0" style="-fx-background-color: white; -fx-border-color: black;" />
+               </content>
+            </ScrollPane>
             </children>
         </HBox>
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="8" />
-        <HBox alignment="CENTER_LEFT" prefHeight="100.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+        <HBox alignment="CENTER_LEFT" prefHeight="90.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
             <children>
-                <Button fx:id="chooseRatiosButton" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
-                <TextFlow fx:id="defaultRatiosListTextFlow" maxHeight="70.0" minHeight="70.0" prefHeight="70.0" prefWidth="1001.0" style="-fx-background-color: white; -fx-border-color: black;" />
+                <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
+            <ScrollPane HBox.hgrow="ALWAYS">
+               <content>
+                      <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="1000.0" style="-fx-background-color: white; -fx-border-color: black;" />
+               </content>
+            </ScrollPane>
             </children>
         </HBox>
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Name:" GridPane.rowIndex="1" />
