@@ -1910,6 +1910,11 @@ public class SquidUIController implements Initializable {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
     }
 
+    @FXML
+    private void videoTutorialsGoogleDriveMenuItemAction(ActionEvent event) {
+        BrowserControl.showURI("https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX?usp=sharing");
+    }
+
     private class HighlightMainMenu {
 
         private Menu highlightedMenu;
