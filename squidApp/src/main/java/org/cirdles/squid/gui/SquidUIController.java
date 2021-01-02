@@ -758,7 +758,8 @@ public class SquidUIController implements Initializable {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
                 squidProjectOriginalHash = squidProject.hashCode();
-            } catch (IOException iOException) {
+            } catch (IOException | SquidException ex) {
+                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
     }

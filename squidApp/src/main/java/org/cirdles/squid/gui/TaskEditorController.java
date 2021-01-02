@@ -489,9 +489,6 @@ public class TaskEditorController implements Initializable {
     public static StackPane makeMassStackPane(String massName, String color) {
         Text massText = new Text(massName);
         massText.setFont(new Font("Monospaced Bold", 12));
-//        if (massName.compareTo(DEFAULT_BACKGROUND_MASS_LABEL) == 0) {
-//            massText.setFill(Paint.valueOf("red"));
-//        }
 
         Shape circle = new Ellipse(15, 15, 20, 13);
         circle.setFill(Paint.valueOf(color));

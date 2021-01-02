@@ -19,7 +19,6 @@ package org.cirdles.squid.reports.reportCategories;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.scene.paint.Color;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.reports.reportViews.ReportListItemI;
 
@@ -90,12 +89,6 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
      *
      * @return
      */
-    Color getCategoryColor();
-
-    /**
-     *
-     * @return
-     */
     ReportColumnInterface[] getCategoryColumns();
 
     /**
@@ -122,12 +115,6 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
      */
     @Override
     boolean isVisible();
-
-    /**
-     *
-     * @param categoryColor
-     */
-    void setCategoryColor(Color categoryColor);
 
     /**
      *

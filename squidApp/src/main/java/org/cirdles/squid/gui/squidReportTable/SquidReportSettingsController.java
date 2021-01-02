@@ -59,6 +59,7 @@ import javafx.scene.input.DataFormat;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
@@ -1301,7 +1302,8 @@ public class SquidReportSettingsController implements Initializable {
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
-            } catch (IOException iOException) {
+            } catch (IOException | SquidException ex) {
+                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
     }

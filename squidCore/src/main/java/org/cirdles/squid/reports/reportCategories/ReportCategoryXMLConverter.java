@@ -92,10 +92,6 @@ public class ReportCategoryXMLConverter implements Converter {
         context.convertAnother( reportCategory.getCategoryColumns() );
         writer.endNode();
 
-        writer.startNode( "categoryColor" );
-        writer.setValue(  Integer.toString((int)reportCategory.getCategoryColor().getBlue()));
-        writer.endNode();
-
         writer.startNode( "visible" );
         writer.setValue( Boolean.toString( reportCategory.isVisible() ) );
         writer.endNode();
@@ -148,10 +144,6 @@ public class ReportCategoryXMLConverter implements Converter {
             Arrays.sort( ReportCategoryColumns );
             reportCategory.setCategoryColumns( ReportCategoryColumns );
         }
-        reader.moveUp();
-
-        reader.moveDown();
-//        reportCategory.setCategoryColor( new Color( Integer.valueOf( reader.getValue())));
         reader.moveUp();
 
         reader.moveDown();

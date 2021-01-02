@@ -194,7 +194,7 @@
                 <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses" />
             <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
                <content>
-                      <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="1000.0" style="-fx-background-color: white; -fx-border-color: black;" />
+                      <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="997.0" style="-fx-background-color: white; -fx-border-color: black;" />
                </content>
             </ScrollPane>
             </children>
@@ -205,7 +205,7 @@
                 <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
             <ScrollPane HBox.hgrow="ALWAYS">
                <content>
-                      <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="1000.0" style="-fx-background-color: white; -fx-border-color: black;" />
+                      <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="997.0" style="-fx-background-color: white; -fx-border-color: black;" />
                </content>
             </ScrollPane>
             </children>
