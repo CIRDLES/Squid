@@ -398,12 +398,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
             g2d.fillText(Double.toString(weightedMeanStats[0]), rightOfText + widthOffset, currentTextHeightPixels);
 
-            text.setText("1%\u03C3 error of mean");
+            text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
 
-            text.setText("1\u03C3  external spot-to-spot error");
+            text.setText("1\u03C3 external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
