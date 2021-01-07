@@ -190,6 +190,8 @@
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#visitCIRDLESAction" text="CIRDLES.org" />
                         <MenuItem mnemonicParsing="false" onAction="#showTopsoilGithubRepo" text="Topsoil Github Repository" />
+                  <MenuItem mnemonicParsing="false" onAction="#showLudwigLibraryGithubRepo" text="LudwigLibrary Repository" />
+                  <MenuItem mnemonicParsing="false" onAction="#ludwigLibraryJavaDocAction" text="LudwigLibrary Java Doc" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#enjoySquidMenuItemAction" text="Enjoy!" />
                     </items>
