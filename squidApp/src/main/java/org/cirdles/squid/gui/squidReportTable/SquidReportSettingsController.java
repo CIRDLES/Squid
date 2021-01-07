@@ -179,6 +179,9 @@ public class SquidReportSettingsController implements Initializable {
 
         isRefMat = false;
         spotsChoiceBox.setVisible(true);
+        isEditing.set(false);
+        isDefault.set(false);
+        isDefaultLab.set(false);
 
         selectedRefMatReportModel = task.getSelectedRefMatReportModel();
         selectedUnknownReportModel = task.getSelectedUnknownReportModel();
@@ -228,7 +231,7 @@ public class SquidReportSettingsController implements Initializable {
         } else if (isDefaultLab.getValue()) {
             Arrays.asList(makeDefaultButton, saveButton, restoreButton, deleteButton).
                     parallelStream().forEach(button -> button.setDisable(true));
-            Arrays.asList( unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton).
+            Arrays.asList(unknownsRadioButton, refMatRadioButton, newButton, copyButton, exportButton, importButton, renameButton).
                     parallelStream().forEach(button -> button.setDisable(false));
         } else {
             Arrays.asList(restoreButton, saveButton).forEach(button -> button.setDisable(true));
@@ -264,10 +267,13 @@ public class SquidReportSettingsController implements Initializable {
         isDefault.setValue(false);
         isDefault.addListener(ob -> processButtons());
     }
-    
+
     private void initDefaultLab() {
         isDefaultLab.setValue(false);
-        isDefaultLab.addListener(ob -> processButtons());
+        try {
+            isDefaultLab.addListener(ob -> processButtons());
+        } catch (Exception e) {
+        }
     }
 
     private void initReportTableCB() {
@@ -291,11 +297,11 @@ public class SquidReportSettingsController implements Initializable {
                 if (isRefMat) {
                     selectedRefMatReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedRefMatReportModel(selectedRefMatReportModel);
-                    makeDefaultButton.setDisable(isDefaultLab.get());//    selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
+                    //makeDefaultButton.setDisable(isDefaultLab.get());//    selectedRefMatReportModel.isDefault() || selectedRefMatReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 } else {
                     selectedUnknownReportModel = reportTableCB.getSelectionModel().getSelectedItem();
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
-                    makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
+                   // makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 }
 
             }
@@ -1091,9 +1097,11 @@ public class SquidReportSettingsController implements Initializable {
         // remove labdatadefault
         SquidReportTableInterface saveTable = null;
         for (SquidReportTableInterface table : tables) {
+            if (table.getReportTableName().compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0) {
+                table.setIsLabDataDefault(false);
+            }
             if (table.isIsLabDataDefault()) {
                 saveTable = table;
-                break;
             }
         }
 
@@ -1107,6 +1115,8 @@ public class SquidReportSettingsController implements Initializable {
             if (defaultRT != null) {
                 if (saveTable.getReportTableName().compareToIgnoreCase(defaultRT.getReportTableName()) != 0) {
                     saveTable.setIsLabDataDefault(false);
+                    tables.remove(saveTable);
+                    tables.remove(defaultRT);
                     tables.add(defaultRT);
                 }
             }
@@ -1130,7 +1140,7 @@ public class SquidReportSettingsController implements Initializable {
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
         table.setReportCategories(cats);
         table.setIsDefault(false);
-        table.setIsLabDataDefault(false);
+        //table.setIsLabDataDefault(false);
 
         return table;
     }
@@ -1151,16 +1161,17 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void newOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model");
         dialog.setContentText("Name:");
 
         dialog.showAndWait().ifPresent(name -> {
 
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Please try again.", primaryStageWindow);
             } else {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
+                table.setIsLabDataDefault(false);
                 getTables().add(table);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(table);
@@ -1177,15 +1188,16 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void copyOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model Copy");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
                 SquidReportTableInterface copy = createCopyOfUpdatedSquidReportTable();
                 copy.setReportTableName(name);
+                copy.setIsLabDataDefault(false);
                 getTables().add(copy);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(copy);
@@ -1197,12 +1209,12 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void renameOnAction(ActionEvent event) {
         TextInputDialog dialog = new TextInputDialog("new name goes here");
-        dialog.setTitle("Squid Report Model Name");
+        dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a new name for the Report Model");
         dialog.setContentText("Name:");
         dialog.showAndWait().ifPresent(name -> {
             if (getNamesOfTables().contains(name)) {
-                SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
             } else {
                 int selectedIndex = reportTableCB.getSelectionModel().getSelectedIndex();
                 reportTableCB.getSelectionModel().getSelectedItem().setReportTableName(name);
@@ -1260,13 +1272,13 @@ public class SquidReportSettingsController implements Initializable {
                     Alert alert;
                     if (sameNameTable.isDefault()) {
                         alert = new Alert(Alert.AlertType.WARNING,
-                                "A Squid Report Model already exists with this name. What do you want to do?",
+                                "A Squid3 Report Model already exists with this name. What do you want to do?",
                                 rename,
                                 ButtonType.CANCEL
                         );
                     } else {
                         alert = new Alert(Alert.AlertType.WARNING,
-                                "A Squid Report Model already exists with this name. What do you want to do?",
+                                "A Squid3 Report Model already exists with this name. What do you want to do?",
                                 replace,
                                 rename,
                                 ButtonType.CANCEL
@@ -1283,7 +1295,7 @@ public class SquidReportSettingsController implements Initializable {
                             TextInputDialog dialog = new TextInputDialog(table.getReportTableName());
                             dialog.setTitle("Rename");
                             dialog.setHeaderText("Rename " + table.getReportTableName());
-                            dialog.setContentText("Enter the new Squid Report Model's name:");
+                            dialog.setContentText("Enter the new Squid3 Report Model's name:");
                             Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
                             TextField newName = null;
                             for (Node n : dialog.getDialogPane().getChildren()) {
@@ -1303,7 +1315,7 @@ public class SquidReportSettingsController implements Initializable {
                             if (result.isPresent()) {
                                 table.setReportTableName(result.get());
                                 if (tables.contains(table)) {
-                                    SquidMessageDialog.showWarningDialog("A Squid Report Model already exists with this name.", primaryStageWindow);
+                                    SquidMessageDialog.showWarningDialog("A Squid3 Report Model already exists with this name.", primaryStageWindow);
                                 } else {
                                     tables.add(table);
                                     populateSquidReportTableChoiceBox();
@@ -1327,12 +1339,12 @@ public class SquidReportSettingsController implements Initializable {
 
         if (currTable.isDefault()) {
             TextInputDialog dialog = new TextInputDialog("name goes here");
-            dialog.setTitle("Squid Report Model Name");
+            dialog.setTitle("Squid3 Report Model Name");
             dialog.setHeaderText("Enter a name for the new Report Model");
             dialog.setContentText("Name:");
             dialog.showAndWait().ifPresent(name -> {
                 if (getNamesOfTables().contains(name)) {
-                    SquidMessageDialog.showWarningDialog("A Squid Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
+                    SquidMessageDialog.showWarningDialog("A Squid3 Report Model with the name you entered already exists. Aborting.", primaryStageWindow);
                 } else {
                     SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
                     table.setReportTableName(name);
@@ -1419,8 +1431,8 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private void makeDefaultAction(ActionEvent event) {
         SquidReportTableInterface defaultReportTableSpec = reportTableCB.getSelectionModel().getSelectedItem();
-        if (!defaultReportTableSpec.isIsLabDataDefault()) {
-            defaultReportTableSpec.setIsLabDataDefault(true);
+        if (!defaultReportTableSpec.isIsLabDataDefault()
+                && !defaultReportTableSpec.isDefault()) {
 
             SquidReportTableInterface defaultReport;
             if (isRefMat) {
@@ -1432,7 +1444,7 @@ public class SquidReportSettingsController implements Initializable {
             if ((defaultReport != null) && (!defaultReport.equals(defaultReportTableSpec))) {
                 defaultReport.setIsLabDataDefault(false);
             }
-
+            defaultReportTableSpec.setIsLabDataDefault(true);
             if (isRefMat) {
                 Task.squidLabData.setDefaultReportTableRM(defaultReportTableSpec);
             } else {

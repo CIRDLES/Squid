@@ -142,7 +142,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
     }
 
     private void formatNode(Control control, int width) {
-        control.setStyle(control.getStyle() + "-font-family: San Serif;-fx-font-size: 12px;-fx-font-weight: bold;");
+        control.setStyle(control.getStyle() + "-font-family: 'Monospaced', 'SansSerif';-fx-font-size: 12px;-fx-font-weight: bold;");
         control.setPrefWidth(width);
         control.setMinWidth(USE_PREF_SIZE);
         control.setPrefHeight(23);

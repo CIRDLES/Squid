@@ -52,7 +52,7 @@ public class FileHandler {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Project '.squid' file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Project files", "*.squid"));
         File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
@@ -72,7 +72,7 @@ public class FileHandler {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save Project '.squid' file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Project files", "*.squid"));
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Project files", "*.squid"));
         File initDirectory = new File(squidPersistentState.getMRUProjectFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 //        fileChooser.setInitialFileName(squidProject.getProjectName().toUpperCase(Locale.ENGLISH) + ".squid");
@@ -189,8 +189,8 @@ public class FileHandler {
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid 2.5 Task File in Excel '.xls");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid 2.5 Excel Task Files", "*.xls"));
+        fileChooser.setTitle("Select Squid2.5 Task File in Excel '.xls");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid2.5 Excel Task Files", "*.xls"));
 
         File initDirectory = new File(squidPersistentState.getMRUTaskFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
@@ -238,8 +238,8 @@ public class FileHandler {
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid Task '.xml' file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Task '.xml' files", "*.xml"));
+        fileChooser.setTitle("Save Squid3 Task '.xml' file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Task '.xml' files", "*.xml"));
         File mruFolder = new File(squidPersistentState.getMRUTaskXMLFolderPath());
         fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
 
@@ -264,8 +264,8 @@ public class FileHandler {
         File retVal = null;
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid Task XML file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Task XML files", "*.xml"));
+        fileChooser.setTitle("Select Squid3 Task XML file");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Task XML files", "*.xml"));
         File initDirectory = new File(squidPersistentState.getMRUTaskXMLFolderPath());
         fileChooser.setInitialDirectory(initDirectory.exists() ? initDirectory : null);
 
@@ -396,7 +396,7 @@ public class FileHandler {
 
     public static File parametersManagerSelectPhysicalConstantsXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid Physical Constants xml File '.xml");
+        fileChooser.setTitle("Select Squid3 Physical Constants xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Physical Constants xml Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
@@ -404,7 +404,7 @@ public class FileHandler {
 
     public static File parametersManagerSavePhysicalConstantsXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid Physical Constants xml File '.xml");
+        fileChooser.setTitle("Save Squid3 Physical Constants xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Physical Constants xml Files", "*.xml"));
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
@@ -414,7 +414,7 @@ public class FileHandler {
 
     public static File parametersManagerSelectReferenceMaterialXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid Reference Material xml File '.xml");
+        fileChooser.setTitle("Select Squid3 Reference Material xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Reference Material xml Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
@@ -422,7 +422,7 @@ public class FileHandler {
 
     public static File parametersManagerSaveReferenceMaterialXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid Reference Material xml File '.xml");
+        fileChooser.setTitle("Save Squid3 Reference Material xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Reference Material xml Files", "*.xml"));
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
@@ -431,7 +431,7 @@ public class FileHandler {
 
     public static File parametersManagerSelectCommonPbModelXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid Pb Blank IC Model xml File '.xml");
+        fileChooser.setTitle("Select Squid3 Pb Blank IC Model xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Pb Blank IC Model xml Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
@@ -439,7 +439,7 @@ public class FileHandler {
 
     public static File parametersManagerSaveCommonPbModelXMLFile(ParametersModel model, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid Pb Blank IC Model xml File '.xml");
+        fileChooser.setTitle("Save Squid3 Pb Blank IC Model xml File '.xml");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Pb Blank IC Model xml Files", "*.xml"));
         fileChooser.setInitialFileName(model.getModelName() + " v." + model.getVersion() + ".xml");
 
@@ -448,8 +448,8 @@ public class FileHandler {
 
     public static File saveSquidReportModelXMLFile(SquidReportTableInterface table, Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Squid Report Settings XML File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));
+        fileChooser.setTitle("Save Squid3 Report Settings XML File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Report Settings XML Files", "*.xml"));
         fileChooser.setInitialFileName(table.getReportTableName() + ".xml");
 
         return fileChooser.showSaveDialog(ownerWindow);
@@ -457,8 +457,8 @@ public class FileHandler {
 
     public static File selectSquidReportModelXMLFile(Window ownerWindow) throws IOException {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Squid Report Settings XML File '.xml");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid Report Settings XML Files", "*.xml"));
+        fileChooser.setTitle("Select Squid3 Report Settings XML File '.xml");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Squid3 Report Settings XML Files", "*.xml"));
 
         return fileChooser.showOpenDialog(ownerWindow);
     }

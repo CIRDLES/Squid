@@ -407,6 +407,9 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
 
     @Override
     public boolean isDefault() {
+        if (isDefault) {
+            isLabDataDefault = false;
+        }
         return isDefault;
     }
 

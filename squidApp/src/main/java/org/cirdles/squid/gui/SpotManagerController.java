@@ -345,7 +345,7 @@ public class SpotManagerController implements Initializable {
                             "Two Prawn XML files have been written:\n\n"
                             + "\t" + splitNames[0] + "\n"
                             + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {
@@ -373,7 +373,7 @@ public class SpotManagerController implements Initializable {
                             "Two Prawn XML files have been written:\n\n"
                             + "\t" + splitNames[0] + "\n"
                             + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid Project with each of these Prawn XML files.",
+                            + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {
@@ -522,7 +522,7 @@ public class SpotManagerController implements Initializable {
                         } else {
                             if (audit[0].contains("1")) {
                                 SquidMessageDialog.showInfoDialog(
-                                        "This reference material model is missing key age(s), so Squid is \n"
+                                        "This reference material model is missing key age(s), so Squid3 is \n"
                                         + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
                                         + audit[1],
                                         primaryStageWindow);
