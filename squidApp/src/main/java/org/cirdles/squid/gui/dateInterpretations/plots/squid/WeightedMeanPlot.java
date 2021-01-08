@@ -49,6 +49,7 @@ import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
@@ -325,15 +326,15 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.setFill(Paint.valueOf("RED"));
 
-        g2d.fillText(plotTitle 
-                + (referenceMaterialAge > 0.0 ? " (" +new BigDecimal(referenceMaterialAge).movePointLeft(6).toBigInteger().toString()
-                + " Ma)" : ""), 45, 45);
+        g2d.fillText(plotTitle
+                + (referenceMaterialAge > 0.0 ? " (" + new BigDecimal(referenceMaterialAge).movePointLeft(6).toBigInteger().toString()
+                        + " Ma)" : ""), 45, 45);
 
         g2d.setFill(Paint.valueOf("RED"));
 
         Text text = new Text();
         text.setFont(Font.font("SansSerif", 15));
-        int rightOfText = 450;
+        int rightOfText = 275;
         int textWidth = 0;
         int widthOffset = 10;
         int currentTextHeightPixels = 75;
@@ -392,7 +393,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             g2d.fillText(String.valueOf(countOfIncluded) + " of " + String.valueOf(shrimpFractions.size()), rightOfText + widthOffset, currentTextHeightPixels);
 
         } else {
-
+            // Reference Materials WM
             text.setText("Wtd Mean of Ref Mat Pb/" + ((String) (ageOrValueLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
@@ -401,12 +402,22 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3 external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.fillText(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+            double min206238ExtOneSigmaPct = weightedMeanRefreshInterface.getTaskParameterExtPErrU();
+            if (weightedMeanStats[6] == 0.0) {
+                g2d.fillText(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = 0.0 %)", rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                double externalSpotToSpotError = weightedMeanStats[2] / weightedMeanStats[0] * 100.0;
+                if (min206238ExtOneSigmaPct > externalSpotToSpotError) {
+                    g2d.fillText(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = " + externalSpotToSpotError + " %)", rightOfText + widthOffset, currentTextHeightPixels);
+                } else {
+                    g2d.fillText(Double.toString(externalSpotToSpotError) + " (min 1\u03C3 ext error = " + min206238ExtOneSigmaPct + " %)", rightOfText + widthOffset, currentTextHeightPixels);
+                }
+            }
 
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();

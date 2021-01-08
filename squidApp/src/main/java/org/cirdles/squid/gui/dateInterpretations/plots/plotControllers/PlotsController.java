@@ -150,6 +150,12 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         plot.setProperty(SHOW_UNINCLUDED.getTitle(), doShow);
     }
 
+    @Override
+    public double getTaskParameterExtPErrU() {
+        return ((Task) squidProject.getTask()).getExtPErrU();
+    }
+
+    
     public static enum PlotTypes {
         CONCORDIA("CONCORDIA"),
         TERA_WASSERBURG("TERA_WASSERBURG"),

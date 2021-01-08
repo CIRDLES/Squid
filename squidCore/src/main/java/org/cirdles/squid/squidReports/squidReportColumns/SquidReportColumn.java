@@ -196,6 +196,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             if (expressionName.toUpperCase().contains("AGE")) {
                 uncertaintyColumn.setUncertaintyDirective(ABS_UNCERTAINTY_DIRECTIVE);
                 unctColumnHeaders[4] = "±1σ abs";
+                uncertaintyColumn.setUnits("Ma");
             } else {
                 uncertaintyColumn.setUncertaintyDirective(PCT_UNCERTAINTY_DIRECTIVE);
                 unctColumnHeaders[4] = "±1σ %";
