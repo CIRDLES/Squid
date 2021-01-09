@@ -174,6 +174,14 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             }
         }
 
+        // temporary hacks until this functionality is fnished for specifying units and sigdigs
+        if ((expressionName.toUpperCase().contains("Hours"))
+                || (expressionName.toUpperCase().contains("Stage"))
+                || (expressionName.toUpperCase().contains("Qt1"))
+                || (expressionName.toUpperCase().contains("PrimaryBeam"))){
+            countOfSignificantDigits = 5;
+        }
+        
         uncertaintyColumn = null;
         if ((uncertaintyDirective.length() == 0)
                 && (!expressionName.toUpperCase().contains("PCT"))
@@ -196,10 +204,12 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             if (expressionName.toUpperCase().contains("AGE")) {
                 uncertaintyColumn.setUncertaintyDirective(ABS_UNCERTAINTY_DIRECTIVE);
                 unctColumnHeaders[4] = "±1σ abs";
-                uncertaintyColumn.setUnits("Ma");
+                units = "Ma";
+                uncertaintyColumn.setUnits(units);
             } else {
                 uncertaintyColumn.setUncertaintyDirective(PCT_UNCERTAINTY_DIRECTIVE);
                 unctColumnHeaders[4] = "±1σ %";
+                units = "";
             }
 
             unctColumnHeaders[5] = units;
