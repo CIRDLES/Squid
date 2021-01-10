@@ -322,7 +322,8 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     private void populateSquidReportTableChoiceBox() {
-        reportTableCB.getItems().setAll(FXCollections.observableArrayList(getTables()));
+        List<SquidReportTableInterface> tables = getTables();
+        reportTableCB.getItems().setAll(FXCollections.observableArrayList(tables));
     }
 
     private void initListViews() {
@@ -1011,36 +1012,30 @@ public class SquidReportSettingsController implements Initializable {
                 = isRefMat
                         ? task.getSquidReportTablesRefMat()
                         : task.getSquidReportTablesUnknown();
-
-        // remove labdatadefault
-        SquidReportTableInterface saveTable = null;
-        for (SquidReportTableInterface table : tables) {
-            if (table.getReportTableName().compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0) {
-                table.setIsLabDataDefault(false);
-            }
-            if (table.isIsLabDataDefault()) {
-                saveTable = table;
-            }
-        }
-
-        SquidReportTableInterface defaultRT;
+        
+        SquidReportTableInterface defaultLabDataRT;
         if (isRefMat) {
-            defaultRT = Task.squidLabData.getDefaultReportTableRM();
+            defaultLabDataRT = Task.squidLabData.getDefaultReportTableRM();
         } else {
-            defaultRT = Task.squidLabData.getDefaultReportTable();
-        }
-        if (saveTable != null) {
-            if (defaultRT != null) {
-                if (saveTable.getReportTableName().compareToIgnoreCase(defaultRT.getReportTableName()) != 0) {
-                    saveTable.setIsLabDataDefault(false);
-                    tables.remove(saveTable);
-                    tables.remove(defaultRT);
-                    tables.add(defaultRT);
-                }
+            defaultLabDataRT = Task.squidLabData.getDefaultReportTable();
+            // backwards fix
+            if (defaultLabDataRT.getReportTableName().toUpperCase().startsWith("BUILTIN")) {
+                defaultLabDataRT = null;
+                Task.squidLabData.setDefaultReportTable(null);
             }
-        } else if (defaultRT != null) {
-            tables.remove(defaultRT);
-            tables.add(defaultRT);
+        }
+
+        for (SquidReportTableInterface table : tables) {
+            if (table.isIsLabDataDefault()) {
+                table.setIsBuiltInSquidDefault(false);
+            }
+            table.setIsLabDataDefault(false);
+        }
+
+        if (defaultLabDataRT != null) {
+            defaultLabDataRT.setIsLabDataDefault(true);
+            tables.remove(defaultLabDataRT);
+            tables.add(defaultLabDataRT);
         }
 
         // clean tables
@@ -1057,8 +1052,8 @@ public class SquidReportSettingsController implements Initializable {
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         categoryListView.getItems().forEach(cat -> cats.add(cat.clone()));
         table.setReportCategories(cats);
-        table.setIsDefault(false);
-        //table.setIsLabDataDefault(false);
+        table.setIsBuiltInSquidDefault(false);
+        table.setIsLabDataDefault(false);
 
         return table;
     }
@@ -1116,6 +1111,7 @@ public class SquidReportSettingsController implements Initializable {
                 SquidReportTableInterface copy = createCopyOfUpdatedSquidReportTable();
                 copy.setReportTableName(name);
                 copy.setIsLabDataDefault(false);
+                copy.setIsBuiltInSquidDefault(false);
                 getTables().add(copy);
                 populateSquidReportTableChoiceBox();
                 reportTableCB.getSelectionModel().select(copy);
@@ -1303,7 +1299,7 @@ public class SquidReportSettingsController implements Initializable {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
             } catch (IOException | SquidException ex) {
-                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
     }
