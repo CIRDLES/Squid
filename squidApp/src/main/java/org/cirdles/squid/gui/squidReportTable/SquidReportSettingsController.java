@@ -296,6 +296,7 @@ public class SquidReportSettingsController implements Initializable {
                     task.setSelectedUnknownReportModel(selectedUnknownReportModel);
                     // makeDefaultButton.setDisable(isDefaultLab.get());//  selectedUnknownReportModel.isDefault() || selectedUnknownReportModel.amWeightedMeanPlotAndSortReport() || !saveButton.isDisabled());
                 }
+                processButtons();
 
             }
         });
@@ -307,10 +308,10 @@ public class SquidReportSettingsController implements Initializable {
         SquidReportTableInterface selectedReportModel = (isRefMat) ? selectedRefMatReportModel : selectedUnknownReportModel;
         SquidReportTableInterface defaultReportModel = (isRefMat) ? Task.squidLabData.getDefaultReportTableRM() : Task.squidLabData.getDefaultReportTable();
 
-        if (defaultReportModel != null) {
-            reportTableCB.getSelectionModel().select(defaultReportModel);
-        } else if (selectedReportModel != null) {
+        if (selectedReportModel != null) {
             reportTableCB.getSelectionModel().select(selectedReportModel);
+        } else if (defaultReportModel != null) {
+            reportTableCB.getSelectionModel().select(defaultReportModel);
         } else {
             reportTableCB.getSelectionModel().selectFirst();
         }
@@ -1012,7 +1013,7 @@ public class SquidReportSettingsController implements Initializable {
                 = isRefMat
                         ? task.getSquidReportTablesRefMat()
                         : task.getSquidReportTablesUnknown();
-        
+
         SquidReportTableInterface defaultLabDataRT;
         if (isRefMat) {
             defaultLabDataRT = Task.squidLabData.getDefaultReportTableRM();
