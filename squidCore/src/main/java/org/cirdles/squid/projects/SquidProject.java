@@ -288,23 +288,16 @@ public final class SquidProject implements Serializable {
         return taskFromSquid25;
     }
 
-    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) {
+    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile){
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
         // if Task is short of nominal masses, add them
         int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
-            SquidMessageDialog.showWarningDialog(
-                    "The PrawnFile has "
-                    + prawnSpeciesCount
-                    + " mass stations and the Task has "
-                    + taskSquid25.getNominalMasses().size()
-                    + " masses - please confirm.",
-                    null);
             for (int i = 0; i < (prawnSpeciesCount - taskSquid25.getNominalMasses().size()); i++) {
                 taskSquid25.getNominalMasses().add("DUMMY" + (i + 1));
-            }
+            }         
         }
 
         // need to remove stored expression results on fractions to clear the decks
@@ -314,139 +307,17 @@ public final class SquidProject implements Serializable {
             spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
 
-//        task = new Task(
-//                taskSquid25.getTaskName(), prawnFile, prawnFileHandler.getNewReportsEngine());
         task = makeTaskFromSquid25Task(taskSquid25);
 
         task.setPrawnFile(prawnFile);
         task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
 
-//        task.setTaskType(taskSquid25.getTaskType());
-//        task.setDescription(taskSquid25.getTaskDescription());
-//        task.setProvenance(taskSquid25.getSquidTaskFileName());
-//        task.setAuthorName(taskSquid25.getAuthorName());
-//        task.setLabName(taskSquid25.getLabName());
-//        task.setNominalMasses(taskSquid25.getNominalMasses());
-//        task.setRatioNames(taskSquid25.getRatioNames());
-//        task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-//        task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-//        task.setFiltersForUnknownNames(filtersForUnknownNames);
-//        task.setParentNuclide(taskSquid25.getParentNuclide());
-//        task.setDirectAltPD(taskSquid25.isDirectAltPD());
-//
-//        task.setExtPErrTh(extPErrTh);
-//        task.setExtPErrU(extPErrU);
-//        task.setSelectedIndexIsotope(selectedIndexIsotope);
-//        task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
-//        task.setUseSBM(useSBM);
-//        task.setUserLinFits(userLinFits);
-//
-//        task.setReferenceMaterialModel(referenceMaterialModel);
-//        task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
-//
-//        // determine index of background mass as specified in task
-//        for (int i = 0; i < taskSquid25.getNominalMasses().size(); i++) {
-//            if (taskSquid25.getNominalMasses().get(i).compareToIgnoreCase(taskSquid25.getBackgroundMass()) == 0) {
-//                task.setIndexOfTaskBackgroundMass(i);
-//                task.setIndexOfBackgroundSpecies(i);
-//                break;
-//            }
-//        }
-//
-////        // first pass
-////        task.setChanged(true);
-////        task.setupSquidSessionSpecsAndReduceAndReport(false);
-//        List<TaskSquid25Equation> task25Equations = taskSquid25.getTask25Equations();
-//        for (TaskSquid25Equation task25Eqn : task25Equations) {
-//            ((Task) task).makeCustomExpression(task25Eqn);
-//        }
-//
-//        List<String> constantNames = taskSquid25.getConstantNames();
-//        List<String> constantValues = taskSquid25.getConstantValues();
-//        for (int i = 0; i < constantNames.size(); i++) {
-//
-//            // March 2019 moved imported constants to be custom expressions
-//            ExpressionSpecInterface constantSpec = specifyConstantExpression(
-//                    constantNames.get(i),
-//                    constantValues.get(i),
-//                    "Custom constant imported from Squid2 task " + taskSquid25.getTaskName() + " ."
-//            );
-//            ((Task) task).makeCustomExpression(constantSpec);
-//        }
-//
-//        this.task.setSpecialSquidFourExpressionsMap(taskSquid25.getSpecialSquidFourExpressionsMap());
         // first pass
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(false);
         this.task.applyDirectives();
 
         initializeTaskAndReduceData(false);
-    }
-
-    public void createTaskFromSerializedTaskXML(String fileName)
-            throws SquidException {
-        // need to remove stored expression results on fractions to clear the decks
-        task.getShrimpFractions().forEach((spot) -> {
-            spot.getTaskExpressionsForScansEvaluated().clear();
-            spot.getTaskExpressionsEvaluationsPerSpot().clear();
-            spot.getTaskExpressionsMetaDataPerSpot().clear();
-        });
-
-        // assume existing or default task
-        TaskInterface currentTask = task;
-        try {
-            task = (Task) ((XMLSerializerInterface) task).readXMLObject(fileName, false);
-        } catch (com.thoughtworks.xstream.mapper.CannotResolveClassException e) {
-            task = currentTask;
-            throw new SquidException(fileName);
-        }
-
-        if (task == null) {
-            task = currentTask;
-            throw new SquidException(fileName);
-        } else {
-            task.setPrawnFile(prawnFile);
-            task.setReportsEngine(prawnFileHandler.getNewReportsEngine());
-
-            // if Task is short of nominal masses, add them
-            int prawnSpeciesCount = Integer.parseInt(prawnFile.getRun().get(0).getPar().get(2).getValue());
-            if (prawnSpeciesCount != task.getNominalMasses().size()) {
-                SquidMessageDialog.showWarningDialog(
-                        "The PrawnFile has "
-                        + prawnSpeciesCount
-                        + " mass stations and the Task has "
-                        + task.getNominalMasses().size()
-                        + " masses - please confirm.",
-                        null);
-                for (int i = 0; i < (prawnSpeciesCount - task.getNominalMasses().size()); i++) {
-                    task.getNominalMasses().add("DUMMY" + (i + 1));
-                }
-            }
-
-            task.setExtPErrTh(extPErrTh);
-            task.setExtPErrU(extPErrU);
-            task.setIndexOfTaskBackgroundMass(task.getIndexOfBackgroundSpecies());
-            task.setSelectedIndexIsotope(selectedIndexIsotope);
-            task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
-            task.setUseSBM(useSBM);
-            task.setUserLinFits(userLinFits);
-
-            task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
-            task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
-            task.setFiltersForUnknownNames(filtersForUnknownNames);
-
-            task.setReferenceMaterialModel(referenceMaterialModel);
-            task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
-
-            // first pass
-            task.getSquidSpeciesModelList().clear();
-            task.setChanged(true);
-            task.setupSquidSessionSpecsAndReduceAndReport(false);
-
-            task.applyDirectives();
-
-            initializeTaskAndReduceData(false);
-        }
     }
 
     public void setupPrawnOPFile(File opFileNew)

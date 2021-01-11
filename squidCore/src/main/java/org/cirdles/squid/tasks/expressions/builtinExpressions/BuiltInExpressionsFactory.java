@@ -749,20 +749,20 @@ public abstract class BuiltInExpressionsFactory {
         } // end test of directAltD
 
         Expression expression4CorrExtPerrU = buildExpression(PB4CORR + PBU_EXT_1_SIGMA_ERR_PCT,
-                "Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                + "[\"" + PB4COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB4COR206_238CALIB_CONST_WM + "\"]*100)", true, false, true);
+                "IF([\"" + PB4COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
+                + "[\"" + PB4COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB4COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
         Expression expression7CorrExtPerrU = buildExpression(PB7CORR + PBU_EXT_1_SIGMA_ERR_PCT,
-                "Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                + "[\"" + PB7COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"]*100)", true, false, true);
+                "IF([\"" + PB7COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
+                + "[\"" + PB7COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
         Expression expression8CorrExtPerrU = buildExpression(PB8CORR + PBU_EXT_1_SIGMA_ERR_PCT,
-                "Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                + "[\"" + PB8COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB8COR206_238CALIB_CONST_WM + "\"]*100)", true, false, true);
+                "IF([\"" + PB8COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
+                + "[\"" + PB8COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB8COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
         Expression expression4CorrExtPerrT = buildExpression("" + PB4CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
-                "Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
-                + "[\"" + PB4COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB4COR208_232CALIB_CONST_WM + "\"]*100)", true, false, true);
+                "IF([\"" + PB4COR208_232CALIB_CONST_WM + "\"][6]==0," + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
+                + "[\"" + PB4COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB4COR208_232CALIB_CONST_WM + "\"][0]*100))", true, false, true);
         Expression expression7CorrExtPerrT = buildExpression("" + PB7CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
-                "Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
-                + "[\"" + PB7COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"]*100)", true, false, true);
+                "IF([\"" + PB7COR208_232CALIB_CONST_WM + "\"][6]==0," + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
+                + "[\"" + PB7COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*100))", true, false, true);
 
         // perm 2,3,4
         if (parentNuclide.contains("232") || isDirectAltPD) {

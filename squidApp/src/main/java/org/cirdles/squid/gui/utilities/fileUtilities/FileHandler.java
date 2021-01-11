@@ -37,6 +37,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -85,7 +88,11 @@ public class FileHandler {
             retVal = projectFileNew;
             // capture squid project file name from file for project itself
             squidProject.setProjectName(projectFileNew.getName().substring(0, projectFileNew.getName().lastIndexOf(".")));
-            ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
+            try {
+                ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
+            } catch (IOException | SquidException ex) {
+                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
+            }
         }
 
         return retVal;
