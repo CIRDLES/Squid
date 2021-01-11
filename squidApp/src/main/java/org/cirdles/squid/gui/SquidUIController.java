@@ -1518,6 +1518,7 @@ public class SquidUIController implements Initializable {
     private void launchConcordiaAndWeightedMeanPlots() {
         mainPane.getChildren().remove(plotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
+        squidProject.getTask().updateAllExpressions(true);
         if (confirmReduction()) {
             PlotsController.currentlyPlottedSampleTreeNode = null;
             launchInterpretations();
