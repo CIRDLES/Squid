@@ -1020,9 +1020,11 @@ public class SquidReportSettingsController implements Initializable {
         } else {
             defaultLabDataRT = Task.squidLabData.getDefaultReportTable();
             // backwards fix
-            if (defaultLabDataRT.getReportTableName().toUpperCase().startsWith("BUILTIN")) {
-                defaultLabDataRT = null;
-                Task.squidLabData.setDefaultReportTable(null);
+            if (defaultLabDataRT != null) {
+                if (defaultLabDataRT.getReportTableName().toUpperCase().startsWith("BUILTIN")) {
+                    defaultLabDataRT = null;
+                    Task.squidLabData.setDefaultReportTable(null);
+                }
             }
         }
 
