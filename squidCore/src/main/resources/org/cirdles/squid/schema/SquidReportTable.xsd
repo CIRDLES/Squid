@@ -30,57 +30,57 @@
     </xs:documentation>
   </xs:annotation>
   
-  <xs:element name="SquidReportTable">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="reportTableName" type="xs:string" />
-        <xs:element name="reportCategories">
-          <xs:complexType>
+    <xs:element name="SquidReportTable">
+        <xs:complexType>
             <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="reportCategory">
-                <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="displayName" type="xs:string" />
-                    <xs:element name="categoryColumns">
-                      <xs:complexType>
+                <xs:element name="reportTableName" type="xs:string" />
+                <xs:element name="reportCategories">
+                    <xs:complexType>
                         <xs:sequence>
-                          <xs:element maxOccurs="unbounded" name="SquidReportColumn" minOccurs="0">
-                            <xs:complexType>
-                              <xs:sequence>
-                                <xs:element name="expressionName" type="xs:string" />
-                                <xs:element name="units" type="xs:string" minOccurs="0"/>
-                                <xs:element name="uncertaintyColumn" type="xs:string" minOccurs="0"/>
-                                <xs:element name="amUncertaintyColumn" type="xs:boolean" />
-                                <xs:element name="uncertaintyDirective" type="xs:string" minOccurs="0"/>
-                                <xs:element name="countOfSignificantDigits" type="xs:int" />
-                                <xs:element name="visible" type="xs:boolean" />
-                                <xs:element name="footnoteSpec" minOccurs="0"/>
-                              </xs:sequence>
-                            </xs:complexType>
-                          </xs:element>
+                            <xs:element maxOccurs="unbounded" name="reportCategory">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="displayName" type="xs:string" />
+                                        <xs:element name="categoryColumns">
+                                            <xs:complexType>
+                                                <xs:sequence maxOccurs="unbounded">                                                  
+                                                    <xs:element name="SquidReportColumn" type="SquidReportColumn" minOccurs="0"/>                                                                                                      
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="visible" type="xs:boolean" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
-                      </xs:complexType>
-                    </xs:element>
-                    <xs:element name="visible" type="xs:boolean" />
-                  </xs:sequence>
-                </xs:complexType>
-              </xs:element>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="reportSpotTarget" type="SpotTypes" />
+                <xs:element name="isDefault" type="xs:boolean" />
+                <xs:element name="version" type="xs:int" />
             </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="reportSpotTarget" type="spotTypes" minOccurs="0"/>
-        <xs:element name="isDefault" type="xs:boolean" />
-        <xs:element name="version" type="xs:int" />
-      </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+  
+    <xs:complexType name="SquidReportColumn">
+        <xs:sequence minOccurs="0">
+            <xs:element name="expressionName" type="xs:string" />
+            <xs:element name="units" type="xs:string" />
+            <xs:element name="uncertaintyColumn" type="SquidReportColumn" />
+            <xs:element name="amUncertaintyColumn" type="xs:boolean" />
+            <xs:element name="uncertaintyDirective" type="xs:string" />
+            <xs:element name="countOfSignificantDigits" type="xs:int" />
+            <xs:element name="visible" type="xs:boolean" minOccurs="0" />
+            <xs:element name="footnoteSpec"/>
+        </xs:sequence>
     </xs:complexType>
-  </xs:element>
 
-  <xs:simpleType name="spotTypes">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="REFERENCE_MATERIAL"/>
-      <xs:enumeration value="UNKNOWN"/>
-      <xs:enumeration value="NONE"/>
-    </xs:restriction>
-  </xs:simpleType>
+    <xs:simpleType name="SpotTypes">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REFERENCE_MATERIAL" />
+            <xs:enumeration value="UNKNOWN" />
+            <xs:enumeration value="NONE" />
+        </xs:restriction>
+    </xs:simpleType>
   
 </xs:schema>
