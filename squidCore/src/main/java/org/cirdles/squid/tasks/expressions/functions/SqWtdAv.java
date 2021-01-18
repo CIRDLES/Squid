@@ -34,8 +34,8 @@ public class SqWtdAv extends Function {
 
     /**
      * Provides the basic functionality of Squid2.5's sqWtdAv by calculating
-     * WeightedAverage and returning intMean, intSigmaMean, MSWD, probability,
-     * intErr68, intMeanErr95 and encoding the labels for each cell of the
+     * WeightedAverage and returning mean, 1-sigmaAbs, err68, err95, 
+     * MSWD, probability, externalFlag and encoding the labels for each cell of the
      * values array produced by eval.
      *
      * @see
@@ -49,12 +49,12 @@ public class SqWtdAv extends Function {
         precedence = 4;
         rowCount = 1;
         colCount = 7;
-        labelsForOutputValues = new String[][]{{"intMean", "intSigmaMean", "err68", "err95", "MSWD", "probability", "externalFlag"}};
+        labelsForOutputValues = new String[][]{{"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"}};
         labelsForInputValues = new String[]{"per-spot expression with values and uncertainties"};
         summaryCalc = true;
         definition = "Provides the basic functionality of Squid's sqWtdAv by calculating\n"
                 + "   WeightedAverage and returning intMean, intSigmaMean, intErr68, intMeanErr95, \n"
-                + "   MSWD, and probability. Input must be ValueModel - variable+error";
+                + "   MSWD, and probability. Input must be ValueModel containing expression and error";
     }
 
     /**

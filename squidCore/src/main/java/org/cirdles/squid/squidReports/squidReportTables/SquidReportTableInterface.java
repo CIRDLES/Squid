@@ -142,7 +142,7 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      */
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories);
 
-    public void setIsDefault(boolean isDefault);
+    public void setIsBuiltInSquidDefault(boolean isDefault);
 
     public boolean isDefault();
 
