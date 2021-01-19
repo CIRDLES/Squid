@@ -195,7 +195,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         Label sortedByLabel = new Label("Sort ASC by:");
         formatNode(sortedByLabel, 75);
 
-        formatNode(categorySortComboBox, 105);
+        formatNode(categorySortComboBox, 100);
         categorySortComboBox.setPromptText("Category");
 
         categorySortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -234,8 +234,8 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         HBox exportHBox = new HBox(2);
         
         Button saveToNewFileButton = new Button("To SVG");
-        formatNode(saveToNewFileButton, 53);
-        saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        formatNode(saveToNewFileButton, 50);
+        saveToNewFileButton.setStyle("-fx-font-size: 11px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
         saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -254,7 +254,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         return exportHBox;
     }
     
-    private void writeWeightedMeanSVG() throws IOException{
+    private void writeWeightedMeanSVG() throws IOException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) plot;
             String expressionName = myPlot.getAgeOrValueLookupString().split(" ")[0];
@@ -262,26 +262,30 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
             if (!autoExcludeSpotsCheckBox().isSelected()) {
                 activeTreeView = spotsTreeViewCheckBox;
             }
-            String reportFileName = "WM_" + "Sample_" + 
-                    activeTreeView.getRoot().getValue().getNodeName() + "_" + expressionName + ".svg";
-
+            String reportFileNameSVG = expressionName.replace("/", "_") + ".svg";
+            String reportFileNamePDF = expressionName.replace("/", "_") + ".pdf";
+    
             try {
-                File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
-                if (reportFile != null) {
+                File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
+                File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
+                
+                if (reportFileSVG != null) {
                     BooleanProperty writeReport = new SimpleBooleanProperty(true);
                     boolean confirmedExists = false;
                     OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                    if (reportFile.exists()) {
+                    if (reportFileSVG.exists()) {
                         switch (osType) {
                             case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFile)) {
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
                                     writeReport.setValue(false);
                                 }
                                 break;
                             case MacOS:
                             case Linux:
-                                if (!FileUtilities.isFileClosedUnix(reportFile)) {
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                     alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                     alert.showAndWait().ifPresent(action -> {
@@ -295,7 +299,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
                         }
                     }
                     if (writeReport.getValue()) {
-                        if (reportFile.exists()) {
+                        if (reportFileSVG.exists()) {
                             if (!confirmedExists) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         "It appears that a weighted means report already exists. "
@@ -309,8 +313,9 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
                             }
                         }
                         if (writeReport.getValue()) {
-                            myPlot.outputToSVG(reportFile);
-                            SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
+                            myPlot.outputToSVG(reportFileSVG);
+                            myPlot.outputToPDF(reportFileSVG);
+                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
                         }
                     }
                 }

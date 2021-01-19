@@ -17,6 +17,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.awt.Graphics2D;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,12 +26,16 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -641,7 +646,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     }
     
-    public void paint(Graphics2D g2d) {
+    public void paintX(Graphics2D g2d) {
         g2d.clearRect(0, 0, (int)width, (int)height);
         
         g2d.setPaint(java.awt.Color.WHITE);
@@ -975,7 +980,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // Ask the test to render into the SVG Graphics2D implementation.
-        paint(svgGenerator);
+        paintX(svgGenerator);
 
         // Finally, stream out SVG to the standard output using
         // UTF-8 encoding.
@@ -984,14 +989,40 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         Writer out = null;
         try {
             out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
-        } catch (FileNotFoundException fileNotFoundException) {
-        } catch (UnsupportedEncodingException unsupportedEncodingException) {
+        } catch (FileNotFoundException | UnsupportedEncodingException fileNotFoundException) {
+            System.out.println(fileNotFoundException.getMessage());
         }
         try {
             svgGenerator.stream(out, useCSS);
-            out.close();
         } catch (SVGGraphics2DIOException sVGGraphics2DIOException) {
-        } catch (IOException e) {
+            System.out.println(sVGGraphics2DIOException.getMessage());
+        }
+        
+        try {
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(WeightedMeanPlot.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
+    public void outputToPDF(File file) {
+        SVGConverter myConv = new SVGConverter();
+        myConv.setDestinationType(org.apache.batik.apps.rasterizer.DestinationType.PDF);
+        myConv.setSources(new String[]{file.toPath().toUri().toString()});
+        try {
+            myConv.setDst(new File(new URI(file.toPath().toUri().toString().replace("svg", "pdf"))));
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(WeightedMeanPlot.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        myConv.setWidth((float) getWidth() + 2);
+        myConv.setHeight((float) getHeight() + 2);
+        
+        try {
+            myConv.execute();
+
+        } catch (SVGConverterException sVGConverterException) {
+            System.out.println("Error in pdf conversion: " + sVGConverterException.getMessage());
         }
     }
 

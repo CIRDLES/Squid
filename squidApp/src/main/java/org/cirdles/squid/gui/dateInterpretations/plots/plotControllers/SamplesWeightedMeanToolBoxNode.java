@@ -751,26 +751,28 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
             String expressionName = myPlot.getAgeOrValueLookupString();
-            String reportFileName = "WM_" + "Sample_" + sampleNode.getNodeName() + "_" + 
-                    expressionName.replace("/", "_") + ".svg";
+            String reportFileNameSVG = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().replace("/", "_") + ".svg";
 
             try {
-                File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
-                if (reportFile != null) {
+                File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
+                File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
+                if (reportFileSVG != null) {
                     BooleanProperty writeReport = new SimpleBooleanProperty(true);
                     boolean confirmedExists = false;
                     OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                    if (reportFile.exists()) {
+                    if (reportFileSVG.exists()) {
                         switch (osType) {
                             case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFile)) {
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
                                     writeReport.setValue(false);
                                 }
                                 break;
                             case MacOS:
                             case Linux:
-                                if (!FileUtilities.isFileClosedUnix(reportFile)) {
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                     alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                     alert.showAndWait().ifPresent(action -> {
@@ -784,7 +786,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         }
                     }
                     if (writeReport.getValue()) {
-                        if (reportFile.exists()) {
+                        if (reportFileSVG.exists()) {
                             if (!confirmedExists) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         "It appears that a weighted means report already exists. "
@@ -797,9 +799,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 });
                             }
                         }
-                        if (writeReport.getValue()) {
-                            myPlot.outputToSVG(reportFile);
-                            SquidMessageDialog.showSavedAsDialog(reportFile, primaryStageWindow);
+                        if (writeReport.getValue()) {    
+                            myPlot.outputToSVG(reportFileSVG);
+                            myPlot.outputToPDF(reportFileSVG);
+                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
                         }
                     }
                 }

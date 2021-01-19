@@ -45,6 +45,7 @@ test_*
 *.xls
 *.pdf
 *.png
+*.svg
 
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
