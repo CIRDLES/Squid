@@ -758,7 +758,8 @@ public class SquidUIController implements Initializable {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
                 squidProjectOriginalHash = squidProject.hashCode();
-            } catch (IOException iOException) {
+            } catch (IOException | SquidException ex) {
+                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
     }
@@ -1517,6 +1518,7 @@ public class SquidUIController implements Initializable {
     private void launchConcordiaAndWeightedMeanPlots() {
         mainPane.getChildren().remove(plotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
+        squidProject.getTask().updateAllExpressions(true);
         if (confirmReduction()) {
             PlotsController.currentlyPlottedSampleTreeNode = null;
             launchInterpretations();
@@ -1914,6 +1916,11 @@ public class SquidUIController implements Initializable {
     @FXML
     private void editExistingTaskMenuItemAction(ActionEvent event) {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
+    }
+
+    @FXML
+    private void videoTutorialsGoogleDriveMenuItemAction(ActionEvent event) {
+        BrowserControl.showURI("https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX?usp=sharing");
     }
 
     private class HighlightMainMenu {

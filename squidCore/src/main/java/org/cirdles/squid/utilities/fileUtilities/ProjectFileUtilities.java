@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
@@ -28,14 +27,11 @@ import java.io.File;
  */
 public final class ProjectFileUtilities {
 
-    public static void serializeSquidProject(SquidProject squidProject, String projectFileName) {
-        try {
-            SquidSerializer.serializeObjectToFile(squidProject, projectFileName);
-            squidProject.getPrawnFileHandler().getReportsEngine().setFolderToWriteCalamariReports(new File(projectFileName).getParentFile());
-            SquidProject.setProjectChanged(false);
-        } catch (SquidException ex) {
-            SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
-        }
-    }
+    public static void serializeSquidProject(SquidProject squidProject, String projectFileName)
+            throws SquidException {
 
+        SquidSerializer.serializeObjectToFile(squidProject, projectFileName);
+        squidProject.getPrawnFileHandler().getReportsEngine().setFolderToWriteCalamariReports(new File(projectFileName).getParentFile());
+        SquidProject.setProjectChanged(false);
+    }
 }

@@ -60,9 +60,9 @@ public class WtdMeanACalc extends Function {
      * Note: the following values displayed in Squid25 can be calculated from
      * the outputs of this function.
      *
-     * 1sigma%errorOfMean = err68 / mean * 100
+     * 1sigma error of mean (%) = exterr68 / mean * 100
      *
-     * 95%-conf. err. of mean(%) = err95 / mean * 100
+     * 95%-conf. err. of mean(%) = exterr95 / mean * 100
      *
      * if externalFlag = 1.0, otherwise zero 1s external spot-to-spot error =
      * 1-sigmaAbs / mean * 100
@@ -81,7 +81,7 @@ public class WtdMeanACalc extends Function {
         colCount = 7;
         summaryCalc = true;
         labelsForOutputValues = new String[][]{
-            {"mean", "1-sigmaAbs", "err68", "err95", "MSWD", "probability", "externalFlag"},
+            {"mean", "1-sigmaAbs", "exterr68", "exterr95", "MSWD", "probability", "externalFlag"},
             {"LargeRej Indices"},
             {"WmeanRej Indices"}};
         labelsForInputValues = new String[]{"numbers", "oneSigmaPercentUncertainties", "noUPbConstAutoReject", "pbCanDriftCorr"};

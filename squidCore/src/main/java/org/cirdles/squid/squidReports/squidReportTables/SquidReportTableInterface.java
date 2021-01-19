@@ -153,7 +153,7 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      */
     public void setReportSpotTarget(SpotTypes reportSpotTarget);
 
-    public void setIsDefault(boolean isDefault);
+    public void setIsBuiltInSquidDefault(boolean isDefault);
 
     public boolean isDefault();
 
