@@ -33,7 +33,7 @@ public class SquidReportTableXSDValidationTest {
         try {
             final File squidReportTableSchema = squidReportTableSchemaExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
-            final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("DefaultSquid3ReportTableforReferenceMaterialsTest.xml");
+            final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("Example.xml");
             validates = FileValidator.validateFileIsXMLSerializedEntity(defaultRefMatXML, schema);
         } catch (SAXException|IOException e) {
         }
