@@ -23,7 +23,6 @@ package org.cirdles.squid.reports.reportCategories;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javafx.scene.paint.Color;
 import org.cirdles.squid.reports.reportColumns.ReportColumn;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -51,7 +50,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     private int positionIndex;
     private TaskInterface task;
     private ReportColumnInterface[] categoryColumns;
-    private Color categoryColor;
     private boolean visible;
     private boolean legacyData;
 
@@ -233,8 +231,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
 
         }
-
-        this.categoryColor = Color.WHITE;
+        
         this.visible = isVisible;
         this.legacyData = false;
 
@@ -639,24 +636,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     @Override
     public void setPositionIndex(int positionIndex) {
         this.positionIndex = positionIndex;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Override
-    public Color getCategoryColor() {
-        return categoryColor;
-    }
-
-    /**
-     *
-     * @param categoryColor
-     */
-    @Override
-    public void setCategoryColor(Color categoryColor) {
-        this.categoryColor = categoryColor;
     }
 
     /**

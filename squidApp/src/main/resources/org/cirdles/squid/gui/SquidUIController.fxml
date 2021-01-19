@@ -200,7 +200,8 @@
                     <items>
 
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Introduction and Guide to Menu" />
-                        <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials" />
+                        <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials on YouTube" />
+                  <MenuItem mnemonicParsing="false" onAction="#videoTutorialsGoogleDriveMenuItemAction" text="Video Tutorials on GoogleDrive" />
                         <MenuItem mnemonicParsing="false" onAction="#contributeIssueOnGitHubAction" text="Contribute an Issue on GitHub" />
 
                     </items>

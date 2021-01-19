@@ -2745,7 +2745,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             if (squidWeightedMeanPlotSortTable == null) {
                 squidWeightedMeanPlotSortTable
                         = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
-                squidWeightedMeanPlotSortTable.setIsDefault(false);
+                squidWeightedMeanPlotSortTable.setIsBuiltInSquidDefault(false);
                 squidWeightedMeanPlotSortTable.setIsLabDataDefault(false);
                 squidLabData.setSpecialWMSortingReportTable(squidWeightedMeanPlotSortTable);
             }

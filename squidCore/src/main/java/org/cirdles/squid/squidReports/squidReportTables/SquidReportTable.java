@@ -55,7 +55,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     // Fields
     private String reportTableName;
     private LinkedList<SquidReportCategoryInterface> reportCategories;
-    private boolean isDefault;
+    private boolean isBuiltInSquidDefault;
     private boolean isLabDataDefault;
 
     private int version;
@@ -70,7 +70,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private SquidReportTable(String reportTableName, LinkedList<SquidReportCategoryInterface> reportCategories, boolean isDefault, int version) {
         this.reportTableName = reportTableName;
         this.reportCategories = reportCategories;
-        this.isDefault = isDefault;
+        this.isBuiltInSquidDefault = isDefault;
         this.isLabDataDefault = false;
         this.version = version;
     }
@@ -79,7 +79,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public SquidReportTableInterface copy() {
         LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
         reportCategories.forEach(cat -> cats.add(cat.clone()));
-        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isDefault, version);
+        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isBuiltInSquidDefault, version);
         table.setIsLabDataDefault(isLabDataDefault);
 
         return table;
@@ -397,21 +397,19 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     @Override
-    public void setIsDefault(boolean isDefault) {
-        this.isDefault = isDefault;
+    public void setIsBuiltInSquidDefault(boolean isBuiltInSquidDefault) {
+        this.isBuiltInSquidDefault = isBuiltInSquidDefault;
     }
 
     @Override
     public boolean isDefault() {
-        if (isDefault) {
-            isLabDataDefault = false;
-        }
-        return isDefault;
+        return isBuiltInSquidDefault;
     }
 
     /**
      * @return the isLabDataDefault
      */
+    @Override
     public boolean isIsLabDataDefault() {
         return isLabDataDefault;
     }
@@ -419,6 +417,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     /**
      * @param isLabDataDefault the isLabDataDefault to set
      */
+    @Override
     public void setIsLabDataDefault(boolean isLabDataDefault) {
         this.isLabDataDefault = isLabDataDefault;
     }
@@ -435,6 +434,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         xstream.alias("SquidReportColumn", SquidReportColumn.class);
     }
 
+    @Override
     public SquidReportTable clone() {
         SquidReportTable table = createEmptySquidReportTable(reportTableName);
 
@@ -443,7 +443,8 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
             cats.add(cat.clone());
         }
         table.setReportCategories(cats);
-        table.setIsDefault(isDefault);
+        table.setIsBuiltInSquidDefault(isBuiltInSquidDefault);
+        table.setIsLabDataDefault(isLabDataDefault);
 
         return table;
     }
