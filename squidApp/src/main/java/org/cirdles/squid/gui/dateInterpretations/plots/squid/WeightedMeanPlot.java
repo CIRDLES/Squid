@@ -683,7 +683,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         Text text = new Text();
         text.setFont(Font.font("SansSerif", 15));
-        int rightOfText = 450;
+        int rightOfText = 275;
         int textWidth = 0;
         int widthOffset = 10;
         int currentTextHeightPixels = 75;
@@ -748,16 +748,28 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
             g2d.drawString(Double.toString(weightedMeanStats[0]), rightOfText + widthOffset, currentTextHeightPixels);
 
-            text.setText("1%\u03C3 error of mean");
+            text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             g2d.drawString(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
 
-            text.setText("1\u03C3  external spot-to-spot error");
+            text.setText("1\u03C3  external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.drawString(Double.toString(weightedMeanStats[1] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
-
+            double min206238ExtOneSigmaPct = weightedMeanRefreshInterface.getTaskParameterExtPErrU();
+            if (weightedMeanStats[6] == 0.0) {
+                g2d.drawString(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = 0.0 %)",
+                        rightOfText + widthOffset, currentTextHeightPixels);
+            } else {
+                double externalSpotToSpotError = weightedMeanStats[1] / weightedMeanStats[0] * 100.0;
+                if (min206238ExtOneSigmaPct > externalSpotToSpotError) {
+                    g2d.drawString(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = " + externalSpotToSpotError + " %)",
+                            rightOfText + widthOffset, currentTextHeightPixels);
+                } else {
+                    g2d.drawString(Double.toString(externalSpotToSpotError) + " (min 1\u03C3 ext error = " + min206238ExtOneSigmaPct + " %)",
+                            rightOfText + widthOffset, currentTextHeightPixels);
+                }
+            }
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
@@ -814,7 +826,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // plot either the reference material age or the weighted mean
         // standard age
-        g2d.setStroke(new java.awt.BasicStroke(0.5f));
+        g2d.setStroke(new java.awt.BasicStroke(1.0f));
         g2d.setPaint(java.awt.Color.GREEN);
         if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
                 || switchRefMatViewToCalibConst) {
