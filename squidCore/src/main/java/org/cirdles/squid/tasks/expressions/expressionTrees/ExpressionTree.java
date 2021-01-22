@@ -39,6 +39,7 @@ import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.functions.If;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
+import org.cirdles.squid.tasks.expressions.functions.ValueModel;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Divide;
@@ -558,6 +559,20 @@ public class ExpressionTree
     @Override
     public boolean isTypeFunctionOrOperation() {
         return (operation instanceof Function) || (operation instanceof Operation);
+    }
+    
+    /**
+     *
+     * @return true if this expressionTree is built as a ValueModel
+     */
+    @Override
+    public boolean builtAsValueModel(){
+        boolean retVal = false;
+        if (isTypeFunction()){
+            retVal = operation.getColCount() > 1;
+        }
+        
+        return retVal;
     }
 
     /**

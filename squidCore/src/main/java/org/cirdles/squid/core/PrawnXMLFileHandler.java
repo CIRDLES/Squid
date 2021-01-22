@@ -49,13 +49,15 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.SCHEMA_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
+import org.cirdles.squid.prawnLegacy.PrawnLegacyFile;
+import org.cirdles.squid.prawnLegacy.PrawnLegacyFileHandler;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 import org.xml.sax.SAXException;
 
 /**
@@ -67,9 +69,9 @@ public class PrawnXMLFileHandler implements Serializable {
 
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-       
+
     private SquidProject squidProject;
-    
+
     private CalamariReportsEngine reportsEngine;
 
     private String currentPrawnSourceFileLocation;
@@ -79,6 +81,7 @@ public class PrawnXMLFileHandler implements Serializable {
 
     /**
      * Creates a new {@link PrawnFileHandler} using a new reports engine.
+     *
      * @param squidProject
      */
     public PrawnXMLFileHandler(SquidProject squidProject) {
@@ -126,21 +129,10 @@ public class PrawnXMLFileHandler implements Serializable {
     public ShrimpDataFileInterface unmarshallPrawnFileXML(String prawnFileLocation, boolean isTestMode)
             throws IOException, MalformedURLException, JAXBException, SAXException, SquidException {
 
+        // modified Jan 2021 to detect and translate Legacy Prawn files
         String localPrawnXMLFile = prawnFileLocation;
-        ShrimpDataFileInterface myPrawnFile;
+        ShrimpDataFileInterface myPrawnFile = null;
 
-        JAXBContext jaxbContext = JAXBContext.newInstance(PrawnFile.class);
-        jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-        if (!isTestMode) {
-            // force validation against schema
-            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
-            File schemaFile = new File(URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
-            Schema schema = sf.newSchema(schemaFile);
-            jaxbUnmarshaller.setSchema(schema);
-        }
-        
         // test for URL such as "https://raw.githubusercontent.com/bowring/XSD/master/SHRIMP/EXAMPLE_100142_G6147_10111109.43_10.33.37%20AM.xml"
         boolean isURL = false;
         if (prawnFileLocation.toLowerCase(Locale.ENGLISH).startsWith("http")) {
@@ -160,12 +152,14 @@ public class PrawnXMLFileHandler implements Serializable {
         // swap out bad header
         Path pathToLocalPrawnXMLFile = FileSystems.getDefault().getPath(localPrawnXMLFile);
 
+        boolean isPrawnLegacyFile = false;
         // read localPrawnXMLFile and determine location of required tag
         List<String> lines = Files.readAllLines(pathToLocalPrawnXMLFile, Charset.defaultCharset());
         int indexOfSoftwareTagLine = -1;
         for (int i = 0; i < lines.size(); i++) {
             if (lines.get(i).contains("<software")) {
                 indexOfSoftwareTagLine = i;
+                isPrawnLegacyFile = lines.get(i).contains("<software_version>SHRIMP II v2 SW");
                 break;
             }
         }
@@ -182,8 +176,24 @@ public class PrawnXMLFileHandler implements Serializable {
             lines.remove(0);
         }
 
+        JAXBContext jaxbContext = JAXBContext.newInstance(isPrawnLegacyFile ? PrawnLegacyFile.class : PrawnFile.class);
+        jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+        if (!isTestMode) {
+            // force validation against schema
+            SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            // JULY 2017 Team decided to make schema and validation local because of security concerns at Geoscience Australia
+            File schemaFile = new File(isPrawnLegacyFile
+                    ? Squid3Constants.URL_STRING_FOR_PRAWN_LEGACY_XML_SCHEMA_LOCAL
+                    : Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL);
+            Schema schema = sf.newSchema(schemaFile);
+            jaxbUnmarshaller.setSchema(schema);
+        }
+
         // July 2017 Team decided to make schema local because of issues of security at Geoscience Australia
-        String[] headerArray = Squid3Constants.XML_HEADER_FOR_PRAWN_FILES_USING_LOCAL_SCHEMA.split("\\n");
+        String[] headerArray = isPrawnLegacyFile
+                ? Squid3Constants.XML_HEADER_FOR_PRAWN_LEGACY_FILES_USING_LOCAL_SCHEMA.split("\\n")
+                : Squid3Constants.XML_HEADER_FOR_PRAWN_FILES_USING_LOCAL_SCHEMA.split("\\n");
 
         // add correct header
         for (int i = 0; i < headerArray.length; i++) {
@@ -217,10 +227,17 @@ public class PrawnXMLFileHandler implements Serializable {
             prawnDataFile = config.toFile();
         }
 
-        myPrawnFile = readRawDataFile(prawnDataFile);
+        if (isPrawnLegacyFile) {
+            ShrimpDataLegacyFileInterface myPrawnLegacyFile = readRawDataLegacyFile(prawnDataFile);
+            // now translate to Prawn File ***************************************
+            
+            myPrawnFile = PrawnLegacyFileHandler.convertPrawnLegacyFileToPrawnFile(myPrawnLegacyFile);
+        } else {
+            myPrawnFile = readRawDataFile(prawnDataFile);
+        }
 
         if (!prawnDataFile.delete()) {
-            throw new SquidException("Unable to delete temporaty prawnfile.");
+            throw new SquidException("Unable to delete temporary prawnfile.");
         }
 
         return myPrawnFile;
@@ -236,6 +253,18 @@ public class PrawnXMLFileHandler implements Serializable {
     private ShrimpDataFileInterface readRawDataFile(File prawnDataFile) throws JAXBException {
         ShrimpDataFileInterface myPrawnFile = (PrawnFile) jaxbUnmarshaller.unmarshal(prawnDataFile);
         return myPrawnFile;
+    }
+
+    /**
+     * Deserializes xml file to a PrawnLegacyFile object.
+     *
+     * @param prawnLegacyDataFile the value of prawnLegacyDataFile
+     * @return the PrawnLegacyFile
+     * @throws javax.xml.bind.JAXBException
+     */
+    private ShrimpDataLegacyFileInterface readRawDataLegacyFile(File prawnLegacyDataFile) throws JAXBException {
+        ShrimpDataLegacyFileInterface myPrawnLegacyFile = (PrawnLegacyFile) jaxbUnmarshaller.unmarshal(prawnLegacyDataFile);
+        return myPrawnLegacyFile;
     }
 
     /**
@@ -317,8 +346,8 @@ public class PrawnXMLFileHandler implements Serializable {
      */
     public File currentPrawnFileLocationFolder() {
         // TODO: make more elegant for OP file handling
-        if (currentPrawnSourceFileLocation == null){
-            currentPrawnSourceFileLocation = "."; 
+        if (currentPrawnSourceFileLocation == null) {
+            currentPrawnSourceFileLocation = ".";
         }
         File retVal = new File(currentPrawnSourceFileLocation);
         if (currentPrawnFileLocationIsFile()) {
@@ -329,7 +358,8 @@ public class PrawnXMLFileHandler implements Serializable {
     }
 
     /**
-     * @param aCurrentPrawnFileLocation the currentPrawnSourceFileLocation to set
+     * @param aCurrentPrawnFileLocation the currentPrawnSourceFileLocation to
+     * set
      */
     public void setCurrentPrawnSourceFileLocation(String aCurrentPrawnFileLocation) {
         currentPrawnSourceFileLocation = aCurrentPrawnFileLocation;

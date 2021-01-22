@@ -63,6 +63,16 @@ public final class Squid3Constants {
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                                ../schema/SHRIMP_PRAWN.xsd\">";
+    
+    public static final String XML_HEADER_FOR_PRAWN_LEGACY_FILES_USING_LOCAL_SCHEMA
+            = "<?xml version=\"1.0\"?>\n"
+            + "<!-- SHRIMP SW PRAWN Data File -->\n"
+            + "<prawn_file xmlns=\"https://raw.githubusercontent.com\"\n"
+            + "            xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
+            + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
+            + "                                ../schema/SHRIMP_PRAWN_LEGACY.xsd\">";
+
 
     /**
      *
@@ -72,6 +82,9 @@ public final class Squid3Constants {
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
             = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SHRIMP_PRAWN.xsd";
+    
+    public static final String URL_STRING_FOR_PRAWN_LEGACY_XML_SCHEMA_LOCAL
+            = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SHRIMP_PRAWN_LEGACY.xsd";
 
     public static final String SQUID_LAB_DATA_SERIALIZED_NAME = "SquidLabData.ser";
 
