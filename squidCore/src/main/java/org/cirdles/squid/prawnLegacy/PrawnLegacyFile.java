@@ -368,10 +368,10 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         protected short scans;
         @XmlElement(name = "dead_time_ns")
         @XmlSchemaType(name = "unsignedByte")
-        protected short deadTimeNs;
+        protected int deadTimeNs;
         @XmlElement(name = "sbm_zero_cps")
         @XmlSchemaType(name = "unsignedByte")
-        protected short sbmZeroCps;
+        protected int sbmZeroCps;
         @XmlElement(required = true)
         protected String autocentering;
         @XmlElement(name = "qt1y_mode", required = true)
@@ -461,7 +461,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
          * Gets the value of the deadTimeNs property.
          * 
          */
-        public short getDeadTimeNs() {
+        public int getDeadTimeNs() {
             return deadTimeNs;
         }
 
@@ -469,7 +469,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
          * Sets the value of the deadTimeNs property.
          * 
          */
-        public void setDeadTimeNs(short value) {
+        public void setDeadTimeNs(int value) {
             this.deadTimeNs = value;
         }
 
@@ -477,7 +477,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
          * Gets the value of the sbmZeroCps property.
          * 
          */
-        public short getSbmZeroCps() {
+        public int getSbmZeroCps() {
             return sbmZeroCps;
         }
 
@@ -485,7 +485,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
          * Sets the value of the sbmZeroCps property.
          * 
          */
-        public void setSbmZeroCps(short value) {
+        public void setSbmZeroCps(int value) {
             this.sbmZeroCps = value;
         }
 
@@ -1133,7 +1133,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
             @XmlSchemaType(name = "time")
             protected String time;
             @XmlElement(name = "qt1y")
-            protected short qt1Y;
+            protected int qt1Y;
             @XmlElement(required = true)
             protected String pbm;
             @XmlElement(required = true)
@@ -1191,7 +1191,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * Gets the value of the qt1Y property.
              * 
              */
-            public short getQt1Y() {
+            public int getQt1Y() {
                 return qt1Y;
             }
 
@@ -1199,7 +1199,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * Sets the value of the qt1Y property.
              * 
              */
-            public void setQt1Y(short value) {
+            public void setQt1Y(int value) {
                 this.qt1Y = value;
             }
 
@@ -1482,7 +1482,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
                         @XmlElement(required = true)
                         protected String autocentering;
                         @XmlElement(name = "ion_count", type = Integer.class)
-                        @XmlSchemaType(name = "unsignedShort")
+                        @XmlSchemaType(name = "unsignedInt")
                         protected List<Integer> ionCount;
                         @XmlElement(name = "norm_count", type = Long.class)
                         @XmlSchemaType(name = "unsignedInt")
