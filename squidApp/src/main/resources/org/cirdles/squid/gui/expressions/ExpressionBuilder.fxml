@@ -244,7 +244,7 @@
                                           </AnchorPane>
                                        </content>
                                        <graphic>
-                                          <HBox alignment="CENTER_LEFT" prefHeight="0.0">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="0.0" prefWidth="898.0">
                                              <children>
                                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Expression">
                                                    <HBox.margin>
@@ -256,6 +256,7 @@
                                                 <Button fx:id="fontMinusBtn" mnemonicParsing="false" onAction="#fontMinusAction" scaleX="0.7" scaleY="0.7" text="Font -" translateX="-72.0" />
                                                 <Button fx:id="fontPlusBtn" mnemonicParsing="false" onAction="#fontPlusAction" scaleX="0.7" scaleY="0.7" text="Font +" translateX="-100.0" />
                                                 <Button fx:id="toggleWhiteSpacesBtn" mnemonicParsing="false" onAction="#toggleWhiteSpacesAction" scaleX="0.7" scaleY="0.7" text="Hide white spaces tokens" translateX="-148.0" />
+                                                <Text fx:id="editingModeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Editing Mode is " wrappingWidth="169.58544921875" />
                                              </children>
                                           </HBox>
                                        </graphic>
@@ -297,7 +298,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="122.0" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" prefHeight="31.0" prefWidth="138.0" text="Edit as text" />
+                                          <Button fx:id="expressionAsTextBtn" mnemonicParsing="false" onAction="#expressionAsTextAction" prefHeight="31.0" prefWidth="138.0" text="Switch to text" />
                                        </children>
                                     </HBox>
                                  </children>
