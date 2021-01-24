@@ -292,7 +292,7 @@ public class SquidUIController implements Initializable {
 
         CalamariFileUtilities.initExamplePrawnFiles();
         CalamariFileUtilities.initDemoSquidProjectFiles();
-        CalamariFileUtilities.loadShrimpPrawnFileSchema();
+        CalamariFileUtilities.loadShrimpFileSchema();
         CalamariFileUtilities.loadJavadoc();
         CalamariFileUtilities.initXSLTML();
         CalamariFileUtilities.initSquidTaskLibraryFiles();
@@ -513,15 +513,20 @@ public class SquidUIController implements Initializable {
     private void openOPFile(File file) throws IOException {
         prepareForNewProject(GEOCHRON);
         if (file != null) {
-            squidProject.setupPrawnOPFile(file);
-            squidProject.autoDivideSamples();
-            //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
-            SquidUI.updateStageTitle("");
-            launchProjectManager();
-            saveSquidProjectMenuItem.setDisable(true);
-            customizeDataMenu();
-            squidPersistentState.updateOPFileListMRU(file);
-            buildOPFileMenuMRU();
+            if (squidProject.setupPrawnOPFile(file)) {
+                squidProject.autoDivideSamples();
+                //Needs own MRU squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+                SquidUI.updateStageTitle("");
+                launchProjectManager();
+                saveSquidProjectMenuItem.setDisable(true);
+                customizeDataMenu();
+                squidPersistentState.updateOPFileListMRU(file);
+                buildOPFileMenuMRU();
+            } else {
+                SquidMessageDialog.showWarningDialog(
+                        "Squid3 encountered an error while trying to open the selected data file.",
+                        primaryStageWindow);
+            }
         } else {
             squidProject.getTask().setChanged(false);
             SquidProject.setProjectChanged(false);
@@ -541,13 +546,18 @@ public class SquidUIController implements Initializable {
 
                 File prawnSourceFileNew = prawnFilePath.toFile();
 
-                squidProject.setupPrawnXMLFile(prawnSourceFileNew);
-                squidProject.autoDivideSamples();
-                squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
-                SquidUI.updateStageTitle("");
-                launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(true);
-                customizeDataMenu();
+                if (squidProject.setupPrawnXMLFile(prawnSourceFileNew)) {
+                    squidProject.autoDivideSamples();
+                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+                    SquidUI.updateStageTitle("");
+                    launchProjectManager();
+                    saveSquidProjectMenuItem.setDisable(true);
+                    customizeDataMenu();
+                } else {
+                    SquidMessageDialog.showWarningDialog(
+                            "Squid3 encountered an error while trying to open the selected data file.",
+                            primaryStageWindow);
+                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -572,13 +582,18 @@ public class SquidUIController implements Initializable {
         try {
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFile != null) {
-                squidProject.setupPrawnXMLFile(prawnSourceFile);
-                squidProject.autoDivideSamples();
-                squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
-                SquidUI.updateStageTitle("");
-                launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(true);
-                customizeDataMenu();
+                if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
+                    squidProject.autoDivideSamples();
+                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+                    SquidUI.updateStageTitle("");
+                    launchProjectManager();
+                    saveSquidProjectMenuItem.setDisable(true);
+                    customizeDataMenu();
+                } else {
+                    SquidMessageDialog.showWarningDialog(
+                            "Squid3 encountered an error while trying to open the selected data file.",
+                            primaryStageWindow);
+                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -604,17 +619,22 @@ public class SquidUIController implements Initializable {
         try {
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFile != null) {
-                squidProject.setupPrawnXMLFile(prawnSourceFile);
-                squidProject.autoDivideSamples();
-                squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+                if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
+                    squidProject.autoDivideSamples();
+                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
 
-                // auto generate task data for nominal masses
-                squidProject.initializeTaskAndReduceData(true);
+                    // auto generate task data for nominal masses
+                    squidProject.initializeTaskAndReduceData(true);
 
-                SquidUI.updateStageTitle("");
-                launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(true);
-                customizeDataMenu();
+                    SquidUI.updateStageTitle("");
+                    launchProjectManager();
+                    saveSquidProjectMenuItem.setDisable(true);
+                    customizeDataMenu();
+                } else {
+                    SquidMessageDialog.showWarningDialog(
+                            "Squid3 encountered an error while trying to open the selected data file.",
+                            primaryStageWindow);
+                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -646,10 +666,15 @@ public class SquidUIController implements Initializable {
         try {
             List<File> prawnXMLFilesNew = FileHandler.selectForJoinTwoPrawnXMLFiles(primaryStageWindow);
             if (prawnXMLFilesNew.size() == 2) {
-                squidProject.setupPrawnXMLFileByJoin(prawnXMLFilesNew);
-                launchProjectManager();
-                saveSquidProjectMenuItem.setDisable(true);
-                customizeDataMenu();
+                if (squidProject.setupPrawnXMLFileByJoin(prawnXMLFilesNew)) {
+                    launchProjectManager();
+                    saveSquidProjectMenuItem.setDisable(true);
+                    customizeDataMenu();
+                } else {
+                    SquidMessageDialog.showWarningDialog(
+                            "Squid3 encountered an error while trying to open and join the selected files.",
+                            primaryStageWindow);
+                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -708,7 +733,7 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
-                
+
                 selectedRunsForRestore.clear();
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
@@ -759,7 +784,7 @@ public class SquidUIController implements Initializable {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
                 squidProjectOriginalHash = squidProject.hashCode();
             } catch (IOException | SquidException ex) {
-                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
     }
@@ -1260,12 +1285,11 @@ public class SquidUIController implements Initializable {
     private void showTopsoilGithubRepo(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
-        
+
     @FXML
     private void showLudwigLibraryGithubRepo(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/LudwigLibrary");
     }
-
 
     private void launchInterpretations() {
         try {

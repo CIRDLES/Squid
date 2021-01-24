@@ -66,10 +66,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private boolean visible;
     private String footnoteSpec;
 
-    private SquidReportColumn() {
-        this("", "", 0, false, "");
-    }
-
     private SquidReportColumn(String expressionName) {
         this(expressionName, "", 0, false, "");
     }
@@ -156,10 +152,10 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         }
         //columnHeaders[HEADER_ROW_COUNT - 1] = expTree.getName();
 
-        columnHeaders[5] = units;
-        if (columnHeaders[5].length() > 0) {
-            columnHeaders[4] += "(" + units + ")";
-        }
+//        columnHeaders[5] = units;
+//        if (columnHeaders[5].length() > 0) {
+//            columnHeaders[4] += "(" + units + ")";
+//        }
 
         // propose uncertainty column and type if detected in expTree
         // if expTree has uncertaintyDirective, then this column is itself an uncertainty column as defined
@@ -174,25 +170,30 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             }
         }
 
-        // temporary hacks until this functionality is fnished for specifying units and sigdigs
+        // temporary hacks until this functionality is finished for specifying units and sigdigs
         if ((expressionName.toUpperCase().contains("Hours"))
                 || (expressionName.toUpperCase().contains("Stage"))
                 || (expressionName.toUpperCase().contains("Qt1"))
-                || (expressionName.toUpperCase().contains("PrimaryBeam"))){
+                || (expressionName.toUpperCase().contains("PrimaryBeam"))) {
             countOfSignificantDigits = 5;
         }
-        
+
         uncertaintyColumn = null;
         if ((uncertaintyDirective.length() == 0)
-                && (!expressionName.toUpperCase().contains("PCT"))
-                && (!expressionName.toUpperCase().contains("ERR"))
-                && (!expressionName.toUpperCase().contains("CONCEN"))
-                && (!expressionName.toUpperCase().contains("DISC"))
-                && (!expressionName.toUpperCase().contains("PPM"))
-                && (!expressionName.toUpperCase().contains("CORR"))
-                && (!expressionName.contains(R204PB_206PB))
-                && !(expTree instanceof SpotFieldNode)
-                && !(expTree instanceof ShrimpSpeciesNode)) {
+                && expTree.builtAsValueModel()
+//                && (!expressionName.toUpperCase().contains("PCT"))
+//                && (!expressionName.toUpperCase().contains("ERR"))
+//                && (!expressionName.toUpperCase().contains("CONCEN"))
+//                && (!expressionName.toUpperCase().contains("DISC"))
+//                && (!expressionName.toUpperCase().contains("PPM"))
+//                && (!expressionName.toUpperCase().contains("CORR"))
+//                && (!expressionName.contains(R204PB_206PB))
+//                && !(expTree instanceof SpotFieldNode)
+//                && !(expTree instanceof ShrimpSpeciesNode)
+//                || ((expressionName.toUpperCase().contains("AGE")
+//                && !expressionName.toUpperCase().contains("TAGE")))
+//                || expTree.builtAsValueModel()
+                ) {
             uncertaintyColumn = createSquidReportColumn(expressionName, units);
             uncertaintyColumn.setExpTree(expTree);
 
@@ -220,6 +221,16 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             uncertaintyColumn.setVisible(true);
             uncertaintyColumn.setCountOfSignificantDigits(DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS);
             uncertaintyColumn.setAmIsotopicRatio(amIsotopicRatio);
+        }
+        
+        if ((expressionName.toUpperCase().contains("AGE")
+                && !expressionName.toUpperCase().contains("TAGE"))){
+            units = "Ma";
+        }
+        
+        columnHeaders[5] = units;
+        if (columnHeaders[5].length() > 0) {
+            columnHeaders[4] += "(" + units + ")";
         }
 
         amUncertaintyColumn = false;
@@ -461,7 +472,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     public SquidReportColumn clone() {
         SquidReportColumnInterface col = createSquidReportColumn(expressionName);
         col.setUnits(units);
-        if (uncertaintyColumn != null){
+        if (uncertaintyColumn != null) {
             col.setUncertaintyColumn(uncertaintyColumn.clone());
         } else {
             col.setUncertaintyColumn(null);

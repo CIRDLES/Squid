@@ -172,6 +172,8 @@ public class ExpressionBuilderController implements Initializable {
     private ToggleGroup expressionsSortToggleGroup;
 
     private final TextArea expressionAsTextArea = new TextArea();
+    @FXML
+    private Text editingModeLabel;
 
     {
         expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE));
@@ -559,6 +561,7 @@ public class ExpressionBuilderController implements Initializable {
         expressionClearBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionPasteBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionAsTextBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
+        editingModeLabel.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionUndoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
         expressionRedoBtn.visibleProperty().bind(currentMode.isNotEqualTo(Mode.VIEW));
 
@@ -1421,7 +1424,8 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setTopAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setRightAnchor(expressionAsTextArea, 0.0);
             AnchorPane.setLeftAnchor(expressionAsTextArea, 0.0);
-            expressionAsTextBtn.setText("Edit as d&d");
+            expressionAsTextBtn.setText("Switch to d&d");
+            editingModeLabel.setText("Editing mode is Text");
             expressionAsTextArea.requestFocus();
 
         } else {
@@ -1434,7 +1438,8 @@ public class ExpressionBuilderController implements Initializable {
             AnchorPane.setTopAnchor(expressionScrollPane, 0.0);
             AnchorPane.setRightAnchor(expressionScrollPane, 0.0);
             AnchorPane.setLeftAnchor(expressionScrollPane, 0.0);
-            expressionAsTextBtn.setText("Edit as text");
+            expressionAsTextBtn.setText("Switch to text");
+            editingModeLabel.setText("Editing mode is Drag 'n Drop");
 
             //Rebuild because CSS doesn't apply
             expressionTextFlow.getChildren().clear();
