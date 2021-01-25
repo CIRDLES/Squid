@@ -21,7 +21,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox fx:id="vboxMaster" minHeight="680.0" minWidth="1250.0" prefHeight="670.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskFolderBrowserController">
+<VBox fx:id="vboxMaster" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskFolderBrowserController">
    <children>
       <HBox fx:id="taskFolderBrowserTitleBar" alignment="CENTER" maxHeight="30.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: white;">
          <children>
