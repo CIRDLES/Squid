@@ -127,6 +127,17 @@ public class ExpressionTree
     protected String uncertaintyDirective;
 
     protected int index;
+    
+    protected transient boolean hasNoTargetSpots;
+
+    public void setHasNoTargetSpots(boolean hasNoTargetSpots) {
+        this.hasNoTargetSpots = hasNoTargetSpots;
+    }
+
+    public boolean doesHaveNoTargetSpots() {
+        return hasNoTargetSpots;
+    }
+    
 
     /**
      *
@@ -186,6 +197,7 @@ public class ExpressionTree
         this.squidSwitchConcentrationReferenceMaterialCalculation = false;
         this.rootExpressionTree = false;
         this.uncertaintyDirective = "";
+        this.hasNoTargetSpots = false;
     }
 
     public ExpressionTree copy() {
@@ -211,7 +223,7 @@ public class ExpressionTree
 
     @Override
     public boolean amHealthy() {
-        boolean retVal = (isValid());
+        boolean retVal = (isValid() && !hasNoTargetSpots);
         // check for correct number of operands for operation
         if (retVal) {
             retVal = retVal && (getCountOfChildren() == argumentCount());
@@ -428,7 +440,7 @@ public class ExpressionTree
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
                     ? (unknownsGroupSampleName
-                            .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK(" + unknownsGroupSampleName) + "):") : "";
+                            .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK<" + unknownsGroupSampleName) + ">") : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
@@ -441,7 +453,7 @@ public class ExpressionTree
         if (isSquidSwitchSCSummaryCalculation()) {
             targetPhrase = "SUMMARY("
                     + (referenceMaterialCalc ? "R" : "")
-                    + (squidSwitchSAUnknownCalculation ? "U" : "")
+                    + (squidSwitchSAUnknownCalculation ? targetPhrase : "")
                     + "):";
         }
 
