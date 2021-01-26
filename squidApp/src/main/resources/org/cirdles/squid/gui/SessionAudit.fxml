@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="sessionVBox" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
+<VBox fx:id="sessionVBox" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SessionAuditController">
    <children>
-      <HBox minHeight="10.0" prefHeight="10.0" prefWidth="200.0" />
+      <HBox minHeight="10.0" prefHeight="10.0" />
       <HBox prefHeight="30.0" prefWidth="1200.0" translateY="5.0">
          <children>
             <Label fx:id="titleLabel" text="Data &gt; Spot Naming and Reference Materials" translateX="25.0" />

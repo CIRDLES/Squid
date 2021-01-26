@@ -550,6 +550,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
+            // jan 2021 issue #564
+            if (customExp.getName().contains("_WM_")){
+                String targetSampleName = customExp.getName().split("_WM_")[1].trim();
+                customExp.getExpressionTree().setUnknownsGroupSampleName(targetSampleName);
+            }
             taskExpressionsOrdered.add(customExp);
         }
 
@@ -2326,6 +2331,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
                 evaluateExpressionForSpot(expressionTree, spot);
             }
+        }
+        
+        // jan 2021
+        if (spotsForExpression.isEmpty()){
+            ((ExpressionTree)expressionTree).setHasNoTargetSpots(true);
         }
     }
 

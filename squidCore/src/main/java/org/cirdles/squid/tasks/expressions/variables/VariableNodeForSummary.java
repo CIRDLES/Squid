@@ -26,6 +26,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.divideWithZeroForNanResult;
 
 /**
  *
@@ -121,7 +122,7 @@ public class VariableNodeForSummary extends ExpressionTree {
 
             if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                 // index should be 1 from constructor
-                valuesAll[0][1] = StrictMath.abs(valuesAll[0][1] / valuesAll[0][0] * 100.0);
+                valuesAll[0][1] = StrictMath.abs(divideWithZeroForNanResult(valuesAll[0][1], valuesAll[0][0]) * 100.0);
             }
 
             values = clone2dArray(valuesAll);

@@ -23,6 +23,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_7_6;
+import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.divideWithZeroForNanResult;
 
 /**
  *
@@ -78,8 +79,8 @@ public class StdPb86radCor7per extends Function {
             double[] pb46cor7 = convertObjectArrayToDoubles(childrenET.get(3).eval(shrimpFractions, task)[0]);
 
             // convert uncertainties to percents for function call
-            double pb208_206Unct = pb208_206RatioAndUnct[1] / pb208_206RatioAndUnct[0] * 100.0;
-            double pb207_206Unct = pb207_206RatioAndUnct[1] / pb207_206RatioAndUnct[0] * 100.0;
+            double pb208_206Unct = divideWithZeroForNanResult(pb208_206RatioAndUnct[1], pb208_206RatioAndUnct[0]) * 100.0;
+            double pb207_206Unct = divideWithZeroForNanResult(pb207_206RatioAndUnct[1], pb207_206RatioAndUnct[0]) * 100.0;
 
             double std_76 = task.getTaskExpressionsEvaluationsPerSpotSet().get(REFRAD_7_6).getValues()[0][0];
 //            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
