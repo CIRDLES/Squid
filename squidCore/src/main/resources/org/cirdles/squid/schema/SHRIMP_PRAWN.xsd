@@ -103,7 +103,7 @@
                                     </xs:sequence>
                                     <xs:attribute name="entries" type="xs:unsignedByte" use="required" />
                                     <xs:attribute name="parameters" type="xs:unsignedByte" use="required" />
-                                    <xs:attribute name="sample_name" type="xs:string" use="required" />
+                                    <xs:attribute name="sample_name" type="xs:string" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="set">

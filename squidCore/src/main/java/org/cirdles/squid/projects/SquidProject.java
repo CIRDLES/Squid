@@ -31,7 +31,6 @@ import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -49,6 +48,7 @@ import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -56,7 +56,6 @@ import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstant
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
  *
@@ -288,7 +287,7 @@ public final class SquidProject implements Serializable {
         return taskFromSquid25;
     }
 
-    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile){
+    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
@@ -297,7 +296,7 @@ public final class SquidProject implements Serializable {
         if (prawnSpeciesCount != taskSquid25.getNominalMasses().size()) {
             for (int i = 0; i < (prawnSpeciesCount - taskSquid25.getNominalMasses().size()); i++) {
                 taskSquid25.getNominalMasses().add("DUMMY" + (i + 1));
-            }         
+            }
         }
 
         // need to remove stored expression results on fractions to clear the decks
@@ -320,63 +319,86 @@ public final class SquidProject implements Serializable {
         initializeTaskAndReduceData(false);
     }
 
-    public void setupPrawnOPFile(File opFileNew)
+    public boolean setupPrawnOPFile(File opFileNew)
             throws IOException {
+
+        boolean retVal = false;
         prawnSourceFile = opFileNew;
         updatePrawnFileHandlerWithFileLocation();
 
         OPFileHandler opFileHandler = new OPFileHandler();
         prawnFile = opFileHandler.convertOPFileToPrawnFile(opFileNew);
-        task.setPrawnFile(prawnFile);
-        ((Task) task).setupSquidSessionSkeleton();
+
+        if (prawnFileExists()) {
+            retVal = true;
+            task.setPrawnFile(prawnFile);
+            ((Task) task).setupSquidSessionSkeleton();
+        }
+
+        return retVal;
     }
 
-    public void setupPrawnXMLFile(File prawnXMLFileNew)
+    public boolean setupPrawnXMLFile(File prawnXMLFileNew)
             throws IOException, JAXBException, SAXException, SquidException {
 
+        boolean retVal = false;
         prawnSourceFile = prawnXMLFileNew;
         updatePrawnFileHandlerWithFileLocation();
 
+        // determine whether legacy or modern Prawn XML file
+        // if Legacy, then it has to be read in and translated to modern by unmarshall
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
-        task.setPrawnFile(prawnFile);
-        ((Task) task).setupSquidSessionSkeleton();
+
+        if (prawnFileExists()) {
+            retVal = true;
+            task.setPrawnFile(prawnFile);
+            ((Task) task).setupSquidSessionSkeleton();
+        }
+
+        return retVal;
     }
 
-    public void setupPrawnXMLFileByJoin(List<File> prawnXMLFilesNew)
+    public boolean setupPrawnXMLFileByJoin(List<File> prawnXMLFilesNew)
             throws IOException, JAXBException, SAXException, SquidException {
 
         if (prawnXMLFilesNew.size() == 2) {
             ShrimpDataFileInterface prawnFile1 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(0).getCanonicalPath(), false);
             ShrimpDataFileInterface prawnFile2 = prawnFileHandler.unmarshallPrawnFileXML(prawnXMLFilesNew.get(1).getCanonicalPath(), false);
 
-            long start1 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
-            long start2 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
+            if ((prawnFile1 != null) && (prawnFile2 != null)) {
+                long start1 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile1.getRun().get(0));
+                long start2 = PrawnFileUtilities.timeInMillisecondsOfRun(prawnFile2.getRun().get(0));
 
-            if (start1 > start2) {
-                prawnFile2.getRun().addAll(prawnFile1.getRun());
-                prawnFile2.setRuns((short) prawnFile2.getRun().size());
-                prawnSourceFile = new File(
-                        prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
-                        + "-JOIN-"
-                        + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
-                prawnFile = prawnFile2;
+                if (start1 > start2) {
+                    prawnFile2.getRun().addAll(prawnFile1.getRun());
+                    prawnFile2.setRuns((short) prawnFile2.getRun().size());
+                    prawnSourceFile = new File(
+                            prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
+                            + "-JOIN-"
+                            + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                    prawnFile = prawnFile2;
+                } else {
+                    prawnFile1.getRun().addAll(prawnFile2.getRun());
+                    prawnFile1.setRuns((short) prawnFile1.getRun().size());
+                    prawnSourceFile = new File(
+                            prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
+                            + "-JOIN-"
+                            + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                    prawnFile = prawnFile1;
+                }
+
+                updatePrawnFileHandlerWithFileLocation();
+                // write and read merged file to confirm conforms to schema
+                serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
+                prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
             } else {
-                prawnFile1.getRun().addAll(prawnFile2.getRun());
-                prawnFile1.setRuns((short) prawnFile1.getRun().size());
-                prawnSourceFile = new File(
-                        prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
-                        + "-JOIN-"
-                        + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
-                prawnFile = prawnFile1;
+                prawnFile = null;
             }
-
-            updatePrawnFileHandlerWithFileLocation();
-            // write and read merged file to confirm conforms to schema
-            serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
-            prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
         } else {
             throw new IOException("Two files not present");
         }
+        
+        return prawnFileExists();
     }
 
     public void updatePrawnFileHandlerWithFileLocation()

@@ -1285,6 +1285,10 @@ public class SquidReportSettingsController implements Initializable {
                 tables.add(table);
             }
 
+            if (currTable.isIsLabDataDefault()){
+                table.setIsLabDataDefault(true);
+                currTable.setIsLabDataDefault(false);
+            }
             if (table.isIsLabDataDefault()) {
                 if (isRefMat) {
                     Task.squidLabData.setDefaultReportTableRM(table);
@@ -1564,6 +1568,7 @@ public class SquidReportSettingsController implements Initializable {
                                         SquidMessageDialog.showWarningDialog("A category already exists with this name.", primaryStageWindow);
                                     } else {
                                         cell.getItem().setDisplayName(result.get());
+                                        isEditing.setValue(true);
                                         categoryListView.refresh();
                                     }
                                 }

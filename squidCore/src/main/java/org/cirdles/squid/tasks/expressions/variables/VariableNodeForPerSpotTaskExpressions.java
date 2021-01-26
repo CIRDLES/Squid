@@ -24,6 +24,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.divideWithZeroForNanResult;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
@@ -136,7 +137,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
                         if (uncertaintyDirective.compareTo(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
                             // index should be 1 from constructor
-                            values[1] = StrictMath.abs(values[1] / values[0] * 100.0);
+                            double value = StrictMath.abs(divideWithZeroForNanResult(values[1], values[0]) * 100.0);
+                            values[1] = StrictMath.abs(value);
                         }
 
                         // july 2018

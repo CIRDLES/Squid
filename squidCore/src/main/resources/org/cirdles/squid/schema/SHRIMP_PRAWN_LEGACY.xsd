@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+           attributeFormDefault="unqualified" 
+           elementFormDefault="qualified" 
+           targetNamespace="https://raw.githubusercontent.com"
+           xmlns="https://raw.githubusercontent.com">
+    <xs:annotation>
+        <xs:documentation xml:lang="en">
+            This schema defines the contents of a SHRIMP PRAWN data file,
+            with Software Version = SHRIMP II v2 SW representing
+            legacy PRAWN data files.
+                   
+            Copyright 2021 CIRDLES.org.
+
+            Licensed under the Apache License, Version 2.0 (the "License");
+            you may not use this file except in compliance with the License.
+            You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+            Unless required by applicable law or agreed to in writing, software
+            distributed under the License is distributed on an "AS IS" BASIS,
+            WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            See the License for the specific language governing permissions and
+            limitations under the License.
+
+            Created: 22.January.2021
+            
+        </xs:documentation>
+    </xs:annotation>    
+    <xs:element name="prawn_file">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="software_version" type="xs:string" />
+                <xs:element name="runs" type="xs:unsignedByte" />
+                <xs:element maxOccurs="unbounded" name="run">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="title" type="xs:string" />
+                            <xs:element name="sets" type="xs:unsignedByte" />
+                            <xs:element name="peaks" type="xs:unsignedByte" />
+                            <xs:element name="scans" type="xs:unsignedByte" />
+                            <xs:element name="dead_time_ns" type="xs:unsignedInt" />
+                            <xs:element name="sbm_zero_cps" type="xs:unsignedInt" />
+                            <xs:element name="autocentering" type="xs:string" />
+                            <xs:element name="qt1y_mode" type="xs:string" />
+                            <xs:element name="deflect_beam_between_peaks" type="xs:string" />
+                            <xs:element name="autocenter_method" type="xs:string" />
+                            <xs:element name="run_table">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="name" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="trim_mass" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="trim_mass_offset" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="count_time_sec" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="delay_sec" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="collector_focus" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="centering" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="centering_time_sec" type="xs:decimal" />
+                                        <xs:element maxOccurs="unbounded" name="reference" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="centering_frequency" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="detector" type="xs:string" />
+                                        <xs:element maxOccurs="unbounded" name="cup_settings" type="xs:string" />
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="set">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="date" type="xs:string" />
+                                        <xs:element name="time" type="xs:string" />
+                                        <xs:element name="qt1y" type="xs:short" />
+                                        <xs:element name="pbm" type="xs:string" />
+                                        <xs:element name="data">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element maxOccurs="unbounded" name="peak">
+                                                        <xs:complexType>
+                                                            <xs:sequence>
+                                                                <xs:element name="peak_name" type="xs:string" />
+                                                                <xs:element maxOccurs="unbounded" name="scan">
+                                                                    <xs:complexType>
+                                                                        <xs:sequence>
+                                                                            <xs:element name="scan_number" type="xs:unsignedByte" />
+                                                                            <xs:element name="trim_mass" type="xs:decimal" />
+                                                                            <xs:element name="time_stamp_sec" type="xs:decimal" />
+                                                                            <xs:element name="autocentering" type="xs:string" />
+                                                                            <xs:element maxOccurs="unbounded" name="ion_count" type="xs:unsignedInt" />
+                                                                            <xs:element maxOccurs="unbounded" name="norm_count" type="xs:unsignedInt" />
+                                                                        </xs:sequence>
+                                                                    </xs:complexType>
+                                                                </xs:element>
+                                                            </xs:sequence>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
