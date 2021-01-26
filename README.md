@@ -11,6 +11,9 @@ We encourage you to download
 and evaluate the latest release, the ".jar" file found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
 Squid3 requires Oracle's <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">Java 1.8</a>.  Java 1.9 and 1.10 are no longer supported and Java 1.11 through 1.17 involve major architectural changes that we have elected to avoid until 2024-2025.  You can read [here](https://en.wikipedia.org/wiki/Java_version_history) about the community's plans for Java.
 
+***UPDATE JAN 2021***
+[Liberica OpenJDK 8](https://bell-sw.com/pages/downloads/#/java-8-lts) also works: be sure to download the "full jre" or "full jdk".
+
 
 To contribute issues and feedback, please join GitHub <a href="https://github.com/" target="_blank">here</a>. While using Squid3,
 the help menu provides a link that

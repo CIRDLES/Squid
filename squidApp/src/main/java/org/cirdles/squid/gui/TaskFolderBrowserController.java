@@ -34,6 +34,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -170,6 +171,16 @@ public class TaskFolderBrowserController implements Initializable {
             e.printStackTrace();
         }
         populateListOfTasks();
+        
+        taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
+        taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
+        listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
+        listViewOfTasksInFolder.prefWidthProperty().bind(taskListAnchorPane.prefWidthProperty());
+
+        taskDetailAnchorPane.prefHeightProperty().bind(taskScrollPane.heightProperty());
+        taskDetailAnchorPane.prefWidthProperty().bind(taskScrollPane.widthProperty());
+        taskManagerGridPane.prefHeightProperty().bind(taskDetailAnchorPane.heightProperty());
+        taskManagerGridPane.prefWidthProperty().bind(taskDetailAnchorPane.widthProperty());
     }
 
     private void populateListOfTasks() {
@@ -280,7 +291,7 @@ public class TaskFolderBrowserController implements Initializable {
                 SquidMessageDialog.showWarningDialog("No valid Squid2.5 tasks found.", primaryStageWindow);
                 nameOfTasksFolderLabel.setText("No Valid Squid2.5 Tasks Selected");
             }
-            
+
             editTaskButton.setDisable(true);
             replaceTaskButton.setDisable(true);
             saveTaskButton.setDisable(true);
@@ -346,15 +357,15 @@ public class TaskFolderBrowserController implements Initializable {
 
             taskListAnchorPane.getChildren().add(listViewOfTasksInFolder);
 
-            taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
-            taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
-            listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
-            listViewOfTasksInFolder.prefWidthProperty().bind(taskListAnchorPane.prefWidthProperty());
-
-            taskDetailAnchorPane.prefHeightProperty().bind(taskScrollPane.heightProperty());
-            taskDetailAnchorPane.prefWidthProperty().bind(taskScrollPane.widthProperty());
-            taskManagerGridPane.prefHeightProperty().bind(taskDetailAnchorPane.heightProperty());
-            taskManagerGridPane.prefWidthProperty().bind(taskDetailAnchorPane.widthProperty());
+//            taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
+//            taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
+//            listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
+//            listViewOfTasksInFolder.prefWidthProperty().bind(taskListAnchorPane.prefWidthProperty());
+//
+//            taskDetailAnchorPane.prefHeightProperty().bind(taskScrollPane.heightProperty());
+//            taskDetailAnchorPane.prefWidthProperty().bind(taskScrollPane.widthProperty());
+//            taskManagerGridPane.prefHeightProperty().bind(taskDetailAnchorPane.heightProperty());
+//            taskManagerGridPane.prefWidthProperty().bind(taskDetailAnchorPane.widthProperty());
         }
     }
 
@@ -389,12 +400,6 @@ public class TaskFolderBrowserController implements Initializable {
 
         Collections.sort(allMasses, new IntuitiveStringComparator<>());
 
-//        allMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
-//        if (task.getIndexOfBackgroundSpecies() >= 0) {
-//            allMasses.add((allMasses.size() > task.getIndexOfBackgroundSpecies()
-//                    ? task.getIndexOfBackgroundSpecies() : allMasses.size()),
-//                    DEFAULT_BACKGROUND_MASS_LABEL);
-//        }
         int count = 1;
         for (String mass : allMasses) {
             StackPane massText;
@@ -405,14 +410,14 @@ public class TaskFolderBrowserController implements Initializable {
             } else {
                 massText = makeMassStackPane(mass, "white");
 
-//            if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
-//                massText = TaskEditorController.makeMassStackPane(mass, "pink");
-//            } else {
-//                massText = TaskEditorController.makeMassStackPane(mass, "white");
             }
             massText.setTranslateX(1 * count++);
             defaultMassesListTextFlow.getChildren().add(massText);
         }
+        // pad 
+        Label padLabel = new Label("        ");
+        padLabel.setTranslateX(1 * count++);
+        defaultMassesListTextFlow.getChildren().add(padLabel);
     }
 
     private void populateRatios(TaskInterface task) {

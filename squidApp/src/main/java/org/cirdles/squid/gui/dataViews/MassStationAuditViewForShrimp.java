@@ -33,6 +33,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -460,8 +461,9 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
     private void showSpotLabelOnGraph(GraphicsContext g2d, int spotIndex) {
         if (countOfScansCumulative.length > spotIndex) {
-            g2d.setFont(Font.font("SansSerif", 10));
-            g2d.setFill(Paint.valueOf("BLACK"));
+            //g2d.setFont(Font.font("SansSerif", FontWeight.BOLD, 11));
+            g2d.setFont(Font.font("SansSerif", 11));
+            g2d.setFill(Paint.valueOf("BLUE"));
             Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());
             text.applyCss();
             g2d.rotate(-90);

@@ -146,9 +146,13 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
      */
     private int haveMatchedTargetSpots() {
         int goalTargetBits = expressionTree.makeTargetBits();
+        // jan 2021
+        if (((ExpressionTree)expressionTree).doesHaveNoTargetSpots()){
+            goalTargetBits = 0;
+        }
         int targetBits = expressionTree.auditTargetMatchingII(goalTargetBits);
 
-        // make sure summary referes to correct target
+        // make sure summary refers to correct target
         if ((targetBits > 0) && expressionTree.isSquidSwitchSCSummaryCalculation()) {
             if (expressionTree.isSquidSwitchSTReferenceMaterialCalculation() || expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
                 if (targetBits != 2) {

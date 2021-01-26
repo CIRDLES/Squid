@@ -87,6 +87,8 @@ public interface ExpressionTreeInterface {
      * @return
      */
     public boolean isTypeFunctionOrOperation();
+    
+    public boolean builtAsValueModel();
 
     public boolean amHealthy();
 

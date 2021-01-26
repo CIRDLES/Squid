@@ -551,6 +551,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
+            // jan 2021 issue #564
+            if (customExp.getName().contains("_WM_")){
+                String targetSampleName = customExp.getName().split("_WM_")[1].trim();
+                customExp.getExpressionTree().setUnknownsGroupSampleName(targetSampleName);
+            }
             taskExpressionsOrdered.add(customExp);
         }
 
@@ -2328,6 +2333,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 evaluateExpressionForSpot(expressionTree, spot);
             }
         }
+        
+        // jan 2021
+        if (spotsForExpression.isEmpty()){
+            ((ExpressionTree)expressionTree).setHasNoTargetSpots(true);
+        }
     }
 
     private void evaluateExpressionForSpot(
@@ -2746,7 +2756,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             if (squidWeightedMeanPlotSortTable == null) {
                 squidWeightedMeanPlotSortTable
                         = SquidReportTable.createDefaultSquidReportTableUnknownSquidFilter(this, SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION);
-                squidWeightedMeanPlotSortTable.setIsDefault(false);
+                squidWeightedMeanPlotSortTable.setIsBuiltInSquidDefault(false);
                 squidWeightedMeanPlotSortTable.setIsLabDataDefault(false);
                 squidLabData.setSpecialWMSortingReportTable(squidWeightedMeanPlotSortTable);
             }

@@ -293,7 +293,7 @@ public class CalamariFileUtilities {
      * Loads PrawnFile schema locally for use when Internet connection not
      * available.
      */
-    public static void loadShrimpPrawnFileSchema() {
+    public static void loadShrimpFileSchema() {
         ResourceExtractor prawnFileResourceExtractor
                 = new ResourceExtractor(Squid.class);
         try {
@@ -305,6 +305,15 @@ public class CalamariFileUtilities {
                 File shrimpPrawnFileSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
 
                 if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
+                    //System.out.println("SHRIMP_PRAWN.xsd added.");
+                } else {
+                    //System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
+                }
+
+                File shrimpPrawnLegacyFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN_LEGACY.xsd");
+                File shrimpPrawnLegacyFileSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SHRIMP_PRAWN_LEGACY.xsd");
+
+                if (shrimpPrawnLegacyFileSchemaResource.renameTo(shrimpPrawnLegacyFileSchema)) {
                     //System.out.println("SHRIMP_PRAWN.xsd added.");
                 } else {
                     //System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
