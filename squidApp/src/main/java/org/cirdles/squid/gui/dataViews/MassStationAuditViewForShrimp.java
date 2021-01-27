@@ -26,6 +26,7 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -33,14 +34,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import org.cirdles.squid.gui.SquidUIController;
-import static org.cirdles.squid.gui.SquidUIController.selectedRunsForRestore;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
@@ -77,7 +75,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
     private List<PrawnFile.Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
-    private MenuItem spotContextMenuItem1R;
+    private Menu spotRestoreMenu;
+    private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
 
@@ -134,12 +133,11 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * implementation
      */
     private void setupSpotContextMenu() {
-        spotContextMenuItem1 = new MenuItem("Remove selected spot.");
+        spotContextMenuItem1 = new MenuItem();
         spotContextMenuItem1.setOnAction((evt) -> {
 
             if (indexOfSelectedSpot >= 0) {
                 squidProject.removeRunsFromPrawnFile(selectedRuns);
-                SquidUIController.selectedRunsForRestore.addAll(selectedRuns);
 
                 squidProject.generatePrefixTreeFromSpotNames();
                 SquidProject.setProjectChanged(true);
@@ -148,21 +146,13 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
         });
 
-        spotContextMenuItem1R = new MenuItem("Restore last removed spot.");
-        spotContextMenuItem1R.setOnAction((evt) -> {
-            if (indexOfSelectedSpot >= 0) {
+        spotRestoreMenu = new Menu("Restore spots ...");
 
-                squidProject.restoreRunsToPrawnFile(selectedRunsForRestore);
-                selectedRunsForRestore.clear();
+        prawnFileSplitMenu = new Menu("Split Prawn file ...");
 
-                squidProject.generatePrefixTreeFromSpotNames();
-                SquidProject.setProjectChanged(true);
-                massAuditRefreshInterface.updateSpotsInGraphs();
-            }
+        spotContextMenu.getItems().addAll(spotContextMenuItem1, prawnFileSplitMenu);
 
-        });
-
-        splitRunsOriginalMenuItem = new MenuItem("Split Prawn file starting with this run, using original unedited.");
+        splitRunsOriginalMenuItem = new MenuItem("Split at this run, using original unedited.");
         splitRunsOriginalMenuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = prawnFileRuns.get(indexOfSelectedSpot);
             if (selectedRun != null) {
@@ -189,7 +179,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
             }
         });
 
-        splitRunsEditedMenuItem = new MenuItem("Split Prawn file starting with this run, using edits.");
+        splitRunsEditedMenuItem = new MenuItem("Split at this run, using edits.");
         splitRunsEditedMenuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = prawnFileRuns.get(indexOfSelectedSpot);
             if (selectedRun != null) {
@@ -215,7 +205,8 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                 }
             }
         });
-        spotContextMenu.getItems().addAll(spotContextMenuItem1, splitRunsOriginalMenuItem, splitRunsEditedMenuItem);
+
+        prawnFileSplitMenu.getItems().addAll(splitRunsOriginalMenuItem, splitRunsEditedMenuItem);
 
     }
 
@@ -224,41 +215,54 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
         @Override
         public void handle(MouseEvent mouseEvent) {
             spotContextMenu.hide();
+            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
+            if (secondIndex == -1) {
+                secondIndex = indexOfSelectedSpot;
+            }
+            selectedRuns = new ArrayList<>();
+            if (indexOfSelectedSpot >= 0) {
+                boolean increasing = (secondIndex >= indexOfSelectedSpot);
+                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
+                        index <= (increasing ? secondIndex : indexOfSelectedSpot);
+                        index++) {
+                    selectedRuns.add(prawnFileRuns.get(index));
+                }
+            }
+            if (selectedRuns.size() > 1) {
+                spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
+            } else {
+                spotContextMenuItem1.setText("Remove selected spot.");
+            }
+
+            prawnFileSplitMenu.setDisable(selectedRuns.size() > 1);
 
             if ((indexOfSelectedSpot > -1) && (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0)) {
                 // customize spotContextMenu
-                if (!selectedRunsForRestore.isEmpty()) {
-                    spotContextMenu.getItems().add(0, spotContextMenuItem1R);
-                    if (selectedRunsForRestore.size() > 1) {
-                        spotContextMenuItem1R.setText("Restore removed set of " + selectedRunsForRestore.size() + " spots.");
-                    } else {
-                        spotContextMenuItem1R.setText("Restore removed spot.");
+                if (!squidProject.getRemovedRuns().isEmpty()) {
+                    spotContextMenu.getItems().add(0, spotRestoreMenu);
+                    spotRestoreMenu.getItems().clear();
+                    MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
+                    spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
+                    restoreAllSpotMenuItem.setOnAction((evt) -> {
+                        squidProject.restoreAllRunsToPrawnFile();
+                        squidProject.generatePrefixTreeFromSpotNames();
+                        SquidProject.setProjectChanged(true);
+                        massAuditRefreshInterface.updateSpotsInGraphs();
+                    });
+                    // list all removed runs
+                    for (Run run : squidProject.getRemovedRuns()) {
+                        MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
+                        spotRestoreMenu.getItems().add(restoreSpotMenuItem);
+                        restoreSpotMenuItem.setOnAction((evt) -> {
+                            squidProject.restoreRunToPrawnFile(run);
+                            squidProject.generatePrefixTreeFromSpotNames();
+                            SquidProject.setProjectChanged(true);
+                            massAuditRefreshInterface.updateSpotsInGraphs();
+                        });
                     }
                 } else {
-                    spotContextMenu.getItems().remove(spotContextMenuItem1R);
+                    spotContextMenu.getItems().remove(spotRestoreMenu);
                 }
-
-                int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
-                if (secondIndex == -1) {
-                    secondIndex = indexOfSelectedSpot;
-                }
-                selectedRuns = new ArrayList<>();
-                if (indexOfSelectedSpot >= 0) {
-                    boolean increasing = (secondIndex >= indexOfSelectedSpot);
-                    for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
-                            index <= (increasing ? secondIndex : indexOfSelectedSpot);
-                            index++) {
-                        selectedRuns.add(prawnFileRuns.get(index));
-                    }
-                }
-                if (selectedRuns.size() > 1) {
-                    spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
-                } else {
-                    spotContextMenuItem1.setText("Remove selected spot.");
-                }
-
-                splitRunsOriginalMenuItem.setDisable(selectedRuns.size() > 1);
-                splitRunsEditedMenuItem.setDisable(selectedRuns.size() > 1);
 
                 spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
                         mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
