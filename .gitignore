@@ -49,15 +49,18 @@ test_*
 EXPRESSION.HTML
 squidApp/LudwigLibraryJavadoc/
 squidApp/Schema/
+squidApp/Squid3_Resources/
+squidApp/Squid3_Reports_v?.?.?
+squidApp/XSLTML/
+
 squidCore/LudwigLibraryJavadoc/
 squidCore/Schema/
+squidCore/out
+
 LudwigLibraryJavadoc/
 Schema/
 /Schema/
-squidApp/Squid3_Reports_v?.?.?
-squidApp/XSLTML/
 XSLTML/
-squidCore/out
 
 
 squidCore/expressionsImages
