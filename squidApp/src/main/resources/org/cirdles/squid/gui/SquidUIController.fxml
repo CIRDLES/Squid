@@ -220,8 +220,9 @@
                                     <Image url="@images/SquidLogoSansBg.png" />
                                  </image>
                               </ImageView>
-                              <Label alignment="CENTER" prefHeight="68.0" prefWidth="248.0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-family: SansSerif;" text="Squid 3" textFill="#fffdfd" />
-                              <Label fx:id="squidVersionLabel" alignment="CENTER" layoutX="10.0" layoutY="256.0" prefHeight="68.0" prefWidth="248.0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-family: SansSerif;" text="v1.0.0.0" textFill="#fffdfd" />
+                              <Label alignment="CENTER" prefHeight="68.0" prefWidth="248.0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-family: SansSerif;" text="Squid3" textFill="#fffdfd" />
+                              <Label fx:id="squidVersionLabel" alignment="CENTER" layoutX="10.0" layoutY="256.0" prefHeight="35.0" prefWidth="248.0" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-family: SansSerif;" text="v1.0.0.0" textFill="#fffdfd" />
+                              <Label fx:id="versionBuildDate" alignment="CENTER" layoutX="10.0" layoutY="414.0" prefHeight="24.0" prefWidth="248.0" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-family: SansSerif;" text="build date" textFill="#fffdfd" />
                            </children>
                            <opaqueInsets>
                               <Insets />

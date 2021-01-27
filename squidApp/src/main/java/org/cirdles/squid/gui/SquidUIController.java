@@ -234,6 +234,8 @@ public class SquidUIController implements Initializable {
     private MenuItem browseTaskFolderTaskMenuItem1;
     @FXML
     private Label squidVersionLabel;
+    @FXML
+    private Label versionBuildDate;
 
     /**
      * Initializes the controller class.
@@ -245,6 +247,7 @@ public class SquidUIController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         squidVersionLabel.setText("v" + Squid.VERSION);
+        versionBuildDate.setText(Squid.RELEASE_DATE);
 
         initSaveMenuItemDisabling();
 
