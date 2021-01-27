@@ -42,6 +42,8 @@ import java.util.logging.Logger;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**

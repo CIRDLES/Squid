@@ -136,7 +136,7 @@ public abstract class AbstractDataView extends Canvas {
         relocate(x, y);
         g2d.clearRect(0, 0, width, height);
     }
-
+    
     /**
      *
      * @param g2d
@@ -146,7 +146,7 @@ public abstract class AbstractDataView extends Canvas {
 
         drawBorder(g2d);
     }
-
+    
     public void repaint() {
         paint(this.getGraphicsContext2D());
     }
@@ -162,7 +162,7 @@ public abstract class AbstractDataView extends Canvas {
         g2d.strokeRect(1, 1, width - 1, height - 1);
 
     }
-
+    
     /**
      *
      * @param x
