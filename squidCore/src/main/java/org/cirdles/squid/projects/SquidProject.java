@@ -48,7 +48,6 @@ import org.xml.sax.SAXException;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -90,8 +89,10 @@ public final class SquidProject implements Serializable {
     private ParametersModel physicalConstantsModel;
     private ParametersModel commonPbModel;
     private boolean squidAllowsAutoExclusionOfSpots;
+
     // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
     private double extPErrU;
+
     // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
     private double extPErrTh;
     private Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
@@ -99,6 +100,16 @@ public final class SquidProject implements Serializable {
     private boolean userLinFits;
 
     private TaskTypeEnum projectType;
+
+    // jan 2021 issue #547
+    private List<Run> removedRuns;
+
+    public List<Run> getRemovedRuns() {
+        if (removedRuns == null) {
+            removedRuns = new ArrayList<>();
+        }
+        return removedRuns;
+    }
 
     /**
      *
@@ -143,6 +154,8 @@ public final class SquidProject implements Serializable {
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
                 = SquidPersistentState.getExistingPersistentState().getTaskDesign().getDelimiterForUnknownNames();
+
+        this.removedRuns = new ArrayList<>();
 
     }
 
@@ -328,6 +341,7 @@ public final class SquidProject implements Serializable {
 
         OPFileHandler opFileHandler = new OPFileHandler();
         prawnFile = opFileHandler.convertOPFileToPrawnFile(opFileNew);
+        removedRuns = new ArrayList<>();
 
         if (prawnFileExists()) {
             retVal = true;
@@ -348,6 +362,7 @@ public final class SquidProject implements Serializable {
         // determine whether legacy or modern Prawn XML file
         // if Legacy, then it has to be read in and translated to modern by unmarshall
         prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+        removedRuns = new ArrayList<>();
 
         if (prawnFileExists()) {
             retVal = true;
@@ -391,13 +406,14 @@ public final class SquidProject implements Serializable {
                 // write and read merged file to confirm conforms to schema
                 serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
                 prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
+                removedRuns = new ArrayList<>();
             } else {
                 prawnFile = null;
             }
         } else {
             throw new IOException("Two files not present");
         }
-        
+
         return prawnFileExists();
     }
 
@@ -682,24 +698,43 @@ public final class SquidProject implements Serializable {
 
     public void removeRunsFromPrawnFile(List<Run> runs) {
 
-        for (Run run : runs) {
-            prawnFile.getRun().remove(run);
-        }
+        prawnFile.getRun().removeAll(runs);
+        removedRuns.addAll(runs);
 
         // save new count
         prawnFile.setRuns((short) prawnFile.getRun().size());
 
         // update fractions
         ((Task) task).setupSquidSessionSkeleton();
-
     }
 
-    public void restoreRunsToPrawnFile(List<Run> runs) {
+    public void restoreRunToPrawnFile(Run run) {
+        prawnFile.getRun().add(run);
+        removedRuns.remove(run);
 
-        for (Run run : runs) {
-            prawnFile.getRun().add(run);
-        }
+        updatePrawnRunsSorting();
+        // save new count
+        prawnFile.setRuns((short) prawnFile.getRun().size());
 
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();
+    }
+
+    public void restoreAllRunsToPrawnFile() {
+
+        prawnFile.getRun().addAll(removedRuns);
+        removedRuns.clear();
+
+        updatePrawnRunsSorting();
+
+        // save new count
+        prawnFile.setRuns((short) prawnFile.getRun().size());
+
+        // update fractions
+        ((Task) task).setupSquidSessionSkeleton();
+    }
+
+    private void updatePrawnRunsSorting() {
         Collections.sort(prawnFile.getRun(), new Comparator<Run>() {
             @Override
             public int compare(Run run1, Run run2) {
@@ -718,29 +753,12 @@ public final class SquidProject implements Serializable {
                 return Long.compare(run1DateTimeMilliseconds, run2DateTimeMilliseconds);
             }
         });
-
-        // save new count
-        prawnFile.setRuns((short) prawnFile.getRun().size());
-
-        // update fractions
-        ((Task) task).setupSquidSessionSkeleton();
-
     }
 
     public static String generateDateTimeMillisecondsStringForRun(Run run) {
         return run.getSet().getPar().get(0).getValue()
                 + " " + run.getSet().getPar().get(1).getValue()
                 + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
-    }
-
-    public void removeRunFromPrawnFile(Run run) {
-        prawnFile.getRun().remove(run);
-
-        // save new count
-        prawnFile.setRuns((short) prawnFile.getRun().size());
-
-        // update fractions
-        ((Task) task).setupSquidSessionSkeleton();
     }
 
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {

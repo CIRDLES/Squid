@@ -79,8 +79,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
@@ -117,12 +115,7 @@ public class SquidUIController implements Initializable {
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
-    public static List<PrawnFile.Run> selectedRunsForRestore = new ArrayList<>();
-
     private static Map<String, String> taskLibraryDescriptions = new HashMap<>();
-
-    @FXML
-    private ImageView squidImageView;
 
     private static GridPane projectManagerUI;
 
@@ -220,7 +213,6 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private Menu openRecentExpressionFileMenu;
-    private Menu squidLabDataMenu;
     @FXML
     private Menu commonPbMenu;
     @FXML
@@ -240,6 +232,10 @@ public class SquidUIController implements Initializable {
     private MenuItem browseTaskFolderTaskMenuItem;
     @FXML
     private MenuItem browseTaskFolderTaskMenuItem1;
+    @FXML
+    private Label squidVersionLabel;
+    @FXML
+    private Label versionBuildDate;
 
     /**
      * Initializes the controller class.
@@ -249,13 +245,9 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // center Logo
-        mainPane.heightProperty().addListener((ov, oldValue, newValue) -> {
-            AnchorPane.setTopAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitHeight() / 2.0);
-        });
-        mainPane.widthProperty().addListener((ov, oldValue, newValue) -> {
-            AnchorPane.setLeftAnchor(squidImageView, newValue.doubleValue() / 2.0 - squidImageView.getFitWidth() / 2.0);
-        });
+
+        squidVersionLabel.setText("v" + Squid.VERSION);
+        versionBuildDate.setText(Squid.RELEASE_DATE);
 
         initSaveMenuItemDisabling();
 
@@ -733,9 +725,7 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
-
-                selectedRunsForRestore.clear();
-
+                
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();
 

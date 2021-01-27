@@ -21,6 +21,9 @@
 */
 package org.cirdles.squid.prawnLegacy;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 
 
@@ -155,8 +159,7 @@ import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
     "run"
 })
 @XmlRootElement(name = "prawn_file")
-public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializable {
-//    private static final long serialVersionUID = ;
+public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface {
 
     @XmlElement(name = "software_version", required = true)
     protected String softwareVersion;
@@ -173,6 +176,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
      *     {@link String }
      *     
      */
+    @Override
     public String getSoftwareVersion() {
         return softwareVersion;
     }
@@ -185,6 +189,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
      *     {@link String }
      *     
      */
+    @Override
     public void setSoftwareVersion(String value) {
         this.softwareVersion = value;
     }
@@ -192,6 +197,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
     /**
      * Gets the value of the runs property.
      * 
+     * @return 
      */
     public short getRuns() {
         return runs;
@@ -200,7 +206,9 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
     /**
      * Sets the value of the runs property.
      * 
+     * @param value
      */
+    @Override
     public void setRuns(short value) {
         this.runs = value;
     }
@@ -412,6 +420,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Gets the value of the sets property.
          * 
+         * @return 
          */
         public short getSets() {
             return sets;
@@ -420,6 +429,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Sets the value of the sets property.
          * 
+         * @param value
          */
         public void setSets(short value) {
             this.sets = value;
@@ -428,6 +438,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Gets the value of the peaks property.
          * 
+         * @return 
          */
         public short getPeaks() {
             return peaks;
@@ -436,6 +447,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Sets the value of the peaks property.
          * 
+         * @param value
          */
         public void setPeaks(short value) {
             this.peaks = value;
@@ -444,6 +456,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Gets the value of the scans property.
          * 
+         * @return 
          */
         public short getScans() {
             return scans;
@@ -452,6 +465,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Sets the value of the scans property.
          * 
+         * @param value
          */
         public void setScans(short value) {
             this.scans = value;
@@ -460,6 +474,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Gets the value of the deadTimeNs property.
          * 
+         * @return 
          */
         public int getDeadTimeNs() {
             return deadTimeNs;
@@ -468,6 +483,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Sets the value of the deadTimeNs property.
          * 
+         * @param value
          */
         public void setDeadTimeNs(int value) {
             this.deadTimeNs = value;
@@ -476,6 +492,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Gets the value of the sbmZeroCps property.
          * 
+         * @return 
          */
         public int getSbmZeroCps() {
             return sbmZeroCps;
@@ -484,6 +501,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
         /**
          * Sets the value of the sbmZeroCps property.
          * 
+         * @param value
          */
         public void setSbmZeroCps(int value) {
             this.sbmZeroCps = value;
@@ -727,10 +745,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getName() {
                 if (name == null) {
-                    name = new ArrayList<String>();
+                    name = new ArrayList<>();
                 }
                 return this.name;
             }
@@ -756,10 +775,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getTrimMass() {
                 if (trimMass == null) {
-                    trimMass = new ArrayList<BigDecimal>();
+                    trimMass = new ArrayList<>();
                 }
                 return this.trimMass;
             }
@@ -785,10 +805,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getTrimMassOffset() {
                 if (trimMassOffset == null) {
-                    trimMassOffset = new ArrayList<BigDecimal>();
+                    trimMassOffset = new ArrayList<>();
                 }
                 return this.trimMassOffset;
             }
@@ -814,10 +835,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getCountTimeSec() {
                 if (countTimeSec == null) {
-                    countTimeSec = new ArrayList<BigDecimal>();
+                    countTimeSec = new ArrayList<>();
                 }
                 return this.countTimeSec;
             }
@@ -843,10 +865,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getDelaySec() {
                 if (delaySec == null) {
-                    delaySec = new ArrayList<BigDecimal>();
+                    delaySec = new ArrayList<>();
                 }
                 return this.delaySec;
             }
@@ -872,10 +895,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getCollectorFocus() {
                 if (collectorFocus == null) {
-                    collectorFocus = new ArrayList<BigDecimal>();
+                    collectorFocus = new ArrayList<>();
                 }
                 return this.collectorFocus;
             }
@@ -901,10 +925,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getCentering() {
                 if (centering == null) {
-                    centering = new ArrayList<String>();
+                    centering = new ArrayList<>();
                 }
                 return this.centering;
             }
@@ -930,10 +955,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link BigDecimal }
              * 
              * 
+             * @return 
              */
             public List<BigDecimal> getCenteringTimeSec() {
                 if (centeringTimeSec == null) {
-                    centeringTimeSec = new ArrayList<BigDecimal>();
+                    centeringTimeSec = new ArrayList<>();
                 }
                 return this.centeringTimeSec;
             }
@@ -959,10 +985,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getReference() {
                 if (reference == null) {
-                    reference = new ArrayList<String>();
+                    reference = new ArrayList<>();
                 }
                 return this.reference;
             }
@@ -988,10 +1015,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getCenteringFrequency() {
                 if (centeringFrequency == null) {
-                    centeringFrequency = new ArrayList<String>();
+                    centeringFrequency = new ArrayList<>();
                 }
                 return this.centeringFrequency;
             }
@@ -1017,10 +1045,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getDetector() {
                 if (detector == null) {
-                    detector = new ArrayList<String>();
+                    detector = new ArrayList<>();
                 }
                 return this.detector;
             }
@@ -1046,10 +1075,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
              * {@link String }
              * 
              * 
+             * @return 
              */
             public List<String> getCupSettings() {
                 if (cupSettings == null) {
-                    cupSettings = new ArrayList<String>();
+                    cupSettings = new ArrayList<>();
                 }
                 return this.cupSettings;
             }
@@ -1491,6 +1521,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
                         /**
                          * Gets the value of the scanNumber property.
                          * 
+                         * @return 
                          */
                         public short getScanNumber() {
                             return scanNumber;
@@ -1499,6 +1530,7 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
                         /**
                          * Sets the value of the scanNumber property.
                          * 
+                         * @param value
                          */
                         public void setScanNumber(short value) {
                             this.scanNumber = value;
@@ -1597,10 +1629,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
                          * {@link Integer }
                          * 
                          * 
+                         * @return 
                          */
                         public List<Integer> getIonCount() {
                             if (ionCount == null) {
-                                ionCount = new ArrayList<Integer>();
+                                ionCount = new ArrayList<>();
                             }
                             return this.ionCount;
                         }
@@ -1626,10 +1659,11 @@ public class PrawnLegacyFile implements ShrimpDataLegacyFileInterface, Serializa
                          * {@link Long }
                          * 
                          * 
+                         * @return 
                          */
                         public List<Long> getNormCount() {
                             if (normCount == null) {
-                                normCount = new ArrayList<Long>();
+                                normCount = new ArrayList<>();
                             }
                             return this.normCount;
                         }
