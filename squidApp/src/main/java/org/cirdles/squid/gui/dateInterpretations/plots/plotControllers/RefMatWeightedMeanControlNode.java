@@ -15,9 +15,16 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,21 +33,28 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Path;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotSummaryDetails;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewCheckBox;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewString;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.defaultRefMatWMSortingCategories;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.utilities.FileUtilities;
+import org.cirdles.squid.utilities.OsCheck;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -94,16 +108,19 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         HBox plotChoiceHBox = plotChoiceHBox();
         HBox corrChoiceHBox = new RefMatWeightedMeanToolBoxNode(plotsController);
         HBox sortingToolBox = sortedHBox();
+        HBox exportToSVGHBox = exportButtonHBox();
 
         Path separator1 = separator(20.0F);
         Path separator2 = separator(20.0F);
         Path separator3 = separator(20.0F);
+        Path separator4 = separator(20.0F);
 
         getChildren().addAll(
                 autoExcludeSpotsCheckBox, showExcludedSpotsCheckBox,
                 separator1, plotChoiceHBox,
                 separator2, corrChoiceHBox,
-                separator3, sortingToolBox);
+                separator3, sortingToolBox,
+                separator4, exportToSVGHBox);
     }
 
     private CheckBox autoExcludeSpotsCheckBox() {
@@ -175,8 +192,8 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
 
         HBox sortingHBox = new HBox(5);
 
-        Label sortedByLabel = new Label("Sorted Ascending by:");
-        formatNode(sortedByLabel, 125);
+        Label sortedByLabel = new Label("Sort ASC by:");
+        formatNode(sortedByLabel, 75);
 
         formatNode(categorySortComboBox, 100);
         categorySortComboBox.setPromptText("Category");
@@ -193,7 +210,7 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
             }
         });
 
-        formatNode(expressionSortComboBox, 115);
+        formatNode(expressionSortComboBox, 110);
         expressionSortComboBox.setPromptText("Expression");
         expressionSortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
@@ -211,6 +228,108 @@ public class RefMatWeightedMeanControlNode extends HBox implements ToolBoxNodeIn
         sortingHBox.getChildren().addAll(sortedByLabel, categorySortComboBox, expressionSortComboBox);
 
         return sortingHBox;
+    }
+    
+    private HBox exportButtonHBox() {
+        HBox exportHBox = new HBox(2);
+        
+        Button saveToNewFileButton = new Button("To SVG");
+        formatNode(saveToNewFileButton, 50);
+        saveToNewFileButton.setStyle("-fx-font-size: 11px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    writeWeightedMeanSVG();
+                }
+                catch(IOException ex) {
+                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                    ex.printStackTrace();
+                }  
+            }
+        });
+        
+        exportHBox.getChildren().addAll(saveToNewFileButton);
+        
+        return exportHBox;
+    }
+    
+    private void writeWeightedMeanSVG() throws IOException {
+        if (squidProject.hasReportsFolder()) {
+            WeightedMeanPlot myPlot = (WeightedMeanPlot) plot;
+            String expressionName = myPlot.getAgeOrValueLookupString().split(" ")[0];
+            TreeView<SampleTreeNodeInterface> activeTreeView = spotsTreeViewString;
+            if (!autoExcludeSpotsCheckBox().isSelected()) {
+                activeTreeView = spotsTreeViewCheckBox;
+            }
+            String reportFileNameSVG = expressionName.replace("/", "_") + ".svg";
+            String reportFileNamePDF = expressionName.replace("/", "_") + ".pdf";
+    
+            try {
+                File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
+                File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
+                
+                if (reportFileSVG != null) {
+                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                    boolean confirmedExists = false;
+                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                    if (reportFileSVG.exists()) {
+                        switch (osType) {
+                            case Windows:
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                    writeReport.setValue(false);
+                                }
+                                break;
+                            case MacOS:
+                            case Linux:
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                    alert.showAndWait().ifPresent(action -> {
+                                        if (action != ButtonType.OK) {
+                                            writeReport.setValue(false);
+                                        }
+                                    });
+                                    confirmedExists = true;
+                                }
+                                break;
+                        }
+                    }
+                    if (writeReport.getValue()) {
+                        if (reportFileSVG.exists()) {
+                            if (!confirmedExists) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                        "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
+                                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                alert.showAndWait().ifPresent(action -> {
+                                    if (action.equals(ButtonType.CANCEL)) {
+                                        writeReport.setValue(false);
+                                    }
+                                });
+                            }
+                        }
+                        if (writeReport.getValue()) {
+                            myPlot.outputToSVG(reportFileSVG);
+                            myPlot.outputToPDF(reportFileSVG);
+                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
+                        }
+                    }
+                }
+            } catch (NoSuchFileException e) {
+                SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
+            } catch (java.nio.file.FileSystemException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
+            } catch (IOException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
+            }
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+        
     }
 
     /**
