@@ -657,7 +657,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     }
     
-    public void paintX(Graphics2D g2d) {
+    private void paintToSVG(Graphics2D g2d) {
         g2d.clearRect(0, 0, (int)width, (int)height);
         
         g2d.setPaint(java.awt.Color.WHITE);
@@ -693,16 +693,20 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             // section for sample wms
             text.setText("Wtd Mean of " + ageOrValueLookupString);
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
             if (adaptToAgeInMA) {
+                g2d.drawString(text.getText(), rightOfText - 8 - textWidth, currentTextHeightPixels);
                 g2d.drawString(squid3RoundedToSize(weightedMeanStats[0] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+            } else if (ageOrValueLookupString.contains("/")) {
+                g2d.drawString(text.getText(), rightOfText - 3 - textWidth, currentTextHeightPixels);
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[0], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
+                g2d.drawString(text.getText(), rightOfText - 5 - textWidth, currentTextHeightPixels);
                 g2d.drawString(squid3RoundedToSize(weightedMeanStats[0], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
             }
 
             text.setText("1-sigmaAbs");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(text.getText(), rightOfText - 4 - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
                 g2d.drawString(squid3RoundedToSize(weightedMeanStats[1] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
@@ -728,12 +732,12 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(text.getText(), rightOfText + 3 - textWidth, currentTextHeightPixels += heightOffset);
             g2d.drawString(squid3RoundedToSize(weightedMeanStats[4], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("Prob. of fit");
-            textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            textWidth = (int) text.getLayoutBounds().getWidth(); 
+            g2d.drawString(text.getText(), rightOfText - 7 - textWidth, currentTextHeightPixels += heightOffset);
             g2d.drawString(squid3RoundedToSize(weightedMeanStats[5], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("n");
@@ -745,40 +749,40 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             text.setText("Wtd Mean of Ref Mat Pb/" + ((String) (ageOrValueLookupString.contains("Th") ? "Th" : "U")) + " calibr.");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels);
-            g2d.drawString(Double.toString(weightedMeanStats[0]), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.drawString(text.getText(), rightOfText - 3 - textWidth, currentTextHeightPixels);  
+            g2d.drawString(Double.toString(weightedMeanStats[0]), rightOfText + 5 + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.drawString(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.drawString(text.getText(), rightOfText - 1 - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + 5 + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3  external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(text.getText(), rightOfText - 9  - textWidth, currentTextHeightPixels += heightOffset);
             double min206238ExtOneSigmaPct = weightedMeanRefreshInterface.getTaskParameterExtPErrU();
             if (weightedMeanStats[6] == 0.0) {
                 g2d.drawString(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = 0.0 %)",
-                        rightOfText + widthOffset, currentTextHeightPixels);
+                        rightOfText + 5 + widthOffset, currentTextHeightPixels);
             } else {
                 double externalSpotToSpotError = weightedMeanStats[1] / weightedMeanStats[0] * 100.0;
                 if (min206238ExtOneSigmaPct > externalSpotToSpotError) {
                     g2d.drawString(Double.toString(min206238ExtOneSigmaPct) + " (1\u03C3 ext error = " + externalSpotToSpotError + " %)",
-                            rightOfText + widthOffset, currentTextHeightPixels);
+                            rightOfText + 5 + widthOffset, currentTextHeightPixels);
                 } else {
                     g2d.drawString(Double.toString(externalSpotToSpotError) + " (min 1\u03C3 ext error = " + min206238ExtOneSigmaPct + " %)",
-                            rightOfText + widthOffset, currentTextHeightPixels);
+                            rightOfText + 5 + widthOffset, currentTextHeightPixels);
                 }
             }
             text.setText("MSWD");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.drawString(Double.toString(weightedMeanStats[4]), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.drawString(text.getText(), rightOfText + 6 - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[4]), rightOfText + 5 + widthOffset, currentTextHeightPixels);
 
             text.setText("Prob. of fit");
             textWidth = (int) text.getLayoutBounds().getWidth();
-            g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.drawString(Double.toString(weightedMeanStats[5]), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.drawString(text.getText(), rightOfText - 2 - textWidth, currentTextHeightPixels += heightOffset);
+            g2d.drawString(Double.toString(weightedMeanStats[5]), rightOfText + 5 + widthOffset, currentTextHeightPixels);
 
         }
 
@@ -1003,7 +1007,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         SVGGraphics2D svgGenerator = new SVGGraphics2D(document);
 
         // Ask the test to render into the SVG Graphics2D implementation.
-        paintX(svgGenerator);
+        paintToSVG(svgGenerator);
 
         // Finally, stream out SVG to the standard output using
         // UTF-8 encoding.
