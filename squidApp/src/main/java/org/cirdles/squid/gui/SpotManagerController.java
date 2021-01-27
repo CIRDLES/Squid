@@ -38,6 +38,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SplitPane;
@@ -54,7 +55,6 @@ import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.parametersLauncher;
-import static org.cirdles.squid.gui.SquidUIController.selectedRunsForRestore;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
@@ -67,6 +67,7 @@ import static org.cirdles.squid.parameters.util.RadDates.age207_206r;
 import static org.cirdles.squid.parameters.util.RadDates.age208_232r;
 import static org.cirdles.squid.parameters.util.ReferenceMaterialEnum.r238_235s;
 import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.projects.SquidProject;
 
 /**
@@ -143,8 +144,9 @@ public class SpotManagerController implements Initializable {
     private ComboBox<String> sampleNameComboBox;
 
     private List<PrawnFile.Run> selectedRuns = new ArrayList<>();
-    private MenuItem spotContextMenuItem1;
-    private MenuItem spotContextMenuItem1R;
+    private MenuItem spotContextRemoveSpotsMenuItem;
+    private Menu spotRestoreMenu;
+    private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
     @FXML
@@ -245,8 +247,9 @@ public class SpotManagerController implements Initializable {
         filterRuns(squidProject.getFilterForConcRefMatSpotNames());
         updateConcReferenceMaterialsList(false);
 
-        // restore spot list to full population
-        filterRuns("");
+        // restore spot list to full selected population
+        filterRuns(sampleNameComboBox.getSelectionModel().getSelectedIndex() >= 1
+                ? sampleNameComboBox.getSelectionModel().getSelectedItem() : "");
     }
 
     private void setUpShrimpFractionList()
@@ -304,38 +307,26 @@ public class SpotManagerController implements Initializable {
     private ContextMenu createAllSpotsViewContextMenu()
             throws SquidException {
         ContextMenu contextMenu = new ContextMenu();
-        spotContextMenuItem1 = new MenuItem("Remove selected spot(s).");
-        spotContextMenuItem1.setOnAction((evt) -> {
+        spotContextRemoveSpotsMenuItem = new MenuItem();
+        spotContextRemoveSpotsMenuItem.setOnAction((evt) -> {
             squidProject.removeRunsFromPrawnFile(selectedRuns);
-            SquidUIController.selectedRunsForRestore.addAll(selectedRuns);
 
             try {
                 setUpPrawnFile();
             } catch (SquidException squidException) {
 
             }
-            squidProject.generatePrefixTreeFromSpotNames();
-            squidProject.setProjectChanged(true);
-        });
-        contextMenu.getItems().add(spotContextMenuItem1);
-
-        spotContextMenuItem1R = new MenuItem("Restore last removed spot.");
-        spotContextMenuItem1R.setOnAction((evt) -> {
-            squidProject.restoreRunsToPrawnFile(selectedRunsForRestore);
-            selectedRunsForRestore.clear();
-
-            try {
-                setUpPrawnFile();
-            } catch (SquidException squidException) {
-
-            }
-
             squidProject.generatePrefixTreeFromSpotNames();
             SquidProject.setProjectChanged(true);
-
         });
+        contextMenu.getItems().add(spotContextRemoveSpotsMenuItem);
 
-        splitRunsOriginalMenuItem = new MenuItem("Split Prawn file starting with this run, using original unedited and without duplicates noted.");
+        spotRestoreMenu = new Menu("Restore spots ...");
+
+        prawnFileSplitMenu = new Menu("Split Prawn file ...");
+        contextMenu.getItems().add(prawnFileSplitMenu);
+
+        splitRunsOriginalMenuItem = new MenuItem("Split at this run, using original unedited, no duplicates noted.");
         splitRunsOriginalMenuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
             if (selectedRun != null) {
@@ -361,9 +352,9 @@ public class SpotManagerController implements Initializable {
                 }
             }
         });
-        contextMenu.getItems().add(splitRunsOriginalMenuItem);
+        prawnFileSplitMenu.getItems().add(splitRunsOriginalMenuItem);
 
-        splitRunsEditedMenuItem = new MenuItem("Split Prawn file starting with this run, using this edited list with duplicates noted.");
+        splitRunsEditedMenuItem = new MenuItem("Split at this run, using this edited spots, duplicates noted.");
         splitRunsEditedMenuItem.setOnAction((evt) -> {
             PrawnFile.Run selectedRun = shrimpFractionList.getSelectionModel().getSelectedItem();
             if (selectedRun != null) {
@@ -389,7 +380,7 @@ public class SpotManagerController implements Initializable {
                 }
             }
         });
-        contextMenu.getItems().add(splitRunsEditedMenuItem);
+        prawnFileSplitMenu.getItems().add(splitRunsEditedMenuItem);
 
         return contextMenu;
     }
@@ -402,24 +393,46 @@ public class SpotManagerController implements Initializable {
                 selectedRuns = shrimpFractionList.getSelectionModel().getSelectedItems();
 
                 if (selectedRuns.size() > 1) {
-                    spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
+                    spotContextRemoveSpotsMenuItem.setText("Remove selected set of " + selectedRuns.size() + " spots.");
                 } else {
-                    spotContextMenuItem1.setText("Remove selected spot.");
+                    spotContextRemoveSpotsMenuItem.setText("Remove selected spot.");
                 }
 
-                splitRunsOriginalMenuItem.setDisable(selectedRuns.size() > 1);
-                splitRunsEditedMenuItem.setDisable(selectedRuns.size() > 1);
+                prawnFileSplitMenu.setDisable(selectedRuns.size() > 1);
 
                 // customize spotContextMenu
-                if (!selectedRunsForRestore.isEmpty()) {
-                    shrimpFractionList.getContextMenu().getItems().add(0, spotContextMenuItem1R);
-                    if (selectedRunsForRestore.size() > 1) {
-                        spotContextMenuItem1R.setText("Restore removed set of " + selectedRunsForRestore.size() + " spots.");
-                    } else {
-                        spotContextMenuItem1R.setText("Restore removed spot.");
+                if (!squidProject.getRemovedRuns().isEmpty()) {
+                    shrimpFractionList.getContextMenu().getItems().add(0, spotRestoreMenu);
+                    spotRestoreMenu.getItems().clear();
+                    MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
+                    spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
+                    restoreAllSpotMenuItem.setOnAction((evt) -> {
+                        squidProject.restoreAllRunsToPrawnFile();
+                        try {
+                            setUpPrawnFile();
+                        } catch (SquidException squidException) {
+                            //TODO: need message here
+                        }
+                        squidProject.generatePrefixTreeFromSpotNames();
+                        SquidProject.setProjectChanged(true);
+                    });
+                    // list all removed runs
+                    for (Run run : squidProject.getRemovedRuns()) {
+                        MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
+                        spotRestoreMenu.getItems().add(restoreSpotMenuItem);
+                        restoreSpotMenuItem.setOnAction((evt) -> {
+                            squidProject.restoreRunToPrawnFile(run);
+                            try {
+                                setUpPrawnFile();
+                            } catch (SquidException squidException) {
+                                //TODO: need message here
+                            }
+                            squidProject.generatePrefixTreeFromSpotNames();
+                            SquidProject.setProjectChanged(true);
+                        });
                     }
                 } else {
-                    shrimpFractionList.getContextMenu().getItems().remove(spotContextMenuItem1R);
+                    shrimpFractionList.getContextMenu().getItems().remove(spotRestoreMenu);
                 }
             }
         }

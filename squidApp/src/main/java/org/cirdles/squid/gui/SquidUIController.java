@@ -115,10 +115,7 @@ public class SquidUIController implements Initializable {
     public static SquidProject squidProject;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
 
-    public static List<PrawnFile.Run> selectedRunsForRestore = new ArrayList<>();
-
     private static Map<String, String> taskLibraryDescriptions = new HashMap<>();
-
 
     private static GridPane projectManagerUI;
 
@@ -246,7 +243,7 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-  
+
         squidVersionLabel.setText("v" + Squid.VERSION);
 
         initSaveMenuItemDisabling();
@@ -725,9 +722,7 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
-
-                selectedRunsForRestore.clear();
-
+                
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();
 
