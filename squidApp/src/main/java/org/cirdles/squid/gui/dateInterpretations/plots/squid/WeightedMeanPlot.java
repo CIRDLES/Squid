@@ -948,15 +948,15 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         // legend
         text.setText("Legend:");
-        g2d.drawString(text.getText(), leftMargin + 225, topMargin + graphHeight + 80);
+        g2d.drawString(text.getText(), leftMargin + 125, topMargin + graphHeight + 80);
 
         g2d.setPaint(java.awt.Color.RED);
         text.setText("Included");
-        g2d.drawString(text.getText(), leftMargin + 325, topMargin + graphHeight + 80);
+        g2d.drawString(text.getText(), leftMargin + 225, topMargin + graphHeight + 80);
 
         g2d.setPaint(java.awt.Color.BLUE);
         text.setText("Excluded");
-        g2d.drawString(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
+        g2d.drawString(text.getText(), leftMargin + 325, topMargin + graphHeight + 80);
 
         // provide highlight and info about selected spot
         g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11));
