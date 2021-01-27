@@ -958,14 +958,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         text.setText("Excluded");
         g2d.drawString(text.getText(), leftMargin + 425, topMargin + graphHeight + 80);
 
-        g2d.setPaint(java.awt.Color.BLACK);
-        g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 10));
-        g2d.drawString("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
-        g2d.drawString(" left = spot details", leftMargin + 0, topMargin + graphHeight + 70);
-        if (spotSummaryDetails.isManualRejectionEnabled()) {
-            g2d.drawString(" right = spot menu", leftMargin + 0, topMargin + graphHeight + 80);
-        }
-
         // provide highlight and info about selected spot
         g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 11));
         if (indexOfSelectedSpot >= 0) {
