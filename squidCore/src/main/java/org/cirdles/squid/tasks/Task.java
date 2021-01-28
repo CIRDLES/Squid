@@ -1049,11 +1049,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         if (refreshReferenceMaterialsModel) {
-//            models = SquidLabData.getExistingSquidLabData().getReferenceMaterials();
-//            referenceMaterialModel = findModelByName(models, referenceMaterialModel);
             referenceMaterialModelChanged = true;
-
-////            concentrationReferenceMaterialModel = findModelByName(models, concentrationReferenceMaterialModel);
             concentrationReferenceMaterialModelChanged = true;
         }
 
