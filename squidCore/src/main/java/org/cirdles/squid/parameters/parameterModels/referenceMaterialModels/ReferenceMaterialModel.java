@@ -124,10 +124,6 @@ public class ReferenceMaterialModel extends ParametersModel {
             // if 6/38 AND 7/6 = 0, use 8/32 age
             // if 7/6 = 0, use 6/38 age
             //     
-//         dates[0] = new Age206_238r();
-//        dates[1] = new Age207_206r();
-//        dates[2] = new Age207_235r();
-//        dates[3] = new Age208_232r();
             if (dates[0].hasPositiveValue()) {
                 flagsArray[0] = "0;";
                 if (!dates[1].hasPositiveValue()) {
