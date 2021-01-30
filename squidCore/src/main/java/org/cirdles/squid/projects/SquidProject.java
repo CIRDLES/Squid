@@ -828,7 +828,7 @@ public final class SquidProject implements Serializable {
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
-        } catch (JAXBException jAXBException) {
+        } catch (IOException | JAXBException Exception) {
         }
 
         runs.clear();
@@ -839,7 +839,7 @@ public final class SquidProject implements Serializable {
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
-        } catch (JAXBException jAXBException) {
+        } catch (IOException | JAXBException Exception) {
         }
 
         // restore list

@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.core;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,21 +24,12 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
-import java.nio.file.attribute.PosixFilePermissions;
-import java.util.EnumSet;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -49,7 +39,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
@@ -59,6 +48,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 import org.xml.sax.SAXException;
+import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStrings;
 
 /**
  * Handles common operations involving Prawn files.
@@ -200,37 +190,12 @@ public class PrawnXMLFileHandler implements Serializable {
             lines.add(i, headerArray[i]);
         }
 
-        String tempPrawnXMLFileName = "tempPrawnXMLFileName.xml";
-        File prawnDataFile;
-
-        // detect Operating System ... we need POSIX code for use on Ubuntu Server
-        String OS = System.getProperty("os.name").toLowerCase(Locale.US);
-        if (OS.toLowerCase(Locale.US).contains("win")) {
-            Path pathTempXML = Paths.get(tempPrawnXMLFileName).toAbsolutePath();
-            try (BufferedWriter writer = Files.newBufferedWriter(pathTempXML, StandardCharsets.UTF_8)) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-            prawnDataFile = new File(tempPrawnXMLFileName);
-        } else {
-            // Posix attributes added to support web service on Linux
-            Set<PosixFilePermission> perms = EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ);
-            Path config = Files.createTempFile("tempPrawnXMLFileName", "xml", PosixFilePermissions.asFileAttribute(perms));
-            try (BufferedWriter writer = Files.newBufferedWriter(config, StandardCharsets.UTF_8)) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-            prawnDataFile = config.toFile();
-        }
+        File prawnDataFile = writeTextFileFromListOfStrings(lines, "tempPrawnXMLFileName", ".xml");
 
         if (isPrawnLegacyFile) {
             ShrimpDataLegacyFileInterface myPrawnLegacyFile = readRawDataLegacyFile(prawnDataFile);
             // now translate to Prawn File ***************************************
-            
+
             myPrawnFile = PrawnLegacyFileHandler.convertPrawnLegacyFileToPrawnFile(myPrawnLegacyFile);
         } else {
             myPrawnFile = readRawDataFile(prawnDataFile);
@@ -277,11 +242,26 @@ public class PrawnXMLFileHandler implements Serializable {
      * @throws JAXBException
      */
     public void writeRawDataFileAsXML(ShrimpDataFileInterface prawnFile, String fileName)
-            throws PropertyException, JAXBException {
+            throws IOException, PropertyException, JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(PrawnFile.class);
         jaxbMarshaller = jaxbContext.createMarshaller();
         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        jaxbMarshaller.marshal(prawnFile, new File(fileName));
+        File outputPrawnFile = new File(fileName);
+        jaxbMarshaller.marshal(prawnFile, outputPrawnFile);
+
+        // jan 2021 per issue #574, remove leading white space and add a space after last attribute value plus add 2 comment lines
+        // to make files ingestible by Squid25
+        Path originalPrawnOutput = outputPrawnFile.toPath();
+        List<String> lines = Files.readAllLines(originalPrawnOutput, Charset.defaultCharset());
+        for (int i = 0; i < lines.size(); i++) {
+            lines.set(i, lines.get(i).replaceAll("\"/>", "\" />").trim());
+        }
+        lines.add(1, "<!-- SHRIMP SW PRAWN Data File -->");
+        lines.add(2, "<!-- SQUID3-generated PRAWN Data File -->");
+
+        File updatedPrawnFile = writeTextFileFromListOfStrings(lines, "updatedPrawnFile", ".xml");
+        Path updatedPrawnOutput = updatedPrawnFile.toPath();
+        Files.copy(updatedPrawnOutput, originalPrawnOutput, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
