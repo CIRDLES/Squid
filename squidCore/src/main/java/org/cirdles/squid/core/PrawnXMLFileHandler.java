@@ -238,6 +238,7 @@ public class PrawnXMLFileHandler implements Serializable {
      *
      * @param prawnFile for serialization
      * @param fileName
+     * @throws java.io.IOException
      * @throws PropertyException
      * @throws JAXBException
      */
@@ -257,7 +258,7 @@ public class PrawnXMLFileHandler implements Serializable {
             lines.set(i, lines.get(i).replaceAll("\"/>", "\" />").trim());
         }
         lines.add(1, "<!-- SHRIMP SW PRAWN Data File -->");
-        lines.add(2, "<!-- SQUID3-generated PRAWN Data File -->");
+        lines.add(2, "<!-- SQUID3-generated PRAWN Data File copy -->");
 
         File updatedPrawnFile = writeTextFileFromListOfStrings(lines, "updatedPrawnFile", ".xml");
         Path updatedPrawnOutput = updatedPrawnFile.toPath();

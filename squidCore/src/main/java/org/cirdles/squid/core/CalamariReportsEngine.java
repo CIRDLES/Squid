@@ -145,9 +145,10 @@ public class CalamariReportsEngine implements Serializable {
         }
     }
 
-    private String makeReportFolderStructure() {
-        return File.separator + "Squid3ProjectReports-" + squidProject.getProjectName().replaceAll("\\s", "_")
-                //                + File.separator + "TASK-" + squidProject.getTask().getName()
+    public String makeReportFolderStructure() throws IOException{
+        return folderToWriteCalamariReports.getCanonicalPath()
+                + File.separator + "Squid3ProjectReports-" 
+                + squidProject.getProjectName().replaceAll("\\s", "_")
                 + File.separator;
     }
 
@@ -182,9 +183,7 @@ public class CalamariReportsEngine implements Serializable {
 
         if (doWriteReportFiles) {
             folderToWriteCalamariReportsPath
-                    = folderToWriteCalamariReports.getCanonicalPath()
-                    + makeReportFolderStructure()
-                    //                    + "PRAWN-" + nameOfPrawnSourceFile
+                    = makeReportFolderStructure()
                     + squidProject.getProjectName().replaceAll("\\s", "_") + "_PerScan"
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
@@ -978,8 +977,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+                = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -993,8 +991,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+                = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -1153,8 +1150,7 @@ public class CalamariReportsEngine implements Serializable {
 
     private File getFileForSummaryCalc(String baseSummaryCalcName) throws IOException {
         String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+                = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
         }
@@ -1164,8 +1160,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeTaskAudit() throws IOException {
         String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+                = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -1183,8 +1178,7 @@ public class CalamariReportsEngine implements Serializable {
 
     public File writeProjectAudit() throws IOException {
         String reportsPath
-                = folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+                = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
         if (!reportsFolder.mkdirs()) {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
@@ -1201,8 +1195,7 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     public String getWeightedMeansReportPath() throws IOException {
-        return folderToWriteCalamariReports.getCanonicalPath()
-                + makeReportFolderStructure();
+        return makeReportFolderStructure();
     }
 
     public File getWeightedMeansReportFile(String baseReportTableName) throws IOException {
