@@ -79,10 +79,10 @@ public class Squid3Ink implements Squid3API {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws IOException {
-        Squid3API squidInk = Squid3Ink.spillSquid3Ink();
-        squidInk.openDemonstrationSquid3Project();
-        squidInk.generateAllSquid3ProjectReports();
+        Squid3API squid3Ink = Squid3Ink.spillSquid3Ink();
+        squid3Ink.openDemonstrationSquid3Project();
+        squid3Ink.generateAllSquid3ProjectReports();
 
-        System.out.println(squidInk.getSquid3Project().getProjectName());
+        System.out.println(squid3Ink.getSquid3Project().getProjectName());
     }
 }
