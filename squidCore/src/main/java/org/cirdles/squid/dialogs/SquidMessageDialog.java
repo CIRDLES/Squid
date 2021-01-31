@@ -68,28 +68,36 @@ public class SquidMessageDialog extends Alert {
      */
     public static void showInfoDialog(String message, Window owner) {
         Alert alert = new SquidMessageDialog(
-                Alert.AlertType.INFORMATION, 
-                message, 
+                Alert.AlertType.INFORMATION,
+                message,
                 "Squid3 informs you:", owner);
         alert.showAndWait();
     }
 
     public static void showSavedAsDialog(File file, Window owner) {
-        Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
-                file != null ? showLongfilePath(file.getAbsolutePath()) : "File is Null!",
-                "File saved as:",
-                owner);
-        ButtonType openButton = new ButtonType("Open", ButtonBar.ButtonData.APPLY);
-        dialog.getButtonTypes().setAll(openButton, ButtonType.OK);
+        if (file == null) {
+            Alert dialog = new SquidMessageDialog(Alert.AlertType.WARNING,
+                    "Path is null!",
+                    "Check permissions ...",
+                    owner);
+            dialog.showAndWait();
+        } else {
+            Alert dialog = new SquidMessageDialog(Alert.AlertType.CONFIRMATION,
+                    showLongfilePath(file.getAbsolutePath()),
+                    (file.isDirectory() ? "Files saved in:" : "File saved as:"),
+                    owner);
+            ButtonType openButton = new ButtonType((file.isDirectory() ? "Open Directory" : "Open File"), ButtonBar.ButtonData.APPLY);
+            dialog.getButtonTypes().setAll(openButton, ButtonType.OK);
 
-        dialog.showAndWait().ifPresent(action -> {
-            if (action == openButton) {
-                try {
-                    Desktop.getDesktop().open(file);
-                } catch (IOException e) {
+            dialog.showAndWait().ifPresent(action -> {
+                if (action == openButton) {
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (IOException e) {
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public static String showLongfilePath(String path) {
