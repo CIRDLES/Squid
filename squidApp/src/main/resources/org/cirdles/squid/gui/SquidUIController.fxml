@@ -21,7 +21,7 @@
                     <items>
                         <MenuItem fx:id="projectManagerMenuItem" mnemonicParsing="false" onAction="#projectManagerMenuItemAction" text="Manage Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="New Squid GEOCHRON Project">
+                        <Menu mnemonicParsing="false" text="New Squid3 GEOCHRON Project">
                             <items>
                                 <MenuItem fx:id="newSquidProjectMenuItem" mnemonicParsing="false" onAction="#newSquidProjectAction" text="From a single Prawn XML file" />
                                 <MenuItem fx:id="newSquidProjectFromZippedPrawnMenuItem" mnemonicParsing="false" onAction="#newSquidProjectFromZippedPrawnAction" text="From a single Zipped Prawn XML file" />
@@ -31,22 +31,22 @@
                                 <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="(Beta) From Recent OP File" />
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="New Squid RATIO Project &lt;BETA&gt;">
+                        <Menu mnemonicParsing="false" text="New Squid3 RATIO Project &lt;BETA&gt;">
                             <items>
                                 <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false" onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file" />
                             </items>
                         </Menu>
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid Project" />
-                        <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid Project" />
-                        <MenuItem mnemonicParsing="false" onAction="#openDemoSquiProjectAction" text="Open Demonstration Squid Project" />
+                        <MenuItem fx:id="openSquidProjectMenuItem" mnemonicParsing="false" onAction="#openSquidProjectMenuItemAction" text="Open Squid3 Project" />
+                        <Menu fx:id="openRecentSquidProjectMenu" mnemonicParsing="false" text="Open Recent Squid3 Project" />
+                        <MenuItem mnemonicParsing="false" onAction="#openDemoSquiProjectAction" text="Open Demonstration Squid3 Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid Project" />
-                        <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid Project as ..." />
+                        <MenuItem fx:id="saveSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveSquidProjectMenuItemAction" text="Save Squid3 Project" />
+                        <MenuItem fx:id="saveAsSquidProjectMenuItem" mnemonicParsing="false" onAction="#saveAsSquidProjectMenuItemAction" text="Save Squid3 Project as ..." />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid Project" />
+                        <MenuItem fx:id="closeSquidProjectMenuItem" mnemonicParsing="false" onAction="#closeSquidProjectMenuItemClose" text="Close Squid3 Project" />
                         <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid" />
+                        <MenuItem mnemonicParsing="false" onAction="#quitAction" text="Quit Squid3" />
                     </items>
                 </Menu>
                 <Menu fx:id="managePrawnFileMenu" mnemonicParsing="false" text="Data">

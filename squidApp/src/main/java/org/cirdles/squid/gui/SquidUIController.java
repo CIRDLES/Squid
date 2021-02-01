@@ -1424,21 +1424,10 @@ public class SquidUIController implements Initializable {
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {
-                File projectAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
-                squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
-
-                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
-                squidProject.produceReferenceMaterialPerSquid25CSV(true);
-                squidProject.produceSelectedReferenceMaterialReportCSV();
-
-                squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns();
-                squidProject.produceUnknownsPerSquid25CSV(true);
-                squidProject.produceUnknownsBySampleForETReduxCSV(true);
-                squidProject.produceSelectedUnknownsReportCSV();
-                squidProject.produceUnknownsWeightedMeanSortingFieldsCSV();
-
-                squidProject.getTask().producePerScanReportsToFiles();
-                SquidMessageDialog.showSavedAsDialog(projectAuditFile.getParentFile(), primaryStageWindow);
+                
+                Path reportFolderPath = squidProject.generateAllReports();
+                
+                SquidMessageDialog.showSavedAsDialog(reportFolderPath.toFile(), primaryStageWindow);
             } else {
                 showReportsWarning();
             }

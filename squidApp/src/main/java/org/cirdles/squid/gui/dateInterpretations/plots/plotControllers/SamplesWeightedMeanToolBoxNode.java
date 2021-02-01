@@ -66,6 +66,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
@@ -130,7 +131,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         VBox filterToolBox = filterVBox();
         VBox sortingToolBox = sortedVBox();
         VBox saveAsToolBox = saveAsVBox();
-        VBox publishExpressionToolBox = publishExpressionVBox();
+        VBox publishExpressionToolBox = publishExpressionAndExportSVGVBox();
 
         Path separator1 = separator(60.0F);
         Path separator2 = separator(60.0F);
@@ -623,12 +624,13 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         return saveAsToolBox;
     }
 
-    private VBox publishExpressionVBox() {
-        VBox publishExpression = new VBox(2);
-
+    private VBox publishExpressionAndExportSVGVBox() {
+        VBox publishExpressionVbox = new VBox(2);
+        
+        HBox publishExpressionHbox = new HBox(5);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
-        showInExpressionsButton.setPrefHeight(60);
+        showInExpressionsButton.setPrefHeight(40);
         showInExpressionsButton.setMinHeight(USE_PREF_SIZE);
         showInExpressionsButton.setWrapText(true);
         showInExpressionsButton.setTextAlignment(TextAlignment.CENTER);
@@ -640,10 +642,33 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
             }
         });
+        
+        HBox exportToSVGHbox = new HBox(5);
+        Button exportToSVGButton = new Button("To SVG");
+        formatNode(exportToSVGButton, 80);
+        exportToSVGButton.setPrefHeight(20);
+        exportToSVGButton.setMinHeight(USE_PREF_SIZE);
+        exportToSVGButton.setWrapText(true);
+        exportToSVGButton.setTextAlignment(TextAlignment.CENTER);
+        exportToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
+        exportToSVGButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                try {
+                    writeWeightedMeanSVG();
+                }
+                catch(IOException ex) {
+                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                    ex.printStackTrace();
+                }  
+            }
+        });
+        
+        exportToSVGHbox.getChildren().addAll(exportToSVGButton);
+        publishExpressionHbox.getChildren().addAll(showInExpressionsButton);
+        publishExpressionVbox.getChildren().addAll(publishExpressionHbox, exportToSVGHbox);
 
-        publishExpression.getChildren().addAll(showInExpressionsButton);
-
-        return publishExpression;
+        return publishExpressionVbox;
     }
 
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
@@ -720,6 +745,78 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         } else {
             SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
         }
+    }
+    
+    private void writeWeightedMeanSVG() throws IOException {
+        if (squidProject.hasReportsFolder()) {
+            WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
+            String expressionName = myPlot.getAgeOrValueLookupString();
+            String reportFileNameSVG = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().replace("/", "_") + ".svg";
+
+            try {
+                File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
+                File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
+                if (reportFileSVG != null) {
+                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                    boolean confirmedExists = false;
+                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                    if (reportFileSVG.exists()) {
+                        switch (osType) {
+                            case Windows:
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                    writeReport.setValue(false);
+                                }
+                                break;
+                            case MacOS:
+                            case Linux:
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
+                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                    alert.showAndWait().ifPresent(action -> {
+                                        if (action != ButtonType.OK) {
+                                            writeReport.setValue(false);
+                                        }
+                                    });
+                                    confirmedExists = true;
+                                }
+                                break;
+                        }
+                    }
+                    if (writeReport.getValue()) {
+                        if (reportFileSVG.exists()) {
+                            if (!confirmedExists) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                        "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
+                                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                                alert.showAndWait().ifPresent(action -> {
+                                    if (action.equals(ButtonType.CANCEL)) {
+                                        writeReport.setValue(false);
+                                    }
+                                });
+                            }
+                        }
+                        if (writeReport.getValue()) {    
+                            myPlot.outputToSVG(reportFileSVG);
+                            myPlot.outputToPDF(reportFileSVG);
+                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
+                        }
+                    }
+                }
+            } catch (NoSuchFileException e) {
+                SquidMessageDialog.showWarningDialog("The file doesn't seem to exist. Try hitting the new button.", primaryStageWindow);
+            } catch (java.nio.file.FileSystemException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred. Try closing the file in other applications.", primaryStageWindow);
+            } catch (IOException e) {
+                SquidMessageDialog.showWarningDialog("An error occurred.\n" + e.getMessage(), primaryStageWindow);
+            }
+        } else {
+            SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
+        }
+        
     }
 
     /**

@@ -188,7 +188,7 @@ public class SpotManagerController implements Initializable {
         setUpParametersModelsComboBoxes();
 
         try {
-            setUpPrawnFile();
+            setUpDataFile();
         } catch (SquidException squidException) {
         }
 
@@ -230,7 +230,7 @@ public class SpotManagerController implements Initializable {
         sampleNameComboBox.getSelectionModel().selectFirst();
     }
 
-    private void setUpPrawnFile() throws SquidException {
+    private void setUpDataFile() throws SquidException {
 
         shrimpRuns = FXCollections.observableArrayList(squidProject.getPrawnFileRuns());
 
@@ -312,7 +312,7 @@ public class SpotManagerController implements Initializable {
             squidProject.removeRunsFromPrawnFile(selectedRuns);
 
             try {
-                setUpPrawnFile();
+                setUpDataFile();
             } catch (SquidException squidException) {
 
             }
@@ -409,7 +409,7 @@ public class SpotManagerController implements Initializable {
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
                         squidProject.restoreAllRunsToPrawnFile();
                         try {
-                            setUpPrawnFile();
+                            setUpDataFile();
                         } catch (SquidException squidException) {
                             //TODO: need message here
                         }
@@ -423,7 +423,7 @@ public class SpotManagerController implements Initializable {
                         restoreSpotMenuItem.setOnAction((evt) -> {
                             squidProject.restoreRunToPrawnFile(run);
                             try {
-                                setUpPrawnFile();
+                                setUpDataFile();
                             } catch (SquidException squidException) {
                                 //TODO: need message here
                             }
@@ -522,49 +522,52 @@ public class SpotManagerController implements Initializable {
 
         refMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if (newValue != null) {
-
-                        String[] audit = ((ReferenceMaterialModel) newValue).auditAndTempUpdateRefMatModel().split("Audit:");
-                        String[] flags = audit[0].split(";");
-
-                        if (flags[0].contains("F")) {
-                            SquidMessageDialog.showInfoDialog(
-                                    "This reference material model is missing meaningful age data. \n"
-                                    + "Please choose another model.\n\n",
-                                    primaryStageWindow);
-                        } else {
-                            if (audit[0].contains("1")) {
-                                SquidMessageDialog.showInfoDialog(
-                                        "This reference material model is missing key age(s), so Squid3 is \n"
-                                        + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
-                                        + audit[1],
-                                        primaryStageWindow);
-                            }
-                        }
-
-                        BigDecimal age206_238rModel = ((ReferenceMaterialModel) newValue).getDateByName(age206_238r.getName()).getValue();
-                        BigDecimal age207_206rModel = ((ReferenceMaterialModel) newValue).getDateByName(age207_206r.getName()).getValue();
-                        BigDecimal age208_232rModel = ((ReferenceMaterialModel) newValue).getDateByName(age208_232r.getName()).getValue();
-
-                        pbb206U238AgeLabel.setText(age206_238rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                        pbb206U238AgeLabel.setStyle((flags[0].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
-
-                        pb207Pb206AgeLabel.setText(age207_206rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                        pb207Pb206AgeLabel.setStyle((flags[1].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
-
-                        pb208Th232AgeLabel.setText(age208_232rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
-                        pb208Th232AgeLabel.setStyle((flags[2].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
-
-                        u238u235NatAbunLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getDatumByName(r238_235s.getName())
-                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
-
-                        alertForZeroNaturalUranium();
-
+                    if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
                         squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        
+                        alertForZeroNaturalUranium();
                     }
+
+                    ParametersModel curValue = (newValue != null) ? newValue : oldValue;
+
+                    String[] audit = ((ReferenceMaterialModel) curValue).auditAndTempUpdateRefMatModel().split("Audit:");
+                    String[] flags = audit[0].split(";");
+
+                    if (flags[0].contains("F")) {
+                        SquidMessageDialog.showInfoDialog(
+                                "This reference material model is missing meaningful age data. \n"
+                                + "Please choose another model.\n\n",
+                                primaryStageWindow);
+                    } else {
+                        if (audit[0].contains("1")) {
+                            SquidMessageDialog.showInfoDialog(
+                                    "This reference material model is missing key age(s), so Squid3 is \n"
+                                    + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
+                                    + audit[1],
+                                    primaryStageWindow);
+                        }
+                    }
+
+                    BigDecimal age206_238rModel = ((ReferenceMaterialModel) curValue).getDateByName(age206_238r.getName()).getValue();
+                    BigDecimal age207_206rModel = ((ReferenceMaterialModel) curValue).getDateByName(age207_206r.getName()).getValue();
+                    BigDecimal age208_232rModel = ((ReferenceMaterialModel) curValue).getDateByName(age208_232r.getName()).getValue();
+
+                    pbb206U238AgeLabel.setText(age206_238rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    pbb206U238AgeLabel.setStyle((flags[0].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
+                    pb207Pb206AgeLabel.setText(age207_206rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    pb207Pb206AgeLabel.setStyle((flags[1].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
+                    pb208Th232AgeLabel.setText(age208_232rModel.movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString());
+                    pb208Th232AgeLabel.setStyle((flags[2].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
+
+                    u238u235NatAbunLabel.setText(
+                            ((ReferenceMaterialModel) curValue).getDatumByName(r238_235s.getName())
+                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+
+                    
                 });
 
         // ConcentrationReferenceMaterials
@@ -589,18 +592,19 @@ public class SpotManagerController implements Initializable {
 
         concRefMatModelComboBox.valueProperty()
                 .addListener((ObservableValue<? extends ParametersModel> observable, ParametersModel oldValue, ParametersModel newValue) -> {
-                    if (newValue != null) {
-                        uPpmLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getConcentrationByName("concU")
-                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
-                        thPpmLabel.setText(
-                                ((ReferenceMaterialModel) newValue).getConcentrationByName("concTh")
-                                        .getValue().setScale(3, RoundingMode.HALF_UP).toString());
-
+                    if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setConcentrationReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
                         squidProject.getTask().refreshParametersFromModels(false, false, true);
                     }
+
+                    ParametersModel curValue = (newValue != null) ? newValue : oldValue;
+                    uPpmLabel.setText(
+                            ((ReferenceMaterialModel) curValue).getConcentrationByName("concU")
+                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
+                    thPpmLabel.setText(
+                            ((ReferenceMaterialModel) curValue).getConcentrationByName("concTh")
+                                    .getValue().setScale(3, RoundingMode.HALF_UP).toString());
                 });
     }
 
