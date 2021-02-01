@@ -29,7 +29,7 @@ public interface Squid3API {
     
     public void openSquid3Project(Path projectFilePath);
 
-    public void openDemonstrationSquid3Project();
+    public void openDemonstrationSquid3Project()throws IOException;
     
     public void generateAllSquid3ProjectReports()throws IOException;
 }

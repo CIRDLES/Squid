@@ -61,7 +61,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
  *
  * @author bowring
  */
-public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI {
+public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI, Squid3ProjectParametersAPI {
 
     private static final long serialVersionUID = 7099919411562934142L;
 
@@ -1075,6 +1075,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return referenceMaterialModel;
     }
 
+    @Override
     public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
         if (task != null) {
             task.setReferenceMaterialModel(referenceMaterialModel);
@@ -1093,6 +1094,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return concentrationReferenceMaterialModel;
     }
 
+    @Override
     public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
         if (task != null) {
             task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
@@ -1121,6 +1123,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param physicalConstantsModel the physicalConstantsModel to set
      */
+    @Override
     public void setPhysicalConstantsModel(ParametersModel physicalConstantsModel) {
         if (task != null) {
             task.setPhysicalConstantsModel(physicalConstantsModel);
@@ -1148,6 +1151,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param commonPbModel the commonPbModel to set
      */
+    @Override
     public void setCommonPbModel(ParametersModel commonPbModel) {
         if (task != null) {
             task.setCommonPbModel(commonPbModel);
