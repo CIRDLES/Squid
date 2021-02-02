@@ -61,87 +61,89 @@ public final class PrawnFileUtilities {
      *
      * @param indexOfBackgroundSpecies the value of indexOfBackgroundSpecies
      * @param runs
-     * @return the java.util.Map<java.lang.Integer,org.cirdles.squid.shrimp.MassStationDetail>
+     * @return the
+     * java.util.Map<java.lang.Integer,org.cirdles.squid.shrimp.MassStationDetail>
      */
     public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(int indexOfBackgroundSpecies, List<Run> runs) {
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
 
-        // prepare map from first run table
-        List<Entry> entries = runs.get(0).getRunTable().getEntry();
-        int index = 0;
-        for (Entry entry : entries) {
-            String massStationLabel = entry.getPar().get(0).getValue();
-            double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
-            double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
-            String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
-            
-            // upated July 2020
-            Pattern pattern = Pattern.compile("^(\\d\\d)?(\\d)?(\\D+\\d?\\D?)*(\\d\\d\\d)?$", Pattern.CASE_INSENSITIVE); 
-            Matcher matcher = pattern.matcher(massStationLabel); 
-            String elementLabel = massStationLabel;
-            if (matcher.matches()){
-                elementLabel = matcher.group(3);
-            }
-            
+        if (!runs.isEmpty()) {
+            // prepare map from first run table
+            List<Entry> entries = runs.get(0).getRunTable().getEntry();
+            int index = 0;
+            for (Entry entry : entries) {
+                String massStationLabel = entry.getPar().get(0).getValue();
+                double atomicMassUnit = Double.parseDouble(entry.getPar().get(1).getValue());
+                double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
+                String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
 
-            boolean isBackground = (index == indexOfBackgroundSpecies);//     massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
-            
-            String uThBearingName = UThBearingEnum.N.getName();
-            if (elementLabel.matches("(.*)(238|254|270|U)(.*)")) {
-                uThBearingName = UThBearingEnum.U.getName();
-            } else if (elementLabel.matches("(.*)(232|248|264|Th)(.*)")) {
-                uThBearingName = UThBearingEnum.T.getName();
-            }
-
-            MassStationDetail massStationDetail
-                    = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground, uThBearingName);
-
-            mapOfIndexToMassStationDetails.put(index, massStationDetail);
-            index++;
-        }
-
-        // collect mass variations by time for all runs
-        boolean detectedMassStationCountAnomaly = false;
-        int runIndex = 1;
-        for (Run run : runs) {
-            long runStartTime = timeInMillisecondsOfRun(run);
-            List<Scan> scans = run.getSet().getScan();
-            for (Scan scan : scans) {
-                List<Measurement> measurements = scan.getMeasurement();
-                index = 0;
-                // assume measurements are in same order and length as  runtable mass station
-                if (measurements.size() != entries.size()) {
-                    // inform user
-                    detectedMassStationCountAnomaly = true;
+                // upated July 2020
+                Pattern pattern = Pattern.compile("^(\\d\\d)?(\\d)?(\\D+\\d?\\D?)*(\\d\\d\\d)?$", Pattern.CASE_INSENSITIVE);
+                Matcher matcher = pattern.matcher(massStationLabel);
+                String elementLabel = massStationLabel;
+                if (matcher.matches()) {
+                    elementLabel = matcher.group(3);
                 }
-                for (Measurement measurement : measurements) {
-                    try {
-                        double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
-                        double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
-                        long measurementTime = runStartTime + (long) timeStampSec * 1000l;
 
-                        MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
-                        massStationDetail.getMeasuredTrimMasses().add(trimMass);
-                        massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
-                        massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
-                        massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
+                boolean isBackground = (index == indexOfBackgroundSpecies);//     massStationLabel.toUpperCase(Locale.ENGLISH).contains("KG");
 
-                        index++;
-                    } catch (NumberFormatException | NullPointerException numberFormatException) {
-                        // likely not a uniform number of mass stations but we proceed anyway for now
+                String uThBearingName = UThBearingEnum.N.getName();
+                if (elementLabel.matches("(.*)(238|254|270|U)(.*)")) {
+                    uThBearingName = UThBearingEnum.U.getName();
+                } else if (elementLabel.matches("(.*)(232|248|264|Th)(.*)")) {
+                    uThBearingName = UThBearingEnum.T.getName();
+                }
+
+                MassStationDetail massStationDetail
+                        = new MassStationDetail(index, massStationLabel, centeringTimeSec, isotopeLabel, elementLabel, isBackground, uThBearingName);
+
+                mapOfIndexToMassStationDetails.put(index, massStationDetail);
+                index++;
+            }
+
+            // collect mass variations by time for all runs
+            boolean detectedMassStationCountAnomaly = false;
+            int runIndex = 1;
+            for (Run run : runs) {
+                long runStartTime = timeInMillisecondsOfRun(run);
+                List<Scan> scans = run.getSet().getScan();
+                for (Scan scan : scans) {
+                    List<Measurement> measurements = scan.getMeasurement();
+                    index = 0;
+                    // assume measurements are in same order and length as  runtable mass station
+                    if (measurements.size() != entries.size()) {
                         // inform user
                         detectedMassStationCountAnomaly = true;
                     }
-                }
-            }
-            runIndex++;
-        }
+                    for (Measurement measurement : measurements) {
+                        try {
+                            double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
+                            double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
+                            long measurementTime = runStartTime + (long) timeStampSec * 1000l;
 
-        if (detectedMassStationCountAnomaly) {
-            SquidMessageDialog.showWarningDialog(
-                    "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
-                    + "Please edit your data file to fix this issue.",
-                    null);
+                            MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
+                            massStationDetail.getMeasuredTrimMasses().add(trimMass);
+                            massStationDetail.getTimesOfMeasuredTrimMasses().add((double) measurementTime);
+                            massStationDetail.getIndicesOfScansAtMeasurementTimes().add((int) scan.getNumber());
+                            massStationDetail.getIndicesOfRunsAtMeasurementTimes().add(runIndex);
+
+                            index++;
+                        } catch (NumberFormatException | NullPointerException numberFormatException) {
+                            // likely not a uniform number of mass stations but we proceed anyway for now
+                            // inform user
+                            detectedMassStationCountAnomaly = true;
+                        }
+                    }
+                }
+                runIndex++;
+            }
+
+            if (detectedMassStationCountAnomaly) {
+                SquidMessageDialog.showWarningDialog(
+                        "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
+                        + "Please edit your data file to fix this issue.",
+                        null);
+            }
         }
         return mapOfIndexToMassStationDetails;
     }

@@ -1577,7 +1577,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (squidSpeciesModelList.isEmpty()) {
             buildSquidSpeciesModelListFromMassStationDetails();
         }
-        if (mapOfIndexToMassStationDetails != null) {
+        if ((mapOfIndexToMassStationDetails != null) && (!mapOfIndexToMassStationDetails.isEmpty())){
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
                 int index = 0;
