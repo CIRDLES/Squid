@@ -411,6 +411,11 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                 serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
                 prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
                 removedRuns = new ArrayList<>();
+
+                if (prawnFileExists()) {
+                    task.setPrawnFile(prawnFile);
+                    ((Task) task).setupSquidSessionSkeleton();
+                }
             } else {
                 prawnFile = null;
             }
