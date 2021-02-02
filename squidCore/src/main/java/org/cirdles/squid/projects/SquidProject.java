@@ -460,11 +460,13 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             if (task.getShrimpFractions() != null) {
                 // July 2020 add in delimiter suggester
                 Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
+                // empirical observation that second fraction conforms to naming pattern more frequently than first
+                int firstIndex = (task.getShrimpFractions().size() > 1) ? 1 : 0;
                 Matcher matcher
-                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
+                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(firstIndex).getFractionID());
                 if (matcher.find()) {
                     int s = matcher.start();
-                    delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
+                    delimiterForUnknownNames = task.getShrimpFractions().get(firstIndex).getFractionID().substring(s, s + 1);
                 }
 
                 boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
@@ -881,7 +883,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         produceUnknownsWeightedMeanSortingFieldsCSV();
 
         getTask().producePerScanReportsToFiles();
-        
+
         return (new File(prawnFileHandler.getReportsEngine().makeReportFolderStructure())).toPath();
     }
 
