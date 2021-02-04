@@ -48,7 +48,7 @@ import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
 import org.xml.sax.SAXException;
-import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStrings;
+import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStringsWithUnixLineEnd;
 
 /**
  * Handles common operations involving Prawn files.
@@ -190,7 +190,7 @@ public class PrawnXMLFileHandler implements Serializable {
             lines.add(i, headerArray[i]);
         }
 
-        File prawnDataFile = writeTextFileFromListOfStrings(lines, "tempPrawnXMLFileName", ".xml");
+        File prawnDataFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "tempPrawnXMLFileName", ".xml");
 
         if (isPrawnLegacyFile) {
             ShrimpDataLegacyFileInterface myPrawnLegacyFile = readRawDataLegacyFile(prawnDataFile);
@@ -260,7 +260,7 @@ public class PrawnXMLFileHandler implements Serializable {
         lines.add(1, "<!-- SHRIMP SW PRAWN Data File -->");
         lines.add(2, "<!-- SQUID3-generated PRAWN Data File copy -->");
 
-        File updatedPrawnFile = writeTextFileFromListOfStrings(lines, "updatedPrawnFile", ".xml");
+        File updatedPrawnFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "updatedPrawnFile", ".xml");
         Path updatedPrawnOutput = updatedPrawnFile.toPath();
         Files.copy(updatedPrawnOutput, originalPrawnOutput, StandardCopyOption.REPLACE_EXISTING);
     }

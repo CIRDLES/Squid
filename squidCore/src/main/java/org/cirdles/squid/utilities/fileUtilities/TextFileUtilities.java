@@ -49,13 +49,15 @@ public class TextFileUtilities {
      * @return
      * @throws IOException 
      */
-    public static File writeTextFileFromListOfStrings(List<String> stringLine, String targetTextFileName, String extension)
+    public static File writeTextFileFromListOfStringsWithUnixLineEnd(List<String> stringLine, String targetTextFileName, String extension)
             throws IOException {
         File targetTextFile;
 
         // detect Operating System ... we need POSIX code for use on Ubuntu Server
         String OS = System.getProperty("os.name").toLowerCase(Locale.US);
         if (OS.toLowerCase(Locale.US).contains("win")) {
+            // Feb 2021 Issue #580 force windows into suppressing CRLF for LF so Squid25 can open these files
+            System.setProperty("line.separator", "\n");
             Path pathTempXML = Paths.get(targetTextFileName + extension).toAbsolutePath();
             try (BufferedWriter writer = Files.newBufferedWriter(pathTempXML, StandardCharsets.UTF_8)) {
                 for (String line : stringLine) {
@@ -63,7 +65,8 @@ public class TextFileUtilities {
                     writer.newLine();
                 }
             }
-            targetTextFile = new File(targetTextFileName + extension);
+            targetTextFile = pathTempXML.toFile();
+            System.setProperty("line.separator", "\r\n");
         } else {
             // Posix attributes added to support web service on Linux
             Set<PosixFilePermission> perms = EnumSet.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ);
