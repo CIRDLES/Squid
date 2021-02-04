@@ -7,13 +7,11 @@ package org.cirdles.squid.squidReports.squidReportTables;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
-import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 import org.junit.Test;
 import org.xml.sax.SAXException;
@@ -38,7 +36,7 @@ public class SquidReportTableXSDValidationTest {
         } catch (SAXException|IOException e) {
         }
         finally {
-            // assertTrue(validates);
+            assertTrue(validates);
         }
     }
 }
