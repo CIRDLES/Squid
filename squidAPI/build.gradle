@@ -1,0 +1,12 @@
+apply plugin: 'application'
+
+mainClassName = 'org.cirdles.squid.SquidAPI'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile project(":squidCore")
+    testImplementation     'junit:junit:4.13'
+}

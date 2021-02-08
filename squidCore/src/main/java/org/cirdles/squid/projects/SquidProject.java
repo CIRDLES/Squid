@@ -16,6 +16,7 @@
 package org.cirdles.squid.projects;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -60,7 +61,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
  *
  * @author bowring
  */
-public final class SquidProject implements Serializable {
+public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI, Squid3ProjectParametersAPI {
 
     private static final long serialVersionUID = 7099919411562934142L;
 
@@ -104,6 +105,7 @@ public final class SquidProject implements Serializable {
     // jan 2021 issue #547
     private List<Run> removedRuns;
 
+    @Override
     public List<Run> getRemovedRuns() {
         if (removedRuns == null) {
             removedRuns = new ArrayList<>();
@@ -172,6 +174,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the projectType
      */
+    @Override
     public TaskTypeEnum getProjectType() {
         if (projectType == null) {
             projectType = GEOCHRON;
@@ -179,6 +182,7 @@ public final class SquidProject implements Serializable {
         return projectType;
     }
 
+    @Override
     public boolean isTypeGeochron() {
         return (projectType.equals(GEOCHRON));
     }
@@ -407,6 +411,11 @@ public final class SquidProject implements Serializable {
                 serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
                 prawnFile = prawnFileHandler.unmarshallCurrentPrawnFileXML();
                 removedRuns = new ArrayList<>();
+
+                if (prawnFileExists()) {
+                    task.setPrawnFile(prawnFile);
+                    ((Task) task).setupSquidSessionSkeleton();
+                }
             } else {
                 prawnFile = null;
             }
@@ -432,6 +441,7 @@ public final class SquidProject implements Serializable {
         serializePrawnData(prawnFileHandler.getCurrentPrawnSourceFileLocation());
     }
 
+    @Override
     public boolean prawnFileExists() {
         return prawnFile != null;
     }
@@ -455,11 +465,13 @@ public final class SquidProject implements Serializable {
             if (task.getShrimpFractions() != null) {
                 // July 2020 add in delimiter suggester
                 Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
+                // empirical observation that second fraction conforms to naming pattern more frequently than first
+                int firstIndex = (task.getShrimpFractions().size() > 1) ? 1 : 0;
                 Matcher matcher
-                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(1).getFractionID());
+                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(firstIndex).getFractionID());
                 if (matcher.find()) {
                     int s = matcher.start();
-                    delimiterForUnknownNames = task.getShrimpFractions().get(1).getFractionID().substring(s, s + 1);
+                    delimiterForUnknownNames = task.getShrimpFractions().get(firstIndex).getFractionID().substring(s, s + 1);
                 }
 
                 boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
@@ -631,6 +643,7 @@ public final class SquidProject implements Serializable {
         return isTypeGeochron() && task.getExpressionByName("ParentElement_ConcenConst").amHealthy();
     }
 
+    @Override
     public String getPrawnSourceFileName() {
         return prawnSourceFile.getName();
     }
@@ -642,18 +655,22 @@ public final class SquidProject implements Serializable {
         this.prawnFile = prawnFile;
     }
 
+    @Override
     public String getPrawnSourceFilePath() {
         return prawnSourceFile.getAbsolutePath();
     }
 
+    @Override
     public String getPrawnFileShrimpSoftwareVersionName() {
         return prawnFile.getSoftwareVersion();
     }
 
+    @Override
     public String getPrawnFileLoginComment() {
         return ((PrawnFile) prawnFile).getLoginComment();
     }
 
+    @Override
     public List<Run> getPrawnFileRuns() {
         return new ArrayList<>(prawnFile.getRun());
     }
@@ -828,7 +845,7 @@ public final class SquidProject implements Serializable {
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
-        } catch (JAXBException jAXBException) {
+        } catch (IOException | JAXBException Exception) {
         }
 
         runs.clear();
@@ -839,7 +856,7 @@ public final class SquidProject implements Serializable {
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
-        } catch (JAXBException jAXBException) {
+        } catch (IOException | JAXBException Exception) {
         }
 
         // restore list
@@ -856,6 +873,26 @@ public final class SquidProject implements Serializable {
         return retVal;
     }
 
+    public Path generateAllReports() throws IOException {
+        prawnFileHandler.getReportsEngine().writeProjectAudit();
+        prawnFileHandler.getReportsEngine().writeTaskAudit();
+
+        prawnFileHandler.getReportsEngine().writeSummaryReportsForReferenceMaterials();
+        produceReferenceMaterialPerSquid25CSV(true);
+        produceSelectedReferenceMaterialReportCSV();
+
+        prawnFileHandler.getReportsEngine().writeSummaryReportsForUnknowns();
+        produceUnknownsPerSquid25CSV(true);
+        produceUnknownsBySampleForETReduxCSV(true);
+        produceSelectedUnknownsReportCSV();
+        produceUnknownsWeightedMeanSortingFieldsCSV();
+
+        getTask().producePerScanReportsToFiles();
+
+        return (new File(prawnFileHandler.getReportsEngine().makeReportFolderStructure())).toPath();
+    }
+
+    @Override
     public boolean hasReportsFolder() {
         return prawnFileHandler.getReportsEngine().getFolderToWriteCalamariReports() != null;
     }
@@ -863,6 +900,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the prawnFileHandler
      */
+    @Override
     public PrawnXMLFileHandler getPrawnFileHandler() {
         return prawnFileHandler;
     }
@@ -877,6 +915,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the projectName
      */
+    @Override
     public String getProjectName() {
         return projectName;
     }
@@ -891,6 +930,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the analystName
      */
+    @Override
     public String getAnalystName() {
         return analystName;
     }
@@ -905,6 +945,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the projectNotes
      */
+    @Override
     public String getProjectNotes() {
         return projectNotes;
     }
@@ -919,6 +960,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the filterForRefMatSpotNames
      */
+    @Override
     public String getFilterForRefMatSpotNames() {
         if (filterForConcRefMatSpotNames == null) {
             filterForConcRefMatSpotNames = "";
@@ -936,6 +978,7 @@ public final class SquidProject implements Serializable {
         }
     }
 
+    @Override
     public String getFilterForConcRefMatSpotNames() {
         return filterForConcRefMatSpotNames;
     }
@@ -950,6 +993,7 @@ public final class SquidProject implements Serializable {
         }
     }
 
+    @Override
     public Map<String, Integer> getFiltersForUnknownNames() {
         if (filtersForUnknownNames == null) {
             filtersForUnknownNames = new HashMap<>();
@@ -967,6 +1011,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the sessionDurationHours
      */
+    @Override
     public double getSessionDurationHours() {
         return sessionDurationHours;
     }
@@ -974,6 +1019,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the prefixTree
      */
+    @Override
     public SquidPrefixTree getPrefixTree() {
         return prefixTree;
     }
@@ -981,6 +1027,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the task
      */
+    @Override
     public TaskInterface getTask() {
         return task;
     }
@@ -1009,6 +1056,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the delimiterForUnknownNames
      */
+    @Override
     public String getDelimiterForUnknownNames() {
         if (delimiterForUnknownNames == null) {
             delimiterForUnknownNames = Squid3Constants.SampleNameDelimitersEnum.HYPHEN.getName();
@@ -1026,6 +1074,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the referenceMaterialModel
      */
+    @Override
     public ParametersModel getReferenceMaterialModel() {
         if (referenceMaterialModel == null) {
             this.referenceMaterialModel = new ReferenceMaterialModel();
@@ -1033,6 +1082,7 @@ public final class SquidProject implements Serializable {
         return referenceMaterialModel;
     }
 
+    @Override
     public void setReferenceMaterialModel(ParametersModel referenceMaterialModel) {
         if (task != null) {
             task.setReferenceMaterialModel(referenceMaterialModel);
@@ -1043,6 +1093,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the concentrationReferenceMaterialModel
      */
+    @Override
     public ParametersModel getConcentrationReferenceMaterialModel() {
         if (concentrationReferenceMaterialModel == null) {
             this.concentrationReferenceMaterialModel = new ReferenceMaterialModel();
@@ -1050,6 +1101,7 @@ public final class SquidProject implements Serializable {
         return concentrationReferenceMaterialModel;
     }
 
+    @Override
     public void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel) {
         if (task != null) {
             task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
@@ -1060,6 +1112,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the physicalConstantsModel
      */
+    @Override
     public ParametersModel getPhysicalConstantsModel() {
         if (physicalConstantsModel == null) {
             physicalConstantsModel = task.getPhysicalConstantsModel();
@@ -1077,6 +1130,7 @@ public final class SquidProject implements Serializable {
     /**
      * @param physicalConstantsModel the physicalConstantsModel to set
      */
+    @Override
     public void setPhysicalConstantsModel(ParametersModel physicalConstantsModel) {
         if (task != null) {
             task.setPhysicalConstantsModel(physicalConstantsModel);
@@ -1087,6 +1141,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the commonPbModel
      */
+    @Override
     public ParametersModel getCommonPbModel() {
         if (commonPbModel == null) {
             //backwards compatible
@@ -1103,6 +1158,7 @@ public final class SquidProject implements Serializable {
     /**
      * @param commonPbModel the commonPbModel to set
      */
+    @Override
     public void setCommonPbModel(ParametersModel commonPbModel) {
         if (task != null) {
             task.setCommonPbModel(commonPbModel);
@@ -1113,6 +1169,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the squidAllowsAutoExclusionOfSpots
      */
+    @Override
     public boolean isSquidAllowsAutoExclusionOfSpots() {
         //backwards compatible
         if (task != null) {
@@ -1135,6 +1192,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the extPErrU
      */
+    @Override
     public double getExtPErrU() {
         //backwards compatible
         if (task != null) {
@@ -1156,6 +1214,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the extPErrTh
      */
+    @Override
     public double getExtPErrTh() {
         //backwards compatible
         if (task != null) {
@@ -1177,6 +1236,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the selectedIndexIsotope
      */
+    @Override
     public Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope() {
         if (selectedIndexIsotope == null) {
             selectedIndexIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
@@ -1197,6 +1257,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the useSBM
      */
+    @Override
     public boolean isUseSBM() {
         //backwards compatible
         if (task != null) {
@@ -1218,6 +1279,7 @@ public final class SquidProject implements Serializable {
     /**
      * @return the userLinFits
      */
+    @Override
     public boolean isUserLinFits() {
         //backwards compatible
         if (task != null) {
