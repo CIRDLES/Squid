@@ -588,17 +588,16 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         }
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         System.err.println("problem formatting " + getRetrieveVariableName() + " for " + fraction.getFractionID() + " >> " + e);
+                        }
                     }
-                }
 
             } catch (ClassNotFoundException classNotFoundException) {
             }
+            }
+
+            return retVal;
         }
-
-        return retVal;
-    }
-
-    // these staitic methods stolen from ET_Redux valueModel for now
+        // these staitic methods stolen from ET_Redux valueModel for now
     static BigDecimal getValueInUnits(double value, String units) {
         int shiftPointRightCount = 0;
 
@@ -730,7 +729,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         }
 
         if (uncertaintyType.equalsIgnoreCase("PCT")) {
-            return getOneSigmaPct(value, oneSigmaAbs).movePointRight(shiftPointRightCount);
+            return getOneSigmaPct(value, oneSigmaAbs); // Feb 2021 bug = no shift for percent.movePointRight(shiftPointRightCount);
         } else {
             return getOneSigmaAbs(oneSigmaAbs).movePointRight(shiftPointRightCount);
         }
@@ -742,10 +741,13 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
     /**
      *
+     * @param value
+     * @param oneSigmaAbs
      * @return
      */
     static BigDecimal getOneSigmaPct(double value, double oneSigmaAbs) {
         return new BigDecimal(oneSigmaAbs / value * 100.0);
+//        TODO: Redo tests with this math return (new BigDecimal(oneSigmaAbs)).divide((new BigDecimal(value)),new MathContext(15, RoundingMode.HALF_EVEN)).movePointRight(2);
     }
 
     static int calculateCountOfDigitsAfterDecPoint(String oneSigError) {
