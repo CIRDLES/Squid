@@ -923,6 +923,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param projectName the projectName to set
      */
+    @Override
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }

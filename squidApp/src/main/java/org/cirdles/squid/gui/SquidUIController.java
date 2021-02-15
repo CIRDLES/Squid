@@ -1314,7 +1314,7 @@ public class SquidUIController implements Initializable {
     
     @FXML
     private void videoTutorialsMenuItemAction(ActionEvent event) {
-        BrowserControl.showURI("https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists");
+        BrowserControl.showURI("https://www.youtube.com/playlist?list=PLfF8bcNRe2WTWx2IuDaHW_XpLh36bWkUc");
     }
     
     @FXML

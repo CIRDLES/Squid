@@ -119,13 +119,20 @@ public class PrawnFileHandlerIT {
 
         squidProjectZ6266.getTask().setTaskType(Squid3Constants.TaskTypeEnum.GEOCHRON);
         squidProjectZ6266.getTask().setUseSBM(true);
+        squidProjectZ6266.setUseSBM(true);
         squidProjectZ6266.getTask().setUserLinFits(false);
+        squidProjectZ6266.setUserLinFits(false);
         squidProjectZ6266.getTask().setSquidAllowsAutoExclusionOfSpots(true);
+        squidProjectZ6266.setSquidAllowsAutoExclusionOfSpots(true);
 
         squidProjectZ6266.getTask().setExtPErrU(0.75);
+        squidProjectZ6266.setExtPErrU(0.75);
         squidProjectZ6266.getTask().setExtPErrTh(0.75);
+        squidProjectZ6266.setExtPErrTh(0.75);
         squidProjectZ6266.getTask().setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
+        squidProjectZ6266.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
         squidProjectZ6266.getTask().setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
+        squidProjectZ6266.setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
 
         // modified sept 202 to accommodate old tests and new models
         ResourceExtractor extractor = new ResourceExtractor(ReferenceMaterialModel.class);
@@ -133,9 +140,12 @@ public class PrawnFileHandlerIT {
         ReferenceMaterialModel testingModel = new ReferenceMaterialModel();
         testingModel = (ReferenceMaterialModel) testingModel.readXMLObject(testingModelFile.getAbsolutePath(), false);
         squidProjectZ6266.getTask().setReferenceMaterialModel(testingModel);
+        squidProjectZ6266.setReferenceMaterialModel(testingModel);
         squidProjectZ6266.getTask().setConcentrationReferenceMaterialModel(testingModel);
+        squidProjectZ6266.setConcentrationReferenceMaterialModel(testingModel);
 
         squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
 
         // force defaults for testing of builtins
         squidProjectZ6266.getTask().getSpecialSquidFourExpressionsMap()
