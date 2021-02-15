@@ -99,6 +99,8 @@ public interface Squid3ProjectBasicAPI extends Serializable {
      * @return the projectName
      */
     String getProjectName();
+    
+    void setProjectName(String projectName);
 
     /**
      * @return the projectNotes

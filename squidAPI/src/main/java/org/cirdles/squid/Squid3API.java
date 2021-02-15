@@ -15,8 +15,11 @@
  */
 package org.cirdles.squid;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
 
 /**
@@ -25,11 +28,20 @@ import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
  */
 public interface Squid3API {
 
+    // project management
     public Squid3ProjectBasicAPI getSquid3Project();
-    
+
     public void openSquid3Project(Path projectFilePath);
 
-    public void openDemonstrationSquid3Project()throws IOException;
-    
-    public void generateAllSquid3ProjectReports()throws IOException;
+    public List<String> retrieveSquid3ProjectListMRU();
+
+    public void openDemonstrationSquid3Project() throws IOException;
+
+    public void saveCurrentSquid3Project() throws IOException, SquidException;
+
+    public void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException;
+
+    // reports management
+    public void generateAllSquid3ProjectReports() throws IOException;
+
 }
