@@ -230,6 +230,9 @@ public class SquidPersistentState implements Serializable {
 
                 // update MRU folder
                 MRUProjectFolderPath = projectFileMRU.getParent();
+                if (MRUProjectFolderPath == null){
+                    MRUProjectFolderPath = "";
+                }
 
                 // update current file
                 MRUProjectFile = projectFileMRU;
@@ -309,6 +312,9 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUProjectFolderPath
      */
     public String getMRUProjectFolderPath() {
+        if (MRUProjectFolderPath == null){
+            MRUProjectFolderPath = "";
+        }
         return MRUProjectFolderPath;
     }
 
