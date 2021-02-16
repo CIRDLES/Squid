@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import javax.xml.bind.JAXBException;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -34,8 +36,10 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.xml.sax.SAXException;
 
 /**
  * Provides specialized class to implement API for Squid3Ink Virtual Squid3.
@@ -74,6 +78,74 @@ public class Squid3Ink implements Squid3API {
 
     public static Squid3API spillSquid3Ink() {
         return new Squid3Ink();
+    }
+
+    /**
+     *
+     * @param prawnXMLFileSourcePath
+     * @throws IOException
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws SquidException
+     */
+    @Override
+    public void newSquid3GeochronProjectFromPrawnXML(Path prawnXMLFileSourcePath)
+            throws IOException, JAXBException, SAXException, SquidException {
+
+        File prawnSourceFile = prawnXMLFileSourcePath.toFile();
+        if (prawnSourceFile != null) {
+            squid3Project = new SquidProject(GEOCHRON);
+
+            // this updates output folder for reports to current version
+            CalamariFileUtilities.initCalamariReportsFolder(squid3Project.getPrawnFileHandler(),
+                    prawnXMLFileSourcePath.toFile().getParentFile());
+
+            if (((SquidProject) squid3Project).setupPrawnXMLFile(prawnSourceFile)) {
+                ((SquidProject) squid3Project).autoDivideSamples();
+                squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+            } else {
+                squid3Project.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
+                throw new SquidException(
+                        "Squid3 encountered an error while trying to open the selected data file.");
+            }
+        }
+    }
+
+    /**
+     *
+     * @param prawnXMLFileSourcePath
+     * @throws IOException
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws SquidException
+     */
+    @Override
+    public void newSquid3GeochronProjectFromZippedPrawnXML(Path prawnXMLFileSourcePath)
+            throws IOException, JAXBException, SAXException, SquidException {
+
+        File prawnZippedSourceFile = prawnXMLFileSourcePath.toFile();
+        if (prawnZippedSourceFile != null) {
+            squid3Project = new SquidProject(GEOCHRON);
+
+            File prawnSourceFileNew = extractZippedFile(
+                    prawnZippedSourceFile,
+                    prawnXMLFileSourcePath.getParent().toFile()).toFile();
+
+            // this updates output folder for reports to current version
+            CalamariFileUtilities.initCalamariReportsFolder(squid3Project.getPrawnFileHandler(),
+                    prawnXMLFileSourcePath.toFile().getParentFile());
+
+            if (((SquidProject) squid3Project).setupPrawnXMLFile(prawnSourceFileNew)) {
+                ((SquidProject) squid3Project).autoDivideSamples();
+                squidPersistentState.updatePrawnFileListMRU(prawnSourceFileNew);
+            } else {
+                squid3Project.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
+                throw new SquidException(
+                        "Squid3 encountered an error while trying to open the selected data file.");
+            }
+        }
     }
 
     /**
@@ -128,6 +200,10 @@ public class Squid3Ink implements Squid3API {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<String> retrieveSquid3ProjectListMRU() {
         return squidPersistentState.getMRUProjectList();
@@ -145,11 +221,11 @@ public class Squid3Ink implements Squid3API {
         openSquid3Project(localDemoFile.toPath());
     }
 
-    @Override
-    public void generateAllSquid3ProjectReports() throws IOException {
-        ((Squid3ProjectReportingAPI) squid3Project).generateAllReports();
-    }
-
+    /**
+     *
+     * @throws IOException
+     * @throws SquidException
+     */
     @Override
     public void saveCurrentSquid3Project() throws IOException, SquidException {
         if (squid3Project != null) {
@@ -159,6 +235,12 @@ public class Squid3Ink implements Squid3API {
         }
     }
 
+    /**
+     *
+     * @param squid3ProjectFileTarget
+     * @throws IOException
+     * @throws SquidException
+     */
     @Override
     public void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException {
         if (squid3Project != null) {
@@ -180,14 +262,34 @@ public class Squid3Ink implements Squid3API {
         }
     }
 
+    // REPORTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /**
+     * This method first checks to see if reports folder is initialized
+     *
+     * @throws IOException
+     */
+    @Override
+    public void generateAllSquid3ProjectReports() throws IOException {
+        if (squid3Project.hasReportsFolder()) {
+            ((Squid3ProjectReportingAPI) squid3Project).generateAllReports();
+        }
+    }
+
     /**
      * @param args the command line arguments
      * @throws java.io.IOException
      * @throws org.cirdles.squid.exceptions.SquidException
+     * @throws javax.xml.bind.JAXBException
+     * @throws org.xml.sax.SAXException
      */
-    public static void main(String[] args) throws IOException, SquidException {
+    public static void main(String[] args) throws IOException, SquidException, JAXBException, SAXException {
         Squid3API squid3Ink = Squid3Ink.spillSquid3Ink();
-        squid3Ink.openDemonstrationSquid3Project();
+
+        //squid3Ink.openDemonstrationSquid3Project();
+//        squid3Ink.newSquid3GeochronProjectFromPrawnXML(
+//                (new File("Squid3_Resources/ExamplePrawnXMLFiles/836_1_2016_Nov_28_09.50.xml")).toPath());
+        squid3Ink.newSquid3GeochronProjectFromZippedPrawnXML(
+                (new File("zippy/836_1_2016_Nov_28_09.50.xml.zip")).toPath());
 
         squid3Ink.generateAllSquid3ProjectReports();
         System.out.println(squid3Ink.getSquid3Project().getProjectName()
