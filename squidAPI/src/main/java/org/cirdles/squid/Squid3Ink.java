@@ -19,9 +19,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javax.xml.bind.JAXBException;
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
@@ -264,15 +267,48 @@ public class Squid3Ink implements Squid3API {
 
     // REPORTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     /**
-     * This method first checks to see if reports folder is initialized
      *
-     * @throws IOException
+     * @return @throws IOException
      */
     @Override
-    public void generateAllSquid3ProjectReports() throws IOException {
-        if (squid3Project.hasReportsFolder()) {
-            ((Squid3ProjectReportingAPI) squid3Project).generateAllReports();
-        }
+    public Path generateReferenceMaterialSummaryExpressionsReport() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generateReferenceMaterialSummaryExpressionsReport();
+    }
+
+    /**
+     *
+     * @return @throws IOException
+     */
+    @Override
+    public Path generateUnknownsSummaryExpressionsReport() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generateUnknownsSummaryExpressionsReport();
+    }
+
+    /**
+     *
+     * @return @throws IOException
+     */
+    @Override
+    public Path generateTaskSummaryReport() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generateTaskSummaryReport();
+    }
+
+    /**
+     *
+     * @return @throws IOException
+     */
+    @Override
+    public Path generateProjectAuditReport() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generateProjectAuditReport();
+    }
+
+    /**
+     *
+     * @return @throws IOException
+     */
+    @Override
+    public Path generateAllSquid3ProjectReports() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generateAllReports();
     }
 
     /**
@@ -285,20 +321,23 @@ public class Squid3Ink implements Squid3API {
     public static void main(String[] args) throws IOException, SquidException, JAXBException, SAXException {
         Squid3API squid3Ink = Squid3Ink.spillSquid3Ink();
 
-        //squid3Ink.openDemonstrationSquid3Project();
+        squid3Ink.openDemonstrationSquid3Project();
 //        squid3Ink.newSquid3GeochronProjectFromPrawnXML(
 //                (new File("Squid3_Resources/ExamplePrawnXMLFiles/836_1_2016_Nov_28_09.50.xml")).toPath());
-        squid3Ink.newSquid3GeochronProjectFromZippedPrawnXML(
-                (new File("zippy/836_1_2016_Nov_28_09.50.xml.zip")).toPath());
-
+//        squid3Ink.newSquid3GeochronProjectFromZippedPrawnXML(
+//                (new File("zippy/836_1_2016_Nov_28_09.50.xml.zip")).toPath());
+//        
         squid3Ink.generateAllSquid3ProjectReports();
         System.out.println(squid3Ink.getSquid3Project().getProjectName()
-                + "   " + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
-
-        squid3Ink.saveAsSquid3Project(new File("XXXXXX.squid"));
-        squid3Ink.generateAllSquid3ProjectReports();
-        System.out.println(squid3Ink.getSquid3Project().getProjectName()
-                + "   " + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
+                + "\n" + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
+        try {
+            System.out.println(squid3Ink.generateReferenceMaterialSummaryExpressionsReport().toString());
+        } catch (IOException iOException) {
+        }
+//        squid3Ink.saveAsSquid3Project(new File("XXXXXX.squid"));
+//        squid3Ink.generateAllSquid3ProjectReports();
+//        System.out.println(squid3Ink.getSquid3Project().getProjectName()
+//                + "   " + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
 
         System.out.println(squid3Ink.retrieveSquid3ProjectListMRU());
     }

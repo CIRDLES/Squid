@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
+import org.cirdles.squid.projects.Squid3ProjectReportingAPI;
 import org.xml.sax.SAXException;
 
 /**
@@ -38,23 +39,23 @@ public interface Squid3API {
     public Squid3ProjectBasicAPI getSquid3Project();
 
     /**
-     * 
+     *
      * @param prawnXMLFileSourcePath
      * @throws IOException
      * @throws JAXBException
      * @throws SAXException
-     * @throws SquidException 
+     * @throws SquidException
      */
     public void newSquid3GeochronProjectFromPrawnXML(Path prawnXMLFileSourcePath)
             throws IOException, JAXBException, SAXException, SquidException;
-    
+
     /**
-     * 
+     *
      * @param prawnXMLFileSourcePath
      * @throws IOException
      * @throws JAXBException
      * @throws SAXException
-     * @throws SquidException 
+     * @throws SquidException
      */
     public void newSquid3GeochronProjectFromZippedPrawnXML(Path prawnXMLFileSourcePath)
             throws IOException, JAXBException, SAXException, SquidException;
@@ -93,10 +94,18 @@ public interface Squid3API {
     public void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException;
 
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    public Path generateReferenceMaterialSummaryExpressionsReport() throws IOException;
+
+    public Path generateUnknownsSummaryExpressionsReport() throws IOException;
+
+    public Path generateTaskSummaryReport() throws IOException;
+
+    public Path generateProjectAuditReport() throws IOException;
+
     /**
      *
      * @throws IOException
      */
-    public void generateAllSquid3ProjectReports() throws IOException;
+    public Path generateAllSquid3ProjectReports() throws IOException;
 
 }

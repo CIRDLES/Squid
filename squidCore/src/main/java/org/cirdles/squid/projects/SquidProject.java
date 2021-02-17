@@ -873,25 +873,27 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return retVal;
     }
 
+    @Override
     public Path generateAllReports() throws IOException {
+
         if (prawnFileExists()) {
-            if (filterForConcRefMatSpotNames.length() > 0) {
-                prawnFileHandler.getReportsEngine().writeProjectAudit();
-                prawnFileHandler.getReportsEngine().writeTaskAudit();
-
-                prawnFileHandler.getReportsEngine().writeSummaryReportsForReferenceMaterials();
-                produceReferenceMaterialPerSquid25CSV(true);
-                produceSelectedReferenceMaterialReportCSV();
-
-                prawnFileHandler.getReportsEngine().writeSummaryReportsForUnknowns();
-                produceUnknownsPerSquid25CSV(true);
-                produceUnknownsBySampleForETReduxCSV(true);
-                produceSelectedUnknownsReportCSV();
-                produceUnknownsWeightedMeanSortingFieldsCSV();
-            }
-
             // these are raw data reports
             getTask().producePerScanReportsToFiles();
+        }
+
+        if (generateReportsValid()) {
+            prawnFileHandler.getReportsEngine().writeProjectAudit();
+            prawnFileHandler.getReportsEngine().writeTaskAudit();
+
+            prawnFileHandler.getReportsEngine().writeSummaryReportsForReferenceMaterials();
+            produceReferenceMaterialPerSquid25CSV(true);
+            produceSelectedReferenceMaterialReportCSV();
+
+            prawnFileHandler.getReportsEngine().writeSummaryReportsForUnknowns();
+            produceUnknownsPerSquid25CSV(true);
+            produceUnknownsBySampleForETReduxCSV(true);
+            produceSelectedUnknownsReportCSV();
+            produceUnknownsWeightedMeanSortingFieldsCSV();
         }
 
         return (new File(prawnFileHandler.getReportsEngine().makeReportFolderStructure())).toPath();
