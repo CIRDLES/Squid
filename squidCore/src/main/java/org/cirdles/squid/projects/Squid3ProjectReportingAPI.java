@@ -5,7 +5,6 @@
  */
 package org.cirdles.squid.projects;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -14,8 +13,6 @@ import java.nio.file.Path;
  * @author bowring
  */
 public interface Squid3ProjectReportingAPI {
-
-    public Path generateAllReports() throws IOException;
 
     public default boolean generateReportsValid() {
         return (!((SquidProject) this).getTask().getNominalMasses().isEmpty())
@@ -72,5 +69,19 @@ public interface Squid3ProjectReportingAPI {
             return projectAuditFilePath;
         }
     }
+
+    public default Path generatePerScanReports() throws IOException {
+        Path projectScanReportsPath = null;
+        if (generateReportsValid()) {
+            projectScanReportsPath = ((SquidProject) this).getTask().producePerScanReportsToFiles().toPath();
+        }
+        if (projectScanReportsPath == null) {
+            throw new IOException("Squid3 unable to generatePerScanReports");
+        } else {
+            return projectScanReportsPath;
+        }
+    }
+
+    public Path generateAllReports() throws IOException;
 
 }

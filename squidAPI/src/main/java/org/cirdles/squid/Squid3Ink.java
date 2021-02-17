@@ -312,6 +312,16 @@ public class Squid3Ink implements Squid3API {
     }
 
     /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    @Override
+    public Path generatePerScanReports() throws IOException {
+        return ((Squid3ProjectReportingAPI) squid3Project).generatePerScanReports();
+    }
+
+    /**
      * @param args the command line arguments
      * @throws java.io.IOException
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -332,6 +342,7 @@ public class Squid3Ink implements Squid3API {
                 + "\n" + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
         try {
             System.out.println(squid3Ink.generateReferenceMaterialSummaryExpressionsReport().toString());
+            System.out.println(squid3Ink.generatePerScanReports().toString());
         } catch (IOException iOException) {
         }
 //        squid3Ink.saveAsSquid3Project(new File("XXXXXX.squid"));

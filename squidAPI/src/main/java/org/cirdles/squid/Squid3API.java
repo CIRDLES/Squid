@@ -22,7 +22,6 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
-import org.cirdles.squid.projects.Squid3ProjectReportingAPI;
 import org.xml.sax.SAXException;
 
 /**
@@ -94,13 +93,40 @@ public interface Squid3API {
     public void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException;
 
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Path generateReferenceMaterialSummaryExpressionsReport() throws IOException;
 
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Path generateUnknownsSummaryExpressionsReport() throws IOException;
 
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Path generateTaskSummaryReport() throws IOException;
 
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
     public Path generateProjectAuditReport() throws IOException;
+
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generatePerScanReports() throws IOException;
 
     /**
      *
