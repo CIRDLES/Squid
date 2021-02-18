@@ -1,25 +1,15 @@
 package org.cirdles.squid.utilities.fileUtilities;
 
 
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
-import java.lang.String;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
-import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL;
-import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_LOCAL;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStringsWithUnixLineEnd;
 import org.xml.sax.SAXException;
 
@@ -148,7 +138,6 @@ public class FileValidator {
             e.getMessage();
         }
         return validates;
-        
     }
 }
         /*  XStream stream = new XStream();

@@ -1618,7 +1618,7 @@ public class SquidUIController implements Initializable {
                 final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
                 files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml")
                         && FileValidator.validateXML(f, schema, XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA));
-                            final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
+                final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
             
                 ButtonType replaceAll = new ButtonType("Replace All");
                 ButtonType replaceNone = new ButtonType("Replace None");
@@ -1674,10 +1674,11 @@ public class SquidUIController implements Initializable {
                         } else {
                             expressions.add(exp);
                         }
-                } catch (Exception e) {
-                    System.out.println(files[i].getName() + " custom expression not added");
+                    } catch (Exception e) {
+                        System.out.println(files[i].getName() + " custom expression not added");
+                    }
                 }
-            }
+                
             } catch (SAXException e) {
                 String message = e.getMessage();
                 SquidMessageDialog.showWarningDialog(
