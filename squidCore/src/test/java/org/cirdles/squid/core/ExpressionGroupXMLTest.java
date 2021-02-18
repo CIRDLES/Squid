@@ -19,6 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA;
 
 public class ExpressionGroupXMLTest {
     @Test
@@ -44,7 +45,7 @@ public class ExpressionGroupXMLTest {
         try {
             final Schema schema = sf.newSchema(new File("src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd"));
             files = folder.listFiles(f -> f.getName().endsWith(".xml") &&
-                    FileValidator.validateFileIsXMLSerializedEntity(f, schema));
+                    FileValidator.validateXML(f, schema, XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA));
         } catch (SAXException e) {
         }
         if (files != null) {

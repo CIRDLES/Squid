@@ -49,6 +49,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -200,12 +201,10 @@ public class TaskFolderBrowserController implements Initializable {
                     )) {
                         // check if task 
                         try {
-                            // Backwards compatibility prior to task-xml-validation
-                            File temp = fixXMLFileHeader(file);
-                            if (FileValidator.validateFileIsXMLSerializedEntity(temp, taskXMLSchema)){
-                                TaskInterface task = (Task) ((XMLSerializerInterface)
-                                        squidProject.getTask()).readXMLObject(temp.getAbsolutePath(), false);
-                                if (task != null) {
+                            TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
+                                        squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
+                            if (task != null){
+                                if (FileValidator.validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
                                     taskFilesInFolder.add(task);
                                 }
                             }
@@ -216,11 +215,10 @@ public class TaskFolderBrowserController implements Initializable {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
                     // check if task 
                     try {
-                        File temp = fixXMLFileHeader(tasksBrowserTarget);
-                        if (FileValidator.validateFileIsXMLSerializedEntity(temp, taskXMLSchema)){
-                            TaskInterface task = (Task) ((XMLSerializerInterface)
-                                    squidProject.getTask()).readXMLObject(temp.getAbsolutePath(), false);
-                            if (task != null) {
+                        TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
+                                    squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
+                        if (task != null){
+                            if (FileValidator.validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
                                 taskFilesInFolder.add(task);
                             }
                         }
@@ -498,45 +496,6 @@ public class TaskFolderBrowserController implements Initializable {
         if (!player) {
             expressionText.setText("Not Used");
         }
-    }
-    
-    private File fixXMLFileHeader(File XMLFile) { 
-        FileReader reader;
-        FileWriter writer;
-        BufferedReader buffIn = null;
-        BufferedWriter buffOut = null;
-        File tempTaskXML = null;
-        
-        try {
-            tempTaskXML = File.createTempFile("tempTaskXML", ".tmp");
-            reader = new FileReader(XMLFile);
-            writer = new FileWriter(tempTaskXML);
-            buffIn = new BufferedReader(reader);
-            buffOut = new BufferedWriter(writer);
-            
-            String line;
-            while((line = buffIn.readLine()) != null){
-                line = line.replaceFirst("<Task>",
-                    XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA);
-                buffOut.write(line);
-                buffOut.newLine();
-            }
-            buffIn.close();
-            buffOut.close();
-        } catch(IOException e) {
-        } finally {
-            try {
-                if (buffIn != null) {
-                    buffIn.close();
-                }
-                if (buffOut != null) {
-                    buffOut.close();
-                }
-            } catch(IOException e){
-            }
-        }
-
-        return tempTaskXML;
     }
 
     @FXML
