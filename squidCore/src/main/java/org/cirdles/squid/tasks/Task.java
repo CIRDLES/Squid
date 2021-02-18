@@ -37,6 +37,7 @@ import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -1943,12 +1944,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public String customizeXML(String xml) {
-        String retVal
-                = "<?xml version=\"1.0\"?>\n"
-                + "<!-- SQUID3_TASK_SPECIFICATION_FILE -->\n"
-                + "<!-- visit: github.com/CIRDLES/Squid -->\n"
-                + xml;
-        return retVal;
+        String xmlR = xml;
+        
+        xmlR = xmlR.replaceFirst("<Task>",
+                XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
+        
+        return xmlR;
     }
 
     @Override

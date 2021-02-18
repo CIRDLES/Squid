@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<!-- SQUID3_TASK_SPECIFICATION_FILE -->
+<!-- visit: github.com/CIRDLES/Squid -->
+<Task>
+  <name>Z6266_=_11pk_Perm1</name>
+  <taskType>GEOCHRON</taskType>
+  <description>11-peak zircon (189-254), primary 206/238, secondary (208/232) calibrated indirectly, via 232Th/238U</description>
+  <authorName></authorName>
+  <labName>SB</labName>
+  <provenance>SquidTask_Z6266 = 11pk Perm1.SB.xls</provenance>
+  <dateRevised>0</dateRevised>
+  <parentNuclide>238</parentNuclide>
+  <directAltPD>false</directAltPD>
+  <nominalMasses>
+    <string>190</string>
+    <string>195.8</string>
+    <string>195.9</string>
+    <string>204</string>
+    <string>204.1</string>
+    <string>206</string>
+    <string>207</string>
+    <string>208</string>
+    <string>238</string>
+    <string>248</string>
+    <string>254</string>
+  </nominalMasses>
+  <indexOfBackgroundSpecies>4</indexOfBackgroundSpecies>
+  <ratioNames>
+    <string>190/195.8</string>
+    <string>195.9/195.8</string>
+    <string>204/206</string>
+    <string>206/238</string>
+    <string>206/254</string>
+    <string>207/206</string>
+    <string>208/206</string>
+    <string>208/248</string>
+    <string>238/195.8</string>
+    <string>248/195.8</string>
+    <string>248/254</string>
+    <string>254/238</string>
+  </ratioNames>
+  <specialSquidFourExpressionsMap>
+    <entry>
+      <string>232Th238U_DEFAULT</string>
+      <string>(0.03446*[&quot;254/238&quot;]+0.868)*[&quot;248/254&quot;]</string>
+    </entry>
+    <entry>
+      <string>ParentElement_ConcenConst</string>
+      <string>[&quot;238/195.8&quot;]/[&quot;254/238&quot;]^0.66</string>
+    </entry>
+    <entry>
+      <string>Uncor_206Pb238U_CalibConst</string>
+      <string>[&quot;206/238&quot;]/[&quot;254/238&quot;]^Expo_Used</string>
+    </entry>
+    <entry>
+      <string>Uncor_208Pb232Th_CalibConst</string>
+      <string>[&quot;208/248&quot;]</string>
+    </entry>
+  </specialSquidFourExpressionsMap>
+  <customExpressions>
+    <ExpressionSpec>
+      <expressionName>Expo_Used</expressionName>
+      <excelExpressionString>1.8</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>LnUOU</expressionName>
+      <excelExpressionString>ln([&quot;254/238&quot;])</excelExpressionString>
+      <squidSwitchNU>true</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>LnPbU</expressionName>
+      <excelExpressionString>Ln([&quot;206/238&quot;])</excelExpressionString>
+      <squidSwitchNU>true</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>lnUOU-sample</expressionName>
+      <excelExpressionString>ln([&quot;254/238&quot;])</excelExpressionString>
+      <squidSwitchNU>true</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>lnPbU-sample</expressionName>
+      <excelExpressionString>Ln([&quot;206/238&quot;])</excelExpressionString>
+      <squidSwitchNU>true</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Expo</expressionName>
+      <excelExpressionString>RobReg(LnUOU,LnPbU)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Yb_bwt</expressionName>
+      <excelExpressionString>Biweight([&quot;190/195.8&quot;],9)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Ybsen</expressionName>
+      <excelExpressionString>69.85/Yb_bwt</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Ybsens1sigabserror</expressionName>
+      <excelExpressionString>Yb_bwt21/Yb_bwt*Ybsen</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Hf_bwt</expressionName>
+      <excelExpressionString>Biweight([&quot;195.9/195.8&quot;],9)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Hfsens</expressionName>
+      <excelExpressionString>8200/Hf_bwt</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Hfsens1sigabs</expressionName>
+      <excelExpressionString>Hf_bwt21/Hf_bwt*Hfsens</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Expo-RR</expressionName>
+      <excelExpressionString>Expo</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>EXPO-USED</expressionName>
+      <excelExpressionString>Expo_used</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Massfrac</expressionName>
+      <excelExpressionString>1</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom constant imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MassFract.Factor</expressionName>
+      <excelExpressionString>Massfrac</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.7*/6*</expressionName>
+      <excelExpressionString>4cor_207Pb206Pb*[&quot;MassFract.Factor&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>NatUrat</expressionName>
+      <excelExpressionString>137.88001</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom constant imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.207*/235</expressionName>
+      <excelExpressionString>4cor_206Pb238U*NatUrat*[&quot;MF_corr.4corr.7*/6*&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.207*/235%err.</expressionName>
+      <excelExpressionString>[%&quot;4cor_207Pb235U&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.206*/238</expressionName>
+      <excelExpressionString>4cor_206Pb238U</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.206*/238%err.</expressionName>
+      <excelExpressionString>[%&quot;4cor_206Pb238U&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF-corr.206*/238 Ageabs.err.</expressionName>
+      <excelExpressionString>[±&quot;4cor_206Pb238U_Age&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.7*/6*%err.</expressionName>
+      <excelExpressionString>[%&quot;4cor_207Pb206Pb&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.7*/6* Age</expressionName>
+      <excelExpressionString>AgePb76([&quot;MF_corr.4corr.7*/6*&quot;])</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.%Disc.</expressionName>
+      <excelExpressionString>(1-[&quot;MF_corr.4corr.206*/238&quot;]/(EXP(0.000155125*[&quot;MF_corr.4corr.7*/6* Age&quot;])-1))</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>62667*/6*biwt</expressionName>
+      <excelExpressionString>Biweight(4cor_207Pb206Pb,9)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>6266%com206</expressionName>
+      <excelExpressionString>Biweight(4cor_Com206Pb_Pct,9)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Ybppm</expressionName>
+      <excelExpressionString>[&quot;190/195.8&quot;]*Ybsen</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Yb1sabserr</expressionName>
+      <excelExpressionString>sqrt((Ybsens1sigabserror/Ybsen)^2+([%&quot;190/195.8&quot;]/100)^2)*Ybppm</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Hfppm</expressionName>
+      <excelExpressionString>Hfsens*[&quot;195.9/195.8&quot;]</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>Hf1sabserr</expressionName>
+      <excelExpressionString>sqrt((Hfsens1sigabs/Hfsens)^2+([%&quot;195.9/195.8&quot;]/100)^2)*Hfppm</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF-corr.206*/238 Age</expressionName>
+      <excelExpressionString>4cor_206Pb238U_Age</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>ERRORCoefficient</expressionName>
+      <excelExpressionString>ErrCorr</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>MF_corr.4corr.7*/6* Ageabs.err.</expressionName>
+      <excelExpressionString>AgeErPb76([&quot;MF_corr.4corr.7*/6*&quot;],[&quot;MF_corr.4corr.7*/6*%err.&quot;],,,,true)</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>QCStatus</expressionName>
+      <excelExpressionString>&quot;ACCEPT&quot;</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>QCComment</expressionName>
+      <excelExpressionString>&quot;N/C&quot;</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>CalibrationError(%)</expressionName>
+      <excelExpressionString>ExtPerrA1</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>ErrorinStandardCalib.(%)</expressionName>
+      <excelExpressionString>WtdMeanAPerr1</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>true</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>true</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>false</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+    <ExpressionSpec>
+      <expressionName>CalError</expressionName>
+      <excelExpressionString>ErrorinStandardCalib</excelExpressionString>
+      <squidSwitchNU>false</squidSwitchNU>
+      <squidSwitchSCSummaryCalculation>false</squidSwitchSCSummaryCalculation>
+      <squidSwitchSTReferenceMaterialCalculation>false</squidSwitchSTReferenceMaterialCalculation>
+      <squidSwitchSAUnknownCalculation>true</squidSwitchSAUnknownCalculation>
+      <squidSpecialUPbThExpression>false</squidSpecialUPbThExpression>
+      <squidSwitchConcentrationReferenceMaterialCalculation>false</squidSwitchConcentrationReferenceMaterialCalculation>
+      <notes>Custom expression imported from Squid2 task Z6266 = 11pk Perm1 .</notes>
+    </ExpressionSpec>
+  </customExpressions>
+</Task>

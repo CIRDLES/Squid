@@ -1,13 +1,27 @@
 package org.cirdles.squid.utilities.fileUtilities;
 
-import org.xml.sax.SAXException;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
+import javax.xml.XMLConstants;
+import javax.xml.bind.JAXBContext;
+import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Schema;
-import javax.xml.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.lang.String;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Validator;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL;
+import static org.cirdles.squid.constants.Squid3Constants.URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_LOCAL;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStringsWithUnixLineEnd;
+import org.xml.sax.SAXException;
 
 public class FileValidator {
 
@@ -86,17 +100,55 @@ public class FileValidator {
     }
     */
 
-    public static boolean validateFileIsXMLSerializedEntity(File serializedFile, Schema schema) {
-        boolean retVal = false;
-        Source source = new StreamSource(serializedFile);
-        Validator validator = schema.newValidator();
+    public static boolean validateXML(File serializedFile, Schema schema, String header) {
+        boolean validates = false;
+        String[] headerArray = header.split("\\n");
+        File tempSerializedFile = null; // Temp file with corresponding header for XML validation
+        
+        // Exception thrown if file is xml but validation fails
         try {
+            List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
+            // Change header
+            lines.set(2, headerArray[2]);
+            lines.set(3, headerArray[3]);
+            lines.set(4, headerArray[4]);
+            lines.set(5, headerArray[5]);
+            lines.set(6, headerArray[6]);
+            
+            tempSerializedFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
+            Validator validator = schema.newValidator();
+            Source source = new StreamSource(tempSerializedFile);
             validator.validate(source);
-            retVal = true;
-        } catch (SAXException | IOException e) {
-            e.printStackTrace();
+            validates = true; // True if no exception is thrown
+            
+        } catch (IOException | ArrayIndexOutOfBoundsException |
+                NullPointerException | SAXException e) {
+            // No info as to why XML didn't validate... need to fix.
+            e.getMessage();
         }
-        return retVal;
+        return validates;
+    }
+    
+    public static boolean validateXML(File serializedFile, Schema schema) {
+        boolean validates = false;
+        File tempSerializedFile = null; // Temp file with corresponding header for XML validation
+        
+        // Exception thrown if file is xml but validation fails
+        try {
+            List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
+            writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
+            Validator validator = schema.newValidator();
+            Source source = new StreamSource(tempSerializedFile);
+            validator.validate(source);
+            validates = true; // True if no exception is thrown
+            
+        } catch (IOException | ArrayIndexOutOfBoundsException |
+                NullPointerException | SAXException e) {
+            // No info as to why XML didn't validate... need to fix.
+            e.getMessage();
+        }
+        return validates;
+        
     }
 }
         /*  XStream stream = new XStream();

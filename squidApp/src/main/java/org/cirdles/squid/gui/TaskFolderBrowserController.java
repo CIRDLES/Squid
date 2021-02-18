@@ -5,7 +5,11 @@
  */
 package org.cirdles.squid.gui;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
@@ -40,7 +44,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextFlow;
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
@@ -62,6 +71,8 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import org.cirdles.squid.utilities.fileUtilities.FileValidator;
+import org.xml.sax.SAXException;
 
 /**
  * FXML Controller class
@@ -74,8 +85,10 @@ public class TaskFolderBrowserController implements Initializable {
     // folder or file
     public static File tasksBrowserTarget;
     public static String tasksBrowserType = ".xml";
-
+    
     private ListView<TaskInterface> listViewOfTasksInFolder;
+    
+    private static Schema taskXMLSchema;
 
     @FXML
     private VBox vboxMaster;
@@ -151,6 +164,13 @@ public class TaskFolderBrowserController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        try {
+            taskXMLSchema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_LOCAL));
+        }
+        catch (SAXException e){
+            e.printStackTrace();
+        }
         populateListOfTasks();
         
         taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
@@ -181,9 +201,12 @@ public class TaskFolderBrowserController implements Initializable {
                     )) {
                         // check if task 
                         try {
-                            TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
-                            if (task != null) {
-                                taskFilesInFolder.add(task);
+                            TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
+                                        squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
+                            if (task != null){
+                                if (FileValidator.validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
+                                    taskFilesInFolder.add(task);
+                                }
                             }
                         } catch (Exception e) {
                         }
@@ -192,9 +215,12 @@ public class TaskFolderBrowserController implements Initializable {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
                     // check if task 
                     try {
-                        TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
-                        if (task != null) {
-                            taskFilesInFolder.add(task);
+                        TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
+                                    squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
+                        if (task != null){
+                            if (FileValidator.validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
+                                taskFilesInFolder.add(task);
+                            }
                         }
                     } catch (Exception e) {
                     }

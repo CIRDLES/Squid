@@ -93,6 +93,7 @@ import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
 import org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 
 /**
@@ -1616,70 +1617,73 @@ public class SquidUIController implements Initializable {
             try {
                 final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
                 files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml")
-                        && FileValidator.validateFileIsXMLSerializedEntity(f, schema));
-            } catch (SAXException e) {
-                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
-            }
+                        && FileValidator.validateXML(f, schema, XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA));
+                            final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
             
-            final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
-            
-            ButtonType replaceAll = new ButtonType("Replace All");
-            ButtonType replaceNone = new ButtonType("Replace None");
-            ButtonType replace = new ButtonType("Replace");
-            ButtonType dontReplace = new ButtonType("Don't Replace");
-            ButtonType rename = new ButtonType("Rename");
-            Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
-            alert.initStyle(StageStyle.UNDECORATED);
-            alert.initOwner(primaryStage.getScene().getWindow());
-            alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
-            alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
-            for (int i = 0; i < files.length; i++) {
-                try {
-                    final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
-                    
-                    if (expressions.contains(exp)) {
-                        if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
-                            expressions.remove(exp);
-                            expressions.add(exp);
-                        } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
-                            alert.setContentText(exp.getName() + " exists");
-                            alert.showAndWait().ifPresent((t) -> {
-                                if (t.equals(replace) || t.equals(replaceAll)) {
-                                    expressions.remove(exp);
-                                    expressions.add(exp);
-                                } else if (t.equals(rename)) {
-                                    TextInputDialog dialog = new TextInputDialog(exp.getName());
-                                    dialog.setTitle("Rename");
-                                    dialog.setHeaderText("Rename " + exp.getName());
-                                    dialog.setContentText("Enter the new name:");
-                                    Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-                                    TextField newName = null;
-                                    for (Node n : dialog.getDialogPane().getChildren()) {
-                                        if (n instanceof TextField) {
-                                            newName = (TextField) n;
+                ButtonType replaceAll = new ButtonType("Replace All");
+                ButtonType replaceNone = new ButtonType("Replace None");
+                ButtonType replace = new ButtonType("Replace");
+                ButtonType dontReplace = new ButtonType("Don't Replace");
+                ButtonType rename = new ButtonType("Rename");
+                Alert alert = new Alert(Alert.AlertType.WARNING, "", replaceAll, replaceNone, replace, dontReplace, rename);
+                alert.initStyle(StageStyle.UNDECORATED);
+                alert.initOwner(primaryStage.getScene().getWindow());
+                alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
+                alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
+                for (int i = 0; i < files.length; i++) {
+                    try {
+                        final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
+
+                        if (expressions.contains(exp)) {
+                            if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
+                                expressions.remove(exp);
+                                expressions.add(exp);
+                            } else if (alert.getResult() == null || !alert.getResult().equals(replaceNone)) {
+                                alert.setContentText(exp.getName() + " exists");
+                                alert.showAndWait().ifPresent((t) -> {
+                                    if (t.equals(replace) || t.equals(replaceAll)) {
+                                        expressions.remove(exp);
+                                        expressions.add(exp);
+                                    } else if (t.equals(rename)) {
+                                        TextInputDialog dialog = new TextInputDialog(exp.getName());
+                                        dialog.setTitle("Rename");
+                                        dialog.setHeaderText("Rename " + exp.getName());
+                                        dialog.setContentText("Enter the new name:");
+                                        Button okBtn = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                                        TextField newName = null;
+                                        for (Node n : dialog.getDialogPane().getChildren()) {
+                                            if (n instanceof TextField) {
+                                                newName = (TextField) n;
+                                            }
+                                        }
+                                        if (okBtn != null && newName != null) {
+                                            newName.textProperty().addListener((observable, oldValue, newValue) -> {
+                                                okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
+                                            });
+                                        }
+                                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
+                                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                                        Optional<String> result = dialog.showAndWait();
+                                        if (result.isPresent()) {
+                                            exp.setName(result.get());
+                                            expressions.add(exp);
                                         }
                                     }
-                                    if (okBtn != null && newName != null) {
-                                        newName.textProperty().addListener((observable, oldValue, newValue) -> {
-                                            okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
-                                        });
-                                    }
-                                    dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                                    dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
-                                    Optional<String> result = dialog.showAndWait();
-                                    if (result.isPresent()) {
-                                        exp.setName(result.get());
-                                        expressions.add(exp);
-                                    }
-                                }
-                            });
+                                });
+                            }
+                        } else {
+                            expressions.add(exp);
                         }
-                    } else {
-                        expressions.add(exp);
-                    }
                 } catch (Exception e) {
                     System.out.println(files[i].getName() + " custom expression not added");
                 }
+            }
+            } catch (SAXException e) {
+                String message = e.getMessage();
+                SquidMessageDialog.showWarningDialog(
+                    "Squid3 encountered an error while trying to open the folder of custom expressions\n\n"
+                    + message,
+                    primaryStageWindow);
             }
             
             squidProject.getTask().setChanged(true);
