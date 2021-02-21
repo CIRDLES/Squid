@@ -6,6 +6,7 @@
 package org.cirdles.squid.tasks;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
@@ -40,8 +41,7 @@ public class TaskXMLValidationTest {
             assertTrue(FileValidator.validateXML(
                     taskFile, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA));
         }
-        catch (SAXException e){
-            
+        catch (SAXException | IOException e){
         }
            
     }   

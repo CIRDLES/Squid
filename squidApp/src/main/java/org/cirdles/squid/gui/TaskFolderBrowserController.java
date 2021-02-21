@@ -48,7 +48,6 @@ import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;

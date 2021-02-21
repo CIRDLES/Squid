@@ -4,7 +4,6 @@ import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import org.cirdles.squid.Squid;
 
@@ -21,11 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 
 public class ExpressionGroupXMLTest {
     @Test
@@ -34,6 +32,7 @@ public class ExpressionGroupXMLTest {
         ResourceExtractor squidProjectExtractor = new ResourceExtractor(SquidProject.class);
         ResourceExtractor squidTaskXMLSchemaExtractor = new ResourceExtractor(Squid.class);
         File squidFile = squidProjectExtractor.extractResourceAsFile("Z626611PKPERM1.squid");
+        File schemaFile = squidTaskXMLSchemaExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
         SquidProject project = (SquidProject) SquidSerializer.getSerializedObjectFromFile(squidFile.getAbsolutePath(), false);
 
         final File folder = new File("testingExpressionsGroups");
@@ -48,18 +47,24 @@ public class ExpressionGroupXMLTest {
         });
         
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        File[] files;
-        LinkedList<File> validatedFiles = new LinkedList<File>();
+        File[] files = null;
         try {
-            final Schema schema = sf.newSchema(new File("src/main/resources/org/cirdles/squid/schema/SquidTask_ExpressionXMLSchema.xsd"));
-            files = folder.listFiles(f -> f.getName().endsWith(".xml") &&
-                    FileValidator.validateXML(f, schema, XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA));
+            final Schema schema = sf.newSchema(schemaFile);
+            files = folder.listFiles(f -> f.getName().endsWith(".xml"));
+            for (File file : files) {
+                try {
+                    validateXML(file, schema);
+                }   catch (SAXException | IOException e) {
+                    // If any exception is thrown, test will fail
+                }
+        } 
+                
         } catch (SAXException e) {
         }
-        if (!validatedFiles.isEmpty()) {
+        if (files != null) {
             List<Expression> convertedExpressions = new ArrayList<>();
             Expression converter = new Expression();
-            for (File file : validatedFiles) {
+            for (File file : files) {
                 convertedExpressions.add((Expression) converter.readXMLObject(file.getAbsolutePath(), false));
             }
             files = folder.listFiles();

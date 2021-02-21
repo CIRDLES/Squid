@@ -158,7 +158,6 @@ public final class Squid3Constants {
     public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_REMOTE_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
             + "<!-- SQUID3_TASK_SPECIFICATION_FILE -->\n"
-            + "<!-- visit: github.com/CIRDLES/Squid -->\n"
             + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
             + "      xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
@@ -168,19 +167,12 @@ public final class Squid3Constants {
     public static final String XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
             + "<!-- SQUID3_TASK_SPECIFICATION_FILE -->\n"
-            + "<!-- visit: github.com/CIRDLES/Squid -->\n"
             + "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
             + "      xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
             + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "      xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                          ../schema/SquidTask_XMLSchema.xsd\">";
     
-    public static final String XML_HEADER_FIX_FOR_SQUIDTASK_FILES_IN_LIBRARY_USING_LOCAL_SCHEMA
-            = "<Task xmlns=\"https://raw.githubusercontent.com\"\n"
-            + "      xmlns:xs=\"http://www.w3.org/2001/XMLSchema\"\n"
-            + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
-            + "      xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
-            + "                          ../schema/SquidTask_XMLSchema.xsd\">";
     /**
      *
      */

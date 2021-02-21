@@ -95,6 +95,7 @@ import org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum;
 import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 
 /**
  * FXML Controller class
@@ -1613,11 +1614,19 @@ public class SquidUIController implements Initializable {
         if (folder != null && folder.exists()) {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             
-            File[] files;
+            List<File> validatedFiles = new ArrayList<>();
             try {
                 final Schema schema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_EXPRESSION_XML_SCHEMA_LOCAL));
-                files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml")
-                        && FileValidator.validateXML(f, schema, XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA));
+                File[] files = folder.listFiles(f -> f.getName().toLowerCase().endsWith(".xml"));
+                for (File file : files) {
+                    try { 
+                        validateXML(file, schema);
+                        validatedFiles.add(file);
+                    } catch (SAXException | IOException e) {
+                        // Need something for the user here?
+                    }
+                }
+
                 final List<Expression> expressions = squidProject.getTask().getTaskExpressionsOrdered();
             
                 ButtonType replaceAll = new ButtonType("Replace All");
@@ -1630,9 +1639,9 @@ public class SquidUIController implements Initializable {
                 alert.initOwner(primaryStage.getScene().getWindow());
                 alert.setX(primaryStage.getX() + (primaryStage.getWidth() - alert.getWidth()) / 2);
                 alert.setY(primaryStage.getY() + (primaryStage.getHeight() - alert.getHeight()) / 2);
-                for (int i = 0; i < files.length; i++) {
+                for (int i = 0; i < validatedFiles.size(); i++) {
                     try {
-                        final Expression exp = (Expression) (new Expression()).readXMLObject(files[i].getAbsolutePath(), false);
+                        final Expression exp = (Expression) (new Expression()).readXMLObject(validatedFiles.get(i).getAbsolutePath(), false);
 
                         if (expressions.contains(exp)) {
                             if (alert.getResult() != null && alert.getResult().equals(replaceAll)) {
@@ -1675,7 +1684,7 @@ public class SquidUIController implements Initializable {
                             expressions.add(exp);
                         }
                     } catch (Exception e) {
-                        System.out.println(files[i].getName() + " custom expression not added");
+                        System.out.println(validatedFiles.get(i).getName() + " custom expression not added");
                     }
                 }
                 

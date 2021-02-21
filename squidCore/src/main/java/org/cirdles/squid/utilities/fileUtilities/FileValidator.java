@@ -10,6 +10,7 @@ import java.util.List;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Validator;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStringsWithUnixLineEnd;
 import org.xml.sax.SAXException;
 
@@ -90,53 +91,57 @@ public class FileValidator {
     }
     */
 
-    public static boolean validateXML(File serializedFile, Schema schema, String header) {
+    /**
+     *
+     * @param serializedFile
+     * @param schema
+     * @param header
+     * @return
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     * @throws Exception
+     */
+    public static boolean validateXML(File serializedFile, Schema schema, String header) throws SAXException,
+            IOException, ArrayIndexOutOfBoundsException {
         boolean validates = false;
         String[] headerArray = header.split("\\n");
         File tempSerializedFile = null; // Temp file with corresponding header for XML validation
-        
-        // Exception thrown if file is xml but validation fails
-        try {
-            List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
+        List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
+        if (!(lines.get(2).equals(headerArray[2]))) { // Does file already have header?
             // Change header
             lines.set(2, headerArray[2]);
-            lines.set(3, headerArray[3]);
-            lines.set(4, headerArray[4]);
-            lines.set(5, headerArray[5]);
-            lines.set(6, headerArray[6]);
-            
-            tempSerializedFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
-            Validator validator = schema.newValidator();
-            Source source = new StreamSource(tempSerializedFile);
-            validator.validate(source);
-            validates = true; // True if no exception is thrown
-            
-        } catch (IOException | ArrayIndexOutOfBoundsException |
-                NullPointerException | SAXException e) {
-            // No info as to why XML didn't validate... need to fix.
-            e.getMessage();
-        }
-        return validates;
+            lines.add(3, headerArray[3]);
+            lines.add(4, headerArray[4]);
+            lines.add(5, headerArray[5]);
+            lines.add(6, headerArray[6]);
+        }     
+        tempSerializedFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
+        Validator validator = schema.newValidator();
+        Source source = new StreamSource(tempSerializedFile);
+        validator.validate(source);
+        validates = true;
+        return validates; // Return if no exception
     }
     
-    public static boolean validateXML(File serializedFile, Schema schema) {
+    /**
+     *
+     * @param serializedFile
+     * @param schema
+     * @return
+     * @throws org.xml.sax.SAXException
+     * @throws java.io.IOException
+     */
+    public static boolean validateXML(File serializedFile, Schema schema) throws SAXException, IOException {
         boolean validates = false;
         File tempSerializedFile = null; // Temp file with corresponding header for XML validation
         
         // Exception thrown if file is xml but validation fails
-        try {
-            List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
-            writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
-            Validator validator = schema.newValidator();
-            Source source = new StreamSource(tempSerializedFile);
-            validator.validate(source);
-            validates = true; // True if no exception is thrown
-            
-        } catch (IOException | ArrayIndexOutOfBoundsException |
-                NullPointerException | SAXException e) {
-            // No info as to why XML didn't validate... need to fix.
-            e.getMessage();
-        }
+        List<String> lines = Files.readAllLines(serializedFile.toPath(), Charset.defaultCharset());
+        tempSerializedFile = writeTextFileFromListOfStringsWithUnixLineEnd(lines, "squidTempXML", ".xml");
+        Validator validator = schema.newValidator();
+        Source source = new StreamSource(tempSerializedFile);
+        validator.validate(source);
+        validates = true; // True if no exception is thrown
         return validates;
     }
 }

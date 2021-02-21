@@ -34,7 +34,7 @@ public class SquidReportTableXSDValidationTest {
             final Schema schema = sf.newSchema(squidReportTableSchema);
             final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("Example.xml");
             validates = FileValidator.validateXML(defaultRefMatXML, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
-        } catch (SAXException e) {
+        } catch (SAXException | IOException e) {
         }
         finally {
             assertTrue(validates);

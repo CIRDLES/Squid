@@ -1192,15 +1192,16 @@ public class SquidReportSettingsController implements Initializable {
     private void importOnAction(ActionEvent event) {
         File file = null;
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        boolean tableValidates = false;
+        boolean isValidTableXML = false;
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
             final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
-            tableValidates = FileValidator.validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
-        } catch (IOException | SAXException e) {
-            SquidMessageDialog.showWarningDialog("Unable to import. Table could not be validated against XML schema.", primaryStageWindow);
+            isValidTableXML = FileValidator.validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+        } catch (SAXException | IOException | ArrayIndexOutOfBoundsException e) {
+            SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
+            // Another message here to describe why failure occured?
         }
-        if (file != null && tableValidates) {
+        if (file != null && isValidTableXML) {
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
             final SquidReportTableInterface IMPORTED_TABLE = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (IMPORTED_TABLE != null) {
