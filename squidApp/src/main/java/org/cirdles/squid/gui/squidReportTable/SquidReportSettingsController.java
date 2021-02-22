@@ -50,7 +50,6 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +73,7 @@ import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 
 /**
  * FXML Controller class
@@ -1196,7 +1196,7 @@ public class SquidReportSettingsController implements Initializable {
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
             final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
-            isValidTableXML = FileValidator.validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+            isValidTableXML = validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
         } catch (SAXException | IOException | ArrayIndexOutOfBoundsException e) {
             SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
             // Another message here to describe why failure occured?

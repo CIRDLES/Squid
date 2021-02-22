@@ -18,7 +18,6 @@ package org.cirdles.squid.squidReports.squidReportColumns;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -29,7 +28,6 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 
-@XmlJavaTypeAdapter(SquidReportColumn.Adapter.class)
 public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
     public void initReportColumn(TaskInterface task);

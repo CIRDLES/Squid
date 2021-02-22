@@ -5,11 +5,7 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +30,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -70,7 +65,7 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import org.xml.sax.SAXException;
 
 /**
@@ -203,13 +198,12 @@ public class TaskFolderBrowserController implements Initializable {
                             TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
                                         squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
                             if (task != null){
-                                if (FileValidator.validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
-                                    taskFilesInFolder.add(task);
-                                }
+                                validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
+                                taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                             }
-                        } catch (Exception e) {
+                        } catch (IOException | ArrayIndexOutOfBoundsException | SAXException e) {
                         }
-                    };
+                    } // End for loop for files
                 } else {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
                     // check if task 
@@ -217,11 +211,10 @@ public class TaskFolderBrowserController implements Initializable {
                         TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
                                     squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
                         if (task != null){
-                            if (FileValidator.validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA)) {
-                                taskFilesInFolder.add(task);
-                            }
+                            validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
+                            taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                         }
-                    } catch (Exception e) {
+                    } catch (IOException | ArrayIndexOutOfBoundsException | SAXException e) {
                     }
                 }
             } else {

@@ -16,7 +16,7 @@ import org.xml.sax.SAXException;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class TaskXMLValidationTest {
                                 "schema/SquidTask_XMLSchema.xsd"));
             File taskFile = taskResourceExtractor.extractResourceAsFile(
                             "Z6266_=_11pk_Perm1.xml");
-            assertTrue(FileValidator.validateXML(
+            assertTrue(validateXML(
                     taskFile, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA));
         }
         catch (SAXException | IOException e){

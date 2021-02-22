@@ -20,22 +20,12 @@ import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLConverter;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
@@ -45,12 +35,6 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 
-@XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "reportCategory", propOrder = {
-    "displayName",
-    "categoryColumns",
-    "visible"
-})
 public class SquidReportCategory implements Serializable, SquidReportCategoryInterface {
 
     private static final long serialVersionUID = 8741573410884399160L;
@@ -102,14 +86,10 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     }
 
     // Fields
-    @XmlElement(name = "displayName", required = true)
     private String displayName;
 
-    @XmlElementWrapper(name = "categoryColumns")
-    @XmlElement(name = "SquidReportColumn", required = true)
     private LinkedList<SquidReportColumnInterface> categoryColumns;
 
-    @XmlElement(name = "visible")
     private boolean visible;
 
     private SquidReportCategory() {
@@ -228,15 +208,4 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         return Objects.hash(getDisplayName(), getCategoryColumns(), isVisible());
     }
 
-    // https://stackoverflow.com/questions/4101718/jaxb-cant-handle-interfaces
-    public static class Adapter extends XmlAdapter<SquidReportCategory, SquidReportCategoryInterface>{
-        @Override
-         public SquidReportCategoryInterface unmarshal(SquidReportCategory cat){
-            return cat;
-        }
-        @Override
-        public SquidReportCategory marshal(SquidReportCategoryInterface cat){
-            return (SquidReportCategory) cat;
-        }
-    }
 }

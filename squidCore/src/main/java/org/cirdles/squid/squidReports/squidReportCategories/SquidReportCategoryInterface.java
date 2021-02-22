@@ -26,8 +26,6 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-
-@XmlJavaTypeAdapter(SquidReportCategory.Adapter.class)
 public interface SquidReportCategoryInterface extends XMLSerializerInterface {
 
     /**

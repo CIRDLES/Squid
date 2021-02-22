@@ -13,7 +13,7 @@ import javax.xml.validation.SchemaFactory;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -33,7 +33,7 @@ public class SquidReportTableXSDValidationTest {
             final File squidReportTableSchema = squidReportTableSchemaExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
             final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("Example.xml");
-            validates = FileValidator.validateXML(defaultRefMatXML, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+            validates = validateXML(defaultRefMatXML, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
         } catch (SAXException | IOException e) {
         }
         finally {

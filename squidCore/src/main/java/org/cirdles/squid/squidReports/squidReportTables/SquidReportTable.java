@@ -34,14 +34,6 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
@@ -51,15 +43,6 @@ import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDRE
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-@XmlAccessorType(XmlAccessType.NONE)
-@XmlType(name = "", propOrder = {
-    "reportTableName",
-    "reportCategories",
-    "reportSpotTarget",
-    "isDefault",
-    "version"
-})
-@XmlRootElement(name = "SquidReportTable")
 public class SquidReportTable implements Serializable, SquidReportTableInterface, Comparable<SquidReportTableInterface> {
 
     private static final long serialVersionUID = 1685572683987304408L;
@@ -71,21 +54,17 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
 
     // Fields
-    @XmlElement(name = "reportTableName", required = true)
     private String reportTableName;
 
-    @XmlElementWrapper(name = "reportCategories")
-    @XmlElement(name = "reportCategory", required = true)
     private LinkedList<SquidReportCategoryInterface> reportCategories;
 
-    @XmlElement(name = "reportSpotTarget", required = true) // Backwards compatibility with report tables prior to ...
+    // Backwards compatibility with report tables prior to ...
     private SpotTypes reportSpotTarget;
 
     private boolean isBuiltInSquidDefault;
 
     private boolean isLabDataDefault;
 
-    @XmlElement(name = "version", required = true)
     private int version;
 
     private SquidReportTable() {
