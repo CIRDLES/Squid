@@ -1192,17 +1192,12 @@ public class SquidReportSettingsController implements Initializable {
     private void importOnAction(ActionEvent event) {
         File file = null;
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        boolean isValidTableXML = false;
         try {
             file = FileHandler.selectSquidReportModelXMLFile(primaryStageWindow);
             final Schema schema = sf.newSchema(new File(URL_STRING_FOR_SQUIDREPORTTABLE_XML_SCHEMA_LOCAL));
-            isValidTableXML = validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
-        } catch (SAXException | IOException | ArrayIndexOutOfBoundsException e) {
-            SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
-            // Another message here to describe why failure occured?
-        }
-        if (file != null && isValidTableXML) {
+            validateXML(file, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
             SquidReportTableInterface temp = SquidReportTable.createEmptySquidReportTable("");
+            // Read object if XML validates against schema
             final SquidReportTableInterface IMPORTED_TABLE = (SquidReportTableInterface) ((SquidReportTable) temp).readXMLObject(file.getAbsolutePath(), false);
             if (IMPORTED_TABLE != null) {
                 IMPORTED_TABLE.setIsLabDataDefault(false); // Not serialized, so initialize to false and let user decide if table should be lab data default
@@ -1218,7 +1213,7 @@ public class SquidReportSettingsController implements Initializable {
                     refMatRadioButton.fire();
                     switchButton = true;
                 }
-                
+
                 if (switchButton){
                     populateSquidReportTableChoiceBox();
                     selectSquidReportTableByPriors();
@@ -1227,7 +1222,7 @@ public class SquidReportSettingsController implements Initializable {
                     populateRatiosListView();
                     populateSpotMetaDataListView();
                 } // End switch button
-                
+
                 final List<SquidReportTableInterface> tables = getTables();
                 int indexOfSameNameTable = tables.indexOf(IMPORTED_TABLE);
                 if (indexOfSameNameTable >= 0) {
@@ -1296,6 +1291,9 @@ public class SquidReportSettingsController implements Initializable {
                     reportTableCB.getSelectionModel().select(IMPORTED_TABLE);
                 }
             }
+        } catch (SAXException | IOException | ArrayIndexOutOfBoundsException e) {
+            SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
+            // Another message here to describe why failure occured?
         }
     }
 

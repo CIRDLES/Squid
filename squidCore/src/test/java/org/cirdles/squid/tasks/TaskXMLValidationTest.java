@@ -38,10 +38,14 @@ public class TaskXMLValidationTest {
                                 "schema/SquidTask_XMLSchema.xsd"));
             File taskFile = taskResourceExtractor.extractResourceAsFile(
                             "Z6266_=_11pk_Perm1.xml");
-            assertTrue(validateXML(
-                    taskFile, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA));
+            File taskFileHeadless = taskResourceExtractor.extractResourceAsFile(
+                            "Z6266_=_11pk_Perm1.xml");
+            validateXML(taskFileHeadless, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
+            validateXML(taskFile, taskXMLSchema);
+            assertTrue(true);
         }
         catch (SAXException | IOException e){
+            assertTrue(false);
         }
            
     }   

@@ -28,16 +28,16 @@ public class SquidReportTableXSDValidationTest {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         ResourceExtractor squidReportTableSchemaExtractor = new ResourceExtractor(Squid.class);
         ResourceExtractor testSquidReportTableExtractor = new ResourceExtractor(SquidReportTableXSDValidationTest.class);
-        boolean validates = false;
         try {
             final File squidReportTableSchema = squidReportTableSchemaExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
             final Schema schema = sf.newSchema(squidReportTableSchema);
             final File defaultRefMatXML = testSquidReportTableExtractor.extractResourceAsFile("Example.xml");
-            validates = validateXML(defaultRefMatXML, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+            final File defaultRefMatXMLHeadless = testSquidReportTableExtractor.extractResourceAsFile("Example_Headless.xml");
+            validateXML(defaultRefMatXMLHeadless, schema, XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA);
+            validateXML(defaultRefMatXML, schema);
+            assertTrue(true);
         } catch (SAXException | IOException e) {
-        }
-        finally {
-            assertTrue(validates);
+            assertTrue(false);
         }
     }
 }
