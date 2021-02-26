@@ -127,7 +127,7 @@ public class ExpressionTree
     protected String uncertaintyDirective;
 
     protected int index;
-    
+
     protected transient boolean hasNoTargetSpots;
 
     public void setHasNoTargetSpots(boolean hasNoTargetSpots) {
@@ -137,7 +137,6 @@ public class ExpressionTree
     public boolean doesHaveNoTargetSpots() {
         return hasNoTargetSpots;
     }
-    
 
     /**
      *
@@ -468,6 +467,16 @@ public class ExpressionTree
         return name.compareTo(ANONYMOUS_NAME) == 0;
     }
 
+    public boolean amIsotopicRatio() {
+        boolean retVal = false;
+        if (childrenET.size() > 1) {
+            retVal = (childrenET.get(0) instanceof ShrimpSpeciesNode)
+                    && (childrenET.get(1) instanceof ShrimpSpeciesNode)
+                    && (operation instanceof Divide);
+        }
+        return retVal;
+    }
+
     /**
      *
      * @param xstream
@@ -572,18 +581,18 @@ public class ExpressionTree
     public boolean isTypeFunctionOrOperation() {
         return (operation instanceof Function) || (operation instanceof Operation);
     }
-    
+
     /**
      *
      * @return true if this expressionTree is built as a ValueModel
      */
     @Override
-    public boolean builtAsValueModel(){
+    public boolean builtAsValueModel() {
         boolean retVal = false;
-        if (isTypeFunction()){
+        if (isTypeFunction()) {
             retVal = operation.getColCount() > 1;
         }
-        
+
         return retVal;
     }
 
