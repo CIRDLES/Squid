@@ -31,7 +31,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  * Created by johnzeringue on 7/27/16.
  * Adapted by James Bowring Dec 2018.
  */
-@Path("squidReporting")
+@Path("Services/squidReporting")
 public class SquidReportingResource {
 
     private SquidReportingService squidReportingService;

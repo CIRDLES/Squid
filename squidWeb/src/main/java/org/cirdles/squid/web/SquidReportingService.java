@@ -176,6 +176,9 @@ public class SquidReportingService {
 
             ((Task) task).initTaskDefaultSquidReportTables(true);
 
+            // for web service, need to set
+            prawnFileHandler.setCurrentPrawnSourceFileLocation(fileName);
+            
             if (squidProject.hasReportsFolder()) {
                 squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
                 squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
