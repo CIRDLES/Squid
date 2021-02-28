@@ -19,11 +19,13 @@ import java.io.*;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.xml.bind.JAXBException;
+import org.cirdles.squid.Squid;
 
 import org.cirdles.squid.constants.Squid3Constants;
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
@@ -588,9 +590,10 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     public String printProjectAudit() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("Project Audit produced by Squid3 v").append(Squid.VERSION).append(" on ").append(LocalDate.now()).append("\n");
         sb.append("Project Name: ").append(projectName).append("\n");
         sb.append("Analyst Name: ").append(analystName).append("\n");
-        sb.append("Data File: ").append(prawnSourceFile.getAbsolutePath()).append("\n");
+        sb.append("Data File: ").append(prawnFileHandler.getCurrentPrawnSourceFileLocation()).append("\n");
         sb.append("Software: ").append(getPrawnFileShrimpSoftwareVersionName()).append("\n\n");
         sb.append("Session\n");
         sb.append("\tLogin Comment: ").append(getPrawnFileLoginComment()).append("\n");
