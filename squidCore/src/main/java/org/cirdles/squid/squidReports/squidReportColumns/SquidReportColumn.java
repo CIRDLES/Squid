@@ -23,7 +23,6 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
@@ -125,11 +124,11 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             expressionNameCustom = "total_" + expressionName + "_cts_/sec";
         }
 
-        amIsotopicRatio = false;
-        if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
-            // Check for isotopic ratios
-            amIsotopicRatio = (((ExpressionTree) expTree).getOperation() instanceof Divide);
-        }
+        amIsotopicRatio = ((ExpressionTree) expTree).amIsotopicRatio();
+//        if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
+//            // Check for isotopic ratios
+//            amIsotopicRatio = (((ExpressionTree) expTree).getOperation() instanceof Divide);
+//        }
 
         // propose column headers by splitting on underscores in name
         // row 0 is reserved for category displayname
@@ -184,7 +183,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
 
         uncertaintyColumn = null;
         if ((uncertaintyDirective.length() == 0)
-                && expTree.builtAsValueModel()
+                && ( expTree.builtAsValueModel() || amIsotopicRatio)
 //                && (!expressionName.toUpperCase().contains("PCT"))
 //                && (!expressionName.toUpperCase().contains("ERR"))
 //                && (!expressionName.toUpperCase().contains("CONCEN"))

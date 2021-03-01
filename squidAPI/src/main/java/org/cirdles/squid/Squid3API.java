@@ -38,23 +38,23 @@ public interface Squid3API {
     public Squid3ProjectBasicAPI getSquid3Project();
 
     /**
-     * 
+     *
      * @param prawnXMLFileSourcePath
      * @throws IOException
      * @throws JAXBException
      * @throws SAXException
-     * @throws SquidException 
+     * @throws SquidException
      */
     public void newSquid3GeochronProjectFromPrawnXML(Path prawnXMLFileSourcePath)
             throws IOException, JAXBException, SAXException, SquidException;
-    
+
     /**
-     * 
+     *
      * @param prawnXMLFileSourcePath
      * @throws IOException
      * @throws JAXBException
      * @throws SAXException
-     * @throws SquidException 
+     * @throws SquidException
      */
     public void newSquid3GeochronProjectFromZippedPrawnXML(Path prawnXMLFileSourcePath)
             throws IOException, JAXBException, SAXException, SquidException;
@@ -94,9 +94,44 @@ public interface Squid3API {
 
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
     /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generateReferenceMaterialSummaryExpressionsReport() throws IOException;
+
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generateUnknownsSummaryExpressionsReport() throws IOException;
+
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generateTaskSummaryReport() throws IOException;
+
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generateProjectAuditReport() throws IOException;
+
+    /**
+     * 
+     * @return
+     * @throws IOException 
+     */
+    public Path generatePerScanReports() throws IOException;
+
+    /**
      *
      * @throws IOException
      */
-    public void generateAllSquid3ProjectReports() throws IOException;
+    public Path generateAllSquid3ProjectReports() throws IOException;
 
 }
