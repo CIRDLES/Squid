@@ -95,7 +95,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      */
     public default XStream getXStreamWriter() {
         XStream xstream = new XStream();
-
+        xstream.addPermission(AnyTypePermission.ANY);
         customizeXstream(xstream);
 
         return xstream;
@@ -108,19 +108,9 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     public default XStream getXStreamReader() {
 
         XStream xstream = new XStream(new DomDriver());
-
-        customizeXstream(xstream);
-
-        // http://x-stream.github.io/security.html
-//        XStream.setupDefaultSecurity(xstream);
-        // clear out existing permissions and set own ones
-        xstream.addPermission(NoTypePermission.NONE);
-        // allow some basics
-        xstream.addPermission(NullPermission.NULL);
-        xstream.addPermission(PrimitiveTypePermission.PRIMITIVES);
-        xstream.allowTypeHierarchy(Collection.class);
         xstream.addPermission(AnyTypePermission.ANY);
-
+        customizeXstream(xstream);
+        
         return xstream;
     }
 
