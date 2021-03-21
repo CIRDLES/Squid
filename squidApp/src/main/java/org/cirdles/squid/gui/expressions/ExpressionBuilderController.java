@@ -1926,12 +1926,12 @@ public class ExpressionBuilderController implements Initializable {
                 // only provide spot details for WeightedMean expressions for now
                 if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
                     etWMChild1 = expTree.getChildrenET().get(0);
-                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
+                    isAgeExpression = exp.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
                 }
                 // SqWtdAv is used for Sample weighted means
                 if (expTree.getOperation() instanceof SqWtdAv && exp.amHealthy() && expTree.getChildrenET().size() >= 1) {
                     etWMChild1 = expTree.getChildrenET().get(0);
-                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
+                    isAgeExpression = exp.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
                 }
 
                 CheckBox mainCB;
@@ -2227,7 +2227,7 @@ public class ExpressionBuilderController implements Initializable {
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = expTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
         String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-        isAge = isAge || resultLabelsFirst[0][0].toUpperCase().contains("AGE");
+        isAge = isAge || resultLabelsFirst[0][0].toUpperCase(Locale.ENGLISH).contains("AGE");
         
         String contextAgeFieldName = (isAge ? "Age(Ma)" : "Value");
         String contextAge1SigmaAbsName = (isAge ? "1\u03C3Abs(Ma)" : "1\u03C3Abs");
