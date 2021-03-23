@@ -23,11 +23,9 @@ import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnXMLCon
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
@@ -36,6 +34,7 @@ import org.cirdles.squid.utilities.IntuitiveStringComparator;
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+
 public class SquidReportCategory implements Serializable, SquidReportCategoryInterface {
 
     private static final long serialVersionUID = 8741573410884399160L;
@@ -88,7 +87,9 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
 
     // Fields
     private String displayName;
+
     private LinkedList<SquidReportColumnInterface> categoryColumns;
+
     private boolean visible;
 
     private SquidReportCategory() {
@@ -206,4 +207,5 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     public int hashCode() {
         return Objects.hash(getDisplayName(), getCategoryColumns(), isVisible());
     }
+
 }

@@ -51,17 +51,22 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private transient String[] columnHeaders;
 
     private String expressionName;
+
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
 
     // optional uncertainty column
     private SquidReportColumnInterface uncertaintyColumn;
+
     private boolean amUncertaintyColumn;
+
     // 1 sigma abs or pct if uncertainty column
     private String uncertaintyDirective;
 
     private int countOfSignificantDigits;
+
     private boolean visible;
+
     private String footnoteSpec;
 
     private SquidReportColumn(String expressionName) {
@@ -495,4 +500,5 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         return result;
 
     }
+
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!-- SQUIDREPORTTABLE_DATA_FILE -->
+<SquidReportTable>
+  <reportTableName>Example</reportTableName>
+  <reportCategories>
+    <reportCategory>
+      <displayName>Default Category</displayName>
+      <categoryColumns>
+        <SquidReportColumn>
+          <expressionName>4cor_206Pb238U_Age</expressionName>
+          <units></units>
+          <uncertaintyColumn></uncertaintyColumn>
+          <amUncertaintyColumn>false</amUncertaintyColumn>
+          <uncertaintyDirective></uncertaintyDirective>
+          <countOfSignificantDigits>0</countOfSignificantDigits>
+          <visible>false</visible>
+          <footnoteSpec></footnoteSpec>
+        </SquidReportColumn>
+      </categoryColumns>
+      <visible>true</visible>
+    </reportCategory>
+  </reportCategories>
+  <reportSpotTarget>UNKNOWN</reportSpotTarget>
+  <isDefault>false</isDefault>
+  <version>0</version>
+</SquidReportTable>
