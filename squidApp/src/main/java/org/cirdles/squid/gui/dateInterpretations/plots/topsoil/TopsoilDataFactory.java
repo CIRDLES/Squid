@@ -17,6 +17,7 @@ package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -100,11 +101,18 @@ public class TopsoilDataFactory {
             // case of raw ratios
             xAxisValueAndUnct
                     = Arrays.stream(shrimpFraction
-                            .getIsotopicRatioValuesByStringName(correction + xAxisRatio)).toArray(double[][]::new)[0];
+                            .getIsotopicRatioValuesByStringName(correction + xAxisRatio)).toArray(double[][]::new)[0].clone();
         } else {
             // all other expressions
             xAxisValueAndUnct = shrimpFraction
-                    .getTaskExpressionsEvaluationsPerSpotByField(correction + xAxisRatio)[0];
+                    .getTaskExpressionsEvaluationsPerSpotByField(correction + xAxisRatio)[0].clone();
+            
+            // handle Ma Issue #603
+            if (xAxisRatio.toUpperCase(Locale.ENGLISH).contains("AGE")){
+                xAxisValueAndUnct[0] /= 1e6;
+                xAxisValueAndUnct[1] /= 1e6;
+            }
+            
         }
         badData = badData && !Double.isFinite(xAxisValueAndUnct[0]);
         datum.put(X.getTitle(), xAxisValueAndUnct[0]);
@@ -119,11 +127,17 @@ public class TopsoilDataFactory {
             // case of raw ratios
             yAxisValueAndUnct
                     = Arrays.stream(shrimpFraction
-                            .getIsotopicRatioValuesByStringName(correction + yAxisRatio)).toArray(double[][]::new)[0];
+                            .getIsotopicRatioValuesByStringName(correction + yAxisRatio)).toArray(double[][]::new)[0].clone();
         } else {
             // all other expressions
             yAxisValueAndUnct = shrimpFraction
-                    .getTaskExpressionsEvaluationsPerSpotByField(correction + yAxisRatio)[0];
+                    .getTaskExpressionsEvaluationsPerSpotByField(correction + yAxisRatio)[0].clone();
+            
+            // handle Ma Issue #603
+            if (yAxisRatio.toUpperCase(Locale.ENGLISH).contains("AGE")){
+                yAxisValueAndUnct[0] /= 1e6;
+                yAxisValueAndUnct[1] /= 1e6;
+            }
         }
         badData = badData && !Double.isFinite(yAxisValueAndUnct[0]);
         datum.put(Y.getTitle(), yAxisValueAndUnct[0]);
