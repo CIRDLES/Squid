@@ -1926,12 +1926,12 @@ public class ExpressionBuilderController implements Initializable {
                 // only provide spot details for WeightedMean expressions for now
                 if (expTree.getOperation() instanceof WtdMeanACalc && exp.amHealthy() && expTree.getChildrenET().size() >= 2) {
                     etWMChild1 = expTree.getChildrenET().get(0);
-                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
+                    isAgeExpression = exp.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
                 }
                 // SqWtdAv is used for Sample weighted means
                 if (expTree.getOperation() instanceof SqWtdAv && exp.amHealthy() && expTree.getChildrenET().size() >= 1) {
                     etWMChild1 = expTree.getChildrenET().get(0);
-                    isAgeExpression = exp.getName().toUpperCase().contains("AGE");
+                    isAgeExpression = exp.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
                 }
 
                 CheckBox mainCB;
@@ -2226,6 +2226,9 @@ public class ExpressionBuilderController implements Initializable {
 
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = expTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
+        String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+        isAge = isAge || resultLabelsFirst[0][0].toUpperCase(Locale.ENGLISH).contains("AGE");
+        
         String contextAgeFieldName = (isAge ? "Age(Ma)" : "Value");
         String contextAge1SigmaAbsName = (isAge ? "1\u03C3Abs(Ma)" : "1\u03C3Abs");
         // or it may be concentration ppm
@@ -2235,7 +2238,7 @@ public class ExpressionBuilderController implements Initializable {
         if (expTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
             sb.append("Concentration Reference Materials Only\n\n");
         }
-        sb.append(String.format("%1$-" + 15 + "s", "SpotName"));
+        sb.append(String.format("%1$-18s", "SpotName"));
         String[][] resultLabels;
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
@@ -2279,10 +2282,15 @@ public class ExpressionBuilderController implements Initializable {
                 }
             } else {
                 // some smarts
-                String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : 3];
+                // if only one label, keep it; if two, assume 1sigma abs
+                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : resultLabelsFirst[0].length == 2 ? 3 : resultLabelsFirst[0].length];
                 resultLabels[0][0] = contextAgeFieldName;
-                if (resultLabelsFirst[0].length > 1) {
+                if (resultLabelsFirst[0].length > 2) {
+                    resultLabels[0][1] = contextAge1SigmaAbsName;
+                    for (int i = 2; i < resultLabelsFirst[0].length; i++) {
+                        resultLabels[0][i] = resultLabelsFirst[0][i];
+                    }
+                } else if (resultLabelsFirst[0].length > 1) {
                     resultLabels[0][1] = contextAge1SigmaAbsName;
                     resultLabels[0][2] = "1\u03C3%";
                 }
@@ -2290,7 +2298,7 @@ public class ExpressionBuilderController implements Initializable {
 
             for (int i = 0; i < resultLabels[0].length; i++) {
                 try {
-                    sb.append(String.format("%1$-" + 25 + "s", resultLabels[0][i]));
+                    sb.append(String.format("%1$-25s", resultLabels[0][i].trim()));
                 } catch (Exception e) {
                 }
             }
@@ -2302,7 +2310,7 @@ public class ExpressionBuilderController implements Initializable {
                 // Check for functions of species
                 if (((ExpressionTree) expTree).getOperation() instanceof ShrimpSpeciesNodeFunction) {
                     for (ShrimpFractionExpressionInterface spot : spots) {
-                        sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
+                        sb.append(String.format("%1$-18s", spot.getFractionID()));
 
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
@@ -2322,7 +2330,7 @@ public class ExpressionBuilderController implements Initializable {
                 } else if (((ExpressionTree) expTree).getOperation() instanceof Value) {
                     // case of isotope
                     for (ShrimpFractionExpressionInterface spot : spots) {
-                        sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
+                        sb.append(String.format("%1$-18s", spot.getFractionID()));
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
@@ -2341,7 +2349,7 @@ public class ExpressionBuilderController implements Initializable {
                 } else {
                     // case of ratio
                     for (ShrimpFractionExpressionInterface spot : spots) {
-                        sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
+                        sb.append(String.format("%1$-18s", spot.getFractionID()));
                         double[][] results
                                 = Arrays.stream(spot.getIsotopicRatioValuesByStringName(expTree.getName())).toArray(double[][]::new);
 
@@ -2359,7 +2367,7 @@ public class ExpressionBuilderController implements Initializable {
             } else {
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     if (spot.getTaskExpressionsEvaluationsPerSpot().get(expTree) != null) {
-                        sb.append(String.format("%1$-" + 18 + "s", spot.getFractionID()));
+                        sb.append(String.format("%1$-18s", spot.getFractionID()));
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
@@ -2370,11 +2378,18 @@ public class ExpressionBuilderController implements Initializable {
                             if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
                                 resultsWithPct = new double[1];
                                 resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                            } else if (results[0].length > 1) {
+                            } else if (resultLabels[0].length == 3) {
                                 resultsWithPct = new double[3];
                                 resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
                                 resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
                                 resultsWithPct[2] = calcPercentUnct(results[0]);
+                            } else {
+                                resultsWithPct = new double[resultLabels[0].length];
+                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                for (int i = 2; i < resultLabels[0].length; i++) {
+                                    resultsWithPct[i] = results[0][i];
+                                }
                             }
 
                             Formatter formatter = new Formatter();
@@ -2382,7 +2397,7 @@ public class ExpressionBuilderController implements Initializable {
                                 sb.append("NaN");
                             } else {
                                 for (int i = 0; i < resultsWithPct.length; i++) {
-                                    formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
+                                    formatter.format("% 20.14" + (String) (((i == 2) && resultLabels[0].length == 3) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
                                 }
                                 sb.append(formatter.toString());
                             }

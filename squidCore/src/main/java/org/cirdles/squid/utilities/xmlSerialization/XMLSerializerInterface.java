@@ -17,6 +17,7 @@ package org.cirdles.squid.utilities.xmlSerialization;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.security.AnyTypePermission;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -39,6 +40,7 @@ public interface XMLSerializerInterface {
         OutputStreamWriter outFile = null;
         try {
             XStream xstream = new XStream(new DomDriver());
+            xstream.addPermission(AnyTypePermission.ANY);
             customizeXstream(xstream);
             String xml = xstream.toXML(this).trim();
             xml = customizeXML(xml).trim();
@@ -77,6 +79,7 @@ public interface XMLSerializerInterface {
             Reader reader = new InputStreamReader(bis, "UTF-8");
 
             XStream xstream = new XStream(new DomDriver());
+            xstream.addPermission(AnyTypePermission.ANY);
             customizeXstream(xstream);
 
             myModelClassInstance = xstream.fromXML(reader);
