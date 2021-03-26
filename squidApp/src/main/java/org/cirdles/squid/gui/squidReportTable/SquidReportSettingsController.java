@@ -655,6 +655,12 @@ public class SquidReportSettingsController implements Initializable {
 
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = expTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
+        String[][] resultLabelsFirst = new String[0][];
+        if (((ExpressionTree) expTree).getOperation() != null) {
+            resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+            isAge = isAge || resultLabelsFirst[0][0].toUpperCase(Locale.ENGLISH).contains("AGE");
+        }
+
         String contextAgeFieldName = (isAge ? "Age(Ma)" : "Value");
         String contextAge1SigmaAbsName = (isAge ? "1\u03C3Abs(Ma)" : "1\u03C3Abs");
         // or it may be concentration ppm
@@ -708,10 +714,22 @@ public class SquidReportSettingsController implements Initializable {
                 }
             } else {
                 // some smarts
-                String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : 3];
+//                String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+//                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : 3];
+//                resultLabels[0][0] = contextAgeFieldName;
+//                if (resultLabelsFirst[0].length > 1) {
+//                    resultLabels[0][1] = contextAge1SigmaAbsName;
+//                    resultLabels[0][2] = "1\u03C3%";
+//                }
+                // if only one label, keep it; if two, assume 1sigma abs
+                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : resultLabelsFirst[0].length == 2 ? 3 : resultLabelsFirst[0].length];
                 resultLabels[0][0] = contextAgeFieldName;
-                if (resultLabelsFirst[0].length > 1) {
+                if (resultLabelsFirst[0].length > 2) {
+                    resultLabels[0][1] = contextAge1SigmaAbsName;
+                    for (int i = 2; i < resultLabelsFirst[0].length; i++) {
+                        resultLabels[0][i] = resultLabelsFirst[0][i];
+                    }
+                } else if (resultLabelsFirst[0].length > 1) {
                     resultLabels[0][1] = contextAge1SigmaAbsName;
                     resultLabels[0][2] = "1\u03C3%";
                 }
@@ -803,6 +821,30 @@ public class SquidReportSettingsController implements Initializable {
                         double[][] results
                                 = Arrays.stream(spot.getTaskExpressionsEvaluationsPerSpot().get(expTree)).toArray(double[][]::new);
 
+//                        if (!Double.isFinite(results[0][0])) {
+//                            sb.append("NaN");
+//                        } else {
+//                            double[] resultsWithPct = new double[0];
+//                            if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
+//                                resultsWithPct = new double[1];
+//                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+//                            } else if (results[0].length > 1) {
+//                                resultsWithPct = new double[3];
+//                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+//                                resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
+//                                resultsWithPct[2] = calcPercentUnct(results[0]);
+//                            }
+//
+//                            Formatter formatter = new Formatter();
+//                            if (!Double.isFinite(results[0][0])) {
+//                                sb.append("NaN");
+//                            } else {
+//                                for (int i = 0; i < resultsWithPct.length; i++) {
+//                                    formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
+//                                }
+//                                sb.append(formatter.toString());
+//                            }
+//                        }
                         if (!Double.isFinite(results[0][0])) {
                             sb.append("NaN");
                         } else {
@@ -810,11 +852,18 @@ public class SquidReportSettingsController implements Initializable {
                             if ((resultLabels[0].length == 1) && (results[0].length >= 1)) {
                                 resultsWithPct = new double[1];
                                 resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
-                            } else if (results[0].length > 1) {
+                            } else if (resultLabels[0].length == 3) {
                                 resultsWithPct = new double[3];
                                 resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
                                 resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
                                 resultsWithPct[2] = calcPercentUnct(results[0]);
+                            } else {
+                                resultsWithPct = new double[resultLabels[0].length];
+                                resultsWithPct[0] = squid3RoundedToSize(results[0][0] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                resultsWithPct[1] = squid3RoundedToSize(results[0][1] / (isAge ? 1.0e6 : 1.0), sigDigits);
+                                for (int i = 2; i < resultLabels[0].length; i++) {
+                                    resultsWithPct[i] = results[0][i];
+                                }
                             }
 
                             Formatter formatter = new Formatter();
@@ -822,7 +871,7 @@ public class SquidReportSettingsController implements Initializable {
                                 sb.append("NaN");
                             } else {
                                 for (int i = 0; i < resultsWithPct.length; i++) {
-                                    formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
+                                    formatter.format("% 20.14" + (String) (((i == 2) && resultLabels[0].length == 3) ? "f   " : "E   "), squid3RoundedToSize(resultsWithPct[i], sigDigits));
                                 }
                                 sb.append(formatter.toString());
                             }
@@ -1103,8 +1152,7 @@ public class SquidReportSettingsController implements Initializable {
                 SquidReportTableInterface table = SquidReportTable.createEmptySquidReportTable(name);
                 if (isRefMat) {
                     table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
-                }
-                else {
+                } else {
                     table.setReportSpotTarget(SpotTypes.UNKNOWN);
                 }
                 table.setIsLabDataDefault(false);
@@ -1207,14 +1255,13 @@ public class SquidReportSettingsController implements Initializable {
                     isRefMat = false;
                     unknownsRadioButton.fire();
                     switchButton = true;
-                }   
-                else if (!isRefMat && IMPORTED_TABLE.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
+                } else if (!isRefMat && IMPORTED_TABLE.getReportSpotTarget().equals(SpotTypes.REFERENCE_MATERIAL)) {
                     isRefMat = true;
                     refMatRadioButton.fire();
                     switchButton = true;
                 }
 
-                if (switchButton){
+                if (switchButton) {
                     populateSquidReportTableChoiceBox();
                     selectSquidReportTableByPriors();
                     populateExpressionListViews();
@@ -1290,6 +1337,8 @@ public class SquidReportSettingsController implements Initializable {
                     populateSquidReportTableChoiceBox();
                     reportTableCB.getSelectionModel().select(IMPORTED_TABLE);
                 }
+            } else {
+                SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
             }
         } catch (SAXException | IOException | ArrayIndexOutOfBoundsException e) {
             SquidMessageDialog.showWarningDialog("Unable to import. Could not be validated against XML schema.", primaryStageWindow);
@@ -1332,7 +1381,7 @@ public class SquidReportSettingsController implements Initializable {
                 tables.add(table);
             }
 
-            if (currTable.isIsLabDataDefault()){
+            if (currTable.isIsLabDataDefault()) {
                 table.setIsLabDataDefault(true);
                 currTable.setIsLabDataDefault(false);
             }
