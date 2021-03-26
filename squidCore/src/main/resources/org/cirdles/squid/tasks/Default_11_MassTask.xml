@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!-- SQUID3_TASK_SPECIFICATION_FILE -->
-<!-- visit: github.com/CIRDLES/Squid -->
 <Task>
   <name>New_11_mass_task</name>
   <taskType>GEOCHRON</taskType>

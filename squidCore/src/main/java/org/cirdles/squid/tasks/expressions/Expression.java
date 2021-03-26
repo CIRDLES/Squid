@@ -50,6 +50,8 @@ import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressions
 import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 import static org.cirdles.squid.tasks.expressions.functions.Function.replaceAliasedFunctionNamesInExpressionString;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
 
 /**
  *
@@ -189,6 +191,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
+        
+        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
+        xstream.alias("SpotFieldNode", SpotFieldNode.class);
 
         xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);

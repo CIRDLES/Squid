@@ -2102,7 +2102,6 @@ public class ExpressionBuilderController implements Initializable {
         boolean isAge = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("AGE");
         boolean isLambda = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("LAMBDA2");
         boolean isConcen = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("CONCEN");
-        boolean isWM = ((ExpressionTree) spotSummary.getExpressionTree()).getName().toUpperCase(Locale.ENGLISH).contains("WM");
 
         String[][] labels;
         try {
@@ -2226,9 +2225,12 @@ public class ExpressionBuilderController implements Initializable {
 
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = expTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
-        String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-        isAge = isAge || resultLabelsFirst[0][0].toUpperCase(Locale.ENGLISH).contains("AGE");
-        
+        String[][] resultLabelsFirst = new String[0][];
+        if (((ExpressionTree) expTree).getOperation() != null) {
+            resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
+            isAge = isAge || resultLabelsFirst[0][0].toUpperCase(Locale.ENGLISH).contains("AGE");
+        }
+
         String contextAgeFieldName = (isAge ? "Age(Ma)" : "Value");
         String contextAge1SigmaAbsName = (isAge ? "1\u03C3Abs(Ma)" : "1\u03C3Abs");
         // or it may be concentration ppm
@@ -2323,6 +2325,7 @@ public class ExpressionBuilderController implements Initializable {
                                 formatter.format("% 20.14" + (String) ((i == 2) ? "f   " : "E   "), squid3RoundedToSize(results[0][i], sigDigits));
                             }
                             sb.append(formatter.toString());
+                            formatter.close();
                         }
 
                         sb.append("\n");
@@ -2359,6 +2362,7 @@ public class ExpressionBuilderController implements Initializable {
                             Formatter formatter = new Formatter();
                             formatter.format("% 20.14E   % 20.14E   % 20.14f   ", results[0][0], results[0][1], calcPercentUnct(results[0]));
                             sb.append(formatter.toString());
+                            formatter.close();
                         }
 
                         sb.append("\n");
@@ -2401,6 +2405,7 @@ public class ExpressionBuilderController implements Initializable {
                                 }
                                 sb.append(formatter.toString());
                             }
+                            formatter.close();
                         }
 
                         sb.append("\n");
@@ -2427,6 +2432,7 @@ public class ExpressionBuilderController implements Initializable {
 
                         formatter.format("%1$-20s   ", squid3RoundedToSize(results[0][0], sigDigits));
                         sb.append(formatter.toString());
+                        formatter.close();
                     }
 
                     sb.append("\n");
@@ -2449,6 +2455,7 @@ public class ExpressionBuilderController implements Initializable {
                             Formatter formatter = new Formatter();
                             formatter.format("%1$-" + 20 + "s", squid3RoundedToSize(results[0][0], sigDigits));
                             sb.append(formatter.toString());
+                            formatter.close();
                         }
 
                     } catch (Exception e) {
@@ -2525,7 +2532,7 @@ public class ExpressionBuilderController implements Initializable {
                     || task.getRatioNames().contains(text)) {
                 MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode("[%\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[%\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[%\"" + text + "\"]");
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2533,7 +2540,7 @@ public class ExpressionBuilderController implements Initializable {
                 });
                 MenuItem menuItem2 = new MenuItem("1 \u03C3 abs (±)");
                 menuItem2.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode("[±\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[±\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[±\"" + text + "\"]");
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2541,7 +2548,7 @@ public class ExpressionBuilderController implements Initializable {
                 });
                 MenuItem menuItem3 = new MenuItem("Use value");
                 menuItem3.setOnAction((evt) -> {
-                    ExpressionTextNode etn2 = new ExpressionTextNode("[\"" + text + "\"]");//    etn.getText().trim().replaceAll("\\[(±?)(%?)\"", "[\""));
+                    ExpressionTextNode etn2 = new ExpressionTextNode("[\"" + text + "\"]");
                     etn2.setOrdinalIndex(etn.getOrdinalIndex());
                     expressionTextFlow.getChildren().remove(etn);
                     expressionTextFlow.getChildren().add(etn2);
@@ -2620,7 +2627,6 @@ public class ExpressionBuilderController implements Initializable {
             });
             menuItem = new MenuItem("<< Edit value then click here to save", editText);
             menuItem.setOnAction((evt) -> {
-                //etn.setText(editText.getText());
                 // this allows for redo of content editing
                 NumberTextNode etn2 = new NumberTextNode(editText.getText());
                 etn2.setOrdinalIndex(etn.getOrdinalIndex());
@@ -3651,15 +3657,13 @@ public class ExpressionBuilderController implements Initializable {
                         MenuItem remove = new MenuItem("Remove expression(s)");
                         remove.setOnAction((t) -> {
                             int index = cell.getIndex();
-//                        ListView parent = cell.getListView();
+
                             ObservableList selectedItemsToRemove = parent.getSelectionModel().getSelectedItems();
                             for (int i = 0; i < selectedItemsToRemove.size(); i++) {
                                 removedExpressions.add((Expression) selectedItemsToRemove.get(i));
                                 task.removeExpression((Expression) selectedItemsToRemove.get(i), true);
                             }
 
-//                        removedExpressions.add(cell.getItem());
-//                        task.removeExpression(cell.getItem(), true);
                             selectedExpression.set(null);
                             populateExpressionListViews();
 
@@ -3678,56 +3682,55 @@ public class ExpressionBuilderController implements Initializable {
                         });
                         cm.getItems().add(remove);
 
-                    }
-
-                    MenuItem restore = new MenuItem("Restore removed expressions");
-                    restore.setOnAction((t) -> {
-                        for (Expression removedExp : removedExpressions) {
-                            boolean nameExist;
-                            do {
-                                nameExist = false;
-                                for (Expression e : namedExpressions) {
-                                    if (e.getName().equalsIgnoreCase(removedExp.getName())) {
-                                        removedExp.setName(removedExp.getName() + " [restored]");
-                                        nameExist = true;
+                        MenuItem restore = new MenuItem("Restore removed expressions");
+                        restore.setOnAction((t) -> {
+                            for (Expression removedExp : removedExpressions) {
+                                boolean nameExist;
+                                do {
+                                    nameExist = false;
+                                    for (Expression e : namedExpressions) {
+                                        if (e.getName().equalsIgnoreCase(removedExp.getName())) {
+                                            removedExp.setName(removedExp.getName() + " [restored]");
+                                            nameExist = true;
+                                        }
                                     }
-                                }
-                            } while (nameExist);
+                                } while (nameExist);
 
-                            task.addExpression(removedExp, true);
-                        }
-                        removedExpressions.clear();
-                        populateExpressionListViews();
-                    });
-                    restore.setDisable(removedExpressions.isEmpty());
-                    cm.getItems().add(restore);
+                                task.addExpression(removedExp, true);
+                            }
+                            removedExpressions.clear();
+                            populateExpressionListViews();
+                        });
+                        restore.setDisable(removedExpressions.isEmpty());
+                        cm.getItems().add(restore);
 
-                    cm.getItems().add(new SeparatorMenuItem());
+                        cm.getItems().add(new SeparatorMenuItem());
 
-                    Menu export = new Menu("Export Expression as");
+                        Menu export = new Menu("Export Expression as");
 
-                    MenuItem exportXML = new MenuItem("XML document");
-                    exportXML.setOnAction((t) -> {
-                        try {
-                            FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
-                        } catch (IOException ex) {
-                        }
-                    });
-                    export.getItems().add(exportXML);
+                        MenuItem exportXML = new MenuItem("XML document");
+                        exportXML.setOnAction((t) -> {
+                            try {
+                                FileHandler.saveExpressionFileXML(cell.getItem(), SquidUI.primaryStageWindow);
+                            } catch (IOException ex) {
+                            }
+                        });
+                        export.getItems().add(exportXML);
 
-                    MenuItem exportHTML = new MenuItem("HTML document");
-                    exportHTML.setOnAction((t) -> {
-                        try {
-                            FileHandler.saveExpressionGraphHTML(cell.getItem(), SquidUI.primaryStageWindow);
-                        } catch (IOException ex) {
-                        }
-                    });
-                    export.getItems().add(exportHTML);
+                        MenuItem exportHTML = new MenuItem("HTML document");
+                        exportHTML.setOnAction((t) -> {
+                            try {
+                                FileHandler.saveExpressionGraphHTML(cell.getItem(), SquidUI.primaryStageWindow);
+                            } catch (IOException ex) {
+                            }
+                        });
+                        export.getItems().add(exportHTML);
 
-                    export.setDisable(parent.getSelectionModel().getSelectedItems().size() > 1);
-                    cm.getItems().add(export);
+                        export.setDisable(parent.getSelectionModel().getSelectedItems().size() > 1);
+                        cm.getItems().add(export);
 
-                    cm.show(cell, event.getScreenX(), event.getScreenY());
+                        cm.show(cell, event.getScreenX(), event.getScreenY());
+                    }
                 }
             });
 

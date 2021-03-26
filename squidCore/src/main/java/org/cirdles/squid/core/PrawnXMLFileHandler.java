@@ -150,6 +150,7 @@ public class PrawnXMLFileHandler implements Serializable {
             if (lines.get(i).contains("<software")) {
                 indexOfSoftwareTagLine = i;
                 isPrawnLegacyFile = lines.get(i).contains("<software_version>SHRIMP II v2 SW");
+                isPrawnLegacyFile = isPrawnLegacyFile && !lines.get(i).contains("SHR 2");
                 break;
             }
         }

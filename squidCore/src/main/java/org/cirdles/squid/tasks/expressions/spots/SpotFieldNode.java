@@ -57,16 +57,6 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode(); 
-    }
-
-    @Override
     public boolean amHealthy() {
         return (methodNameForShrimpFraction.length() > 0);
     }
@@ -75,11 +65,6 @@ public class SpotFieldNode extends ExpressionTree {
     public boolean isValid() {
         return amHealthy();
     }
-
-//    @Override
-//    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-//        return false;
-//    }
 
     @Override
     public boolean usesOtherExpression() {
@@ -157,12 +142,9 @@ public class SpotFieldNode extends ExpressionTree {
 
     @Override
     public String toStringMathML() {
-        String retVal
-                = "<mrow>"
+        return "<mrow>"
                 + "<mi>" + fieldName + "</mi>"
                 + "</mrow>\n";
-
-        return retVal;
     }
 
     @Override

@@ -12,8 +12,10 @@ import org.cirdles.squid.tasks.Task;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 import java.util.LinkedList;
+import java.util.Locale;
 
 public class SquidReportTableXMLConverter implements Converter {
+
     @Override
     public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
         SquidReportTableInterface table = (SquidReportTableInterface) source;
@@ -30,7 +32,7 @@ public class SquidReportTableXMLConverter implements Converter {
             writer.endNode();
         }
         writer.endNode();
-        
+
         writer.startNode("reportSpotTarget");
         writer.setValue(table.getReportSpotTarget().name());
         writer.endNode();
@@ -38,7 +40,7 @@ public class SquidReportTableXMLConverter implements Converter {
         writer.startNode("isDefault");
         writer.setValue(Boolean.toString(table.isDefault()));
         writer.endNode();
-        
+
         writer.startNode("version");
         writer.setValue(Integer.toString(table.getVersion()));
         writer.endNode();
@@ -63,16 +65,22 @@ public class SquidReportTableXMLConverter implements Converter {
         reader.moveUp();
 
         reader.moveDown();
-        table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
-        reader.moveUp();
+        // backwards compatible
+        if (reader.getValue().toUpperCase(Locale.ENGLISH).contains("FALSE")) {
+            table.setIsBuiltInSquidDefault(Boolean.parseBoolean(reader.getValue()));
+            reader.moveUp();
+        } else {
+            table.setReportSpotTarget(SpotTypes.valueOf(reader.getValue()));
+            reader.moveUp();
 
-        reader.moveDown();
-        table.setIsBuiltInSquidDefault(Boolean.parseBoolean(reader.getValue()));
-        reader.moveUp();
+            reader.moveDown();
+            table.setIsBuiltInSquidDefault(Boolean.parseBoolean(reader.getValue()));
+            reader.moveUp();
 
-        reader.moveDown();
-        table.setVersion(Integer.parseInt(reader.getValue()));
-        reader.moveUp();
+            reader.moveDown();
+            table.setVersion(Integer.parseInt(reader.getValue()));
+            reader.moveUp();
+        }
 
         return table;
     }

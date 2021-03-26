@@ -145,7 +145,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
-    
+
     public static SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
 
     /**
@@ -425,7 +425,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ParametersModel commonPbMod = getCommonPbModel();
 
 //        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
-
         if (physConst == null) {
             setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
         } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
@@ -487,7 +486,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(taskDesign, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
+                        @SuppressWarnings("unchecked")
+                        Set<Entry<String, String>> entries = ((Map) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -549,7 +549,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         for (Expression customExp : taskDesign.getCustomTaskExpressions()) {
             // jan 2021 issue #564
-            if (customExp.getName().contains("_WM_")){
+            if (customExp.getName().contains("_WM_")) {
                 String targetSampleName = customExp.getName().split("_WM_")[1].trim();
                 customExp.getExpressionTree().setUnknownsGroupSampleName(targetSampleName);
             }
@@ -582,7 +582,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     Object retrieved = methGetTask.invoke(this, new Object[0]);
                     if (retrieved instanceof Map) {
                         Map<String, String> copyMap = new TreeMap<>();
-                        @SuppressWarnings("unchecked") Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
+                        @SuppressWarnings("unchecked")
+                        Set<Entry<String, String>> entries = ((Map<String, String>) retrieved).entrySet();
                         for (Map.Entry<String, String> mapEntry : entries) {
                             copyMap.put(mapEntry.getKey(), mapEntry.getValue());
                         }
@@ -1578,7 +1579,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (squidSpeciesModelList.isEmpty()) {
             buildSquidSpeciesModelListFromMassStationDetails();
         }
-        if ((mapOfIndexToMassStationDetails != null) && (!mapOfIndexToMassStationDetails.isEmpty())){
+        if ((mapOfIndexToMassStationDetails != null) && (!mapOfIndexToMassStationDetails.isEmpty())) {
             // update these if squidSpeciesModelList exists
             if (squidSpeciesModelList.size() > 0) {
                 int index = 0;
@@ -1945,10 +1946,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public String customizeXML(String xml) {
         String xmlR = xml;
-        
+
         xmlR = xmlR.replaceFirst("<Task>",
                 XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
-        
+
         return xmlR;
     }
 
@@ -2326,10 +2327,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 evaluateExpressionForSpot(expressionTree, spot);
             }
         }
-        
+
         // jan 2021
-        if (spotsForExpression.isEmpty()){
-            ((ExpressionTree)expressionTree).setHasNoTargetSpots(true);
+        if (spotsForExpression.isEmpty()) {
+            ((ExpressionTree) expressionTree).setHasNoTargetSpots(true);
         }
     }
 
@@ -2738,8 +2739,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
         }
 
-        if (containsFilterReport){
-               // && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
+        if (containsFilterReport) {
+            // && ((SquidReportTable) squidWeightedMeanPlotSortTable).getVersion() < SquidReportTable.WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION) {
             squidReportTablesUnknown.remove(squidWeightedMeanPlotSortTable);
             containsFilterReport = false;
         }
