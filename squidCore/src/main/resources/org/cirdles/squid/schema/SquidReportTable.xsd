@@ -55,9 +55,9 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="reportSpotTarget" type="SpotTypes" />
+                <xs:element minOccurs="0" name="reportSpotTarget" type="SpotTypes" />
                 <xs:element name="isDefault" type="xs:boolean" />
-                <xs:element name="version" type="xs:int" />
+                <xs:element minOccurs="0" name="version" type="xs:int" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
