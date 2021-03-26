@@ -46,6 +46,7 @@ import org.cirdles.squid.tasks.expressions.operations.Divide;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -330,7 +331,7 @@ public class ExpressionTree
 
             if (retVal == 0) {
                 // then compare on names so we have a complete ordering
-                retVal = 1;//getName().compareToIgnoreCase(exp.getName());
+                retVal = 1;
             }
         }
         return retVal;
@@ -492,6 +493,9 @@ public class ExpressionTree
 
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
+        
+        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
+        xstream.alias("SpotFieldNode", SpotFieldNode.class);
 
         xstream.registerConverter(new VariableNodeForSummaryXMLConverter());
         xstream.alias("VariableNodeForSummary", VariableNodeForSummary.class);
