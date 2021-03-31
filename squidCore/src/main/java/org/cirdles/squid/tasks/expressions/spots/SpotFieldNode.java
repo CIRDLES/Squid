@@ -16,17 +16,16 @@
 package org.cirdles.squid.tasks.expressions.spots;
 
 import com.thoughtworks.xstream.XStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SpotFieldNode extends ExpressionTree {
@@ -72,7 +71,6 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param xstream
      */
     @Override

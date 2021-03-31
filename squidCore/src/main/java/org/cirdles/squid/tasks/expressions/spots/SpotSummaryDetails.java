@@ -15,21 +15,21 @@
  */
 package org.cirdles.squid.tasks.expressions.spots;
 
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SpotSummaryDetails implements Serializable {
@@ -53,7 +53,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     *
      * @param expressionTree
      * @param values
      * @param selectedSpots
@@ -95,7 +94,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     *
      * @param values
      */
     public void setValues(double[][] values) {
@@ -110,7 +108,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     *
      * @param selectedSpots
      */
     public void setSelectedSpots(List<ShrimpFractionExpressionInterface> selectedSpots) {
@@ -118,7 +115,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     *
      * @param expressionTree
      */
     public void setExpressionTree(ExpressionTreeInterface expressionTree) {
@@ -126,7 +122,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public ExpressionTreeInterface getExpressionTree() {
@@ -191,7 +186,7 @@ public class SpotSummaryDetails implements Serializable {
      * @return the selectedExpressionName
      */
     public String getSelectedExpressionName() {
-        if (selectedExpressionName == null){
+        if (selectedExpressionName == null) {
             selectedExpressionName = "Hours";
         }
         return selectedExpressionName;

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,11 +16,11 @@
 package org.cirdles.squid.tasks.expressions.parsing;
 
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.regex.Pattern;
+
 import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 
 /**
@@ -32,7 +32,6 @@ public class ShuntingYard {
     private static final Pattern NUMBER_SCIENTIFIC_PATTERN = Pattern.compile("([+-]?(?:0|[1-9]\\d*)(?:\\.\\d*)?(?:[eE][+\\-]?\\d+))");
 
     /**
-     *
      * @param args
      */
     public static void main(String[] args) {
@@ -47,7 +46,8 @@ public class ShuntingYard {
         infixList.add("±");
         infixList.add("\"");
         infixList.add("Hfsens");
-        infixList.add("\"");;
+        infixList.add("\"");
+        ;
         infixList.add("]");
         infixList.add("[");
         infixList.add("0");
@@ -59,14 +59,12 @@ public class ShuntingYard {
     }
 
     /**
-     * @see
-     * https://en.wikipedia.org/wiki/Reverse_Polish_notation#The_postfix_algorithm
-     * @see
-     * https://blog.kallisti.net.nz/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/
-     * @see http://www.reedbeta.com/blog/the-shunting-yard-algorithm/
-     * @see https://en.wikipedia.org/wiki/Shunting-yard_algorithm
      * @param infix
      * @return
+     * @see https://en.wikipedia.org/wiki/Reverse_Polish_notation#The_postfix_algorithm
+     * @see https://blog.kallisti.net.nz/2008/02/extension-to-the-shunting-yard-algorithm-to-allow-variable-numbers-of-arguments-to-functions/
+     * @see http://www.reedbeta.com/blog/the-shunting-yard-algorithm/
+     * @see https://en.wikipedia.org/wiki/Shunting-yard_algorithm
      */
     public static List<String> infixToPostfix(List<String> infix) {
         Stack<String> operatorStack = new Stack<>();
@@ -173,11 +171,11 @@ public class ShuntingYard {
 //                                            String funcWithArgCount = func + ":" + String.valueOf(a);
                                             outputQueue.add(func);// temp simplify(funcWithArgCount);
                                         }
-                                        }
                                     }
                                 }
                             }
                         }
+                    }
                     lastWasOperationOrFunction = false;
                     break;
                 case NUMBER:
@@ -310,7 +308,6 @@ public class ShuntingYard {
         }
 
         /**
-         *
          * @param token
          * @return
          */
@@ -353,7 +350,6 @@ public class ShuntingYard {
     }
 
     /**
-     *
      * @param string
      * @return
      */

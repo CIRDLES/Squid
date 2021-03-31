@@ -518,8 +518,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedRefMatReportModel();
-            String[][] report = reportSettings.reportSpotsInCustomTable(
-                    reportSettings, task, task.getReferenceMaterialSpots());
+            Map<String, List<ShrimpFractionExpressionInterface>> reportSamplesMap = new HashMap<>();
+            reportSamplesMap.put(((Task) task).getFilterForRefMatSpotNames(), task.getReferenceMaterialSpots());
+            String[][] report = reportSettings.reportSpotsInCustomTable(reportSettings, task, reportSamplesMap, true);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, (projectName + "_" + reportSettings.getReportTableName()).replaceAll("\\s+", "_") + ".csv");
         }
@@ -562,8 +563,17 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
-            String[][] report = reportSettings.reportSpotsInCustomTable(
-                    reportSettings, task, task.getMapOfUnknownsBySampleNames().get(nameOfTargetSample));
+            Map<String, List<ShrimpFractionExpressionInterface>> reportSamplesMap = new HashMap<>();
+            if (SpotTypes.UNKNOWN.getSpotTypeName().compareToIgnoreCase(nameOfTargetSample) == 0) {
+                for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : task.getMapOfUnknownsBySampleNames().entrySet()) {
+                    if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
+                        reportSamplesMap.put(entry.getKey(), entry.getValue());
+                    }
+                }
+            } else {
+                reportSamplesMap.put(nameOfTargetSample, task.getMapOfUnknownsBySampleNames().get(nameOfTargetSample));
+            }
+            String[][] report = reportSettings.reportSpotsInCustomTable(reportSettings, task, reportSamplesMap, true);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report,
                     (projectName
@@ -579,8 +589,13 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSquidReportTablesUnknown().get(1);
-            String[][] report = reportSettings.reportSpotsInCustomTable(
-                    reportSettings, task, task.getUnknownSpots());
+            Map<String, List<ShrimpFractionExpressionInterface>> reportSamplesMap = new HashMap<>();
+            for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : task.getMapOfUnknownsBySampleNames().entrySet()) {
+                if (entry.getKey().compareToIgnoreCase(SpotTypes.UNKNOWN.getSpotTypeName()) != 0) {
+                    reportSamplesMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+            String[][] report = reportSettings.reportSpotsInCustomTable(reportSettings, task, reportSamplesMap, true);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, projectName.replaceAll("\\s+", "_") + "_UnknownsWeightedMeansSortingFields.csv");
         }

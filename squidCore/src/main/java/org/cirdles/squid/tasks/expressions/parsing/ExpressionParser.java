@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,45 +15,40 @@
  */
 package org.cirdles.squid.tasks.expressions.parsing;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.ExpressionsForSquid2Parser;
-import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
-import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 import org.cirdles.squid.tasks.expressions.functions.Function;
-import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
-import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
 import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
-import static org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes.NAMED_EXPRESSION_INDEXED;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import static org.cirdles.squid.tasks.expressions.functions.Function.FUNCTIONS_MAP;
+import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATIONS_MAP;
+
 /**
- *
  * @author James F. Bowring
  */
 public class ExpressionParser {
@@ -70,7 +65,6 @@ public class ExpressionParser {
     }
 
     /**
-     *
      * @param expression
      * @param expressionString
      * @return
@@ -109,8 +103,8 @@ public class ExpressionParser {
             if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
                 expression.setParsingStatusReport(
                         descriptiveErrorListenerLexer.getSyntaxErrors()
-                        + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
-                        + descriptiveErrorListenerParser.getSyntaxErrors());
+                                + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
+                                + descriptiveErrorListenerParser.getSyntaxErrors());
             } else {
                 parser.setBuildParseTree(true);
                 List<ParseTree> children = expSentenceContext.children;
@@ -274,9 +268,9 @@ public class ExpressionParser {
                 }
                 String expressionName
                         = token.replace("[\"", "")
-                                .replace("[" + ABS_UNCERTAINTY_DIRECTIVE + "\"", "")
-                                .replace("[" + PCT_UNCERTAINTY_DIRECTIVE + "\"", "")
-                                .replaceAll("\"]( )*", "");
+                        .replace("[" + ABS_UNCERTAINTY_DIRECTIVE + "\"", "")
+                        .replace("[" + PCT_UNCERTAINTY_DIRECTIVE + "\"", "")
+                        .replaceAll("\"]( )*", "");
                 ExpressionTreeInterface retExpTreeKnown = namedExpressionsMap.get(expressionName);
 
                 if (retExpTreeKnown == null) {

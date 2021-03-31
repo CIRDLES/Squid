@@ -17,15 +17,10 @@ package org.cirdles.squid.tasks.taskDesign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class TaskDesign9Mass extends TaskDesign {
@@ -33,16 +28,16 @@ public class TaskDesign9Mass extends TaskDesign {
     public TaskDesign9Mass() {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-            "204.1", "196", "238", "248", "254"}));
+                "204.1", "196", "238", "248", "254"}));
 //        DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254"}));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-            "238/196", "206/238", "254/238", "248/254", "206/254"}));
-        
+                "238/196", "206/238", "254/238", "248/254", "206/254"}));
+
         this.name = "New 9 mass task";
 
         indexOfBackgroundSpecies = 2;
-        
+
         this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, "[\"206/238\"]/[\"254/238\"]^2");
         this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
         this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, "(0.03446*[\"254/238\"]+0.868)*[\"248/254\"]");

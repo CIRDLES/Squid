@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +16,17 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToBooleans;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -51,7 +52,7 @@ public class If extends Function {
     /**
      * If expects child 0 as boolean and child 1 and 2 as double
      *
-     * @param childrenET the value of childrenET
+     * @param childrenET      the value of childrenET
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the Object[][] containing doubles
@@ -84,7 +85,6 @@ public class If extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

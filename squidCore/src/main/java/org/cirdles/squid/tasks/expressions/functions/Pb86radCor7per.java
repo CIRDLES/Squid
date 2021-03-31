@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +16,20 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+
+import java.util.List;
+
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_235;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.divideWithZeroForNanResult;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -41,8 +42,7 @@ public class Pb86radCor7per extends Function {
      * radiogenic 208Pb/206Pb %err and encoding the labels for each cell of the
      * values array produced by eval.
      *
-     * @see
-     * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/squid2.5Basic/PbUTh_2.bas
+     * @see https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/squid2.5Basic/PbUTh_2.bas
      */
     public Pb86radCor7per() {
 
@@ -53,7 +53,7 @@ public class Pb86radCor7per extends Function {
         colCount = 1;
         labelsForOutputValues = new String[][]{{"pb86radCor7per"}};
         labelsForInputValues = new String[]{
-            "208/206 Ratio with Unct", "207/206 Ratio with 1\u03C3 abs", "Total206Pb/238U", "Total206Pb/238U%err", "207corr206Pb/238UAge"};
+                "208/206 Ratio with Unct", "207/206 Ratio with 1\u03C3 abs", "Total206Pb/238U", "Total206Pb/238U%err", "207corr206Pb/238UAge"};
     }
 
     /**
@@ -65,7 +65,7 @@ public class Pb86radCor7per extends Function {
      * Total206Pb/238U, child 3 is Total206Pb/238U %err, and child 4 is
      * 207corr206Pb/238UAge.
      *
-     * @param childrenET list containing children 0 - 4
+     * @param childrenET      list containing children 0 - 4
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][1] array of 208Pb/206Pb %err
@@ -111,7 +111,6 @@ public class Pb86radCor7per extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

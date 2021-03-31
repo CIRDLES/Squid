@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,14 +16,14 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
+import java.util.List;
+
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -36,8 +36,7 @@ public class RobReg extends Function {
      * returning "Slope", "SlopeErr", "Y-Intercept", "Y-IntErr" and encoding the
      * labels for each cell of the values array produced by eval.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/squid2.5Basic/Resistant.bas
      */
     public RobReg() {
         name = "RobReg";
@@ -59,7 +58,7 @@ public class RobReg extends Function {
      * evaluates to true or false. Child 2 and 3 are currently ignored but exist
      * for compatibility with Squid2.5.
      *
-     * @param childrenET list containing child 0 through 3
+     * @param childrenET      list containing child 0 through 3
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][3] array of slope, slopeErr, y-Intercept, y-IntErr
@@ -85,7 +84,6 @@ public class RobReg extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

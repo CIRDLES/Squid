@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,19 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -40,10 +41,8 @@ public class Concordia extends Function {
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public Concordia() {
         name = "Concordia";
@@ -61,7 +60,7 @@ public class Concordia extends Function {
      * each member of shrimpFractions. child 2 evaluates to a double
      * representing rho
      *
-     * @param childrenET list containing child 0 and 1
+     * @param childrenET      list containing child 0 and 1
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][4]{"Age", "1-sigma abs", "MSWD", "Prob Of MSWD"}
@@ -81,12 +80,12 @@ public class Concordia extends Function {
 
             double[] concordia
                     = org.cirdles.ludwig.isoplot3.Pub.concordia(
-                            ratioXAndUnct[0],
-                            ratioXAndUnct[1],
-                            ratioYAndUnct[0],
-                            ratioYAndUnct[1],
-                            rho[0],
-                            lambda235, lambda238);
+                    ratioXAndUnct[0],
+                    ratioXAndUnct[1],
+                    ratioYAndUnct[0],
+                    ratioYAndUnct[1],
+                    rho[0],
+                    lambda235, lambda238);
             retVal = new Object[][]{convertArrayToObjects(concordia)};
         } catch (ArithmeticException | NullPointerException e) {
             retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0}};
@@ -96,7 +95,6 @@ public class Concordia extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */
