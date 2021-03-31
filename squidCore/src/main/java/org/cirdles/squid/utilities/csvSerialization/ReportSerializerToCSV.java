@@ -16,21 +16,22 @@
 package org.cirdles.squid.utilities.csvSerialization;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class ReportSerializerToCSV {
 
-    public static void writeCSVReport(boolean rawOutput, File csvFile, String[][] reportFractions) {
-        
-        int firstColumnShown = 2;
-        PrintWriter outputWriter = null;
+    private ReportSerializerToCSV() {
+    }
+
+    public static void writeCSVReport(boolean rawOutput, File csvFile, String[][] reportFractions, boolean showSample) {
+
+        int firstColumnShown = showSample ? 1 : 2;
+        PrintWriter outputWriter;
 
         if (rawOutput) {
             try {
@@ -66,6 +67,12 @@ public class ReportSerializerToCSV {
 
                 outputWriter.write("\n");
                 // column titles
+                // March 2021 per issue #593
+                if (showSample) {
+                    reportFractions[4][1] = "Sample";
+                    reportFractions[4][2] = "Spot  ";
+                    reportFractions[4][reportFractions[0].length - 2] = "Spot  ";
+                }
                 for (int row = 1; row < 5; row++) {
                     for (int c = firstColumnShown; c < reportFractions[0].length; c++) {
 
@@ -83,22 +90,17 @@ public class ReportSerializerToCSV {
                 String saveAliquotName = "";
 
                 for (int row = firstDataRow - 1; row < reportFractions.length; row++) {
+                    // test for data
+                    if (reportFractions[row][3].length() > 0) {
+                        // check whether fraction is included
+                        if (reportFractions[row][0].equalsIgnoreCase("TRUE")) {
+                            // fraction data
+                            for (int c = firstColumnShown; c < reportFractions[0].length - 1; c++) {
+                                outputWriter.write(reportFractions[row][c] + ",");
+                            }
 
-                    // check whether fraction is included
-                    if (reportFractions[row][0].equalsIgnoreCase("TRUE")) {
-                        // for each aliquot
-                        if (!reportFractions[row][1].equalsIgnoreCase(saveAliquotName)) {
-                            saveAliquotName = reportFractions[row][1];
-                            outputWriter.write(reportFractions[row][1] + "\n");
+                            outputWriter.write("\n");
                         }
-
-                        // fraction data
-                        for (int c = firstColumnShown; c < reportFractions[0].length - 1; c++) {
-                            outputWriter.write(reportFractions[row][c] + ",");
-                        }
-
-                        outputWriter.write("\n");
-
                     }
                 }
 
@@ -113,9 +115,9 @@ public class ReportSerializerToCSV {
                         String footNoteLine
                                 = //
                                 " " //
-                                + footNote[0] //
-                                + "  " //
-                                + footNote[1] + "\n";
+                                        + footNote[0] //
+                                        + "  " //
+                                        + footNote[1] + "\n";
                         outputWriter.write(replaceUnicodes(footNoteLine));
                     }
                 }
@@ -123,28 +125,28 @@ public class ReportSerializerToCSV {
                 outputWriter.write("\n");
                 outputWriter.write("\n");
 
+                outputWriter.flush();
+                outputWriter.close();
+
             } catch (IOException iOException) {
             }
         }
-
-        outputWriter.flush();
-        outputWriter.close();
 
     }
 
     public static void writeSquid3CustomCSVReport(File csvFile, String[][] reportFractions) {
         reportFractions[4][2] = "Fractions";
         reportFractions[4][reportFractions[4].length - 2] = "Fractions";
-        for(int i = 0; i < reportFractions.length; i++) {
+        for (int i = 0; i < reportFractions.length; i++) {
             String[] row = reportFractions[i];
             reportFractions[i] = Arrays.copyOfRange(row, 2, row.length - 1);
         }
 
-        for(int j = 2; j < reportFractions[4].length - 1; j++) {
+        for (int j = 2; j < reportFractions[4].length - 1; j++) {
             reportFractions[4][j] = replaceUnicodes(reportFractions[4][j]);
         }
 
-        writeCSVReport(true, csvFile, reportFractions);
+        writeCSVReport(true, csvFile, reportFractions, true);
     }
 
     private static String replaceUnicodes(String text) {

@@ -15,24 +15,22 @@
  */
 package org.cirdles.squid.prawn;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.SortedSet;
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
-import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
-import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
-import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
+import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.shrimp.SquidSessionModel;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_TINY_VALUE;
+import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
@@ -83,7 +81,6 @@ public class PrawnFileRunFractionParser {
     }
 
     /**
-     *
      * @param runFraction
      * @param useSBM
      * @param userLinFits
@@ -99,7 +96,6 @@ public class PrawnFileRunFractionParser {
     }
 
     /**
-     *
      * @param runFraction
      * @param squidSessionSpecs
      * @return
@@ -369,7 +365,7 @@ public class PrawnFileRunFractionParser {
                         rawSBMData[scanNum][speciesMeasurementIndex + speciesMeasurementIndex * (sbmMeasurementsCount - 1) + i] = (int) sbm[i];
                     }
                     double[] sbmTukeysMeanAndUnct = SquidMathUtils.tukeysBiweight(sbm, 6.0);
-                    totalCountsSpeciesSBM = sbmMeasurementsCount * sbmTukeysMeanAndUnct[0];//  sbmTukeyMean.getValue().doubleValue();
+                    totalCountsSpeciesSBM = sbmMeasurementsCount * sbmTukeysMeanAndUnct[0];
                 } // end of decision regular Prawn vs OP
 
                 totalCountsSBM[scanNum][speciesMeasurementIndex] = totalCountsSpeciesSBM;
@@ -447,8 +443,7 @@ public class PrawnFileRunFractionParser {
     }
 
     /**
-     *
-     * @param useSBM the value of useSBM
+     * @param useSBM      the value of useSBM
      * @param userLinFits the value of userLinFits
      */
     private void calculateIsotopicRatios(boolean useSBM, boolean userLinFits) {
@@ -502,7 +497,7 @@ public class PrawnFileRunFractionParser {
                     }
 
                     ratioInterpTime = new double[]{//
-                        0.5 * (StrictMath.min(timeStampSec[0][NUM], timeStampSec[0][DEN]) + StrictMath.max(timeStampSec[nScans - 1][NUM], timeStampSec[nScans - 1][DEN]))
+                            0.5 * (StrictMath.min(timeStampSec[0][NUM], timeStampSec[0][DEN]) + StrictMath.max(timeStampSec[nScans - 1][NUM], timeStampSec[nScans - 1][DEN]))
                     };
 
                     isotopicRatioModel.setRatioVal(squid3RoundedToSize(ratioVal, sigFigs));

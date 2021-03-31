@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,19 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.ArrayList;
-import java.util.List;
-import static org.cirdles.ludwig.isoplot3.Means.weightedAverage;
-import static org.cirdles.ludwig.squid25.Resistant.fdNmad;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.cirdles.ludwig.isoplot3.Means.weightedAverage;
+import static org.cirdles.ludwig.squid25.Resistant.fdNmad;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -44,30 +45,30 @@ public class WtdMeanACalc extends Function {
      * 206Pb/238U and/or 208Pb/232Th as appropriate) are calculated from there,
      * because SHRIMP (and secondary ion mass spectrometry in general) is an
      * indirect dating technique. Thus this is a critical step.
-     *
+     * <p>
      * We modify Ludwig's VBA version so that the input is any set of values and
      * oneSigmaPercentUncertainties but plan for it to be called separately for
      * each of the 5 flavors of calibration constants, named here:
      * 4-corr206/238, 7-corr206/238, 8-corr206/238, 4-corr208/232,
      * 7-corr208/232.
-     *
+     * <p>
      * In a break with Squid3 architecture, in order to preserve the results of
      * Squid25, the uncertainties input to this function are 1-sigma percent.
      * After the large rejection stage, the uncertainties are converted to
      * absolute for the balance of the calculations and 1-sigma absolute values
      * are returned per Squid3 architecture.
-     *
+     * <p>
      * Note: the following values displayed in Squid25 can be calculated from
      * the outputs of this function.
-     *
+     * <p>
      * 1sigma error of mean (%) = exterr68 / mean * 100
-     *
+     * <p>
      * 95%-conf. err. of mean(%) = exterr95 / mean * 100
-     *
+     * <p>
      * if externalFlag = 1.0, otherwise zero 1s external spot-to-spot error =
      * 1-sigmaAbs / mean * 100
-     *
-     *
+     * <p>
+     * <p>
      * Returns double[3][], where the indices listed in [1] and [2] are
      * zero-based rather than the Squid25 1-based values.
      *
@@ -81,9 +82,9 @@ public class WtdMeanACalc extends Function {
         colCount = 7;
         summaryCalc = true;
         labelsForOutputValues = new String[][]{
-            {"mean", "1-sigmaAbs", "exterr68", "exterr95", "MSWD", "probability", "externalFlag"},
-            {"LargeRej Indices"},
-            {"WmeanRej Indices"}};
+                {"mean", "1-sigmaAbs", "exterr68", "exterr95", "MSWD", "probability", "externalFlag"},
+                {"LargeRej Indices"},
+                {"WmeanRej Indices"}};
         labelsForInputValues = new String[]{"numbers", "oneSigmaPercentUncertainties", "noUPbConstAutoReject", "pbCanDriftCorr"};
         definition = "Evaluates, for the Standard Reference Material, the weighted mean (and\n"
                 + DEF_TAB + "associated parameters) of a set of common-Pb corrected calibration\n"
@@ -126,8 +127,8 @@ public class WtdMeanACalc extends Function {
      * and that child 2, 3 are ConstantNodes that evaluate to true or false
      * denoting uncertaintiesInPercent, noUPbConstAutoReject.
      *
-     * @param childrenET list containing child 0, child 1, child 2, child 3,
-     * child 4
+     * @param childrenET      list containing child 0, child 1, child 2, child 3,
+     *                        child 4
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[3][n] where [0] is array of intMean, intSigmaMean,
@@ -165,7 +166,6 @@ public class WtdMeanACalc extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */
@@ -192,12 +192,12 @@ public class WtdMeanACalc extends Function {
      * 206Pb/238U and/or 208Pb/232Th as appropriate) are calculated from there,
      * because SHRIMP (and secondary ion mass spectrometry in general) is an
      * indirect dating technique. Thus this is a critical step.
-     *
+     * <p>
      * We modify Ludwig's VBA version so that the input is any set of values and
      * oneSigmaPercentUncertainties but plan for it to be called for both
      * flavors of calibration constants, 8/32 and 6/38 named here:
      * UncorrPb/Uconst and UncorrPb/Thconst.
-     *
+     * <p>
      * In keeping with Squid3 architecture, noramlly all
      * oneSigmaPercentUncertainties are input and output as one-sigma absolute;
      * however, here we input oneSigmaPercentUncertainties as 1-sigma percents

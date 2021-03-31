@@ -125,10 +125,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         }
 
         amIsotopicRatio = ((ExpressionTree) expTree).amIsotopicRatio();
-//        if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
-//            // Check for isotopic ratios
-//            amIsotopicRatio = (((ExpressionTree) expTree).getOperation() instanceof Divide);
-//        }
 
         // propose column headers by splitting on underscores in name
         // row 0 is reserved for category displayname

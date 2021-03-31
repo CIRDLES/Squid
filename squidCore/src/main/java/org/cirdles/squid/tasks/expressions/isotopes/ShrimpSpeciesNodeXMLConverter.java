@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,22 +26,17 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  * A <code>ShrimpSpeciesNodeXMLConverter</code> is used to marshal and unmarshal
  * data between <code>ShrimpSpeciesNode</code> and XML files.
  *
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
- * com.thoughtworks.xstream.converters.Converter</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html>
- * com.thoughtworks.xstream.converters.MarhsallingContext</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext.html>
- * com.thoughtworks.xstream.converters.UnmarshallingContext</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamReader.html>
- * com.thoughtworks.xstream.io.HierachicalSreamReader</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamWriter.html>
- * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
+ * com.thoughtworks.xstream.converters.Converter</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html>
+ * com.thoughtworks.xstream.converters.MarhsallingContext</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext.html>
+ * com.thoughtworks.xstream.converters.UnmarshallingContext</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamReader.html>
+ * com.thoughtworks.xstream.io.HierachicalSreamReader</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamWriter.html>
+ * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  */
 public class ShrimpSpeciesNodeXMLConverter implements Converter {
 
@@ -50,14 +45,14 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
      * <code>ShrimpSpeciesNode</code>'s <code>Class</code>. Used to ensure that
      * the object about to be marshalled/unmarshalled is of the correct type.
      *
-     * @pre argument <code>clazz</code> is a valid <code>Class</code>
-     * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>ShrimpSpeciesNode.class</code>
-     * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
-     * convert to/from XML
-     * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
+     * @param clazz <code>Class</code> of the <code>Object</code> you wish to
+     *              convert to/from XML
+     * @return <code>boolean</code> - <code>true</code> if <code>clazz</code>
      * matches <code>ShrimpSpeciesNode</code>'s <code>Class</code>; else
      * <code>false</code>.
+     * @pre argument <code>clazz</code> is a valid <code>Class</code>
+     * @post <code>boolean</code> is returned comparing <code>clazz</code>
+     * against <code>ShrimpSpeciesNode.class</code>
      */
     @Override
     public boolean canConvert(Class clazz) {
@@ -68,22 +63,22 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
-     *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
-     * <code>context</code> is a valid <code>MarshallingContext</code>
-     * @post    <code>value</code> is written to the XML file specified via
-     * <code>writer</code>
      * @param value   <code>ShrimpSpeciesNode</code> that you wish to write to a
-     * file
-     * @param writer stream to write through
+     *                file
+     * @param writer  stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
+     * @pre <code>value</code> is a valid <code>ShrimpSpeciesNode</code>, <code>
+     * writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
+     * <code>context</code> is a valid <code>MarshallingContext</code>
+     * @post <code>value</code> is written to the XML file specified via
+     * <code>writer</code>
      */
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
-            MarshallingContext context) {
+                        MarshallingContext context) {
 
         ShrimpSpeciesNode shrimpSpeciesNode = (ShrimpSpeciesNode) value;
-        
+
         writer.startNode("isotopeName");
         writer.setValue(shrimpSpeciesNode.getName());
         writer.endNode();
@@ -91,7 +86,7 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
         writer.startNode("squidSpeciesModel");
         context.convertAnother(shrimpSpeciesNode.getSquidSpeciesModel());
         writer.endNode();
-        
+
         writer.startNode("methodNameForShrimpFraction");
         writer.setValue(shrimpSpeciesNode.getMethodNameForShrimpFraction());
         writer.endNode();
@@ -102,31 +97,31 @@ public class ShrimpSpeciesNodeXMLConverter implements Converter {
      * reads a <code>shrimpSpeciesNode</code> from the XML file specified
      * through <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>ShrimpSpeciesNode</code>
+     * @param reader  stream to read through
+     * @param context <code>UnmarshallingContext</code> used to store generic
+     *                data
+     * @return <code>ShrimpSpeciesNode</code> - <code>ShrimpSpeciesNode</code>
+     * read from file specified by <code>reader</code>
+     * @pre <code>reader</code> leads to a valid <code>ShrimpSpeciesNode</code>
      * @post the <code>ShrimpSpeciesNode</code> is read from the XML file and
      * returned
-     * @param reader stream to read through
-     * @param context <code>UnmarshallingContext</code> used to store generic
-     * data
-     * @return  <code>ShrimpSpeciesNode</code> - <code>ShrimpSpeciesNode</code>
-     * read from file specified by <code>reader</code>
      */
     @Override
     public Object unmarshal(HierarchicalStreamReader reader,
-            UnmarshallingContext context) {
+                            UnmarshallingContext context) {
 
         ShrimpSpeciesNode shrimpSpeciesNode = ShrimpSpeciesNode.buildEmptyShrimpSpeciesNode();
 
         reader.moveDown();
         shrimpSpeciesNode.setName(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         SquidSpeciesModel squidSpeciesModel = new SquidSpeciesModel();
         squidSpeciesModel = (SquidSpeciesModel) context.convertAnother(squidSpeciesModel, SquidSpeciesModel.class);
         shrimpSpeciesNode.setsquidSpeciesModel(squidSpeciesModel);
-        reader.moveUp();        
-        
+        reader.moveUp();
+
         reader.moveDown();
         shrimpSpeciesNode.setMethodNameForShrimpFraction(reader.getValue());
         reader.moveUp();

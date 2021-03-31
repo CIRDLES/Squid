@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +17,19 @@ package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -177,7 +178,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -186,7 +186,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface ln() {
@@ -194,7 +193,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface log() {
@@ -202,7 +200,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface sqrt() {
@@ -210,7 +207,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface exp() {
@@ -218,7 +214,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface robReg() {
@@ -226,7 +221,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface sqBiweight() {
@@ -234,7 +228,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface biweight() {
@@ -242,7 +235,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface sqWtdAv() {
@@ -250,7 +242,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface wtdAv() {
@@ -258,7 +249,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface agePb76() {
@@ -266,7 +256,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface agePb76WithErr() {
@@ -274,7 +263,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface age7corrWithErr() {
@@ -282,7 +270,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface age8corrWithErr() {
@@ -290,7 +277,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface age7CorrPb8Th2WithErr() {
@@ -298,7 +284,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface rad8corPb7U5WithErr() {
@@ -306,7 +291,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface rad8corConcRho() {
@@ -314,7 +298,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pb76() {
@@ -322,7 +305,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pb46cor7() {
@@ -330,7 +312,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pb46cor8() {
@@ -338,7 +319,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pb206U238rad() {
@@ -346,7 +326,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface stdPb86radCor7per() {
@@ -354,7 +333,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pb86radCor7per() {
@@ -362,7 +340,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface concordiaTW() {
@@ -370,7 +347,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface concordia() {
@@ -378,7 +354,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface and() {
@@ -386,7 +361,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface or() {
@@ -394,7 +368,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface sqIf() {
@@ -402,7 +375,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface not() {
@@ -418,7 +390,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface max() {
@@ -426,7 +397,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface min() {
@@ -434,7 +404,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface abs() {
@@ -442,7 +411,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface average() {
@@ -450,7 +418,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface median() {
@@ -458,7 +425,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface sum() {
@@ -466,7 +432,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface count() {
@@ -474,7 +439,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface tinv() {
@@ -482,7 +446,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface round() {
@@ -490,7 +453,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface stdev() {
@@ -498,7 +460,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface stdevp() {
@@ -514,7 +475,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface valueModel() {
@@ -522,7 +482,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @param myOperationName
      * @return
      */
@@ -544,7 +503,6 @@ public abstract class Function
     }
 
     /**
-     *
      * @param columnVector
      * @param colIndex
      * @return
@@ -553,7 +511,7 @@ public abstract class Function
         double[] rowVector = new double[columnVector.length];
         for (int i = 0; i < rowVector.length; i++) {
             if (columnVector[i][colIndex] instanceof Integer) {
-                rowVector[i] = (double) (Integer)columnVector[i][colIndex];
+                rowVector[i] = (double) (Integer) columnVector[i][colIndex];
             } else {
                 rowVector[i] = (double) columnVector[i][colIndex];
             }

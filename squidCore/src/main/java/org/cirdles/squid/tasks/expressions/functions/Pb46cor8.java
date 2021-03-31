@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,17 +16,18 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -38,8 +39,7 @@ public class Pb46cor8 extends Function {
      * Provides the functionality of Squid2.5's pb46cor8. Returns 204Pb/206Pb
      * required to force 206Pb/238U-208Pb/232Th ages to concordance.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb46cor8() {
 
@@ -62,7 +62,7 @@ public class Pb46cor8 extends Function {
      * representing ["208corr206Pb/238UAge"] and a row for each member of
      * shrimpFractions.
      *
-     * @param childrenET list containing child 0 - 2
+     * @param childrenET      list containing child 0 - 2
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][1] array of pb46cor8
@@ -100,7 +100,6 @@ public class Pb46cor8 extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

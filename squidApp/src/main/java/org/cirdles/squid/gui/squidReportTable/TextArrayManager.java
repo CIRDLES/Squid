@@ -65,10 +65,10 @@ public class TextArrayManager {
 
     private static void initializeAliquots() {
         aliquots.clear();
-        int i = Integer.parseInt(array[0][0]);
-        String currentAliquot = array[i][1];
+        int ii = Integer.parseInt(array[0][0]);
+        String currentAliquot = array[ii][1];
         aliquots.add(currentAliquot);
-        for (i = ++i; i < array.length; i++) {
+        for (int i = ii + 1; i < array.length; i++) {
             if (!array[i][1].isEmpty() && !currentAliquot.equals(array[i][1])) {
                 aliquots.add(array[i][1]);
                 currentAliquot = array[i][1];
@@ -160,7 +160,7 @@ public class TextArrayManager {
         }
 
         if (col == textArray[0].length - 2) {
-            retVal = "\n\n\nFractions";
+            retVal = "\n\n\nSpot";
         }
 
         return retVal;
@@ -171,7 +171,7 @@ public class TextArrayManager {
         int startSpot = Integer.parseInt(array[0][0]);
         String aliquot = null;
         for (int i = startSpot; i < array.length; i++) {
-            if (Boolean.parseBoolean(array[i][0]) == true) {
+            if (Boolean.parseBoolean(array[i][0])) {
                 ObservableList<String> row = FXCollections.observableArrayList();
                 if (controllerType == SquidReportTableLauncher.ReportTableTab.unknownCustom) {
                     if (aliquot == null || !array[i][1].isEmpty()) {
@@ -197,8 +197,8 @@ public class TextArrayManager {
 
     private static void setUpBoundCol() {
         boundCol.getColumns().clear();
-        TableColumn<ObservableList<String>, String> header = new TableColumn<>("Squid");
-        TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nFractions");
+        TableColumn<ObservableList<String>, String> header = new TableColumn<>("Squid3");
+        TableColumn<ObservableList<String>, String> col = new TableColumn<>("\n\n\nSpot");
         col.setComparator(comparator);
         col.setPrefWidth(col.getPrefWidth() + 76);
         final int num = 1;

@@ -401,7 +401,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
                 g2d.setFont(Font.font("SansSerif", 7));
                 Text text = new Text(String.valueOf(runIndices[i]));
-                text.setFont(Font.font("SansSerif", 7)); //       applyCss();
+                text.setFont(Font.font("SansSerif", 7)); 
                 g2d.setFill(Paint.valueOf("BLACK"));
                 g2d.fillText(String.valueOf(runIndices[i]), mapX(myOnPeakNormalizedAquireTimes[i]) - text.getLayoutBounds().getWidth() + 2.0f, height - 1.5);
                 g2d.setStroke(Paint.valueOf("BLACK"));
@@ -441,16 +441,16 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
                 mapY(peakTukeysMeanAndUnct[0]));
 
         g2d.setFill(Paint.valueOf("BLUE"));
-        g2d.fillText("mean = " + (new BigDecimal(peakTukeysMeanAndUnct[0])).setScale(4, RoundingMode.HALF_UP).toPlainString(),
+        g2d.fillText("mean = " + (BigDecimal.valueOf(peakTukeysMeanAndUnct[0])).setScale(4, RoundingMode.HALF_UP).toPlainString(),
                 (float) mapX(minX) - 150f,
                 (float) mapY(peakTukeysMeanAndUnct[0]) + verticalTextShift);
-        g2d.fillText("  95% = " + (new BigDecimal(peakTukeysMeanAndUnct[2])).setScale(6, RoundingMode.HALF_UP).toEngineeringString(),
+        g2d.fillText("  95% = " + (BigDecimal.valueOf(peakTukeysMeanAndUnct[2])).setScale(6, RoundingMode.HALF_UP).toEngineeringString(),
                 (float) mapX(minX) - 150f,
                 (float) mapY(peakTukeysMeanAndUnct[0]) + 15f);
-        g2d.fillText(" max = " + (new BigDecimal(maxMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
+        g2d.fillText(" max = " + (BigDecimal.valueOf(maxMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
                 (float) mapX(minX) - 150f,
                 (float) mapY(maxMassAMU) + verticalTextShift);
-        g2d.fillText(" min = " + (new BigDecimal(minMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
+        g2d.fillText(" min = " + (BigDecimal.valueOf(minMassAMU)).setScale(3, RoundingMode.HALF_UP).toPlainString(),
                 (float) mapX(minX) - 150f,
                 (float) mapY(minMassAMU) + verticalTextShift);
 
@@ -465,7 +465,6 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
 
     private void showSpotLabelOnGraph(GraphicsContext g2d, int spotIndex) {
         if (countOfScansCumulative.length > spotIndex) {
-            //g2d.setFont(Font.font("SansSerif", FontWeight.BOLD, 11));
             g2d.setFont(Font.font("SansSerif", 11));
             g2d.setFill(Paint.valueOf("BLUE"));
             Text text = new Text(prawnFileRuns.get(spotIndex).getPar().get(0).getValue());

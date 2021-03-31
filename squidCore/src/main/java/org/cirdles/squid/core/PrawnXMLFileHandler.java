@@ -15,6 +15,21 @@
  */
 package org.cirdles.squid.core;
 
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.prawn.PrawnFile;
+import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
+import org.cirdles.squid.prawnLegacy.PrawnLegacyFile;
+import org.cirdles.squid.prawnLegacy.PrawnLegacyFileHandler;
+import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.bind.*;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,24 +45,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
-import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.prawn.PrawnFile;
-import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
-import org.cirdles.squid.prawnLegacy.PrawnLegacyFile;
-import org.cirdles.squid.prawnLegacy.PrawnLegacyFileHandler;
-import org.cirdles.squid.projects.SquidProject;
-import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
-import org.xml.sax.SAXException;
+
 import static org.cirdles.squid.utilities.fileUtilities.TextFileUtilities.writeTextFileFromListOfStringsWithUnixLineEnd;
 
 /**
@@ -108,12 +106,12 @@ public class PrawnXMLFileHandler implements Serializable {
      * Unmarshalls prawn file xml to object of class PrawnFile.
      *
      * @param prawnFileLocation String path to prawn file location
-     * @param isTestMode the value of isTestMode
+     * @param isTestMode        the value of isTestMode
+     * @return the org.cirdles.squid.prawn.PrawnFile
      * @throws IOException
      * @throws MalformedURLException
      * @throws JAXBException
      * @throws SAXException
-     * @return the org.cirdles.squid.prawn.PrawnFile
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     public ShrimpDataFileInterface unmarshallPrawnFileXML(String prawnFileLocation, boolean isTestMode)
@@ -267,7 +265,6 @@ public class PrawnXMLFileHandler implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public boolean currentPrawnFileLocationIsFile() {
@@ -285,7 +282,6 @@ public class PrawnXMLFileHandler implements Serializable {
     }
 
     /**
-     *
      * @param prawnFileLocation
      */
     public void initReportsEngineWithCurrentPrawnFileName(String prawnFileLocation) {
@@ -323,7 +319,6 @@ public class PrawnXMLFileHandler implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public File currentPrawnFileLocationFolder() {
@@ -341,14 +336,13 @@ public class PrawnXMLFileHandler implements Serializable {
 
     /**
      * @param aCurrentPrawnFileLocation the currentPrawnSourceFileLocation to
-     * set
+     *                                  set
      */
     public void setCurrentPrawnSourceFileLocation(String aCurrentPrawnFileLocation) {
         currentPrawnSourceFileLocation = aCurrentPrawnFileLocation;
     }
 
     /**
-     *
      * @return
      */
     public CalamariReportsEngine getReportsEngine() {

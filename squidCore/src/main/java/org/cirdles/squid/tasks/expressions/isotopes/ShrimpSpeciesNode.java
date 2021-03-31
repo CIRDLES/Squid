@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,10 +16,6 @@
 package org.cirdles.squid.tasks.expressions.isotopes;
 
 import com.thoughtworks.xstream.XStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
@@ -27,11 +23,16 @@ import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Objects;
+
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+
 /**
- *
  * @author James F. Bowring
  */
 public class ShrimpSpeciesNode extends ExpressionTree {
@@ -49,7 +50,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param squidSpeciesModel
      * @param methodNameForShrimpFraction
      */
@@ -135,7 +135,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -190,7 +189,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -214,7 +212,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -229,7 +226,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
 
     /**
      * @param squidSpeciesModel
-     * @param name the name to set
+     * @param name              the name to set
      */
     public void setsquidSpeciesModel(SquidSpeciesModel squidSpeciesModel) {
         this.squidSpeciesModel = squidSpeciesModel;
@@ -262,7 +259,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -271,7 +267,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -280,7 +275,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override

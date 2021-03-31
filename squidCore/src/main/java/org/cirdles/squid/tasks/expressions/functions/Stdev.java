@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.apache.commons.math3.exception.MathIllegalArgumentException;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.cirdles.squid.exceptions.SquidException;
@@ -24,8 +23,9 @@ import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
+import java.util.List;
+
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -37,8 +37,7 @@ public class Stdev extends Function {
      * Provides the functionality of Excel's STDEV and returns "stdev" and
      * encoding the labels for each cell of the values array produced by eval.
      *
-     * @see
-     * http://commons.apache.org/proper/commons-math/javadocs/api-3.6/org/apache/commons/math3/stat/descriptive/moment/StandardDeviation.html
+     * @see http://commons.apache.org/proper/commons-math/javadocs/api-3.6/org/apache/commons/math3/stat/descriptive/moment/StandardDeviation.html
      */
     public Stdev() {
         name = "stdev";
@@ -56,7 +55,7 @@ public class Stdev extends Function {
      * Requires that child 0 is a VariableNode that evaluates to a double array
      * with one column and a row for each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0
+     * @param childrenET      list containing child 0
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][3] array of slope, slopeErr, y-Intercept, y-IntErr
@@ -81,7 +80,6 @@ public class Stdev extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

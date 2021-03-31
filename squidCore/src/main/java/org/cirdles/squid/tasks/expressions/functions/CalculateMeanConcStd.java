@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +16,17 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.ludwig.squid25.SquidConstants;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -38,8 +39,7 @@ public class CalculateMeanConcStd extends Function {
      * mean concentration of the parent isotope of the concentration reference
      * standard, known as Av_ParentElement_ConcenConst.
      *
-     * @see
-     * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
+     * @see https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-1
      */
     public CalculateMeanConcStd() {
         name = "CalculateMeanConcStd";
@@ -57,9 +57,9 @@ public class CalculateMeanConcStd extends Function {
      * Requires that child 0 is a VariableNode that evaluates to a double array
      * with one column and a row for each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0
+     * @param childrenET      list containing child 0
      * @param shrimpFractions a list of shrimpFractions from the concentration
-     * reference material
+     *                        reference material
      * @param task
      * @return the double[1][1] array of Av_ParentElement_ConcenConst
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -94,7 +94,6 @@ public class CalculateMeanConcStd extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

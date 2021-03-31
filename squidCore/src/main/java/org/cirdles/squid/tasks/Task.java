@@ -17,27 +17,12 @@
 package org.cirdles.squid.tasks;
 
 import com.thoughtworks.xstream.XStream;
-
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
-import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
-import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -49,94 +34,61 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFileRunFractionParser;
 import org.cirdles.squid.projects.SquidProject;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
-import org.cirdles.squid.shrimp.MassStationDetail;
-import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.shrimp.SquidSessionModel;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
-import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
-import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
-import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
-
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
-import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
-import org.cirdles.squid.tasks.expressions.operations.Operation;
-import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
-import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateExperimentalExpressions;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generateOverCountExpressions;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePerSpotProportionsOfCommonPb;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePlaceholderExpressions;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.generatePpmUandPpmTh;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.overCountMeans;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.samRadiogenicCols;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.stdRadiogenicCols;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateCommonLeadParameterValuesFromModel;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateConcReferenceMaterialValuesFromModel;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updatePhysicalConstantsParameterValuesFromModel;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.updateReferenceMaterialValuesFromModel;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
-import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeBuilderInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER_BY_GROUP;
+import org.cirdles.squid.shrimp.*;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
-import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.evaluationEngines.ExpressionEvaluator;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.ExpressionSpec;
-import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpression;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
+import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.*;
 import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
+import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
+import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.*;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT;
+import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpression;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.*;
+import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Task implements TaskInterface, Serializable, XMLSerializerInterface {
@@ -275,7 +227,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param name
      * @param prawnFile
      * @param reportsEngine
@@ -463,8 +414,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
-     * @param taskDesign the value of taskDesign
+     * @param taskDesign   the value of taskDesign
      * @param taskSkeleton the value of taskSkeleton
      */
     @Override
@@ -562,8 +512,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
-     * @param taskDesign the value of taskDesign
+     * @param taskDesign       the value of taskDesign
      * @param includeCustomExp the value of includeCustomExp
      */
     @Override
@@ -660,7 +609,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
      */
     public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
@@ -677,8 +625,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 // no background assumed
                 String proposedNominalMassName
                         = new BigDecimal(getMapOfIndexToMassStationDetails()
-                                .get(ssm.getMassStationIndex())
-                                .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
+                        .get(ssm.getMassStationIndex())
+                        .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
                 nominalMasses.add(proposedNominalMassName);
             }
             setNominalMasses(nominalMasses);
@@ -773,8 +721,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (String sampleName : filtersForUnknownNames.keySet()) {
             List<ShrimpFractionExpressionInterface> filteredList
                     = unknownSpots.stream()
-                            .filter(spot -> spot.getFractionID().toUpperCase(Locale.ENGLISH).startsWith(sampleName.toUpperCase(Locale.ENGLISH)))
-                            .collect(Collectors.toList());
+                    .filter(spot -> spot.getFractionID().toUpperCase(Locale.ENGLISH).startsWith(sampleName.toUpperCase(Locale.ENGLISH)))
+                    .collect(Collectors.toList());
             if (filteredList.size() > 0) {
                 mapOfUnknownsBySampleNames.put(sampleName, filteredList);
                 // provide 1-based time index within unknown group
@@ -965,7 +913,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param forceReprocess the value of forceReprocess
      */
     @Override
@@ -991,14 +938,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             if (requiresChanges || prawnChanged || forceReprocess) {
                 squidSessionModel
                         = new SquidSessionModel(
-                                squidSpeciesModelList,
-                                squidRatiosModelList,
-                                useSBM,
-                                userLinFits,
-                                indexOfBackgroundSpecies,
-                                filterForRefMatSpotNames,
-                                filterForConcRefMatSpotNames,
-                                filtersForUnknownNames);
+                        squidSpeciesModelList,
+                        squidRatiosModelList,
+                        useSBM,
+                        userLinFits,
+                        indexOfBackgroundSpecies,
+                        filterForRefMatSpotNames,
+                        filterForConcRefMatSpotNames,
+                        filtersForUnknownNames);
 
                 try {
                     shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
@@ -1023,12 +970,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
-     * @param refreshCommonLeadModel the value of refreshCommonLeadModel
-     * @param refreshPhysicalConstantsModel the value of
-     * refreshPhysicalConstantsModel
+     * @param refreshCommonLeadModel         the value of refreshCommonLeadModel
+     * @param refreshPhysicalConstantsModel  the value of
+     *                                       refreshPhysicalConstantsModel
      * @param refreshReferenceMaterialsModel the value of
-     * refreshReferenceMaterialsModel
+     *                                       refreshReferenceMaterialsModel
      */
     @Override
     public void refreshParametersFromModels(
@@ -1221,7 +1167,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 reportsEngine.produceReports(shrimpFractions,
                         (ShrimpFraction) unknownSpots.get(0),
                         referenceMaterialSpots.size() > 0
-                        ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
+                                ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
                         false, true);
             } catch (IOException iOException) {
             }
@@ -1239,7 +1185,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 retVal = reportsEngine.produceReports(shrimpFractions,
                         (ShrimpFraction) unknownSpots.get(0),
                         referenceMaterialSpots.size() > 0
-                        ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
+                                ? (ShrimpFraction) referenceMaterialSpots.get(0) : (ShrimpFraction) unknownSpots.get(0),
                         true, false);
             } catch (IOException iOException) {
             }
@@ -1371,7 +1317,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param sourceExpression
      * @param reprocessExpressions
      */
@@ -1518,10 +1463,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void makeCustomExpression(ExpressionSpecInterface expressionSpec) {
         Expression expression
                 = generateExpressionFromRawExcelStyleText(
-                        expressionSpec.getExpressionName(),
-                        expressionSpec.getExcelExpressionString(),
-                        expressionSpec.isSquidSwitchNU(),
-                        false, false);
+                expressionSpec.getExpressionName(),
+                expressionSpec.getExcelExpressionString(),
+                expressionSpec.isSquidSwitchNU(),
+                false, false);
 
         expression.setNotes(expressionSpec.getNotes());
 
@@ -1727,13 +1672,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
             SquidSpeciesModel spm
                     = new SquidSpeciesModel(
-                            entry.getKey(),
-                            entry.getValue().getMassStationLabel(),
-                            entry.getValue().getIsotopeLabel(),
-                            entry.getValue().getElementLabel(),
-                            entry.getValue().getIsBackground(),
-                            entry.getValue().getuThBearingName(),
-                            entry.getValue().isViewedAsGraph());
+                    entry.getKey(),
+                    entry.getValue().getMassStationLabel(),
+                    entry.getValue().getIsotopeLabel(),
+                    entry.getValue().getElementLabel(),
+                    entry.getValue().getIsBackground(),
+                    entry.getValue().getuThBearingName(),
+                    entry.getValue().isViewedAsGraph());
 
             squidSpeciesModelList.add(spm);
         }
@@ -1863,10 +1808,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if ((findNumerator(ratioName) != null) && (findDenominator(ratioName) != null)) {
             ratioExpressionTree
                     = new ExpressionTree(
-                            ratioName,
-                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
-                            ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
-                            Operation.divide());
+                    ratioName,
+                    ShrimpSpeciesNode.buildShrimpSpeciesNode(findNumerator(ratioName), "getPkInterpScanArray"),
+                    ShrimpSpeciesNode.buildShrimpSpeciesNode(findDenominator(ratioName), "getPkInterpScanArray"),
+                    Operation.divide());
 
             ((ExpressionTreeWithRatiosInterface) ratioExpressionTree).getRatiosOfInterest().add(ratioName);
             ratioExpressionTree.setSquidSwitchSTReferenceMaterialCalculation(true);
@@ -1911,7 +1856,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param ratiosOfInterest
      * @return
      */
@@ -1926,7 +1870,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -1983,7 +1926,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (useSBM && (countOfShrimpFractionsWithInvalidSBMcounts > 0)) {
             SquidMessageDialog.showWarningDialog(
                     "Squid3 detected that " + countOfShrimpFractionsWithInvalidSBMcounts + " spots contain invalid SBM counts. \n\n"
-                    + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.",
+                            + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.",
                     null);
         }
 
@@ -2179,7 +2122,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param spot the value of spot
      */
     private void evaluateExpressionsForSampleSpot(ShrimpFractionExpressionInterface spot) {
@@ -2198,7 +2140,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param expressionTree the value of expressionTree2
      */
     public void evaluateTaskExpression(ExpressionTreeInterface expressionTree) {
@@ -2353,7 +2294,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             // save spot-specific results
             double[][] value = new double[][]{{taskExpressionEvaluatedPerSpotPerScanModel.getRatioVal(),
-                taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
+                    taskExpressionEvaluatedPerSpotPerScanModel.getRatioFractErr()}};
 
             Map<ExpressionTreeInterface, double[][]> taskExpressionsPerSpot = spot.getTaskExpressionsEvaluationsPerSpot();
             if (taskExpressionsPerSpot.containsKey(expressionTree)) {
@@ -2529,11 +2470,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
-     * @param numerator the value of numerator
-     * @param numValue the value of numValue
+     * @param numerator   the value of numerator
+     * @param numValue    the value of numValue
      * @param denominator the value of denominator
-     * @param denValue the value of denValue
+     * @param denValue    the value of denValue
      */
     public void initializeSquidSpeciesModelsRatioMode(boolean numerator, boolean numValue, boolean denominator, boolean denValue) {
         for (SquidSpeciesModel ssm : squidSpeciesModelList) {
@@ -2651,12 +2591,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param calledExpressions the value of calledExpressions
-     * @param depth the value of depth
-     * @param showEdge the value of showEdge
-     * @param graph the value of graph
-     * @param direction the value of direction
+     * @param depth             the value of depth
+     * @param showEdge          the value of showEdge
+     * @param graph             the value of graph
+     * @param direction         the value of direction
      */
     private String printDependencyGraph(
             List<String> calledExpressions, int depth, List<Boolean> showEdge, Map<String, List<String>> graph, String direction) {
@@ -2684,7 +2623,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param updateDefaultReports the value of updateDefaultReports
      * @return
      */
@@ -2956,7 +2894,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param indexOfTaskBackgroundMass
      */
     @Override
@@ -2965,7 +2902,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @return
      */
     public int getIndexOfTaskBackgroundMass() {
@@ -2973,7 +2909,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -2982,7 +2917,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param parentNuclide
      */
     @Override
@@ -3024,7 +2958,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      * @param taskExpressionsEvaluationsPerSpotSet the
-     * taskExpressionsEvaluationsPerSpotSet to set
+     *                                             taskExpressionsEvaluationsPerSpotSet to set
      */
     @Override
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet) {
@@ -3283,7 +3217,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      * @param useCalculatedAv_ParentElement_ConcenConst the
-     * useCalculatedAv_ParentElement_ConcenConst to set
+     *                                                  useCalculatedAv_ParentElement_ConcenConst to set
      */
     @Override
     public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst) {
@@ -3414,7 +3348,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @return showSpotLabels
      */
     @Override
@@ -3423,7 +3356,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     *
      * @param showSpotLabels
      */
     @Override
@@ -3467,7 +3399,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      * @param squidAllowsAutoExclusionOfSpots the
-     * squidAllowsAutoExclusionOfSpots to set
+     *                                        squidAllowsAutoExclusionOfSpots to set
      */
     @Override
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
@@ -3586,7 +3518,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
-     * to set
+     *                                       to set
      */
     @Override
     public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
@@ -3768,9 +3700,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum,
                 providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName,
                 roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
-//                ((ShrimpFraction) this.referenceMaterialSpots.get(1)));
+
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
-        System.out.println(result);
         return result;
     }
 

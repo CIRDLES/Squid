@@ -1,16 +1,17 @@
 package org.cirdles.squid.op;
 
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.RunParameterNames;
 import org.cirdles.squid.prawn.RunTableEntryParameterNames;
 import org.cirdles.squid.prawn.SetParameterNames;
+import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 import java.io.File;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
-import org.cirdles.squid.Squid;
-import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 public class OPFileHandler {
