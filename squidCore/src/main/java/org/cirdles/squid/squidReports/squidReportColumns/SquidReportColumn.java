@@ -51,17 +51,22 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     private transient String[] columnHeaders;
 
     private String expressionName;
+
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
 
     // optional uncertainty column
     private SquidReportColumnInterface uncertaintyColumn;
+
     private boolean amUncertaintyColumn;
+
     // 1 sigma abs or pct if uncertainty column
     private String uncertaintyDirective;
 
     private int countOfSignificantDigits;
+
     private boolean visible;
+
     private String footnoteSpec;
 
     private SquidReportColumn(String expressionName) {
@@ -120,10 +125,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         }
 
         amIsotopicRatio = ((ExpressionTree) expTree).amIsotopicRatio();
-//        if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
-//            // Check for isotopic ratios
-//            amIsotopicRatio = (((ExpressionTree) expTree).getOperation() instanceof Divide);
-//        }
 
         // propose column headers by splitting on underscores in name
         // row 0 is reserved for category displayname
@@ -495,4 +496,5 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         return result;
 
     }
+
 }

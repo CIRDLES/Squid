@@ -25,7 +25,7 @@ public class OPFraction {
     }
 
     public double[][] getTotalSBM() {
-        return clone2dArray( totalSBM);
+        return clone2dArray(totalSBM);
     }
 
     public void setTotalSBM(double[][] totalSBM) {

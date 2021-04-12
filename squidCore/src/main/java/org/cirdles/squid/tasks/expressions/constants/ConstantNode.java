@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,15 @@
 package org.cirdles.squid.tasks.expressions.constants;
 
 import com.thoughtworks.xstream.XStream;
-import java.util.List;
-import java.util.Objects;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
- *
  * @author James F. Bowring
  */
 public class ConstantNode extends ExpressionTree {
@@ -42,7 +42,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param name
      * @param value
      */
@@ -52,7 +51,7 @@ public class ConstantNode extends ExpressionTree {
             value = ((int) value) * 1.0;
         }
         this.value = value;
-        
+
         this.squidSwitchSTReferenceMaterialCalculation = true;
         this.squidSwitchSAUnknownCalculation = true;
     }
@@ -112,7 +111,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -122,7 +120,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param shrimpFractions the value of shrimpFraction
      * @return the double[][]
      */
@@ -146,7 +143,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -155,7 +151,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -164,7 +159,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -173,7 +167,6 @@ public class ConstantNode extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,17 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -39,8 +38,7 @@ public class Pb46cor7 extends Function {
      * Provides the functionality of Squid2.5's pb46cor7. Returns 204Pb/206Pb
      * required to force 206Pb/238U-207Pb/206Pb ages to concordance.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/src/main/java/org/cirdles/ludwig/squid25/PbUTh_2.java
      */
     public Pb46cor7() {
 
@@ -60,7 +58,7 @@ public class Pb46cor7 extends Function {
      * evaluates to a double array with one column representing the
      * 207corr206Pb/238UAge and a row for each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0 and 1
+     * @param childrenET      list containing child 0 and 1
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][1] array of pb46cor7
@@ -99,7 +97,6 @@ public class Pb46cor7 extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

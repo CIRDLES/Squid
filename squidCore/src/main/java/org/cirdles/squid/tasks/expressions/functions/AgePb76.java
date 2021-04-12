@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,18 +16,17 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -40,10 +39,8 @@ public class AgePb76 extends Function {
      * returning "Age" and "AgeErr" and encoding the labels for each cell of the
      * values array produced by eval.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public AgePb76() {
 
@@ -53,7 +50,7 @@ public class AgePb76 extends Function {
         rowCount = 1;
         colCount = 2;
         labelsForInputValues = new String[]{"[\"207/206\"] (includes Ratio and 1\u03C3abs)"};
-        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}}; 
+        labelsForOutputValues = new String[][]{{"Age", "1\u03C3 abs"}};
         definition
                 = "This function is based on Isoplot's AgePb76, which calculates the 207/206 age from the 207/206 ratio.\n "
                 + DEF_TAB + "However, since Squid3 ratios of interest of the form [\"206/207\"] have an associated uncertainty,\n"
@@ -70,7 +67,7 @@ public class AgePb76 extends Function {
      * containing the 1sigma abs unct with a row for each member of
      * shrimpFractions.
      *
-     * @param childrenET list containing child 0
+     * @param childrenET      list containing child 0
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][2] array of age, ageErr
@@ -100,7 +97,6 @@ public class AgePb76 extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

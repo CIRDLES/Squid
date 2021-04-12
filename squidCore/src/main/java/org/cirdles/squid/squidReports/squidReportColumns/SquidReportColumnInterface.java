@@ -27,6 +27,7 @@ import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
+
 public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
     public void initReportColumn(TaskInterface task);

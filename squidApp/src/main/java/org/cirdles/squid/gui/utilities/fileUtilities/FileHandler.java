@@ -340,29 +340,29 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File saveReportFileCSV(boolean rawOutput, String[][] report, Window ownerWindow)
-            throws IOException {
-
-        File retVal = null;
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save Report '.csv' file");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Report '.csv' files", "*.csv"));
-        File mruFolder = new File("");//squidPersistentState.getMRUExpressionFolderPath());
-        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
-        fileChooser.setInitialFileName(report[0][1] + ".csv");
-
-        File reportFileCSV = fileChooser.showSaveDialog(ownerWindow);
-
-        if (reportFileCSV != null) {
-            retVal = reportFileCSV;
-            //squidPersistentState.updateExpressionListMRU(reportFileCSV);
-
-            ReportSerializerToCSV.writeCSVReport(rawOutput, reportFileCSV, report);
-        }
-
-        return retVal;
-    }
+////    public static File saveReportFileCSV(boolean rawOutput, String[][] report, Window ownerWindow)
+////            throws IOException {
+////
+////        File retVal = null;
+////
+////        FileChooser fileChooser = new FileChooser();
+////        fileChooser.setTitle("Save Report '.csv' file");
+////        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Report '.csv' files", "*.csv"));
+////        File mruFolder = new File("");//squidPersistentState.getMRUExpressionFolderPath());
+////        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
+////        fileChooser.setInitialFileName(report[0][1] + ".csv");
+////
+////        File reportFileCSV = fileChooser.showSaveDialog(ownerWindow);
+////
+////        if (reportFileCSV != null) {
+////            retVal = reportFileCSV;
+////            //squidPersistentState.updateExpressionListMRU(reportFileCSV);
+////
+////            ReportSerializerToCSV.writeCSVReport(rawOutput, reportFileCSV, report);
+////        }
+////
+////        return retVal;
+////    }
 
     public static File getCustomExpressionFolder(Window ownerWindow) {
         File retVal;

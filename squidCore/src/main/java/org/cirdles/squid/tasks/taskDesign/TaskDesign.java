@@ -17,38 +17,24 @@
  */
 package org.cirdles.squid.tasks.taskDesign;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
+import java.io.Serializable;
+import java.util.*;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+
 /**
- *
  * @author James F. Bowring
  */
 public class TaskDesign implements Serializable {
@@ -79,6 +65,7 @@ public class TaskDesign implements Serializable {
     public boolean isPbU() {
         return (parentNuclide.contains("238"));
     }
+
     protected boolean directAltPD;
 
     protected Map<String, String> specialSquidFourExpressionsMap;
@@ -192,7 +179,6 @@ public class TaskDesign implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public TaskTypeEnum getTaskType() {
@@ -203,7 +189,6 @@ public class TaskDesign implements Serializable {
     }
 
     /**
-     *
      * @param taskType
      */
     public void setTaskType(TaskTypeEnum taskType) {
@@ -340,7 +325,7 @@ public class TaskDesign implements Serializable {
 
     /**
      * @param squidAllowsAutoExclusionOfSpots the
-     * squidAllowsAutoExclusionOfSpots to set
+     *                                        squidAllowsAutoExclusionOfSpots to set
      */
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
         this.squidAllowsAutoExclusionOfSpots = squidAllowsAutoExclusionOfSpots;
@@ -425,7 +410,7 @@ public class TaskDesign implements Serializable {
 
     /**
      * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
-     * to set
+     *                                       to set
      */
     public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap) {
         this.specialSquidFourExpressionsMap = specialSquidFourExpressionsMap;

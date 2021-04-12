@@ -20,16 +20,15 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 
 /**
- *
  * @author James F. Bowring
  */
-public class DescriptiveErrorListener extends BaseErrorListener{
+public class DescriptiveErrorListener extends BaseErrorListener {
 
-   // public static DescriptiveErrorListener INSTANCE = new DescriptiveErrorListener();
+    // public static DescriptiveErrorListener INSTANCE = new DescriptiveErrorListener();
 
     private String syntaxErrors;
     private boolean reportSyntaxErrors;
-    
+
     public DescriptiveErrorListener(boolean reportSyntaxErrors) {
         syntaxErrors = "";
         this.reportSyntaxErrors = reportSyntaxErrors;
@@ -37,8 +36,8 @@ public class DescriptiveErrorListener extends BaseErrorListener{
 
     @Override
     public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
-            int line, int charPositionInLine,
-            String msg, RecognitionException e) {
+                            int line, int charPositionInLine,
+                            String msg, RecognitionException e) {
         if (!reportSyntaxErrors) {
             return;
         }

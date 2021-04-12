@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,15 +16,16 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -34,14 +35,12 @@ public class SqWtdAv extends Function {
 
     /**
      * Provides the basic functionality of Squid2.5's sqWtdAv by calculating
-     * WeightedAverage and returning mean, 1-sigmaAbs, err68, err95, 
+     * WeightedAverage and returning mean, 1-sigmaAbs, err68, err95,
      * MSWD, probability, externalFlag and encoding the labels for each cell of the
      * values array produced by eval.
      *
-     * @see
-     * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/squid2.5Basic/MathUtils.bas
-     * @see
-     * https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/isoplot3Basic/Means.bas
+     * @see https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/squid2.5Basic/MathUtils.bas
+     * @see https://github.com/CIRDLES/LudwigLibrary/blob/master/vbaCode/isoplot3Basic/Means.bas
      */
     public SqWtdAv() {
         name = "WtdAv";
@@ -62,7 +61,7 @@ public class SqWtdAv extends Function {
      * with one column and a row for each member of shrimpFractions and that
      * child 1 is a ConstantNode that evaluates to an integer.
      *
-     * @param childrenET list containing child 0 and child 1
+     * @param childrenET      list containing child 0 and child 1
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][6] array of intMean, intSigmaMean, MSWD,
@@ -87,7 +86,6 @@ public class SqWtdAv extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

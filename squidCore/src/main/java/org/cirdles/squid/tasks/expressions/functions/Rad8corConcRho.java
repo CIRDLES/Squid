@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,19 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
-import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_232;
+import static org.cirdles.squid.parameters.util.Lambdas.LAMBDA_238;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -41,10 +40,8 @@ public class Rad8corConcRho extends Function {
      * Ludwig specifies: Returns the error correlation for 208-corrected
      * 206PbSTAR/238U-207PbSTAR/235U ratio-pairs.
      *
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
-     * @see
-     * https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/Pub.bas
+     * @see https://raw.githubusercontent.com/CIRDLES/LudwigLibrary/master/vbaCode/isoplot3Basic/UPb.bas
      */
     public Rad8corConcRho() {
 
@@ -55,22 +52,21 @@ public class Rad8corConcRho extends Function {
         colCount = 2;
         labelsForOutputValues = new String[][]{{"rho"}};
         labelsForInputValues = new String[]{
-            "Total 206/238, Total 206/238 1%Unct,"
-            + PB8CORR + R206PB_238U + ","
-            + "Total 208/232, Total 208/232 1%Unct, "
-            + "Total 207/206, Total 207/206 1%Unct,"
-            + "Total 208/206, Total 208/206 1%Unct"};
+                "Total 206/238, Total 206/238 1%Unct,"
+                        + PB8CORR + R206PB_238U + ","
+                        + "Total 208/232, Total 208/232 1%Unct, "
+                        + "Total 207/206, Total 207/206 1%Unct,"
+                        + "Total 208/206, Total 208/206 1%Unct"};
     }
 
     /**
-     *
      * Requires that children 0 - 8 are VariableNodes that evaluate to a double
      * array with column 1 representing the values for Total 206/238, Total
      * 206/238 1%Unct, 8-corr 206/238, Total 208/232, Total 208/232 1%Unct,
      * Total 207/206, Total 207/206 1%Unct, Total 208/206, Total 208/206 1%Unct
      * with a row for each member of shrimpFractions.
      *
-     * @param childrenET list containing child 0-8
+     * @param childrenET      list containing child 0-8
      * @param shrimpFractions a list of shrimpFractions
      * @param task
      * @return the double[1][1] array of rho
@@ -121,7 +117,6 @@ public class Rad8corConcRho extends Function {
     }
 
     /**
-     *
      * @param childrenET the value of childrenET
      * @return
      */

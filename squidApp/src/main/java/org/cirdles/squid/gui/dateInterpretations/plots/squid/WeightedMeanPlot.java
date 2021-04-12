@@ -1099,8 +1099,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     public static String makeSimpleAgeString(double age) {
         String retVal = "No Age calculated.";
         try {
+            // Mar 2021 in fixing issue #603 moved handling to TopsoilDataFactory
             retVal = new BigDecimal(age)
-                    .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
+                    .movePointLeft(0).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
                     + "Ma";
         } catch (Exception e) {
         }

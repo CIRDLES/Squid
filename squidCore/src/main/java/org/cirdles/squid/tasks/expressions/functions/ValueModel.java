@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +16,17 @@
 package org.cirdles.squid.tasks.expressions.functions;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToBooleans;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -55,10 +56,9 @@ public class ValueModel extends Function {
     }
 
     /**
-     *
-     * @param childrenET the value of childrenET where child 0 is the value,
-     * child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false
-     * for PCT uncertainty.
+     * @param childrenET      the value of childrenET where child 0 is the value,
+     *                        child 1 is the 1 sigma uncertainty and child 3 is true for ABS and false
+     *                        for PCT uncertainty.
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
@@ -85,8 +85,7 @@ public class ValueModel extends Function {
     }
 
     /**
-     *
-     * @param rightET the value of rightET
+     * @param rightET    the value of rightET
      * @param childrenET the value of childrenET
      * @return
      */

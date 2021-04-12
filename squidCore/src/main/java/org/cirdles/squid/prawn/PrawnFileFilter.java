@@ -19,7 +19,6 @@ import java.io.File;
 import java.util.Locale;
 
 /**
- *
  * @author James F. Bowring
  */
 public class PrawnFileFilter extends javax.swing.filechooser.FileFilter {
@@ -39,7 +38,6 @@ public class PrawnFileFilter extends javax.swing.filechooser.FileFilter {
     }
 
     /**
-     *
      * @return
      */
     @Override

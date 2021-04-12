@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -35,9 +37,16 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
     public default String[][] reportSpotsInCustomTable(
             SquidReportTableInterface squidReportTable,
             TaskInterface task,
-            List<ShrimpFractionExpressionInterface> spots) {
+            Map<String, List<ShrimpFractionExpressionInterface>> mySamples,
+            boolean showSampleNames) {
 
-        String[][] retVal = new String[spots.size() + HEADER_ROW_COUNT][];
+        int sizeOfArray = 0;
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mySamples.entrySet()) {
+            List<ShrimpFractionExpressionInterface> mySpots = entry.getValue();
+            sizeOfArray += mySpots.size();
+        }
+
+        String[][] retVal = new String[sizeOfArray + HEADER_ROW_COUNT + (showSampleNames ? mySamples.size() : 0)][];
 
         // process columns
         List<SquidReportColumnInterface> columns = new ArrayList<>();
@@ -92,14 +101,19 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
         retVal[0][0] = Integer.toString(HEADER_ROW_COUNT);
         int fractionRowCount = HEADER_ROW_COUNT;
 
-        for (ShrimpFractionExpressionInterface spot : spots) {
-            retVal[fractionRowCount][0] = "true";//included
-            retVal[fractionRowCount][2] = spot.getFractionID();
-            // detect aliquot
-            if (spot.getSpotNumber() < 0) {
-                retVal[fractionRowCount][1] = spot.getFractionID();
-            } else {
+        for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mySamples.entrySet()) {
+            List<ShrimpFractionExpressionInterface> mySpots = entry.getValue();
 
+            retVal[fractionRowCount][0] = "true";
+            retVal[fractionRowCount][1] = "";
+            retVal[fractionRowCount][2] = entry.getKey();
+            fractionRowCount++;
+
+            for (ShrimpFractionExpressionInterface spot : mySpots) {
+                retVal[fractionRowCount][0] = "true";//included
+                retVal[fractionRowCount][2] = spot.getFractionID();
+
+                retVal[fractionRowCount][1] = entry.getKey();
                 retVal[fractionRowCount][countOfAllColumns - 2] = spot.getFractionID();
 
                 retVal[fractionRowCount][countOfAllColumns - 1] = "false";
@@ -109,10 +123,10 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
                     retVal[fractionRowCount][columnIndex] = col.cellEntryForSpot(spot);
                     columnIndex++;
                 }
+//            }
+                fractionRowCount++;
             }
-            fractionRowCount++;
         }
-
         return retVal;
     }
 
@@ -125,7 +139,7 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      * @param reportTableName the reportTableName to set
      */
     public void setReportTableName(String reportTableName);
-    
+
     public SquidReportTableInterface copy();
 
     public boolean amWeightedMeanPlotAndSortReport();
@@ -141,6 +155,16 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
      * @param reportCategories the reportCategories to set
      */
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories);
+
+    /**
+     * @return the reportSpotTarget
+     */
+    public SpotTypes getReportSpotTarget();
+
+    /**
+     * @param reportSpotTarget the reportSpotTarget to set
+     */
+    public void setReportSpotTarget(SpotTypes reportSpotTarget);
 
     public void setIsBuiltInSquidDefault(boolean isDefault);
 

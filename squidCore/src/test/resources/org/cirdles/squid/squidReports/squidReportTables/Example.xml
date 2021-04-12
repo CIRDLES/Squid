@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- SQUIDREPORTTABLE_DATA_FILE -->
+<SquidReportTable xmlns="https://raw.githubusercontent.com"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="https://raw.githubusercontent.com
+                                ../schema/SquidReportTable.xsd">
+  <reportTableName>Example</reportTableName>
+  <reportCategories>
+    <reportCategory>
+      <displayName>Default Category</displayName>
+      <categoryColumns>
+        <SquidReportColumn>
+          <expressionName>4cor_206Pb238U_Age</expressionName>
+          <units></units>
+          <uncertaintyColumn></uncertaintyColumn>
+          <amUncertaintyColumn>false</amUncertaintyColumn>
+          <uncertaintyDirective></uncertaintyDirective>
+          <countOfSignificantDigits>0</countOfSignificantDigits>
+          <visible>false</visible>
+          <footnoteSpec></footnoteSpec>
+        </SquidReportColumn>
+      </categoryColumns>
+      <visible>true</visible>
+    </reportCategory>
+  </reportCategories>
+  <reportSpotTarget>UNKNOWN</reportSpotTarget>
+  <isDefault>false</isDefault>
+  <version>0</version>
+</SquidReportTable>

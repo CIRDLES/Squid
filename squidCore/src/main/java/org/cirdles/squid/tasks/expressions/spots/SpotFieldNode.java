@@ -16,17 +16,16 @@
 package org.cirdles.squid.tasks.expressions.spots;
 
 import com.thoughtworks.xstream.XStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SpotFieldNode extends ExpressionTree {
@@ -57,16 +56,6 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode(); 
-    }
-
-    @Override
     public boolean amHealthy() {
         return (methodNameForShrimpFraction.length() > 0);
     }
@@ -76,18 +65,12 @@ public class SpotFieldNode extends ExpressionTree {
         return amHealthy();
     }
 
-//    @Override
-//    public boolean usesAnotherExpression(ExpressionTreeInterface exp) {
-//        return false;
-//    }
-
     @Override
     public boolean usesOtherExpression() {
         return true;
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -157,12 +140,9 @@ public class SpotFieldNode extends ExpressionTree {
 
     @Override
     public String toStringMathML() {
-        String retVal
-                = "<mrow>"
+        return "<mrow>"
                 + "<mi>" + fieldName + "</mi>"
                 + "</mrow>\n";
-
-        return retVal;
     }
 
     @Override
