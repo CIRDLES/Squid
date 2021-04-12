@@ -15,53 +15,85 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import java.text.DecimalFormat;
+import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextFormatter;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import org.cirdles.squid.gui.dataViews.SampleNode;
+import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.currentlyPlottedSampleTreeNode;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.spotsTreeViewCheckBox;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.xAxisExpressionName;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.yAxisExpressionName;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.AbstractTopsoilPlot;
+import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotAnyTwo;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION_ENVELOPE;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInterface {
+public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInterface {
 
     private Map<String, ExpressionTreeInterface> mapOfNamedExpressions;
+    private final Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
     private final ComboBox<String> xAxisExpressionComboBox;
     private final ComboBox<String> yAxisExpressionComboBox;
-    private final PlotRefreshInterface plotsController;
-    protected boolean hasData;
+    private final ComboBox<String> sampleComboBox; // public because plotsController needs access
     private CheckBox regressionCheckBox;
+    private final PlotRefreshInterface plotsController;
+    private boolean hasData;
     private static boolean plotExcluded = true;
+    
+    public SampleNode sampleNode;
 
     /**
      *
      * @param plotsController the value of plotsController
      * @param hasData the value of hasData
      */
-    public AnyTwoExpressionsControlNode(PlotRefreshInterface plotsController, boolean hasData) {
+    public SamplesAnyTwoExpressionsControlNode(PlotRefreshInterface plotsController) {
         super(4);
 
         this.xAxisExpressionComboBox = new ComboBox<>();
         this.yAxisExpressionComboBox = new ComboBox<>();
+        this.sampleComboBox = new ComboBox<>();
         this.plotsController = plotsController;
-        this.hasData = hasData;
+        
 
         initNode();
 
@@ -81,7 +113,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         List<String> sortedAvailableExpressions = new ArrayList<>();
         for (Entry<String, ExpressionTreeInterface> entry : mapOfNamedExpressions.entrySet()) {
             if (entry.getValue().amHealthy()
-                    && entry.getValue().isSquidSwitchSTReferenceMaterialCalculation()
+                    && entry.getValue().isSquidSwitchSAUnknownCalculation()
                     && !entry.getValue().isSquidSwitchSCSummaryCalculation()
                     && !(entry.getValue() instanceof ShrimpSpeciesNode)
                     && !(entry.getValue() instanceof ConstantNode)
@@ -90,6 +122,9 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
                 sortedAvailableExpressions.add(entry.getKey());
             }
         }
+        
+        HBox samplesToolBox = samplesHBox();
+        getChildren().addAll(samplesToolBox, separator(20.0F));
 
         CheckBox showExcludedSpotsCheckBox = new CheckBox("Plot Excluded");
         showExcludedSpotsCheckBox.setSelected(plotExcluded);
@@ -157,12 +192,27 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         formatNode(yAxisChooseLabel, 160);
         getChildren().add(announce);
     }
+    
+        
+    private HBox samplesHBox() {
+        HBox sampleNameToolBox = new HBox(2);
 
-    /**
-     * @param hasData the hasData to set
-     */
-    public void setHasData(boolean hasData) {
-        this.hasData = hasData;
+        Label sampleInfoLabel = new Label("Samples: ");
+        formatNode(sampleInfoLabel, 100);
+
+        formatNode(sampleComboBox, 100);
+        sampleComboBox.setItems(FXCollections.observableArrayList(mapOfSpotsBySampleNames.keySet()));
+        
+        sampleNameToolBox.getChildren().addAll(sampleInfoLabel, sampleComboBox);
+        
+        return sampleNameToolBox;
     }
-
+    
+    public SampleNode getSampleNode() {
+        return this.sampleNode;
+    }
+    
+    public ComboBox<String> getSampleComboBox() {
+        return this.sampleComboBox;
+    }
 }

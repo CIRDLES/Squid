@@ -194,7 +194,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 0.0,
                 plotsController);
 
-        sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
+        sampleNode.setSamplePlot(sampleNodeSelectedAgeWMPlot);
         sampleNode.setPlotsController(plotsController);
 
         PlotsController.plot = sampleNodeSelectedAgeWMPlot;
@@ -313,7 +313,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             // recover current rejected indices from newly chosen sampleNode
                             ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(sampleNode.getSpotSummaryDetailsWM().getRejectedIndices());
                         }
-                        sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
+                        sampleNode.setSamplePlot(sampleNodeSelectedAgeWMPlot);
                         PlotsController.plot = sampleNodeSelectedAgeWMPlot;
 
                         String selectedAge = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
@@ -344,10 +344,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
                         if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlot()).getRejectedIndices());
                         }
 
-                        PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
+                        PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlot();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
@@ -370,7 +370,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 //                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
                         if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlot()).getRejectedIndices());
                         }
 
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
@@ -386,7 +386,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
-                        sampleNode.setSamplePlotWM(myPlot);
+                        sampleNode.setSamplePlot(myPlot);
 
 //                        updateSampleFromSlider(probabilitySlider.getValue());
                         // if value is unchanged, then we need to force update
@@ -749,7 +749,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
     
     private void writeWeightedMeanSVG() throws IOException {
         if (squidProject.hasReportsFolder()) {
-            WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
+            WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlot();
             String expressionName = myPlot.getAgeOrValueLookupString();
             String reportFileNameSVG = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().replace("/", "_") + ".svg";
 
