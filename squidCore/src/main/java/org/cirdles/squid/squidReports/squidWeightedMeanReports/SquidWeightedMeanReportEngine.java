@@ -56,6 +56,7 @@ public class SquidWeightedMeanReportEngine {
         report.append(spotSummaryDetails.getValues()[0][1] / (isAnAge ? 1e6 : 1.0) * 2.0).append(", ");
         report.append(spotSummaryDetails.getValues()[0][3] / (isAnAge ? 1e6 : 1.0)).append(", ");        
         report.append(countOfIncluded).append(", ");
+        report.append(spotSummaryDetails.getRejectedIndices().length).append(", ");
         report.append(spotSummaryDetails.getValues()[0][4]).append(", ");
         report.append(spotSummaryDetails.getValues()[0][5]).append(", ");
         report.append(spotSummaryDetails.getMinProbabilityWM()).append(", ");
@@ -66,7 +67,7 @@ public class SquidWeightedMeanReportEngine {
 
     public static String makeWeightedMeanReportHeaderAsCSV() {
         StringBuilder header = new StringBuilder();
-        header.append("SampleName, WeightedMeanName, WeightedMean, 2sigma abs unct, 95% conf, n, MSWD, Prob of Fit, Min Prob, Spots");
+        header.append("SampleName, WeightedMeanName, WeightedMean, 2sigma abs unct, 95% conf, n, N (total), MSWD, Prob of Fit, Min Prob, Spots");
 
         return header.toString();
     }
