@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.constants;
 
+import javafx.scene.input.DataFormat;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -422,4 +424,6 @@ public final class Squid3Constants {
             return name;
         }
     }
+
+    public final static DataFormat MASS_DETAIL_FORMAT = new DataFormat("Mass station detail");
 }

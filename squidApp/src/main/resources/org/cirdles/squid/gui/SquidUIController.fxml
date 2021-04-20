@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="700.0" minWidth="1250.0" prefHeight="700.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
+<VBox minHeight="700.0" minWidth="1250.0" prefHeight="700.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SquidUIController">
     <children>
         <MenuBar VBox.vgrow="NEVER">
             <menus>
@@ -83,15 +83,7 @@
                 <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction" text="Map Isotopes from Data to Task" />
-                        <MenuItem mnemonicParsing="false" onAction="#selectRatiosMenuItemAction" text="Manage Ratios" visible="false" />
-                        <Menu disable="true" mnemonicParsing="false" text="Load a Default Ratio Set" visible="false">
-                            <items>
-                                <MenuItem mnemonicParsing="false" onAction="#defaultEmptyRatioSetAction" text="Empty" />
-                                <MenuItem disable="true" mnemonicParsing="false" text="9 Species" />
-                                <MenuItem mnemonicParsing="false" onAction="#default10SpeciesRatioSetAction" text="10 Species" />
-                                <MenuItem disable="true" mnemonicParsing="false" text="11 Species" />
-                            </items>
-                        </Menu>
+                        <MenuItem mnemonicParsing="false" onAction="#auditCountsAndSBMAction" text="Audit Counts and SBM" />
                     </items>
                 </Menu>
                 <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
