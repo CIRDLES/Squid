@@ -17,10 +17,6 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Node;
@@ -38,17 +34,23 @@ import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.projects.SquidProject;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  *
  * @author James F. Bowring
  */
-public class MassStationAuditViewForShrimp extends AbstractDataView {
+public class SpeciesAMUAuditViewForShrimp extends AbstractDataView {
 
     private final List<Double> measuredTrimMasses;
     private final List<Double> timesOfMeasuredTrimMasses;
@@ -93,7 +95,7 @@ public class MassStationAuditViewForShrimp extends AbstractDataView {
      * @param showSpotLabels the value of showSpotLabels
      * @param massAuditRefreshInterface the value of massAuditRefreshInterface
      */
-    public MassStationAuditViewForShrimp(
+    public SpeciesAMUAuditViewForShrimp(
             Rectangle bounds,
             String plotTitle,
             List<Double> measuredTrimMasses,
