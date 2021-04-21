@@ -66,8 +66,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -194,7 +192,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 0.0,
                 plotsController);
 
-        sampleNode.setSamplePlot(sampleNodeSelectedAgeWMPlot);
+        sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
         sampleNode.setPlotsController(plotsController);
 
         PlotsController.plot = sampleNodeSelectedAgeWMPlot;
@@ -313,7 +311,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             // recover current rejected indices from newly chosen sampleNode
                             ((WeightedMeanPlot) sampleNodeSelectedAgeWMPlot).getSpotSummaryDetails().setRejectedIndices(sampleNode.getSpotSummaryDetailsWM().getRejectedIndices());
                         }
-                        sampleNode.setSamplePlot(sampleNodeSelectedAgeWMPlot);
+                        sampleNode.setSamplePlotWM(sampleNodeSelectedAgeWMPlot);
                         PlotsController.plot = sampleNodeSelectedAgeWMPlot;
 
                         String selectedAge = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
@@ -344,10 +342,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
                         if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlot()).getRejectedIndices());
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
                         }
 
-                        PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlot();
+                        PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
@@ -370,7 +368,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 //                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
                         if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlot()).getRejectedIndices());
+                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
                         }
 
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
@@ -386,7 +384,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
-                        sampleNode.setSamplePlot(myPlot);
+                        sampleNode.setSamplePlotWM(myPlot);
 
 //                        updateSampleFromSlider(probabilitySlider.getValue());
                         // if value is unchanged, then we need to force update
@@ -749,7 +747,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
     
     private void writeWeightedMeanSVG() throws IOException {
         if (squidProject.hasReportsFolder()) {
-            WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlot();
+            WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
             String expressionName = myPlot.getAgeOrValueLookupString();
             String reportFileNameSVG = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().replace("/", "_") + ".svg";
 

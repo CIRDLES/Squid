@@ -75,14 +75,14 @@ public class SampleNode implements SampleTreeNodeInterface {
     /**
      * @return the samplePlotWM
      */
-    public PlotDisplayInterface getSamplePlot() {
+    public PlotDisplayInterface getSamplePlotWM() {
         return samplePlot;
     }
 
     /**
      * @param samplePlotWM the samplePlotWM to set
      */
-    public void setSamplePlot(PlotDisplayInterface samplePlotWM) {
+    public void setSamplePlotWM(PlotDisplayInterface samplePlotWM) {
         this.samplePlot = samplePlotWM;
     }
 
