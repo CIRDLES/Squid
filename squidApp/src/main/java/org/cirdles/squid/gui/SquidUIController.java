@@ -25,20 +25,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
@@ -59,7 +51,6 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
-import org.cirdles.squid.utilities.fileUtilities.FileValidator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
@@ -75,27 +66,20 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
-import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+
+import static org.cirdles.squid.constants.Squid3Constants.*;
+import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
-
-import static org.cirdles.squid.constants.Squid3Constants.getDEFAULT_RATIOS_LIST_FOR_10_SPECIES;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
 import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
-import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
-import static org.cirdles.squid.constants.Squid3Constants.LUDWIGLIBRARY_JAVADOC_FOLDER;
-import static org.cirdles.squid.constants.Squid3Constants.SQUID_TASK_LIBRARY_FOLDER;
-import org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum;
-import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
 /**
  * FXML Controller class
@@ -128,7 +112,7 @@ public class SquidUIController implements Initializable {
     public static Node taskFolderBrowserUI;
     
     private static VBox isotopesManagerUI;
-    private static ScrollPane ratiosManagerUI;
+    private static ScrollPane countsAuditManager;
     
     private static SplitPane expressionBuilderUI;
     
@@ -431,7 +415,7 @@ public class SquidUIController implements Initializable {
         mainPane.getChildren().remove(taskManagerUI);
         
         mainPane.getChildren().remove(isotopesManagerUI);
-        mainPane.getChildren().remove(ratiosManagerUI);
+        mainPane.getChildren().remove(countsAuditManager);
         
         mainPane.getChildren().remove(expressionBuilderUI);
         mainPane.getChildren().remove(squidReportSettingsUI);
@@ -1000,29 +984,29 @@ public class SquidUIController implements Initializable {
             //System.out.println("IsotopesManager >>>>   " + iOException.getMessage());
         }
     }
-    
-    private void launchRatiosManager() {
+
+    private void launchCountsAuditManager() {
         try {
-            mainPane.getChildren().remove(ratiosManagerUI);
+            mainPane.getChildren().remove(countsAuditManager);
             // critical for populating table
             squidProject.getTask().buildSquidSpeciesModelList();
-            
-            ratiosManagerUI = FXMLLoader.load(getClass().getResource("RatiosManager.fxml"));
-            ratiosManagerUI.setId("RatiosManager");
-            
-            AnchorPane.setLeftAnchor(ratiosManagerUI, 0.0);
-            AnchorPane.setRightAnchor(ratiosManagerUI, 0.0);
-            AnchorPane.setTopAnchor(ratiosManagerUI, 0.0);
-            AnchorPane.setBottomAnchor(ratiosManagerUI, 0.0);
-            
-            mainPane.getChildren().add(ratiosManagerUI);
-            ratiosManagerUI.setVisible(false);
-            
-            showUI(ratiosManagerUI);
-            
+
+            countsAuditManager = FXMLLoader.load(getClass().getResource("CountsAudit.fxml"));
+            countsAuditManager.setId("RatiosManager");
+
+            AnchorPane.setLeftAnchor(countsAuditManager, 0.0);
+            AnchorPane.setRightAnchor(countsAuditManager, 0.0);
+            AnchorPane.setTopAnchor(countsAuditManager, 0.0);
+            AnchorPane.setBottomAnchor(countsAuditManager, 0.0);
+
+            mainPane.getChildren().add(countsAuditManager);
+            countsAuditManager.setVisible(false);
+
+            showUI(countsAuditManager);
+
             menuHighlighter.highlight(manageRatiosMenu);
         } catch (IOException | RuntimeException iOException) {
-            //System.out.println("RatioManager >>>>   " + iOException.getMessage());
+            //System.out.println("auditCountsManager >>>>   " + iOException.getMessage());
         }
     }
     
@@ -1127,11 +1111,6 @@ public class SquidUIController implements Initializable {
     }
     
     @FXML
-    private void selectRatiosMenuItemAction(ActionEvent event) {
-        launchRatiosManager();
-    }
-    
-    @FXML
     private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
         try {
             File prawnXMLFileNew = FileHandler.savePrawnXMLFile(squidProject, primaryStageWindow);
@@ -1216,18 +1195,6 @@ public class SquidUIController implements Initializable {
         buildExpressionMenuMRU();
         launchExpressionBuilder();
         showUI(expressionBuilderUI);
-    }
-    
-    @FXML
-    private void defaultEmptyRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(new String[]{});
-        launchRatiosManager();
-    }
-    
-    @FXML
-    private void default10SpeciesRatioSetAction(ActionEvent event) {
-        squidProject.getTask().updateRatioNames(getDEFAULT_RATIOS_LIST_FOR_10_SPECIES());
-        launchRatiosManager();
     }
     
     @FXML
@@ -1941,7 +1908,11 @@ public class SquidUIController implements Initializable {
     private void videoTutorialsGoogleDriveMenuItemAction(ActionEvent event) {
         BrowserControl.showURI("https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX?usp=sharing");
     }
-    
+
+    public void auditCountsAndSBMAction(ActionEvent actionEvent) {
+        launchCountsAuditManager();
+    }
+
     private class HighlightMainMenu {
         
         private Menu highlightedMenu;

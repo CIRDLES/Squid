@@ -52,11 +52,15 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+
+import static org.cirdles.squid.constants.Squid3Constants.MASS_DETAIL_FORMAT;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
-import org.cirdles.squid.gui.dataViews.MassStationAuditViewForShrimp;
+import org.cirdles.squid.gui.dataViews.SpeciesAMUAuditViewForShrimp;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -106,7 +110,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private static ObservableList<MassStationDetail> allMassStations;
     private static ObservableList<MassStationDetail> availableMassStations;
     private static ObservableList<MassStationDetail> viewedAsGraphMassStations;
-    private static final DataFormat MASS_DETAIL_FORMAT = new DataFormat("Mass station detail");
 
     private static List<MassStationDetail> massMinuends;
     private static List<MassStationDetail> massSubtrahends;
@@ -564,7 +567,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
 
         AbstractDataView canvas
-                = new MassStationAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                = new SpeciesAMUAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
                         title,
                         data,
                         entry.getTimesOfMeasuredTrimMasses(),
@@ -734,7 +737,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @Override
     public void updateGraphsWithSelectedIndex(int index) {
         for (int i = 0; i < graphs.size(); i++) {
-            ((MassStationAuditViewForShrimp) graphs.get(i)).setIndexOfSelectedSpot(index);
+            ((SpeciesAMUAuditViewForShrimp) graphs.get(i)).setIndexOfSelectedSpot(index);
             graphs.get(i).repaint();
         }
     }
@@ -742,7 +745,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @Override
     public void updateGraphsWithSecondSelectedIndex(int index) {
         for (int i = 0; i < graphs.size(); i++) {
-            ((MassStationAuditViewForShrimp) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
+            ((SpeciesAMUAuditViewForShrimp) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
             graphs.get(i).repaint();
         }
     }

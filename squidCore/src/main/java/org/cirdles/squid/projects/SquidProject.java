@@ -454,7 +454,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     private void serializePrawnData(String fileName)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, JAXBException {
         prawnFileHandler.writeRawDataFileAsXML(prawnFile, fileName);
     }
 
@@ -553,9 +553,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return reportTableFile;
     }
 
-    public File produceSelectedUnknownsReportCSV()
+    public void produceSelectedUnknownsReportCSV()
             throws IOException {
-        return produceTargetedSelectedUnknownsReportCSV(SpotTypes.UNKNOWN.getSpotTypeName());
+        produceTargetedSelectedUnknownsReportCSV(SpotTypes.UNKNOWN.getSpotTypeName());
     }
 
     public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
@@ -619,7 +619,12 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
         //parameters
         if (task != null) {
-            sb.append("\nParameters:\n");
+            sb.append("\nTask Name: ").append(task.getName());
+            sb.append("\nTask Description: ").append(task.getDescription());
+            sb.append("\nTask Author: ").append(task.getAuthorName());
+            sb.append("\nTask Lab: ").append(task.getLabName());
+            sb.append("\nTask Provenance: ").append(task.getProvenance());
+            sb.append("\n\nParameters:\n");
             sb.append("\tIon Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
             sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
             sb.append("\tPreferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
