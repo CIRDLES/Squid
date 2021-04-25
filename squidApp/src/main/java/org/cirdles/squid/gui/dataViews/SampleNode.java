@@ -31,13 +31,13 @@ public class SampleNode implements SampleTreeNodeInterface {
 
     private final String sampleName;
     private SimpleBooleanProperty selectedProperty;
-    private PlotDisplayInterface samplePlot;    
+    private PlotDisplayInterface samplePlotWM;    
     private PlotRefreshInterface plotsController;
 
     public SampleNode(String sampleName) {
         this.sampleName = sampleName;
         this.selectedProperty = new SimpleBooleanProperty(false);
-        this.samplePlot = null;
+        this.samplePlotWM = null;
         this.plotsController = null;
     }
 
@@ -69,21 +69,21 @@ public class SampleNode implements SampleTreeNodeInterface {
      * @return the spotSummaryDetailsWM
      */
     public SpotSummaryDetails getSpotSummaryDetailsWM() {
-        return (samplePlot == null) ? null : ((WeightedMeanPlot)samplePlot).getSpotSummaryDetails();
+        return (samplePlotWM == null) ? null : ((WeightedMeanPlot)samplePlotWM).getSpotSummaryDetails();
     }
 
     /**
      * @return the samplePlotWM
      */
     public PlotDisplayInterface getSamplePlotWM() {
-        return samplePlot;
+        return samplePlotWM;
     }
 
     /**
      * @param samplePlotWM the samplePlotWM to set
      */
     public void setSamplePlotWM(PlotDisplayInterface samplePlotWM) {
-        this.samplePlot = samplePlotWM;
+        this.samplePlotWM = samplePlotWM;
     }
 
     /**
