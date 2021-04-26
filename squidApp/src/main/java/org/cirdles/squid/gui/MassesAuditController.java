@@ -15,13 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,39 +25,35 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.gui.dataViews.AbstractDataView;
+import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
+import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesAMUAuditViewForShrimp;
+import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesCountsAuditViewForShrimp;
+import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesGraphInterface;
+import org.cirdles.squid.prawn.PrawnFile.Run;
+import org.cirdles.squid.shrimp.MassStationDetail;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.shrimp.SquidSpeciesModel;
+import org.cirdles.squid.tasks.Task;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.MASS_DETAIL_FORMAT;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.dataViews.AbstractDataView;
-import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
-import org.cirdles.squid.gui.dataViews.SpeciesAMUAuditViewForShrimp;
-import org.cirdles.squid.prawn.PrawnFile.Run;
-import org.cirdles.squid.shrimp.MassStationDetail;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
 
 /**
  * FXML Controller class
@@ -73,17 +62,40 @@ import org.cirdles.squid.shrimp.SquidSpeciesModel;
  */
 public class MassesAuditController implements Initializable, MassAuditRefreshInterface {
 
-    private final int BUTTON_WIDTH = 60;
-    private final int COMBO_WIDTH = 210;
-    private final int ROW_HEIGHT = 30;
-
     private static final String STYLE_BUTTON_LABEL
             = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
-
+    private static ObservableList<MassStationDetail> allMassStations;
+    private static ObservableList<MassStationDetail> availableMassStations;
+    private static ObservableList<MassStationDetail> viewedAsGraphMassStations;
+    private static List<MassStationDetail> massMinuends;
+    private static List<MassStationDetail> massSubtrahends;
+    private static boolean showTimeNormalized;
+    private static boolean showPrimaryBeam;
+    private static boolean showQt1y;
+    private static boolean showQt1z;
+    private static boolean showSpotLabels;
+    private static boolean synchedScrolls;
+    // binary: 00= masses, 01 = SBM, 10 = Counts; 11 = both SBM and Counts
+    private static int countsRadioButtonChoice = 0B00;
+    private final int BUTTON_WIDTH = 60;
+    private final int COMBO_WIDTH = 210;
+    private final int ROW_HEIGHT = 30;
     private int[] countOfScansCumulative;
+    @FXML
+    private RadioButton displayMasses;
+    @FXML
+    private RadioButton displayTotalCountsRB;
+    @FXML
+    private RadioButton displayTotalSBMRB;
+    @FXML
+    private RadioButton displayBothCountsRB;
 
+    @FXML
+    private Accordion massesAccordian;
+    @FXML
+    private TitledPane massesTitledPane;
     @FXML
     private VBox scrolledBox;
     @FXML
@@ -106,25 +118,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private ScrollPane leftScrollPane;
     @FXML
     private ScrollPane rightScrollPane;
-
-    private static ObservableList<MassStationDetail> allMassStations;
-    private static ObservableList<MassStationDetail> availableMassStations;
-    private static ObservableList<MassStationDetail> viewedAsGraphMassStations;
-
-    private static List<MassStationDetail> massMinuends;
-    private static List<MassStationDetail> massSubtrahends;
-
-    private static boolean showTimeNormalized;
-    private static boolean showPrimaryBeam;
-    private static boolean showQt1y;
-    private static boolean showQt1z;
-    private static boolean showSpotLabels;
-
     private List<AbstractDataView> graphs;
-
-    private static boolean synchedScrolls;
     @FXML
     private CheckBox displaySpotLabelsCheckBox;
+
 
     /**
      * Initializes the controller class.
@@ -149,7 +146,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         showQt1z = squidProject.getTask().isShowQt1z();
         showQt1zCheckBox.setSelected(showQt1z);
-        
+
         showSpotLabels = squidProject.getTask().isShowSpotLabels();
         displaySpotLabelsCheckBox.setSelected(showSpotLabels);
 
@@ -159,7 +156,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         displayMassStationsForReview();
 
+        massesAccordian.setExpandedPane(massesTitledPane);
+
         synchedScrolls = false;
+
     }
 
     private void setupScrollBarSynch() {
@@ -191,7 +191,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         availableMassesListView.setItems(availableMassStations);
         availableMassesListView.setCellFactory(
                 (parameter)
-                -> new MassStationDetailListCell()
+                        -> new MassStationDetailListCell()
         );
 
         availableMassesListView.setOnDragDetected(new onDragDetectedEventHandler());
@@ -206,7 +206,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         viewedAsGraphMassesListView.setItems(viewedAsGraphMassStations);
         viewedAsGraphMassesListView.setCellFactory(
                 (parameter)
-                -> new MassStationDetailListCell()
+                        -> new MassStationDetailListCell()
         );
 
         viewedAsGraphMassesListView.setOnDragDetected(new onDragDetectedEventHandler());
@@ -274,118 +274,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         squidProject.getTask().setShowSpotLabels(showSpotLabels);
         displayMassStationsForReview();
     }
-
-    static class MassStationDetailListCell extends ListCell<MassStationDetail> {
-
-        @Override
-        protected void updateItem(MassStationDetail msd, boolean empty) {
-            super.updateItem(msd, empty);
-            if (msd == null || empty) {
-                setText(null);
-            } else {
-                setText(msd.toPrettyString());
-            }
-        }
-    };
-
-    static class MassStationDetailStringConverter extends StringConverter<MassStationDetail> {
-
-        @Override
-        public String toString(MassStationDetail msd) {
-            if (msd == null) {
-                return null;
-            } else {
-                return msd.toPrettyString();
-            }
-        }
-
-        @Override
-        public MassStationDetail fromString(String massStationDetailString) {
-            return null; // No conversion fromString needed.
-        }
-    }
-
-    class onDragDetectedEventHandler implements EventHandler<MouseEvent> {
-
-        @Override
-        public void handle(MouseEvent event) {
-            /* drag was detected, start a drag-and-drop gesture */
-            Dragboard db = ((ListView) event.getSource()).startDragAndDrop(TransferMode.COPY_OR_MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.put(MASS_DETAIL_FORMAT, ((ListView) event.getSource()).getSelectionModel().getSelectedItem());
-            db.setContent(content);
-            db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
-            event.consume();
-        }
-    };
-
-    class onDragOverEventHandler implements EventHandler<DragEvent> {
-
-        @Override
-        public void handle(DragEvent event) {
-            /* data is dragged over the target 
-                * accept it only if it is not dragged from the same node*/
-            if (event.getGestureSource() != ((ListView) event.getSource())
-                    && event.getDragboard().hasContent(MASS_DETAIL_FORMAT)) {
-
-                event.acceptTransferModes(TransferMode.MOVE);
-
-            }
-            event.consume();
-        }
-    };
-
-    class onDragDroppedEventHandler implements EventHandler<DragEvent> {
-
-        private ListView<MassStationDetail> myListView;
-
-        public onDragDroppedEventHandler(ListView<MassStationDetail> myListView) {
-            this.myListView = myListView;
-        }
-
-        @Override
-        public void handle(DragEvent event) {
-            /* data dropped */
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasContent(MASS_DETAIL_FORMAT)) {
-                myListView.getItems().add((MassStationDetail) db.getContent(MASS_DETAIL_FORMAT));
-                Collections.sort(myListView.getItems());
-                myListView.refresh();
-
-                success = true;
-            }
-            /* let the source know whether the MassStationDetail was successfully transferred and used */
-            event.setDropCompleted(success);
-
-            event.consume();
-        }
-    };
-
-    class onDragDoneEventHandler implements EventHandler<DragEvent> {
-
-        private ListView<MassStationDetail> myListView;
-
-        public onDragDoneEventHandler(ListView<MassStationDetail> myListView) {
-            this.myListView = myListView;
-        }
-
-        @Override
-        public void handle(DragEvent event) {
-            /* the drag and drop gesture ended if the data was successfully moved, clear it */
-            if (event.getTransferMode().equals(TransferMode.MOVE)) {
-                MassStationDetail massStationDetail = (MassStationDetail) event.getDragboard().getContent(MASS_DETAIL_FORMAT);
-                myListView.getItems().remove(massStationDetail);
-                massStationDetail.setViewedAsGraph(!myListView.idProperty().getValue().contains("viewedAsGraph"));
-
-                SquidSpeciesModel ssm = squidProject.getTask().getSquidSpeciesModelList().get(massStationDetail.getMassStationIndex());
-                ssm.setViewedAsGraph(massStationDetail.isViewedAsGraph());
-
-                displayMassStationsForReview();
-            }
-            event.consume();
-        }
-    };
 
     private void setupMassDeltas() {
         massMinuends = squidProject.getTask().getMassMinuends();
@@ -455,13 +343,437 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         massComboBox.setPrefWidth(COMBO_WIDTH);
         massComboBox.setCellFactory(
                 (parameter)
-                -> new MassStationDetailListCell()
+                        -> new MassStationDetailListCell()
         );
         massComboBox.setConverter(new MassStationDetailStringConverter());
         massComboBox.setOnAction(new onMassDeltaComboSelectionAction());
         massComboBox.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
         return massComboBox;
+    }
+
+    private void setCountChoiceRatioButton() {
+        switch (countsRadioButtonChoice) {
+            case 0b00:
+                displayMasses.setSelected(true);
+                break;
+            case 0b01:
+                displayTotalSBMRB.setSelected(true);
+                break;
+            case 0b10:
+                displayTotalCountsRB.setSelected(true);
+                break;
+            default:
+                displayBothCountsRB.setSelected(true);
+        }
+    }
+
+    @FXML
+    private void displayMassesAction(ActionEvent actionEvent){
+        countsRadioButtonChoice = 0b00;
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void displayTotalCountsAction(ActionEvent actionEvent) {
+        countsRadioButtonChoice = 0b10;
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void displayTotalSBMAction(ActionEvent actionEvent) {
+        countsRadioButtonChoice = 0b01;
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void displayBothCountsAction(ActionEvent actionEvent) {
+        countsRadioButtonChoice = 0b11;
+        displayMassStationsForReview();
+    }
+    private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry, VBox scrolledBox) {
+
+        int heightOfMassPlot = 150;
+        // aug 2018 to manage large spot counts and pixels used
+        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
+        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
+        if (scrolledBox.equals(scrolledBoxLeft)) {
+            widthOfView = 260;
+        }
+        AbstractDataView canvas
+                = new SpeciesAMUAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                title,
+                data,
+                entry.getTimesOfMeasuredTrimMasses(),
+                entry.getIndicesOfScansAtMeasurementTimes(),
+                entry.getIndicesOfRunsAtMeasurementTimes(),
+                squidProject.getPrawnFileRuns(),
+                showTimeNormalized,
+                showSpotLabels,
+                this);
+
+        scrolledBox.getChildren().add(canvas);
+        graphs.add(canvas);
+        GraphicsContext gc1 = canvas.getGraphicsContext2D();
+        canvas.preparePanel();
+        canvas.paint(gc1);
+    }
+
+    private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry, VBox scrolledBox) {
+
+        int heightOfMassPlot = 150;
+        // aug 2018 to manage large spot counts and pixels used
+        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
+        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
+        if (scrolledBox.equals(scrolledBoxLeft)) {
+            widthOfView = 260;
+        }
+
+        AbstractDataView canvas
+                = new SpeciesCountsAuditViewForShrimp(
+                new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                title,
+                countsData,
+                countsSBMData,
+                countsRadioButtonChoice,
+                entry.getTimesOfMeasuredTrimMasses(),
+                entry.getIndicesOfScansAtMeasurementTimes(),
+                entry.getIndicesOfRunsAtMeasurementTimes(),
+                squidProject.getPrawnFileRuns(),
+                showTimeNormalized,
+                showSpotLabels,
+                this);
+
+        scrolledBox.getChildren().add(canvas);
+        graphs.add(canvas);
+        GraphicsContext gc1 = canvas.getGraphicsContext2D();
+        canvas.preparePanel();
+        canvas.paint(gc1);
+    }
+
+    private void displayMassStationsForReview() {
+
+        scrolledBox.getChildren().clear();
+        scrolledBoxLeft.getChildren().clear();
+        graphs.clear();
+
+        int massCounter = 0;
+        for (MassStationDetail entry : viewedAsGraphMassStations) {
+            if (countsRadioButtonChoice == 0) {
+                produceMassModeGraphOnScrolledPane(
+                        massCounter,
+                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                        entry.getMeasuredTrimMasses(),
+                        entry,
+                        scrolledBox);
+                produceMassModeGraphOnScrolledPane(
+                        massCounter,
+                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                        entry.getMeasuredTrimMasses(),
+                        entry,
+                        scrolledBoxLeft);
+            } else {
+                // prep for shrimp fractions
+                List<Double> totalCounts = new ArrayList<>();
+                List<Double> totalCountsSBM = new ArrayList<>();
+                List<ShrimpFractionExpressionInterface> shrimpFractions = squidProject.getTask().getShrimpFractions();
+                for (ShrimpFractionExpressionInterface shrimpFraction : shrimpFractions) {
+                    // note totalCounts = new double[nScans][nSpecies];
+                    double[][] myTotalCounts = shrimpFraction.getTotalCounts();
+                    double[][] myTotalCountsSBM = ((ShrimpFraction) shrimpFraction).getTotalCountsSBM();
+                    for (int i = 0; i < myTotalCounts.length; i++) {
+                        totalCounts.add(myTotalCounts[i][entry.getMassStationIndex()]);
+                        totalCountsSBM.add(myTotalCountsSBM[i][entry.getMassStationIndex()]);
+                    }
+                }
+
+                produceCountsModeGraphOnScrolledPane(
+                        massCounter,
+                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                        totalCounts,
+                        totalCountsSBM,
+                        entry,
+                        scrolledBox);
+                produceCountsModeGraphOnScrolledPane(
+                        massCounter,
+                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
+                        totalCounts,
+                        totalCountsSBM,
+                        entry,
+                        scrolledBoxLeft);
+            }
+            massCounter++;
+        }
+
+        for (int i = 0; i < massMinuends.size(); i++) {
+            // Feb 2020 need to confirm A nd B are up to date
+            MassStationDetail A = getCurrentVersionOfMassStationDetail(massMinuends.get(i));
+            MassStationDetail B = getCurrentVersionOfMassStationDetail(massSubtrahends.get(i));
+            List<Double> deltas = new ArrayList<>();
+            for (int j = 0; j < A.getMeasuredTrimMasses().size(); j++) {
+                BigDecimal aBD = new BigDecimal(A.getMeasuredTrimMasses().get(j));
+                BigDecimal bBD = new BigDecimal(B.getMeasuredTrimMasses().get(j));
+                deltas.add(aBD.subtract(bBD).doubleValue());
+            }
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                            + " - "
+                            + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
+                    deltas,
+                    A,
+                    scrolledBox);
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
+                            + " - "
+                            + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
+                    deltas,
+                    A,
+                    scrolledBoxLeft);
+
+            massCounter++;
+        }
+
+        // primary beam
+        // TODO: decide details of showing it
+        if (showPrimaryBeam) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> primaryBeam = new ArrayList<>();
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
+                for (int j = 0; j < countOfScans; j++) {
+                    primaryBeam.add(spots.get(i).getPrimaryBeam());
+                }
+            }
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "Primary Beam",
+                    primaryBeam,
+                    allMassStations.get(0),
+                    scrolledBox);
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "Primary Beam",
+                    primaryBeam,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
+
+            massCounter++;
+        }
+
+        // qt1y
+        // TODO: decide details of showing it
+        if (showQt1y) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> qt1y = new ArrayList<>();
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
+                for (int j = 0; j < countOfScans; j++) {
+                    qt1y.add((double) spots.get(i).getQt1Y());
+                }
+            }
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "qt1y",
+                    qt1y,
+                    allMassStations.get(0),
+                    scrolledBox);
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "qt1y",
+                    qt1y,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
+
+            massCounter++;
+        }
+
+        // qt1z
+        // TODO: decide details of showing it
+        if (showQt1z) {
+            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
+            List<Double> qt1z = new ArrayList<>();
+            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
+                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
+                for (int j = 0; j < countOfScans; j++) {
+                    qt1z.add((double) spots.get(i).getQt1Z());
+                }
+            }
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "qt1z",
+                    qt1z,
+                    allMassStations.get(0),
+                    scrolledBox);
+
+            produceMassModeGraphOnScrolledPane(
+                    massCounter,
+                    "qt1z",
+                    qt1z,
+                    allMassStations.get(0),
+                    scrolledBoxLeft);
+
+            massCounter++;
+        }
+
+    }
+
+    private MassStationDetail getCurrentVersionOfMassStationDetail(MassStationDetail massStationDetail) {
+        // MassStationDetails are solely equal based on mass station number
+        MassStationDetail retVal = allMassStations.get(allMassStations.indexOf(massStationDetail));
+
+        return retVal;
+    }
+
+    @Override
+    public void updateGraphsWithSelectedIndex(int index) {
+        for (int i = 0; i < graphs.size(); i++) {
+            ((SpeciesGraphInterface) graphs.get(i)).setIndexOfSelectedSpot(index);
+            graphs.get(i).repaint();
+        }
+    }
+
+    @Override
+    public void updateGraphsWithSecondSelectedIndex(int index) {
+        for (int i = 0; i < graphs.size(); i++) {
+            ((SpeciesGraphInterface) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
+            graphs.get(i).repaint();
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public void updateSpotsInGraphs() {
+        calculateCountOfScansCumulative();
+        setupMassStationDetailsListViews();
+        displayMassStationsForReview();
+    }
+
+    @FXML
+    private void resetMassesAuditGraphs(ActionEvent actionEvent) {
+        ((Task) squidProject.getTask()).resetMassStationGraphViews();
+        SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
+        primaryStageController.launchMassesAudit();
+    }
+
+    static class MassStationDetailListCell extends ListCell<MassStationDetail> {
+
+        @Override
+        protected void updateItem(MassStationDetail msd, boolean empty) {
+            super.updateItem(msd, empty);
+            if (msd == null || empty) {
+                setText(null);
+            } else {
+                setText(msd.toPrettyString());
+            }
+        }
+    }
+
+    static class MassStationDetailStringConverter extends StringConverter<MassStationDetail> {
+
+        @Override
+        public String toString(MassStationDetail msd) {
+            if (msd == null) {
+                return null;
+            } else {
+                return msd.toPrettyString();
+            }
+        }
+
+        @Override
+        public MassStationDetail fromString(String massStationDetailString) {
+            return null; // No conversion fromString needed.
+        }
+    }
+
+    class onDragDetectedEventHandler implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent event) {
+            /* drag was detected, start a drag-and-drop gesture */
+            Dragboard db = ((ListView) event.getSource()).startDragAndDrop(TransferMode.COPY_OR_MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.put(MASS_DETAIL_FORMAT, ((ListView) event.getSource()).getSelectionModel().getSelectedItem());
+            db.setContent(content);
+            db.setDragView(new Image(SQUID_LOGO_SANS_TEXT_URL, 32, 32, true, true));
+            event.consume();
+        }
+    }
+
+    class onDragOverEventHandler implements EventHandler<DragEvent> {
+
+        @Override
+        public void handle(DragEvent event) {
+            /* data is dragged over the target
+             * accept it only if it is not dragged from the same node*/
+            if (event.getGestureSource() != event.getSource()
+                    && event.getDragboard().hasContent(MASS_DETAIL_FORMAT)) {
+
+                event.acceptTransferModes(TransferMode.MOVE);
+
+            }
+            event.consume();
+        }
+    }
+
+    class onDragDroppedEventHandler implements EventHandler<DragEvent> {
+
+        private final ListView<MassStationDetail> myListView;
+
+        public onDragDroppedEventHandler(ListView<MassStationDetail> myListView) {
+            this.myListView = myListView;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            /* data dropped */
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasContent(MASS_DETAIL_FORMAT)) {
+                myListView.getItems().add((MassStationDetail) db.getContent(MASS_DETAIL_FORMAT));
+                Collections.sort(myListView.getItems());
+                myListView.refresh();
+
+                success = true;
+            }
+            /* let the source know whether the MassStationDetail was successfully transferred and used */
+            event.setDropCompleted(success);
+
+            event.consume();
+        }
+    }
+
+    class onDragDoneEventHandler implements EventHandler<DragEvent> {
+
+        private final ListView<MassStationDetail> myListView;
+
+        public onDragDoneEventHandler(ListView<MassStationDetail> myListView) {
+            this.myListView = myListView;
+        }
+
+        @Override
+        public void handle(DragEvent event) {
+            /* the drag and drop gesture ended if the data was successfully moved, clear it */
+            if (event.getTransferMode().equals(TransferMode.MOVE)) {
+                MassStationDetail massStationDetail = (MassStationDetail) event.getDragboard().getContent(MASS_DETAIL_FORMAT);
+                myListView.getItems().remove(massStationDetail);
+                massStationDetail.setViewedAsGraph(!myListView.idProperty().getValue().contains("viewedAsGraph"));
+
+                SquidSpeciesModel ssm = squidProject.getTask().getSquidSpeciesModelList().get(massStationDetail.getMassStationIndex());
+                ssm.setViewedAsGraph(massStationDetail.isViewedAsGraph());
+
+                displayMassStationsForReview();
+            }
+            event.consume();
+        }
     }
 
     class onMassDeltaComboSelectionAction implements EventHandler<ActionEvent> {
@@ -538,226 +850,44 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     massMinuends.clear();
                     massSubtrahends.clear();
                 } else {
-                    if (massMinuendComboBox.getSelectionModel().getSelectedItem() != null) {
+                    // if (massMinuendComboBox.getSelectionModel().getSelectedItem() != null) {
+
+                    try {
                         massMinuends.remove(row);
+                    } catch (Exception exception) {
+//                        exception.printStackTrace();
                     }
-                    if (massSubtrahendComboBox.getSelectionModel().getSelectedItem() != null) {
+                    // }
+                    // if (massSubtrahendComboBox.getSelectionModel().getSelectedItem() != null) {
+                    try {
                         massSubtrahends.remove(row);
+                    } catch (Exception exception) {
+//                        exception.printStackTrace();
                     }
+                    // }
 
                     // fix row index of all downstream
+//                    if (massMinuends.isEmpty()) {
+//                        massDeltasGridPane.getChildren().clear();
+//                        // setup first add button
+//                        massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, 0);
+//                    } else {
                     for (Node node : massDeltasGridPane.getChildren()) {
                         if (GridPane.getRowIndex(node) > row) {
                             GridPane.setRowIndex(node, GridPane.getRowIndex(node) - 1);
                         }
                     }
+//                    }
                 }
-
+                if (massMinuends.isEmpty()) {
+                    massDeltasGridPane.getChildren().clear();
+                    // setup first add button
+                    massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, 0);
+                }
                 displayMassStationsForReview();
             }
         }
 
-    }
-
-    private void produceGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry, VBox scrolledBox) {
-
-        int heightOfMassPlot = 150;
-        // aug 2018 to manage large spot counts and pixels used
-        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
-        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
-
-        AbstractDataView canvas
-                = new SpeciesAMUAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
-                        title,
-                        data,
-                        entry.getTimesOfMeasuredTrimMasses(),
-                        entry.getIndicesOfScansAtMeasurementTimes(),
-                        entry.getIndicesOfRunsAtMeasurementTimes(),
-                        squidProject.getPrawnFileRuns(),
-                        showTimeNormalized, 
-                        showSpotLabels,
-                        this);
-
-        scrolledBox.getChildren().add(canvas);
-        graphs.add(canvas);
-        GraphicsContext gc1 = canvas.getGraphicsContext2D();
-        canvas.preparePanel();
-        canvas.paint(gc1);
-    }
-
-    private void displayMassStationsForReview() {
-
-        scrolledBox.getChildren().clear();
-        scrolledBoxLeft.getChildren().clear();
-        graphs.clear();
-
-        int massCounter = 0;
-        for (MassStationDetail entry : viewedAsGraphMassStations) {
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
-                    entry.getMeasuredTrimMasses(),
-                    entry,
-                    scrolledBox);
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
-                    entry.getMeasuredTrimMasses(),
-                    entry,
-                    scrolledBoxLeft);
-            massCounter++;
-        }
-
-        for (int i = 0; i < massMinuends.size(); i++) {
-            // Feb 2020 need to confirm A nd B are up to date
-            MassStationDetail A = getCurrentVersionOfMassStationDetail(massMinuends.get(i));
-            MassStationDetail B = getCurrentVersionOfMassStationDetail(massSubtrahends.get(i));
-            List<Double> deltas = new ArrayList<>();
-            for (int j = 0; j < A.getMeasuredTrimMasses().size(); j++) {
-                BigDecimal aBD = new BigDecimal(A.getMeasuredTrimMasses().get(j));
-                BigDecimal bBD = new BigDecimal(B.getMeasuredTrimMasses().get(j));
-                deltas.add(aBD.subtract(bBD).doubleValue());
-            }
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                    + " - "
-                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
-                    deltas,
-                    A,
-                    scrolledBox);
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                    + " - "
-                    + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
-                    deltas,
-                    A,
-                    scrolledBoxLeft);
-
-            massCounter++;
-        }
-
-        // primary beam
-        // TODO: decide details of showing it 
-        if (showPrimaryBeam) {
-            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
-            List<Double> primaryBeam = new ArrayList<>();
-            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
-                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
-                for (int j = 0; j < countOfScans; j++) {
-                    primaryBeam.add(spots.get(i).getPrimaryBeam());
-                }
-            }
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "Primary Beam",
-                    primaryBeam,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "Primary Beam",
-                    primaryBeam,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
-
-            massCounter++;
-        }
-
-        // qt1y
-        // TODO: decide details of showing it 
-        if (showQt1y) {
-            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
-            List<Double> qt1y = new ArrayList<>();
-            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
-                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
-                for (int j = 0; j < countOfScans; j++) {
-                    qt1y.add((double) spots.get(i).getQt1Y());
-                }
-            }
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "qt1y",
-                    qt1y,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "qt1y",
-                    qt1y,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
-
-            massCounter++;
-        }
-
-        // qt1z
-        // TODO: decide details of showing it 
-        if (showQt1z) {
-            List<ShrimpFractionExpressionInterface> spots = squidProject.getTask().getShrimpFractions();
-            List<Double> qt1z = new ArrayList<>();
-            for (int i = 0; i < squidProject.getPrawnFileRuns().size(); i++) {
-                int countOfScans = Integer.parseInt(squidProject.getPrawnFileRuns().get(i).getPar().get(3).getValue());
-                for (int j = 0; j < countOfScans; j++) {
-                    qt1z.add((double) spots.get(i).getQt1Z());
-                }
-            }
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "qt1z",
-                    qt1z,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceGraphOnScrolledPane(
-                    massCounter,
-                    "qt1z",
-                    qt1z,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
-
-            massCounter++;
-        }
-
-    }
-
-    private MassStationDetail getCurrentVersionOfMassStationDetail(MassStationDetail massStationDetail) {
-        // MassStationDetails are solely equal based on mass station number
-        MassStationDetail retVal = allMassStations.get(allMassStations.indexOf(massStationDetail));
-
-        return retVal;
-    }
-
-    @Override
-    public void updateGraphsWithSelectedIndex(int index) {
-        for (int i = 0; i < graphs.size(); i++) {
-            ((SpeciesAMUAuditViewForShrimp) graphs.get(i)).setIndexOfSelectedSpot(index);
-            graphs.get(i).repaint();
-        }
-    }
-
-    @Override
-    public void updateGraphsWithSecondSelectedIndex(int index) {
-        for (int i = 0; i < graphs.size(); i++) {
-            ((SpeciesAMUAuditViewForShrimp) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
-            graphs.get(i).repaint();
-        }
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void updateSpotsInGraphs() {
-        calculateCountOfScansCumulative();
-        setupMassStationDetailsListViews();
-        displayMassStationsForReview();
     }
 
 }
