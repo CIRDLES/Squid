@@ -19,30 +19,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
- *
  * @author James F. Bowring
  */
 public class MassStationDetail implements Comparable<MassStationDetail>, Serializable {
 
     private static final long serialVersionUID = -874679604916998001L;
-
-    private int massStationIndex;
-
     private final String massStationLabel;
-    private String elementLabel;
-    private String isotopeLabel;
-    private String isotopeAMU;
-    private String taskIsotopeLabel;
-
-    private boolean isBackground;
-
     private final double centeringTimeSec;
     private final List<Double> measuredTrimMasses;
     private final List<Double> timesOfMeasuredTrimMasses;
     private final List<Integer> indicesOfScansAtMeasurementTimes;
+    private int massStationIndex;
+    private String elementLabel;
+    private String isotopeLabel;
+    private String isotopeAMU;
+    private String taskIsotopeLabel;
+    private boolean isBackground;
     private List<Integer> indicesOfRunsAtMeasurementTimes;
 
     private String uThBearingName;
@@ -79,7 +75,7 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
         this.uThBearingName = uThBearingName;
 
         // default value
-        this.viewedAsGraph = centeringTimeSec > 0.0;
+        this.viewedAsGraph = false;
         this.numeratorRole = true;
         this.denominatorRole = true;
     }
@@ -151,7 +147,6 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     /**
-     *
      * @param label
      */
     public void setIsotopeLabel(String label) {
@@ -195,7 +190,6 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     /**
-     *
      * @param elementLabel
      */
     public void setElementLabel(String elementLabel) {
@@ -246,7 +240,7 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
 
     /**
      * @param indicesOfRunsAtMeasurementTimes the
-     * indicesOfRunsAtMeasurementTimes to set
+     *                                        indicesOfRunsAtMeasurementTimes to set
      */
     public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
         this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;

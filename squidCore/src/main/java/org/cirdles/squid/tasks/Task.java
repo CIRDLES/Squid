@@ -1567,6 +1567,22 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    public void resetMassStationGraphViews(){
+        // April 2021
+        // deselect all graphs for massstations because of memory issues on some machines
+        for (SquidSpeciesModel ssm : squidSpeciesModelList){
+            ssm.setViewedAsGraph(false);
+            int indexMS = ssm.getMassStationIndex();
+            mapOfIndexToMassStationDetails.get(indexMS).setViewedAsGraph(false);
+        }
+        massMinuends = new ArrayList<>();
+        massSubtrahends = new ArrayList<>();
+        showPrimaryBeam = false;
+        showQt1y = false;
+        showQt1z = false;
+        showSpotLabels = false;
+    }
+
     @Override
     public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() {
         applyTaskIsotopeLabelsToMassStations();
@@ -1972,6 +1988,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         generateMapOfUnknownsBySampleNames();
+
+        // april 2021 reset graphs
+        //resetMassStationGraphViews();
 
         return shrimpFractions;
     }
