@@ -116,6 +116,7 @@
                             <items>
                                 <MenuItem fx:id="unknownConcordiaMenuItem" mnemonicParsing="false" onAction="#unknownConcordiaAction" text="Concordia" />
                                 <MenuItem mnemonicParsing="false" onAction="#weightedMeansAction" text="Weighted Means" />
+                        <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsSamplesAction" text="Plot Any Two Expressions" />
                             </items>
                         </Menu>
                     </items>

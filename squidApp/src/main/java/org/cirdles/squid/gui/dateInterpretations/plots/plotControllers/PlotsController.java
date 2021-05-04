@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
+import javafx.scene.control.*;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilPlotWetherill;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,26 +33,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import static javafx.scene.paint.Color.RED;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
@@ -161,7 +152,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         TERA_WASSERBURG("TERA_WASSERBURG"),
         WEIGHTED_MEAN("WEIGHTED_MEAN"),
         WEIGHTED_MEAN_SAMPLE("WEIGHTED_MEAN_SAMPLE"),
-        ANY_TWO("ANY_TWO");
+        ANY_TWO("ANY_TWO"),
+        ANY_TWO_SAMPLE("ANY_TWO_SAMPLE");
 
         private String plotType;
 
@@ -201,6 +193,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
+        // Retrieves saved expression names for ref mat, but not for unknowns (which is handled in SamplesAnyTwoExpressionsControlNode)
         xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
         yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
@@ -706,6 +699,138 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         provisionAnyTwoToolbox(true);
 
     }
+    
+    private void showAnyTwoExpressionsSamples() {
+        spotsTreeViewCheckBox = new CheckTreeView<>();
+        spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
+
+        // instantiate anyTwoToolBox for samples
+        if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
+            vboxMaster.getChildren().remove(0);
+        }
+        SamplesAnyTwoExpressionsControlNode samplesAnyTwoToolBox = new SamplesAnyTwoExpressionsControlNode(this);
+        vboxMaster.getChildren().add(0, samplesAnyTwoToolBox);
+        // want plot choices sticky during execution
+        if (mapOfPlotsOfSpotSets == null) {
+            mapOfPlotsOfSpotSets = new TreeMap<>();
+        }
+        
+        final Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames = squidProject.getTask().getMapOfUnknownsBySampleNames();
+        // need current physical constants for plotting of data 
+        final ParametersModel physicalConstantsModel = squidProject.getTask().getPhysicalConstantsModel();
+
+        samplesAnyTwoToolBox.getSampleComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(newValue);
+            SamplesAnyTwoExpressionsControlNode.savedSampleName = newValue;
+            
+            rootPlot = mapOfPlotsOfSpotSets.get(
+                newValue + xAxisExpressionName + yAxisExpressionName);
+            if (rootPlot == null) {
+                rootPlot = generateAnyTwoPlot(
+                        shrimpFractions, physicalConstantsModel);
+                mapOfPlotsOfSpotSets.put(
+                        newValue + xAxisExpressionName + yAxisExpressionName, rootPlot);
+            }
+            chosenSample = new CheckBoxTreeItem<>(new SampleNode(newValue));
+
+            displayAnyTwoPlotForSamples(shrimpFractions, samplesAnyTwoToolBox);
+
+        });
+
+        samplesAnyTwoToolBox.getXAxisExpressionComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            SamplesAnyTwoExpressionsControlNode.savedXAxisExpressionName = newValue;
+            List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(samplesAnyTwoToolBox.getSampleComboBox().getValue());
+            xAxisExpressionName = newValue;
+
+            rootPlot = mapOfPlotsOfSpotSets.get(
+                    samplesAnyTwoToolBox.getSampleComboBox().getValue() + xAxisExpressionName + yAxisExpressionName);
+            if (rootPlot == null) {
+                rootPlot = generateAnyTwoPlot(
+                        shrimpFractions, physicalConstantsModel);
+                mapOfPlotsOfSpotSets.put(
+                        samplesAnyTwoToolBox.getSampleComboBox().getValue() + xAxisExpressionName + yAxisExpressionName, rootPlot);
+            }
+            chosenSample = new CheckBoxTreeItem<>(new SampleNode(chosenSample.getValue().getNodeName()));
+
+            displayAnyTwoPlotForSamples(shrimpFractions, samplesAnyTwoToolBox);
+
+        });
+
+        samplesAnyTwoToolBox.getYAxisExpressionComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            SamplesAnyTwoExpressionsControlNode.savedYAxisExpressionName = newValue;
+            List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(samplesAnyTwoToolBox.getSampleComboBox().getValue());
+            yAxisExpressionName = newValue;
+
+            rootPlot = mapOfPlotsOfSpotSets.get(
+                    samplesAnyTwoToolBox.getSampleComboBox().getValue() + xAxisExpressionName + newValue);
+            if (rootPlot == null) {
+                rootPlot = generateAnyTwoPlot(
+                        shrimpFractions, physicalConstantsModel);
+                mapOfPlotsOfSpotSets.put(
+                        samplesAnyTwoToolBox.getSampleComboBox().getValue() + xAxisExpressionName + yAxisExpressionName, rootPlot);
+            }
+            chosenSample = new CheckBoxTreeItem<>(new SampleNode(chosenSample.getValue().getNodeName()));
+
+            displayAnyTwoPlotForSamples(shrimpFractions, samplesAnyTwoToolBox);
+
+        });
+        
+        ((TreeView<SampleTreeNodeInterface>) spotsTreeViewCheckBox).setCellFactory(cell -> new CheckBoxTreeCell<>(
+                (TreeItem<SampleTreeNodeInterface> item) -> ((PlotAnyTwoFractionNode) item.getValue()).getSelectedProperty(),
+                new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+
+            @Override
+            public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                SampleTreeNodeInterface item = object.getValue();
+
+                String nodeString = item.getNodeName();
+                if ((object.getParent() != null) && !(item instanceof SampleNode)) {
+                    double[][] expressionValues = item.getShrimpFraction()
+                            .getTaskExpressionsEvaluationsPerSpotByField(PB4COR206_238AGE);
+
+                    double uncertainty = 0.0;
+                    if (expressionValues[0].length > 1) {
+                        uncertainty = expressionValues[0][1];
+                    }
+                    String ageOrValueSource = WeightedMeanPlot.makeAgeString(expressionValues[0][0], uncertainty);
+
+                    try {
+                        nodeString += "  " + ageOrValueSource
+                                + " (" + squid3RoundedToSize(((Double) item.getDatum().get(X.getTitle())), 5)
+                                + ", " + squid3RoundedToSize(((Double) item.getDatum().get(Y.getTitle())), 5) + ")";
+                    } catch (Exception e) {
+                    }
+                }
+                return nodeString;
+            }
+
+            @Override
+            public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                throw new UnsupportedOperationException("Not supported yet.");
+            }
+        }));
+
+        spotListAnchorPane.getChildren().clear();
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
+        spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
+        spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
+
+        // Select saved item to run code in listener and generate plot
+        if (SamplesAnyTwoExpressionsControlNode.savedSampleName == null) {
+            samplesAnyTwoToolBox.getSampleComboBox().getSelectionModel().select(0);
+        }
+        else {
+            samplesAnyTwoToolBox.getSampleComboBox().getSelectionModel().select(SamplesAnyTwoExpressionsControlNode.savedSampleName);
+        }
+
+        if (plot instanceof AbstractTopsoilPlot) {
+            boolean hasData = (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION);
+            plot.setProperty(MCLEAN_REGRESSION.getTitle(), hasData);
+            samplesAnyTwoToolBox.setHasData(hasData);
+        }
+
+        refreshPlot();
+    }
 
     /**
      *
@@ -778,6 +903,109 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
             plotVBox.getChildren().remove(plotToolBar);
         }
 
+    }
+
+    private void displayAnyTwoPlotForSamples(List<ShrimpFractionExpressionInterface> shrimpFractions,
+                                             SamplesAnyTwoExpressionsControlNode samplesAnyTwoToolBox) {
+        rootData = new ArrayList<>(); // Will contain all spots, regardless of whether they are checked
+        plot = rootPlot;
+        samplesAnyTwoToolBox.configureCheckBoxesWithDisplayedPlot();
+        spotsTreeViewCheckBox.setRoot(chosenSample);
+        spotsTreeViewCheckBox.setShowRoot(true);
+
+        List<Map<String, Object>> myData = new ArrayList<>();
+        PlotDisplayInterface myPlotTry
+                = mapOfPlotsOfSpotSets.get(samplesAnyTwoToolBox.getSampleComboBox().getValue() + xAxisExpressionName + yAxisExpressionName);
+
+        // final for listener
+        final PlotDisplayInterface myPlot = myPlotTry;
+        List<SampleTreeNodeInterface> fractionNodeDetails = new ArrayList<>();
+        for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
+            SampleTreeNodeInterface fractionNode
+                    = new PlotsController.PlotAnyTwoFractionNode(spot, xAxisExpressionName, yAxisExpressionName);
+            if (((PlotsController.PlotAnyTwoFractionNode) fractionNode).isValid()) {
+
+                fractionNodeDetails.add(fractionNode);
+
+                // handles each spot
+                CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeSpotItem
+                        = new CheckBoxTreeItem<>(fractionNode);
+                chosenSample.getChildren().add(checkBoxTreeSpotItem);
+
+                checkBoxTreeSpotItem.setIndependent(false);
+                checkBoxTreeSpotItem.setSelected(fractionNode.getSelectedProperty().getValue());
+
+                myData.add(((PlotsController.PlotAnyTwoFractionNode) fractionNode).getDatum());
+                // this contains all samples at the tree top
+                rootData.add(((PlotsController.PlotAnyTwoFractionNode) fractionNode).getDatum());
+
+                checkBoxTreeSpotItem.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        ((PlotsController.PlotAnyTwoFractionNode) checkBoxTreeSpotItem.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+                        myPlot.setData(myData); // Change data to be different from rootPlot
+                    }
+                });
+
+            }
+        }
+
+        myPlot.setData(myData); // Set data of plot, which at this point is equivalent to root
+        rootPlot.setData(rootData); // Set data of plot
+        chosenSample.setExpanded(true);
+        chosenSample.setIndependent(true);
+        chosenSample.setSelected(true);
+
+        chosenSample.indeterminateProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (plot instanceof AbstractTopsoilPlot) {
+                    boolean hasData = (newValue || chosenSample.isSelected())
+                            && (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION);
+                    plot.setProperty(MCLEAN_REGRESSION.getTitle(), hasData);
+                    samplesAnyTwoToolBox.setHasData(hasData);
+                }
+
+                refreshPlot();
+            }
+        });
+
+        chosenSample.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                ((SampleNode) chosenSample.getValue()).setSelectedProperty(new SimpleBooleanProperty(newValue));
+
+                ObservableList<TreeItem<SampleTreeNodeInterface>> mySamples = chosenSample.getChildren();
+                Iterator<TreeItem<SampleTreeNodeInterface>> mySamplesIterator = mySamples.iterator();
+                while (mySamplesIterator.hasNext()) {
+
+                    CheckBoxTreeItem<SampleTreeNodeInterface> mySampleItem
+                            = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
+                    mySampleItem.setSelected(newValue);
+                }
+
+                myPlot.setData(myData);
+                rootPlot.setData(rootData);
+
+                if (plot instanceof AbstractTopsoilPlot) {
+                    boolean hasData = (newValue || chosenSample.isSelected())
+                            && (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION);
+                    plot.setProperty(MCLEAN_REGRESSION.getTitle(), hasData);
+                    samplesAnyTwoToolBox.setHasData(hasData);
+                }
+
+                refreshPlot();
+            }
+        });
+
+        // Initialize plot
+        if (plot instanceof AbstractTopsoilPlot) {
+            boolean hasData = (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION);
+            plot.setProperty(MCLEAN_REGRESSION.getTitle(), hasData);
+            samplesAnyTwoToolBox.setHasData(hasData);
+        }
+
+        refreshPlot();
     }
 
     @Override
@@ -1064,6 +1292,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 break;
             case ANY_TWO:
                 showAnyTwoExpressions();
+                break;
+            case ANY_TWO_SAMPLE:
+                showAnyTwoExpressionsSamples();
         }
     }
 

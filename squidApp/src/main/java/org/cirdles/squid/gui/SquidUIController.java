@@ -1548,6 +1548,14 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
+    private void plotAnyTwoExpressionsSamplesAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
+        PlotsController.plotTypeSelected = PlotTypes.ANY_TWO_SAMPLE;
+        PlotsController.currentlyPlottedSampleTreeNode = null;
+        launchConcordiaAndWeightedMeanPlots();
+    }
+    
+    @FXML
     private void openParametersManagerPhysConst(ActionEvent event) {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.physConst);
     }

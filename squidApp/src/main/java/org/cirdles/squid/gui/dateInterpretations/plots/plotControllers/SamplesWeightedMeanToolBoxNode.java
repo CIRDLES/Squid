@@ -66,8 +66,6 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
