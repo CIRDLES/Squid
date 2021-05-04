@@ -50,6 +50,9 @@ public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBox
     private final Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private ComboBox<String> xAxisExpressionComboBox;
     private ComboBox<String> yAxisExpressionComboBox;
+    public static String savedXAxisExpressionName = null;
+    public static String savedYAxisExpressionName = null;
+    public static String savedSampleName = null;
     private final ComboBox<String> sampleComboBox;
     private CheckBox regressionCheckBox;
     private CheckBox regressionUnctEnvelopeCheckBox;
@@ -115,7 +118,11 @@ public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBox
 
         formatNode(xAxisExpressionComboBox, 150);
         xAxisExpressionComboBox.setItems(FXCollections.observableArrayList(sortedAvailableExpressions));
-        PlotsController.xAxisExpressionName = sortedAvailableExpressions.get(0);
+        String selectedXAxisExpression = savedXAxisExpressionName;
+        if (selectedXAxisExpression == null) {
+            selectedXAxisExpression = sortedAvailableExpressions.get(0);
+        }
+        PlotsController.xAxisExpressionName = selectedXAxisExpression;
         xAxisExpressionComboBox.setValue(PlotsController.xAxisExpressionName);
 
         Label yAxisChooseLabel = new Label(" Choose Y-axis expression:");
@@ -123,7 +130,11 @@ public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBox
 
         formatNode(yAxisExpressionComboBox, 150);
         yAxisExpressionComboBox.setItems(FXCollections.observableArrayList(sortedAvailableExpressions));
-        PlotsController.yAxisExpressionName = sortedAvailableExpressions.get(0);
+        String selectedYAxisExpression = savedYAxisExpressionName;
+        if (selectedYAxisExpression == null) {
+            selectedYAxisExpression = sortedAvailableExpressions.get(0);
+        }
+        PlotsController.yAxisExpressionName = selectedYAxisExpression;
         yAxisExpressionComboBox.setValue(PlotsController.yAxisExpressionName);
 
         getChildren().addAll(yAxisChooseLabel, yAxisExpressionComboBox,
@@ -162,23 +173,11 @@ public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBox
             mapOfSpotsBySampleNames.remove(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName());
         }
         sampleComboBox.setItems(FXCollections.observableArrayList(mapOfSpotsBySampleNames.keySet()));
-        
         sampleNameToolBox.getChildren().addAll(sampleInfoLabel, sampleComboBox);
-        
+
         return sampleNameToolBox;
     }
-    
-    public ComboBox<String> getSampleComboBox() {
-        return this.sampleComboBox;
-    }
 
-    public ComboBox<String> getXAxisExpressionComboBox() { return this.xAxisExpressionComboBox; }
-
-    public ComboBox<String> getYAxisExpressionComboBox() { return this.yAxisExpressionComboBox; }
-
-    public void setHasData(boolean hasData) {
-        this.hasData = hasData;
-    }
 
     public void configureCheckBoxesWithDisplayedPlot() {
         regressionCheckBox.setOnAction(mouseEvent -> {
@@ -196,4 +195,17 @@ public class SamplesAnyTwoExpressionsControlNode extends HBox implements ToolBox
                         .and(new SimpleBooleanProperty(((AbstractTopsoilPlot) PlotsController.plot).isHasUncertainties())))
         );
     }
+
+    public ComboBox<String> getSampleComboBox() {
+        return this.sampleComboBox;
+    }
+
+    public ComboBox<String> getXAxisExpressionComboBox() { return this.xAxisExpressionComboBox; }
+
+    public ComboBox<String> getYAxisExpressionComboBox() { return this.yAxisExpressionComboBox; }
+
+    public void setHasData(boolean hasData) {
+        this.hasData = hasData;
+    }
+
 }

@@ -193,6 +193,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewString.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
         // default
+        // Retrieves saved expression names for ref mat, but not for unknowns (which is handled in SamplesAnyTwoExpressionsControlNode)
         xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
         yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
@@ -720,6 +721,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
         samplesAnyTwoToolBox.getSampleComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
             List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(newValue);
+            SamplesAnyTwoExpressionsControlNode.savedSampleName = newValue;
             
             rootPlot = mapOfPlotsOfSpotSets.get(
                 newValue + xAxisExpressionName + yAxisExpressionName);
@@ -736,6 +738,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         });
 
         samplesAnyTwoToolBox.getXAxisExpressionComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            SamplesAnyTwoExpressionsControlNode.savedXAxisExpressionName = newValue;
             List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(samplesAnyTwoToolBox.getSampleComboBox().getValue());
             xAxisExpressionName = newValue;
 
@@ -754,6 +757,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         });
 
         samplesAnyTwoToolBox.getYAxisExpressionComboBox().valueProperty().addListener((observable, oldValue, newValue) -> {
+            SamplesAnyTwoExpressionsControlNode.savedYAxisExpressionName = newValue;
             List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(samplesAnyTwoToolBox.getSampleComboBox().getValue());
             yAxisExpressionName = newValue;
 
@@ -811,14 +815,20 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
         spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
 
-        samplesAnyTwoToolBox.getSampleComboBox().getSelectionModel().select(0); // Select first item to run code in listener and generate plot
+        // Select saved item to run code in listener and generate plot
+        if (SamplesAnyTwoExpressionsControlNode.savedSampleName == null) {
+            samplesAnyTwoToolBox.getSampleComboBox().getSelectionModel().select(0);
+        }
+        else {
+            samplesAnyTwoToolBox.getSampleComboBox().getSelectionModel().select(SamplesAnyTwoExpressionsControlNode.savedSampleName);
+        }
 
         if (plot instanceof AbstractTopsoilPlot) {
             boolean hasData = (Boolean) ((AbstractTopsoilPlot) plot).getPlotOptions().get(MCLEAN_REGRESSION);
             plot.setProperty(MCLEAN_REGRESSION.getTitle(), hasData);
             samplesAnyTwoToolBox.setHasData(hasData);
         }
-        
+
         refreshPlot();
     }
 
