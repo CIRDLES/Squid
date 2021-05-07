@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,10 +30,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.*;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
@@ -67,7 +66,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 12pt;\n";
     private static ObservableList<MassStationDetail> allMassStations;
-    private static ObservableList<MassStationDetail> availableMassStations;
     private static ObservableList<MassStationDetail> viewedAsGraphMassStations;
     private static List<MassStationDetail> massMinuends;
     private static List<MassStationDetail> massSubtrahends;
@@ -82,15 +80,20 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private final int BUTTON_WIDTH = 60;
     private final int COMBO_WIDTH = 210;
     private final int ROW_HEIGHT = 30;
+    private final int heightOfMassPlot = 150;
+    private final int plotWidthOfSpots = 7;
+    private final int plotWidthOfZoomedSpots = 20;
+
     private int[] countOfScansCumulative;
-    @FXML
-    private RadioButton displayMasses;
-    @FXML
-    private RadioButton displayTotalCountsRB;
-    @FXML
-    private RadioButton displayTotalSBMRB;
-    @FXML
-    private RadioButton displayBothCountsRB;
+    private List<AbstractDataView> legendGraphs;
+    private List<AbstractDataView> leadingGraphs;
+    private List<AbstractDataView> zoomingGraphs;
+    private List<AbstractDataView> trailingGraphs;
+
+    // 1-based counting of spots
+    private int zoomedStart = 5;
+    private int zoomedWidth = 20;
+    private int zoomedEnd = zoomedStart + zoomedWidth - 1;
 
     @FXML
     private Accordion massesAccordian;
@@ -118,10 +121,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private ScrollPane leftScrollPane;
     @FXML
     private ScrollPane rightScrollPane;
-    private List<AbstractDataView> graphs;
     @FXML
     private CheckBox displaySpotLabelsCheckBox;
-
+    @FXML
+    private ScrollBar zoomScrollBar;
 
     /**
      * Initializes the controller class.
@@ -131,6 +134,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
 
         setupMassStationDetailsListViews();
         setupMassDeltas();
@@ -150,16 +154,20 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         showSpotLabels = squidProject.getTask().isShowSpotLabels();
         displaySpotLabelsCheckBox.setSelected(showSpotLabels);
 
-        graphs = new ArrayList<>();
+        legendGraphs = new ArrayList<>();
+        leadingGraphs = new ArrayList<>();
+        zoomingGraphs = new ArrayList<>();
+        trailingGraphs = new ArrayList<>();
 
         calculateCountOfScansCumulative();
 
+        zoomScrollBar.setValue(zoomedStart);
         displayMassStationsForReview();
+        zoomScrollBar.prefWidthProperty().bind(rightScrollPane.widthProperty());
 
         massesAccordian.setExpandedPane(massesTitledPane);
 
         synchedScrolls = false;
-
     }
 
     private void setupScrollBarSynch() {
@@ -187,7 +195,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
             }
         }
 
-        availableMassStations = FXCollections.observableArrayList(availableMassStationDetails);
+        ObservableList<MassStationDetail> availableMassStations = FXCollections.observableArrayList(availableMassStationDetails);
         availableMassesListView.setItems(availableMassStations);
         availableMassesListView.setCellFactory(
                 (parameter)
@@ -264,7 +272,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
-    public int[] getCountOfScansCumulative() {
+    public int[] getCountOfScansCumulative(List<Run> prawnFileRuns) {
         return countOfScansCumulative;
     }
 
@@ -352,24 +360,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         return massComboBox;
     }
 
-    private void setCountChoiceRatioButton() {
-        switch (countsRadioButtonChoice) {
-            case 0b00:
-                displayMasses.setSelected(true);
-                break;
-            case 0b01:
-                displayTotalSBMRB.setSelected(true);
-                break;
-            case 0b10:
-                displayTotalCountsRB.setSelected(true);
-                break;
-            default:
-                displayBothCountsRB.setSelected(true);
-        }
-    }
-
     @FXML
-    private void displayMassesAction(ActionEvent actionEvent){
+    private void displayMassesAction(ActionEvent actionEvent) {
         countsRadioButtonChoice = 0b00;
         displayMassStationsForReview();
     }
@@ -391,17 +383,11 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         countsRadioButtonChoice = 0b11;
         displayMassStationsForReview();
     }
-    private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry, VBox scrolledBox) {
 
-        int heightOfMassPlot = 150;
-        // aug 2018 to manage large spot counts and pixels used
-        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
-        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
-        if (scrolledBox.equals(scrolledBoxLeft)) {
-            widthOfView = 260;
-        }
-        AbstractDataView canvas
-                = new SpeciesAMUAuditViewForShrimp(new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+    private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry) {
+        // plot legend
+        AbstractDataView legendCanvas
+                = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, 260, heightOfMassPlot),
                 title,
                 data,
                 entry.getTimesOfMeasuredTrimMasses(),
@@ -410,28 +396,224 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 squidProject.getPrawnFileRuns(),
                 showTimeNormalized,
                 showSpotLabels,
-                this);
+                this, -1,
+                0, 0, 0);
 
-        scrolledBox.getChildren().add(canvas);
-        graphs.add(canvas);
-        GraphicsContext gc1 = canvas.getGraphicsContext2D();
-        canvas.preparePanel();
-        canvas.paint(gc1);
-    }
+        scrolledBoxLeft.getChildren().add(legendCanvas);
+        legendGraphs.add(legendCanvas);
+        GraphicsContext gc0 = legendCanvas.getGraphicsContext2D();
+        legendCanvas.preparePanel();
+        legendCanvas.paint(gc0);
 
-    private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry, VBox scrolledBox) {
-
-        int heightOfMassPlot = 150;
-        // aug 2018 to manage large spot counts and pixels used
-        int customSpotWidth = (1000 - squidProject.getPrawnFileRuns().size()) / 30;//was just 25, then 15
-        int widthOfView = squidProject.getPrawnFileRuns().size() * customSpotWidth + 350;
-        if (scrolledBox.equals(scrolledBoxLeft)) {
-            widthOfView = 260;
+        // prepare for three plots (canvas) = leadingSpots, zoomedSpots, trailingSpots
+        // test zoom window
+        zoomedWidth = zoomedEnd - zoomedStart + 1;
+        if (zoomedEnd >= squidProject.getPrawnFileRuns().size()) {
+            zoomedEnd = squidProject.getPrawnFileRuns().size() - 1;
+            zoomedStart = zoomedEnd - zoomedWidth + 1;
         }
 
-        AbstractDataView canvas
-                = new SpeciesCountsAuditViewForShrimp(
-                new Rectangle(25, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+        HBox graphsBox = new HBox();
+        scrolledBox.getChildren().add(graphsBox);
+
+        // determine indices of details
+        int endLeadingIndex = 0;
+        int endZoomedIndex = 0;
+        for (int i = 0; i < entry.getIndicesOfRunsAtMeasurementTimes().size(); i++) {
+            if (entry.getIndicesOfRunsAtMeasurementTimes().get(i) < zoomedStart) {
+                endLeadingIndex = i;
+            } else if (entry.getIndicesOfRunsAtMeasurementTimes().get(i) <= zoomedEnd) {
+                endZoomedIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        int widthOfView = plotWidthOfSpots * (zoomedStart - 1);
+        if (endLeadingIndex > 0) {
+            // leading canvas
+            // sublist excludes right end of range
+            endLeadingIndex += 1;
+            AbstractDataView leadingCanvas
+                    = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                    title,
+                    data.subList(0, endLeadingIndex),
+                    entry.getTimesOfMeasuredTrimMasses().subList(0, endLeadingIndex),
+                    entry.getIndicesOfScansAtMeasurementTimes().subList(0, endLeadingIndex),
+                    entry.getIndicesOfRunsAtMeasurementTimes().subList(0, endLeadingIndex),
+                    squidProject.getPrawnFileRuns().subList(0, zoomedStart - 1),
+                    showTimeNormalized,
+                    showSpotLabels,
+                    this,
+                    -1,
+                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+
+            graphsBox.getChildren().add(leadingCanvas);
+            leadingGraphs.add(leadingCanvas);
+            GraphicsContext gc1 = leadingCanvas.getGraphicsContext2D();
+            leadingCanvas.preparePanel();
+            leadingCanvas.paint(gc1);
+        }
+
+        // zoomed canvas
+        // sublist excludes right end of range
+        endZoomedIndex += 1;
+        widthOfView = plotWidthOfZoomedSpots * (zoomedWidth);
+        AbstractDataView zoomedCanvas
+                = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                title,
+                data.subList(endLeadingIndex, endZoomedIndex),
+                entry.getTimesOfMeasuredTrimMasses().subList(endLeadingIndex, endZoomedIndex),
+                entry.getIndicesOfScansAtMeasurementTimes().subList(endLeadingIndex, endZoomedIndex),
+                entry.getIndicesOfRunsAtMeasurementTimes().subList(endLeadingIndex, endZoomedIndex),
+                squidProject.getPrawnFileRuns().subList(zoomedStart - 1, zoomedEnd),
+                showTimeNormalized,
+                showSpotLabels,
+                this,
+                0,
+                legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+
+        graphsBox.getChildren().add(zoomedCanvas);
+        zoomingGraphs.add(zoomedCanvas);
+        GraphicsContext gc2 = zoomedCanvas.getGraphicsContext2D();
+        zoomedCanvas.preparePanel();
+        zoomedCanvas.paint(gc2);
+
+        // trailing canvas
+        int endTrailingIndex = data.size();
+        widthOfView = plotWidthOfSpots * (squidProject.getPrawnFileRuns().size() - zoomedEnd);
+
+        if (widthOfView > 0) {
+            AbstractDataView trailingCanvas
+                    = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                    title,
+                    data.subList(endZoomedIndex, endTrailingIndex),
+                    entry.getTimesOfMeasuredTrimMasses().subList(endZoomedIndex, endTrailingIndex),
+                    entry.getIndicesOfScansAtMeasurementTimes().subList(endZoomedIndex, endTrailingIndex),
+                    entry.getIndicesOfRunsAtMeasurementTimes().subList(endZoomedIndex, endTrailingIndex),
+                    squidProject.getPrawnFileRuns().subList(zoomedEnd, squidProject.getPrawnFileRuns().size()),
+                    showTimeNormalized,
+                    showSpotLabels,
+                    this,
+                    1,
+                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+
+            graphsBox.getChildren().add(trailingCanvas);
+            trailingGraphs.add(trailingCanvas);
+            GraphicsContext gc3 = trailingCanvas.getGraphicsContext2D();
+            trailingCanvas.preparePanel();
+            trailingCanvas.paint(gc3);
+        }
+    }
+
+    private void updateSpeciesAMUAuditCanvas(
+            SpeciesGraphInterface spotsCanvas, List<Double> data, List<Double> dataII, int index, int startIndex, int endIndex, int startSpotIndex, int endSpotIndex) {
+
+        if (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) {
+            ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCounts(data.subList(startIndex, endIndex));
+            ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCountsSBM(dataII.subList(startIndex, endIndex));
+        } else {
+            spotsCanvas.setMeasuredTrimMasses(data.subList(startIndex, endIndex));
+        }
+
+        spotsCanvas.setTimesOfMeasuredTrimMasses(((SpeciesGraphInterface) legendGraphs.get(index)).getTimesOfMeasuredTrimMasses().subList(startIndex, endIndex));
+
+        // protect against internal changes
+        List<Integer> indicesOfScansAtMeasurementTimes =
+                new ArrayList<>(((SpeciesGraphInterface) legendGraphs.get(index)).getIndicesOfScansAtMeasurementTimes().subList(startIndex, endIndex));
+        spotsCanvas.setIndicesOfScansAtMeasurementTimes(indicesOfScansAtMeasurementTimes);
+
+        spotsCanvas.setIndicesOfRunsAtMeasurementTimes(((SpeciesGraphInterface) legendGraphs.get(index)).getIndicesOfRunsAtMeasurementTimes().subList(startIndex, endIndex));
+        spotsCanvas.setPrawnFileRuns(squidProject.getPrawnFileRuns().subList(startSpotIndex, endSpotIndex));
+        ((AbstractDataView) spotsCanvas).preparePanel();
+        ((AbstractDataView) spotsCanvas).repaint();
+    }
+
+    private void updateAllMassesCanvases() {
+        int endLeadingIndex = 0;
+        int endZoomedIndex = 0;
+        List<Integer> entry0 = ((SpeciesGraphInterface) legendGraphs.get(0)).getIndicesOfRunsAtMeasurementTimes();
+        for (int i = 0; i < entry0.size(); i++) {
+            if (entry0.get(i) < zoomedStart) {
+                endLeadingIndex = i;
+            } else if (entry0.get(i) <= zoomedEnd) {
+                endZoomedIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        int widthOfView;
+        // leading graphs
+        if (endLeadingIndex > 0) {
+            // leading canvas
+            // sublist excludes right end of range
+            endLeadingIndex += 1;
+
+            widthOfView = plotWidthOfSpots * (zoomedStart - 1);
+            int index = 0;
+            for (AbstractDataView spotsCanvas : leadingGraphs) {
+                spotsCanvas.setMyWidth(widthOfView);
+                spotsCanvas.setGraphWidth(widthOfView);
+                updateSpeciesAMUAuditCanvas((SpeciesGraphInterface) spotsCanvas,
+                        ((SpeciesGraphInterface) legendGraphs.get(index)).getMeasuredTrimMasses(),
+                        (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) ? ((SpeciesCountsAuditViewForShrimp) legendGraphs.get(index)).getTotalCountsSBM() : null,
+                        index,
+                        0, endLeadingIndex, 0, zoomedStart - 1);
+                index += 1;
+            }
+        } else {
+            for (AbstractDataView spotsCanvas : leadingGraphs) {
+                spotsCanvas.setMyWidth(0);
+                spotsCanvas.setGraphWidth(0);
+                spotsCanvas.repaint();
+            }
+        }
+        // zoomed canvas
+        // sublist excludes right end of range
+        endZoomedIndex += 1;
+        widthOfView = plotWidthOfZoomedSpots * (zoomedWidth);
+        int index = 0;
+        for (AbstractDataView spotsCanvas : zoomingGraphs) {
+            spotsCanvas.setMyWidth(widthOfView);
+            spotsCanvas.setGraphWidth(widthOfView);
+            updateSpeciesAMUAuditCanvas((SpeciesGraphInterface) spotsCanvas,
+                    ((SpeciesGraphInterface) legendGraphs.get(index)).getMeasuredTrimMasses(),
+                    (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) ? ((SpeciesCountsAuditViewForShrimp) legendGraphs.get(index)).getTotalCountsSBM() : null,
+                    index,
+                    endLeadingIndex, endZoomedIndex, zoomedStart - 1, zoomedEnd);
+            index += 1;
+        }
+
+        // trailing canvas
+        int endTrailingIndex = ((SpeciesGraphInterface) legendGraphs.get(0)).getMeasuredTrimMasses().size();
+        widthOfView = plotWidthOfSpots * (squidProject.getPrawnFileRuns().size() - zoomedEnd);
+
+        if (widthOfView > 0) {
+            index = 0;
+            for (AbstractDataView spotsCanvas : trailingGraphs) {
+                spotsCanvas.setMyWidth(widthOfView);
+                spotsCanvas.setGraphWidth(widthOfView);
+                updateSpeciesAMUAuditCanvas((SpeciesGraphInterface) spotsCanvas,
+                        ((SpeciesGraphInterface) legendGraphs.get(index)).getMeasuredTrimMasses(),
+                        (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) ? ((SpeciesCountsAuditViewForShrimp) legendGraphs.get(index)).getTotalCountsSBM() : null,
+                        index,
+                        endZoomedIndex, endTrailingIndex, zoomedEnd, squidProject.getPrawnFileRuns().size());
+                index += 1;
+            }
+        } else {
+            for (AbstractDataView spotsCanvas : trailingGraphs) {
+                spotsCanvas.setMyWidth(0);
+                spotsCanvas.setGraphWidth(0);
+                spotsCanvas.repaint();
+            }
+        }
+    }
+
+    private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry) {
+        // plot legend
+        AbstractDataView legendCanvas
+                = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, 260, heightOfMassPlot),
                 title,
                 countsData,
                 countsSBMData,
@@ -442,20 +624,145 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 squidProject.getPrawnFileRuns(),
                 showTimeNormalized,
                 showSpotLabels,
-                this);
+                this, -1, 0, 0, 0, 0);
 
-        scrolledBox.getChildren().add(canvas);
-        graphs.add(canvas);
-        GraphicsContext gc1 = canvas.getGraphicsContext2D();
-        canvas.preparePanel();
-        canvas.paint(gc1);
+        scrolledBoxLeft.getChildren().add(legendCanvas);
+        legendGraphs.add(legendCanvas);
+        GraphicsContext gc0 = legendCanvas.getGraphicsContext2D();
+        legendCanvas.preparePanel();
+        legendCanvas.paint(gc0);
+
+        // prepare for three plots (canvas) = leadingSpots, zoomedSpots, trailingSpots
+        HBox graphsBox = new HBox();
+        scrolledBox.getChildren().add(graphsBox);
+
+        // determine indices of details
+        int endLeadingIndex = 0;
+        int endZoomedIndex = 0;
+        for (int i = 0; i < entry.getIndicesOfRunsAtMeasurementTimes().size(); i++) {
+            if (entry.getIndicesOfRunsAtMeasurementTimes().get(i) < zoomedStart) {
+                endLeadingIndex = i;
+            } else if (entry.getIndicesOfRunsAtMeasurementTimes().get(i) <= zoomedEnd) {
+                endZoomedIndex = i;
+            } else {
+                break;
+            }
+        }
+
+        int widthOfView = plotWidthOfSpots * (zoomedStart - 1);
+        if (endLeadingIndex > 0) {
+            // leading canvas
+            // sublist excludes right end of range
+            endLeadingIndex += 1;
+            AbstractDataView leadingCanvas
+                    = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                    title,
+                    countsData.subList(0, endLeadingIndex),
+                    countsSBMData.subList(0, endLeadingIndex),
+                    countsRadioButtonChoice,
+                    entry.getTimesOfMeasuredTrimMasses().subList(0, endLeadingIndex),
+                    entry.getIndicesOfScansAtMeasurementTimes().subList(0, endLeadingIndex),
+                    entry.getIndicesOfRunsAtMeasurementTimes().subList(0, endLeadingIndex),
+                    squidProject.getPrawnFileRuns().subList(0, zoomedStart - 1),
+                    showTimeNormalized,
+                    showSpotLabels,
+                    this,
+                    -1,
+                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(),
+                    ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMinYII(), ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMaxYII());
+
+
+            graphsBox.getChildren().add(leadingCanvas);
+            leadingGraphs.add(leadingCanvas);
+            GraphicsContext gc1 = leadingCanvas.getGraphicsContext2D();
+            leadingCanvas.preparePanel();
+            leadingCanvas.paint(gc1);
+        }
+
+        // zoomed canvas
+        // sublist excludes right end of range
+        endZoomedIndex += 1;
+        widthOfView = plotWidthOfZoomedSpots * (zoomedWidth);
+        AbstractDataView zoomedCanvas
+                = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                title,
+                countsData.subList(endLeadingIndex, endZoomedIndex),
+                countsSBMData.subList(endLeadingIndex, endZoomedIndex),
+                countsRadioButtonChoice,
+                entry.getTimesOfMeasuredTrimMasses().subList(endLeadingIndex, endZoomedIndex),
+                entry.getIndicesOfScansAtMeasurementTimes().subList(endLeadingIndex, endZoomedIndex),
+                entry.getIndicesOfRunsAtMeasurementTimes().subList(endLeadingIndex, endZoomedIndex),
+                squidProject.getPrawnFileRuns().subList(zoomedStart - 1, zoomedEnd),
+                showTimeNormalized,
+                showSpotLabels,
+                this,
+                0, legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(),
+                ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMinYII(), ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMaxYII());
+
+        graphsBox.getChildren().add(zoomedCanvas);
+        zoomingGraphs.add(zoomedCanvas);
+        GraphicsContext gc2 = zoomedCanvas.getGraphicsContext2D();
+        zoomedCanvas.preparePanel();
+        zoomedCanvas.paint(gc2);
+
+        // trailing canvas
+        int endTrailingIndex = countsData.size();
+        widthOfView = plotWidthOfSpots * (squidProject.getPrawnFileRuns().size() - zoomedEnd);
+
+        if (widthOfView > 0) {
+            AbstractDataView trailingCanvas
+                    = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, widthOfView, heightOfMassPlot),
+                    title,
+                    countsData.subList(endZoomedIndex, endTrailingIndex),
+                    countsSBMData.subList(endZoomedIndex, endTrailingIndex),
+                    countsRadioButtonChoice,
+                    entry.getTimesOfMeasuredTrimMasses().subList(endZoomedIndex, endTrailingIndex),
+                    entry.getIndicesOfScansAtMeasurementTimes().subList(endZoomedIndex, endTrailingIndex),
+                    entry.getIndicesOfRunsAtMeasurementTimes().subList(endZoomedIndex, endTrailingIndex),
+                    squidProject.getPrawnFileRuns().subList(zoomedEnd, squidProject.getPrawnFileRuns().size()),
+                    showTimeNormalized,
+                    showSpotLabels,
+                    this,
+                    1, legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(),
+                    ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMinYII(), ((SpeciesCountsAuditViewForShrimp) legendCanvas).getMaxYII());
+
+            graphsBox.getChildren().add(trailingCanvas);
+            trailingGraphs.add(trailingCanvas);
+            GraphicsContext gc3 = trailingCanvas.getGraphicsContext2D();
+            trailingCanvas.preparePanel();
+            trailingCanvas.paint(gc3);
+        }
     }
 
     private void displayMassStationsForReview() {
 
         scrolledBox.getChildren().clear();
         scrolledBoxLeft.getChildren().clear();
-        graphs.clear();
+        legendGraphs.clear();
+        leadingGraphs.clear();
+        zoomingGraphs.clear();
+        trailingGraphs.clear();
+
+        zoomScrollBar.setMin(1);
+        zoomScrollBar.setMax(squidProject.getPrawnFileRuns().size());
+        zoomScrollBar.setUnitIncrement(2);
+        zoomScrollBar.setBlockIncrement(4);
+        zoomScrollBar.setVisibleAmount(20);
+
+        zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                int delta = (new_val.intValue() - old_val.intValue());
+                if (delta < 0) {
+                    zoomedStart = ((zoomedStart + delta) > 1) ? (zoomedStart + delta) : 1;
+                    zoomedEnd = zoomedStart + zoomedWidth - 1;
+                } else {
+                    zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
+                    zoomedStart = zoomedEnd - zoomedWidth + 1;
+                }
+                updateAllMassesCanvases();
+            }
+        });
 
         int massCounter = 0;
         for (MassStationDetail entry : viewedAsGraphMassStations) {
@@ -464,16 +771,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                         massCounter,
                         entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
                         entry.getMeasuredTrimMasses(),
-                        entry,
-                        scrolledBox);
-                produceMassModeGraphOnScrolledPane(
-                        massCounter,
-                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
-                        entry.getMeasuredTrimMasses(),
-                        entry,
-                        scrolledBoxLeft);
+                        entry);
             } else {
-                // prep for shrimp fractions
+                // prep for shrimp fractions to extract total counts and totalSBM
                 List<Double> totalCounts = new ArrayList<>();
                 List<Double> totalCountsSBM = new ArrayList<>();
                 List<ShrimpFractionExpressionInterface> shrimpFractions = squidProject.getTask().getShrimpFractions();
@@ -492,15 +792,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                         entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
                         totalCounts,
                         totalCountsSBM,
-                        entry,
-                        scrolledBox);
-                produceCountsModeGraphOnScrolledPane(
-                        massCounter,
-                        entry.getMassStationLabel() + " " + entry.getIsotopeLabel(),
-                        totalCounts,
-                        totalCountsSBM,
-                        entry,
-                        scrolledBoxLeft);
+                        entry);
             }
             massCounter++;
         }
@@ -522,17 +814,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                             + " - "
                             + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
                     deltas,
-                    A,
-                    scrolledBox);
-
-            produceMassModeGraphOnScrolledPane(
-                    massCounter,
-                    A.getMassStationLabel() + " " + A.getIsotopeLabel()
-                            + " - "
-                            + B.getMassStationLabel() + " " + B.getIsotopeLabel(),
-                    deltas,
-                    A,
-                    scrolledBoxLeft);
+                    A
+            );
 
             massCounter++;
         }
@@ -553,15 +836,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     massCounter,
                     "Primary Beam",
                     primaryBeam,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceMassModeGraphOnScrolledPane(
-                    massCounter,
-                    "Primary Beam",
-                    primaryBeam,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
+                    allMassStations.get(0)
+            );
 
             massCounter++;
         }
@@ -581,15 +857,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     massCounter,
                     "qt1y",
                     qt1y,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceMassModeGraphOnScrolledPane(
-                    massCounter,
-                    "qt1y",
-                    qt1y,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
+                    allMassStations.get(0)
+            );
 
             massCounter++;
         }
@@ -609,15 +878,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     massCounter,
                     "qt1z",
                     qt1z,
-                    allMassStations.get(0),
-                    scrolledBox);
-
-            produceMassModeGraphOnScrolledPane(
-                    massCounter,
-                    "qt1z",
-                    qt1z,
-                    allMassStations.get(0),
-                    scrolledBoxLeft);
+                    allMassStations.get(0)
+            );
 
             massCounter++;
         }
@@ -632,18 +894,44 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @Override
-    public void updateGraphsWithSelectedIndex(int index) {
-        for (int i = 0; i < graphs.size(); i++) {
-            ((SpeciesGraphInterface) graphs.get(i)).setIndexOfSelectedSpot(index);
-            graphs.get(i).repaint();
+    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing) {
+        List<AbstractDataView> activeGraphs = new ArrayList<>();
+        switch (leadingZoomingTrailing) {
+            case -1:
+                activeGraphs.addAll(leadingGraphs);
+                break;
+            case 0:
+                activeGraphs.addAll(zoomingGraphs);
+                break;
+            case 1:
+                activeGraphs.addAll(trailingGraphs);
+                break;
+        }
+
+        for (int i = 0; i < activeGraphs.size(); i++) {
+            ((SpeciesGraphInterface) activeGraphs.get(i)).setIndexOfSelectedSpot(index);
+            activeGraphs.get(i).repaint();
         }
     }
 
     @Override
-    public void updateGraphsWithSecondSelectedIndex(int index) {
-        for (int i = 0; i < graphs.size(); i++) {
-            ((SpeciesGraphInterface) graphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
-            graphs.get(i).repaint();
+    public void updateGraphsWithSecondSelectedIndex(int index, int leadingZoomingTrailing) {
+        List<AbstractDataView> activeGraphs = new ArrayList<>();
+        switch (leadingZoomingTrailing) {
+            case -1:
+                activeGraphs.addAll(leadingGraphs);
+                break;
+            case 0:
+                activeGraphs.addAll(zoomingGraphs);
+                break;
+            case 1:
+                activeGraphs.addAll(trailingGraphs);
+                break;
+        }
+
+        for (int i = 0; i < activeGraphs.size(); i++) {
+            ((SpeciesGraphInterface) activeGraphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
+            activeGraphs.get(i).repaint();
         }
     }
 
@@ -652,6 +940,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
      */
     @Override
     public void updateSpotsInGraphs() {
+        // May 2021 fixes issue #618
+        squidProject.getTask().setChanged(true);
+        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(true);
+
         calculateCountOfScansCumulative();
         setupMassStationDetailsListViews();
         displayMassStationsForReview();
@@ -850,34 +1142,23 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     massMinuends.clear();
                     massSubtrahends.clear();
                 } else {
-                    // if (massMinuendComboBox.getSelectionModel().getSelectedItem() != null) {
 
                     try {
                         massMinuends.remove(row);
                     } catch (Exception exception) {
 //                        exception.printStackTrace();
                     }
-                    // }
-                    // if (massSubtrahendComboBox.getSelectionModel().getSelectedItem() != null) {
                     try {
                         massSubtrahends.remove(row);
                     } catch (Exception exception) {
 //                        exception.printStackTrace();
                     }
-                    // }
 
-                    // fix row index of all downstream
-//                    if (massMinuends.isEmpty()) {
-//                        massDeltasGridPane.getChildren().clear();
-//                        // setup first add button
-//                        massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, 0);
-//                    } else {
                     for (Node node : massDeltasGridPane.getChildren()) {
                         if (GridPane.getRowIndex(node) > row) {
                             GridPane.setRowIndex(node, GridPane.getRowIndex(node) - 1);
                         }
                     }
-//                    }
                 }
                 if (massMinuends.isEmpty()) {
                     massDeltasGridPane.getChildren().clear();

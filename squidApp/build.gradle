@@ -20,6 +20,8 @@ if (!hasProperty('mainClass')) {
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 dependencies {
+    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.jetbrains:annotations:20.1.0'
     compile project(":squidCore")
    
     compile group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.9.1'
@@ -41,5 +43,3 @@ task fatAppJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-
-

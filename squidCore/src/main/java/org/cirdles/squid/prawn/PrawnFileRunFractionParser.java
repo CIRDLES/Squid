@@ -250,7 +250,6 @@ public class PrawnFileRunFractionParser {
      * email 4.Feb.2016 interpretation of Squid code Corrected per Phil Main
      * 9.Feb.2016 email
      *
-     * @param runFraction
      * @return
      */
     private void parseRunFractionData() {

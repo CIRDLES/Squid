@@ -19,17 +19,14 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import org.cirdles.squid.prawn.PrawnFile;
+
+import java.math.BigDecimal;
 
 /**
- *
  * @author James F. Bowring
  */
 public abstract class AbstractDataView extends Canvas {
@@ -38,6 +35,8 @@ public abstract class AbstractDataView extends Canvas {
     protected double y;
     protected double width;
     protected double height;
+    protected static int indexOfSelectedSpot = -1;
+    protected static int indexOfSecondSelectedSpotForMultiSelect = -1;
 
     /**
      *
@@ -47,9 +46,6 @@ public abstract class AbstractDataView extends Canvas {
      *
      */
     protected double[] myOnPeakNormalizedAquireTimes;
-    /**
-     *
-     */
     protected int graphWidth;
     /**
      *
@@ -82,34 +78,32 @@ public abstract class AbstractDataView extends Canvas {
     /**
      *
      */
-    private double displayOffsetY = 0;
-    /**
-     *
-     */
-    private double displayOffsetX = 0;
-    /**
-     *
-     */
     protected BigDecimal[] ticsX;
     /**
      *
      */
     protected BigDecimal[] ticsY;
     protected BigDecimal[] ticsYII;
-
     protected boolean showTimeNormalized;
     protected boolean showspotLabels;
-    
+    /**
+     *
+     */
+    private double displayOffsetY = 0;
+    /**
+     *
+     */
+    private double displayOffsetX = 0;
+
 
     /**
      *
      */
-    public AbstractDataView() {
+    private AbstractDataView() {
         super();
     }
 
     /**
-     *
      * @param bounds
      */
     protected AbstractDataView(Rectangle bounds, int leftMargin, int topMargin) {
@@ -130,16 +124,14 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @param g2d
      */
     protected void paintInit(GraphicsContext g2d) {
         relocate(x, y);
         g2d.clearRect(0, 0, width, height);
     }
-    
+
     /**
-     *
      * @param g2d
      */
     public void paint(GraphicsContext g2d) {
@@ -147,7 +139,7 @@ public abstract class AbstractDataView extends Canvas {
 
         drawBorder(g2d);
     }
-    
+
     public void repaint() {
         paint(this.getGraphicsContext2D());
     }
@@ -163,9 +155,8 @@ public abstract class AbstractDataView extends Canvas {
         g2d.strokeRect(1, 1, width - 1, height - 1);
 
     }
-    
+
     /**
-     *
      * @param x
      * @return mapped x
      */
@@ -174,7 +165,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @param y
      * @return mapped y
      */
@@ -183,8 +173,7 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
-     * @param doReScale the value of doReScale
+     * @param doReScale  the value of doReScale
      * @param inLiveMode the value of inLiveMode
      */
     public void refreshPanel(boolean doReScale, boolean inLiveMode) {
@@ -196,9 +185,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
-     * @param doReScale the value of doReScale
-     * @param inLiveMode the value of inLiveMode
      */
     public abstract void preparePanel();
 
@@ -231,7 +217,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return minimum displayed x
      */
     public double getMinX_Display() {
@@ -239,7 +224,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return maximum displayed x
      */
     public double getMaxX_Display() {
@@ -247,7 +231,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return minimum displayed y
      */
     public double getMinY_Display() {
@@ -255,7 +238,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return maximum displayed y
      */
     public double getMaxY_Display() {
@@ -263,7 +245,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return
      */
     public double getRangeX_Display() {
@@ -271,7 +252,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @return
      */
     public double getRangeY_Display() {
@@ -293,12 +273,11 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @param x
      * @return
      */
     protected double convertMouseXToValue(double x) {
-        double convertedX = (((double) (x - leftMargin + 2)) / (double) graphWidth) //
+        double convertedX = ((x - leftMargin + 2) / (double) graphWidth) //
                 * getRangeX_Display()//
                 + getMinX_Display();
 
@@ -306,7 +285,6 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
-     *
      * @param y
      * @return
      */
@@ -320,5 +298,14 @@ public abstract class AbstractDataView extends Canvas {
                 && (evt.getY() >= topMargin)
                 && (evt.getY() < graphHeight + topMargin - 2)
                 && (evt.getX() < (graphWidth + leftMargin - 2)));
+    }
+
+    public void setGraphWidth(int graphWidth) {
+        this.graphWidth = graphWidth;
+    }
+
+    public void setMyWidth(double width) {
+        this.width = width;
+        setWidth(width);
     }
 }

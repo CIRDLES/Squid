@@ -25,7 +25,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 
@@ -51,7 +50,7 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() > 100) {
                     width = newValue.intValue();
-                    graphWidth = (int) width - 2 * leftMargin;
+                    setGraphWidth((int) width - 2 * leftMargin);
                     displayPlotAsNode();
                 }
             }
