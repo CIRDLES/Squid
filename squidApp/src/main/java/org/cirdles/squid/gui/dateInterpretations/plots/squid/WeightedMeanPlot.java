@@ -17,7 +17,6 @@ package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 import java.awt.Graphics2D;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -66,7 +65,6 @@ import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 import org.w3c.dom.DOMImplementation;
@@ -141,7 +139,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 if (newValue.intValue() > 100) {
                     bounds.setWidth(newValue.intValue());
                     width = (int) bounds.getWidth();
-                    graphWidth = (int) width - 2 * leftMargin;
+                    setGraphWidth((int) width - 2 * leftMargin);
                     displayPlotAsNode();
                 }
             }

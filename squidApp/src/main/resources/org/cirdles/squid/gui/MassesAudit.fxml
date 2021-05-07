@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -64,14 +65,14 @@
                                     <CheckBox fx:id="displaySpotLabelsCheckBox" mnemonicParsing="false" onAction="#displaySpotLabelsCheckBoxAction" text="Display spot labels" />
                                     <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="667.0" spacing="15.0" style="-fx-background-color: azure; -fx-border-color: black;">
                                        <children>
-                                          <RadioButton fx:id="displayMasses" layoutX="10.0" layoutY="17.0" mnemonicParsing="false" onAction="#displayMassesAction" selected="true" text="Display Masses">
+                                          <RadioButton layoutX="10.0" layoutY="17.0" mnemonicParsing="false" onAction="#displayMassesAction" selected="true" text="Display Masses">
                                              <toggleGroup>
                                                 <ToggleGroup fx:id="displayCountFlavorToggleGroup" />
                                              </toggleGroup>
                                           </RadioButton>
-                                          <RadioButton fx:id="displayTotalCountsRB" mnemonicParsing="false" onAction="#displayTotalCountsAction" text="Display totalCounts" toggleGroup="$displayCountFlavorToggleGroup" />
-                                          <RadioButton fx:id="displayTotalSBMRB" mnemonicParsing="false" onAction="#displayTotalSBMAction" text="Display totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
-                                          <RadioButton fx:id="displayBothCountsRB" mnemonicParsing="false" onAction="#displayBothCountsAction" prefHeight="18.0" prefWidth="225.0" text="Display totalCounts and totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
+                                          <RadioButton mnemonicParsing="false" onAction="#displayTotalCountsAction" text="Display totalCounts" toggleGroup="$displayCountFlavorToggleGroup" />
+                                          <RadioButton mnemonicParsing="false" onAction="#displayTotalSBMAction" text="Display totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
+                                          <RadioButton mnemonicParsing="false" onAction="#displayBothCountsAction" prefHeight="18.0" prefWidth="225.0" text="Display totalCounts and totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
                                        </children>
                                        <HBox.margin>
                                           <Insets left="25.0" />
@@ -133,6 +134,12 @@
                 </TitledPane>
               </panes>
             </Accordion>
+            <HBox alignment="CENTER_LEFT" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" VBox.vgrow="NEVER">
+               <children>
+                  <Label prefHeight="28.0" prefWidth="268.0" />
+                  <ScrollBar fx:id="zoomScrollBar" prefHeight="17.0" prefWidth="983.0" style="-fx-background-color: azure;" />
+               </children>
+            </HBox>
             <HBox>
                <children>
                   <ScrollPane fx:id="leftScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" minWidth="270.0" prefHeight="631.0" prefWidth="270.0" vbarPolicy="NEVER">
@@ -144,9 +151,9 @@
                         </VBox>
                      </content>
                   </ScrollPane>
-                  <ScrollPane fx:id="rightScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="770.0" prefWidth="1089.0">
+                  <ScrollPane fx:id="rightScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefHeight="581.0" prefWidth="1032.0">
                      <content>
-                        <VBox fx:id="scrolledBox" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" prefWidth="1092.0" styleClass="backgroundCalamari">
+                        <VBox fx:id="scrolledBox" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" styleClass="backgroundCalamari">
                            <padding>
                               <Insets bottom="10.0" right="10.0" top="10.0" />
                            </padding>

@@ -35,6 +35,8 @@ public abstract class AbstractDataView extends Canvas {
     protected double y;
     protected double width;
     protected double height;
+    protected static int indexOfSelectedSpot = -1;
+    protected static int indexOfSecondSelectedSpotForMultiSelect = -1;
 
     /**
      *
@@ -44,9 +46,6 @@ public abstract class AbstractDataView extends Canvas {
      *
      */
     protected double[] myOnPeakNormalizedAquireTimes;
-    /**
-     *
-     */
     protected int graphWidth;
     /**
      *
@@ -299,5 +298,14 @@ public abstract class AbstractDataView extends Canvas {
                 && (evt.getY() >= topMargin)
                 && (evt.getY() < graphHeight + topMargin - 2)
                 && (evt.getX() < (graphWidth + leftMargin - 2)));
+    }
+
+    public void setGraphWidth(int graphWidth) {
+        this.graphWidth = graphWidth;
+    }
+
+    public void setMyWidth(double width) {
+        this.width = width;
+        setWidth(width);
     }
 }

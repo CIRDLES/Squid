@@ -15,19 +15,23 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
+import org.cirdles.squid.prawn.PrawnFile;
+
+import java.util.List;
+
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface MassAuditRefreshInterface {
-    public void updateGraphsWithSelectedIndex(int index);
+    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing);
     
-    public void updateGraphsWithSecondSelectedIndex(int index);
+    public void updateGraphsWithSecondSelectedIndex(int index, int leadingZoomingTrailing);
     
     /**
      *
      */
     public void updateSpotsInGraphs();
     
-    public int[] getCountOfScansCumulative();
+    public int[] getCountOfScansCumulative(List<PrawnFile.Run> prawnFileRuns);
 }
