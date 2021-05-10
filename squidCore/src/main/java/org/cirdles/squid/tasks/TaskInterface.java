@@ -15,40 +15,28 @@
  */
 package org.cirdles.squid.tasks;
 
-import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import com.thoughtworks.xstream.XStream;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.shrimp.*;
+import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
-import org.cirdles.squid.core.CalamariReportsEngine;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.shrimp.MassStationDetail;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.shrimp.SquidRatiosModel;
-import org.cirdles.squid.shrimp.SquidSessionModel;
-import org.cirdles.squid.shrimp.SquidSpeciesModel;
-import org.cirdles.squid.tasks.expressions.Expression;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
 

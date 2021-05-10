@@ -22,28 +22,27 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.scene.layout.HBox;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import org.cirdles.squid.projects.SquidProject;
 
 /**
  * FXML Controller class
  *
  * @author James F. Bowring
- * @see
- * <a href="https://courses.bekwam.net/public_tutorials/bkcourse_filterlistapp.html" target="_blank">Bekwam.net</a>
+ * @see <a href="https://courses.bekwam.net/public_tutorials/bkcourse_filterlistapp.html" target="_blank">Bekwam.net</a>
  */
 public class ProjectManagerController implements Initializable {
 
@@ -143,7 +142,7 @@ public class ProjectManagerController implements Initializable {
         }
 
         orignalPrawnFileName.setEditable(false);
-        
+
         preferredIndexIsotopeLabel.setVisible(squidProject.isTypeGeochron());
         isotopeHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeansHBox.setVisible(squidProject.isTypeGeochron());
@@ -197,19 +196,6 @@ public class ProjectManagerController implements Initializable {
         }
     }
 
-    static class ParameterModelStringConverter extends StringConverter<ParametersModel> {
-
-        @Override
-        public String toString(ParametersModel model) {
-            return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
-        }
-
-        @Override
-        public ParametersModel fromString(String string) {
-            return null;
-        }
-    }
-
     private void setupListeners() {
         projectNameText.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -255,7 +241,7 @@ public class ProjectManagerController implements Initializable {
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
         assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable,
-                Double oldValue, Double newValue) -> {
+                                                                 Double oldValue, Double newValue) -> {
             squidProject.setExtPErrU(newValue);
             SquidProject.setProjectChanged(true);
             task.setExtPErrU(newValue);
@@ -265,7 +251,7 @@ public class ProjectManagerController implements Initializable {
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrTh(), 0.05);
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
         assignedExternalErrThSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
-                Double oldValue, Double newValue) -> {
+                                                                  Double oldValue, Double newValue) -> {
             squidProject.setExtPErrTh(newValue);
             SquidProject.setProjectChanged(true);
             task.setExtPErrTh(newValue);
@@ -286,11 +272,11 @@ public class ProjectManagerController implements Initializable {
 
         softwareVersionLabel.setText(
                 "Version: "
-                + squidProject.getPrawnFileShrimpSoftwareVersionName());
+                        + squidProject.getPrawnFileShrimpSoftwareVersionName());
 
         loginCommentLabel.setText(
                 "Login Comment: "
-                + squidProject.getPrawnFileLoginComment());
+                        + squidProject.getPrawnFileLoginComment());
 
         extractSummaryStatsFromPrawnFile();
     }
@@ -347,7 +333,6 @@ public class ProjectManagerController implements Initializable {
     private void pb204RadioButtonAction(ActionEvent event) {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         SquidProject.setProjectChanged(true);
-        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         task.setChanged(true);
     }
 
@@ -355,7 +340,6 @@ public class ProjectManagerController implements Initializable {
     private void pb207RadioButtonAction(ActionEvent event) {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         SquidProject.setProjectChanged(true);
-        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         task.setChanged(true);
     }
 
@@ -363,25 +347,8 @@ public class ProjectManagerController implements Initializable {
     private void pb208RadioButtonAction(ActionEvent event) {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         SquidProject.setProjectChanged(true);
-        task.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         task.setChanged(true);
     }
-//
-//    @FXML
-//    private void roundingSquid25Action(ActionEvent event) {
-//        USE_SIG_FIG_15 = false;
-//        task.setRoundingForSquid3(false);
-//        task.setChanged(true);
-//        task.setupSquidSessionSpecsAndReduceAndReport(true);
-//    }
-//
-//    @FXML
-//    private void roundingSquid3Action(ActionEvent event) {
-//        USE_SIG_FIG_15 = true;
-//        task.setRoundingForSquid3(true);
-//        task.setChanged(true);
-//        task.setupSquidSessionSpecsAndReduceAndReport(true);
-//    }
 
     @FXML
     private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
@@ -423,6 +390,19 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private void refreshModelsAction(ActionEvent event) {
         task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
+    }
+
+    static class ParameterModelStringConverter extends StringConverter<ParametersModel> {
+
+        @Override
+        public String toString(ParametersModel model) {
+            return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+        }
+
+        @Override
+        public ParametersModel fromString(String string) {
+            return null;
+        }
     }
 
 }
