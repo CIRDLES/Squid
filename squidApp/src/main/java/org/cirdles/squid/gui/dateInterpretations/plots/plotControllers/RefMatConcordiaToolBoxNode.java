@@ -19,27 +19,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+
+import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  *
@@ -82,12 +73,12 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         pb204RadioButton.setSelected(correction.equals(PB4CORR));
         formatNode(pb204RadioButton, 60);
 
-        RadioButton pb207RadioButton = new RadioButton("207Pb");
-        pb207RadioButton.setToggleGroup(isotopeGroup);
-        pb207RadioButton.setUserData(PB7CORR);
-        pb207RadioButton.setSelected(correction.equals(PB7CORR));
-        pb207RadioButton.setDisable(false);
-        formatNode(pb207RadioButton, 60);
+//        RadioButton pb207RadioButton = new RadioButton("207Pb");
+//        pb207RadioButton.setToggleGroup(isotopeGroup);
+//        pb207RadioButton.setUserData(PB7CORR);
+//        pb207RadioButton.setSelected(correction.equals(PB7CORR));
+//        pb207RadioButton.setDisable(true);
+//        formatNode(pb207RadioButton, 60);
 
         RadioButton pb208RadioButton = new RadioButton("208Pb");
         pb208RadioButton.setToggleGroup(isotopeGroup);
@@ -107,7 +98,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         pb204RadioButton.setSelected(isDirectAltPD || has232 || pb204RadioButton.isSelected());
         
         getChildren().addAll(
-                saveToNewFileButton, separator(), isotopeChoiceLabel, pb204RadioButton, pb207RadioButton, pb208RadioButton);
+                saveToNewFileButton, separator(), isotopeChoiceLabel, pb204RadioButton /*, pb207RadioButton*/, pb208RadioButton);
 
         // add listener after initial choice
         isotopeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
@@ -116,13 +107,13 @@ public class RefMatConcordiaToolBoxNode extends HBox {
                 correction = ((String) isotopeGroup.getSelectedToggle().getUserData());
                 switch (correction.substring(0, 1)) {
                     case "4":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_204);
+                        squidProject.setSelectedIndexIsotope(PB_204);
                         break;
                     case "7":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_207);
+                        squidProject.setSelectedIndexIsotope(PB_207);
                         break;
                     default: // case 8
-                        squidProject.getTask().setSelectedIndexIsotope(PB_208);
+                        squidProject.setSelectedIndexIsotope(PB_208);
                 }
 
                 squidProject.getTask().setChanged(true);

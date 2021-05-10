@@ -90,6 +90,7 @@ public class SquidUIController implements Initializable {
 
     public static final SquidLabData squidLabData;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     public static SquidProject squidProject;
     public static Node taskFolderBrowserUI;
     public static Node plotUI;
@@ -101,7 +102,6 @@ public class SquidUIController implements Initializable {
     public static SquidReportTableLauncher squidReportTableLauncher;
     public static HighlightMainMenu menuHighlighter;
     public static int squidProjectOriginalHash;
-    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     private static GridPane projectManagerUI;
     private static VBox sessionAuditUI;
     private static ScrollPane massesAuditUI;
@@ -719,6 +719,9 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
+
+                // fixes #624 by correcting out of synch tasks
+                squidProject.getTask().setSelectedIndexIsotope(squidProject.getSelectedIndexIsotope());
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();

@@ -15,29 +15,10 @@
  */
 package org.cirdles.squid.web;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
-import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
-import java.nio.file.attribute.PosixFilePermissions;
-import java.util.EnumSet;
-import java.util.Set;
-import javax.xml.bind.JAXBException;
 import org.apache.commons.io.FilenameUtils;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
@@ -49,11 +30,27 @@ import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.FileUtilities;
-import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
 import org.cirdles.squid.utilities.fileUtilities.ZipUtility;
-import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
-import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
 import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.EnumSet;
+import java.util.Set;
+
+import static java.nio.file.attribute.PosixFilePermission.*;
+import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
 /**
  * Created by johnzeringue on 7/27/16. Adapted by James Bowring Dec 2018.
@@ -138,14 +135,12 @@ public class SquidReportingService {
             CommonPbModel commPbModel = new CommonPbModel();
             commPbModel = (CommonPbModel) commPbModel.readXMLObject(commPbModelFile.getAbsolutePath(), false);
             task.setCommonPbModel(commPbModel);
-//            task.setCommonPbModel(CommonPbModel.getDefaultModel("Stacey-Kramers@559.0Ma (z6266)", "1.0"));
 
             extractor = new ResourceExtractor(PhysicalConstantsModel.class);
             File physConstModelFile = extractor.extractResourceAsFile("Squid 2.5 Default Physical Constants Model v.1.0.xml");
             PhysicalConstantsModel physConstModel = new PhysicalConstantsModel();
             physConstModel = (PhysicalConstantsModel) physConstModel.readXMLObject(physConstModelFile.getAbsolutePath(), false);
             task.setPhysicalConstantsModel(physConstModel);
-//            task.setPhysicalConstantsModel(PhysicalConstantsModel.getDefaultModel(SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1, "1.0"));
 
             extractor = new ResourceExtractor(ReferenceMaterialModel.class);
             File refMatModelFile = extractor.extractResourceAsFile("z6266 ID-TIMS (559.0 Ma) v.1.0.xml");
@@ -153,8 +148,6 @@ public class SquidReportingService {
             refMatModel = (ReferenceMaterialModel) refMatModel.readXMLObject(refMatModelFile.getAbsolutePath(), false);
             task.setReferenceMaterialModel(refMatModel);
             task.setConcentrationReferenceMaterialModel(refMatModel);
-//            task.setReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
-//            task.setConcentrationReferenceMaterialModel(ReferenceMaterialModel.getDefaultModel("z6266 ID-TIMS (559.0 Ma)", "1.0"));
 
             task.setExtPErrU(0.75);
             task.setExtPErrTh(0.75);
@@ -178,7 +171,7 @@ public class SquidReportingService {
 
             // for web service, need to set
             prawnFileHandler.setCurrentPrawnSourceFileLocation(fileName);
-            
+
             if (squidProject.hasReportsFolder()) {
                 squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
                 squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();

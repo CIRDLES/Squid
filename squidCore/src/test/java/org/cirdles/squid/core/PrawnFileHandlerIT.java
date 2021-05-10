@@ -15,13 +15,8 @@
  */
 package org.cirdles.squid.core;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
@@ -31,28 +26,24 @@ import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign11Mass;
 import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities;
-import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.junit.rules.Timeout;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.utilities.stateUtilities.SquidLabData.SQUID2_DEFAULT_PHYSICAL_CONSTANTS_MODEL_V1;
+
 /**
- *
  * @author bowring
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -63,12 +54,6 @@ public class PrawnFileHandlerIT {
 
     private static final ResourceExtractor RESOURCE_EXTRACTOR
             = new ResourceExtractor(PrawnFileHandlerIT.class);
-
-    private static File reportsFolder;
-    private static File prawnFileZ6266;
-    private static SquidProject squidProjectZ6266;
-    private static ShrimpDataFileInterface prawnFileDataZ6266;
-
     /**
      *
      */
@@ -76,17 +61,18 @@ public class PrawnFileHandlerIT {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
     @ClassRule
     public static TemporaryFolder temporaryFolderPerm1 = new TemporaryFolder();
-
+    private static File reportsFolder;
+    private static File prawnFileZ6266;
+    private static SquidProject squidProjectZ6266;
+    private static ShrimpDataFileInterface prawnFileDataZ6266;
+    private static PrawnXMLFileHandler prawnFileHandler;
     /**
      *
      */
     @Rule
     public Timeout timeout = Timeout.seconds(120);
 
-    private static PrawnXMLFileHandler prawnFileHandler;
-
     /**
-     *
      * @throws java.lang.Exception
      */
     @BeforeClass // provides to run setup once
@@ -144,7 +130,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setConcentrationReferenceMaterialModel(testingModel);
         squidProjectZ6266.setConcentrationReferenceMaterialModel(testingModel);
 
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
 
         // force defaults for testing of builtins
@@ -162,7 +148,6 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -194,7 +179,6 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -215,14 +199,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tB_testingOutputForZ6266Perm1_7corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 7cor unknowns.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -235,14 +218,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tC_testingOutputForZ6266Perm1_8corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 8cor unknowns.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -255,14 +237,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tD_testingOutputForZ6266Perm1_4corrRM() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4cor reference materials.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -275,7 +256,6 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -296,14 +276,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tF_testingOutputForZ6266Perm2_7corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm2 with 7cor unknowns.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -316,14 +295,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tG_testingOutputForZ6266Perm2_4corrRM() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm2 with 4cor reference materials.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -336,7 +314,6 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -357,14 +334,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tI_testingOutputForZ6266Perm4_7corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm4 with 7cor unknowns.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -377,14 +353,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tJ_testingOutputForZ6266Perm4_4corrRM() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm4 with 4cor reference materials.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -397,7 +372,6 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -418,14 +392,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tL_testingOutputForZ6266Perm3_7corr() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm3 with 7cor unknowns.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -438,14 +411,13 @@ public class PrawnFileHandlerIT {
     }
 
     /**
-     *
      * @throws Exception
      */
     @Test
     public void tM_testingOutputForZ6266Perm3_4corrRM() throws Exception {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm3 with 4cor reference materials.");
         // change selected index isotope
-        squidProjectZ6266.getTask().setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
+        squidProjectZ6266.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 

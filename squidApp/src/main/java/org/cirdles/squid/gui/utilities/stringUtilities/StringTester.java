@@ -18,7 +18,6 @@ package org.cirdles.squid.gui.utilities.stringUtilities;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class StringTester {
