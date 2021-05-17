@@ -16,7 +16,6 @@
 package org.cirdles.squid.utilities.squidPrefixTree;
 
 /**
- *
  * @author Casey Wilson
  */
 public class SquidPrefixTreeNode {

@@ -17,7 +17,6 @@ package org.cirdles.squid.projects;
 
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
@@ -490,29 +489,35 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                     int s = matcher.start();
                     delimiterForUnknownNames = task.getShrimpFractions().get(firstIndex).getFractionID().substring(s, s + 1);
                 }
-
-                boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
-                for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
-                    // determine flavor
-                    int delimiterIndex;
-                    if (delimiterIsNumber) {
-                        delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
-                    } else {
-                        delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
-                    }
-
-                    String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
-                            ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
-                    if (filtersForUnknownNames.containsKey(sampleName)) {
-                        filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
-                    } else {
-                        filtersForUnknownNames.put(sampleName, 1);
-                    }
-                }
-                task.setFiltersForUnknownNames(filtersForUnknownNames);
-                task.generateMapOfUnknownsBySampleNames();
+                divideSamples();
             }
         }
+    }
+
+    public void divideSamples() {
+        boolean delimiterIsNumber = Squid3Constants.SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+        for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
+            // determine flavor
+            int delimiterIndex;
+            if (delimiterIsNumber) {
+                delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+            } else {
+                delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
+            }
+
+            String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
+                    ? fraction.getFractionID() : fraction.getFractionID()
+                    .substring(0, (delimiterIndex <= fraction.getFractionID().length() ? delimiterIndex : fraction.getFractionID().length()))
+                    .toUpperCase(Locale.ENGLISH);
+            if (filtersForUnknownNames.containsKey(sampleName)) {
+                filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+            } else {
+                filtersForUnknownNames.put(sampleName, 1);
+            }
+        }
+        task.setDelimiterForUnknownNames(delimiterForUnknownNames);
+        task.setFiltersForUnknownNames(filtersForUnknownNames);
+        task.generateMapOfUnknownsBySampleNames();
     }
 
     // reports
@@ -660,7 +665,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * Helper method to prepare for reports by sample
      *
-     * @return
+     * @return List<ShrimpFractionExpressionInterface>
      */
     public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();

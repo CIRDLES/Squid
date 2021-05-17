@@ -885,6 +885,10 @@ public class SquidUIController implements Initializable {
 
     private void launchSpotManager() {
         try {
+            // force use of delimiter to filter samples
+            sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
+            sessionAuditUI.setId("SessionAudit");
+
             spotManagerUI = FXMLLoader.load(getClass().getResource("SpotManager.fxml"));
             spotManagerUI.setId("SpotManager");
 

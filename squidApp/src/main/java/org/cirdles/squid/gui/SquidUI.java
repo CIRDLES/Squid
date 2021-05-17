@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +27,10 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 /**
- *
  * @author James F. Bowring
  */
 public final class SquidUI extends Application {
@@ -57,7 +57,7 @@ public final class SquidUI extends Application {
     public static final String SQUID_LOGO_SANS_TEXT_URL
             = "org/cirdles/squid/gui/images/SquidLogoSansBg.png";
 
-    
+
     public static final String HEALTHY_URL = "org/cirdles/squid/gui/images/icon_checkmark.png";
     public static final Image HEALTHY = new Image(HEALTHY_URL);
     public static final String UNHEALTHY_URL = "org/cirdles/squid/gui/images/wrongx_icon.png";
@@ -65,13 +65,13 @@ public final class SquidUI extends Application {
 
     public static final String WARNING_URL = "org/cirdles/squid/gui/images/warning.png";
     public static final Image WARNING = new Image(WARNING_URL);
-    
-    
-    public static  final String HEALTHY_EXPRESSION_STYLE
+
+
+    public static final String HEALTHY_EXPRESSION_STYLE
             = "-fx-background-image:url('\"" + HEALTHY_URL
             + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
             + " -fx-background-size: 16px 16px;";
-    public static  final String UNHEALTHY_EXPRESSION_STYLE
+    public static final String UNHEALTHY_EXPRESSION_STYLE
             = "-fx-background-image:url('\"" + UNHEALTHY_URL
             + "\"');-fx-background-repeat: no-repeat;-fx-background-position: left center;"
             + " -fx-background-size: 16px 16px;";
@@ -82,6 +82,63 @@ public final class SquidUI extends Application {
 
     protected static SquidAboutWindow squidAboutWindow;
     protected static Stage primaryStage;
+
+    public static void updateStageTitle(String fileName) {
+        String fileSpec = "[Project File: NONE]";
+        fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
+        primaryStage.setTitle("Squid3  " + fileSpec);
+        SquidUIController.projectFileName = fileName;
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        // arg[0] : -v[erbose]
+        boolean verbose = false;
+        if (args.length > 0) {
+            verbose = args[0].startsWith("-v");
+        }
+
+        // http://patorjk.com/software/taag/#p=display&c=c%2B%2B&f=Varsity&t=Squid
+        // Varsity font with defaults
+        //    ______                      _        __    ______
+        //  .' ____ \                    (_)      |  ]  / ____ `.
+        //  | (___ \_|  .--. _  __   _   __   .--.| |   `'  __) |
+        //   _.____`. / /'`\' ][  | | | [  |/ /'`\' |   _  |__ '.
+        //  | \____) || \__/ |  | \_/ |, | || \__/  |  | \____) |
+        //   \______.' \__.; |  '.__.'_/[___]'.__.;__]  \______.'
+        //                 |__]
+        StringBuilder logo = new StringBuilder();
+        logo.append("         ______                      _        __    ______   \n");
+        logo.append("       .' ____ \\                    (_)      |  ]  / ____ `.\n");
+        logo.append("       | (___ \\_|  .--. _  __   _   __   .--.| |   `'  __) |\n");
+        logo.append("        _.____`. / /'`\\' ][  | | | [  |/ /'`\\' |   _  |__ '.\n");
+        logo.append("       | \\____) || \\__/ |  | \\_/ |, | || \\__/  |  | \\____) |\n");
+        logo.append("        \\______.' \\__.; |  '.__.'_/[___]'.__.;__]  \\______.'\n");
+        logo.append("                      |__]                        \n");
+        System.out.println((logo));
+
+        // detect if running from jar file
+        if (!verbose && (ClassLoader.getSystemResource("org/cirdles/squid/gui/SquidUI.class").toExternalForm().startsWith("jar"))) {
+            System.out.println(
+                    "Running Squid3 from Jar file ... suppressing terminal output.\n"
+                            + "\t use '-verbose' argument after jar file name to enable terminal output.");
+            System.setOut(new PrintStream(new OutputStream() {
+                public void write(int b) {
+                    // NO-OP
+                }
+            }));
+            System.setErr(new PrintStream(new OutputStream() {
+                public void write(int b) {
+                    // NO-OP
+                }
+            }));
+
+        }
+
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -110,62 +167,5 @@ public final class SquidUI extends Application {
         primaryStage.setMinWidth(scene.getWidth());
 
         squidAboutWindow = new SquidAboutWindow(primaryStage);
-    }
-
-    public static void updateStageTitle(String fileName) {
-        String fileSpec = "[Project File: NONE]";
-        fileSpec = fileName.length() > 0 ? fileSpec.replace("NONE", fileName) : fileSpec;
-        primaryStage.setTitle("Squid3  " + fileSpec);
-        SquidUIController.projectFileName = fileName;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // arg[0] : -v[erbose]
-        boolean verbose = false;
-        if (args.length > 0) {
-            verbose = args[0].startsWith("-v");
-        }
-
-        // http://patorjk.com/software/taag/#p=display&c=c%2B%2B&f=Varsity&t=Squid
-        // Varsity font with defaults
-        //    ______                      _        __    ______   
-        //  .' ____ \                    (_)      |  ]  / ____ `. 
-        //  | (___ \_|  .--. _  __   _   __   .--.| |   `'  __) | 
-        //   _.____`. / /'`\' ][  | | | [  |/ /'`\' |   _  |__ '. 
-        //  | \____) || \__/ |  | \_/ |, | || \__/  |  | \____) | 
-        //   \______.' \__.; |  '.__.'_/[___]'.__.;__]  \______.' 
-        //                 |__]                
-        StringBuilder logo = new StringBuilder();
-        logo.append("         ______                      _        __    ______   \n");
-        logo.append("       .' ____ \\                    (_)      |  ]  / ____ `.\n");
-        logo.append("       | (___ \\_|  .--. _  __   _   __   .--.| |   `'  __) |\n");
-        logo.append("        _.____`. / /'`\\' ][  | | | [  |/ /'`\\' |   _  |__ '.\n");
-        logo.append("       | \\____) || \\__/ |  | \\_/ |, | || \\__/  |  | \\____) |\n");
-        logo.append("        \\______.' \\__.; |  '.__.'_/[___]'.__.;__]  \\______.'\n");
-        logo.append("                      |__]                        \n");
-        System.out.println((logo));
-
-        // detect if running from jar file
-        if (!verbose && (ClassLoader.getSystemResource("org/cirdles/squid/gui/SquidUI.class").toExternalForm().startsWith("jar"))) {
-            System.out.println(
-                    "Running Squid3 from Jar file ... suppressing terminal output.\n"
-                    + "\t use '-verbose' argument after jar file name to enable terminal output.");
-            System.setOut(new PrintStream(new OutputStream() {
-                public void write(int b) {
-                    // NO-OP
-                }
-            }));
-            System.setErr(new PrintStream(new OutputStream() {
-                public void write(int b) {
-                    // NO-OP
-                }
-            }));
-
-        }
-
-        launch(args);
     }
 }
