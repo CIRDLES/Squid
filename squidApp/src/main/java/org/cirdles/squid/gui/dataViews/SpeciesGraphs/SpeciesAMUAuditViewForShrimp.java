@@ -54,13 +54,15 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  */
 public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements SpeciesGraphInterface {
 
-    private  List<Double> measuredTrimMasses;
-    private  List<Double> timesOfMeasuredTrimMasses;
-    private  List<Integer> indicesOfRunsAtMeasurementTimes;
-    private  List<Run> prawnFileRuns;
     private final MassAuditRefreshInterface massAuditRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
-    private  List<Integer> indicesOfScansAtMeasurementTimes = new ArrayList<>();
+    // -1, 0, 1
+    private final int leadingZoomingTrailing;
+    private List<Double> measuredTrimMasses;
+    private List<Double> timesOfMeasuredTrimMasses;
+    private List<Integer> indicesOfRunsAtMeasurementTimes;
+    private List<Run> prawnFileRuns;
+    private List<Integer> indicesOfScansAtMeasurementTimes = new ArrayList<>();
     private int[] countOfScansCumulative;
     private String plotTitle = "NONE";
     private int[] scanIndices;
@@ -68,7 +70,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
     private double maxMassAMU;
     private double minMassAMU;
     private double[] peakTukeysMeanAndUnct;
-//    private int indexOfSelectedSpot;
+    //    private int indexOfSelectedSpot;
 //    private int indexOfSecondSelectedSpotForMultiSelect;
     private List<PrawnFile.Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
@@ -76,9 +78,6 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
     private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
-
-    // -1, 0, 1
-    private final int leadingZoomingTrailing;
     private double controlMinY = 0;
     private double controlMaxY = 0;
     private double controlMean = 0;
@@ -532,7 +531,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
      *                                                indexOfSecondSelectedSpotForMultiSelect to set
      */
     public void setIndexOfSecondSelectedSpotForMultiSelect(int indexOfSecondSelectedSpotForMultiSelect) {
-        this.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
+        AbstractDataView.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
     }
 
     /**
@@ -542,12 +541,19 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return measuredTrimMasses;
     }
 
+    public void setMeasuredTrimMasses(List<Double> measuredTrimMasses) {
+        this.measuredTrimMasses = measuredTrimMasses;
+    }
 
     /**
      * @return the timesOfMeasuredTrimMasses
      */
     public List<Double> getTimesOfMeasuredTrimMasses() {
         return timesOfMeasuredTrimMasses;
+    }
+
+    public void setTimesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
+        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
     }
 
     /**
@@ -557,11 +563,19 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return indicesOfScansAtMeasurementTimes;
     }
 
+    public void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
+        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
+    }
+
     /**
      * @return the indicesOfRunsAtMeasurementTimes
      */
     public List<Integer> getIndicesOfRunsAtMeasurementTimes() {
         return indicesOfRunsAtMeasurementTimes;
+    }
+
+    public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
+        this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
 
     /**
@@ -571,28 +585,12 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return prawnFileRuns;
     }
 
-    public double getPlottedMean() {
-        return plottedMean;
-    }
-
-    public void setMeasuredTrimMasses(List<Double> measuredTrimMasses) {
-        this.measuredTrimMasses = measuredTrimMasses;
-    }
-
-    public void setTimesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
-        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
-    }
-
-    public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
-        this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
-    }
-
     public void setPrawnFileRuns(List<Run> prawnFileRuns) {
         this.prawnFileRuns = prawnFileRuns;
     }
 
-    public void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
-        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
+    public double getPlottedMean() {
+        return plottedMean;
     }
 
     private class MouseClickEventHandler implements EventHandler<MouseEvent> {
@@ -662,10 +660,9 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
                 } else {
                     if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) != 0) {
                         massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(-1, leadingZoomingTrailing);
-                        indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-                        if (indexOfSelectedSpot > -1) {
-                            massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
-                        }
+                        int testIndex = indexOfSpotFromMouseX(mouseEvent.getX());
+                        indexOfSelectedSpot = (testIndex == indexOfSelectedSpot) ? -1 : testIndex;
+                        massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
                     }
                 }
             }

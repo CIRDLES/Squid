@@ -135,7 +135,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-
         setupMassStationDetailsListViews();
         setupMassDeltas();
 
@@ -162,6 +161,21 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         calculateCountOfScansCumulative();
 
         zoomScrollBar.setValue(zoomedStart);
+        zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                int delta = (new_val.intValue() - old_val.intValue());
+                if (delta < 0) {
+                    zoomedStart = ((zoomedStart + delta) > 1) ? (zoomedStart + delta) : 1;
+                    zoomedEnd = zoomedStart + zoomedWidth - 1;
+                } else {
+                    zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
+                    zoomedStart = zoomedEnd - zoomedWidth + 1;
+                }
+                updateAllMassesCanvases();
+            }
+        });
+
         displayMassStationsForReview();
         zoomScrollBar.prefWidthProperty().bind(rightScrollPane.widthProperty());
 
@@ -748,22 +762,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         zoomScrollBar.setUnitIncrement(2);
         zoomScrollBar.setBlockIncrement(4);
         zoomScrollBar.setVisibleAmount(20);
-
-        zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                int delta = (new_val.intValue() - old_val.intValue());
-                if (delta < 0) {
-                    zoomedStart = ((zoomedStart + delta) > 1) ? (zoomedStart + delta) : 1;
-                    zoomedEnd = zoomedStart + zoomedWidth - 1;
-                } else {
-                    zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
-                    zoomedStart = zoomedEnd - zoomedWidth + 1;
-                }
-                updateAllMassesCanvases();
-            }
-        });
-
+        
         int massCounter = 0;
         for (MassStationDetail entry : viewedAsGraphMassStations) {
             if (countsRadioButtonChoice == 0) {

@@ -54,6 +54,8 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private final MassAuditRefreshInterface massAuditRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
     private final int countsRadioButtonChoice;
+    // -1, 0, 1
+    private final int leadingZoomingTrailing;
     private List<Double> totalCounts;
     private List<Double> totalCountsSBM;
     private List<Double> timesOfMeasuredTrimMasses;
@@ -67,7 +69,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private String plotTitle = "NONE";
     private int[] scanIndices;
     private int[] runIndices;
-//    private int indexOfSelectedSpot;
+    //    private int indexOfSelectedSpot;
 //    private int indexOfSecondSelectedSpotForMultiSelect;
     private List<Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
@@ -75,9 +77,6 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
-
-    // -1, 0, 1
-    private final int leadingZoomingTrailing;
     private double controlMinY = 0;
     private double controlMaxY = 0;
     private double controlMinYII = 0;
@@ -131,7 +130,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
         this.showspotLabels = showSpotLabels;
         this.massAuditRefreshInterface = massAuditRefreshInterface;
         this.leadingZoomingTrailing = leadingZoomingTrailing;
-        this.controlMinY =controlMinY;
+        this.controlMinY = controlMinY;
         this.controlMaxY = controlMaxY;
         this.controlMinYII = controlMinYII;
         this.controlMaxYII = controlMaxYII;
@@ -603,7 +602,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
      *                                                indexOfSecondSelectedSpotForMultiSelect to set
      */
     public void setIndexOfSecondSelectedSpotForMultiSelect(int indexOfSecondSelectedSpotForMultiSelect) {
-        this.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
+        AbstractDataView.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
     }
 
     /**
@@ -752,10 +751,9 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
                 } else {
                     if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) != 0) {
                         massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(-1, leadingZoomingTrailing);
-                        indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-                        if (indexOfSelectedSpot > -1) {
-                            massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
-                        }
+                        int testIndex = indexOfSpotFromMouseX(mouseEvent.getX());
+                        indexOfSelectedSpot = (testIndex == indexOfSelectedSpot) ? -1 : testIndex;
+                        massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
                     }
                 }
             }
