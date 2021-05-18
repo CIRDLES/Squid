@@ -28,6 +28,8 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
 import java.net.URL;
@@ -89,7 +91,6 @@ public class SessionAuditController implements Initializable {
         delimiterComboBox.setItems(delimitersList);
         // set value before adding listener
         delimiterComboBox.getSelectionModel().select(sampleNameDelimiter);
-
         delimiterComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             public void changed(ObservableValue<? extends String> ov,
                                 final String oldvalue, final String newvalue) {
@@ -99,13 +100,18 @@ public class SessionAuditController implements Initializable {
         });
 
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
-
     }
 
     private void updateDelimiterChoice() {
         squidProject.setDelimiterForUnknownNames(sampleNameDelimiter);
         squidProject.updateFiltersForUnknownNames(new HashMap<>());
         squidProject.divideSamples();
+        if (SquidProject.sampleNamingNotStandard) {
+            SquidMessageDialog.showWarningDialog(
+                    "The sample names are not consistent with the choice of delimiter: \"" + sampleNameDelimiter + "\"",
+                    primaryStageWindow);
+            SquidProject.sampleNamingNotStandard = false;
+        }
         squidProject.getTask().setChanged(true);
         setUpPrawnAuditTreeView(false);
         refreshView();
