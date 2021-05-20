@@ -149,6 +149,20 @@ public class TaskManagerController implements Initializable {
         menuItemTaskViewer.fire();
     }
 
+    class MyConverter extends StringConverter<Double> {
+
+        @Override
+        public String toString(Double object) {
+            return object + "";
+        }
+
+        @Override
+        public Double fromString(String string) {
+            return Double.parseDouble(string);
+        }
+
+    }
+
     /**
      * @param expressionName
      * @param expressionString
@@ -159,8 +173,8 @@ public class TaskManagerController implements Initializable {
     }
 
     private void updateDirectiveButtons() {
-        taskManagerGridPane.lookup("#232").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
-        taskManagerGridPane.lookup("#direct").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives() {
@@ -171,7 +185,7 @@ public class TaskManagerController implements Initializable {
             ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         } catch (Exception e) {
         }
-        ((RadioButton) taskManagerGridPane.lookup("#" + (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
         boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
@@ -198,7 +212,7 @@ public class TaskManagerController implements Initializable {
                 + (makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
-        Expression thU = task.getExpressionByName(TH_U_EXP_DEFAULT);
+        Expression thU = task.getExpressionByName(TH_U_EXP_RM);
         String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
         th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
 
@@ -264,19 +278,5 @@ public class TaskManagerController implements Initializable {
         task.applyDirectives();
         populateDirectives();
         taskAuditTextArea.setText(task.printTaskAudit());
-    }
-
-    class MyConverter extends StringConverter<Double> {
-
-        @Override
-        public String toString(Double object) {
-            return object + "";
-        }
-
-        @Override
-        public Double fromString(String string) {
-            return Double.parseDouble(string);
-        }
-
     }
 }
