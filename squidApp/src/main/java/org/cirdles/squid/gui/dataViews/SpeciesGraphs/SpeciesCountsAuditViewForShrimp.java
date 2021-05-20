@@ -54,6 +54,8 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private final MassAuditRefreshInterface massAuditRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
     private final int countsRadioButtonChoice;
+    // -1, 0, 1
+    private final int leadingZoomingTrailing;
     private List<Double> totalCounts;
     private List<Double> totalCountsSBM;
     private List<Double> timesOfMeasuredTrimMasses;
@@ -67,17 +69,12 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private String plotTitle = "NONE";
     private int[] scanIndices;
     private int[] runIndices;
-//    private int indexOfSelectedSpot;
-//    private int indexOfSecondSelectedSpotForMultiSelect;
-    private List<Run> selectedRuns = new ArrayList<>();
+//    private List<Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
     private Menu spotRestoreMenu;
     private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
-
-    // -1, 0, 1
-    private final int leadingZoomingTrailing;
     private double controlMinY = 0;
     private double controlMaxY = 0;
     private double controlMinYII = 0;
@@ -131,13 +128,10 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
         this.showspotLabels = showSpotLabels;
         this.massAuditRefreshInterface = massAuditRefreshInterface;
         this.leadingZoomingTrailing = leadingZoomingTrailing;
-        this.controlMinY =controlMinY;
+        this.controlMinY = controlMinY;
         this.controlMaxY = controlMaxY;
         this.controlMinYII = controlMinYII;
         this.controlMaxYII = controlMaxYII;
-
-//        this.indexOfSelectedSpot = -1;
-//        this.indexOfSecondSelectedSpotForMultiSelect = -1;
 
         setOpacity(1.0);
 
@@ -345,16 +339,10 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
             // selection rectangle and labels
             g2d.setFill(Paint.valueOf("BLACK"));
             g2d.setFont(Font.font("SansSerif", 12));
-            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
-            if (secondIndex == -1) {
-                secondIndex = indexOfSelectedSpot;
-            }
-            if (indexOfSelectedSpot >= 0 && leadingZoomingTrailing == 0) {
-                boolean increasing = (secondIndex >= indexOfSelectedSpot);
-                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
-                     index <= (increasing ? secondIndex : indexOfSelectedSpot);
-                     index++) {
 
+            if (indexOfSelectedSpot >= 0 && leadingZoomingTrailing == 0) {
+                for (int i = 0; i < listOfSelectedIndices.size(); i++) {
+                    int index = listOfSelectedIndices.get(i);
                     // gray spot(s) rectangle
                     g2d.setFill(Color.rgb(0, 0, 0, 0.1));
                     g2d.fillRect(
@@ -363,16 +351,9 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
                             StrictMath.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index + 1] - 1])
                                     - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]])) + 4f,
                             height);
-                }
-                // label spots
-                if (!showspotLabels && leadingZoomingTrailing == 0) {
-                    showSpotLabelOnGraph(g2d, indexOfSelectedSpot);
-                    if (secondIndex != indexOfSelectedSpot) {
-                        showSpotLabelOnGraph(g2d, secondIndex);
-                    }
+                    showSpotLabelOnGraph(g2d, index);
                 }
             }
-
 
             // show totalCounts
             if ((countsRadioButtonChoice & 0b10) > 0) {
@@ -603,7 +584,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
      *                                                indexOfSecondSelectedSpotForMultiSelect to set
      */
     public void setIndexOfSecondSelectedSpotForMultiSelect(int indexOfSecondSelectedSpotForMultiSelect) {
-        this.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
+        AbstractDataView.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
     }
 
     /**
@@ -690,19 +671,47 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
         @Override
         public void handle(MouseEvent mouseEvent) {
             spotContextMenu.hide();
-            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
-            if (secondIndex == -1) {
-                secondIndex = indexOfSelectedSpot;
-            }
-            selectedRuns = new ArrayList<>();
-            if (indexOfSelectedSpot >= 0) {
-                boolean increasing = (secondIndex >= indexOfSelectedSpot);
-                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
-                     index <= (increasing ? secondIndex : indexOfSelectedSpot);
-                     index++) {
-                    selectedRuns.add(prawnFileRuns.get(index));
+
+            // new logic may 2021 to allow for multiple selections +++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // determine if left click or with cmd or with shift
+            boolean isShift = mouseEvent.isShiftDown();
+            boolean isControl = mouseEvent.isControlDown() || mouseEvent.isMetaDown();
+            boolean isPrimary = mouseEvent.getButton().compareTo(MouseButton.PRIMARY) == 0;
+
+            // shift wipes out singletons
+            int currentSelection = indexOfSpotFromMouseX(mouseEvent.getX());
+            if (isPrimary) {
+                if (!isShift && !isControl) {
+                    indexOfSelectedSpot = currentSelection;
+                    listOfSelectedIndices.clear();
+                    listOfSelectedIndices.add(currentSelection);
+                    selectedRuns.clear();
+                    selectedRuns.add(prawnFileRuns.get(currentSelection));
+                } else if (isControl) {
+                    indexOfSelectedSpot = currentSelection;
+                    if (listOfSelectedIndices.contains(currentSelection)) {
+                        listOfSelectedIndices.remove((Integer) currentSelection);
+                        selectedRuns.remove(prawnFileRuns.get(currentSelection));
+                    } else {
+                        listOfSelectedIndices.add(currentSelection);
+                        selectedRuns.add(prawnFileRuns.get(currentSelection));
+                    }
+                } else { // isShift to nearest neighbor incl
+                    selectedRuns = new ArrayList<>();
+                    listOfSelectedIndices.clear();
+                    if (indexOfSelectedSpot >= 0) {
+                        boolean increasing = (currentSelection >= indexOfSelectedSpot);
+                        for (int index = (increasing ? indexOfSelectedSpot : currentSelection);
+                             index <= (increasing ? currentSelection : indexOfSelectedSpot);
+                             index++) {
+                            listOfSelectedIndices.add(index);
+                            selectedRuns.add(prawnFileRuns.get(index));
+                        }
+                    }
                 }
             }
+            massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+
             if (selectedRuns.size() > 1) {
                 spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
             } else {
@@ -741,23 +750,6 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
 
                 spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
                         mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
-            } else {
-
-                if ((indexOfSelectedSpot > -1) && (mouseEvent.isShiftDown())) {
-                    // multi-selection
-                    indexOfSecondSelectedSpotForMultiSelect = indexOfSpotFromMouseX(mouseEvent.getX());
-                    if (indexOfSecondSelectedSpotForMultiSelect > -1) {
-                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(indexOfSecondSelectedSpotForMultiSelect, leadingZoomingTrailing);
-                    }
-                } else {
-                    if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) != 0) {
-                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(-1, leadingZoomingTrailing);
-                        indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-                        if (indexOfSelectedSpot > -1) {
-                            massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
-                        }
-                    }
-                }
             }
         }
     }

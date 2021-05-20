@@ -23,8 +23,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.cirdles.squid.prawn.PrawnFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author James F. Bowring
@@ -37,6 +40,8 @@ public abstract class AbstractDataView extends Canvas {
     protected double height;
     protected static int indexOfSelectedSpot = -1;
     protected static int indexOfSecondSelectedSpotForMultiSelect = -1;
+    protected static List<Integer> listOfSelectedIndices = new ArrayList<>();
+    protected static  List<PrawnFile.Run> selectedRuns = new ArrayList<>();
 
     /**
      *
@@ -121,6 +126,18 @@ public abstract class AbstractDataView extends Canvas {
         graphHeight = (int) height - topMargin;
 
         this.ticsY = null;
+    }
+
+    public static List<Integer> getListOfSelectedIndices() {
+        return listOfSelectedIndices;
+    }
+
+    public static void setListOfSelectedIndices(List<Integer> listOfSelectedIndices) {
+        AbstractDataView.listOfSelectedIndices = listOfSelectedIndices;
+    }
+
+    public static void setSelectedRuns(List<PrawnFile.Run> selectedRuns) {
+        AbstractDataView.selectedRuns = selectedRuns;
     }
 
     /**

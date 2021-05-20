@@ -1,263 +1,377 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Point3D?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<HBox fx:id="spotManagerPane" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.SpotManagerController">
-   <children>
-      <SplitPane dividerPositions="0.4479166666666667" styleClass="backgroundCalamari" HBox.hgrow="ALWAYS">
-         <items>
-            <VBox minWidth="443.0" prefHeight="638.0" prefWidth="443.0">
-               <children>
-                  <HBox>
-                     <children>
-                        <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0" text="Task &gt; View, New, or Browse" translateX="25.0" />
-                     </children>
-                  </HBox>
-                  <VBox VBox.vgrow="ALWAYS">
-                     <children>
-                        <HBox prefHeight="28.0" prefWidth="480.0" spacing="30.0">
-                           <children>
-                              <Label prefHeight="25.0" prefWidth="249.0" style="-fx-font-family: SansSerif; -fx-font-size: 15; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Filter Spots by Sample name:" />
-                              <ComboBox fx:id="sampleNameComboBox" prefHeight="27.0" prefWidth="133.0" promptText="Sample Name" />
-                              <Label fx:id="spotsShownLabel" minWidth="115.0" prefHeight="23.0" prefWidth="115.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown" />
-                           </children>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="spotManagerPane" minHeight="660.0" minWidth="1250.0" prefHeight="660.0"
+      prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css"
+      xmlns="http://javafx.com/javafx/8.0.171" fx:controller="org.cirdles.squid.gui.SpotManagerController">
+    <children>
+        <SplitPane dividerPositions="0.4479166666666667" styleClass="backgroundCalamari" HBox.hgrow="ALWAYS">
+            <items>
+                <VBox minWidth="443.0" prefHeight="638.0" prefWidth="443.0">
+                    <children>
+                        <HBox>
+                            <children>
+                                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="488.0"
+                                       text="Task &gt; View, New, or Browse" translateX="25.0"/>
+                            </children>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" maxHeight="2.0" minHeight="2.0" prefHeight="2.0" prefWidth="216.0" spacing="5.0" visible="false" VBox.vgrow="NEVER">
-                           <children>
-                              <Label minWidth="213.0" prefHeight="28.0" prefWidth="241.0" style="-fx-font-size: 15;" text="Filter Spots by typing spot prefix:" visible="false" />
-                              <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased" prefHeight="27.0" prefWidth="144.0" promptText="type here" visible="false" HBox.hgrow="ALWAYS" />
-                           </children>
+                        <VBox VBox.vgrow="ALWAYS">
+                            <children>
+                                <HBox prefHeight="28.0" prefWidth="480.0" spacing="30.0">
+                                    <children>
+                                        <Label prefHeight="25.0" prefWidth="249.0"
+                                               style="-fx-font-family: SansSerif; -fx-font-size: 15; -fx-text-fill: #c53d13; -fx-font-weight: bold;"
+                                               text="Filter Spots by Sample name:"/>
+                                        <ComboBox fx:id="sampleNameComboBox" prefHeight="27.0" prefWidth="161.0"
+                                                  promptText="Sample Name"/>
+                                        <Label fx:id="spotsShownLabel" minWidth="115.0" prefHeight="23.0"
+                                               prefWidth="115.0" style="-fx-font-size: 12;" text=" : 1000/1000 shown"/>
+                                    </children>
+                                </HBox>
+                                <HBox alignment="CENTER_LEFT" maxHeight="2.0" minHeight="2.0" prefHeight="2.0"
+                                      prefWidth="216.0" spacing="5.0" visible="false" VBox.vgrow="NEVER">
+                                    <children>
+                                        <Label minWidth="213.0" prefHeight="28.0" prefWidth="241.0"
+                                               style="-fx-font-size: 15;" text="Filter Spots by typing spot prefix:"
+                                               visible="false"/>
+                                        <TextField fx:id="filterSpotNameText" onKeyReleased="#filterSpotNameKeyReleased"
+                                                   prefHeight="27.0" prefWidth="144.0" promptText="type here"
+                                                   visible="false" HBox.hgrow="ALWAYS"/>
+                                    </children>
+                                </HBox>
+                                <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label"/>
+                                <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
+                                    <tooltip>
+                                        <Tooltip text="Right-click selected spot(s) for removal menu."/>
+                                    </tooltip>
+                                    <rotationAxis>
+                                        <Point3D/>
+                                    </rotationAxis>
+                                </ListView>
+                                <Label style="-fx-font-size: 11;"
+                                       text="Hint: To remove a spot or split session, right mouse-click on spot for menu."/>
+                                <HBox spacing="5.0">
+                                    <children>
+                                        <Label prefHeight="29.0" prefWidth="109.0"
+                                               style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #c53d13;"
+                                               text="Edit Spot Name:"/>
+                                        <TextField fx:id="selectedSpotNameText" prefHeight="27.0" prefWidth="149.0"
+                                                   promptText="no spot selected" HBox.hgrow="ALWAYS"/>
+                                        <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0"
+                                                mnemonicParsing="false" onAction="#saveSpotNameAction"
+                                                text="Save Name"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                            <VBox.margin>
+                                <Insets/>
+                            </VBox.margin>
+                            <padding>
+                                <Insets left="20.0" right="10.0" top="5.0"/>
+                            </padding>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="5.0" right="5.0" top="5.0"/>
+                    </padding>
+                </VBox>
+                <SplitPane fx:id="refMatSplitPane" dividerPositions="0.5167130919220055" orientation="VERTICAL"
+                           prefHeight="631.0" prefWidth="637.0">
+                    <items>
+                        <HBox fx:id="refMatChooserHBox" prefHeight="225.0" prefWidth="635.0"
+                              style="-fx-border-color: black;">
+                            <children>
+                                <VBox prefHeight="533.0" prefWidth="375.0">
+                                    <children>
+                                        <Label text="Isotopic Reference Material (RM) Spots:">
+                                            <VBox.margin>
+                                                <Insets left="5.0"/>
+                                            </VBox.margin>
+                                        </Label>
+                                        <VBox prefHeight="148.0" prefWidth="373.0" VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="rmCountLabel" style="-fx-font-weight: bold;"
+                                                               text="nnn" textAlignment="CENTER"/>
+                                                        <Label style="-fx-font-size: 15;"
+                                                               text="RM Spots selected using filter: "/>
+                                                        <Label fx:id="rmFilterLabel" prefHeight="28.0"
+                                                               style="-fx-font-weight: bold;" text="filter"/>
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="headerLabelRefMat" style="-fx-font-size: 12;"
+                                                       text="Header label"/>
+                                                <ListView fx:id="shrimpRefMatList" prefHeight="50.0" prefWidth="343.0"
+                                                          VBox.vgrow="ALWAYS"/>
+                                                <VBox alignment="TOP_CENTER">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 11;"
+                                                               text="Hint: To clear the list, right mouse-click on it anywhere for menu."/>
+                                                        <Button fx:id="setFilteredSpotsAsRefMatButton" minWidth="248.0"
+                                                                mnemonicParsing="false"
+                                                                onAction="#setFilteredSpotsToRefMatAction"
+                                                                prefHeight="31.0" prefWidth="297.0"
+                                                                text="Copy Filtered Spots to RM Spots."
+                                                                textOverrun="CLIP" VBox.vgrow="ALWAYS">
+                                                            <padding>
+                                                                <Insets bottom="10.0" left="10.0" right="10.0"
+                                                                        top="10.0"/>
+                                                            </padding>
+                                                        </Button>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets/>
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets left="15.0" right="15.0"/>
+                                            </padding>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                                <GridPane prefHeight="367.0" prefWidth="300.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0"
+                                                           prefWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0"
+                                                           prefWidth="139.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0"
+                                                           prefWidth="10.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0"
+                                                           prefWidth="93.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="32.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="120.0" minHeight="28.0" prefHeight="28.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="288.0" minHeight="10.0" prefHeight="10.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="107.0"
+                                                        vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label style="-fx-text-fill: #c53d13; -fx-font-family: SansSerif; -fx-font-size: 15; -fx-font-weight: bold;"
+                                               text="Select Isotopic RM Model:" GridPane.columnIndex="1"
+                                               GridPane.columnSpan="2147483647"/>
+                                        <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0"
+                                                  promptText="Reference Material Model" GridPane.columnIndex="1"
+                                                  GridPane.columnSpan="2147483647" GridPane.rowIndex="1"/>
+                                        <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0"
+                                               style="-fx-font-size: 12;" text="206Pb/238U date (Ma):"
+                                               textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                        <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0"
+                                               style="-fx-font-size: 12;" text="207Pb/206Pb date (Ma):"
+                                               textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                        <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0"
+                                               style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):"
+                                               textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                                        <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="141.0" prefHeight="28.0"
+                                               prefWidth="139.0" style="-fx-font-size: 12;" text="238U/235U (nat abun):"
+                                               textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                            <GridPane.margin>
+                                                <Insets top="5.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+                                              GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                                              GridPane.rowIndex="8">
+                                            <children>
+                                                <Button minWidth="172.0" mnemonicParsing="false"
+                                                        onAction="#viewRMmodelButton" prefWidth="172.0"
+                                                        text="Manage RM Model"/>
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0"
+                                               style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;"
+                                               text="0" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                                        <Label fx:id="pb207Pb206AgeLabel" prefHeight="31.0" prefWidth="104.0"
+                                               style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;"
+                                               text="0" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                                        <Label fx:id="pb208Th232AgeLabel" prefHeight="31.0" prefWidth="106.0"
+                                               style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;"
+                                               text="0" GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+                                              GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                                              GridPane.rowIndex="9">
+                                            <children>
+                                                <Button minWidth="172.0" mnemonicParsing="false"
+                                                        onAction="#refreshRMmodelButton" prefWidth="172.0"
+                                                        text="Refresh RM Model" visible="false"/>
+                                            </children>
+                                        </HBox>
+                                        <Label fx:id="u238u235NatAbunLabel" layoutX="168.0" layoutY="140.0"
+                                               prefHeight="31.0" prefWidth="106.0"
+                                               style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;"
+                                               text="0" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                            <GridPane.margin>
+                                                <Insets top="5.0"/>
+                                            </GridPane.margin>
+                                        </Label>
+                                        <Label fx:id="defaultValueLabel" layoutX="168.0" layoutY="170.0"
+                                               prefHeight="31.0" prefWidth="106.0"
+                                               style="-fx-font-size: 8; -fx-font-weight: bold; -fx-font-family: monospaced; -fx-text-fill: red;"
+                                               text="   (Default value)" GridPane.columnIndex="3"
+                                               GridPane.rowIndex="7"/>
+                                    </children>
+                                </GridPane>
+                            </children>
+                            <padding>
+                                <Insets top="5.0"/>
+                            </padding>
                         </HBox>
-                        <Label fx:id="headerLabel" style="-fx-font-size: 12;" text="Header label" />
-                        <ListView fx:id="shrimpFractionList" VBox.vgrow="ALWAYS">
-                           <tooltip>
-                              <Tooltip text="Right-click selected spot(s) for removal menu." />
-                           </tooltip>
-                           <rotationAxis>
-                              <Point3D />
-                           </rotationAxis>
-                        </ListView>
-                        <Label style="-fx-font-size: 11;" text="Hint: To remove a spot or split session, right mouse-click on spot for menu." />
-                        <HBox spacing="5.0">
-                           <children>
-                              <Label prefHeight="29.0" prefWidth="109.0" style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #c53d13;" text="Edit Spot Name:" />
-                              <TextField fx:id="selectedSpotNameText" prefHeight="27.0" prefWidth="149.0" promptText="no spot selected" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="saveSpotNameButton" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#saveSpotNameAction" text="Save Name" />
-                           </children>
+                        <HBox prefHeight="322.0" prefWidth="635.0"
+                              style="-fx-border-color: green; -fx-border-width: 1px;">
+                            <children>
+                                <VBox prefWidth="375.0">
+                                    <children>
+                                        <Label text="Concentration Reference Material (CRM) Spots:">
+                                            <VBox.margin>
+                                                <Insets left="5.0"/>
+                                            </VBox.margin>
+                                        </Label>
+                                        <VBox VBox.vgrow="ALWAYS">
+                                            <children>
+                                                <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                    <children>
+                                                        <Label fx:id="concrmCountLabel" style="-fx-font-weight: bold;"
+                                                               text="nnn" textAlignment="CENTER"/>
+                                                        <Label prefHeight="28.0" style="-fx-font-size: 15;"
+                                                               text="CRM Spots selected using filter: "/>
+                                                        <Label fx:id="concrmFilterLabel" prefHeight="28.0"
+                                                               style="-fx-font-weight: bold;" text="filter"/>
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="headerLabelConcRefMat" style="-fx-font-size: 12;"
+                                                       text="Header label"/>
+                                                <ListView fx:id="shrimpConcentrationRefMatList" prefHeight="136.0"
+                                                          prefWidth="352.0" VBox.vgrow="ALWAYS"/>
+                                                <VBox alignment="TOP_CENTER">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 11;"
+                                                               text="Hint: To clear the list, right mouse-click on it anywhere for menu."/>
+                                                        <Button fx:id="setFilteredSpotsAsConcRefMatButton"
+                                                                minWidth="289.0" mnemonicParsing="false"
+                                                                onAction="#setFilteredSpotsToConcRefMatAction"
+                                                                prefHeight="31.0" prefWidth="289.0"
+                                                                text="Copy Filtered Spots to CRM spots."
+                                                                VBox.vgrow="ALWAYS"/>
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets/>
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets left="15.0" right="15.0"/>
+                                            </padding>
+                                            <rotationAxis>
+                                                <Point3D/>
+                                            </rotationAxis>
+                                        </VBox>
+                                    </children>
+                                </VBox>
+                                <VBox>
+                                    <children>
+                                        <GridPane prefWidth="300.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0"
+                                                                   prefWidth="10.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0"
+                                                                   prefWidth="112.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0"
+                                                                   prefWidth="10.0"/>
+                                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0"
+                                                                   prefWidth="120.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="288.0" minHeight="10.0" prefHeight="10.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0"
+                                                                vgrow="SOMETIMES"/>
+                                                <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="172.0"
+                                                                vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <children>
+                                                <Label style="-fx-text-fill: #c53d13; -fx-font-family: SansSerif; -fx-font-size: 15; -fx-font-weight: bold;"
+                                                       text="Select  CRM Model:" GridPane.columnIndex="1"
+                                                       GridPane.columnSpan="2147483647"/>
+                                                <ComboBox fx:id="concRefMatModelComboBox" prefHeight="27.0"
+                                                          prefWidth="325.0" promptText="Concentration RM Model"
+                                                          GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                                                          GridPane.rowIndex="1"/>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0"
+                                                       style="-fx-font-size: 12;" text="U (ppm):"
+                                                       GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                                <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0"
+                                                       style="-fx-font-size: 12;" text="Th (ppm):"
+                                                       GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                                <Label fx:id="uPpmLabel" prefHeight="23.0" prefWidth="105.0"
+                                                       style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;"
+                                                       text="0" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                                                <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0"
+                                                       style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;"
+                                                       text="0" GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                                                <HBox alignment="CENTER" GridPane.columnIndex="1"
+                                                      GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+                                                    <children>
+                                                        <Button minWidth="183.0" mnemonicParsing="false"
+                                                                onAction="#viewCMmodelButton" prefWidth="183.0"
+                                                                text="Manage CRM Model"/>
+                                                    </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0"
+                                                      GridPane.columnIndex="1" GridPane.columnSpan="2147483647"
+                                                      GridPane.rowIndex="6">
+                                                    <children>
+                                                        <Button minWidth="183.0" mnemonicParsing="false"
+                                                                onAction="#refreshRMmodelButton" prefWidth="183.0"
+                                                                text="Refresh CRM Model" visible="false"/>
+                                                    </children>
+                                                </HBox>
+                                            </children>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0"/>
+                            </padding>
                         </HBox>
-                     </children>
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin>
-                     <padding>
-                        <Insets left="20.0" right="10.0" top="5.0" />
-                     </padding>
-                  </VBox>
-               </children>
-               <padding>
-                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </VBox>
-            <SplitPane fx:id="refMatSplitPane" dividerPositions="0.5167130919220055" orientation="VERTICAL" prefHeight="631.0" prefWidth="637.0">
-               <items>
-                  <HBox fx:id="refMatChooserHBox" prefHeight="225.0" prefWidth="635.0" style="-fx-border-color: black;">
-                     <children>
-                        <VBox prefHeight="533.0" prefWidth="375.0">
-                           <children>
-                              <Label text="Isotopic Reference Material (RM) Spots:">
-                                 <VBox.margin>
-                                    <Insets left="5.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <VBox prefHeight="148.0" prefWidth="373.0" VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <children>
-                                          <Label fx:id="rmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                                          <Label style="-fx-font-size: 15;" text="RM Spots selected using filter: " />
-                                          <Label fx:id="rmFilterLabel" prefHeight="28.0" style="-fx-font-weight: bold;" text="filter" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="headerLabelRefMat" style="-fx-font-size: 12;" text="Header label" />
-                                    <ListView fx:id="shrimpRefMatList" prefHeight="50.0" prefWidth="343.0" VBox.vgrow="ALWAYS" />
-                                    <VBox alignment="TOP_CENTER">
-                                       <children>
-                                          <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
-                                          <Button fx:id="setFilteredSpotsAsRefMatButton" minWidth="248.0" mnemonicParsing="false" onAction="#setFilteredSpotsToRefMatAction" prefHeight="31.0" prefWidth="297.0" text="Copy Filtered Spots to RM Spots." textOverrun="CLIP" VBox.vgrow="ALWAYS">
-                                             <padding>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </padding>
-                                          </Button>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets left="15.0" right="15.0" />
-                                 </padding>
-                              </VBox>
-                           </children>
-                        </VBox>
-                        <GridPane prefHeight="367.0" prefWidth="300.0">
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="10.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="139.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="10.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="93.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                              <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="120.0" minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="288.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="10.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label style="-fx-text-fill: #c53d13; -fx-font-family: SansSerif; -fx-font-size: 15; -fx-font-weight: bold;" text="Select Isotopic RM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
-                              <ComboBox fx:id="refMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Reference Material Model" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="206Pb/238U date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="207Pb/206Pb date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                              <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="208Pb/232Th date (Ma):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                              <Label alignment="CENTER_RIGHT" layoutX="20.0" layoutY="141.0" prefHeight="28.0" prefWidth="139.0" style="-fx-font-size: 12;" text="238U/235U (nat abun):" textAlignment="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets top="5.0" />
-                                 </GridPane.margin></Label>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
-                                 <children>
-                                  <Button minWidth="172.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="172.0" text="Manage RM Model" />
-                                 </children>
-                              </HBox>
-                              <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                              <Label fx:id="pb207Pb206AgeLabel" prefHeight="31.0" prefWidth="104.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                              <Label fx:id="pb208Th232AgeLabel" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
-                                 <children>
-                                    <Button minWidth="172.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="172.0" text="Refresh RM Model" visible="false" />
-                                 </children>
-                              </HBox>
-                              <Label fx:id="u238u235NatAbunLabel" layoutX="168.0" layoutY="140.0" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6">
-                                 <GridPane.margin>
-                                    <Insets top="5.0" />
-                                 </GridPane.margin></Label>
-                              <Label fx:id="defaultValueLabel" layoutX="168.0" layoutY="170.0" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 8; -fx-font-weight: bold; -fx-font-family: monospaced; -fx-text-fill: red;" text="   (Default value)" GridPane.columnIndex="3" GridPane.rowIndex="7" />
-                           </children>
-                        </GridPane>
-                     </children>
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
-                  </HBox>
-                  <HBox prefHeight="322.0" prefWidth="635.0" style="-fx-border-color: green; -fx-border-width: 1px;">
-                     <children>
-                        <VBox prefWidth="375.0">
-                           <children>
-                              <Label text="Concentration Reference Material (CRM) Spots:">
-                                 <VBox.margin>
-                                    <Insets left="5.0" />
-                                 </VBox.margin>
-                              </Label>
-                              <VBox VBox.vgrow="ALWAYS">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" spacing="10.0">
-                                       <children>
-                                          <Label fx:id="concrmCountLabel" style="-fx-font-weight: bold;" text="nnn" textAlignment="CENTER" />
-                                          <Label prefHeight="28.0" style="-fx-font-size: 15;" text="CRM Spots selected using filter: " />
-                                          <Label fx:id="concrmFilterLabel" prefHeight="28.0" style="-fx-font-weight: bold;" text="filter" />
-                                       </children>
-                                    </HBox>
-                                    <Label fx:id="headerLabelConcRefMat" style="-fx-font-size: 12;" text="Header label" />
-                                    <ListView fx:id="shrimpConcentrationRefMatList" prefHeight="136.0" prefWidth="352.0" VBox.vgrow="ALWAYS" />
-                                    <VBox alignment="TOP_CENTER">
-                                       <children>
-                                          <Label style="-fx-font-size: 11;" text="Hint: To clear the list, right mouse-click on it anywhere for menu." />
-                                          <Button fx:id="setFilteredSpotsAsConcRefMatButton" minWidth="289.0" mnemonicParsing="false" onAction="#setFilteredSpotsToConcRefMatAction" prefHeight="31.0" prefWidth="289.0" text="Copy Filtered Spots to CRM spots." VBox.vgrow="ALWAYS" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets left="15.0" right="15.0" />
-                                 </padding>
-                                 <rotationAxis>
-                                    <Point3D />
-                                 </rotationAxis>
-                              </VBox>
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <GridPane prefWidth="300.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="159.0" minWidth="10.0" prefWidth="112.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="10.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="120.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="120.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="288.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="288.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="172.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="172.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <Label style="-fx-text-fill: #c53d13; -fx-font-family: SansSerif; -fx-font-size: 15; -fx-font-weight: bold;" text="Select  CRM Model:" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" />
-                                    <ComboBox fx:id="concRefMatModelComboBox" prefHeight="27.0" prefWidth="325.0" promptText="Concentration RM Model" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0" style="-fx-font-size: 12;" text="U (ppm):" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="135.0" style="-fx-font-size: 12;" text="Th (ppm):" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Label fx:id="uPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                                    <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                                    <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-                                       <children>
-                                          <Button minWidth="183.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="183.0" text="Manage CRM Model" />
-                                       </children>
-                                    </HBox>
-                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
-                                       <children>
-                                          <Button minWidth="183.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="183.0" text="Refresh CRM Model" visible="false" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </GridPane>
-                           </children>
-                        </VBox>
-                     </children>
-                     <padding>
-                        <Insets bottom="5.0" />
-                     </padding>
-                  </HBox>
-               </items>
-            </SplitPane>
-         </items>
-         <HBox.margin>
-            <Insets />
-         </HBox.margin>
-      </SplitPane>
-   </children>
+                    </items>
+                </SplitPane>
+            </items>
+            <HBox.margin>
+                <Insets/>
+            </HBox.margin>
+        </SplitPane>
+    </children>
 </HBox>

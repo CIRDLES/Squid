@@ -20,7 +20,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskEditorController">
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskEditorController">
     <columnConstraints>
         <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
         <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
@@ -219,7 +219,7 @@
                   <Font size="11.0" />
                </font>
             </Text>
-            <Spinner fx:id="backgroundIndexSpinner" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" prefWidth="54.0" style="-fx-scale-y: 0.9; -fx-background-color: AQUAMARINE;" />
+            <Spinner fx:id="backgroundIndexSpinner" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="54.0" style="-fx-scale-y: 0.9; -fx-background-color: AQUAMARINE;" />
               <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click its oval in the displayed list." textAlignment="RIGHT" wrappingWidth="578.55224609375">
                   <font>
                       <Font size="11.0" />

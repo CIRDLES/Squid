@@ -172,7 +172,7 @@ public class SpotManagerController implements Initializable {
         setUpParametersModelsComboBoxes();
 
         try {
-            setUpDataFile();
+            setUpDataFile(false);
         } catch (SquidException squidException) {
         }
 
@@ -214,11 +214,13 @@ public class SpotManagerController implements Initializable {
         sampleNameComboBox.getSelectionModel().selectFirst();
     }
 
-    private void setUpDataFile() throws SquidException {
+    private void setUpDataFile(boolean doReprocess) throws SquidException {
 
-        // May 2021 fixes issue #618
-        squidProject.getTask().setChanged(true);
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(true);
+        if (doReprocess) {
+            // May 2021 fixes issue #618
+            squidProject.getTask().setChanged(true);
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(true);
+        }
 
         shrimpRuns = FXCollections.observableArrayList(squidProject.getPrawnFileRuns());
 
@@ -300,7 +302,7 @@ public class SpotManagerController implements Initializable {
             squidProject.removeRunsFromPrawnFile(selectedRuns);
 
             try {
-                setUpDataFile();
+                setUpDataFile(true);
             } catch (SquidException squidException) {
 
             }
@@ -396,8 +398,9 @@ public class SpotManagerController implements Initializable {
                     spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
                         squidProject.restoreAllRunsToPrawnFile();
+
                         try {
-                            setUpDataFile();
+                            setUpDataFile(true);
                         } catch (SquidException squidException) {
                             //TODO: need message here
                         }
@@ -411,7 +414,7 @@ public class SpotManagerController implements Initializable {
                         restoreSpotMenuItem.setOnAction((evt) -> {
                             squidProject.restoreRunToPrawnFile(run);
                             try {
-                                setUpDataFile();
+                                setUpDataFile(true);
                             } catch (SquidException squidException) {
                                 //TODO: need message here
                             }
@@ -658,22 +661,12 @@ public class SpotManagerController implements Initializable {
         refMatModelComboBox.getSelectionModel().clearSelection();
         refMatModelComboBox.getSelectionModel().select(squidProject.getReferenceMaterialModel());
         refMatModelComboBox.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-//        viewRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-//        viewRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
-//
-//        refreshRMmodelButton.setDisable(squidProject.getFilterForRefMatSpotNames().length() == 0);
-//        refreshRMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate());
     }
 
     private void updateViewCM() {
         concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
-        concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-//        viewCMmodelButton.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-//        viewCMmodelButton.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
-//
-//        refreshRMmodelButton2.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-//        refreshRMmodelButton2.setDisable(!((ReferenceMaterialModel) squidProject.getConcentrationReferenceMaterialModel()).hasAtLeastOneNonZeroConcentration());
+        concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);;
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {

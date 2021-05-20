@@ -38,4 +38,6 @@ public interface SpeciesGraphInterface {
     List<Integer> getIndicesOfScansAtMeasurementTimes();
 
     void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes);
+
+    public List<PrawnFile.Run> getPrawnFileRuns();
 }

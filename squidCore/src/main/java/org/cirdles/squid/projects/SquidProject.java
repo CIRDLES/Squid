@@ -17,7 +17,6 @@ package org.cirdles.squid.projects;
 
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
@@ -69,6 +68,7 @@ import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstant
 public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI, Squid3ProjectParametersAPI {
 
     private static final long serialVersionUID = 7099919411562934142L;
+    public static transient boolean sampleNamingNotStandard = false;
     private static boolean projectChanged;
     private transient SquidPrefixTree prefixTree;
     private PrawnXMLFileHandler prawnFileHandler;
@@ -85,23 +85,18 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     private String delimiterForUnknownNames;
     private ParametersModel referenceMaterialModel;
     private ParametersModel concentrationReferenceMaterialModel;
-
     //Spring 2020 adding parameters to project from task ***********************
     private ParametersModel physicalConstantsModel;
     private ParametersModel commonPbModel;
     private boolean squidAllowsAutoExclusionOfSpots;
-
     // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
     private double extPErrU;
-
     // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
     private double extPErrTh;
     private Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
     private boolean useSBM;
     private boolean userLinFits;
-
     private TaskTypeEnum projectType;
-
     // jan 2021 issue #547
     private List<Run> removedRuns;
 
@@ -477,42 +472,58 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * First guess using default delimiter
      */
     public void autoDivideSamples() {
-        if (task.getShrimpFractions().size() > 0) {
-            this.filtersForUnknownNames = new HashMap<>();
-            if (task.getShrimpFractions() != null) {
-                // July 2020 add in delimiter suggester
-                Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
-                // empirical observation that second fraction conforms to naming pattern more frequently than first
-                int firstIndex = (task.getShrimpFractions().size() > 1) ? 1 : 0;
-                Matcher matcher
-                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(firstIndex).getFractionID());
-                if (matcher.find()) {
-                    int s = matcher.start();
-                    delimiterForUnknownNames = task.getShrimpFractions().get(firstIndex).getFractionID().substring(s, s + 1);
-                }
-
-                boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
-                for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
-                    // determine flavor
-                    int delimiterIndex;
-                    if (delimiterIsNumber) {
-                        delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
-                    } else {
-                        delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
-                    }
-
-                    String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
-                            ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
-                    if (filtersForUnknownNames.containsKey(sampleName)) {
-                        filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
-                    } else {
-                        filtersForUnknownNames.put(sampleName, 1);
-                    }
-                }
-                task.setFiltersForUnknownNames(filtersForUnknownNames);
-                task.generateMapOfUnknownsBySampleNames();
-            }
+        this.filtersForUnknownNames = new HashMap<>();
+        String firstFractionID = prawnFile.getRun().get(0).getPar().get(0).getValue();
+        Matcher matcher
+                = Pattern.compile("[^a-zA-Z0-9]+").matcher(firstFractionID);
+        if (matcher.find()) {
+            int s = matcher.start();
+            delimiterForUnknownNames = firstFractionID.substring(s, s + 1);
         }
+        divideSamples();
+        if (sampleNamingNotStandard) {
+            sampleNamingNotStandard = false;
+            delimiterForUnknownNames = "1";
+            divideSamples();
+        }
+    }
+
+    public void divideSamples() {
+        boolean delimiterIsNumber = Squid3Constants.SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+
+        // May 2021 - previously this used fractions, but it is the runs that get
+        // updated when the names are edited and the fractions are redone later
+        List<Run> copyOfRuns = new ArrayList<>(prawnFile.getRun());
+        Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
+        Collections.sort(copyOfRuns, (Run pt1, Run pt2)
+                -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
+
+        for (int i = 0; i < copyOfRuns.size(); i++) {
+            String fractionID = copyOfRuns.get(i).getPar().get(0).getValue();
+
+            // determine flavor
+            int delimiterIndex;
+            if (delimiterIsNumber) {
+                delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+            } else {
+                delimiterIndex = fractionID.indexOf(delimiterForUnknownNames.trim());
+            }
+            // we have poor practice of missing delimiter or too few characters
+            sampleNamingNotStandard = sampleNamingNotStandard || ((delimiterIndex < 0) || (fractionID.length() < (delimiterIndex)));
+            String sampleName = ((delimiterIndex < 0) || (fractionID.length() < (delimiterIndex)))
+                    ? fractionID : fractionID
+                    .substring(0, (delimiterIndex <= fractionID.length() ? delimiterIndex : fractionID.length()))
+                    .toUpperCase(Locale.ENGLISH);
+            if (filtersForUnknownNames.containsKey(sampleName)) {
+                filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+            } else {
+                filtersForUnknownNames.put(sampleName, 1);
+            }
+
+        }
+        task.setDelimiterForUnknownNames(delimiterForUnknownNames);
+        task.setFiltersForUnknownNames(filtersForUnknownNames);
+        task.generateMapOfUnknownsBySampleNames();
     }
 
     // reports
@@ -660,7 +671,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * Helper method to prepare for reports by sample
      *
-     * @return
+     * @return List<ShrimpFractionExpressionInterface>
      */
     public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
