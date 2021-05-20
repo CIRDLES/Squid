@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.IOException;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -25,9 +24,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -35,7 +36,6 @@ import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
@@ -142,7 +142,7 @@ public class TaskManagerController implements Initializable {
             FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
         } catch (IOException iOException) {
         }
-        
+
         // refresh view
         MenuItem menuItemTaskViewer = ((MenuBar) SquidUI.primaryStage.getScene()
                 .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
@@ -212,7 +212,7 @@ public class TaskManagerController implements Initializable {
                 + (makeExpression(UNCOR208PB232TH_CALIB_CONST, UTh_Th_ExpressionString).amHealthy() ? HEALTHY_EXPRESSION_STYLE : UNHEALTHY_EXPRESSION_STYLE));
 
         th232U238Label.setText(TH_U_EXP_RM + ":");
-        Expression thU = task.getExpressionByName(TH_U_EXP_DEFAULT);
+        Expression thU = task.getExpressionByName(TH_U_EXP_RM);
         String thU_ExpressionString = (thU == null) ? TH_U_EXP_DEFAULT_EXPRESSION : thU.getExcelExpressionString();
         th232U238ExpressionLabel.setText((perm1 || perm3) ? thU_ExpressionString : "Not Used");
 

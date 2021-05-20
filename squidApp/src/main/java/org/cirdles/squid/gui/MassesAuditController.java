@@ -38,6 +38,7 @@ import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesAMUAuditViewForShrimp;
 import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesCountsAuditViewForShrimp;
 import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesGraphInterface;
+import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -92,7 +93,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     // 1-based counting of spots
     private int zoomedStart = 5;
-    private int zoomedWidth = 20;
+    private int zoomedWidth = 40;
     private int zoomedEnd = zoomedStart + zoomedWidth - 1;
 
     @FXML
@@ -135,7 +136,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-
         setupMassStationDetailsListViews();
         setupMassDeltas();
 
@@ -162,6 +162,22 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         calculateCountOfScansCumulative();
 
         zoomScrollBar.setValue(zoomedStart);
+        zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                int savedZoomedStart = zoomedStart;
+                int delta = (new_val.intValue() - old_val.intValue());
+                if (delta < 0) {
+                    zoomedStart = ((zoomedStart + delta) > 1) ? (zoomedStart + delta) : 1;
+                    zoomedEnd = zoomedStart + zoomedWidth - 1;
+                } else {
+                    zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
+                    zoomedStart = zoomedEnd - zoomedWidth + 1;
+                }
+                updateAllMassesCanvases(savedZoomedStart);
+            }
+        });
+
         displayMassStationsForReview();
         zoomScrollBar.prefWidthProperty().bind(rightScrollPane.widthProperty());
 
@@ -529,7 +545,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         ((AbstractDataView) spotsCanvas).repaint();
     }
 
-    private void updateAllMassesCanvases() {
+    private void updateAllMassesCanvases(int savedZoomedStart) {
         int endLeadingIndex = 0;
         int endZoomedIndex = 0;
         List<Integer> entry0 = ((SpeciesGraphInterface) legendGraphs.get(0)).getIndicesOfRunsAtMeasurementTimes();
@@ -584,6 +600,22 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     endLeadingIndex, endZoomedIndex, zoomedStart - 1, zoomedEnd);
             index += 1;
         }
+        // adjust selections
+        List<Integer> shiftedIndices = new ArrayList<>();
+        List<PrawnFile.Run> shiftedRuns = new ArrayList<>();
+        if (!((AbstractDataView)zoomingGraphs.get(0)).getListOfSelectedIndices().isEmpty()){
+            int shift = zoomedStart - savedZoomedStart;
+            Integer[] targetArray = ((AbstractDataView)zoomingGraphs.get(0)).getListOfSelectedIndices().toArray(new Integer[0]);
+
+            for (int i = 0; i < targetArray.length; i ++){
+                targetArray[i] -= shift;
+                if ((targetArray[i] >= 0) && (targetArray[i] < zoomedWidth)){
+                    shiftedIndices.add(targetArray[i]);
+                    shiftedRuns.add(((SpeciesGraphInterface)zoomingGraphs.get(0)).getPrawnFileRuns().get(targetArray[i]));
+                }
+            }
+        }
+        updateGraphsWithSelectedIndices(shiftedIndices, shiftedRuns,0);
 
         // trailing canvas
         int endTrailingIndex = ((SpeciesGraphInterface) legendGraphs.get(0)).getMeasuredTrimMasses().size();
@@ -749,21 +781,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         zoomScrollBar.setBlockIncrement(4);
         zoomScrollBar.setVisibleAmount(20);
 
-        zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                                Number old_val, Number new_val) {
-                int delta = (new_val.intValue() - old_val.intValue());
-                if (delta < 0) {
-                    zoomedStart = ((zoomedStart + delta) > 1) ? (zoomedStart + delta) : 1;
-                    zoomedEnd = zoomedStart + zoomedWidth - 1;
-                } else {
-                    zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
-                    zoomedStart = zoomedEnd - zoomedWidth + 1;
-                }
-                updateAllMassesCanvases();
-            }
-        });
-
         int massCounter = 0;
         for (MassStationDetail entry : viewedAsGraphMassStations) {
             if (countsRadioButtonChoice == 0) {
@@ -915,22 +932,23 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @Override
-    public void updateGraphsWithSecondSelectedIndex(int index, int leadingZoomingTrailing) {
+    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices, List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing) {
         List<AbstractDataView> activeGraphs = new ArrayList<>();
         switch (leadingZoomingTrailing) {
             case -1:
-                activeGraphs.addAll(leadingGraphs);
+               // activeGraphs.addAll(leadingGraphs);
                 break;
             case 0:
                 activeGraphs.addAll(zoomingGraphs);
                 break;
             case 1:
-                activeGraphs.addAll(trailingGraphs);
+              //  activeGraphs.addAll(trailingGraphs);
                 break;
         }
 
         for (int i = 0; i < activeGraphs.size(); i++) {
-            ((SpeciesGraphInterface) activeGraphs.get(i)).setIndexOfSecondSelectedSpotForMultiSelect(index);
+            activeGraphs.get(i).setListOfSelectedIndices(listOfSelectedSpotsIndices);
+            activeGraphs.get(i).setSelectedRuns(selectedRuns);
             activeGraphs.get(i).repaint();
         }
     }

@@ -15,24 +15,10 @@
  */
 package org.cirdles.squid.projects;
 
-import java.io.*;
-import java.nio.file.Path;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.xml.bind.JAXBException;
 import org.cirdles.squid.Squid;
-
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
-import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.op.OPFileHandler;
@@ -42,33 +28,49 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
-import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
-import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
-import org.xml.sax.SAXException;
-import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
-import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
-import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstantExpression;
+import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25Equation;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
+import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.xml.sax.SAXException;
+
+import javax.xml.bind.JAXBException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.nio.file.Path;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
+import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstantExpression;
 
 /**
- *
  * @author bowring
  */
 public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI, Squid3ProjectParametersAPI {
 
     private static final long serialVersionUID = 7099919411562934142L;
-
+    public static transient boolean sampleNamingNotStandard = false;
+    private static boolean projectChanged;
     private transient SquidPrefixTree prefixTree;
-
     private PrawnXMLFileHandler prawnFileHandler;
     private String projectName;
     private String analystName;
@@ -79,44 +81,26 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     private String filterForConcRefMatSpotNames;
     private double sessionDurationHours;
     private TaskInterface task;
-
     private Map<String, Integer> filtersForUnknownNames;
     private String delimiterForUnknownNames;
-
-    private static boolean projectChanged;
-
     private ParametersModel referenceMaterialModel;
     private ParametersModel concentrationReferenceMaterialModel;
-
     //Spring 2020 adding parameters to project from task ***********************
     private ParametersModel physicalConstantsModel;
     private ParametersModel commonPbModel;
     private boolean squidAllowsAutoExclusionOfSpots;
-
     // MIN_206PB238U_EXT_1SIGMA_ERR_PCT
     private double extPErrU;
-
     // MIN_208PB232TH_EXT_1SIGMA_ERR_PCT
     private double extPErrTh;
     private Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope;
     private boolean useSBM;
     private boolean userLinFits;
-
     private TaskTypeEnum projectType;
-
     // jan 2021 issue #547
     private List<Run> removedRuns;
 
-    @Override
-    public List<Run> getRemovedRuns() {
-        if (removedRuns == null) {
-            removedRuns = new ArrayList<>();
-        }
-        return removedRuns;
-    }
-
     /**
-     *
      * @param projectType the value of projectType
      */
     public SquidProject(TaskTypeEnum projectType) {
@@ -164,13 +148,40 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     /**
-     *
      * @param projectName the value of projectName
      * @param projectType the value of projectType
      */
     public SquidProject(String projectName, TaskTypeEnum projectType) {
         this(projectType);
         this.projectName = projectName;
+    }
+
+    public static String generateDateTimeMillisecondsStringForRun(Run run) {
+        return run.getSet().getPar().get(0).getValue()
+                + " " + run.getSet().getPar().get(1).getValue()
+                + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
+    }
+
+    /**
+     * @return the projectChanged
+     */
+    public static boolean isProjectChanged() {
+        return projectChanged;
+    }
+
+    /**
+     * @param aProjectChanged the projectChanged to set
+     */
+    public static void setProjectChanged(boolean aProjectChanged) {
+        projectChanged = aProjectChanged;
+    }
+
+    @Override
+    public List<Run> getRemovedRuns() {
+        if (removedRuns == null) {
+            removedRuns = new ArrayList<>();
+        }
+        return removedRuns;
     }
 
     /**
@@ -190,7 +201,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     /**
-     *
      * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
      */
     public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
@@ -395,16 +405,16 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                     prawnFile2.setRuns((short) prawnFile2.getRun().size());
                     prawnSourceFile = new File(
                             prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "")
-                            + "-JOIN-"
-                            + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                                    + "-JOIN-"
+                                    + prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "") + ".xml");
                     prawnFile = prawnFile2;
                 } else {
                     prawnFile1.getRun().addAll(prawnFile2.getRun());
                     prawnFile1.setRuns((short) prawnFile1.getRun().size());
                     prawnSourceFile = new File(
                             prawnXMLFilesNew.get(0).getName().replace(".xml", "").replace(".XML", "")
-                            + "-JOIN-"
-                            + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
+                                    + "-JOIN-"
+                                    + prawnXMLFilesNew.get(1).getName().replace(".xml", "").replace(".XML", "") + ".xml");
                     prawnFile = prawnFile1;
                 }
 
@@ -462,42 +472,58 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * First guess using default delimiter
      */
     public void autoDivideSamples() {
-        if (task.getShrimpFractions().size() > 0) {
-            this.filtersForUnknownNames = new HashMap<>();
-            if (task.getShrimpFractions() != null) {
-                // July 2020 add in delimiter suggester
-                Pattern delimiterPattern = Pattern.compile("[^a-zA-Z0-9]+", Pattern.CASE_INSENSITIVE);
-                // empirical observation that second fraction conforms to naming pattern more frequently than first
-                int firstIndex = (task.getShrimpFractions().size() > 1) ? 1 : 0;
-                Matcher matcher
-                        = Pattern.compile("[^a-zA-Z0-9]+").matcher(task.getShrimpFractions().get(firstIndex).getFractionID());
-                if (matcher.find()) {
-                    int s = matcher.start();
-                    delimiterForUnknownNames = task.getShrimpFractions().get(firstIndex).getFractionID().substring(s, s + 1);
-                }
-
-                boolean delimiterIsNumber = SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
-                for (ShrimpFractionExpressionInterface fraction : task.getShrimpFractions()) {
-                    // determine flavor
-                    int delimiterIndex;
-                    if (delimiterIsNumber) {
-                        delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
-                    } else {
-                        delimiterIndex = fraction.getFractionID().indexOf(delimiterForUnknownNames.trim());
-                    }
-
-                    String sampleName = ((delimiterIndex == -1) || (fraction.getFractionID().length() < (delimiterIndex - 1)))
-                            ? fraction.getFractionID() : fraction.getFractionID().substring(0, delimiterIndex).toUpperCase(Locale.ENGLISH);
-                    if (filtersForUnknownNames.containsKey(sampleName)) {
-                        filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
-                    } else {
-                        filtersForUnknownNames.put(sampleName, 1);
-                    }
-                }
-                task.setFiltersForUnknownNames(filtersForUnknownNames);
-                task.generateMapOfUnknownsBySampleNames();
-            }
+        this.filtersForUnknownNames = new HashMap<>();
+        String firstFractionID = prawnFile.getRun().get(0).getPar().get(0).getValue();
+        Matcher matcher
+                = Pattern.compile("[^a-zA-Z0-9]+").matcher(firstFractionID);
+        if (matcher.find()) {
+            int s = matcher.start();
+            delimiterForUnknownNames = firstFractionID.substring(s, s + 1);
         }
+        divideSamples();
+        if (sampleNamingNotStandard) {
+            sampleNamingNotStandard = false;
+            delimiterForUnknownNames = "1";
+            divideSamples();
+        }
+    }
+
+    public void divideSamples() {
+        boolean delimiterIsNumber = Squid3Constants.SampleNameDelimitersEnum.getByName(delimiterForUnknownNames.trim()).isNumber();
+
+        // May 2021 - previously this used fractions, but it is the runs that get
+        // updated when the names are edited and the fractions are redone later
+        List<Run> copyOfRuns = new ArrayList<>(prawnFile.getRun());
+        Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
+        Collections.sort(copyOfRuns, (Run pt1, Run pt2)
+                -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
+
+        for (int i = 0; i < copyOfRuns.size(); i++) {
+            String fractionID = copyOfRuns.get(i).getPar().get(0).getValue();
+
+            // determine flavor
+            int delimiterIndex;
+            if (delimiterIsNumber) {
+                delimiterIndex = Integer.parseInt(delimiterForUnknownNames.trim());
+            } else {
+                delimiterIndex = fractionID.indexOf(delimiterForUnknownNames.trim());
+            }
+            // we have poor practice of missing delimiter or too few characters
+            sampleNamingNotStandard = sampleNamingNotStandard || ((delimiterIndex < 0) || (fractionID.length() < (delimiterIndex)));
+            String sampleName = ((delimiterIndex < 0) || (fractionID.length() < (delimiterIndex)))
+                    ? fractionID : fractionID
+                    .substring(0, (delimiterIndex <= fractionID.length() ? delimiterIndex : fractionID.length()))
+                    .toUpperCase(Locale.ENGLISH);
+            if (filtersForUnknownNames.containsKey(sampleName)) {
+                filtersForUnknownNames.put(sampleName, filtersForUnknownNames.get(sampleName) + 1);
+            } else {
+                filtersForUnknownNames.put(sampleName, 1);
+            }
+
+        }
+        task.setDelimiterForUnknownNames(delimiterForUnknownNames);
+        task.setFiltersForUnknownNames(filtersForUnknownNames);
+        task.generateMapOfUnknownsBySampleNames();
     }
 
     // reports
@@ -579,7 +605,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                     (projectName
                             + "_"
                             + reportSettings.getReportTableName()).replaceAll("\\s+", "_")
-                    + "_" + ((nameOfTargetSample.equalsIgnoreCase("Unknowns")) ? "ALL" : nameOfTargetSample) + ".csv");
+                            + "_" + ((nameOfTargetSample.equalsIgnoreCase("Unknowns")) ? "ALL" : nameOfTargetSample) + ".csv");
         }
         return reportTableFile;
     }
@@ -645,7 +671,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * Helper method to prepare for reports by sample
      *
-     * @return
+     * @return List<ShrimpFractionExpressionInterface>
      */
     public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
@@ -795,12 +821,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         });
     }
 
-    public static String generateDateTimeMillisecondsStringForRun(Run run) {
-        return run.getSet().getPar().get(0).getValue()
-                + " " + run.getSet().getPar().get(1).getValue()
-                + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
-    }
-
     public SquidPrefixTree generatePrefixTreeFromSpotNames() {
         prefixTree = new SquidPrefixTree();
 
@@ -827,7 +847,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      *
      * @param run
      * @param useOriginalData, when true, the original unedited file is used,
-     * otherwise the edited file is used.
+     *                         otherwise the edited file is used.
      * @return String [2] containing the file names of the two Prawn XML files
      * written as a result of the split.
      */
@@ -1071,20 +1091,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     /**
-     * @return the projectChanged
-     */
-    public static boolean isProjectChanged() {
-        return projectChanged;
-    }
-
-    /**
-     * @param aProjectChanged the projectChanged to set
-     */
-    public static void setProjectChanged(boolean aProjectChanged) {
-        projectChanged = aProjectChanged;
-    }
-
-    /**
      * @return the delimiterForUnknownNames
      */
     @Override
@@ -1211,7 +1217,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     /**
      * @param squidAllowsAutoExclusionOfSpots the
-     * squidAllowsAutoExclusionOfSpots to set
+     *                                        squidAllowsAutoExclusionOfSpots to set
      */
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
         if (task != null) {

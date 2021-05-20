@@ -90,6 +90,7 @@ public class SquidUIController implements Initializable {
 
     public static final SquidLabData squidLabData;
     public static final SquidPersistentState squidPersistentState = SquidPersistentState.getExistingPersistentState();
+    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     public static SquidProject squidProject;
     public static Node taskFolderBrowserUI;
     public static Node plotUI;
@@ -101,7 +102,6 @@ public class SquidUIController implements Initializable {
     public static SquidReportTableLauncher squidReportTableLauncher;
     public static HighlightMainMenu menuHighlighter;
     public static int squidProjectOriginalHash;
-    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     private static GridPane projectManagerUI;
     private static VBox sessionAuditUI;
     private static ScrollPane massesAuditUI;
@@ -320,7 +320,7 @@ public class SquidUIController implements Initializable {
             menuItem.setOnAction((ActionEvent t) -> {
                 try {
                     openProject(menuItem.getText());
-                } catch (IOException iOException) {
+                } catch (IOException | SquidException iOException) {
                     squidPersistentState.removeProjectFileNameFromMRU(menuItem.getText());
                     squidPersistentState.cleanProjectListMRU();
                     openRecentSquidProjectMenu.getItems().remove(menuItem);
@@ -707,11 +707,11 @@ public class SquidUIController implements Initializable {
         try {
             projectFileName = FileHandler.selectProjectFile(SquidUI.primaryStageWindow);
             openProject(projectFileName);
-        } catch (IOException iOException) {
+        } catch (IOException | SquidException iOException) {
         }
     }
 
-    private void openProject(String aProjectFileName) throws IOException {
+    private void openProject(String aProjectFileName) throws IOException, SquidException {
         if (!"".equals(aProjectFileName)) {
             projectFileName = aProjectFileName;
             confirmSaveOnProjectClose();
@@ -719,6 +719,9 @@ public class SquidUIController implements Initializable {
 
             if (squidProject != null) {
                 synchronizeTaskLabDataAndSquidVersion();
+
+                // fixes #624 by correcting out of synch tasks
+                squidProject.getTask().setSelectedIndexIsotope(squidProject.getSelectedIndexIsotope());
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();
@@ -882,6 +885,10 @@ public class SquidUIController implements Initializable {
 
     private void launchSpotManager() {
         try {
+            // force use of delimiter to filter samples
+            sessionAuditUI = FXMLLoader.load(getClass().getResource("SessionAudit.fxml"));
+            sessionAuditUI.setId("SessionAudit");
+
             spotManagerUI = FXMLLoader.load(getClass().getResource("SpotManager.fxml"));
             spotManagerUI.setId("SpotManager");
 
@@ -1719,7 +1726,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void synchronizeTaskLabDataAndSquidVersion() {
+    private void synchronizeTaskLabDataAndSquidVersion() throws SquidException {
         if (squidProject != null && squidProject.getTask() != null) {
             TaskInterface task = squidProject.getTask();
 
@@ -1748,9 +1755,10 @@ public class SquidUIController implements Initializable {
 
                 ((Task) task).initTaskDefaultSquidReportTables(true);
 
+                ProjectFileUtilities.serializeSquidProject(squidProject, projectFileName);
+
                 SquidMessageDialog.showInfoDialog(
-                        "The task has been updated for this version of Squid3.\n"
-                                + "Please save Project.",
+                        "The project file has been updated for this version of Squid3.\n",
                         primaryStageWindow);
             }
         }
@@ -1802,7 +1810,7 @@ public class SquidUIController implements Initializable {
     private void openDemoSquiProjectAction(ActionEvent event) {
         try {
             openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
-        } catch (IOException iOException) {
+        } catch (IOException | SquidException iOException) {
         }
     }
 

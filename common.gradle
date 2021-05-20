@@ -6,17 +6,17 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.7.8'
+String mavenVersion = '1.7.10'
 
 sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
-    mavenCentral();
+    mavenCentral()
     // You may define additional repositories, or even remove "mavenCentral()".
     // Read more about repositories here:
     //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
-    
+
     flatDir {
         dirs 'libs'
     }
@@ -26,7 +26,7 @@ dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
     //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
     compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
-    
+
     testCompile "junit:junit:4.13.1"
     testCompile "org.assertj:assertj-core:3.18.1"
 }
@@ -78,7 +78,7 @@ tasks.withType(JavaCompile) {
     }
     println 'Compiler args: ' + options.compilerArgs
 }
- 
+
 javadoc {
     options.tags = [
             'pre:a:Precondition:',
@@ -87,7 +87,7 @@ javadoc {
             'author:a:Author:'
     ]
 }
-    
+
 if (JavaVersion.current().isJava8Compatible()) {
     allprojects {
         tasks.withType(Javadoc) {

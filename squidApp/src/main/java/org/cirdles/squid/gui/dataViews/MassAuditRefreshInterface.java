@@ -25,8 +25,8 @@ import java.util.List;
  */
 public interface MassAuditRefreshInterface {
     public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing);
-    
-    public void updateGraphsWithSecondSelectedIndex(int index, int leadingZoomingTrailing);
+
+    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices,  List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing);
     
     /**
      *

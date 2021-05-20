@@ -54,13 +54,15 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  */
 public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements SpeciesGraphInterface {
 
-    private  List<Double> measuredTrimMasses;
-    private  List<Double> timesOfMeasuredTrimMasses;
-    private  List<Integer> indicesOfRunsAtMeasurementTimes;
-    private  List<Run> prawnFileRuns;
     private final MassAuditRefreshInterface massAuditRefreshInterface;
     private final ContextMenu spotContextMenu = new ContextMenu();
-    private  List<Integer> indicesOfScansAtMeasurementTimes = new ArrayList<>();
+    // -1, 0, 1
+    private final int leadingZoomingTrailing;
+    private List<Double> measuredTrimMasses;
+    private List<Double> timesOfMeasuredTrimMasses;
+    private List<Integer> indicesOfRunsAtMeasurementTimes;
+    private List<Run> prawnFileRuns;
+    private List<Integer> indicesOfScansAtMeasurementTimes = new ArrayList<>();
     private int[] countOfScansCumulative;
     private String plotTitle = "NONE";
     private int[] scanIndices;
@@ -68,17 +70,11 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
     private double maxMassAMU;
     private double minMassAMU;
     private double[] peakTukeysMeanAndUnct;
-//    private int indexOfSelectedSpot;
-//    private int indexOfSecondSelectedSpotForMultiSelect;
-    private List<PrawnFile.Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
     private Menu spotRestoreMenu;
     private Menu prawnFileSplitMenu;
     private MenuItem splitRunsOriginalMenuItem;
     private MenuItem splitRunsEditedMenuItem;
-
-    // -1, 0, 1
-    private final int leadingZoomingTrailing;
     private double controlMinY = 0;
     private double controlMaxY = 0;
     private double controlMean = 0;
@@ -124,9 +120,6 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         this.showTimeNormalized = showTimeNormalized;
         this.showspotLabels = showSpotLabels;
         this.massAuditRefreshInterface = massAuditRefreshInterface;
-
-//        this.indexOfSelectedSpot = -1;
-//        this.indexOfSecondSelectedSpotForMultiSelect = -1;
 
         this.leadingZoomingTrailing = leadingZoomingTrailing;
         this.controlMinY = controlMinY;
@@ -333,16 +326,10 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
             // selection rectangle and labels
             g2d.setFill(Paint.valueOf("BLACK"));
             g2d.setFont(Font.font("SansSerif", 12));
-            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
-            if (secondIndex == -1) {
-                secondIndex = indexOfSelectedSpot;
-            }
-            if (indexOfSelectedSpot >= 0 && leadingZoomingTrailing == 0) {
-                boolean increasing = (secondIndex >= indexOfSelectedSpot);
-                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
-                     index <= (increasing ? secondIndex : indexOfSelectedSpot);
-                     index++) {
 
+            if (indexOfSelectedSpot >= 0 && leadingZoomingTrailing == 0) {
+                for (int i = 0; i < listOfSelectedIndices.size(); i++) {
+                    int index = listOfSelectedIndices.get(i);
                     // gray spot(s) rectangle
                     g2d.setFill(Color.rgb(0, 0, 0, 0.1));
                     g2d.fillRect(
@@ -351,13 +338,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
                             StrictMath.abs(mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index + 1] - 1])
                                     - mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[index]])) + 4f,
                             height);
-                }
-                // label spots
-                if (!showspotLabels && leadingZoomingTrailing == 0) {
-                    showSpotLabelOnGraph(g2d, indexOfSelectedSpot);
-                    if (secondIndex != indexOfSelectedSpot) {
-                        showSpotLabelOnGraph(g2d, secondIndex);
-                    }
+                    showSpotLabelOnGraph(g2d, index);
                 }
             }
 
@@ -520,6 +501,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
     }
 
+
     /**
      * @param aIndexOfSelectedSpot the indexOfSelectedSpot to set
      */
@@ -532,7 +514,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
      *                                                indexOfSecondSelectedSpotForMultiSelect to set
      */
     public void setIndexOfSecondSelectedSpotForMultiSelect(int indexOfSecondSelectedSpotForMultiSelect) {
-        this.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
+        AbstractDataView.indexOfSecondSelectedSpotForMultiSelect = indexOfSecondSelectedSpotForMultiSelect;
     }
 
     /**
@@ -542,12 +524,19 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return measuredTrimMasses;
     }
 
+    public void setMeasuredTrimMasses(List<Double> measuredTrimMasses) {
+        this.measuredTrimMasses = measuredTrimMasses;
+    }
 
     /**
      * @return the timesOfMeasuredTrimMasses
      */
     public List<Double> getTimesOfMeasuredTrimMasses() {
         return timesOfMeasuredTrimMasses;
+    }
+
+    public void setTimesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
+        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
     }
 
     /**
@@ -557,11 +546,19 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return indicesOfScansAtMeasurementTimes;
     }
 
+    public void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
+        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
+    }
+
     /**
      * @return the indicesOfRunsAtMeasurementTimes
      */
     public List<Integer> getIndicesOfRunsAtMeasurementTimes() {
         return indicesOfRunsAtMeasurementTimes;
+    }
+
+    public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
+        this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
     }
 
     /**
@@ -571,28 +568,12 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         return prawnFileRuns;
     }
 
-    public double getPlottedMean() {
-        return plottedMean;
-    }
-
-    public void setMeasuredTrimMasses(List<Double> measuredTrimMasses) {
-        this.measuredTrimMasses = measuredTrimMasses;
-    }
-
-    public void setTimesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses) {
-        this.timesOfMeasuredTrimMasses = timesOfMeasuredTrimMasses;
-    }
-
-    public void setIndicesOfRunsAtMeasurementTimes(List<Integer> indicesOfRunsAtMeasurementTimes) {
-        this.indicesOfRunsAtMeasurementTimes = indicesOfRunsAtMeasurementTimes;
-    }
-
     public void setPrawnFileRuns(List<Run> prawnFileRuns) {
         this.prawnFileRuns = prawnFileRuns;
     }
 
-    public void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes) {
-        this.indicesOfScansAtMeasurementTimes = indicesOfScansAtMeasurementTimes;
+    public double getPlottedMean() {
+        return plottedMean;
     }
 
     private class MouseClickEventHandler implements EventHandler<MouseEvent> {
@@ -600,19 +581,47 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         @Override
         public void handle(MouseEvent mouseEvent) {
             spotContextMenu.hide();
-            int secondIndex = indexOfSecondSelectedSpotForMultiSelect;
-            if (secondIndex == -1) {
-                secondIndex = indexOfSelectedSpot;
-            }
-            selectedRuns = new ArrayList<>();
-            if (indexOfSelectedSpot >= 0) {
-                boolean increasing = (secondIndex >= indexOfSelectedSpot);
-                for (int index = (increasing ? indexOfSelectedSpot : secondIndex);
-                     index <= (increasing ? secondIndex : indexOfSelectedSpot);
-                     index++) {
-                    selectedRuns.add(prawnFileRuns.get(index));
+
+            // new logic may 2021 to allow for multiple selections +++++++++++++++++++++++++++++++++++++++++++++++++++++
+            // determine if left click or with cmd or with shift
+            boolean isShift = mouseEvent.isShiftDown();
+            boolean isControl = mouseEvent.isControlDown() || mouseEvent.isMetaDown();
+            boolean isPrimary = mouseEvent.getButton().compareTo(MouseButton.PRIMARY) == 0;
+
+            // shift wipes out singletons
+            int currentSelection = indexOfSpotFromMouseX(mouseEvent.getX());
+            if (isPrimary) {
+                if (!isShift && !isControl) {
+                    indexOfSelectedSpot = currentSelection;
+                    listOfSelectedIndices.clear();
+                    listOfSelectedIndices.add(currentSelection);
+                    selectedRuns.clear();
+                    selectedRuns.add(prawnFileRuns.get(currentSelection));
+                } else if (isControl) {
+                    indexOfSelectedSpot = currentSelection;
+                    if (listOfSelectedIndices.contains(currentSelection)) {
+                        listOfSelectedIndices.remove((Integer) currentSelection);
+                        selectedRuns.remove(prawnFileRuns.get(currentSelection));
+                    } else {
+                        listOfSelectedIndices.add(currentSelection);
+                        selectedRuns.add(prawnFileRuns.get(currentSelection));
+                    }
+                } else { // isShift to nearest neighbor incl
+                    selectedRuns = new ArrayList<>();
+                    listOfSelectedIndices.clear();
+                    if (indexOfSelectedSpot >= 0) {
+                        boolean increasing = (currentSelection >= indexOfSelectedSpot);
+                        for (int index = (increasing ? indexOfSelectedSpot : currentSelection);
+                             index <= (increasing ? currentSelection : indexOfSelectedSpot);
+                             index++) {
+                            listOfSelectedIndices.add(index);
+                            selectedRuns.add(prawnFileRuns.get(index));
+                        }
+                    }
                 }
             }
+            massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+
             if (selectedRuns.size() > 1) {
                 spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
             } else {
@@ -651,23 +660,6 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
 
                 spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
                         mapX(myOnPeakNormalizedAquireTimes[countOfScansCumulative[indexOfSelectedSpot]]), 25);
-            } else {
-
-                if ((indexOfSelectedSpot > -1) && (mouseEvent.isShiftDown())) {
-                    // multi-selection
-                    indexOfSecondSelectedSpotForMultiSelect = indexOfSpotFromMouseX(mouseEvent.getX());
-                    if (indexOfSecondSelectedSpotForMultiSelect > -1) {
-                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(indexOfSecondSelectedSpotForMultiSelect, leadingZoomingTrailing);
-                    }
-                } else {
-                    if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) != 0) {
-                        massAuditRefreshInterface.updateGraphsWithSecondSelectedIndex(-1, leadingZoomingTrailing);
-                        indexOfSelectedSpot = indexOfSpotFromMouseX(mouseEvent.getX());
-                        if (indexOfSelectedSpot > -1) {
-                            massAuditRefreshInterface.updateGraphsWithSelectedIndex(indexOfSelectedSpot, leadingZoomingTrailing);
-                        }
-                    }
-                }
             }
         }
     }

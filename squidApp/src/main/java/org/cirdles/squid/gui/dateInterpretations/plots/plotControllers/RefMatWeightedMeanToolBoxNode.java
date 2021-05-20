@@ -17,36 +17,25 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_204;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_207;
-import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.PB_208;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_206_238_ROOT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CALIB_CONST_208_232_ROOT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
+import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.*;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RefMatWeightedMeanToolBoxNode extends HBox {
 
-    private PlotRefreshInterface plotsController;
+    private final PlotRefreshInterface plotsController;
 
     public RefMatWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
         super(5);
@@ -57,7 +46,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox {
 
     private void initNode() {
         correction = squidProject.getTask().getSelectedIndexIsotope().getIsotope().substring(2) + "cor_";
-        
+
         Label corrChoiceLabel = new Label("Index Isotope:");
         formatNode(corrChoiceLabel, 85);
 
@@ -136,13 +125,13 @@ public class RefMatWeightedMeanToolBoxNode extends HBox {
                 correction = ((String) isotopeGroup.getSelectedToggle().getUserData());
                 switch (correction.substring(0, 1)) {
                     case "4":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_204);
+                        squidProject.setSelectedIndexIsotope(PB_204);
                         break;
                     case "7":
-                        squidProject.getTask().setSelectedIndexIsotope(PB_207);
+                        squidProject.setSelectedIndexIsotope(PB_207);
                         break;
                     default: // case 8
-                        squidProject.getTask().setSelectedIndexIsotope(PB_208);
+                        squidProject.setSelectedIndexIsotope(PB_208);
                 }
                 squidProject.getTask().setChanged(true);
 

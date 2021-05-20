@@ -15,14 +15,15 @@
  */
 package org.cirdles.squid.utilities.squidPrefixTree;
 
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import static org.cirdles.squid.constants.Squid3Constants.DUPLICATE_STRING;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SquidPrefixTree {
@@ -31,15 +32,15 @@ public class SquidPrefixTree {
     private final static Character LEAF = "\\".toCharArray()[0];
 
     private SquidPrefixTree parent;
-    private List<SquidPrefixTree> children;
-    private SquidPrefixTreeNode node;
+    private final List<SquidPrefixTree> children;
+    private final SquidPrefixTreeNode node;
     private String stringValue;
     private int countOfSpecies;
     private int countOfScans;
     private int countOfDups;
     private int countOfLeaves;
-    private Map<Integer, Integer> mapOfSpeciesFrequencies;
-    private Map<Integer, Integer> mapOfScansFrequencies;
+    private final Map<Integer, Integer> mapOfSpeciesFrequencies;
+    private final Map<Integer, Integer> mapOfScansFrequencies;
 
     public SquidPrefixTree() {
         this(new SquidPrefixTreeNode(ROOT));
@@ -59,7 +60,6 @@ public class SquidPrefixTree {
     }
 
     /**
-     *
      * @param myWord
      * @return SquidPrefixTree with inserted word
      */
@@ -79,7 +79,7 @@ public class SquidPrefixTree {
                     createLeafNode(target);
                 }
             } else {
-                String remainingString = word.substring(i, word.length());
+                String remainingString = word.substring(i);
                 Pattern pattern = Pattern.compile(DUPLICATE_STRING + ".*");
                 Matcher matcher = pattern.matcher(remainingString);
                 SquidPrefixTreeNode currentNode;
@@ -116,7 +116,6 @@ public class SquidPrefixTree {
     }
 
     /**
-     *
      * @param node
      * @return target SquidPrefixTree
      */
@@ -138,7 +137,6 @@ public class SquidPrefixTree {
     }
 
     /**
-     *
      * @param prefix
      * @return target SquidPrefixTree
      */
@@ -175,12 +173,12 @@ public class SquidPrefixTree {
 
     private void sortChildren(List<SquidPrefixTree> children) {
         Comparator<String> intuitiveString = new IntuitiveStringComparator<>();
-        
+
         Collections.sort(children, (SquidPrefixTree pt1, SquidPrefixTree pt2)
                 -> (intuitiveString.compare(pt1.getNode().getValue(), pt2.getNode().getValue())));
     }
 
-    private int countAnalysisLeaves() {
+    public int countAnalysisLeaves() {
         int retVal = 0;
         for (int i = 0; i < children.size(); i++) {
             if (children.get(i).getNode().getValue().compareTo(String.valueOf(LEAF)) == 0) {
@@ -191,10 +189,10 @@ public class SquidPrefixTree {
                 retVal += childCountOfLeaves;
                 // set local count of leaves below this node
                 children.get(i).setCountOfLeaves(childCountOfLeaves);
-                // this will get overwritten except at root
-                countOfLeaves = retVal;
             }
         }
+        // this will get overwritten except at root
+        countOfLeaves = retVal;
         return retVal;
     }
 
@@ -285,7 +283,6 @@ public class SquidPrefixTree {
     }
 
     /**
-     *
      * @return Whether the current SquidPrefixTree has children
      */
     public boolean hasChildren() {
@@ -293,7 +290,6 @@ public class SquidPrefixTree {
     }
 
     /**
-     *
      * @return Whether the current SquidPrefixTree is a leaf node
      */
     public boolean isleaf() {
