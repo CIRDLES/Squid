@@ -15,32 +15,17 @@
  */
 package org.cirdles.squid.tasks.squidTask25;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.extractor.ExcelExtractor;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
+
+import java.io.*;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  *
@@ -253,10 +238,16 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
         retVal = retVal.replace("[\"Bkrd cts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
         retVal = retVal.replace("[\"Bkrdcts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
+        retVal = retVal.replace("[\"total 204 cts/sec\"]", "totalCps([\"204\"])");
+        retVal = retVal.replace("[\"total 206cts/sec\"]", "totalCps([\"206\"])");
+        retVal = retVal.replace("[\"bkrd cts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
+        retVal = retVal.replace("[\"bkrdcts/sec\"]", "totalCps([\"" + DEFAULT_BACKGROUND_MASS_LABEL + "\"])");
         retVal = retVal.replace("9511", "95");
         retVal = retVal.replace("(Ma)", "");
         // assume most calls to uncertainty are for percent
         retVal = retVal.replace("[±\"", "[%\"");
+        // assume "=" shouild be "==" as in if a == b
+        retVal = retVal.replace("=", "==");
 
         // June 2019 fix Allen Kennedy's use of bad quotes
         retVal = retVal.replace("“", "\"");
