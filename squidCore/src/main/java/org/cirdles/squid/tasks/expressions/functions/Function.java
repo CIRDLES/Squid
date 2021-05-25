@@ -122,6 +122,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
         SQUID_FUNCTIONS_MAP.put("TotalCpsTime", "totalCpsTime");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
+        SQUID_FUNCTIONS_MAP.put("Orig", "orig");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("or", "or");
@@ -472,6 +473,10 @@ public abstract class Function
 
     public static OperationOrFunctionInterface wtdMeanACalc() {
         return new WtdMeanACalc();
+    }
+
+    public static OperationOrFunctionInterface orig() {
+        return new Orig();
     }
 
     /**

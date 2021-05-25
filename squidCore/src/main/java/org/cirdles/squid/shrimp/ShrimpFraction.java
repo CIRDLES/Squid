@@ -15,17 +15,18 @@
  */
 package org.cirdles.squid.shrimp;
 
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
-import org.cirdles.squid.constants.Squid3Constants;
 
-import org.cirdles.squid.core.CalamariReportsEngine;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
@@ -769,7 +770,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return ratioAndUnct;
     }
 
-    // used to display original values on 204-correction tab for unknowns interpretatons
+    // used to display original values on 204-correction tab for unknowns interpretations
+    @Override
     public double[][] getOriginalIsotopicRatioValuesByStringName(String name) {
         double[][] ratioAndUnct = new double[][]{{0.0, 0.0}};
 

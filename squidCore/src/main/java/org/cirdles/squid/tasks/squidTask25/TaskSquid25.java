@@ -28,13 +28,12 @@ import java.util.regex.Pattern;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public class TaskSquid25 implements Serializable {
 
     private static final long serialVersionUID = -2805382700088270719L;
-
+    private static TaskSquid25 taskSquid25;
     private String squidVersion;
     private String squidTaskFileName;
     private TaskTypeEnum taskType;
@@ -51,10 +50,7 @@ public class TaskSquid25 implements Serializable {
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
-
     private Map<String, String> specialSquidFourExpressionsMap;
-
-    private static TaskSquid25 taskSquid25;
 
     public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
 
@@ -233,6 +229,7 @@ public class TaskSquid25 implements Serializable {
     private static String prepareSquid25ExcelEquationStringForSquid3(String excelString) {
         String retVal = "";
 
+        /* TODO: use regex */
         retVal = excelString.replace("|", "");
         retVal = retVal.replace("[\"Total 204 cts/sec\"]", "totalCps([\"204\"])");
         retVal = retVal.replace("[\"Total 206cts/sec\"]", "totalCps([\"206\"])");
@@ -246,8 +243,14 @@ public class TaskSquid25 implements Serializable {
         retVal = retVal.replace("(Ma)", "");
         // assume most calls to uncertainty are for percent
         retVal = retVal.replace("[±\"", "[%\"");
-        // assume "=" shouild be "==" as in if a == b
-        retVal = retVal.replace("=", "==");
+        // assume "=" should be "==" as in if a == b
+        if (retVal.matches(".*[iI][fF].*")) {
+            retVal = retVal.replace("=", "==");
+        } else {
+            // attempt to assign with bad operator to inform user not possible
+            retVal = retVal.replace("=", "<>");
+        }
+
 
         // June 2019 fix Allen Kennedy's use of bad quotes
         retVal = retVal.replace("“", "\"");
@@ -339,7 +342,7 @@ public class TaskSquid25 implements Serializable {
         if (retVal.endsWith(".")) {
             retVal = retVal.substring(0, retVal.lastIndexOf("."));
         }
-        
+
         // as of JUNE 2020, it was requested by Simon Bodorkos that all expressions show up even if bad
 //        // do not accept non-numeric constants as being equations - this results from the conflation in Squid2.5 between equations and outputs
 //        // unless already noted as constant
@@ -435,11 +438,11 @@ public class TaskSquid25 implements Serializable {
                 retVal = retVal.replace(matcher.group(), unBracketed);
             }
         }
-        
+
         squid25FunctionPattern = Pattern.compile("(\\[\\\"total\\s*)(\\d+\\.*\\d*\\s*)(cts\\/sec\\\"])", Pattern.CASE_INSENSITIVE);
         matcher = squid25FunctionPattern.matcher(retVal);
-        while (matcher.find()){
-            retVal = retVal.replace(matcher.group(), "TotalCPS([\""+ matcher.group(2).trim() + "\"])");
+        while (matcher.find()) {
+            retVal = retVal.replace(matcher.group(), "TotalCPS([\"" + matcher.group(2).trim() + "\"])");
         }
 
         return retVal;
@@ -520,7 +523,6 @@ public class TaskSquid25 implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public String getParentNuclide() {
@@ -535,7 +537,6 @@ public class TaskSquid25 implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public String getPrimaryParentElement() {

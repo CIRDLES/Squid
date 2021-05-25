@@ -151,7 +151,8 @@ FUNCTION :
     S T D E V P |
     C A L C U L A T E M E A N C O N C S T D |
     W T D M E A N A C A L C |
-    V A L U E M O D E L 
+    V A L U E M O D E L |
+    O R I G
 ;
 
 ARRAY_CALL : (ID | NAMED_EXPRESSION) ((' ')* '[' INT ']' (' ')*);       // array index like a[1]

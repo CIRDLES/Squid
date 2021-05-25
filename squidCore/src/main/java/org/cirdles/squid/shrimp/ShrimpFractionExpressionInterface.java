@@ -15,12 +15,13 @@
  */
 package org.cirdles.squid.shrimp;
 
-import java.util.List;
-import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -126,6 +127,7 @@ public interface ShrimpFractionExpressionInterface {
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
     public double[][] getIsotopicRatioValuesByStringName(String name);
+    public double[][] getOriginalIsotopicRatioValuesByStringName(String name);
 
     // May 2017 for temp backward comp with ET_Redux
     /**
