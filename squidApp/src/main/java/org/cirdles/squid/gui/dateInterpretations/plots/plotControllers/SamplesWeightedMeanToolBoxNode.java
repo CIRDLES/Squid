@@ -31,12 +31,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
@@ -48,6 +50,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.SpotGroupProcessor;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.OsCheck;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,14 +63,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.text.TextAlignment;
 
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -106,7 +105,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
+        ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = SquidLabData.getExistingSquidLabData().getSpecialWMSortingReportTable();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         categorySortComboBox.getSelectionModel().selectFirst();

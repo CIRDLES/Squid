@@ -16,6 +16,7 @@
 package org.cirdles.squid.squidReports.squidReportTables;
 
 import com.thoughtworks.xstream.XStream;
+import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -35,24 +36,22 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory.createReportCategory;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SquidReportTable implements Serializable, SquidReportTableInterface, Comparable<SquidReportTableInterface> {
 
-    private static final long serialVersionUID = 1685572683987304408L;
-
-    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 6;
-    public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
-
     public final static int HEADER_ROW_COUNT = 7;
     public final static int DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS = 15;
-
+    private static final long serialVersionUID = 1685572683987304408L;
+    public static int WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 6;
+    public static String NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "Weighted Mean Plot and Sort Report";
+    public static int RM_WEIGHTEDMEAN_PLOT_SORT_TABLE_VERSION = 6;
+    public static String RM_NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT = "RM Weighted Mean Plot and Sort Report";
     // Fields
     private String reportTableName;
 
@@ -82,69 +81,6 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         this.version = version;
     }
 
-    @Override
-    public SquidReportTableInterface copy() {
-        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
-        reportCategories.forEach(cat -> cats.add(cat.clone()));
-        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isBuiltInSquidDefault, version);
-        table.setIsLabDataDefault(isLabDataDefault);
-        table.setReportSpotTarget(reportSpotTarget);
-        return table;
-    }
-
-    @Override
-    public int compareTo(SquidReportTableInterface srt)
-            throws ClassCastException {
-        String tableName = srt.getReportTableName();
-        return this.getReportTableName().trim().
-                compareToIgnoreCase(tableName.trim());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof SquidReportTableInterface)) {
-            return false;
-        }
-        SquidReportTableInterface that = (SquidReportTable) o;
-        return reportTableName.compareTo(that.getReportTableName()) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return reportTableName.hashCode();
-    }
-
-    @Override
-    public boolean amWeightedMeanPlotAndSortReport() {
-        return reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0;
-    }
-
-    @Override
-    public void formatWeightedMeanPlotAndSortReport() {
-        // force Time and Ages categories to top of categories list
-        SquidReportCategoryInterface timeCat = null;
-        SquidReportCategoryInterface agesCat = null;
-        for (SquidReportCategoryInterface cat : reportCategories) {
-            if (cat.getDisplayName().compareToIgnoreCase("Time") == 0) {
-                timeCat = cat;
-            }
-            if (cat.getDisplayName().compareToIgnoreCase("Ages") == 0) {
-                agesCat = cat;
-            }
-        }
-
-        if ((timeCat != null) && (agesCat != null)) {
-            reportCategories.remove(timeCat);
-            reportCategories.remove(agesCat);
-
-            reportCategories.add(0, agesCat);
-            reportCategories.add(0, timeCat);
-        }
-    }
-
     public static SquidReportTable createEmptySquidReportTable(String reportTableName) {
         SquidReportTable table = new SquidReportTable(reportTableName, new LinkedList<>(), false);
         table.setReportSpotTarget(SpotTypes.NONE);
@@ -168,9 +104,16 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     }
 
     public static SquidReportTable createDefaultSquidReportTableUnknownSquidFilter(TaskInterface task, int version) {
-        LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknownSquidFilter(task);
+        LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultSampleWMSortingCategoriesSquidFilter(task);
         SquidReportTable table = new SquidReportTable(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
         table.setReportSpotTarget(SpotTypes.UNKNOWN);
+        return table;
+    }
+
+    public static SquidReportTable createDefaultSquidReportTableRMSquidFilter(TaskInterface task, int version) {
+        LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultRMWMSortingCategoriesSquidFilter(task);
+        SquidReportTable table = new SquidReportTable(RM_NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT, reportCategories, false, version);
+        table.setReportSpotTarget(SpotTypes.REFERENCE_MATERIAL);
         return table;
     }
 
@@ -232,16 +175,6 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         pb208Corr_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(PB8CORR + ERR_CORREL_RM));
         reportCategoriesRefMat.add(pb208Corr_RM);
 
-//        SquidReportCategoryInterface custom_RM = createReportCategory("Custom Expressions Ref Mat");
-//        List<Expression> customExpressionsRM = task.getCustomTaskExpressions();
-//        for (Expression exp : customExpressionsRM) {
-//            ExpressionTreeInterface expTree = exp.getExpressionTree();
-//            if ((!expTree.isSquidSwitchSCSummaryCalculation())
-//                    && (expTree.isSquidSwitchSTReferenceMaterialCalculation())) {
-//                custom_RM.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(expTree.getName()));
-//            }
-//        }
-//        reportCategoriesRefMat.add(custom_RM);
         return reportCategoriesRefMat;
     }
 
@@ -327,13 +260,20 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return reportCategoriesUnknown;
     }
 
-    private static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesUnknownSquidFilter(TaskInterface task) {
+    private static LinkedList<SquidReportCategoryInterface> createDefaultSampleWMSortingCategoriesSquidFilter(TaskInterface task) {
         LinkedList<SquidReportCategoryInterface> reportCategoriesUnknownSquidFilter = new LinkedList<>();
-        for (SquidReportCategory src : SquidReportCategory.defaultSquidReportCategories) {
+        for (SquidReportCategory src : SquidReportCategory.defaultSampleWMSortingCategories) {
             reportCategoriesUnknownSquidFilter.add(src);
         }
-
         return reportCategoriesUnknownSquidFilter;
+    }
+
+    private static LinkedList<SquidReportCategoryInterface> createDefaultRMWMSortingCategoriesSquidFilter(TaskInterface task) {
+        LinkedList<SquidReportCategoryInterface> reportCategoriesRMSquidFilter = new LinkedList<>();
+        for (SquidReportCategory src : SquidReportCategory.defaultRefMatWMSortingCategories) {
+            reportCategoriesRMSquidFilter.add(src);
+        }
+        return reportCategoriesRMSquidFilter;
     }
 
     private static SquidReportCategoryInterface createDefaultSpotFundamentalsCategory() {
@@ -377,6 +317,71 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return rawNuclideRatios;
     }
 
+    @Override
+    public SquidReportTableInterface copy() {
+        LinkedList<SquidReportCategoryInterface> cats = new LinkedList<>();
+        reportCategories.forEach(cat -> cats.add(cat.clone()));
+        SquidReportTableInterface table = new SquidReportTable(reportTableName, cats, isBuiltInSquidDefault, version);
+        table.setIsLabDataDefault(isLabDataDefault);
+        table.setReportSpotTarget(reportSpotTarget);
+        return table;
+    }
+
+    @Override
+    public int compareTo(SquidReportTableInterface srt)
+            throws ClassCastException {
+        String tableName = srt.getReportTableName();
+        return this.getReportTableName().trim().
+                compareToIgnoreCase(tableName.trim());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof SquidReportTableInterface)) {
+            return false;
+        }
+        SquidReportTableInterface that = (SquidReportTable) o;
+        return reportTableName.compareTo(that.getReportTableName()) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return reportTableName.hashCode();
+    }
+
+    @Override
+    public boolean amWeightedMeanPlotAndSortReport() {
+        return (reportTableName.compareTo(NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0)
+                ||
+                (reportTableName.compareTo(RM_NAME_OF_WEIGHTEDMEAN_PLOT_SORT_REPORT) == 0);
+    }
+
+    @Override
+    public void formatWeightedMeanPlotAndSortReport() {
+        // force Time and Ages categories to top of categories list
+        SquidReportCategoryInterface timeCat = null;
+        SquidReportCategoryInterface agesCat = null;
+        for (SquidReportCategoryInterface cat : reportCategories) {
+            if (cat.getDisplayName().compareToIgnoreCase("Time") == 0) {
+                timeCat = cat;
+            }
+            if (cat.getDisplayName().compareToIgnoreCase("Ages") == 0) {
+                agesCat = cat;
+            }
+        }
+
+        if ((timeCat != null) && (agesCat != null)) {
+            reportCategories.remove(timeCat);
+            reportCategories.remove(agesCat);
+
+            reportCategories.add(0, agesCat);
+            reportCategories.add(0, timeCat);
+        }
+    }
+
     /**
      * @return the reportTableName
      */
@@ -408,20 +413,20 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories) {
         this.reportCategories = reportCategories;
     }
-    
+
     /**
      * @return the reportSpotTarget
      */
     @Override
-    public SpotTypes getReportSpotTarget(){
+    public SpotTypes getReportSpotTarget() {
         return this.reportSpotTarget;
     }
-    
+
     /**
      * @param reportSpotTarget the reportSpotTarget to set
      */
     @Override
-    public void setReportSpotTarget(SpotTypes reportSpotTarget){
+    public void setReportSpotTarget(SpotTypes reportSpotTarget) {
         this.reportSpotTarget = reportSpotTarget;
     }
 

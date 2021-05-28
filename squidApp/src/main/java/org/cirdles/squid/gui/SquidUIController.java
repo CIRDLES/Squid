@@ -1523,6 +1523,14 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
+    private void referenceMaterialCalibrationConstAction(ActionEvent event) {
+        PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
+        PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN;
+        PlotsController.currentlyPlottedSampleTreeNode = null;
+        launchConcordiaAndWeightedMeanPlots();
+    }
+
+    @FXML
     private void referenceMaterialWMAction(ActionEvent event) {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN;

@@ -15,26 +15,23 @@
  */
 package org.cirdles.squid.squidReports.squidReportTables;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
-import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
+import java.util.*;
+
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.HEADER_ROW_COUNT;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface SquidReportTableInterface extends XMLSerializerInterface {
 
-    public default String[][] reportSpotsInCustomTable(
+    default String[][] reportSpotsInCustomTable(
             SquidReportTableInterface squidReportTable,
             TaskInterface task,
             Map<String, List<ShrimpFractionExpressionInterface>> mySamples,
@@ -133,63 +130,63 @@ public interface SquidReportTableInterface extends XMLSerializerInterface {
     /**
      * @return the reportTableName
      */
-    public String getReportTableName();
+    String getReportTableName();
 
     /**
      * @param reportTableName the reportTableName to set
      */
-    public void setReportTableName(String reportTableName);
+    void setReportTableName(String reportTableName);
 
-    public SquidReportTableInterface copy();
+    SquidReportTableInterface copy();
 
-    public boolean amWeightedMeanPlotAndSortReport();
+    boolean amWeightedMeanPlotAndSortReport();
 
-    public void formatWeightedMeanPlotAndSortReport();
+    void formatWeightedMeanPlotAndSortReport();
 
     /**
      * @return the reportCategories
      */
-    public LinkedList<SquidReportCategoryInterface> getReportCategories();
+    LinkedList<SquidReportCategoryInterface> getReportCategories();
 
     /**
      * @param reportCategories the reportCategories to set
      */
-    public void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories);
+    void setReportCategories(LinkedList<SquidReportCategoryInterface> reportCategories);
 
     /**
      * @return the reportSpotTarget
      */
-    public SpotTypes getReportSpotTarget();
+    SpotTypes getReportSpotTarget();
 
     /**
      * @param reportSpotTarget the reportSpotTarget to set
      */
-    public void setReportSpotTarget(SpotTypes reportSpotTarget);
+    void setReportSpotTarget(SpotTypes reportSpotTarget);
 
-    public void setIsBuiltInSquidDefault(boolean isDefault);
+    void setIsBuiltInSquidDefault(boolean isDefault);
 
-    public boolean isDefault();
+    boolean isDefault();
 
     /**
      * @return the isLabDataDefault
      */
-    public boolean isIsLabDataDefault();
+    boolean isIsLabDataDefault();
 
     /**
      * @param isLabDataDefault the isLabDataDefault to set
      */
-    public void setIsLabDataDefault(boolean isLabDataDefault);
+    void setIsLabDataDefault(boolean isLabDataDefault);
 
-    public boolean equals(Object ob);
+    boolean equals(Object ob);
 
     /**
      * @return the version
      */
-    public int getVersion();
+    int getVersion();
 
     /**
      * @param version the version to set
      */
-    public void setVersion(int version);
+    void setVersion(int version);
 
 }

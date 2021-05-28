@@ -39,7 +39,8 @@ public class Orig extends Function {
         rowCount = 1;
         colCount = 1;
         labelsForOutputValues = new String[][]{{"Orig Value"}};
-        definition = "Orig is designed to provide the original unchanged value of a ratio of interest.";
+        definition = "Orig is designed to provide the original interpolated value of a ratio of interest\n "
+                + DEF_TAB + "when column swapping or overcount corrections have been applied.";
     }
 
     /**

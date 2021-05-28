@@ -41,6 +41,7 @@ public class SquidLabData implements Serializable {
     private int version;
 
     private SquidReportTableInterface specialWMSortingReportTable;
+    private SquidReportTableInterface specialRMWMSortingReportTable;
     private SquidReportTableInterface defaultReportTable;
     private SquidReportTableInterface defaultReportTableRM;
 
@@ -101,6 +102,7 @@ public class SquidLabData implements Serializable {
         version = CURRENT_VERSION;
 
         specialWMSortingReportTable = null;
+        specialRMWMSortingReportTable = null;
         defaultReportTable = null;
         defaultReportTableRM = null;
 
@@ -317,6 +319,14 @@ public class SquidLabData implements Serializable {
      */
     public void setSpecialWMSortingReportTable(SquidReportTableInterface specialWMSortingReportTable) {
         this.specialWMSortingReportTable = specialWMSortingReportTable;
+    }
+
+    public SquidReportTableInterface getSpecialRMWMSortingReportTable() {
+        return specialRMWMSortingReportTable;
+    }
+
+    public void setSpecialRMWMSortingReportTable(SquidReportTableInterface specialRMWMSortingReportTable) {
+        this.specialRMWMSortingReportTable = specialRMWMSortingReportTable;
     }
 
     /**
