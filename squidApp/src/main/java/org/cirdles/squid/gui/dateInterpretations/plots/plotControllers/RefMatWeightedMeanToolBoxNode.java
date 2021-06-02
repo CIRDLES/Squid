@@ -45,7 +45,6 @@ import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterfac
 import org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.tasks.taskUtilities.SpotGroupProcessor;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.OsCheck;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
@@ -83,7 +82,6 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private SampleNode sampleNode;
     private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
     private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
-    private CheckBox filterInfoCheckBox;
 
     public RefMatWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
         super(4);
@@ -127,13 +125,13 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         VBox filterToolBox = filterVBox();
         VBox sortingToolBox = sortedVBox();
         VBox saveAsToolBox = saveAsVBox();
-        VBox publishExpressionToolBox = publishExpressionAndExportSVGVBox();
+        HBox publishExpressionToolBox = publishExpressionAndExportSVGVBox();
 
-        Path separator1 = separator(60.0F);
-        Path separator2 = separator(60.0F);
-        Path separator3 = separator(60.0F);
-        Path separator4 = separator(60.0F);
-        Path separator5 = separator(60.0F);
+        Path separator1 = separator(45.0F);
+        Path separator2 = separator(45.0F);
+        Path separator3 = separator(45.0F);
+        Path separator4 = separator(45.0F);
+        Path separator5 = separator(45.0F);
 
         getChildren().addAll(
                 samplesToolBox, separator1, domainToolBox, separator2,
@@ -144,15 +142,15 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     }
 
     private VBox samplesVBox() {
-        VBox sampleNameToolBox = new VBox(2);
+        VBox sampleNameToolBox = new VBox(0);
 
-        Label sampleInfoLabel = new Label("Reference Mat'l:");
-        formatNode(sampleInfoLabel, 100);
+        Label sampleInfoLabel = new Label("Reference Material:");
+        formatNode(sampleInfoLabel, 125);
 
-        mapOfSpotsBySampleNames = ((Task)squidProject.getTask()).produceMapOfRefMatSpotsNames();
+        mapOfSpotsBySampleNames = ((Task) squidProject.getTask()).produceMapOfRefMatSpotsNames();
 
         formatNode(sampleComboBox, 100);
-        sampleComboBox.setItems(FXCollections.observableArrayList(((Task)squidProject.getTask()).getFilterForRefMatSpotNames()));
+        sampleComboBox.setItems(FXCollections.observableArrayList(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
 
         sampleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             displaySample(newValue);
@@ -274,7 +272,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     }
 
     private VBox expressionVBox() {
-        VBox expressionToolBox = new VBox(2);
+        VBox expressionToolBox = new VBox(0);
 
         HBox expressionInfoHBox = new HBox(5);
 
@@ -285,7 +283,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
         HBox categoryInfoHBox = new HBox(5);
 
-        formatNode(categoryComboBox, 85);
+        formatNode(categoryComboBox, 120);
         categoryComboBox.setPromptText("Category");
 
         categoryComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -328,23 +326,11 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                                 .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
-                        if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
-                        }
-
                         PlotDisplayInterface myPlot = sampleNode.getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
-
-                        // if value is unchanged, then we need to force update
-                        if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
-                            updateSampleFromSlider(probabilitySlider.getValue());
-                        } else {
-                            // this also forces an update
-                            probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
-                        }
 
                     } else {
                         // non-AGE case for exploration
@@ -353,10 +339,6 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                                 .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
                                         selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
-
-                        if (filterInfoCheckBox.isSelected()) {
-                            spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
-                        }
 
                         spotSummaryDetailsWM.setSelectedExpressionName(selectedExpression);
 
@@ -372,16 +354,6 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
-
-//                        updateSampleFromSlider(probabilitySlider.getValue());
-                        // if value is unchanged, then we need to force update
-                        if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
-                            updateSampleFromSlider(probabilitySlider.getValue());
-                        } else {
-                            // this also forces an update
-                            probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
-                        }
-
                     }
 
                     // sort by selected sort expression
@@ -404,16 +376,10 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
     private VBox filterVBox() {
         VBox filterToolBox = new VBox(0);
-
-        HBox filterInfoHBox = new HBox();
-
         CheckBox showExcludedSpotsCheckBox = showExcludedSpotsCheckBox();
 
-        filterInfoHBox.getChildren().addAll(showExcludedSpotsCheckBox);
-
-        filterToolBox.getChildren()
-                .addAll(filterInfoHBox);
-
+        filterToolBox.getChildren().addAll(showExcludedSpotsCheckBox);
+        filterToolBox.setAlignment(Pos.CENTER);
         return filterToolBox;
     }
 
@@ -431,28 +397,8 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         return autoExcludeSpotsCheckBox;
     }
 
-    private void updateSampleFromSlider(double newValue) {
-        // test to see if slider is enabled
-        if (filterInfoCheckBox.isSelected()) {
-            probTextField.textProperty().setValue(
-                    String.format("%.2f", newValue));
-            sampleNode.getSpotSummaryDetailsWM().setMinProbabilityWM(newValue);
-            SpotSummaryDetails spotSummaryDetailsWM = ((WeightedMeanPlot) PlotsController.plot).getSpotSummaryDetails();
-            SpotGroupProcessor.findCoherentGroupOfSpotsForWeightedMean(
-                    squidProject.getTask(), spotSummaryDetailsWM, newValue);
-        }
-
-        for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
-            int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
-            ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
-                    !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
-        }
-
-        plotsController.refreshPlot();
-    }
-
     private VBox sortedVBox() {
-        VBox sortedToolBox = new VBox(-2);
+        VBox sortedToolBox = new VBox(0);
 
         HBox sortingHBoxA = new HBox(5);
         Label sortedByLabel = new Label("Sorted Ascending by:");
@@ -462,7 +408,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
         HBox sortingHBoxB = new HBox(5);
 
-        formatNode(categorySortComboBox, 85);
+        formatNode(categorySortComboBox, 120);
         categorySortComboBox.setPromptText("Category");
 
         categorySortComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportCategoryInterface>() {
@@ -508,7 +454,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     }
 
     private VBox saveAsVBox() {
-        VBox saveAsToolBox = new VBox(2);
+        VBox saveAsToolBox = new VBox(0);
 
         HBox saveDataHBox = new HBox(5);
         Label saveWMStatsLabel = new Label("Save WM stats to file:");
@@ -549,10 +495,8 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         return saveAsToolBox;
     }
 
-    private VBox publishExpressionAndExportSVGVBox() {
-        VBox publishExpressionVbox = new VBox(2);
-
-        HBox publishExpressionHbox = new HBox(5);
+    private HBox publishExpressionAndExportSVGVBox() {
+        HBox publishExpressionVbox = new HBox(2);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
         showInExpressionsButton.setPrefHeight(40);
@@ -568,7 +512,6 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             }
         });
 
-        HBox exportToSVGHbox = new HBox(5);
         Button exportToSVGButton = new Button("To SVG");
         formatNode(exportToSVGButton, 80);
         exportToSVGButton.setPrefHeight(20);
@@ -588,10 +531,8 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             }
         });
 
-        exportToSVGHbox.getChildren().addAll(exportToSVGButton);
-        publishExpressionHbox.getChildren().addAll(showInExpressionsButton);
-        publishExpressionVbox.getChildren().addAll(publishExpressionHbox, exportToSVGHbox);
-
+        publishExpressionVbox.getChildren().addAll(showInExpressionsButton, exportToSVGButton);
+        publishExpressionVbox.setAlignment(Pos.CENTER);
         return publishExpressionVbox;
     }
 

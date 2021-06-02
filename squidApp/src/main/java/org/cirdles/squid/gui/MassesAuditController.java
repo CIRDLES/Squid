@@ -77,7 +77,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private static boolean showSpotLabels;
     private static boolean synchedScrolls;
     // binary: 00= masses, 01 = SBM, 10 = Counts; 11 = both SBM and Counts
-    private static int countsRadioButtonChoice = 0B00;
+    private static int countsRadioButtonChoice;
     private final int BUTTON_WIDTH = 60;
     private final int COMBO_WIDTH = 210;
     private final int ROW_HEIGHT = 30;
@@ -136,6 +136,8 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        countsRadioButtonChoice = 0B00;
+
         setupMassStationDetailsListViews();
         setupMassDeltas();
 
@@ -162,10 +164,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         calculateCountOfScansCumulative();
 
         zoomedWidth = Math.min(40, squidProject.getTask().getShrimpFractions().size() - 0);
-        zoomedStart = zoomedWidth > 45 ? 5 : 1;
+        zoomedStart = zoomedWidth == 40 ? 5 : 1;
         zoomedEnd = zoomedStart + zoomedWidth - 1;
 
-        zoomScrollBar.setVisible(zoomedWidth > 40);
+        zoomScrollBar.setVisible(zoomedWidth == 40);
 
         zoomScrollBar.setValue(zoomedStart);
         zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
