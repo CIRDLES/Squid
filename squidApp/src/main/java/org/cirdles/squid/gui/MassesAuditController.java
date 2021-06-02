@@ -92,9 +92,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private List<AbstractDataView> trailingGraphs;
 
     // 1-based counting of spots
-    private int zoomedStart = 5;
-    private int zoomedWidth = 40;
-    private int zoomedEnd = zoomedStart + zoomedWidth - 1;
+    private int zoomedStart;
+    private int zoomedWidth;
+    private int zoomedEnd;
 
     @FXML
     private Accordion massesAccordian;
@@ -161,6 +161,12 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         calculateCountOfScansCumulative();
 
+        zoomedWidth = Math.min(40, squidProject.getTask().getShrimpFractions().size() - 0);
+        zoomedStart = zoomedWidth > 45 ? 5 : 1;
+        zoomedEnd = zoomedStart + zoomedWidth - 1;
+
+        zoomScrollBar.setVisible(zoomedWidth > 40);
+
         zoomScrollBar.setValue(zoomedStart);
         zoomScrollBar.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
@@ -172,7 +178,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     zoomedEnd = zoomedStart + zoomedWidth - 1;
                 } else {
                     zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
-                    zoomedStart = zoomedEnd - zoomedWidth + 1;
+                    zoomedStart = Math.max(1, zoomedEnd - zoomedWidth + 1);
                 }
                 updateAllMassesCanvases(savedZoomedStart);
             }
@@ -422,13 +428,6 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         legendCanvas.paint(gc0);
 
         // prepare for three plots (canvas) = leadingSpots, zoomedSpots, trailingSpots
-        // test zoom window
-        zoomedWidth = zoomedEnd - zoomedStart + 1;
-        if (zoomedEnd >= squidProject.getPrawnFileRuns().size()) {
-            zoomedEnd = squidProject.getPrawnFileRuns().size() - 1;
-            zoomedStart = zoomedEnd - zoomedWidth + 1;
-        }
-
         HBox graphsBox = new HBox();
         scrolledBox.getChildren().add(graphsBox);
 
@@ -603,19 +602,19 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         // adjust selections
         List<Integer> shiftedIndices = new ArrayList<>();
         List<PrawnFile.Run> shiftedRuns = new ArrayList<>();
-        if (!((AbstractDataView)zoomingGraphs.get(0)).getListOfSelectedIndices().isEmpty()){
+        if (!AbstractDataView.getListOfSelectedIndices().isEmpty()) {
             int shift = zoomedStart - savedZoomedStart;
-            Integer[] targetArray = ((AbstractDataView)zoomingGraphs.get(0)).getListOfSelectedIndices().toArray(new Integer[0]);
+            Integer[] targetArray = AbstractDataView.getListOfSelectedIndices().toArray(new Integer[0]);
 
-            for (int i = 0; i < targetArray.length; i ++){
+            for (int i = 0; i < targetArray.length; i++) {
                 targetArray[i] -= shift;
-                if ((targetArray[i] >= 0) && (targetArray[i] < zoomedWidth)){
+                if ((targetArray[i] >= 0) && (targetArray[i] < zoomedWidth)) {
                     shiftedIndices.add(targetArray[i]);
-                    shiftedRuns.add(((SpeciesGraphInterface)zoomingGraphs.get(0)).getPrawnFileRuns().get(targetArray[i]));
+                    shiftedRuns.add(((SpeciesGraphInterface) zoomingGraphs.get(0)).getPrawnFileRuns().get(targetArray[i]));
                 }
             }
         }
-        updateGraphsWithSelectedIndices(shiftedIndices, shiftedRuns,0);
+        updateGraphsWithSelectedIndices(shiftedIndices, shiftedRuns, 0);
 
         // trailing canvas
         int endTrailingIndex = ((SpeciesGraphInterface) legendGraphs.get(0)).getMeasuredTrimMasses().size();
@@ -936,19 +935,19 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         List<AbstractDataView> activeGraphs = new ArrayList<>();
         switch (leadingZoomingTrailing) {
             case -1:
-               // activeGraphs.addAll(leadingGraphs);
+                // activeGraphs.addAll(leadingGraphs);
                 break;
             case 0:
                 activeGraphs.addAll(zoomingGraphs);
                 break;
             case 1:
-              //  activeGraphs.addAll(trailingGraphs);
+                //  activeGraphs.addAll(trailingGraphs);
                 break;
         }
 
         for (int i = 0; i < activeGraphs.size(); i++) {
-            activeGraphs.get(i).setListOfSelectedIndices(listOfSelectedSpotsIndices);
-            activeGraphs.get(i).setSelectedRuns(selectedRuns);
+            AbstractDataView.setListOfSelectedIndices(listOfSelectedSpotsIndices);
+            AbstractDataView.setSelectedRuns(selectedRuns);
             activeGraphs.get(i).repaint();
         }
     }
