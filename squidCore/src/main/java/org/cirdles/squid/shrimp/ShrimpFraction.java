@@ -30,7 +30,6 @@ import java.util.*;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
- *
  * @author James F. Bowring
  */
 public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInterface {
@@ -77,7 +76,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private double[] pkInterpScanArray;
 
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
-    private Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
+    private final Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
     private Map<ExpressionTreeInterface, String> taskExpressionsMetaDataPerSpot;
 
     private boolean selected;
@@ -143,7 +142,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
      * @param fractionID
      * @param isotopicRatios
      * @param isotopicRatiosII
@@ -245,8 +243,8 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     public long getDateTimeMillisecondsLong() {
         return dateTimeMilliseconds;
     }
-    
-       /**
+
+    /**
      * @return the dateTimeMilliseconds
      */
     @Override
@@ -254,16 +252,16 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return getDateTime();
     }
 
-    @Override
-    public String getDateTime() {
-        return CalamariReportsEngine.getFormattedDate(dateTimeMilliseconds);
-    }
-
     /**
      * @param dateTimeMilliseconds the dateTimeMilliseconds to set
      */
     public void setDateTimeMilliseconds(long dateTimeMilliseconds) {
         this.dateTimeMilliseconds = dateTimeMilliseconds;
+    }
+
+    @Override
+    public String getDateTime() {
+        return CalamariReportsEngine.getFormattedDate(dateTimeMilliseconds);
     }
 
     /**
@@ -542,6 +540,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         return totalCps.clone();
     }
 
+    /**
+     * @param totalCps the totalCps to set
+     */
+    @Override
+    public void setTotalCps(double[] totalCps) {
+        this.totalCps = totalCps.clone();
+    }
+
     @Override
     public double[] getNscansTimesCountTimeSec() {
         int piNscans = timeStampSec.length;
@@ -551,14 +557,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         }
 
         return product;
-    }
-
-    /**
-     * @param totalCps the totalCps to set
-     */
-    @Override
-    public void setTotalCps(double[] totalCps) {
-        this.totalCps = totalCps.clone();
     }
 
     /**
@@ -607,7 +605,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -616,7 +613,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
      * @param concentrationReferenceMaterial
      */
     public void setConcentrationReferenceMaterial(boolean concentrationReferenceMaterial) {
@@ -708,7 +704,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     /**
      * @param taskExpressionsForScansEvaluated the
-     * taskExpressionsForScansEvaluated to set
+     *                                         taskExpressionsForScansEvaluated to set
      */
     @Override
     public void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated) {
@@ -950,7 +946,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -962,7 +957,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     *
      * @param commonLeadModel
      */
     @Override
@@ -1029,7 +1023,14 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
-        return commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
+
+        String expressionName;
+        if (referenceMaterial) {
+            expressionName = commonLeadSpecsForSpot.getRefMatAgeType().getExpressionName();
+        }else {
+            expressionName = commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
+        }
+        return expressionName;
     }
 
     @Override

@@ -108,7 +108,7 @@
                         <Menu mnemonicParsing="false" text="Reference Materials">
                             <items>
                                 <MenuItem fx:id="refMatConcordiaMenuItem" mnemonicParsing="false" onAction="#referenceMaterialConcordiaAction" text="Concordia" />
-                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialCalibrationConstAction" text="Calibration Constant" />
+                                <MenuItem mnemonicParsing="false" onAction="#referenceMaterialCalibrationConstAction" text="Calibration Constant WM" />
                         <MenuItem mnemonicParsing="false" onAction="#referenceMaterialWMAction" text="Weighted Means" />
                                 <MenuItem mnemonicParsing="false" onAction="#plotAnyTwoExpressionsAction" text="Plot Any Two Expressions" />
                             </items>

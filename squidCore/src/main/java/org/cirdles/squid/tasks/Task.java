@@ -47,6 +47,7 @@ import org.cirdles.squid.tasks.expressions.ExpressionSpec;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecXMLConverter;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.ReferenceMaterialAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.expressionTrees.*;
@@ -951,6 +952,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             evaluateTaskExpressions();
 
+            //ensure metadata fields for spots up to date to power sorting at Interpretations menu
+            try {
+                ExpressionTreeInterface hoursExp = namedSpotLookupFieldsMap.get("Hours");
+                evaluateExpressionForSpotSet(hoursExp, shrimpFractions);
+                ExpressionTreeInterface spotIndexExp = namedSpotLookupFieldsMap.get("SpotIndex");
+                evaluateExpressionForSpotSet(spotIndexExp, shrimpFractions);
+            } catch (SquidException squidException) {
+                System.out.println("FIXME");
+            }
+
             buildExpressionDependencyGraphs();
 
             reportsEngine.clearReports();
@@ -1596,15 +1607,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         applyDirectives();
 
-        //ensure metadata fields for spots up to date to power sorting at Interpretations menu
-        try {
-            ExpressionTreeInterface hoursExp = namedSpotLookupFieldsMap.get("Hours");
-            evaluateExpressionForSpotSet(hoursExp, shrimpFractions);
-            ExpressionTreeInterface spotIndexExp = namedSpotLookupFieldsMap.get("SpotIndex");
-            evaluateExpressionForSpotSet(spotIndexExp, shrimpFractions);
-        } catch (SquidException squidException) {
-            System.out.println("FIXME");
-        }
     }
 
     @Override
@@ -2031,6 +2033,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setUnknownGroupSelectedAge(spotsForExpression, sampleAgeType);
     }
 
+    public void setRMGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, ReferenceMaterialAgeTypesEnum sampleAgeType) {
+        for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
+            spot.getCommonLeadSpecsForSpot().setRefMatAgeType(sampleAgeType);
+        }
+    }
+
+    public void setRefMatGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) {
+        ReferenceMaterialAgeTypesEnum sampleAgeType = null;
+        for (ReferenceMaterialAgeTypesEnum sat : ReferenceMaterialAgeTypesEnum.values()) {
+            if (sat.getExpressionName().compareTo(sampleAgeName) == 0) {
+                sampleAgeType = sat;
+                break;
+            }
+        }
+        setRMGroupSelectedAge(spotsForExpression, sampleAgeType);
+    }
+
     public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
@@ -2105,8 +2124,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private Expression constructCustomWMExpression(String expressionName, String sampleName) {
         // calculate weighted mean of selected expressionName without auto-rejection
+        boolean isRefMat = expressionName.contains("_RM");
         Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
-                "WtdAv([\"" + expressionName + "\"])", false, true, true);
+                "WtdAv([\"" + expressionName + "\"])", isRefMat, !isRefMat, true);
 //                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
         expressionWM.setNotes("Expression generated from the Samples Weighted Mean screen under Interpretations.");
 
@@ -2181,6 +2201,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
+    /**
+     * @param expressionTree
+     * @param spotsForExpression
+     * @throws SquidException
+     */
+    @Override
     public void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expressionTree,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
@@ -3433,6 +3459,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         // safety feature
         mapOfUnknownsBySampleNames.put(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(), unknownSpots);
         return mapOfUnknownsBySampleNames;
+    }
+
+    public Map<String, List<ShrimpFractionExpressionInterface>> produceMapOfRefMatSpotsNames() {
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfRefMatSpotsNames  = new TreeMap<>();
+        mapOfRefMatSpotsNames.put(filterForRefMatSpotNames, referenceMaterialSpots);
+        return mapOfRefMatSpotsNames;
     }
 
     /**

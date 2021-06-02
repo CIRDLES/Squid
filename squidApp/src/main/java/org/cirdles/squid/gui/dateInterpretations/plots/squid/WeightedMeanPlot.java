@@ -107,11 +107,11 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         // extract needed values
         this.ageOrValueLookupString = ageOrValueLookupString;
         this.adaptToAgeInMA = ageOrValueLookupString.contains("Age");
-        extractSpotDetails();
+
 
         this.referenceMaterialAge = referenceMaterialAge;
         this.weightedMeanRefreshInterface = weightedMeanRefreshInterface;
-
+        extractSpotDetails();
         this.indexOfSelectedSpot = -1;
 
         setOpacity(1.0);
@@ -336,13 +336,15 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         Text text = new Text();
         text.setFont(Font.font("SansSerif", 15));
-        int rightOfText = 275;
+        int rightOfText = 285;
         int textWidth = 0;
         int widthOffset = 10;
         int currentTextHeightPixels = 75;
         int heightOffset = 18;
 
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+        if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
+                ||
+                (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_RM) == 0)) {
             // section for sample wms
             text.setText("Wtd Mean of " + ageOrValueLookupString);
             textWidth = (int) text.getLayoutBounds().getWidth();
@@ -489,6 +491,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setLineWidth(1.0);
         g2d.setStroke(Paint.valueOf("GREEN"));
         if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
+                ||(PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_RM) == 0)
                 || switchRefMatViewToCalibConst) {
             g2d.strokeLine(
                     mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));
@@ -679,13 +682,15 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         Text text = new Text();
         text.setFont(Font.font("SansSerif", 15));
-        int rightOfText = 275;
+        int rightOfText = 285;
         int textWidth = 0;
         int widthOffset = 10;
         int currentTextHeightPixels = 75;
         int heightOffset = 18;
 
-        if (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0) {
+        if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
+                ||
+                (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_RM) == 0)) {
             // section for sample wms
             text.setText("Wtd Mean of " + ageOrValueLookupString);
             textWidth = (int) text.getLayoutBounds().getWidth();
