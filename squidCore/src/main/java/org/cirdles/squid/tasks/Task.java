@@ -21,7 +21,6 @@ import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
-import org.cirdles.squid.constants.Squid3Constants.OvercountCorrectionTypes;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
@@ -189,7 +188,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<SquidReportTableInterface> squidReportTablesUnknown;
     protected SquidReportTableInterface selectedRefMatReportModel;
     protected SquidReportTableInterface selectedUnknownReportModel;
-    protected OvercountCorrectionTypes overcountCorrectionType;
+    protected Squid3Constants.OvercountCorrectionTypes overcountCorrectionType;
     // Sept 2020 to support stickiness of choices for the plot any 2 feature of interpretations
     protected String xAxisExpressionName;
     protected String yAxisExpressionName;
@@ -323,7 +322,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.selectedRefMatReportModel = null;
         this.selectedUnknownReportModel = null;
 
-        this.overcountCorrectionType = OvercountCorrectionTypes.NONE;
+        this.overcountCorrectionType = Squid3Constants.OvercountCorrectionTypes.NONE;
 
         generateConstants();
         generateParameters();
@@ -1034,7 +1033,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207() {
-        ExpressionTreeInterface countCorrectionExpression204From207 = namedExpressionsMap.get("CountCorrectionExpression204From207");
+        ExpressionTreeInterface countCorrectionExpression204From207 = namedExpressionsMap.get("SWAPCountCorrectionExpression204From207");
         for (ShrimpFractionExpressionInterface spot : unknownSpots) {
             SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
             double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From207);
@@ -1045,7 +1044,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     public void updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208() {
-        ExpressionTreeInterface countCorrectionExpression204From208 = namedExpressionsMap.get("CountCorrectionExpression204From208");
+        ExpressionTreeInterface countCorrectionExpression204From208 = namedExpressionsMap.get("SWAPCountCorrectionExpression204From208");
         for (ShrimpFractionExpressionInterface spot : unknownSpots) {
             SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
             double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot().get(countCorrectionExpression204From208);
@@ -3743,9 +3742,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the overcountCorrectionType
      */
     @Override
-    public OvercountCorrectionTypes getOvercountCorrectionType() {
+    public Squid3Constants.OvercountCorrectionTypes getOvercountCorrectionType() {
         if (overcountCorrectionType == null) {
-            overcountCorrectionType = OvercountCorrectionTypes.NONE;
+            overcountCorrectionType = Squid3Constants.OvercountCorrectionTypes.NONE;
         }
         return overcountCorrectionType;
     }
@@ -3754,7 +3753,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
     @Override
-    public void setOvercountCorrectionType(OvercountCorrectionTypes overcountCorrectionType) {
+    public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType) {
         this.overcountCorrectionType = overcountCorrectionType;
     }
 
@@ -3777,7 +3776,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 referenceMaterialModelChanged, commonPbModelChanged, concentrationReferenceMaterialModelChanged,
                 specialSquidFourExpressionsMap, delimiterForUnknownNames, concentrationTypeEnum,
                 providesExpressionsGraph, requiresExpressionsGraph, missingExpressionsByName,
-                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown, overcountCorrectionType);
+                roundingForSquid3, squidReportTablesRefMat, squidReportTablesUnknown);
 
         result = 31 * result + Arrays.hashCode(tableOfSelectedRatiosByMassStationIndex);
         return result;

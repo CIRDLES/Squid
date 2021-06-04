@@ -55,7 +55,7 @@ public class BuiltinExpressionsCountCorrection204 {
                 = "100*SQRT(" + term1 + "+" + term2 + "+" + term3 + ")/" + term4;
 
         Expression countCorrectionExpression204From207 = buildExpression(
-                "CountCorrectionExpression204From207",
+                "SWAPCountCorrectionExpression204From207",
                 "ValueModel("
                 + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_207 + ")/"
                 + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
@@ -96,7 +96,7 @@ public class BuiltinExpressionsCountCorrection204 {
                 = "100*SQRT(" + term1 + "+" + term2 + "+" + term3 + ")/" + term4;
 
         Expression countCorrectionExpression204From208 = buildExpression(
-                "CountCorrectionExpression204From208",
+                "SWAPCountCorrectionExpression204From208",
                 "ValueModel("
                 + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_208 + ")/"
                 + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
