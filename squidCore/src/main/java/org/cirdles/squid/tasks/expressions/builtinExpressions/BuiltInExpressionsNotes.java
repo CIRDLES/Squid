@@ -17,129 +17,10 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import java.util.Map;
 import java.util.TreeMap;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.AV_PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_4COR_207_206_AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_64;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_68;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_74;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_76;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_84;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM_86;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_208PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_64;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_68;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_74;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_76;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_84;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFCOM_86;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA230;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA234;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA235;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.LAMBDA238;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_7;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_7;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_DISCORDANCE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238CALIB_CONST_WM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR_DISCORDANCE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBTH_EXT_1_SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PBU_EXT_1_SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_7_6;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_8_6_FACT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_PB_PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_TH_PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_AGE_U_PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_TH_PB_RATIO;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REFRAD_U_PB_RATIO;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_TH_CONC_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_U_CONC_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_206PB204PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_207PB204PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFRAD_208PB204PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L1033;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L859;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.L9678;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS232TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.NUKEMASS238U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_206PB204PB_FACTOR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.RAD_208PB204PB_FACTOR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_204;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_204;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_206;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_204;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_206PB238U_EXT_1SIGMA_ERR_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.MIN_208PB232TH_EXT_1SIGMA_ERR_PCT;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class BuiltInExpressionsNotes {
@@ -151,7 +32,7 @@ public class BuiltInExpressionsNotes {
                 "Concentration coefficient linking present-day total U content to present-day 232Th content.");
         BUILTIN_EXPRESSION_NOTES.put(L859,
                 "Concentration coefficient linking radiogenic 206Pb content to total U content in a closed system of known age. "
-                + "The coefficient is used in conjunction with the 206Pb/238U age equation.");
+                        + "The coefficient is used in conjunction with the 206Pb/238U age equation.");
         BUILTIN_EXPRESSION_NOTES.put(L9678,
                 "Concentration coefficient linking present-day 232Th content to present-day total U content.");
 
@@ -166,15 +47,15 @@ public class BuiltInExpressionsNotes {
                 "Reference 238U/235U of Isotopic RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(AV_PARENT_ELEMENT_CONC_CONST,
-                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");       
+                "CM spots: Arithmetic mean of Parent Element concentration constants (for nominated Parent Element), as measured SOLELY on CM.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB_RM,
                 "RM spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R208PB206PB,
-                "Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");      
+                "Sample spots: Radiogenic 208Pb/206Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT_RM,
                 "RM spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
-         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
-                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");      
+        BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM206PB_PCT,
+                "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT_RM,
                 "RM spots: Common 208Pb as a percentage of total 208Pb, based on the 204Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + COM208PB_PCT,
@@ -218,7 +99,7 @@ public class BuiltInExpressionsNotes {
 
         BUILTIN_EXPRESSION_NOTES.put(PARENT_ELEMENT_CONC_CONST,
                 "RM and Sample spots: Parent Element concentration constant, "
-                + "for nominated Parent Element of Concentration RM, evaluated via Special U-Th-Pb Expression.");
+                        + "for nominated Parent Element of Concentration RM, evaluated via Special U-Th-Pb Expression.");
         BUILTIN_EXPRESSION_NOTES.put(REF_TH_CONC_PPM,
                 "Reference Th content of CM.");
         BUILTIN_EXPRESSION_NOTES.put(REF_U_CONC_PPM,
@@ -237,48 +118,48 @@ public class BuiltInExpressionsNotes {
                 "Reference radiogenic 207Pb/206Pb of RM.");
         BUILTIN_EXPRESSION_NOTES.put(REFRAD_8_6_FACT,
                 "Factor defined as (radiogenic 208Pb/206Pb) * (238U/232Th) for RM;"
-                + " determined arithmetically as (exp[Lambda232 * RefRad_208Pb232Th_Age] - 1)"
-                + " / (exp[Lambda238 * RefRad_206Pb238U_Age] - 1).");
+                        + " determined arithmetically as (exp[Lambda232 * RefRad_208Pb232Th_Age] - 1)"
+                        + " / (exp[Lambda238 * RefRad_206Pb238U_Age] - 1).");
 
         BUILTIN_EXPRESSION_NOTES.put(UNCOR206PB238U_CALIB_CONST,
                 "RM and Sample spots: 206Pb/238U calibration constant, uncorrected for common Pb,"
-                + " evaluated via Special U-Th-Pb Expression. Calculated by all Tasks, "
-                + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " evaluated via Special U-Th-Pb Expression. Calculated by all Tasks, "
+                        + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(UNCOR208PB232TH_CALIB_CONST,
                 "RM and Sample spots: 208Pb/232Th calibration constant, uncorrected for common Pb,"
-                + " evaluated via Special U-Th-Pb Expression. Calculated by all Tasks, "
-                + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " evaluated via Special U-Th-Pb Expression. Calculated by all Tasks, "
+                        + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
 
         BUILTIN_EXPRESSION_NOTES.put(OVER_COUNT_4_6_7,
                 "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 207Pb.");
         BUILTIN_EXPRESSION_NOTES.put(OVER_COUNT_4_6_8,
                 "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value "
-                + " depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value "
+                        + " depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(OVER_COUNTS_PERSEC_4_8,
                 "RM spots: Overcounts per second at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + " this value depends on the index isotope (204Pb or 207Pb) "
-                + " chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                        + " this value depends on the index isotope (204Pb or 207Pb) "
+                        + " chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(OVER_COUNTS_PERSEC_4_7,
                 "RM spots: Overcounts per second at mass 204, based on counts at 207Pb.");
 
         BUILTIN_EXPRESSION_NOTES.put(TH_U_EXP_RM,
                 "RM spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"),"
-                + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB4COR206_238AGE_RM,
                 "RM spots: 204Pb-corrected 206Pb/238U age. Calculated for RMs in all "
-                + "Tasks except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + "Tasks except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR206_238CALIB_CONST,
                 "RM spots: 204Pb-corrected 206Pb/238U calibration constant. Calculated for RMs"
-                + "  in all Tasks except Th-Pb Tasks that calculate only a single "
-                + " 208Pb/232Th calibration (\"Perm3\").");
+                        + "  in all Tasks except Th-Pb Tasks that calculate only a single "
+                        + " 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "RM dataset: Calculated external (spot-to-spot) 1sigma uncertainty "
-                + " (expressed as a percentage), derived from WtdAv_4cor_206Pb238U_CalibConst, "
-                + " subject to a user-defined minimum value. Calculated by all Tasks except "
-                + " Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " (expressed as a percentage), derived from WtdAv_4cor_206Pb238U_CalibConst, "
+                        + " subject to a user-defined minimum value. Calculated by all Tasks except "
+                        + " Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + R206PB_238U_RM,
                 "RM spots: 204Pb-corrected 206Pb/238U.");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR207_206AGE_RM,
@@ -289,144 +170,144 @@ public class BuiltInExpressionsNotes {
                 "RM spots: 204Pb-corrected 207Pb/235U ratio.");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR208_232AGE_RM,
                 "RM spots: 204Pb-corrected 208Pb/232Th age. Calculated for RMs in all Tasks "
-                + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR208_232CALIB_CONST,
                 "RM spots: 204Pb-corrected 208Pb/232Th calibration constant. "
-                + " Calculated for RMs in all Tasks except U-Pb Tasks that calculate "
-                + " only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " Calculated for RMs in all Tasks except U-Pb Tasks that calculate "
+                        + " only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
                 "RM dataset: Calculated external (spot-to-spot) 1sigma uncertainty "
-                + " (expressed as a percentage), derived from WtdAv_4cor_208Pb232Th_CalibConst,"
-                + "  subject to a user-defined minimum value. Calculated by all Tasks except "
-                + " U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " (expressed as a percentage), derived from WtdAv_4cor_208Pb232Th_CalibConst,"
+                        + "  subject to a user-defined minimum value. Calculated by all Tasks except "
+                        + " U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + ERR_CORREL_RM,
                 "RM spots: Error correlation (for Wetherill concordia plot) between "
-                + " 204Pb-corrected values of 207Pb/235U and 206Pb/238U.");
+                        + " 204Pb-corrected values of 207Pb/235U and 206Pb/238U.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB7COR206_238AGE_RM,
                 "RM spots: 207Pb-corrected 206Pb/238U age");
         BUILTIN_EXPRESSION_NOTES.put(PB7COR206_238CALIB_CONST,
                 "RM spots: 207Pb-corrected 206Pb/238U calibration constant. "
-                + " Calculated by all Tasks except Th-Pb Tasks that calculate "
-                + " only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " Calculated by all Tasks except Th-Pb Tasks that calculate "
+                        + " only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "RM dataset: Calculated external (spot-to-spot) 1sigma uncertainty "
-                + " (expressed as a percentage), derived from WtdAv_7cor_206Pb238U_CalibConst,"
-                + " subject to a user-defined minimum value. Calculated by all Tasks "
-                + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " (expressed as a percentage), derived from WtdAv_7cor_206Pb238U_CalibConst,"
+                        + " subject to a user-defined minimum value. Calculated by all Tasks "
+                        + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R206PB_238U_RM,
                 "RM spots: 207Pb-corrected 206Pb/238U");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R208PB206PB_RM,
                 "RM spots: Radiogenic 208Pb/206Pb, based on the 207Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7COR208_232AGE_RM,
                 "RM spots: 207Pb-corrected 208Pb/232Th age. Calculated by all Tasks"
-                + "  except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + "  except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7COR208_232CALIB_CONST,
                 "RM spots: 207Pb-corrected 208Pb/232Th calibration constant. Calculated "
-                + " by all Tasks except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " by all Tasks except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
                 "RM dataset: Calculated external (spot-to-spot) 1sigma uncertainty (expressed as a percentage),"
-                + " derived from WtdAv_7cor_208Pb232Th_CalibConst, subject to a user-defined minimum value. "
-                + " Calculated by all Tasks except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " derived from WtdAv_7cor_208Pb232Th_CalibConst, subject to a user-defined minimum value. "
+                        + " Calculated by all Tasks except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + COM206PB_PCT_RM,
                 "RM spots: Common 206Pb as a percentage of total 206Pb, based on the 207Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + COM208PB_PCT_RM,
                 "RM spots: Common 208Pb as a percentage of total 208Pb, based on the 207Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
-                + " based on overcounts at mass 204 as calculated from counts at 207Pb.");
+                        + " based on overcounts at mass 204 as calculated from counts at 207Pb.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB8COR206_238AGE_RM,
                 "RM spots: 208Pb-corrected 206Pb/238U age. Calculated solely in U-Pb Tasks that calculate "
-                + "only a single 206Pb/238U calibration (\"Perm1\").");
+                        + "only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8COR206_238CALIB_CONST,
                 "RM spots: 208Pb-corrected 206Pb/238U calibration constant. Calculated solely "
-                + " in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "RM dataset: Calculated external (spot-to-spot) 1sigma uncertainty (expressed as a percentage),"
-                + " derived from WtdAv_8cor_206Pb238U_CalibConst, subject to a user-defined minimum value. "
-                + " Calculated solely in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " derived from WtdAv_8cor_206Pb238U_CalibConst, subject to a user-defined minimum value. "
+                        + " Calculated solely in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R206PB_238U_RM,
                 "RM spots: 208Pb-corrected 206Pb/238U. Calculated solely in U-Pb Tasks that calculate only a "
-                + " single 206Pb/238U calibration (\"Perm1\").");
+                        + " single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8COR207_206AGE_RM,
                 "RM spots: 208Pb-corrected 207Pb/206Pb age. Calculated solely in U-Pb Tasks that calculate only "
-                + " a single 206Pb/238U calibration (\"Perm1\").");
+                        + " a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R207PB_206PB_RM,
                 "RM spots: 208Pb-corrected 207Pb/206Pb. Calculated solely in U-Pb Tasks that calculate "
-                + " only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R207PB_235U_RM,
                 "RM spots: 208Pb-corrected 207Pb/235U. Calculated solely in U-Pb "
-                + " Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + COM206PB_PCT_RM,
                 "RM spots: Common 206Pb as a percentage of total 206Pb, based on the 208Pb-correction. "
-                + " Calculated solely in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " Calculated solely in U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + ERR_CORREL_RM,
                 "RM spots: Error correlation (for Wetherill concordia plot) between 208Pb-corrected values "
-                + " of 207Pb/235U and 206Pb/238U. Calculated solely in U-Pb Tasks that calculate only a "
-                + " single 206Pb/238U calibration (\"Perm1\").");
+                        + " of 207Pb/235U and 206Pb/238U. Calculated solely in U-Pb Tasks that calculate only a "
+                        + " single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
-                + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value "
-                + " depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value "
+                        + " depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(BIWT_204_OVR_CTS_FROM_207,
                 "RM dataset: Biweight mean of values of overcounts-per-second at mass 204, based on counts at 207Pb in the RM.");
         BUILTIN_EXPRESSION_NOTES.put(BIWT_204_OVR_CTS_FROM_208,
                 "RM dataset: Biweight mean of values of overcounts-per-second at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends on the "
-                + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends on the "
+                        + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(BIWT_4COR_207_206_AGE,
                 "RM dataset: Biweight mean of 204Pb-corrected 207Pb/206Pb ages.");
         BUILTIN_EXPRESSION_NOTES.put(BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM dataset: Biweight mean of offsets (expressed as percentages) of the primary calibration constant, "
-                + " based on overcounts at mass 204 as calculated from counts at 207Pb.");
+                        + " based on overcounts at mass 204 as calculated from counts at 207Pb.");
         BUILTIN_EXPRESSION_NOTES.put(BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM dataset: Biweight mean of offsets (expressed as percentages) of the primary calibration constant,"
-                + " based on overcounts at mass 204 as calculated from counts at 208Pb. In dual-calibration Tasks"
-                + " (i.e. \"Perm2\" and \"Perm4\"), this value depends on the index isotope (204Pb or 207Pb) chosen "
-                + " for the common Pb correction.");
+                        + " based on overcounts at mass 204 as calculated from counts at 208Pb. In dual-calibration Tasks"
+                        + " (i.e. \"Perm2\" and \"Perm4\"), this value depends on the index isotope (204Pb or 207Pb) chosen "
+                        + " for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(TH_CONCEN_PPM_RM,
                 "RM spots: Calculated Th content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its U content, this value depends on the index isotope "
-                + " (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its U content, this value depends on the index isotope "
+                        + " (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_206_238_RM,
                 "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_208_232_RM,
                 "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(U_CONCEN_PPM_RM,
                 "RM spots: Calculated U content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its Th content, this value depends on the index "
-                + " isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its Th content, this value depends on the index "
+                        + " isotope (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB4COR206_238CALIB_CONST_WM,
                 "RM dataset: Weighted mean of 204Pb-corrected 206Pb/238U calibration constants. "
-                + " Calculated by all Tasks except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " Calculated by all Tasks except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR208_232CALIB_CONST_WM,
                 "RM dataset: Weighted mean of 204Pb-corrected 208Pb/232Th calibration constants. Calculated by all Tasks "
-                + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7COR206_238CALIB_CONST_WM,
                 "RM datatset: Weighted mean of 207Pb-corrected 206Pb/238U calibration constants. Calculated by all Tasks "
-                + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
+                        + " except Th-Pb Tasks that calculate only a single 208Pb/232Th calibration (\"Perm3\").");
         BUILTIN_EXPRESSION_NOTES.put(PB7COR208_232CALIB_CONST_WM,
                 "RM dataset: Weighted mean of 207Pb-corrected 208Pb/232Th calibration constants. Calculated by all Tasks "
-                + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " except U-Pb Tasks that calculate only a single 206Pb/238U calibration (\"Perm1\").");
         BUILTIN_EXPRESSION_NOTES.put(PB8COR206_238CALIB_CONST_WM,
                 "RM dataset: Weighted mean of 208Pb-corrected 206Pb/238U calibration constants. Calculated solely in U-Pb Tasks "
-                + " that calculate only a single 206Pb/238U calibration (\"Perm1\").");
+                        + " that calculate only a single 206Pb/238U calibration (\"Perm1\").");
 
         // start unknowns        
         BUILTIN_EXPRESSION_NOTES.put(TH_U_EXP,
                 "Sample spots: 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
-                + "on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
+                        + "on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + CONCEN_206PB,
                 "Sample spots: Radiogenic 206Pb content, based on the 204Pb-correction.");
@@ -450,11 +331,11 @@ public class BuiltInExpressionsNotes {
                 "Sample spots: 204Pb-corrected 238U/206Pb.");
         BUILTIN_EXPRESSION_NOTES.put(PB4COR_DISCORDANCE,
                 "Sample spots: Discordance of 204Pb-corrected 206Pb/238U and 207Pb/206Pb, "
-                + " defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ],"
-                + " and expressed as a percentage.");
+                        + " defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ],"
+                        + " and expressed as a percentage.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + ERR_CORREL,
                 "Sample spots: Error correlation (for Wetherill concordia plot) between "
-                + " 204Pb-corrected values of 207Pb/235U and 206Pb/238U.");
+                        + " 204Pb-corrected values of 207Pb/235U and 206Pb/238U.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + R204PB_206PB,
                 "Sample spots: 204Pb/206Pb corrected for biweight mean of overcounts at mass 204, based on counts at 207Pb in the RM dataset.");
@@ -479,7 +360,7 @@ public class BuiltInExpressionsNotes {
 
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R204PB_206PB,
                 "Sample spots: 204Pb/206Pb corrected for biweight mean of overcounts at "
-                + "/n mass 204, based on counts at 208Pb in the RM dataset.");
+                        + "/n mass 204, based on counts at 208Pb in the RM dataset.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + CONCEN_206PB,
                 "Sample spots: Radiogenic 206Pb content, based on the 208Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R206PB_238U,
@@ -494,16 +375,16 @@ public class BuiltInExpressionsNotes {
                 "Sample spots: 208Pb-corrected 207Pb/235U.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + R238U_206PB,
                 "CM spots: Arithmetic mean of Parent Element concentration constants "
-                + " (for nominated Parent Element), as measured SOLELY on CM");
+                        + " (for nominated Parent Element), as measured SOLELY on CM");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + COM206PB_PCT,
                 "Sample spots: Common 206Pb as a percentage of total 206Pb, based on the 208Pb-correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB8COR_DISCORDANCE,
                 "Sample spots: Discordance of 208Pb-corrected 206Pb/238U and 207Pb/206Pb, "
-                + " defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ], "
-                + "\nand expressed as a percentage");
+                        + " defined as 100 * [ 1 - { (206Pb/238U) / exp( [ Lambda238 * {207Pb/206Pb age} ] - 1 ) } ], "
+                        + "\nand expressed as a percentage");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + ERR_CORREL,
                 "Sample spots: Error correlation (for Wetherill concordia plot) between 208Pb-corrected "
-                + " values of 207Pb/235U and 206Pb/238U.");
+                        + " values of 207Pb/235U and 206Pb/238U.");
 
         BUILTIN_EXPRESSION_NOTES.put(DEFRAD_206PB204PB,
                 "Sample spots: Default (radiogenic 206Pb)/204Pb, defined as (Total_206Pb204Pb) - (DefCom_206Pb204Pb).");
@@ -524,8 +405,8 @@ public class BuiltInExpressionsNotes {
                 "Sample spots: Measured 206Pb/204Pb.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_206_238,
                 "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_207_204,
                 "Sample spots: Measured 207Pb/204Pb.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_207_206,
@@ -534,12 +415,12 @@ public class BuiltInExpressionsNotes {
                 "Sample spots: Measured 208Pb/204Pb.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(TOTAL_238_206,
                 "Sample spots: Calculated total 238U/206Pb. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
 
         BUILTIN_EXPRESSION_NOTES.put(U_CONCEN_PPM,
                 "Sample spots: Calculated U content.");
@@ -547,123 +428,123 @@ public class BuiltInExpressionsNotes {
         // aliased RM expressions start here
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + OVER_COUNTS_PERSEC_4_8,
                 "RM spots: Overcounts per second at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                        + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + OVER_COUNT_4_6_8,
                 "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
-                + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                        + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_U_EXP_RM,
                 "RM spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
-                + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
-                + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                        + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_CONCEN_PPM_RM,
                 "RM spots: Calculated Th content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its U content, this value depends on the "
-                + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its U content, this value depends on the "
+                        + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_206_238_RM,
                 "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_208_232_RM,
                 "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + U_CONCEN_PPM_RM,
                 "RM spots: Calculated U content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its Th content, this value depends "
-                + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its Th content, this value depends "
+                        + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + OVER_COUNTS_PERSEC_4_8,
                 "RM spots: Overcounts per second at mass 204, based on counts at 208Pb. In dual-calibration "
-                + " Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends on the index "
-                + " isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends on the index "
+                        + " isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + OVER_COUNT_4_6_8,
                 "RM spots: 204Pb/206Pb corrected for overcounts at mass 204, based on counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
-                + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), this value depends "
+                        + " on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_U_EXP_RM,
                 "RM spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
                 "RM spots: Offset (expressed as a percentage) of the primary calibration constant, "
-                + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
-                + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " based on overcounts at mass 204 as calculated from counts at 208Pb. "
+                        + " In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
+                        + " this value depends on the index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_CONCEN_PPM_RM,
                 "RM spots: Calculated Th content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its U content, this value depends on the "
-                + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its U content, this value depends on the "
+                        + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_206_238_RM,
                 "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232_RM,
                 "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + U_CONCEN_PPM_RM,
                 "RM spots: Calculated U content. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\") "
-                + " where the CM is defined in terms of its Th content, this value depends on the "
-                + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
+                        + " where the CM is defined in terms of its Th content, this value depends on the "
+                        + " index isotope (204Pb or 207Pb) chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_206_238_RM,
                 "RM spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232_RM,
                 "RM spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for the common Pb correction.");
 
         // aliased UNKNOWN expressions start here
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TH_U_EXP,
                 "Sample spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + "this value depends on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
+                        + "this value depends on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_206_238,
                 "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB4CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TH_U_EXP,
                 "Sample spots: Calculated 232Th/238U. In dual-calibration Tasks (i.e. \"Perm2\" and \"Perm4\"), "
-                + "this value depends on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
+                        + "this value depends on the index isotope (204Pb or 207Pb) chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_206_238,
                 "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB7CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope (204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "[\"Perm1\"], possibly 208Pb)  chosen for common Pb correction of the RM.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_206_238,
                 "Sample spots: Calculated total 206Pb/238U. Always depends on the index isotope "
-                + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+                        + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
         BUILTIN_EXPRESSION_NOTES.put(PB8CORR + TOTAL_208_232,
                 "Sample spots: Calculated total 208Pb/232Th. Always depends on the index isotope "
-                + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
+                        + " (204Pb, 207Pb, or in the case of \"Perm1\", possibly 208Pb)  chosen for the common Pb correction.");
 
         BUILTIN_EXPRESSION_NOTES.put(MIN_206PB238U_EXT_1SIGMA_ERR_PCT,
                 "User-defined minimum value for external (spot-to-spot) 1sigma uncertainty (expressed as a percentage), "
-                + "intended to supersede any smaller value of WtdAv_Xcor_206Pb238U_CalibConst[2] (i.e. the third"
-                + " element of the WtdAv vector output) calculated from any RM dataset of "
-                + "WtdAv_Xcor_206Pb238U_CalibConst values. In this context, Xcor denotes the "
-                + "index isotope used for the common Pb correction in the RM (i.e. 204Pb, 207Pb, "
-                + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
-                + "(i.e. \"Perm1\"), possibly 208Pb).");
+                        + "intended to supersede any smaller value of WtdAv_Xcor_206Pb238U_CalibConst[2] (i.e. the third"
+                        + " element of the WtdAv vector output) calculated from any RM dataset of "
+                        + "WtdAv_Xcor_206Pb238U_CalibConst values. In this context, Xcor denotes the "
+                        + "index isotope used for the common Pb correction in the RM (i.e. 204Pb, 207Pb, "
+                        + "or in the case of U-Pb Tasks that calculate only a single 206Pb/238U calibration "
+                        + "(i.e. \"Perm1\"), possibly 208Pb).");
 
         BUILTIN_EXPRESSION_NOTES.put(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT,
                 "User-defined minimum value for external (spot-to-spot) 1sigma uncertainty (expressed as a percentage),"
-                + " intended to supersede any smaller value of WtdAv_Xcor_208Pb232Th_CalibConst[2]"
-                + " (i.e. the third element of the WtdAv vector output) calculated from "
-                + "any RM dataset of WtdAv_Xcor_208Pb232Th_CalibConst values. In this context, "
-                + "Xcor denotes the index isotope used for the common Pb correction in the RM (i.e. 204Pb or 207Pb).");
+                        + " intended to supersede any smaller value of WtdAv_Xcor_208Pb232Th_CalibConst[2]"
+                        + " (i.e. the third element of the WtdAv vector output) calculated from "
+                        + "any RM dataset of WtdAv_Xcor_208Pb232Th_CalibConst values. In this context, "
+                        + "Xcor denotes the index isotope used for the common Pb correction in the RM (i.e. 204Pb or 207Pb).");
     }
 }

@@ -16,17 +16,19 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
+import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
+
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
-import org.cirdles.squid.exceptions.SquidException;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.TaskInterface;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
-import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
@@ -40,7 +42,15 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     private ShrimpSpeciesNode denominator;
 
     public final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION = "getIsotopicRatioValuesByStringName";
+    private final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE = "getOriginalIsotopicRatioValuesByStringName";
 
+    private static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
+    public static void switchToOrigValue(){
+        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE;
+    }
+    public static void switchToUsedValue(){
+        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
+    }
     /**
      *
      */
@@ -110,7 +120,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
 
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
-                    LOOKUP_METHODNAME_FOR_SHRIMPFRACTION,
+                    LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE,
                     new Class[]{String.class});
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();

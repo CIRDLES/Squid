@@ -39,59 +39,17 @@ public abstract class Function
         Serializable,
         XMLSerializerInterface {
 
-    private static final long serialVersionUID = 5737437390502874465L;
-
-    /**
-     *
-     */
-    protected String name;
-
-    /**
-     *
-     */
-    protected int argumentCount;
-
-    /**
-     *
-     */
-    protected int precedence;
-    // establish size of array resulting from evaluation
-
-    /**
-     *
-     */
-    protected int rowCount;
-
-    /**
-     *
-     */
-    protected int colCount;
-
-    /**
-     *
-     */
-    protected String[][] labelsForOutputValues = new String[][]{{}};
-
-    /**
-     *
-     */
-    protected String[] labelsForInputValues = new String[]{};
-
-    protected String definition;
-
-    protected boolean summaryCalc;
-
     /**
      *
      */
     public static final Map<String, String> FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
     public static final Map<String, String> MATH_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> SQUID_COMMMON_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public static final Map<String, String> SQUID_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // establish size of array resulting from evaluation
     public static final Map<String, String> LOGIC_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
     public static final Map<String, String> ALIASED_FUNCTIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final long serialVersionUID = 5737437390502874465L;
 
     static {
 
@@ -122,6 +80,7 @@ public abstract class Function
         SQUID_FUNCTIONS_MAP.put("TotalCps", "totalCps");
         SQUID_FUNCTIONS_MAP.put("TotalCpsTime", "totalCpsTime");
         SQUID_FUNCTIONS_MAP.put("WtdMeanACalc", "wtdMeanACalc");
+        SQUID_FUNCTIONS_MAP.put("Orig", "orig");
 
         LOGIC_FUNCTIONS_MAP.put("and", "and");
         LOGIC_FUNCTIONS_MAP.put("or", "or");
@@ -159,6 +118,37 @@ public abstract class Function
 
     }
 
+    /**
+     *
+     */
+    protected String name;
+    /**
+     *
+     */
+    protected int argumentCount;
+    /**
+     *
+     */
+    protected int precedence;
+    /**
+     *
+     */
+    protected int rowCount;
+    /**
+     *
+     */
+    protected int colCount;
+    /**
+     *
+     */
+    protected String[][] labelsForOutputValues = new String[][]{{}};
+    /**
+     *
+     */
+    protected String[] labelsForInputValues = new String[]{};
+    protected String definition;
+    protected boolean summaryCalc;
+
     public Function() {
         this.definition = "todo";
     }
@@ -175,14 +165,6 @@ public abstract class Function
         }
 
         return retVal;
-    }
-
-    /**
-     * @param xstream
-     */
-    @Override
-    public void customizeXstream(XStream xstream) {
-        xstream.registerConverter(new FunctionXMLConverter());
     }
 
     /**
@@ -474,6 +456,10 @@ public abstract class Function
         return new WtdMeanACalc();
     }
 
+    public static OperationOrFunctionInterface orig() {
+        return new Orig();
+    }
+
     /**
      * @return
      */
@@ -492,8 +478,8 @@ public abstract class Function
         if (operationName != null) {
             try {
                 method = Function.class.getMethod(//
-                        operationName,
-                        new Class[0]);
+                        operationName
+                );
                 retVal = (Function) method.invoke(null, new Object[0]);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
                 //System.out.println(noSuchMethodException.getMessage());
@@ -503,18 +489,30 @@ public abstract class Function
     }
 
     /**
+     * @param xstream
+     */
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new FunctionXMLConverter());
+    }
+
+    /**
      * @param columnVector
      * @param colIndex
      * @return
      */
     protected double[] transposeColumnVectorOfDoubles(Object[][] columnVector, int colIndex) {
         double[] rowVector = new double[columnVector.length];
-        for (int i = 0; i < rowVector.length; i++) {
-            if (columnVector[i][colIndex] instanceof Integer) {
-                rowVector[i] = (double) (Integer) columnVector[i][colIndex];
-            } else {
-                rowVector[i] = (double) columnVector[i][colIndex];
+
+        try {
+            for (int i = 0; i < rowVector.length; i++) {
+                if (columnVector[i][colIndex] instanceof Integer) {
+                    rowVector[i] = (double) (Integer) columnVector[i][colIndex];
+                } else {
+                    rowVector[i] = (double) columnVector[i][colIndex];
+                }
             }
+        } catch (ClassCastException | ArrayIndexOutOfBoundsException e) {
         }
 
         return rowVector;

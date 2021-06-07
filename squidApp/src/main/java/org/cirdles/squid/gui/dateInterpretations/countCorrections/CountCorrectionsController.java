@@ -15,20 +15,10 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
-import java.net.URL;
-import java.util.Formatter;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -37,18 +27,24 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.gui.SquidUIController;
+import org.cirdles.squid.shrimp.ShrimpFraction;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
+
+import java.net.URL;
+import java.util.Formatter;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-
-import org.cirdles.squid.gui.SquidUIController;
-import org.cirdles.squid.shrimp.ShrimpFraction;
-import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
-import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
 
 /**
  * FXML Controller class
@@ -166,9 +162,9 @@ public class CountCorrectionsController implements Initializable {
 
                 double[][] r204_206 = ((ShrimpFraction) spot).getOriginalIsotopicRatioValuesByStringName("204/206");
                 double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot()
-                        .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From207"));
+                        .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From207"));
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
-                        .get(squidProject.getTask().getNamedExpressionsMap().get("CountCorrectionExpression204From208"));
+                        .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From208"));
 
                 TextFlow textFlowI = new TextFlow();
 

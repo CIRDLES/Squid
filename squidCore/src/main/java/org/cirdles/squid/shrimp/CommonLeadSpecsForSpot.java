@@ -15,18 +15,17 @@
  */
 package org.cirdles.squid.shrimp;
 
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.ReferenceMaterialAgeTypesEnum;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
-import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207_206B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_204B;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208_206B;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum;
-import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  *
@@ -51,6 +50,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private int methodSelected;
 
     private SampleAgeTypesEnum sampleAgeType;
+    private ReferenceMaterialAgeTypesEnum refMatAgeType;
     private double sampleAgeSK;
 
     private ParametersModel commonLeadModel;
@@ -66,6 +66,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.methodSelected = METHOD_COMMON_LEAD_MODEL;
 
         this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
+        this.refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
         this.sampleAgeSK = 0.0;
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
@@ -201,6 +202,17 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.sampleAgeType = sampleAgeType;
     }
 
+    public ReferenceMaterialAgeTypesEnum getRefMatAgeType() {
+        if (refMatAgeType == null){
+            refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
+        }
+        return refMatAgeType;
+    }
+
+    public void setRefMatAgeType(ReferenceMaterialAgeTypesEnum refMatAgeType) {
+        this.refMatAgeType = refMatAgeType;
+    }
+
     /**
      * @return the sampleAgeSK
      */
@@ -224,7 +236,6 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
     /**
      * @param commonPbModel
-     * @param commonLeadModel the commonLeadModel to set
      */
     public void setCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;

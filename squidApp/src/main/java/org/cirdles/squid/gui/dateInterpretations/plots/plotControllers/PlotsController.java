@@ -742,12 +742,12 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     }
 
     @Override
-    public void showRefMatWeightedMeanPlot() {
+    public void showRefMatCalibrationConstantPlot() {
         // may 2020 new approach per Nicole
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
-        HBox toolBox = new RefMatWeightedMeanControlNode(this);
+        HBox toolBox = new RefMatCalibrationConstantWMControlNode(this);
         vboxMaster.getChildren().add(0, toolBox);
 
         // get details
@@ -892,7 +892,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     }
 
     private void showSampleWeightedMeanPlot() {
-        // dec 2019 new approach per Nicole
+        // dec 2019 new approach per @NicoleRayner
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
@@ -929,6 +929,77 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                                 uncertainty = wmExpressionValues[0][1];
                             }
                             if (wmExpressionName.endsWith("Age")) {
+                                ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], uncertainty);
+                            } else {
+                                ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], uncertainty);
+                            }
+                            nodeStringWM = item.getShrimpFraction().getFractionID() + "  " + ageOrValueSourceOfWM;
+
+                            String sortingExpression = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getSelectedExpressionName();
+                            // check to see if sorted by same field
+                            if ((item instanceof WeightedMeanSpotNode)
+                                    && (wmExpressionName.compareToIgnoreCase(sortingExpression) != 0)) {
+                                nodeStringWM += prettyPrintSortedWM(item.getShrimpFraction(), sortingExpression);
+                            }
+
+                        }
+                        return (object.getParent() == null) ? object.getValue().getNodeName() : (item instanceof SampleNode) ? "" : nodeStringWM;
+                    }
+
+                    @Override
+                    public TreeItem<SampleTreeNodeInterface> fromString(String string) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                }));
+
+        spotListAnchorPane.getChildren().clear();
+        spotListAnchorPane.getChildren().add(spotsTreeViewCheckBox);
+        spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
+        spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
+
+        refreshPlot();
+
+    }
+
+    private void showRMWeightedMeanPlot() {
+        // MAY 2021 requested by @NicoleRayner
+        if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
+            vboxMaster.getChildren().remove(0);
+        }
+        HBox toolBox = new RefMatWeightedMeanToolBoxNode(this);
+        vboxMaster.getChildren().add(0, toolBox);
+
+        spotsTreeViewCheckBox.setCellFactory(cell -> new CheckBoxTreeCell<>(
+                (TreeItem<SampleTreeNodeInterface> item) -> item.getValue().getSelectedProperty(),
+                new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
+
+                    @Override
+                    public String toString(TreeItem<SampleTreeNodeInterface> object) {
+                        SampleTreeNodeInterface item = object.getValue();
+                        // the goal is to show the nodename + weightedMean source + value of sorting choice if different
+                        String nodeStringWM = "";
+                        if (object.getParent() != null) {
+
+                            String wmExpressionName
+                                    = ((SampleNode) object.getParent().getValue()).getSpotSummaryDetailsWM().getExpressionTree().getName().split("_WM_")[0];
+                            double[][] wmExpressionValues;
+                            if (stringIsSquidRatio(wmExpressionName)) {
+                                // ratio case
+                                wmExpressionValues
+                                        = Arrays.stream(item.getShrimpFraction()
+                                        .getIsotopicRatioValuesByStringName(wmExpressionName)).toArray(double[][]::new);
+                            } else {
+                                wmExpressionValues = item.getShrimpFraction()
+                                        .getTaskExpressionsEvaluationsPerSpotByField(wmExpressionName);
+                            }
+
+                            String ageOrValueSourceOfWM;
+                            double uncertainty = 0.0;
+                            if (wmExpressionValues[0].length > 1) {
+                                uncertainty = wmExpressionValues[0][1];
+                            }
+                            if (wmExpressionName.contains("Age")) {
                                 ageOrValueSourceOfWM = WeightedMeanPlot.makeAgeString(wmExpressionValues[0][0], uncertainty);
                             } else {
                                 ageOrValueSourceOfWM = WeightedMeanPlot.makeValueString(wmExpressionValues[0][0], uncertainty);
@@ -1001,8 +1072,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
             case TERA_WASSERBURG:
                 showConcordiaPlotsOfUnknownsOrRefMat();
                 break;
-            case WEIGHTED_MEAN:
-                showRefMatWeightedMeanPlot();
+            case CALIBRATION_CONSTANT:
+                showRefMatCalibrationConstantPlot();
+                break;
+            case WEIGHTED_MEAN_RM:
+                showRMWeightedMeanPlot();
                 break;
             case WEIGHTED_MEAN_SAMPLE:
                 showSampleWeightedMeanPlot();
@@ -1015,9 +1089,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     public enum PlotTypes {
         CONCORDIA("CONCORDIA"),
         TERA_WASSERBURG("TERA_WASSERBURG"),
-        WEIGHTED_MEAN("WEIGHTED_MEAN"),
+        CALIBRATION_CONSTANT("CALIBRATION_CONSTANT"),
+        WEIGHTED_MEAN_RM("WEIGHTED_MEAN_RM"),
         WEIGHTED_MEAN_SAMPLE("WEIGHTED_MEAN_SAMPLE"),
         ANY_TWO("ANY_TWO");
+
 
         private final String plotType;
 

@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 import java.io.Serializable;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public enum SampleAgeTypesEnum implements Serializable {
@@ -33,22 +32,15 @@ public enum SampleAgeTypesEnum implements Serializable {
 
     private final String expressionName;
 
-    private SampleAgeTypesEnum(String expressionName) {
+    SampleAgeTypesEnum(String expressionName) {
         this.expressionName = expressionName;
     }
 
-    /**
-     * @return the expressionName
-     */
-    public String getExpressionName() {
-        return expressionName;
-    }
-    
-    public static boolean isReservedName(String nameString){
+    public static boolean isReservedName(String nameString) {
         boolean retVal = false;
-        
-        for (String name : getNames()){
-            if (nameString.startsWith(name)){
+
+        for (String name : getNames()) {
+            if (nameString.startsWith(name)) {
                 retVal = true;
                 break;
             }
@@ -66,10 +58,17 @@ public enum SampleAgeTypesEnum implements Serializable {
         return retVal;
     }
 
+    /**
+     * @return the expressionName
+     */
+    public String getExpressionName() {
+        return expressionName;
+    }
+
     @Override
     public String toString() {
         return expressionName;
     }
-    
-    
+
+
 }

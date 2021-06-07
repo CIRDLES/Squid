@@ -22,6 +22,7 @@ mainClassName = 'org.cirdles.squid.gui.SquidUI'
 dependencies {
     implementation 'org.jetbrains:annotations:20.1.0'
     implementation 'org.jetbrains:annotations:20.1.0'
+    implementation "com.github.cirdles:LudwigLibrary:ae99e60ae0"
     compile project(":squidCore")
    
     compile group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.9.1'

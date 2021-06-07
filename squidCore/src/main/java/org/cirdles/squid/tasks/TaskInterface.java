@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.*;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -498,6 +499,10 @@ public interface TaskInterface {
         // prepares for second pass when needed
         setChanged(true);
     }
+
+    public void evaluateExpressionForSpotSet(
+            ExpressionTreeInterface expressionTree,
+            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException;
 
     public void processAndSortExpressions();
 

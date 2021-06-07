@@ -31,12 +31,14 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
@@ -48,6 +50,7 @@ import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.SpotGroupProcessor;
 import org.cirdles.squid.utilities.FileUtilities;
 import org.cirdles.squid.utilities.OsCheck;
+import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,34 +63,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.text.TextAlignment;
 
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.tasks.expressions.Expression;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeInterface {
 
-    private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
     private final ComboBox<String> sampleComboBox;
     private final PlotRefreshInterface plotsController;
-    private SampleNode sampleNode;
-    private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
-    private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
     private final Slider probabilitySlider;
     private final TextField probTextField;
-
     private final ComboBox<SquidReportCategoryInterface> categoryComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionComboBox;
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
-
+    private Map<String, List<ShrimpFractionExpressionInterface>> mapOfSpotsBySampleNames;
+    private SampleNode sampleNode;
+    private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
+    private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
     private CheckBox filterInfoCheckBox;
 
     public SamplesWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
@@ -106,7 +103,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
+        ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = SquidLabData.getExistingSquidLabData().getSpecialWMSortingReportTable();
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         categorySortComboBox.getSelectionModel().selectFirst();
@@ -229,10 +227,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
             checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM
                     .getRejectedIndices()[((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue())
-                            .getIndexOfSpot()]);
+                    .getIndexOfSpot()]);
 
             checkBoxTreeItemWM.selectedProperty().addListener((observable, oldChoice, newChoice) -> {
-                ((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue()).setSelectedProperty(new SimpleBooleanProperty(newChoice));
+                checkBoxTreeItemWM.getValue().setSelectedProperty(new SimpleBooleanProperty(newChoice));
                 final SpotSummaryDetails spotSummaryDetailsCB = ((SampleNode) checkBoxTreeItemWM.getParent().getValue()).getSpotSummaryDetailsWM();
                 spotSummaryDetailsCB.setIndexOfRejectedIndices(((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue())
                         .getIndexOfSpot(), !newChoice);
@@ -340,14 +338,14 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                        .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
                         if (filterInfoCheckBox.isSelected()) {
                             spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
                         }
 
-                        PlotDisplayInterface myPlot = ((SampleNode) sampleNode).getSamplePlotWM();
+                        PlotDisplayInterface myPlot = sampleNode.getSamplePlotWM();
                         ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                         ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
@@ -365,8 +363,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         // non-AGE case for exploration
                         SpotSummaryDetails spotSummaryDetailsWM
                                 = ((Task) squidProject.getTask())
-                                        .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
-                                                selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                                .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
+                                        selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
 //                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
                         if (filterInfoCheckBox.isSelected()) {
@@ -626,7 +624,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
 
     private VBox publishExpressionAndExportSVGVBox() {
         VBox publishExpressionVbox = new VBox(2);
-        
+
         HBox publishExpressionHbox = new HBox(5);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
@@ -642,7 +640,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
             }
         });
-        
+
         HBox exportToSVGHbox = new HBox(5);
         Button exportToSVGButton = new Button("To SVG");
         formatNode(exportToSVGButton, 80);
@@ -656,14 +654,13 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             public void handle(ActionEvent e) {
                 try {
                     writeWeightedMeanSVG();
-                }
-                catch(IOException ex) {
+                } catch (IOException ex) {
                     SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
                     ex.printStackTrace();
-                }  
+                }
             }
         });
-        
+
         exportToSVGHbox.getChildren().addAll(exportToSVGButton);
         publishExpressionHbox.getChildren().addAll(showInExpressionsButton);
         publishExpressionVbox.getChildren().addAll(publishExpressionHbox, exportToSVGHbox);
@@ -711,7 +708,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             if (!confirmedExists) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         "It appears that a weighted means report already exists. "
-                                        + "Would you like to overwrite it?");
+                                                + "Would you like to overwrite it?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
                                     if (action.equals(ButtonType.CANCEL)) {
@@ -746,7 +743,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
         }
     }
-    
+
     private void writeWeightedMeanSVG() throws IOException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
@@ -763,7 +760,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                     if (reportFileSVG.exists()) {
                         switch (osType) {
                             case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
                                         !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
                                     writeReport.setValue(false);
@@ -771,7 +768,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 break;
                             case MacOS:
                             case Linux:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
                                         !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                     alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -790,7 +787,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             if (!confirmedExists) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         "It appears that a weighted means report already exists. "
-                                        + "Would you like to overwrite it?");
+                                                + "Would you like to overwrite it?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
                                     if (action.equals(ButtonType.CANCEL)) {
@@ -799,7 +796,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 });
                             }
                         }
-                        if (writeReport.getValue()) {    
+                        if (writeReport.getValue()) {
                             myPlot.outputToSVG(reportFileSVG);
                             myPlot.outputToPDF(reportFileSVG);
                             SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
@@ -816,7 +813,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         } else {
             SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
         }
-        
+
     }
 
     /**
@@ -831,11 +828,11 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 // Ratio case
                 double[][] resultsFromNode1
                         = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode1 = resultsFromNode1[0][0];
                 double[][] resultsFromNode2
                         = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                 valueFromNode2 = resultsFromNode2[0][0];
             } else {
                 valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
