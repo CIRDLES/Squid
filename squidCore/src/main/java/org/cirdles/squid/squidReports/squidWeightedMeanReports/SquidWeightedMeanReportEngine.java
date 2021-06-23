@@ -17,6 +17,8 @@ package org.cirdles.squid.squidReports.squidWeightedMeanReports;
 
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 
+import java.util.Locale;
+
 /**
  * per @NicoleRayner Items I would like to see incorporated as headers into the
  * WM stats file: Sample Name * Value Name WM Value * 2s Err * 95% conf Err * n
@@ -49,7 +51,7 @@ public class SquidWeightedMeanReportEngine {
             }
         }
         
-        boolean isAnAge = spotSummaryDetails.getSelectedExpressionName().contains("Age");
+        boolean isAnAge = spotSummaryDetails.getExpressionTree().getName().toUpperCase(Locale.ROOT).contains("AGE");
         report.append(spotSummaryDetails.getExpressionTree().getUnknownsGroupSampleName()).append(", ");
         report.append(spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0]).append(", ");
         report.append(spotSummaryDetails.getValues()[0][0] / (isAnAge ? 1e6 : 1.0)).append(", ");

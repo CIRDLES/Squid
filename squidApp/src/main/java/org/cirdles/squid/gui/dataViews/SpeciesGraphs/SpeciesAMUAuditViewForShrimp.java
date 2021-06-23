@@ -46,6 +46,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.cirdles.squid.gui.MassesAuditController.LEGEND_WIDTH;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -254,7 +255,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        boolean legendOnly = (width - 260 == 0);
+        boolean legendOnly = (width - LEGEND_WIDTH == 0);
         float verticalTextShift = 3.1f;
 
         g2d.setFont(Font.font("SansSerif", 12));
@@ -263,7 +264,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         g2d.setLineWidth(0.5);
 
         if (legendOnly) {
-            leftMargin = 260;
+            leftMargin = LEGEND_WIDTH;
             g2d.setFill(Paint.valueOf("Red"));
             if (plotTitle.contains("-")) {
                 String[] titleArray = plotTitle.split("-");
