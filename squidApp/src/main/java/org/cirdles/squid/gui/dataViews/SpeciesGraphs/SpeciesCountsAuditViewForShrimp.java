@@ -43,6 +43,7 @@ import org.cirdles.squid.projects.SquidProject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.cirdles.squid.gui.MassesAuditController.LEGEND_WIDTH;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
@@ -69,7 +70,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     private String plotTitle = "NONE";
     private int[] scanIndices;
     private int[] runIndices;
-//    private List<Run> selectedRuns = new ArrayList<>();
+    //    private List<Run> selectedRuns = new ArrayList<>();
     private MenuItem spotContextMenuItem1;
     private Menu spotRestoreMenu;
     private Menu prawnFileSplitMenu;
@@ -260,7 +261,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
     public void paint(GraphicsContext g2d) {
         super.paint(g2d);
 
-        boolean legendOnly = (width - 260 == 0);
+        boolean legendOnly = (width - LEGEND_WIDTH == 0);
         float verticalTextShift = 3.1f;
 
         g2d.setFont(Font.font("SansSerif", 12));
@@ -269,7 +270,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
         g2d.setLineWidth(0.5);
 
         if (legendOnly) {
-            leftMargin = 260;
+            leftMargin = LEGEND_WIDTH;
             g2d.setFill(Paint.valueOf("Red"));
             if (plotTitle.contains("-")) {
                 String[] titleArray = plotTitle.split("-");

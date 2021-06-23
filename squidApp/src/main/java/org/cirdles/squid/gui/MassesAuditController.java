@@ -62,6 +62,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
  */
 public class MassesAuditController implements Initializable, MassAuditRefreshInterface {
 
+    public static final int LEGEND_WIDTH = 259;
     private static final String STYLE_BUTTON_LABEL
             = "-fx-font-family: 'Monospaced', 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
@@ -411,7 +412,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry) {
         // plot legend
         AbstractDataView legendCanvas
-                = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, 260, heightOfMassPlot),
+                = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, LEGEND_WIDTH, heightOfMassPlot),
                 title,
                 data,
                 entry.getTimesOfMeasuredTrimMasses(),
@@ -646,7 +647,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry) {
         // plot legend
         AbstractDataView legendCanvas
-                = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, 260, heightOfMassPlot),
+                = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, LEGEND_WIDTH, heightOfMassPlot),
                 title,
                 countsData,
                 countsSBMData,
