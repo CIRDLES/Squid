@@ -37,7 +37,7 @@ public class Abs extends Function {
      *
      */
     public Abs() {
-        name = "abs";
+        name = "ABS";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;

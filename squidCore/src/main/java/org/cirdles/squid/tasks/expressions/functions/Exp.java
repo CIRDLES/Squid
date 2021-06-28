@@ -36,7 +36,7 @@ public class Exp extends Function {
      *
      */
     public Exp() {
-        name = "exp";
+        name = "EXP";
         argumentCount = 1;
         precedence = 4;
         rowCount = 1;
