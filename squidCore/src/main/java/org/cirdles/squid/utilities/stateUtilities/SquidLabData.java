@@ -58,7 +58,7 @@ public class SquidLabData implements Serializable {
     public static SquidLabData getExistingSquidLabData() {
         SquidLabData retVal;
         try {
-            File file = new File(File.separator + System.getProperty("user.home")
+            File file = new File(File.separator + SquidPersistentState.squidUserHomeDirectory
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
@@ -116,14 +116,26 @@ public class SquidLabData implements Serializable {
     }
 
     public void storeState() {
-        try {
-            File file = new File(File.separator + System.getProperty("user.home")
-                    + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
-                    + SQUID_LAB_DATA_SERIALIZED_NAME);
-            serialize(file);
-        } catch (IOException | SquidException e) {
-            e.printStackTrace();
+        String mySerializedName
+                = File.separator//
+                + SquidPersistentState.squidUserHomeDirectory//
+                + File.separator//
+                + SQUID_USERS_DATA_FOLDER_NAME //
+                + File.separator + SQUID_LAB_DATA_SERIALIZED_NAME;
+
+        // check if user data folder exists and create if it does not
+        File dataFolder = new File(
+                File.separator + SquidPersistentState.squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+        if (!dataFolder.exists()) {
+            dataFolder.mkdir();
         }
+
+        try {
+            SquidSerializer.serializeObjectToFile(this, mySerializedName);
+        } catch (SquidException squidException) {
+            squidException.printStackTrace();
+        }
+
     }
 
     public ParametersModel getCommonPbDefault() {

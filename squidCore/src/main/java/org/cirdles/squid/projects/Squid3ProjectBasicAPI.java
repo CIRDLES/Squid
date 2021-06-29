@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.projects;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -25,8 +22,11 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author bowring
  */
 public interface Squid3ProjectBasicAPI extends Serializable {
@@ -57,9 +57,16 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     double getExtPErrTh();
 
     /**
+     * @param extPErrTh the extPErrTh to set
+     */
+    void setExtPErrTh(double extPErrTh);
+
+    /**
      * @return the extPErrU
      */
     double getExtPErrU();
+
+    void setExtPErrU(double extPErrU);
 
     String getFilterForConcRefMatSpotNames();
 
@@ -99,7 +106,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
      * @return the projectName
      */
     String getProjectName();
-    
+
     void setProjectName(String projectName);
 
     /**
@@ -125,6 +132,11 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope();
 
     /**
+     * @param selectedIndexIsotope the selectedIndexIsotope to set
+     */
+    void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope);
+
+    /**
      * @return the sessionDurationHours
      */
     double getSessionDurationHours();
@@ -141,6 +153,12 @@ public interface Squid3ProjectBasicAPI extends Serializable {
      */
     boolean isSquidAllowsAutoExclusionOfSpots();
 
+    /**
+     * @param squidAllowsAutoExclusionOfSpots the
+     *                                        squidAllowsAutoExclusionOfSpots to set
+     */
+    void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
+
     boolean isTypeGeochron();
 
     /**
@@ -149,10 +167,21 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     boolean isUseSBM();
 
     /**
+     * @param useSBM the useSBM to set
+     */
+    void setUseSBM(boolean useSBM);
+
+    /**
      * @return the userLinFits
      */
     boolean isUserLinFits();
 
+
+    /**
+     * @param userLinFits the userLinFits to set
+     */
+    void setUserLinFits(boolean userLinFits);
+
     boolean prawnFileExists();
-    
+
 }

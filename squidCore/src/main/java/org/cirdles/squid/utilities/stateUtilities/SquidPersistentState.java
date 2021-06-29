@@ -36,40 +36,31 @@ public class SquidPersistentState implements Serializable {
     // class variables
     private static final long serialVersionUID = 9131785805774520290L;
     private static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
-    private static volatile SquidPersistentState instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
     private static final int MRU_COUNT = 10;
-
+    public static String squidUserHomeDirectory = System.getProperty("user.home");
+    private static volatile SquidPersistentState instance;// = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
     // instance variables
     private TaskDesign taskDesign;
-
     private File MRUProjectFile;
     private List<String> MRUProjectList;
     private String MRUProjectFolderPath;
-
     private File MRUPrawnFile;
     private List<String> MRUPrawnFileList;
     private String MRUPrawnFileFolderPath;
-
     private String MRUTaskFolderPath;
-
     private String MRUSquidTaskFolderPath;
-
     private File MRUExpressionFile;
     private List<String> MRUExpressionList;
     private String MRUExpressionFolderPath;
-
     private File MRUExpressionGraphFile;
     private List<String> MRUExpressionGraphList;
     private String MRUExpressionGraphFolderPath;
-
     private File MRUOPFile;
     private List<String> MRUOPFileList;
     private String MRUOPFileFolderPath;
-
     private File MRUTaskXMLFile;
     private List<String> MRUTaskXMLList;
     private String MRUTaskXMLFolderPath;
-
     private File customExpressionsFile;
 
     /**
@@ -77,13 +68,14 @@ public class SquidPersistentState implements Serializable {
      */
     private SquidPersistentState() {
 
+
         initMRULists();
 
         taskDesign = new TaskDesign();
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
-                File.separator + System.getProperty("user.home") + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+                File.separator + squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
@@ -117,25 +109,17 @@ public class SquidPersistentState implements Serializable {
         serializeSelf();
     }
 
-    private void serializeSelf() {
-        // save initial persistent state serialized file
-        try {
-            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
-        } catch (SquidException squidException) {
-        }
-    }
-
-    public void updateSquidPersistentState() {
-        serializeSelf();
-    }
-
     /**
      * @return
      */
     public static SquidPersistentState getExistingPersistentState() {
+
+        // squidUserHomeDirectory = System.getProperty("user.home");
+        instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
-                File.separator + System.getProperty("user.home") + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+                File.separator + SquidPersistentState.squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
@@ -155,7 +139,6 @@ public class SquidPersistentState implements Serializable {
 
         return instance;
     }
-    //properties
 
     /**
      * @return
@@ -163,11 +146,24 @@ public class SquidPersistentState implements Serializable {
     public static String getMySerializedName() {
         String mySerializedName
                 = File.separator//
-                + System.getProperty("user.home")//
+                + SquidPersistentState.squidUserHomeDirectory//
                 + File.separator//
                 + SQUID_USERS_DATA_FOLDER_NAME //
                 + File.separator + SQUID_PERSISTENT_STATE_FILE_NAME;
         return mySerializedName;
+    }
+
+    private void serializeSelf() {
+        // save initial persistent state serialized file
+        try {
+            SquidSerializer.serializeObjectToFile(this, getMySerializedName());
+        } catch (SquidException squidException) {
+        }
+    }
+    //properties
+
+    public void updateSquidPersistentState() {
+        serializeSelf();
     }
 
     /**
@@ -211,6 +207,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU Project Data *********************************************************
+
     /**
      * @param projectFileMRU
      */
@@ -230,7 +227,7 @@ public class SquidPersistentState implements Serializable {
 
                 // update MRU folder
                 MRUProjectFolderPath = projectFileMRU.getParent();
-                if (MRUProjectFolderPath == null){
+                if (MRUProjectFolderPath == null) {
                     MRUProjectFolderPath = "";
                 }
 
@@ -302,7 +299,6 @@ public class SquidPersistentState implements Serializable {
 
     /**
      * @param MRUProjectList
-     * @param MRUsampleList
      */
     public void setMRUProjectList(ArrayList<String> MRUProjectList) {
         this.MRUProjectList = MRUProjectList;
@@ -312,7 +308,7 @@ public class SquidPersistentState implements Serializable {
      * @return the MRUProjectFolderPath
      */
     public String getMRUProjectFolderPath() {
-        if (MRUProjectFolderPath == null){
+        if (MRUProjectFolderPath == null) {
             MRUProjectFolderPath = "";
         }
         return MRUProjectFolderPath;
@@ -326,6 +322,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU PrawnFile Data ***************************************************
+
     /**
      * @param PrawnFileMRU
      */
@@ -411,6 +408,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU Squid 2.5 Task Data ********************************************************
+
     /**
      * @param MRUPrawnFileFolderPath the MRUPrawnFileFolderPath to set
      */
@@ -436,6 +434,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU Squid Task Data ********************************************************
+
     /**
      * @return the MRUTaskFolderPath
      */
@@ -447,13 +446,14 @@ public class SquidPersistentState implements Serializable {
     }
 
     /**
-     * @param MRUTaskFolderPath the MRUTaskFolderPath to set
+     *
      */
     public void setMRUSquidTaskFolderPath(String MRUSquidTaskFolderPath) {
         this.MRUSquidTaskFolderPath = MRUSquidTaskFolderPath;
     }
 
     // MRU Expression Data ********************************************************
+
     /**
      * @param expressionFileMRU
      */
@@ -554,8 +554,9 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU Expression Graph Data ********************************************************
+
     /**
-     * @param expressionFileMRU
+     * @param expressionGraphFileMRU
      */
     public void updateExpressionGraphListMRU(File expressionGraphFileMRU) {
 
@@ -702,8 +703,9 @@ public class SquidPersistentState implements Serializable {
     }
 
     // MRU TaskXML File Data ***************************************************
+
     /**
-     * @param PrawnFileMRU
+     * @param TaskXMLMRU
      */
     public void updateTaskXMLFileListMRU(File TaskXMLMRU) {
         if (MRUTaskXMLList == null) {
