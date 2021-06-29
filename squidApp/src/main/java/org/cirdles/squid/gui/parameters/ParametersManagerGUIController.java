@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
@@ -32,6 +33,7 @@ import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.Phys
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.parameters.util.DataDictionary;
 import org.cirdles.squid.parameters.valueModels.ValueModel;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +41,6 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
-import javafx.stage.DirectoryChooser;
 
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataStage;
@@ -52,6 +53,13 @@ import static org.cirdles.squid.gui.parameters.ParametersLauncher.squidLabDataWi
  */
 public class ParametersManagerGUIController implements Initializable {
 
+    private static final DecimalFormat scientificNotation = new DecimalFormat("0.0##############################E0#############");
+    private static final DecimalFormat standardNotation = new DecimalFormat("########################0.0######################################");
+    public static boolean isEditingPhysConst;
+    public static boolean isEditingRefMat;
+    public static boolean isEditingCommonPb;
+    public static ParametersTab chosenTab = ParametersTab.physConst;
+    public static ParametersModel selectedReferenceMaterialModel = null;
     @FXML
     public CheckBox refMatReferenceDatesCheckbox;
     @FXML
@@ -258,55 +266,124 @@ public class ParametersManagerGUIController implements Initializable {
     private Tab commonPbTab;
     @FXML
     private Tab physConstTab;
-
-    private static final DecimalFormat scientificNotation = new DecimalFormat("0.0##############################E0#############");
-    private static final DecimalFormat standardNotation = new DecimalFormat("########################0.0######################################");
-
     private ParametersModel physConstModel;
     private ParametersModel physConstHolder;
-
     private ParametersModel refMatModel;
     private ParametersModel refMatHolder;
-
     private ParametersModel commonPbModel;
     private ParametersModel commonPbModelHolder;
-
     private List<ParametersModel> physConstModels;
     private List<ParametersModel> refMatModels;
     private List<ParametersModel> commonPbModels;
-
     private List<TextField> physConstReferences;
     private List<TextField> molarMasses;
-
     private boolean isEditingCurrPhysConst;
     private boolean isEditingCurrRefMat;
     private boolean isEditingCurrCommonPbModel;
-
     private DecimalFormat physConstDataNotation;
     private DecimalFormat physConstCorrNotation;
     private DecimalFormat physConstCovNotation;
-
     private DecimalFormat refMatDataNotation;
     private DecimalFormat UUNotation;
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
     private DecimalFormat refDatesNotation;
-
     private DecimalFormat commonPbDataNotation;
     private DecimalFormat commonPbCorrNotation;
     private DecimalFormat commonPbCovNotation;
-
-    public static boolean isEditingPhysConst;
-    public static boolean isEditingRefMat;
-    public static boolean isEditingCommonPb;
-
-    public static ParametersTab chosenTab = ParametersTab.physConst;
-
     private Units physConstDataUnits;
     private Units refDatesUnits;
 
-    public static ParametersModel selectedReferenceMaterialModel = null;
+    private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
+        ObservableList<ObservableList<SimpleStringProperty>> obList = FXCollections.observableArrayList();
+        if (matrix != null && matrix.getMatrix() != null) {
+            Iterator<String> colIterator = matrix.getRows().values().iterator();
+            ObservableList<SimpleStringProperty> colList = FXCollections.observableArrayList();
+            colList.add(new SimpleStringProperty("names ↓→"));
+            while (colIterator.hasNext()) {
+                colList.add(new SimpleStringProperty(colIterator.next()));
+            }
+            obList.add(colList);
+
+            double[][] matrixArray = matrix.getMatrix().getArray();
+            Iterator<String> rowIterator = matrix.getRows().values().iterator();
+            for (int i = 0; i < matrixArray.length; i++) {
+                ObservableList<SimpleStringProperty> row = FXCollections.observableArrayList();
+                row.add(new SimpleStringProperty(rowIterator.next()));
+                for (int j = 0; j < matrixArray[0].length; j++) {
+                    row.add(new SimpleStringProperty(Double.toString(matrixArray[i][j])));
+                }
+                obList.add(row);
+            }
+        }
+        return obList;
+    }
+
+    private static String getRatioVisibleName(String ratio) {
+        String retVal = ratio.replaceAll("lambda", "λ");
+
+        retVal = retVal.replaceAll("r206_207r", "206-Pb/207-Pb");
+        retVal = retVal.replaceAll("r206_208r", "206-Pb/208-Pb");
+        retVal = retVal.replaceAll("r206_238r", "206-Pb/238-U");
+        retVal = retVal.replaceAll("r208_232r", "208-Pb/232-Th");
+        retVal = retVal.replaceAll("r238_235s", "238-U/235-U");
+
+        retVal = retVal.replaceAll("r206_204b", "206-Pb/204-Pb");
+        retVal = retVal.replaceAll("r207_204b", "207-Pb/204-Pb");
+        retVal = retVal.replaceAll("r207_206b", "207-Pb/206-Pb");
+        retVal = retVal.replaceAll("r208_204b", "208-Pb/204-Pb");
+        retVal = retVal.replaceAll("r208_206b", "208-Pb/206-Pb");
+
+        return retVal;
+    }
+
+    private static String getRatioHiddenName(String ratio) {
+        String retVal = ratio.replaceAll("λ", "lambda");
+
+        retVal = retVal.replaceAll("206-Pb/207-Pb", "r206_207r");
+        retVal = retVal.replaceAll("206-Pb/208-Pb", "r206_208r");
+        retVal = retVal.replaceAll("206-Pb/238-U", "r206_238r");
+        retVal = retVal.replaceAll("208-Pb/232-Th", "r208_232r");
+        retVal = retVal.replaceAll("238-U/235-U", "r238_235s");
+
+        retVal = retVal.replaceAll("206-Pb/204-Pb", "r206_204b");
+        retVal = retVal.replaceAll("207-Pb/204-Pb", "r207_204b");
+        retVal = retVal.replaceAll("207-Pb/206-Pb", "r207_206b");
+        retVal = retVal.replaceAll("208-Pb/204-Pb", "r208_204b");
+        retVal = retVal.replaceAll("208-Pb/206-Pb", "r208_206b");
+
+        return retVal;
+    }
+
+    public static String trimTrailingZeroes(String s) {
+        String retVal;
+        if (s.contains("E")) {
+            retVal = s;
+        } else {
+            retVal = s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
+        }
+        return retVal;
+    }
+
+    public static boolean isNumeric(String s) {
+        boolean retVal;
+        try {
+            Double.parseDouble(s);
+            retVal = true;
+        } catch (Exception e) {
+            retVal = false;
+        }
+        return retVal;
+    }
+
+    public static BigDecimal round(BigDecimal val, int precision) {
+        return new BigDecimal("" + org.cirdles.ludwig.squid25.Utilities.roundedToSize(val.doubleValue(), precision));
+    }
+
+    public static BigDecimal round(String val, int precision) {
+        return round(new BigDecimal(val), precision);
+    }
 
     /**
      * Initializes the controller class.
@@ -611,34 +688,9 @@ public class ParametersManagerGUIController implements Initializable {
                 commonPbCorrNotation, commonPbModel, commonPbCorrSigFigs.getValue());
     }
 
-    private static ObservableList<ObservableList<SimpleStringProperty>> getObListFromMatrix(AbstractMatrixModel matrix) {
-        ObservableList<ObservableList<SimpleStringProperty>> obList = FXCollections.observableArrayList();
-        if (matrix != null && matrix.getMatrix() != null) {
-            Iterator<String> colIterator = matrix.getRows().values().iterator();
-            ObservableList<SimpleStringProperty> colList = FXCollections.observableArrayList();
-            colList.add(new SimpleStringProperty("names ↓→"));
-            while (colIterator.hasNext()) {
-                colList.add(new SimpleStringProperty(colIterator.next()));
-            }
-            obList.add(colList);
-
-            double[][] matrixArray = matrix.getMatrix().getArray();
-            Iterator<String> rowIterator = matrix.getRows().values().iterator();
-            for (int i = 0; i < matrixArray.length; i++) {
-                ObservableList<SimpleStringProperty> row = FXCollections.observableArrayList();
-                row.add(new SimpleStringProperty(rowIterator.next()));
-                for (int j = 0; j < matrixArray[0].length; j++) {
-                    row.add(new SimpleStringProperty(Double.toString(matrixArray[i][j])));
-                }
-                obList.add(row);
-            }
-        }
-        return obList;
-    }
-
     private void initializeTableWithObList(TableView<ObservableList<SimpleStringProperty>> table,
-            ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
-            ParametersModel model, int precision) {
+                                           ObservableList<ObservableList<SimpleStringProperty>> obList, DecimalFormat format,
+                                           ParametersModel model, int precision) {
         if (obList.size() > 0) {
             List<TableColumn<ObservableList<SimpleStringProperty>, String>> columns = new ArrayList<>();
             ObservableList<SimpleStringProperty> cols = obList.remove(0);
@@ -1192,49 +1244,13 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpTextFields(TextField model, String modelName, TextField lab, String labName, TextField ver, String version,
-            TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
+                                 TextField date, String dateCertified, TextArea com, String comments, TextArea ref, String references) {
         model.setText(modelName);
         lab.setText(labName);
         ver.setText(version);
         date.setText(dateCertified);
         com.setText(comments);
         ref.setText(references);
-    }
-
-    private static String getRatioVisibleName(String ratio) {
-        String retVal = ratio.replaceAll("lambda", "λ");
-
-        retVal = retVal.replaceAll("r206_207r", "206-Pb/207-Pb");
-        retVal = retVal.replaceAll("r206_208r", "206-Pb/208-Pb");
-        retVal = retVal.replaceAll("r206_238r", "206-Pb/238-U");
-        retVal = retVal.replaceAll("r208_232r", "208-Pb/232-Th");
-        retVal = retVal.replaceAll("r238_235s", "238-U/235-U");
-
-        retVal = retVal.replaceAll("r206_204b", "206-Pb/204-Pb");
-        retVal = retVal.replaceAll("r207_204b", "207-Pb/204-Pb");
-        retVal = retVal.replaceAll("r207_206b", "207-Pb/206-Pb");
-        retVal = retVal.replaceAll("r208_204b", "208-Pb/204-Pb");
-        retVal = retVal.replaceAll("r208_206b", "208-Pb/206-Pb");
-
-        return retVal;
-    }
-
-    private static String getRatioHiddenName(String ratio) {
-        String retVal = ratio.replaceAll("λ", "lambda");
-
-        retVal = retVal.replaceAll("206-Pb/207-Pb", "r206_207r");
-        retVal = retVal.replaceAll("206-Pb/208-Pb", "r206_208r");
-        retVal = retVal.replaceAll("206-Pb/238-U", "r206_238r");
-        retVal = retVal.replaceAll("208-Pb/232-Th", "r208_232r");
-        retVal = retVal.replaceAll("238-U/235-U", "r238_235s");
-
-        retVal = retVal.replaceAll("206-Pb/204-Pb", "r206_204b");
-        retVal = retVal.replaceAll("207-Pb/204-Pb", "r207_204b");
-        retVal = retVal.replaceAll("207-Pb/206-Pb", "r207_206b");
-        retVal = retVal.replaceAll("208-Pb/204-Pb", "r208_204b");
-        retVal = retVal.replaceAll("208-Pb/206-Pb", "r208_206b");
-
-        return retVal;
     }
 
     @FXML
@@ -1907,8 +1923,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpMenuItems(boolean isEditing, boolean isEditable, Menu fileMenu, MenuItem saveAndReg,
-            MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
-            MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
+                                MenuItem remCurr, MenuItem cancelEdit, MenuItem editNewEmp,
+                                MenuItem editCopy, MenuItem editCurr, ChoiceBox<String> cB) {
         fileMenu.setDisable(isEditing);
         saveAndReg.setDisable(!isEditing);
         remCurr.setDisable(!isEditable || isEditing);
@@ -2131,27 +2147,6 @@ public class ParametersManagerGUIController implements Initializable {
         isEditingRefMat = true;
     }
 
-    public static String trimTrailingZeroes(String s) {
-        String retVal;
-        if (s.contains("E")) {
-            retVal = s;
-        } else {
-            retVal = s.indexOf(".") < 0 ? s : s.replaceAll("0*$", "").replaceAll("\\.$", "");
-        }
-        return retVal;
-    }
-
-    public static boolean isNumeric(String s) {
-        boolean retVal;
-        try {
-            Double.parseDouble(s);
-            retVal = true;
-        } catch (Exception e) {
-            retVal = false;
-        }
-        return retVal;
-    }
-
     @FXML
     private void physConstDataNotationOnAction(ActionEvent event) {
         if (physConstDataNotation.equals(scientificNotation)) {
@@ -2240,14 +2235,6 @@ public class ParametersManagerGUIController implements Initializable {
         UUTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, UUNotation, UUSigFigSpinner));
 
         UUTable.refresh();
-    }
-
-    public static BigDecimal round(BigDecimal val, int precision) {
-        return new BigDecimal("" + org.cirdles.ludwig.squid25.Utilities.roundedToSize(val.doubleValue(), precision));
-    }
-
-    public static BigDecimal round(String val, int precision) {
-        return round(new BigDecimal(val), precision);
     }
 
     @FXML
@@ -2428,7 +2415,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void corrCovPrecisionOrNotationAction(ParametersModel model,
-            TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
+                                                  TableView<ObservableList<SimpleStringProperty>> table, int precision, DecimalFormat format) {
 
         ObservableList<ObservableList<SimpleStringProperty>> items = table.getItems();
 
@@ -2869,7 +2856,7 @@ public class ParametersManagerGUIController implements Initializable {
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Export Folder for Parameter Model files");
-        File userHome = new File(File.separator + System.getProperty("user.home"));
+        File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
         chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
 
         //directory chooser doesn't have an option to set initial folder name, find solution
@@ -2897,7 +2884,7 @@ public class ParametersManagerGUIController implements Initializable {
         private SimpleStringProperty oneSigmaPCT;
 
         public DataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT) {
+                         String oneSigmaABS, String oneSigmaPCT) {
             this.name = new SimpleStringProperty(name);
             this.value = new SimpleStringProperty(trimTrailingZeroes(value));
             this.oneSigmaABS = new SimpleStringProperty(trimTrailingZeroes(oneSigmaABS));
@@ -2908,28 +2895,28 @@ public class ParametersManagerGUIController implements Initializable {
             return name.get();
         }
 
-        public String getValue() {
-            return value.get();
-        }
-
-        public String getOneSigmaABS() {
-            return oneSigmaABS.get();
-        }
-
-        public String getOneSigmaPCT() {
-            return oneSigmaPCT.get();
-        }
-
         public void setName(String name) {
             this.name = new SimpleStringProperty(name);
+        }
+
+        public String getValue() {
+            return value.get();
         }
 
         public void setValue(String value) {
             this.value = new SimpleStringProperty(value);
         }
 
+        public String getOneSigmaABS() {
+            return oneSigmaABS.get();
+        }
+
         public void setOneSigmaABS(String oneSigmaABS) {
             this.oneSigmaABS = new SimpleStringProperty(oneSigmaABS);
+        }
+
+        public String getOneSigmaPCT() {
+            return oneSigmaPCT.get();
         }
 
         public void setOneSigmaPCT(String oneSigmaPCT) {
@@ -2943,8 +2930,8 @@ public class ParametersManagerGUIController implements Initializable {
         private CheckBox isMeasured;
 
         public RefMatDataModel(String name, String value,
-                String oneSigmaABS, String oneSigmaPCT,
-                boolean isMeasured) {
+                               String oneSigmaABS, String oneSigmaPCT,
+                               boolean isMeasured) {
             super(name, value, oneSigmaABS, oneSigmaPCT);
             this.isMeasured = new CheckBox();
             this.isMeasured.setSelected(isMeasured);

@@ -1219,6 +1219,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * @param squidAllowsAutoExclusionOfSpots the
      *                                        squidAllowsAutoExclusionOfSpots to set
      */
+    @Override
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots) {
         if (task != null) {
             task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
@@ -1241,6 +1242,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param extPErrU the extPErrU to set
      */
+    @Override
     public void setExtPErrU(double extPErrU) {
         if (task != null) {
             task.setExtPErrU(extPErrU);

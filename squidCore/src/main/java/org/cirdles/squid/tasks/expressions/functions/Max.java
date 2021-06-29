@@ -37,7 +37,7 @@ public class Max extends Function {
      *
      */
     public Max() {
-        name = "max";
+        name = "MAX";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;

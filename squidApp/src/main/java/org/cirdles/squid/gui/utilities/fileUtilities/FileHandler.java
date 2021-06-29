@@ -18,14 +18,16 @@ package org.cirdles.squid.gui.utilities.fileUtilities;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWriterMathML;
-import org.cirdles.squid.utilities.csvSerialization.ReportSerializerToCSV;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.xml.sax.SAXException;
 
@@ -37,14 +39,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 
 import static org.cirdles.squid.gui.SquidUIController.squidPersistentState;
-import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
-import org.cirdles.squid.tasks.TaskInterface;
 
 /**
  * @author James F. Bowring
@@ -93,7 +89,7 @@ public class FileHandler {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, projectFileNew.getCanonicalPath());
             } catch (IOException | SquidException ex) {
-                 SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), null);
             }
         }
 
@@ -234,7 +230,7 @@ public class FileHandler {
         if (expressionFileXML != null) {
             retVal = expressionFileXML;
             squidPersistentState.updateExpressionListMRU(expressionFileXML);
-            ((XMLSerializerInterface) expression)
+            expression
                     .serializeXMLObject(expressionFileXML.getAbsolutePath());
         }
 
@@ -340,37 +336,13 @@ public class FileHandler {
         return retVal;
     }
 
-////    public static File saveReportFileCSV(boolean rawOutput, String[][] report, Window ownerWindow)
-////            throws IOException {
-////
-////        File retVal = null;
-////
-////        FileChooser fileChooser = new FileChooser();
-////        fileChooser.setTitle("Save Report '.csv' file");
-////        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Report '.csv' files", "*.csv"));
-////        File mruFolder = new File("");//squidPersistentState.getMRUExpressionFolderPath());
-////        fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
-////        fileChooser.setInitialFileName(report[0][1] + ".csv");
-////
-////        File reportFileCSV = fileChooser.showSaveDialog(ownerWindow);
-////
-////        if (reportFileCSV != null) {
-////            retVal = reportFileCSV;
-////            //squidPersistentState.updateExpressionListMRU(reportFileCSV);
-////
-////            ReportSerializerToCSV.writeCSVReport(rawOutput, reportFileCSV, report);
-////        }
-////
-////        return retVal;
-////    }
-
     public static File getCustomExpressionFolder(Window ownerWindow) {
         File retVal;
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
         chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()
-                ? squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + System.getProperty("user.home")));
+                ? squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + SquidPersistentState.squidUserHomeDirectory));
 
         retVal = chooser.showDialog(ownerWindow);
 
@@ -389,7 +361,7 @@ public class FileHandler {
         if (squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
             chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile().getParentFile());
         } else {
-            File userHome = new File(File.separator + System.getProperty("user.home"));
+            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 
@@ -506,7 +478,7 @@ public class FileHandler {
         if (recentFolder.isDirectory()) {
             chooser.setInitialDirectory(recentFolder);
         } else {
-            File userHome = new File(File.separator + System.getProperty("user.home"));
+            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 
@@ -528,7 +500,7 @@ public class FileHandler {
         if (recentFolder.isDirectory()) {
             chooser.setInitialDirectory(recentFolder);
         } else {
-            File userHome = new File(File.separator + System.getProperty("user.home"));
+            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 

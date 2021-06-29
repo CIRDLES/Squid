@@ -37,7 +37,7 @@ public class Min extends Function {
      *
      */
     public Min() {
-        name = "min";
+        name = "MIN";
         argumentCount = 2;
         precedence = 4;
         rowCount = 1;
