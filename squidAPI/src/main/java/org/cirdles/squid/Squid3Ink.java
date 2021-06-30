@@ -234,8 +234,21 @@ public class Squid3Ink implements Squid3API {
             squidPersistentState.updateProjectListMRU(new File(projectFilePath.toString()));
 
             // this updates output folder for reports to current version
-            CalamariFileUtilities.initCalamariReportsFolder(squid3Project.getPrawnFileHandler(),
-                    projectFilePath.toFile().getParentFile());
+//            CalamariFileUtilities.initCalamariReportsFolder(squid3Project.getPrawnFileHandler(),
+//                    projectFilePath.toFile().getParentFile());
+
+            try {
+                squid3Project.getPrawnFileHandler().getReportsEngine()
+                        .setFolderToWriteCalamariReports(projectFilePath.toFile().getParentFile());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                squid3Project.getPrawnFileHandler().initReportsEngineWithCurrentPrawnFileName();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
