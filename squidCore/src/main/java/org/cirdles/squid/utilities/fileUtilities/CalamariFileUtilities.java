@@ -50,10 +50,15 @@ public class CalamariFileUtilities {
 
     public static List<String> taskLibraryFileNamesList;
 
-    // June 2021 moved
+    // June 2021 reworked
     static {
         try {
             NAME_OF_SQUID_RESOURCES_FOLDER.mkdir();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
             SQUID_PARAMETER_MODELS_FOLDER.mkdir();
         } catch (Exception e) {
             e.printStackTrace();
