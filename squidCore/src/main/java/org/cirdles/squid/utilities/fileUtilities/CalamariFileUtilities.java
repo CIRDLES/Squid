@@ -50,10 +50,11 @@ public class CalamariFileUtilities {
 
     public static List<String> taskLibraryFileNamesList;
 
-    static {
-        NAME_OF_SQUID_RESOURCES_FOLDER.mkdir();
-        SQUID_PARAMETER_MODELS_FOLDER.mkdir();
-    }
+    // June 2021 moved
+//    static {
+//        NAME_OF_SQUID_RESOURCES_FOLDER.mkdir();
+//        SQUID_PARAMETER_MODELS_FOLDER.mkdir();
+//    }
 
     /**
      * Provides a clean copy of two example Prawn XML files every time Squid
