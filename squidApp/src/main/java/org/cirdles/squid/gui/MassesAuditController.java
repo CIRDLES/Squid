@@ -50,10 +50,10 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
-import static org.cirdles.squid.constants.Squid3Constants.MASS_DETAIL_FORMAT;
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.MASS_DETAIL_FORMAT;
 
 /**
  * FXML Controller class

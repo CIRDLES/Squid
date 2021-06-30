@@ -425,5 +425,4 @@ public final class Squid3Constants {
         }
     }
 
-    public final static DataFormat MASS_DETAIL_FORMAT = new DataFormat("Mass station detail");
 }

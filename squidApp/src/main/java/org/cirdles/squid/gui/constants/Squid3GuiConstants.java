@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui.constants;
 
+import javafx.scene.input.DataFormat;
+
 /**
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -35,5 +37,8 @@ public class Squid3GuiConstants {
     public static final int EXPRESSION_BUILDER_DEFAULT_FONTSIZE = 13;
     public static final int EXPRESSION_BUILDER_MIN_FONTSIZE = 11;
     public static final int EXPRESSION_BUILDER_MAX_FONTSIZE = 18;
+
+
+    public final static DataFormat MASS_DETAIL_FORMAT = new DataFormat("Mass station detail");
 
 }
