@@ -16,22 +16,12 @@
 package org.cirdles.squid.tasks.expressions;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_C_FOR_CONCREFMAT;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_R_FOR_REFMAT;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_U_FOR_UNKNOWN;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_EXPRESSION_FILES_USING_REMOTE_SCHEMA;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
+import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeXMLConverter;
+import org.cirdles.squid.tasks.expressions.expressionTrees.*;
 import org.cirdles.squid.tasks.expressions.functions.Function;
 import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
@@ -39,22 +29,25 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverte
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.parsing.ExpressionParser;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
-import static org.cirdles.squid.constants.Squid3Constants.SUPERSCRIPT_SPACE;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.cirdles.squid.constants.Squid3Constants.*;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
-import org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsNotes;
-import org.cirdles.squid.tasks.expressions.expressionTrees.BuiltInExpressionInterface;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeParsedFromExcelString;
 import static org.cirdles.squid.tasks.expressions.functions.Function.replaceAliasedFunctionNamesInExpressionString;
-import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
-import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Expression implements Comparable<Expression>, XMLSerializerInterface, Serializable {
@@ -143,13 +136,12 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     /**
-     *
      * @return -1 = no match, 0 = match, 1 = mismatch
      */
     private int haveMatchedTargetSpots() {
         int goalTargetBits = expressionTree.makeTargetBits();
         // jan 2021
-        if (((ExpressionTree)expressionTree).doesHaveNoTargetSpots()){
+        if (((ExpressionTree) expressionTree).doesHaveNoTargetSpots()) {
             goalTargetBits = 0;
         }
         int targetBits = expressionTree.auditTargetMatchingII(goalTargetBits);
@@ -191,7 +183,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
-        
+
         xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
         xstream.alias("SpotFieldNode", SpotFieldNode.class);
 
@@ -227,9 +219,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     /**
-     *
-     * @param expressionName the value of expressionName
-     * @param expressionString the value of expressionString
+     * @param expressionName      the value of expressionName
+     * @param expressionString    the value of expressionString
      * @param namedExpressionsMap the value of namedExpressionsMap
      * @return
      */
@@ -276,7 +267,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
             auditReport
                     += "Target Spots: "
                     + (String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
-                                    ? "NOT MATCHED" : "MATCHED")
+                    ? "NOT MATCHED" : "MATCHED")
                     + "\n";
             if (targetAudit.size() > 0) {
                 auditReport += "Target Spots Audit:\n";

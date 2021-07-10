@@ -21,7 +21,6 @@ package org.cirdles.squid.parameters.util;
 import java.util.Arrays;
 
 /**
- *
  * @author James F. Bowring
  */
 /*
@@ -33,45 +32,45 @@ public enum RadDates {
 
     // radiogenic dates
     /**
-     * 
+     *
      */
-    age206_238r( "age206_238r" ),
+    age206_238r("age206_238r"),
     /**
-     * 
+     *
      */
-    age207_235r( "age207_235r" ),
+    age207_235r("age207_235r"),
     /**
-     * 
+     *
      */
-    age207_206r( "age207_206r" ),
+    age207_206r("age207_206r"),
     /**
-     * 
+     *
      */
-    age208_232r( "age208_232r" ),
+    age208_232r("age208_232r"),
     /**
-     * 
+     *
      */
-    percentDiscordance( "percentDiscordance" ),
+    percentDiscordance("percentDiscordance"),
     /**
-     * 
+     *
      */
-    age206_238r_Th( "age206_238r_Th" ),
+    age206_238r_Th("age206_238r_Th"),
     /**
-     * 
+     *
      */
-    age207_206r_Th( "age207_206r_Th" ),
+    age207_206r_Th("age207_206r_Th"),
     /**
-     * 
+     *
      */
-    age207_235r_Pa( "age207_235r_Pa" ),
+    age207_235r_Pa("age207_235r_Pa"),
     /**
-     * 
+     *
      */
-    age207_206r_Pa( "age207_206r_Pa" ),
+    age207_206r_Pa("age207_206r_Pa"),
     /**
-     * 
+     *
      */
-    age207_206r_ThPa( "age207_206r_ThPa" ),
+    age207_206r_ThPa("age207_206r_ThPa"),
 
     /**
      *
@@ -103,14 +102,14 @@ public enum RadDates {
      */
     percentDiscordance_PbcCorr("percentDiscordance_PbcCorr"),
     /**
-     * 
+     *
      */
-    bestAge( "bestAge" ),
+    bestAge("bestAge"),
 
     /**
      *
      */
-    bestAge_PbcCorr( "bestAge_PbcCorr" ),
+    bestAge_PbcCorr("bestAge_PbcCorr"),
     date("date"),
     dateCorr("dateCorr"),
     dateBP("dateBP"),
@@ -119,26 +118,25 @@ public enum RadDates {
 
     private String name;
 
-    private RadDates ( String name ) {
+    private RadDates(String name) {
         this.name = name;
     }
 
     /**
-     * 
      * @return
      */
-    public String getName () {
+    public String getName() {
         return name;
     }
-    
-     //*************************
+
+    //*************************
+
     /**
-     * 
      * @return
      */
-    public static String[] getNamesSorted () {
+    public static String[] getNamesSorted() {
         String[] retVal = new String[RadDates.values().length];
-        for (int i = 0; i < RadDates.values().length; i ++) {
+        for (int i = 0; i < RadDates.values().length; i++) {
             retVal[i] = RadDates.values()[i].getName();
         }
         Arrays.sort(retVal);

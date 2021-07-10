@@ -18,7 +18,6 @@ package org.cirdles.squid.utilities.fileUtilities;
 import java.io.File;
 
 /**
- *
  * @author ryanb
  */
 public class FileNameFixer {

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-           attributeFormDefault="unqualified" 
-           elementFormDefault="qualified" 
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
     <xs:annotation>
@@ -28,9 +27,9 @@
             Revised: September.2017
             Revised: May.2018 by Ryan Barrett
             Revised: July.2018 by Bowring
-            
+
         </xs:documentation>
-    </xs:annotation> 
+    </xs:annotation>
 
     <xs:element name="Expression" type="Expression"/>
     <xs:complexType name="Expression" mixed="true">
@@ -44,11 +43,11 @@
             <xs:element name="notes" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
-              
+
     <xs:complexType name="ExpressionTree" mixed="true">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
-            <xs:element name="childrenET" minOccurs="0"> 
+            <xs:element name="childrenET" minOccurs="0">
                 <xs:complexType mixed="true">
                     <xs:sequence>
                         <xs:choice maxOccurs="unbounded">
@@ -56,23 +55,25 @@
                             <xs:element name="ShrimpSpeciesNode" type="ShrimpSpeciesNode" minOccurs="0"/>
                             <xs:element name="SpotFieldNode" type="SpotFieldNode" minOccurs="0"/>
                             <xs:element name="VariableNodeForSummary" type="VariableNodeForSummary" minOccurs="0"/>
-                            <xs:element name="VariableNodeForIsotopicRatios" type="VariableNodeForIsotopicRatios" minOccurs="0"/>
-                            <xs:element name="VariableNodeForPerSpotTaskExpressions" type="VariableNodeForPerSpotTaskExpressions" minOccurs="0"/>
+                            <xs:element name="VariableNodeForIsotopicRatios" type="VariableNodeForIsotopicRatios"
+                                        minOccurs="0"/>
+                            <xs:element name="VariableNodeForPerSpotTaskExpressions"
+                                        type="VariableNodeForPerSpotTaskExpressions" minOccurs="0"/>
                             <xs:element name="ConstantNode" type="ConstantNode" minOccurs="0"/>
                         </xs:choice>
                     </xs:sequence>
                 </xs:complexType>
-            </xs:element>               
-                   
+            </xs:element>
+
             <xs:element name="operation" type="Operation"/>
-            <xs:element name="ratiosOfInterest"  minOccurs="0">
+            <xs:element name="ratiosOfInterest" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                        <xs:element name ="string" type="xs:string"/>
+                        <xs:element name="string" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-                          
+
             <xs:element type="xs:boolean" name="squidSwitchSCSummaryCalculation"/>
             <xs:element type="xs:boolean" name="squidSwitchSTReferenceMaterialCalculation"/>
             <xs:element type="xs:boolean" name="squidSwitchSAUnknownCalculation"/>
@@ -81,10 +82,10 @@
             <xs:element type="xs:boolean" name="squidSwitchConcentrationReferenceMaterialCalculation"/>
             <xs:element type="xs:string" name="uncertaintyDirective"/>
             <xs:element type="xs:integer" name="index"/>
-            
+
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="ShrimpSpeciesNode">
         <xs:sequence>
             <xs:element name="isotopeName" type="xs:string"></xs:element>
@@ -92,7 +93,7 @@
             <xs:element name="methodNameForShrimpFraction" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="SquidSpeciesModel">
         <xs:sequence>
             <xs:element name="massStationIndex" type="xs:string"></xs:element>
@@ -102,39 +103,39 @@
             <xs:element name="isBackground" type="xs:boolean"></xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="SpotFieldNode">
         <xs:sequence>
             <xs:element name="fieldName" type="xs:string"></xs:element>
             <xs:element name="methodNameForShrimpFraction" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="VariableNodeForSummary">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
         </xs:sequence>
-    </xs:complexType>   
-    
+    </xs:complexType>
+
     <xs:complexType name="VariableNodeForIsotopicRatios">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
         </xs:sequence>
-    </xs:complexType>   
-    
+    </xs:complexType>
+
     <xs:complexType name="VariableNodeForPerSpotTaskExpressions">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
         </xs:sequence>
-    </xs:complexType>   
-    
+    </xs:complexType>
+
     <xs:complexType name="ConstantNode">
         <xs:sequence>
             <xs:element name="name" type="xs:string"></xs:element>
             <xs:element name="value" type="xs:string"></xs:element>
         </xs:sequence>
     </xs:complexType>
-    
+
     <xs:complexType name="Operation">
         <xs:sequence>
             <xs:element name="name" type="xs:string" minOccurs="0"></xs:element>
@@ -149,36 +150,36 @@
     </xs:annotation>
     <xs:simpleType name="operationType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="add" />
-            <xs:enumeration value="divide" />
-            <xs:enumeration value="equal" />
-            <xs:enumeration value="lessThan" />
-            <xs:enumeration value="multiply" />
-            <xs:enumeration value="pexp" />
-            <xs:enumeration value="subtract" />
-            <xs:enumeration value="pow" />
+            <xs:enumeration value="add"/>
+            <xs:enumeration value="divide"/>
+            <xs:enumeration value="equal"/>
+            <xs:enumeration value="lessThan"/>
+            <xs:enumeration value="multiply"/>
+            <xs:enumeration value="pexp"/>
+            <xs:enumeration value="subtract"/>
+            <xs:enumeration value="pow"/>
 
-            <xs:enumeration value="abs" />
-            <xs:enumeration value="agePb76" />
-            <xs:enumeration value="and" />
-            <xs:enumeration value="concordiaTW" />
+            <xs:enumeration value="abs"/>
+            <xs:enumeration value="agePb76"/>
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="concordiaTW"/>
 
-            <xs:enumeration value="exp" />
-            <xs:enumeration value="sqIf" />
-            <xs:enumeration value="ln" />
-            <xs:enumeration value="max" />
+            <xs:enumeration value="exp"/>
+            <xs:enumeration value="sqIf"/>
+            <xs:enumeration value="ln"/>
+            <xs:enumeration value="max"/>
 
-            <xs:enumeration value="robReg" />
-            <xs:enumeration value="lookup" />
-            <xs:enumeration value="totalCps" />
-            <xs:enumeration value="TotalCps" />
-            <xs:enumeration value="sqBiweight" />
+            <xs:enumeration value="robReg"/>
+            <xs:enumeration value="lookup"/>
+            <xs:enumeration value="totalCps"/>
+            <xs:enumeration value="TotalCps"/>
+            <xs:enumeration value="sqBiweight"/>
 
-            <xs:enumeration value="sqWtdAv" />
-            <xs:enumeration value="sqrt" />
+            <xs:enumeration value="sqWtdAv"/>
+            <xs:enumeration value="sqrt"/>
 
             <xs:enumeration value="value"/>
-            <xs:enumeration value="none" />
+            <xs:enumeration value="none"/>
         </xs:restriction>
     </xs:simpleType>
 

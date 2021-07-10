@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.IOException;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,8 +24,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+
 /**
- *
  * @author James F. Bowring
  */
 public final class SquidAboutWindow {
@@ -49,10 +49,10 @@ public final class SquidAboutWindow {
             Stage aboutWindow = new Stage(StageStyle.UNDECORATED);
             // center on Squid
             aboutWindow.setX(primaryStage.getX() + (primaryStage.getWidth() - 550) / 2);
-            aboutWindow.setY(primaryStage.getY() + (primaryStage.getHeight()- 700) / 2);
+            aboutWindow.setY(primaryStage.getY() + (primaryStage.getHeight() - 700) / 2);
             aboutWindow.setResizable(false);
             aboutWindow.setScene(aboutScene);
-            
+
 
             aboutWindow.requestFocus();
             aboutWindow.initOwner(primaryStage.getScene().getWindow());

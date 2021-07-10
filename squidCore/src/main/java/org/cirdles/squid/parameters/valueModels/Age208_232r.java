@@ -20,15 +20,15 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
+import org.cirdles.squid.parameters.util.RadDates;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.ConcurrentMap;
-import org.cirdles.squid.parameters.util.RadDates;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Age208_232r extends ValueModel implements
@@ -46,18 +46,17 @@ public class Age208_232r extends ValueModel implements
     /**
      * Creates a new instance of Age208_232r
      */
-    public Age208_232r () {
-        super( NAME, UNCT_TYPE );
+    public Age208_232r() {
+        super(NAME, UNCT_TYPE);
     }
 
     /**
-     *
      * @param inputValueModels
      * @param parDerivTerms
      */
-    public void calculateValue (
+    public void calculateValue(
             ValueModel[] inputValueModels,
-            ConcurrentMap<String, BigDecimal> parDerivTerms ) {
+            ConcurrentMap<String, BigDecimal> parDerivTerms) {
 
 //        setValue( BigDecimal.ZERO );
 //        setValueTree( ExpTreeII.ZERO );
@@ -71,13 +70,13 @@ public class Age208_232r extends ValueModel implements
         try {
             setValue(//
                     new BigDecimal(//
-                    //
-                    //
-                    //
-                    (1.0 / lambda232.getValue().doubleValue())//
-                    * StrictMath.log1p( r208_232r.getValue().doubleValue() ), new MathContext(15, RoundingMode.HALF_UP) ) );
+                            //
+                            //
+                            //
+                            (1.0 / lambda232.getValue().doubleValue())//
+                                    * StrictMath.log1p(r208_232r.getValue().doubleValue()), new MathContext(15, RoundingMode.HALF_UP)));
         } catch (Exception e) {
-            setValue( BigDecimal.ZERO );
+            setValue(BigDecimal.ZERO);
         }
 
 //        try {
@@ -90,28 +89,28 @@ public class Age208_232r extends ValueModel implements
 //        }
 
 
-        if ( parDerivTerms != null ) {
+        if (parDerivTerms != null) {
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Ratio = "dA" + name.substring(1) + "__dR" + r208_232r.getName().substring(1);//dAge208_232r__dR208_232r            
             try {
                 BigDecimal dAge208_232r__dR208_232r = BigDecimal.ONE.//
                         divide(lambda232.getValue().//
-                        multiply( BigDecimal.ONE.//
-                        add( r208_232r.getValue() ) ), new MathContext(15, RoundingMode.HALF_UP) );
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, dAge208_232r__dR208_232r );
+                        multiply(BigDecimal.ONE.//
+                        add(r208_232r.getValue())), new MathContext(15, RoundingMode.HALF_UP));
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, dAge208_232r__dR208_232r);
             } catch (Exception e) {
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, BigDecimal.ZERO);
             }
 
             // added march 2013 for LAICPMS
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda232";//dAge208_232r__dLambda232
             try {
-                BigDecimal dAge208_232r__dLambda232 = new BigDecimal( StrictMath.log1p( r208_232r.getValue().doubleValue() ) ).//
-                        divide(lambda232.getValue().pow( 2 ), new MathContext(15, RoundingMode.HALF_UP) ).negate();
-                parDerivTerms.put( partialDerivativeNameAge__Lambda, dAge208_232r__dLambda232 );
+                BigDecimal dAge208_232r__dLambda232 = new BigDecimal(StrictMath.log1p(r208_232r.getValue().doubleValue())).//
+                        divide(lambda232.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP)).negate();
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge208_232r__dLambda232);
             } catch (Exception e) {
-                parDerivTerms.put( partialDerivativeNameAge__Lambda, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, BigDecimal.ZERO);
             }
 
         }

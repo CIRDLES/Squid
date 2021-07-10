@@ -54,26 +54,26 @@ public abstract class ParametersModel implements
     }
 
     public ParametersModel(String modelName, String labName,
-            String version, String dateCertified) {
+                           String version, String dateCertified) {
         this(modelName, labName, version, dateCertified, "", "");
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references) {
+                           String dateCertified, String comments, String references) {
         this(modelName, labName, version, dateCertified, "", "", new ValueModel[0]);
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references,
-            ValueModel[] values) {
+                           String dateCertified, String comments, String references,
+                           ValueModel[] values) {
         this(modelName, labName, version, dateCertified, "", "", new ValueModel[0], new CorrelationMatrixModel(),
                 new CovarianceMatrixModel(), new HashMap<>(), false);
     }
 
     public ParametersModel(String modelName, String labName, String version,
-            String dateCertified, String comments, String references, ValueModel[] values,
-            CorrelationMatrixModel corrModel, CovarianceMatrixModel covModel,
-            Map<String, BigDecimal> rhos, boolean isEditable) {
+                           String dateCertified, String comments, String references, ValueModel[] values,
+                           CorrelationMatrixModel corrModel, CovarianceMatrixModel covModel,
+                           Map<String, BigDecimal> rhos, boolean isEditable) {
         this.modelName = modelName;
         this.labName = labName;
         this.version = version;
@@ -131,8 +131,8 @@ public abstract class ParametersModel implements
                     double correlation
                             = //
                             covModel.getMatrix().get(row, col)//
-                            / rowData.getOneSigmaABS().doubleValue() //
-                            / colData.getOneSigmaABS().doubleValue();
+                                    / rowData.getOneSigmaABS().doubleValue() //
+                                    / colData.getOneSigmaABS().doubleValue();
                     corrModel.setValueAt(row, col, correlation);
                 }
             }
@@ -158,8 +158,8 @@ public abstract class ParametersModel implements
                     double covariance
                             = //
                             corrModel.getMatrix().get(row, col)//
-                            * rowData.getOneSigmaABS().doubleValue() //
-                            * colData.getOneSigmaABS().doubleValue();
+                                    * rowData.getOneSigmaABS().doubleValue() //
+                                    * colData.getOneSigmaABS().doubleValue();
                     covModel.setValueAt(row, col, covariance);
                 }
             }
@@ -213,7 +213,7 @@ public abstract class ParametersModel implements
         xstream.registerConverter(new CommonPbModelXMLConverter());
         xstream.alias("CommonPbModel", CommonPbModel.class);
     }
-    
+
     public String getComments() {
         return comments;
     }

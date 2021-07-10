@@ -19,38 +19,8 @@ package org.cirdles.squid.reports.reportSpecifications;
 
 import java.util.HashMap;
 import java.util.Map;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM206PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COM208PB_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CONCEN_208PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.ERR_CORREL;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4COR_DISCORDANCE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7COR208_232AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR206_238AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8COR207_206AGE;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R204PB_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R206PB_238U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R207PB_235U;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB206PB;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R208PB_232TH;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_206_238;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_207_206;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_208_232;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TOTAL_238_206;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.R238U_206PB;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  * Modified from ET_Redux July 2018
@@ -67,33 +37,33 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
      *
      */
     public static final String[][] ReportCategory_CorrectionIndependentData = new String[][]{
-        {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", UNCOR206PB238U_CALIB_CONST, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "", "UncorrPb", "/Thconst", "", "getTaskExpressionsEvaluationsPerSpotByField", UNCOR208PB232TH_CALIB_CONST, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", U_CONCEN_PPM, "",
-            "", "true", "false", "15", "", "concentration of U", "false", "false"
-        },
-        {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_CONCEN_PPM, "",
-            "", "true", "false", "15", "", "concentration of Th", "true", "false"
-        },
-        {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_U_EXP, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_206_238, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_208_232, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_238_206, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_207_206, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        }
+            {"", "", "UncorrPb", "/Uconst", "", "getTaskExpressionsEvaluationsPerSpotByField", UNCOR206PB238U_CALIB_CONST, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "", "UncorrPb", "/Thconst", "", "getTaskExpressionsEvaluationsPerSpotByField", UNCOR208PB232TH_CALIB_CONST, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "", "U", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", U_CONCEN_PPM, "",
+                    "", "true", "false", "15", "", "concentration of U", "false", "false"
+            },
+            {"", "", "Th", "(ppm)", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_CONCEN_PPM, "",
+                    "", "true", "false", "15", "", "concentration of Th", "true", "false"
+            },
+            {"", "", "232Th", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", TH_U_EXP, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "Total", "206Pb", "/238U", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_206_238, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "Total", "208Pb", "/232Th", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_208_232, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "Total", "238U", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_238_206, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "Total", "207Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", TOTAL_207_206, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            }
     };
 
     // Report column order =
@@ -104,51 +74,51 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
      *
      */
     public static final String[][] ReportCategory_204PbCorrected = new String[][]{
-        {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM206PB_PCT, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM208PB_PCT, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + CONCEN_206PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "4-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + CONCEN_208PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"204corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR206_238AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"204corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR207_206AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"204corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_DISCORDANCE, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB_232TH, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R238U_206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_235U, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R206PB_238U, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + ERR_CORREL, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        }
+            {"", "4-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM206PB_PCT, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "4-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + COM208PB_PCT, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "4-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "4-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + CONCEN_206PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "4-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + CONCEN_208PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"204corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR206_238AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"204corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR207_206AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"204corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR208_232AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"%", "Dis-", "cor-", "dant", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4COR_DISCORDANCE, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "4-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R208PB_232TH, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "4-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R238U_206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "4-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "4-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R207PB_235U, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "4-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + R206PB_238U, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB4CORR + ERR_CORREL, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            }
     };
     // Report column order =
     //  displayName1, displayName2, displayName3, displayName4, units, retrieveMethodName, retrieveParameterName, uncertaintyType,
@@ -158,36 +128,36 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
      *
      */
     public static final String[][] ReportCategory_207PbCorrected = new String[][]{
-        {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R204PB_206PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM206PB_PCT, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM208PB_PCT, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + CONCEN_206PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + CONCEN_208PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"207corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR206_238AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR208_232AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R206PB_238U, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB_232TH, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        }
+            {"", "7-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R204PB_206PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "7-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM206PB_PCT, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "7-corr", "%com", "208", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + COM208PB_PCT, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "7-corr", "208Pb*", "/206Pb*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "7-corr", "ppm", "206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + CONCEN_206PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "7-corr", "ppm", "208*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + CONCEN_208PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"207corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR206_238AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"207corr", "208Pb", "/232Th", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB7COR208_232AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "7-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R206PB_238U, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "7-corr", "208*", "/232", "", "getTaskExpressionsEvaluationsPerSpotByField", PB7CORR + R208PB_232TH, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            }
     };
 
     // Report column order =
@@ -198,36 +168,36 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
      *
      */
     public static final String[][] ReportCategory_208PbCorrected = new String[][]{
-        {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R204PB_206PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + COM206PB_PCT, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + CONCEN_206PB, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        },
-        {"208corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR206_238AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"208corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR207_206AGE, "ABS",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R238U_206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_206PB, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_235U, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R206PB_238U, "PCT",
-            "", "true", "false", "15", "true", "", "false", "false"
-        },
-        {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + ERR_CORREL, "",
-            "", "true", "false", "15", "", "", "false", "false"
-        }
+            {"", "8-corr", "204Pb", "/206Pb", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R204PB_206PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "8-corr", "%com", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + COM206PB_PCT, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"", "8-corr", "ppm", "206", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + CONCEN_206PB, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            },
+            {"208corr", "206Pb", "/238U", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR206_238AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"208corr", "207Pb", "/206Pb", "Age", "Ma", "getTaskExpressionsEvaluationsPerSpotByField", PB8COR207_206AGE, "ABS",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "8-corr", "238", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R238U_206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "8-corr", "207*", "/206*", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_206PB, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "8-corr", "207*", "/235", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R207PB_235U, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "8-corr", "206*", "/238", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + R206PB_238U, "PCT",
+                    "", "true", "false", "15", "true", "", "false", "false"
+            },
+            {"", "", "err", "corr", "", "getTaskExpressionsEvaluationsPerSpotByField", PB8CORR + ERR_CORREL, "",
+                    "", "true", "false", "15", "", "", "false", "false"
+            }
     };
 
     /**
@@ -240,7 +210,7 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         reportTableFootnotes.put(//
                 "FN-1", //
                 "Th contents calculated from radiogenic 208Pb and 230Th-corrected 206Pb/238U "// corrected text 25 April 2014 per McLean
-                + "date of the sample, assuming concordance between U-Pb Th-Pb systems.");
+                        + "date of the sample, assuming concordance between U-Pb Th-Pb systems.");
         reportTableFootnotes.put(//
                 "FN-2", //
                 "Ratio of radiogenic Pb (including 208Pb) to common Pb.");
@@ -283,19 +253,19 @@ public class ReportSpecificationsUPbSamples15Dig extends ReportSpecificationsAbs
         reportTableFootnotes.put(//
                 "FN-12", //
                 "Corrected for initial Th/U disequilibrium using radiogenic 208Pb "
-                + "and Th/U[magma] <rTh_Umagma>.");
+                        + "and Th/U[magma] <rTh_Umagma>.");
         reportTableFootnotes.put(//
                 "FN-13", //
                 "Corrected for initial Pa/U disequilibrium using "
-                + "initial fraction activity ratio [231Pa]/[235U] <ar231_235sample>.");
+                        + "initial fraction activity ratio [231Pa]/[235U] <ar231_235sample>.");
         reportTableFootnotes.put(//
                 "FN-14", //
                 "Lower-intercept concordia date calculated by assuming that the "
-                + "207Pb/206Pb ratio of the common Pb analyzed is <r207_206c>.");
+                        + "207Pb/206Pb ratio of the common Pb analyzed is <r207_206c>.");
         reportTableFootnotes.put(//
                 "FN-15", //
                 "Lower-intercept concordia date calculated by assuming the 207Pb/206Pb ratio of common Pb  "
-                + "shares a Stacey-Kramers (1975) model date with the intercept date.");
+                        + "shares a Stacey-Kramers (1975) model date with the intercept date.");
         reportTableFootnotes.put(//
                 "FN-16", //
                 "Best Date threshold between 206Pb/238U and 206Pb/207Pb is <bestDateDivider> MA.");

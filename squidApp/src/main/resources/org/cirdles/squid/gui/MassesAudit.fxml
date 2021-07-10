@@ -1,169 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.Double?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollBar?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Polygon?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-
-<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.MassesAuditController">
-  <content>
-      <VBox prefHeight="798.0" prefWidth="1407.0">
-         <children>
-            <Accordion fx:id="massesAccordian">
-              <panes>
-                <TitledPane fx:id="massesTitledPane" text="Manage Displayed Masses">
-                  <content>
-                    <AnchorPane prefWidth="976.0">
-                           <children>
-                              <ListView fx:id="availableMassesListView" layoutX="14.0" layoutY="54.0" prefHeight="204.0" prefWidth="225.0" />
-                              <ListView fx:id="viewedAsGraphMassesListView" layoutX="280.0" layoutY="54.0" prefHeight="204.0" prefWidth="225.0" />
-                              <Polygon fill="DODGERBLUE" layoutX="272.0" layoutY="158.0" rotate="90.0" scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
-                                <points>
-                                  <Double fx:value="-50.0" />
-                                  <Double fx:value="40.0" />
-                                  <Double fx:value="50.0" />
-                                  <Double fx:value="40.0" />
-                                  <Double fx:value="0.0" />
-                                  <Double fx:value="-60.0" />
-                                </points>
-                              </Polygon>
-                              <Polygon fill="DODGERBLUE" layoutX="248.0" layoutY="158.0" rotate="-90.0" scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
-                                 <points>
-                                    <Double fx:value="-50.0" />
-                                    <Double fx:value="40.0" />
-                                    <Double fx:value="50.0" />
-                                    <Double fx:value="40.0" />
-                                    <Double fx:value="0.0" />
-                                    <Double fx:value="-60.0" />
-                                 </points>
-                              </Polygon>
-                              <Label layoutX="16.0" layoutY="27.0" text="Available Masses" />
-                              <Label layoutX="282.0" layoutY="26.0" text="Displayed Masses" />
-                              <HBox alignment="CENTER_LEFT" layoutX="31.0" layoutY="273.0" prefHeight="31.0" prefWidth="1172.0" spacing="20.0">
-                                 <children>
-                                    <Button mnemonicParsing="false" onAction="#resetMassesAuditGraphs" text="Reset" />
-                                    <CheckBox fx:id="normalizeTimeAxisCheckBox" mnemonicParsing="false" onAction="#normalizeTimeAxisCheckBoxAction" text="Display normalized time axis" />
-                                    <CheckBox fx:id="displaySpotLabelsCheckBox" mnemonicParsing="false" onAction="#displaySpotLabelsCheckBoxAction" text="Display spot labels" />
-                                    <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="667.0" spacing="15.0" style="-fx-background-color: azure; -fx-border-color: black;">
-                                       <children>
-                                          <RadioButton layoutX="10.0" layoutY="17.0" mnemonicParsing="false" onAction="#displayMassesAction" selected="true" text="Display Masses">
-                                             <toggleGroup>
-                                                <ToggleGroup fx:id="displayCountFlavorToggleGroup" />
-                                             </toggleGroup>
-                                          </RadioButton>
-                                          <RadioButton mnemonicParsing="false" onAction="#displayTotalCountsAction" text="Display totalCounts" toggleGroup="$displayCountFlavorToggleGroup" />
-                                          <RadioButton mnemonicParsing="false" onAction="#displayTotalSBMAction" text="Display totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
-                                          <RadioButton mnemonicParsing="false" onAction="#displayBothCountsAction" prefHeight="18.0" prefWidth="225.0" text="Display totalCounts and totalSBM" toggleGroup="$displayCountFlavorToggleGroup" />
-                                       </children>
-                                       <HBox.margin>
-                                          <Insets left="25.0" />
-                                       </HBox.margin>
-                                       <padding>
-                                          <Insets left="20.0" />
-                                       </padding>
-                                    </HBox>
-                                 </children>
-                              </HBox>
-                              <Line endX="125.0" layoutX="460.0" layoutY="77.0" rotate="90.0" scaleX="2.0" scaleY="2.0" translateX="-10.0" translateY="55.0" />
-                              <Label layoutX="600.0" text="Displayed Mass Deltas (choose pairs per row)" />
-                              <Label layoutX="650.0" layoutY="26.0" text="Mass A " />
-                              <Label layoutX="875.0" layoutY="26.0" text="Mass B" />
-                              <Line endX="20.0" layoutX="783.0" layoutY="41.0" stroke="#eb0b3f" strokeWidth="5.0" />
-                              <ScrollPane layoutX="519.0" layoutY="54.0" prefHeight="202.0" prefWidth="510.0">
-                                 <content>
-                                    <GridPane fx:id="massDeltasGridPane" prefHeight="190.0" prefWidth="480.0">
-                                      <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="48.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="210.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0" minWidth="10.0" prefWidth="217.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints maxHeight="36.0" minHeight="10.0" prefHeight="26.0" vgrow="NEVER" />
-                                        <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="34.0" vgrow="NEVER" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                    </GridPane>
-                                 </content>
-                              </ScrollPane>
-                              <Text layoutX="517.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Add/Remove">
-                                 <font>
-                                    <Font size="11.0" />
-                                 </font>
-                              </Text>
-                              <Line endX="125.0" layoutX="976.0" layoutY="131.0" rotate="90.0" scaleX="2.0" scaleY="2.0" />
-                              <Label layoutX="1049.0" layoutY="26.0" text="Other Graphs" />
-                              <CheckBox fx:id="showPrimaryBeamCheckBox" layoutX="1053.0" layoutY="57.0" mnemonicParsing="false" onAction="#showPrimaryBeamCheckBoxAction" text="Primary Beam" />
-                              <CheckBox fx:id="showQt1yCheckBox" layoutX="1054.0" layoutY="86.0" mnemonicParsing="false" onAction="#showQt1yCheckBoxAction" text="qt1y" />
-                              <CheckBox fx:id="showQt1zCheckBox" layoutX="1055.0" layoutY="115.0" mnemonicParsing="false" onAction="#showQt1zCheckBoxAction" text="qt1z" />
-                              <HBox layoutX="8.0" layoutY="1.0" prefHeight="18.0" prefWidth="510.0" spacing="25.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: use drag-and-drop to populate lists.">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                    </Text>
-                                    <Text layoutX="10.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Caution: more than 10 active graphs may impede performance.">
-                                       <font>
-                                          <Font size="11.0" />
-                                       </font>
-                                    </Text>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </TitledPane>
-              </panes>
-            </Accordion>
-            <HBox alignment="CENTER_LEFT" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" VBox.vgrow="NEVER">
-               <children>
-                  <Label prefHeight="28.0" prefWidth="268.0" />
-                  <ScrollBar fx:id="zoomScrollBar" prefHeight="17.0" prefWidth="983.0" style="-fx-background-color: azure;" />
-               </children>
-            </HBox>
-            <HBox>
-               <children>
-                  <ScrollPane fx:id="leftScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" minWidth="270.0" prefHeight="631.0" prefWidth="270.0" vbarPolicy="NEVER">
-                     <content>
-                        <VBox fx:id="scrolledBoxLeft" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" styleClass="backgroundCalamari">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
-                  <ScrollPane fx:id="rightScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" prefHeight="581.0" prefWidth="1032.0">
-                     <content>
-                        <VBox fx:id="scrolledBox" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0" styleClass="backgroundCalamari">
-                           <padding>
-                              <Insets bottom="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </HBox>
-            <Pane prefHeight="0.0" prefWidth="1198.0" />
-         </children>
-      </VBox>
-  </content>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<ScrollPane fitToHeight="true" fitToWidth="true" minHeight="660.0" minWidth="1250.0" prefHeight="660.0"
+            prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css"
+            xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.cirdles.squid.gui.MassesAuditController">
+    <content>
+        <VBox prefHeight="798.0" prefWidth="1407.0">
+            <children>
+                <Accordion fx:id="massesAccordian">
+                    <panes>
+                        <TitledPane fx:id="massesTitledPane" text="Manage Displayed Masses">
+                            <content>
+                                <AnchorPane prefWidth="976.0">
+                                    <children>
+                                        <ListView fx:id="availableMassesListView" layoutX="14.0" layoutY="54.0"
+                                                  prefHeight="204.0" prefWidth="225.0"/>
+                                        <ListView fx:id="viewedAsGraphMassesListView" layoutX="280.0" layoutY="54.0"
+                                                  prefHeight="204.0" prefWidth="225.0"/>
+                                        <Polygon fill="DODGERBLUE" layoutX="272.0" layoutY="158.0" rotate="90.0"
+                                                 scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
+                                            <points>
+                                                <Double fx:value="-50.0"/>
+                                                <Double fx:value="40.0"/>
+                                                <Double fx:value="50.0"/>
+                                                <Double fx:value="40.0"/>
+                                                <Double fx:value="0.0"/>
+                                                <Double fx:value="-60.0"/>
+                                            </points>
+                                        </Polygon>
+                                        <Polygon fill="DODGERBLUE" layoutX="248.0" layoutY="158.0" rotate="-90.0"
+                                                 scaleX="0.15" scaleY="0.15" stroke="BLACK" strokeType="INSIDE">
+                                            <points>
+                                                <Double fx:value="-50.0"/>
+                                                <Double fx:value="40.0"/>
+                                                <Double fx:value="50.0"/>
+                                                <Double fx:value="40.0"/>
+                                                <Double fx:value="0.0"/>
+                                                <Double fx:value="-60.0"/>
+                                            </points>
+                                        </Polygon>
+                                        <Label layoutX="16.0" layoutY="27.0" text="Available Masses"/>
+                                        <Label layoutX="282.0" layoutY="26.0" text="Displayed Masses"/>
+                                        <HBox alignment="CENTER_LEFT" layoutX="31.0" layoutY="273.0" prefHeight="31.0"
+                                              prefWidth="1172.0" spacing="20.0">
+                                            <children>
+                                                <Button mnemonicParsing="false" onAction="#resetMassesAuditGraphs"
+                                                        text="Reset"/>
+                                                <CheckBox fx:id="normalizeTimeAxisCheckBox" mnemonicParsing="false"
+                                                          onAction="#normalizeTimeAxisCheckBoxAction"
+                                                          text="Display normalized time axis"/>
+                                                <CheckBox fx:id="displaySpotLabelsCheckBox" mnemonicParsing="false"
+                                                          onAction="#displaySpotLabelsCheckBoxAction"
+                                                          text="Display spot labels"/>
+                                                <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="667.0"
+                                                      spacing="15.0"
+                                                      style="-fx-background-color: azure; -fx-border-color: black;">
+                                                    <children>
+                                                        <RadioButton layoutX="10.0" layoutY="17.0"
+                                                                     mnemonicParsing="false"
+                                                                     onAction="#displayMassesAction" selected="true"
+                                                                     text="Display Masses">
+                                                            <toggleGroup>
+                                                                <ToggleGroup fx:id="displayCountFlavorToggleGroup"/>
+                                                            </toggleGroup>
+                                                        </RadioButton>
+                                                        <RadioButton mnemonicParsing="false"
+                                                                     onAction="#displayTotalCountsAction"
+                                                                     text="Display totalCounts"
+                                                                     toggleGroup="$displayCountFlavorToggleGroup"/>
+                                                        <RadioButton mnemonicParsing="false"
+                                                                     onAction="#displayTotalSBMAction"
+                                                                     text="Display totalSBM"
+                                                                     toggleGroup="$displayCountFlavorToggleGroup"/>
+                                                        <RadioButton mnemonicParsing="false"
+                                                                     onAction="#displayBothCountsAction"
+                                                                     prefHeight="18.0" prefWidth="225.0"
+                                                                     text="Display totalCounts and totalSBM"
+                                                                     toggleGroup="$displayCountFlavorToggleGroup"/>
+                                                    </children>
+                                                    <HBox.margin>
+                                                        <Insets left="25.0"/>
+                                                    </HBox.margin>
+                                                    <padding>
+                                                        <Insets left="20.0"/>
+                                                    </padding>
+                                                </HBox>
+                                            </children>
+                                        </HBox>
+                                        <Line endX="125.0" layoutX="460.0" layoutY="77.0" rotate="90.0" scaleX="2.0"
+                                              scaleY="2.0" translateX="-10.0" translateY="55.0"/>
+                                        <Label layoutX="600.0" text="Displayed Mass Deltas (choose pairs per row)"/>
+                                        <Label layoutX="650.0" layoutY="26.0" text="Mass A "/>
+                                        <Label layoutX="875.0" layoutY="26.0" text="Mass B"/>
+                                        <Line endX="20.0" layoutX="783.0" layoutY="41.0" stroke="#eb0b3f"
+                                              strokeWidth="5.0"/>
+                                        <ScrollPane layoutX="519.0" layoutY="54.0" prefHeight="202.0" prefWidth="510.0">
+                                            <content>
+                                                <GridPane fx:id="massDeltasGridPane" prefHeight="190.0"
+                                                          prefWidth="480.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.0"
+                                                                           minWidth="10.0" prefWidth="48.0"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0"
+                                                                           minWidth="10.0" prefWidth="210.0"/>
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="241.0"
+                                                                           minWidth="10.0" prefWidth="217.0"/>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints maxHeight="36.0" minHeight="10.0"
+                                                                        prefHeight="26.0" vgrow="NEVER"/>
+                                                        <RowConstraints maxHeight="38.0" minHeight="10.0"
+                                                                        prefHeight="34.0" vgrow="NEVER"/>
+                                                        <RowConstraints minHeight="10.0" prefHeight="30.0"
+                                                                        vgrow="SOMETIMES"/>
+                                                    </rowConstraints>
+                                                </GridPane>
+                                            </content>
+                                        </ScrollPane>
+                                        <Text layoutX="517.0" layoutY="52.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                                              text="Add/Remove">
+                                            <font>
+                                                <Font size="11.0"/>
+                                            </font>
+                                        </Text>
+                                        <Line endX="125.0" layoutX="976.0" layoutY="131.0" rotate="90.0" scaleX="2.0"
+                                              scaleY="2.0"/>
+                                        <Label layoutX="1049.0" layoutY="26.0" text="Other Graphs"/>
+                                        <CheckBox fx:id="showPrimaryBeamCheckBox" layoutX="1053.0" layoutY="57.0"
+                                                  mnemonicParsing="false" onAction="#showPrimaryBeamCheckBoxAction"
+                                                  text="Primary Beam"/>
+                                        <CheckBox fx:id="showQt1yCheckBox" layoutX="1054.0" layoutY="86.0"
+                                                  mnemonicParsing="false" onAction="#showQt1yCheckBoxAction"
+                                                  text="qt1y"/>
+                                        <CheckBox fx:id="showQt1zCheckBox" layoutX="1055.0" layoutY="115.0"
+                                                  mnemonicParsing="false" onAction="#showQt1zCheckBoxAction"
+                                                  text="qt1z"/>
+                                        <HBox layoutX="8.0" layoutY="1.0" prefHeight="18.0" prefWidth="510.0"
+                                              spacing="25.0">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                                                      text="Hint: use drag-and-drop to populate lists.">
+                                                    <font>
+                                                        <Font size="11.0"/>
+                                                    </font>
+                                                </Text>
+                                                <Text layoutX="10.0" layoutY="21.0" strokeType="OUTSIDE"
+                                                      strokeWidth="0.0" style="-fx-fill: red;"
+                                                      text="Caution: more than 10 active graphs may impede performance.">
+                                                    <font>
+                                                        <Font size="11.0"/>
+                                                    </font>
+                                                </Text>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                </Accordion>
+                <HBox alignment="CENTER_LEFT" maxHeight="20.0" minHeight="20.0" prefHeight="20.0" VBox.vgrow="NEVER">
+                    <children>
+                        <Label prefHeight="28.0" prefWidth="268.0"/>
+                        <ScrollBar fx:id="zoomScrollBar" prefHeight="17.0" prefWidth="983.0"
+                                   style="-fx-background-color: azure;"/>
+                    </children>
+                </HBox>
+                <HBox>
+                    <children>
+                        <ScrollPane fx:id="leftScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS"
+                                    minWidth="270.0" prefHeight="631.0" prefWidth="270.0" vbarPolicy="NEVER">
+                            <content>
+                                <VBox fx:id="scrolledBoxLeft" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0"
+                                      styleClass="backgroundCalamari">
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" top="10.0"/>
+                                    </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                        <ScrollPane fx:id="rightScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS"
+                                    prefHeight="581.0" prefWidth="1032.0">
+                            <content>
+                                <VBox fx:id="scrolledBox" onMouseEntered="#scrollBoxMouseEntered" prefHeight="770.0"
+                                      styleClass="backgroundCalamari">
+                                    <padding>
+                                        <Insets bottom="10.0" right="10.0" top="10.0"/>
+                                    </padding>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </HBox>
+                <Pane prefHeight="0.0" prefWidth="1198.0"/>
+            </children>
+        </VBox>
+    </content>
 </ScrollPane>

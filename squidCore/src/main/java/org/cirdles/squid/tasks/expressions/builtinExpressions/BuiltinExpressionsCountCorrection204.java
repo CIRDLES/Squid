@@ -16,21 +16,19 @@
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import org.cirdles.squid.tasks.expressions.Expression;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class BuiltinExpressionsCountCorrection204 {
 
     /**
-     * @see
-     * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
-     *
      * @return
+     * @see https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
      */
     public static Expression buildCountCorrectionExpressionFrom207() {
 
@@ -57,10 +55,10 @@ public class BuiltinExpressionsCountCorrection204 {
         Expression countCorrectionExpression204From207 = buildExpression(
                 "SWAPCountCorrectionExpression204From207",
                 "ValueModel("
-                + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_207 + ")/"
-                + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
-                + term5 + ","
-                + "false)", false, true, false);
+                        + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_207 + ")/"
+                        + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
+                        + term5 + ","
+                        + "false)", false, true, false);
 
         countCorrectionExpression204From207.getExpressionTree().setSquidSpecialUPbThExpression(true);
 
@@ -68,10 +66,8 @@ public class BuiltinExpressionsCountCorrection204 {
     }
 
     /**
-     * @see
-     * https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
-     *
      * @return
+     * @see https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
      */
     public static Expression buildCountCorrectionExpressionFrom208() {
 
@@ -98,10 +94,10 @@ public class BuiltinExpressionsCountCorrection204 {
         Expression countCorrectionExpression204From208 = buildExpression(
                 "SWAPCountCorrectionExpression204From208",
                 "ValueModel("
-                + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_208 + ")/"
-                + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
-                + term5 + ","
-                + "false)", false, true, false);
+                        + "(TotalCps([\"204\"])-TotalCps([\"BKG\"])-" + BIWT_204_OVR_CTS_FROM_208 + ")/"
+                        + "(TotalCps([\"206\"])-TotalCps([\"BKG\"]))" + ","
+                        + term5 + ","
+                        + "false)", false, true, false);
 
         countCorrectionExpression204From208.getExpressionTree().setSquidSpecialUPbThExpression(true);
 

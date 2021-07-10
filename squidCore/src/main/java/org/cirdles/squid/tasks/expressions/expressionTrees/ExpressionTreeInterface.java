@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
-import java.util.List;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -24,14 +23,14 @@ import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 
+import java.util.List;
+
 /**
- *
  * @author James F. Bowring
  */
 public interface ExpressionTreeInterface {
 
     /**
-     *
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
@@ -40,7 +39,6 @@ public interface ExpressionTreeInterface {
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
 
     /**
-     *
      * @return
      */
     public String getName();
@@ -71,23 +69,20 @@ public interface ExpressionTreeInterface {
     public void setRootExpressionTree(boolean rootExpressionTree);
 
     /**
-     *
      * @return
      */
     public String toStringMathML();
 
     /**
-     *
      * @return
      */
     public boolean isTypeFunction();
 
     /**
-     *
      * @return
      */
     public boolean isTypeFunctionOrOperation();
-    
+
     public boolean builtAsValueModel();
 
     public boolean amHealthy();
@@ -104,14 +99,13 @@ public interface ExpressionTreeInterface {
     public boolean isSquidSwitchSTReferenceMaterialCalculation();
 
     /**
-     *
      * @param origin
      */
     public void copySettings(ExpressionTreeInterface origin);
 
     /**
      * @param squidSwitchSTReferenceMaterialCalculation the
-     * squidSwitchSTReferenceMaterialCalculation to set
+     *                                                  squidSwitchSTReferenceMaterialCalculation to set
      */
     public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
 
@@ -132,7 +126,7 @@ public interface ExpressionTreeInterface {
 
     /**
      * @param squidSwitchSAUnknownCalculation the
-     * squidSwitchSAUnknownCalculation to set
+     *                                        squidSwitchSAUnknownCalculation to set
      */
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
 
@@ -143,7 +137,7 @@ public interface ExpressionTreeInterface {
 
     /**
      * @param squidSwitchSCSummaryCalculation the
-     * squidSwitchSCSummaryCalculation to set
+     *                                        squidSwitchSCSummaryCalculation to set
      */
     public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
 
@@ -164,7 +158,7 @@ public interface ExpressionTreeInterface {
 
     /**
      * @param squidSwitchConcentrationReferenceMaterialCalculation the
-     * squidSwitchConcentrationReferenceMaterialCalculation to set
+     *                                                             squidSwitchConcentrationReferenceMaterialCalculation to set
      */
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
 
@@ -179,7 +173,6 @@ public interface ExpressionTreeInterface {
     public void setIndex(int index);
 
     /**
-     *
      * @param objects
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -206,7 +199,6 @@ public interface ExpressionTreeInterface {
     }
 
     /**
-     *
      * @param objects
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -223,7 +215,6 @@ public interface ExpressionTreeInterface {
     }
 
     /**
-     *
      * @param types
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -241,7 +232,6 @@ public interface ExpressionTreeInterface {
     }
 
     /**
-     *
      * @param types
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -258,7 +248,6 @@ public interface ExpressionTreeInterface {
     }
 
     /**
-     *
      * @param objects
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -269,7 +258,7 @@ public interface ExpressionTreeInterface {
         }
         boolean[] retVal = new boolean[objects.length];
         for (int i = 0; i < objects.length; i++) {
-            if (!(objects[i] instanceof Boolean)){
+            if (!(objects[i] instanceof Boolean)) {
                 objects[i] = false;
             }
             retVal[i] = (boolean) objects[i];
@@ -331,7 +320,6 @@ public interface ExpressionTreeInterface {
     }
 
     /**
-     *
      * @return targetBits = 2 for both (11), 1 for RM (01), 2 for U (10)
      */
     public default int makeTargetBits() {

@@ -491,7 +491,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.setLineWidth(1.0);
         g2d.setStroke(Paint.valueOf("GREEN"));
         if ((PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_SAMPLE) == 0)
-                ||(PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_RM) == 0)
+                || (PlotsController.plotTypeSelected.compareTo(PlotsController.PlotTypes.WEIGHTED_MEAN_RM) == 0)
                 || switchRefMatViewToCalibConst) {
             g2d.strokeLine(
                     mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));

@@ -5,35 +5,39 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox fx:id="vboxMaster" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" stylesheets="@../../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController">
-   <children>
-      <SplitPane dividerPositions="0.4" prefHeight="701.0" prefWidth="1250.0" VBox.vgrow="ALWAYS">
-         <items>
-            <ScrollPane fx:id="spotListScrollPane">
-               <content>
-                  <AnchorPane fx:id="spotListAnchorPane" prefHeight="200.0" prefWidth="200.0" />
-               </content>
-            </ScrollPane>
-            <ScrollPane fx:id="plotScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER">
-               <content>
-                  <VBox fx:id="plotVBox" alignment="BASELINE_LEFT" prefHeight="658.0" prefWidth="748.0">
-                     <children>
-                        <AnchorPane fx:id="plotAndConfigAnchorPane" prefHeight="618.0" prefWidth="748.0" VBox.vgrow="ALWAYS" />
-                        <ToolBar fx:id="plotToolBar" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER">
-                           <rotationAxis>
-                              <Point3D />
-                           </rotationAxis>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets></ToolBar>
-                     </children>
-                  </VBox>
-               </content>
-            </ScrollPane>
-         </items>
-      </SplitPane>
-   </children>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="vboxMaster" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0"
+      stylesheets="@../../../css/projectManager.css" xmlns="http://javafx.com/javafx/10.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController">
+    <children>
+        <SplitPane dividerPositions="0.4" prefHeight="701.0" prefWidth="1250.0" VBox.vgrow="ALWAYS">
+            <items>
+                <ScrollPane fx:id="spotListScrollPane">
+                    <content>
+                        <AnchorPane fx:id="spotListAnchorPane" prefHeight="200.0" prefWidth="200.0"/>
+                    </content>
+                </ScrollPane>
+                <ScrollPane fx:id="plotScrollPane" hbarPolicy="NEVER" vbarPolicy="NEVER">
+                    <content>
+                        <VBox fx:id="plotVBox" alignment="BASELINE_LEFT" prefHeight="658.0" prefWidth="748.0">
+                            <children>
+                                <AnchorPane fx:id="plotAndConfigAnchorPane" prefHeight="618.0" prefWidth="748.0"
+                                            VBox.vgrow="ALWAYS"/>
+                                <ToolBar fx:id="plotToolBar" maxHeight="40.0" minHeight="40.0" prefHeight="40.0"
+                                         style="-fx-background-color: #67ccff;" VBox.vgrow="NEVER">
+                                    <rotationAxis>
+                                        <Point3D/>
+                                    </rotationAxis>
+                                    <opaqueInsets>
+                                        <Insets/>
+                                    </opaqueInsets>
+                                </ToolBar>
+                            </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </items>
+        </SplitPane>
+    </children>
 </VBox>

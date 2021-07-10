@@ -1,175 +1,212 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-
-<GridPane hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.ProjectManagerController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<GridPane hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0"
+          styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0"
+          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.cirdles.squid.gui.ProjectManagerController">
     <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
-        <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0"/>
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="1200.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" vgrow="NEVER" />
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="180.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" vgrow="NEVER"/>
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="180.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
         <HBox GridPane.columnIndex="1">
             <children>
-                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="956.0" text="Project  &gt; Data / Manage Sample Names  &gt; Data / Manage Spots and Reference Materials" />
-            <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0" style="-fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Geochron Mode" />
+                <Label fx:id="titleLabel" prefHeight="28.0" prefWidth="956.0"
+                       text="Project  &gt; Data / Manage Sample Names  &gt; Data / Manage Spots and Reference Materials"/>
+                <Label fx:id="projectModeLabel" alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="133.0"
+                       style="-fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Geochron Mode"/>
             </children>
         </HBox>
         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <children>
-                <TextField fx:id="projectNameText" prefHeight="27.0" prefWidth="323.0" promptText="Type project name" HBox.hgrow="ALWAYS" />
-                <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Analyst Name:" />
-                <TextField fx:id="analystNameText" prefHeight="27.0" prefWidth="322.0" promptText="Your name" HBox.hgrow="ALWAYS" />
+                <TextField fx:id="projectNameText" prefHeight="27.0" prefWidth="323.0" promptText="Type project name"
+                           HBox.hgrow="ALWAYS"/>
+                <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Analyst Name:"/>
+                <TextField fx:id="analystNameText" prefHeight="27.0" prefWidth="322.0" promptText="Your name"
+                           HBox.hgrow="ALWAYS"/>
             </children>
         </HBox>
         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <children>
-                <TextField fx:id="orignalPrawnFileName" editable="false" prefHeight="27.0" prefWidth="775.0" promptText="name and location of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
+                <TextField fx:id="orignalPrawnFileName" editable="false" prefHeight="27.0" prefWidth="775.0"
+                           promptText="name and location of selected Prawn XML or OP file will appear here"
+                           style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS"/>
             </children>
         </HBox>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Data File:" GridPane.rowIndex="3" />
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Software:" GridPane.rowIndex="4" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari"
+               text="Project Name:" GridPane.rowIndex="1"/>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Data File:" GridPane.rowIndex="3"/>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Software:" GridPane.rowIndex="4"/>
         <VBox GridPane.columnIndex="1" GridPane.rowIndex="4">
             <children>
-                <Label fx:id="softwareVersionLabel" text="Version:" />
+                <Label fx:id="softwareVersionLabel" text="Version:"/>
             </children>
         </VBox>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project File:" GridPane.rowIndex="2" />
-        <TextField fx:id="squidFileNameText" editable="false" prefHeight="27.0" prefWidth="323.0" promptText="name and location of project '.squid' file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Session:" GridPane.rowIndex="6" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari"
+               text="Project File:" GridPane.rowIndex="2"/>
+        <TextField fx:id="squidFileNameText" editable="false" prefHeight="27.0" prefWidth="323.0"
+                   promptText="name and location of project '.squid' file will appear here"
+                   style="-fx-font-family: SansSerif; -fx-font-size: 13;" GridPane.columnIndex="1"
+                   GridPane.rowIndex="2"/>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Session:" GridPane.rowIndex="6"/>
         <HBox spacing="15.0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.vgrow="ALWAYS">
             <VBox>
                 <children>
-                    <Label fx:id="loginCommentLabel" text="Login Comment:" />
-                    <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" prefHeight="149.0" prefWidth="346.0" text="Summary of analyses, duplicates, species, spots" />
+                    <Label fx:id="loginCommentLabel" text="Login Comment:"/>
+                    <Label fx:id="summaryStatsLabel" alignment="TOP_LEFT" prefHeight="149.0" prefWidth="346.0"
+                           text="Summary of analyses, duplicates, species, spots"/>
                     <Label fx:id="totalAnalysisTimeLabel" text="Total analysis time in hours">
                         <VBox.margin>
-                            <Insets bottom="10.0" />
+                            <Insets bottom="10.0"/>
                         </VBox.margin>
                     </Label>
                 </children>
             </VBox>
-            <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Notes:" />
-            <TextArea fx:id="projectNotesText" promptText="Type here" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" HBox.hgrow="ALWAYS" />
+            <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Notes:"/>
+            <TextArea fx:id="projectNotesText" promptText="Type here" wrapText="true" AnchorPane.bottomAnchor="0.0"
+                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
+                      HBox.hgrow="ALWAYS"/>
         </HBox>
-      <VBox GridPane.rowIndex="5">
-         <children>
-      
-          <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
-            <Button fx:id="parametersSetDefaultsButton" mnemonicParsing="false" onAction="#parametersSetDefaultsOnAction" prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0 0 0 0;" text="Set Defaults" />
-         </children>
-      </VBox>
-    <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
-        <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints vgrow="NEVER" />
-            <RowConstraints vgrow="NEVER" />
-            <RowConstraints vgrow="NEVER" />
-            <RowConstraints vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-        </rowConstraints>
-        <children>
-            <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?" />
-            <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1" />
-            <Label fx:id="preferredIndexIsotopeLabel" style="-fx-font-size: 14;" text="Preferred index isotope:" GridPane.rowIndex="3" />
-            <Label fx:id="weightedMeanRefMatLabel" layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;" text="Weighted Means of Ref Mat:" GridPane.rowIndex="4" />
-            <HBox fx:id="isotopeHBox" alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                <children>
-                    <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction" selected="true" text="204Pb">
-                        <toggleGroup>
-                            <ToggleGroup fx:id="toggleGroupIsotope" />
-                        </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="pb207RadioButton" mnemonicParsing="false" onAction="#pb207RadioButtonAction" text="207Pb" toggleGroup="$toggleGroupIsotope" />
-                    <RadioButton fx:id="pb208RadioButton" mnemonicParsing="false" onAction="#pb208RadioButtonAction" text="208Pb" toggleGroup="$toggleGroupIsotope" />
-                </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
-                <children>
-                    <RadioButton fx:id="yesSBMRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#yesSBMRadioButtonAction" selected="true" text="Yes">
-                        <toggleGroup>
-                            <ToggleGroup fx:id="toggleGroupSBM" />
-                        </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSBM" />
-                </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <children>
-                    <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0" mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction" opacity="0.98" text="Linear regression to burn mid-time">
-                        <toggleGroup>
-                            <ToggleGroup fx:id="toggleGroupRatioCalcMethod" />
-                        </toggleGroup>
-                    </RadioButton>
-                    <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false" onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true" text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod" />
-                </children>
-            </HBox>
-            <HBox fx:id="weightedMeansHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                <children>
-                    <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false" onAction="#autoExcludeSpotsCheckBoxAction" selected="true" text="Allow Squid to auto-reject spots" />
-                    <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text="Minimum external 1sigma % err for 206Pb/238U:" translateX="20.0" />
-                    <Spinner fx:id="assignedExternalErrUSpinner" editable="true" prefHeight="27.0" prefWidth="70.0" translateX="25.0" />
-                    <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:" translateX="33.0" />
-                    <Spinner fx:id="assignedExternalErrThSpinner" editable="true" prefHeight="27.0" prefWidth="70.0" translateX="35.0" />
-                </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                <children>
-                    <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0" prefHeight="29.0" prefWidth="374.0" style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Specify Default Common Pb Model:" wrapText="true" />
-                    <Label prefHeight="29.0" prefWidth="238.0" style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Specify Physical Constants Model:" translateX="10.0" />
-                </children>
-               <padding>
-                  <Insets left="5.0" />
-               </padding>
-            </HBox>
-            
-            <Label alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="195.0" style="-fx-font-size: 14;" text="Parameter Models:" GridPane.rowIndex="5" />
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-               <children>
-                    <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="390.0" promptText="Common Lead Model" />
-                    <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="390.0" promptText="Physical Constants Model" />
-                    <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0" prefWidth="115.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 12;" text="Refresh  Models">
-                        <HBox.margin>
-                            <Insets />
-                        </HBox.margin>
-                    </Button>
-               </children>
-            </HBox>
-        </children>
+        <VBox GridPane.rowIndex="5">
+            <children>
 
-        
-    </GridPane>
-        </children>
+                <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0"
+                       style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:"/>
+                <Button fx:id="parametersSetDefaultsButton" mnemonicParsing="false"
+                        onAction="#parametersSetDefaultsOnAction" prefHeight="31.0" prefWidth="108.0"
+                        style="-fx-padding: 0 0 0 0;" text="Set Defaults"/>
+            </children>
+        </VBox>
+        <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="210.0" minWidth="210.0"
+                                   prefWidth="210.0"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="700.0" prefWidth="700.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Label style="-fx-font-size: 14;" text="Normalise Ion Counts for SBM?"/>
+                <Label style="-fx-font-size: 14;" text="Ratio Calculation Method:" GridPane.rowIndex="1"/>
+                <Label fx:id="preferredIndexIsotopeLabel" style="-fx-font-size: 14;" text="Preferred index isotope:"
+                       GridPane.rowIndex="3"/>
+                <Label fx:id="weightedMeanRefMatLabel" layoutX="10.0" layoutY="94.0" style="-fx-font-size: 14;"
+                       text="Weighted Means of Ref Mat:" GridPane.rowIndex="4"/>
+                <HBox fx:id="isotopeHBox" alignment="CENTER_LEFT" spacing="30.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="3">
+                    <children>
+                        <RadioButton fx:id="pb204RadioButton" mnemonicParsing="false" onAction="#pb204RadioButtonAction"
+                                     selected="true" text="204Pb">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="toggleGroupIsotope"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="pb207RadioButton" mnemonicParsing="false" onAction="#pb207RadioButtonAction"
+                                     text="207Pb" toggleGroup="$toggleGroupIsotope"/>
+                        <RadioButton fx:id="pb208RadioButton" mnemonicParsing="false" onAction="#pb208RadioButtonAction"
+                                     text="208Pb" toggleGroup="$toggleGroupIsotope"/>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
+                    <children>
+                        <RadioButton fx:id="yesSBMRadioButton" layoutX="350.0" mnemonicParsing="false"
+                                     onAction="#yesSBMRadioButtonAction" selected="true" text="Yes">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="toggleGroupSBM"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false"
+                                     onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSBM"/>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                        <RadioButton fx:id="linearRegressionRatioCalcRadioButton" layoutX="350.0"
+                                     mnemonicParsing="false" onAction="#linearRegressionRatioCalcRadioButtonAction"
+                                     opacity="0.98" text="Linear regression to burn mid-time">
+                            <toggleGroup>
+                                <ToggleGroup fx:id="toggleGroupRatioCalcMethod"/>
+                            </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="spotAverageRatioCalcRadioButton" mnemonicParsing="false"
+                                     onAction="#spotAverageRatioCalcRadioButtonAction" opacity="0.98" selected="true"
+                                     text="Spot Average (time-invariant)" toggleGroup="$toggleGroupRatioCalcMethod"/>
+                    </children>
+                </HBox>
+                <HBox fx:id="weightedMeansHBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0"
+                      GridPane.columnIndex="1" GridPane.rowIndex="4">
+                    <children>
+                        <CheckBox fx:id="autoExcludeSpotsCheckBox" mnemonicParsing="false"
+                                  onAction="#autoExcludeSpotsCheckBoxAction" selected="true"
+                                  text="Allow Squid to auto-reject spots"/>
+                        <Label style="-fx-font-size: 12; -fx-font-weight: bold;"
+                               text="Minimum external 1sigma % err for 206Pb/238U:" translateX="20.0"/>
+                        <Spinner fx:id="assignedExternalErrUSpinner" editable="true" prefHeight="27.0" prefWidth="70.0"
+                                 translateX="25.0"/>
+                        <Label style="-fx-font-size: 12; -fx-font-weight: bold;" text=" for 208Pb/232Th:"
+                               translateX="33.0"/>
+                        <Spinner fx:id="assignedExternalErrThSpinner" editable="true" prefHeight="27.0" prefWidth="70.0"
+                                 translateX="35.0"/>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <children>
+                        <Label fx:id="specifyDefaultCommonPbLabel" contentDisplay="TEXT_ONLY" graphicTextGap="0.0"
+                               prefHeight="29.0" prefWidth="374.0"
+                               style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;"
+                               text="Specify Default Common Pb Model:" wrapText="true"/>
+                        <Label prefHeight="29.0" prefWidth="238.0"
+                               style="-fx-font-size: 13; -fx-text-fill: #c53d13; -fx-font-weight: bold;"
+                               text="Specify Physical Constants Model:" translateX="10.0"/>
+                    </children>
+                    <padding>
+                        <Insets left="5.0"/>
+                    </padding>
+                </HBox>
+
+                <Label alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="195.0" style="-fx-font-size: 14;"
+                       text="Parameter Models:" GridPane.rowIndex="5"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="6">
+                    <children>
+                        <ComboBox fx:id="commonPbModelComboBox" prefHeight="27.0" prefWidth="390.0"
+                                  promptText="Common Lead Model"/>
+                        <ComboBox fx:id="physConstModelComboBox" prefHeight="27.0" prefWidth="390.0"
+                                  promptText="Physical Constants Model"/>
+                        <Button mnemonicParsing="false" onAction="#refreshModelsAction" prefHeight="27.0"
+                                prefWidth="115.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 12;"
+                                text="Refresh  Models">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+
+
+        </GridPane>
+    </children>
     <padding>
-        <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
+        <Insets bottom="15.0" left="20.0" right="20.0" top="1.0"/>
     </padding>
 </GridPane>

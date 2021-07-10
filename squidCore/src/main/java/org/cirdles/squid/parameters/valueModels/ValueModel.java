@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- *
  * @author ryanb
  */
 public class ValueModel implements Comparable<ValueModel>, Serializable {
@@ -49,7 +48,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     }
 
     public ValueModel(String name, String uncertaintyType, BigDecimal value,
-            BigDecimal oneSigma) {
+                      BigDecimal oneSigma) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.value = value;
@@ -58,7 +57,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     }
 
     public ValueModel(String name, String uncertaintyType, String reference,
-            BigDecimal value, BigDecimal oneSigma) {
+                      BigDecimal value, BigDecimal oneSigma) {
         this.name = name;
         this.uncertaintyType = uncertaintyType;
         this.reference = reference;

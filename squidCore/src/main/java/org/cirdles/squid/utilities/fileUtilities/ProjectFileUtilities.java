@@ -22,7 +22,6 @@ import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
 import java.io.File;
 
 /**
- *
  * @author James F. Bowring
  */
 public final class ProjectFileUtilities {

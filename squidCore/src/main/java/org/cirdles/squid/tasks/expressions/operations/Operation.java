@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,18 +17,18 @@ package org.cirdles.squid.tasks.expressions.operations;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.TreeMap;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
+
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("Operation")
@@ -70,14 +70,14 @@ public abstract class Operation
      *
      */
     protected String[][] labelsForOutputValues = new String[][]{{}};
-    
+
     /**
      *
      */
     protected String[] labelsForInputValues = new String[]{};
-    
+
     protected String definition;
-    
+
     protected boolean summaryCalc;
 
     /**
@@ -92,7 +92,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -121,7 +120,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface add() {
@@ -129,7 +127,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface subtract() {
@@ -137,7 +134,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface divide() {
@@ -145,7 +141,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface multiply() {
@@ -153,7 +148,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pow() {
@@ -161,7 +155,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface pExp() {
@@ -169,7 +162,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface value() {
@@ -177,7 +169,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface equal() {
@@ -185,7 +176,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface lessThan() {
@@ -193,7 +183,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface lessThanEqual() {
@@ -201,7 +190,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface greaterThan() {
@@ -209,7 +197,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @return
      */
     public static OperationOrFunctionInterface greaterThanEqual() {
@@ -217,7 +204,6 @@ public abstract class Operation
     }
 
     /**
-     *
      * @param operationName
      * @return
      */
@@ -282,9 +268,9 @@ public abstract class Operation
      */
     @Override
     public String[][] getLabelsForOutputValues() {
-        return  clone2dArray(labelsForOutputValues);
+        return clone2dArray(labelsForOutputValues);
     }
-    
+
     @Override
     public String[] getLabelsForInputValues() {
         return labelsForInputValues.clone();
@@ -301,6 +287,6 @@ public abstract class Operation
     public boolean isSummaryCalc() {
         return summaryCalc;
     }
-    
-    
+
+
 }

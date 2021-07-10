@@ -5,18 +5,19 @@
  */
 package org.cirdles.squid.squidReports.squidReportTables;
 
-import java.io.File;
-import java.io.IOException;
-import javax.xml.XMLConstants;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
-import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
-import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.File;
+import java.io.IOException;
+
+import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDREPORTTABLE_FILES_USING_LOCAL_SCHEMA;
+import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -24,7 +25,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class SquidReportTableXSDValidationTest {
     @Test
-    public void defaultRefMatTableTest(){
+    public void defaultRefMatTableTest() {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         ResourceExtractor squidReportTableSchemaExtractor = new ResourceExtractor(Squid.class);
         ResourceExtractor testSquidReportTableExtractor = new ResourceExtractor(SquidReportTableXSDValidationTest.class);

@@ -19,8 +19,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import org.cirdles.squid.constants.Squid3Constants;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.fractionTypeSelected;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -30,7 +31,7 @@ public class ConcordiaControlNode extends HBox implements ToolBoxNodeInterface {
     private PlotRefreshInterface plotsController;
 
     private CheckBox showExcludedSpotsCheckBox;
-    
+
     public ConcordiaControlNode(PlotRefreshInterface plotsController) {
         super(4);
 

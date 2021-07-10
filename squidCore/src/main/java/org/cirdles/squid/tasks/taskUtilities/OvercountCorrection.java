@@ -21,29 +21,28 @@ import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class OvercountCorrection {
-    
+
     public static void correctionNone(TaskInterface task) {
         task.setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
-        ((Task)task).updateAllUnknownSpotsWithOriginal204_206();
+        ((Task) task).updateAllUnknownSpotsWithOriginal204_206();
         SquidProject.setProjectChanged(true);
-        ((Task)task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+        ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
     }
-    
+
     public static void correction207(TaskInterface task) {
         task.setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_207);
-        ((Task)task).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
+        ((Task) task).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_207();
         SquidProject.setProjectChanged(true);
-        ((Task)task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+        ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
     }
 
     public static void correction208(TaskInterface task) {
         task.setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_208);
-        ((Task)task).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
+        ((Task) task).updateAllUnknownSpotsWithOverCountCorrectedBy204_206_208();
         SquidProject.setProjectChanged(true);
-        ((Task)task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+        ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
     }
 }

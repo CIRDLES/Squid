@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.gg
  */
-*{
+* {
     Primary: #cfd8dc;
     P-Light: #efefef;
     P-Dark: #9ea7ea;
@@ -22,7 +22,7 @@
     P-Alt-Text: #000000;
     /*(Main-Logo Color)*/
 
-    Secondary : #FB6D42;
+    Secondary: #FB6D42;
     S-Light: #ffa06d;
     S-Dark: #c53d13;
     /*on s-dark only use S-Dark-Text*/
@@ -37,7 +37,7 @@
     not-accent: #976868
 }
 
-.choice-box .label{
+.choice-box .label {
     -fx-font-family: "Monospaced";
     -fx-font-weight: bolder;
     -fx-font-size: 9pt;
@@ -57,9 +57,10 @@
     -fx-border-color: transparent transparent P-Text transparent;
 }
 
-.text-field *.label{
+.text-field *.label {
     -fx-text-color: P-Alt-Text;
 }
+
 .background {
     -fx-background-color: Primary;
 }
@@ -76,13 +77,16 @@
     -fx-padding: 4 0 4 0;
     -fx-opacity: 100;
 }
-.headerLabel{
+
+.headerLabel {
     -fx-font-size: 32pt;
 }
+
 .referenceHeader {
     -fx-font-size: 14pt;
 }
-.sessionSummaryData{
+
+.sessionSummaryData {
     -fx-padding: 0 0 0 64px;
 }
 
@@ -99,7 +103,7 @@
 /*-fx-border-color: derive(S-light, 20%)*/
 /*}*/
 
-.projectNameAnName{
+.projectNameAnName {
     -fx-pref-width: 256px;
     -fx-background-color: transparent;
 }
@@ -116,40 +120,43 @@
 /*-fx-prompt-text-fill: rgba(33,33,33,.75);*/
 /*}*/
 
-.inputTextVbox{
+.inputTextVbox {
     -fx-padding: 10px 20px 0 10px;
     -fx-margin: 0 0 50px 0;
 }
 
-.inputTextHbox{
+.inputTextHbox {
     -fx-margin: 10px;
 }
+
 /*
 .tab-pane .tab-header-area .tab-header-background {
     -fx-opacity: 100;
 }
 */
-.tab-pane
-{
+.tab-pane {
     -fx-margin: 0 8 0 8;
-    -fx-tab-min-width:275px;
+    -fx-tab-min-width: 275px;
     -fx-stroke-width: 0px;
     -fx-border-color: transparent;
     -fx-background-color: P-Light;
 
 }
+
 .tab-pane *.tab-header-background {
-    -fx-background-color: derive(P-Light, 25%);/*25%*/
+    -fx-background-color: derive(P-Light, 25%); /*25%*/
     -fx-alignment: CENTER;
 
 }
+
 .ancPanes {
     -fx-background-color: derive(P-Light, 30%);
 }
 
-.manageSpotsVBoxes{
+.manageSpotsVBoxes {
     -fx-padding: 10;
 }
+
 .tab .tab-label {
     -fx-alignment: CENTER;
     /*-fx-text-fill: S-Text;*/
@@ -160,32 +167,35 @@
     -fx-text-fill: white;
 
 }
-.tab-pane:top *.tab-header-area{
+
+.tab-pane:top *.tab-header-area {
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0;
     -fx-background-radius: 0;
 }
-.tab-pane .tab
-{
-    -fx-background-color: derive(S-Dark, 85%);/*#e6e6e6;*/
+
+.tab-pane .tab {
+    -fx-background-color: derive(S-Dark, 85%); /*#e6e6e6;*/
     -fx-text-fill: white;
 
 }
-.tab-pane .tab:selected .tab-label{
+
+.tab-pane .tab:selected .tab-label {
     -fx-text-fill: P-text;
 }
-.tab-pane .tab:selected
-{
+
+.tab-pane .tab:selected {
     -fx-background-color: derive(S-Dark, 35%);
     /*-fx-background-color: derive(P-Light, 25%);*/
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
 }
 
-.next-steps{
+.next-steps {
     -fx-background-color: S-Dark;
     -fx-text-fill: S-Dark-Text;
 }
+
 /*
 .tab{
     -fx-background-insets: 0 10 0 10,0,0;
@@ -213,10 +223,11 @@
  * Author: Pedro Duque Vieira
  * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
  */
-.shownLabel{
+.shownLabel {
     -fx-font-size: 30px;
 
 }
+
 .button {
     -fx-padding: 5 22 5 22;
     -fx-border-color: #e2e2e2;
@@ -230,11 +241,11 @@
 }
 
 .button:hover {
-    -fx-background-color: S-Light;/*#3a3a3a;*/
+    -fx-background-color: S-Light; /*#3a3a3a;*/
 }
 
 .button:pressed, .button:default:hover:pressed {
-    -fx-background-color: S-Dark;/*white;*/
+    -fx-background-color: S-Dark; /*white;*/
     -fx-text-fill: S-Dark-Text;
 }
 
@@ -258,8 +269,9 @@
 }
 
 .button:default:hover {
-    -fx-background-color: derive(-fx-focus-color,30%);
+    -fx-background-color: derive(-fx-focus-color, 30%);
 }
+
 .button:default {
     -fx-border-width: 0;
     -fx-border-color: #8187ff;
@@ -269,25 +281,27 @@
     -fx-background-insets: 0;
     -fx-text-fill: white;
     -fx-padding: 0 16 0 16;
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 10.75, 0, 0, 3.0);
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, .5), 10.75, 0, 0, 3.0);
 }
-.button:default:hover{
+
+.button:default:hover {
     -fx-background-color: derive(#8187ff, 40%);
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 10.75, 0, 0, 4.0);
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, .5), 10.75, 0, 0, 4.0);
 }
-.button:default:pressed, .button:default:hover:pressed{
+
+.button:default:pressed, .button:default:hover:pressed {
     -fx-background-color: derive(#8187ff, -20%);
-    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,.5), 1, 0, 0, 0);
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, .5), 1, 0, 0, 0);
 }
 
 /*  https://stackoverflow.com/questions/39512621/change-javafx-tableview-font-size  */
-.table-view .column-header-background .label{
+.table-view .column-header-background .label {
     -fx-font-family: "SansSerif", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 10pt;
 }
 
-.table-view .table-column{
-    -fx-alignment:center;
+.table-view .table-column {
+    -fx-alignment: center;
 }
 
 #squidReportSettingsColumnDetailsTextArea {

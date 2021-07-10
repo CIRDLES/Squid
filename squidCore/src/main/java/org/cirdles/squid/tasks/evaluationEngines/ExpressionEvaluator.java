@@ -16,24 +16,25 @@
 package org.cirdles.squid.tasks.evaluationEngines;
 
 import com.google.common.primitives.Doubles;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_EPSILON;
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
-import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeWithRatiosInterface;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_EPSILON;
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_ERROR_VALUE;
+import static org.cirdles.squid.algorithms.weightedMeans.WeightedMeanCalculators.wtdLinCorr;
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
+
 /**
- *
  * @author James F. Bowring
  */
 public class ExpressionEvaluator {
@@ -51,10 +52,10 @@ public class ExpressionEvaluator {
      * @throws org.cirdles.squid.exceptions.SquidException
      */
     public TaskExpressionEvaluatedPerSpotPerScanModelInterface
-            evaluateTaskExpressionsPerSpotPerScan(
-                    Task task,
-                    ExpressionTreeInterface expression,
-                    ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
+    evaluateTaskExpressionsPerSpotPerScan(
+            Task task,
+            ExpressionTreeInterface expression,
+            ShrimpFractionExpressionInterface shrimpFraction) throws SquidException {
 
         TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEvaluatedPerSpotPerScanModel = null;
         if (shrimpFraction != null) {
@@ -283,7 +284,7 @@ public class ExpressionEvaluator {
             // Sept 2017 rounding of ratEqVal, meanEq, and meanEqSig occurs within this constructor
             taskExpressionEvaluatedPerSpotPerScanModel
                     = new TaskExpressionEvaluatedPerSpotPerScanModel(
-                            expression, ratEqVal, ratEqTime, ratEqErr, meanEq, meanEqSig);
+                    expression, ratEqVal, ratEqTime, ratEqErr, meanEq, meanEqSig);
         }
 
         return taskExpressionEvaluatedPerSpotPerScanModel;

@@ -15,14 +15,15 @@
  */
 package org.cirdles.squid.gui;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.gui.utilities.BrowserControl;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * FXML Controller class for About Window
@@ -44,6 +45,7 @@ public class AboutSquidController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */

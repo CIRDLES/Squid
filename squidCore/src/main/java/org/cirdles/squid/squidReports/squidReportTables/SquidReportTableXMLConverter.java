@@ -7,12 +7,11 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
-import org.cirdles.squid.tasks.Task;
-
-import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 import java.util.LinkedList;
 import java.util.Locale;
+
+import static org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 
 public class SquidReportTableXMLConverter implements Converter {
 

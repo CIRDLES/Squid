@@ -55,7 +55,6 @@ public enum Lambdas {
     }
 
     /**
-     *
      * @return
      */
     public String getName() {
@@ -63,7 +62,6 @@ public enum Lambdas {
     }
 
     /**
-     *
      * @return
      */
     public static String[] getNames() {
@@ -75,7 +73,6 @@ public enum Lambdas {
     }
 
     /**
-     *
      * @return
      */
     public String getDisplayName() {
@@ -83,7 +80,6 @@ public enum Lambdas {
     }
 
     /**
-     *
      * @param checkString
      * @return
      */

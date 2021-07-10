@@ -15,23 +15,23 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
-import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
+import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
-import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+
+import java.util.Map;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SampleNode implements SampleTreeNodeInterface {
 
     private final String sampleName;
     private SimpleBooleanProperty selectedProperty;
-    private PlotDisplayInterface samplePlotWM;    
+    private PlotDisplayInterface samplePlotWM;
     private PlotRefreshInterface plotsController;
 
     public SampleNode(String sampleName) {
@@ -42,7 +42,6 @@ public class SampleNode implements SampleTreeNodeInterface {
     }
 
     /**
-     *
      * @return the java.lang.String
      */
     @Override
@@ -69,7 +68,7 @@ public class SampleNode implements SampleTreeNodeInterface {
      * @return the spotSummaryDetailsWM
      */
     public SpotSummaryDetails getSpotSummaryDetailsWM() {
-        return (samplePlotWM == null) ? null : ((WeightedMeanPlot)samplePlotWM).getSpotSummaryDetails();
+        return (samplePlotWM == null) ? null : ((WeightedMeanPlot) samplePlotWM).getSpotSummaryDetails();
     }
 
     /**

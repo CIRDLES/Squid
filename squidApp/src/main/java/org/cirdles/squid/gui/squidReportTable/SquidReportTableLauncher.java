@@ -5,12 +5,13 @@
  */
 package org.cirdles.squid.gui.squidReportTable;
 
-import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+
+import java.io.IOException;
 
 import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 import static org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher.ReportTableTab.unknownCustom;

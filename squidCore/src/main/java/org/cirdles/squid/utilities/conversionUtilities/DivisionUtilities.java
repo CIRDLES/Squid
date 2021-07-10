@@ -16,7 +16,6 @@
 package org.cirdles.squid.utilities.conversionUtilities;
 
 /**
- *
  * @author bowring
  */
 public class DivisionUtilities {

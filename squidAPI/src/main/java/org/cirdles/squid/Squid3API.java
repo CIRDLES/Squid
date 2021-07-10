@@ -108,6 +108,9 @@ public interface Squid3API {
 
     void refreshModelsAction();
 
+    // Sample management
+
+
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**

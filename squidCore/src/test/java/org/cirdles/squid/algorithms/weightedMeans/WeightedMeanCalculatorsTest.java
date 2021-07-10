@@ -1,9 +1,9 @@
 package org.cirdles.squid.algorithms.weightedMeans;
 
+import org.cirdles.squid.utilities.conversionUtilities.MatrixConverters;
 import org.junit.Test;
 
 import java.util.Arrays;
-import org.cirdles.squid.utilities.conversionUtilities.MatrixConverters;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -12,9 +12,8 @@ import static org.junit.Assert.assertTrue;
  * Created by Griffin on 2/7/2017.
  */
 public class WeightedMeanCalculatorsTest {
-    
+
     /**
-     *
      * @throws Exception
      */
     @Test
@@ -57,6 +56,7 @@ public class WeightedMeanCalculatorsTest {
      * The values for this test were retrieved from the example prawn file 100142_G6147_10111109.43.xml. This file was
      * read in by squid and the first time weightedLinearCorr was called, the parameters and result were
      * recorded.
+     *
      * @throws Exception
      */
     @Test
@@ -95,6 +95,7 @@ public class WeightedMeanCalculatorsTest {
      * The values for this test were retrieved from the example prawn file 100142_G6147_10111109.43.xml. This file was
      * read in by squid and the first time convertCorrelationsToCovariances was called, the parameters and result were
      * recorded.
+     *
      * @throws Exception
      */
     @Test
@@ -115,8 +116,7 @@ public class WeightedMeanCalculatorsTest {
                 {0.0, 0.0, 0.0, 2.445257865122999E-7, 5.121736019206806E-7}};
 
         result = MatrixConverters.convertCorrelationsToCovariances(correlations);
-        for (int i = 0; i < result.length; ++i)
-        {
+        for (int i = 0; i < result.length; ++i) {
             assertTrue(Arrays.equals(expectedResult[i], result[i]));
         }
     }
@@ -124,6 +124,7 @@ public class WeightedMeanCalculatorsTest {
     /**
      * The values for this test were retrieved from the example prawn file 100142_G6147_10111109.43.xml. This file was
      * read in by squid and the first time wtdAvCorr() was called, the parameters and result were recorded.
+     *
      * @throws Exception
      */
     @Test
@@ -134,10 +135,10 @@ public class WeightedMeanCalculatorsTest {
 
         values = new double[]{0.05894591763320877, 0.0584223008458865, 0.05895273157365964, 0.059756958328105375, 0.05990723246652871};
         varCov = new double[][]{{4.943306495826336E-7, 2.372787117996641E-7, 0.0, 0.0, 0.0},
-                            {2.372787117996641E-7, 4.943306495826336E-7, 2.372787117996641E-7, 0.0, 0.0},
-                            {0.0, 2.372787117996641E-7, 4.943306495826336E-7, 2.402286708582975E-7, 0.0},
-                            {0.0, 0.0, 2.402286708582975E-7, 5.066985524519384E-7, 2.445257865122999E-7},
-                            {0.0, 0.0, 0.0, 2.445257865122999E-7, 5.121736019206806E-7}};
+                {2.372787117996641E-7, 4.943306495826336E-7, 2.372787117996641E-7, 0.0, 0.0},
+                {0.0, 2.372787117996641E-7, 4.943306495826336E-7, 2.402286708582975E-7, 0.0},
+                {0.0, 0.0, 2.402286708582975E-7, 5.066985524519384E-7, 2.445257865122999E-7},
+                {0.0, 0.0, 0.0, 2.445257865122999E-7, 5.121736019206806E-7}};
 
         WtdAvCorrResults results = WeightedMeanCalculators.wtdAvCorr(values, varCov);
         expectedBad = false;
@@ -154,6 +155,7 @@ public class WeightedMeanCalculatorsTest {
 
     /**
      * This test was created with randomly generated numbers
+     *
      * @throws Exception
      */
     @Test
@@ -224,8 +226,7 @@ public class WeightedMeanCalculatorsTest {
         assertTrue(Arrays.equals(y2ExpResult, y2Result));
         assertTrue(Arrays.equals(x2ExpResult, x2Result));
         assertEquals(sigRho2ExpResult.length, sigRho2Result.length);
-        for (int i = 0; i < sigRho2Result.length; ++i)
-        {
+        for (int i = 0; i < sigRho2Result.length; ++i) {
             assertTrue(Arrays.equals(sigRho2ExpResult[i], sigRho2Result[i]));
         }
     }

@@ -15,9 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -31,15 +28,16 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
-
 import org.cirdles.topsoil.IsotopeSystem;
 import org.cirdles.topsoil.data.Uncertainty;
 import org.cirdles.topsoil.plot.PlotOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.cirdles.topsoil.plot.PlotOption.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public class TopsoilPlotTeraWasserburg extends AbstractTopsoilPlot {

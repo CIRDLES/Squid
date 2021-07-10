@@ -15,12 +15,6 @@
  */
 package org.cirdles.squid.reports.reportColumns;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
@@ -28,14 +22,19 @@ import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSam
 import org.cirdles.squid.reports.reportViews.ReportListItemI;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 /**
- *
  * @author bowring
  */
 public interface ReportColumnInterface extends Comparable<ReportColumnInterface>, ReportListItemI, Serializable {
 
     /**
-     *
      * @param reportColumn
      * @return
      * @throws ClassCastException
@@ -50,7 +49,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -71,7 +69,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     }
 
     /**
-     *
      * @param reportColumn
      * @return
      */
@@ -84,19 +81,16 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     String getAlternateDisplayName();
 
     /**
-     *
      * @return
      */
     int getCountOfSignificantDigits();
 
     /**
-     *
      * @return
      */
     String getDisplayName1();
 
     /**
-     *
      * @return
      */
     String getDisplayName2();
@@ -112,49 +106,41 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     String getDisplayName4();
 
     /**
-     *
      * @return
      */
     String getFootnoteSpec();
 
     /**
-     *
      * @return
      */
     int getPositionIndex();
 
     /**
-     *
      * @return
      */
     String getRetrieveMethodName();
 
     /**
-     *
      * @return
      */
     String getRetrieveVariableName();
 
     /**
-     *
      * @return
      */
     ReportColumnInterface getUncertaintyColumn();
 
     /**
-     *
      * @return
      */
     String getUncertaintyType();
 
     /**
-     *
      * @return
      */
     String getUnits();
 
     /**
-     *
      * @return
      */
     public default String getUnitsFoxXML() {
@@ -168,8 +154,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     boolean hasUncertaintyColumn();
 
     // http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+
     /**
-     *
      * @return
      */
     int hashCode();
@@ -180,7 +166,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     boolean isAmUncertaintyColumn();
 
     /**
-     *
      * @return
      */
     boolean isDisplayedWithArbitraryDigitCount();
@@ -201,7 +186,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     boolean isNeedsU();
 
     /**
-     *
      * @return
      */
     @Override
@@ -213,19 +197,16 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     void setAlternateDisplayName(String alternateDisplayName);
 
     /**
-     *
      * @param countOfSignificantDigits
      */
     void setCountOfSignificantDigits(int countOfSignificantDigits);
 
     /**
-     *
      * @param displayName1
      */
     void setDisplayName1(String displayName1);
 
     /**
-     *
      * @param displayName2
      */
     void setDisplayName2(String displayName2);
@@ -236,13 +217,11 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     void setDisplayName3(String displayName3);
 
     /**
-     *
      * @param displayedWithArbitraryDigitCount
      */
     void setDisplayedWithArbitraryDigitCount(boolean displayedWithArbitraryDigitCount);
 
     /**
-     *
      * @param footnoteSpec
      */
     void setFootnoteSpec(String footnoteSpec);
@@ -263,57 +242,48 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     void setNeedsU(boolean needsU);
 
     /**
-     *
      * @param positionIndex
      */
     @Override
     void setPositionIndex(int positionIndex);
 
     /**
-     *
      * @param retrieveMethodName
      */
     void setRetrieveMethodName(String retrieveMethodName);
 
     /**
-     *
      * @param retrieveVariableName
      */
     void setRetrieveVariableName(String retrieveVariableName);
 
     /**
-     *
      * @param uncertaintyColumn
      */
     void setUncertaintyColumn(ReportColumnInterface uncertaintyColumn);
 
     /**
-     *
      * @param uncertaintyType
      */
     void setUncertaintyType(String uncertaintyType);
 
     /**
-     *
      * @param units
      */
     void setUnits(String units);
 
     /**
-     *
      * @param xmlCode
      */
     void setUnitsFromXML(String xmlCode);
 
     /**
-     *
      * @param visible
      */
     @Override
     void setVisible(boolean visible);
 
     /**
-     *
      * @param numericString
      * @return
      */
@@ -356,7 +326,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     }
 
     /**
-     *
      * @param fraction
      * @param isNumeric
      * @return
@@ -388,8 +357,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                        getRetrieveMethodName(),
-                                        new Class[0]);
+                                getRetrieveMethodName(),
+                                new Class[0]);
 
                         Object o = meth.invoke(fraction, new Object[0]);
 
@@ -401,8 +370,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                        getRetrieveMethodName(),
-                                        new Class[0]);
+                                getRetrieveMethodName(),
+                                new Class[0]);
 
                         long milliseconds = (long) meth.invoke(fraction, new Object[0]);
 
@@ -414,8 +383,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                        getRetrieveMethodName(),
-                                        new Class[0]);
+                                getRetrieveMethodName(),
+                                new Class[0]);
 
                         int intValue = (int) meth.invoke(fraction, new Object[0]);
 
@@ -427,8 +396,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                        getRetrieveMethodName(),
-                                        new Class[0]);
+                                getRetrieveMethodName(),
+                                new Class[0]);
 
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
                         if (!Double.isFinite(doubleValue)) {
@@ -459,8 +428,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                        getRetrieveMethodName(),
-                                        new Class[0]);
+                                getRetrieveMethodName(),
+                                new Class[0]);
 
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
                         if (!Double.isFinite(doubleValue)) {
@@ -571,8 +540,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                     } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
                                         retVal[1]
                                                 = formatBigDecimalForPublicationArbitraryMode(//
-                                                        getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
-                                                        getUncertaintyColumn().getCountOfSignificantDigits());
+                                                getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
+                                                getUncertaintyColumn().getCountOfSignificantDigits());
                                     } else {
                                         retVal[1] = formatOneSigmaForPublicationSigDigMode(//
                                                 vm[0],
@@ -588,16 +557,17 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                         }
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                         System.err.println("problem formatting " + getRetrieveVariableName() + " for " + fraction.getFractionID() + " >> " + e);
-                        }
                     }
+                }
 
             } catch (ClassNotFoundException classNotFoundException) {
             }
-            }
-
-            return retVal;
         }
-        // these staitic methods stolen from ET_Redux valueModel for now
+
+        return retVal;
+    }
+
+    // these staitic methods stolen from ET_Redux valueModel for now
     static BigDecimal getValueInUnits(double value, String units) {
         int shiftPointRightCount = 0;
 
@@ -648,14 +618,14 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         // first determine the shape of significant digits of ABS uncertainty
         String oneSigmaUnct
                 = formatOneSigmaForPublicationSigDigMode(//
-                        value, oneSigmaAbs,
-                        "ABS", movePointRightCount, uncertaintySigDigits);
+                value, oneSigmaAbs,
+                "ABS", movePointRightCount, uncertaintySigDigits);
 
         // then generate the ouput string based on uncertainty type
         String oneSigmaUnctOutput
                 = formatOneSigmaForPublicationSigDigMode(//
-                        value, oneSigmaAbs,
-                        uncertaintyType, movePointRightCount, uncertaintySigDigits);
+                value, oneSigmaAbs,
+                uncertaintyType, movePointRightCount, uncertaintySigDigits);
 
         // determine location of decimal point in uncertainty
         int countOfDigitsAfterDecPointInError = calculateCountOfDigitsAfterDecPoint(oneSigmaUnct);
@@ -740,7 +710,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     }
 
     /**
-     *
      * @param value
      * @param oneSigmaAbs
      * @return

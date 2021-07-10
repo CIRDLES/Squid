@@ -23,13 +23,13 @@ import java.util.Locale;
  * per @NicoleRayner Items I would like to see incorporated as headers into the
  * WM stats file: Sample Name * Value Name WM Value * 2s Err * 95% conf Err * n
  * (number of analyses included in mean)
- *
+ * <p>
  * Included analysis ID (this is maybe not realistic but if this could
  * concatenate a list of the analysis names (e.g.1242-2.1, 1242-4.1, 1242-6.1)
  * used to calculate the WM as a string that would be useful. I know it would be
  * long and unwieldy but would permit other users to see exactly what analyses
  * were used in the calculation).
- *
+ * <p>
  * MSWD * PoF * Min. Prob. (minimum prob of fit filter used)
  *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -41,22 +41,22 @@ public class SquidWeightedMeanReportEngine {
 
     public static String makeWeightedMeanReportAsCSV(SpotSummaryDetails spotSummaryDetails) {
         StringBuilder report = new StringBuilder();
-        
+
         int countOfIncluded = 0;
         StringBuilder spots = new StringBuilder();
         for (int i = 0; i < spotSummaryDetails.getRejectedIndices().length; i++) {
-            if (!spotSummaryDetails.getRejectedIndices()[i]){
+            if (!spotSummaryDetails.getRejectedIndices()[i]) {
                 countOfIncluded++;
-                spots.append(spotSummaryDetails.getSelectedSpots().get(i).getFractionID()).append(";");               
+                spots.append(spotSummaryDetails.getSelectedSpots().get(i).getFractionID()).append(";");
             }
         }
-        
+
         boolean isAnAge = spotSummaryDetails.getExpressionTree().getName().toUpperCase(Locale.ROOT).contains("AGE");
         report.append(spotSummaryDetails.getExpressionTree().getUnknownsGroupSampleName()).append(", ");
         report.append(spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0]).append(", ");
         report.append(spotSummaryDetails.getValues()[0][0] / (isAnAge ? 1e6 : 1.0)).append(", ");
         report.append(spotSummaryDetails.getValues()[0][1] / (isAnAge ? 1e6 : 1.0) * 2.0).append(", ");
-        report.append(spotSummaryDetails.getValues()[0][3] / (isAnAge ? 1e6 : 1.0)).append(", ");        
+        report.append(spotSummaryDetails.getValues()[0][3] / (isAnAge ? 1e6 : 1.0)).append(", ");
         report.append(countOfIncluded).append(", ");
         report.append(spotSummaryDetails.getRejectedIndices().length).append(", ");
         report.append(spotSummaryDetails.getValues()[0][4]).append(", ");

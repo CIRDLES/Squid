@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("ExpressionTree")
@@ -28,7 +27,6 @@ public class ExpressionTreeParsedFromExcelString extends ExpressionTree implemen
     private static final long serialVersionUID = -1526502328130247004L;
 
     /**
-     *
      * @param operation
      */
     public ExpressionTreeParsedFromExcelString(OperationOrFunctionInterface operation) {

@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SquidSessionModel implements Serializable {
@@ -36,12 +35,12 @@ public class SquidSessionModel implements Serializable {
     private Map<String, Integer> filtersForUnknownNames;
 
     public SquidSessionModel(
-            List<SquidSpeciesModel> squidSpeciesSpecsList, 
-            List<SquidRatiosModel> squidRatiosSpecsList, 
-            boolean useSBM, boolean userLinFits, 
+            List<SquidSpeciesModel> squidSpeciesSpecsList,
+            List<SquidRatiosModel> squidRatiosSpecsList,
+            boolean useSBM, boolean userLinFits,
             int indexOfBackgroundSpecies,
-            String referenceMaterialNameFilter, 
-            String concentrationReferenceMaterialNameFilter, 
+            String referenceMaterialNameFilter,
+            String concentrationReferenceMaterialNameFilter,
             Map<String, Integer> filtersForUnknownNames) {
         this.squidSpeciesModelList = squidSpeciesSpecsList == null ? new ArrayList<>() : squidSpeciesSpecsList;
         this.squidRatiosModelList = squidRatiosSpecsList == null ? new ArrayList<>() : squidRatiosSpecsList;
@@ -54,13 +53,13 @@ public class SquidSessionModel implements Serializable {
     }
 
     public boolean updateFields(
-            List<SquidSpeciesModel> squidSpeciesSpecsList, 
-            List<SquidRatiosModel> squidRatiosSpecsList, 
-            boolean useSBM, 
-            boolean userLinFits, 
-            int indexOfBackgroundSpecies, 
-            String referenceMaterialNameFilter, 
-            String concentrationReferenceMaterialNameFilter, 
+            List<SquidSpeciesModel> squidSpeciesSpecsList,
+            List<SquidRatiosModel> squidRatiosSpecsList,
+            boolean useSBM,
+            boolean userLinFits,
+            int indexOfBackgroundSpecies,
+            String referenceMaterialNameFilter,
+            String concentrationReferenceMaterialNameFilter,
             Map<String, Integer> filtersForUnknownNames) {
 
         boolean retVal = false;
@@ -196,7 +195,6 @@ public class SquidSessionModel implements Serializable {
     }
 
     /**
-     *
      * @return
      */
     public String getConcentrationReferenceMaterialNameFilter() {
@@ -204,7 +202,6 @@ public class SquidSessionModel implements Serializable {
     }
 
     /**
-     *
      * @param concentrationReferenceMaterialNameFilter
      */
     public void setConcentrationReferenceMaterialNameFilter(String concentrationReferenceMaterialNameFilter) {

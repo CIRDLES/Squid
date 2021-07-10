@@ -15,15 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.TreeMap;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -36,26 +27,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
@@ -67,34 +42,24 @@ import javafx.stage.Stage;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.SquidUI.EXPRESSION_TOOLTIP_CSS_STYLE_SPECS;
-import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign10Mass;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign11Mass;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign9Mass;
-import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
-import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
-import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+import org.cirdles.squid.tasks.taskDesign.*;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
+
+import static org.cirdles.squid.gui.SquidUI.*;
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  * FXML Controller class
@@ -202,14 +167,14 @@ public class TaskEditorController implements Initializable {
         addBtnHBox.setAlignment(Pos.CENTER);
         addBtn.setStyle(
                 "-fx-padding: 5 22 5 22;\n"
-                + "    -fx-border-color: #e2e2e2;"
-                + "    -fx-border-width: 2;"
-                + "    -fx-background-radius: 0;"
-                + "    -fx-background-color: #FB6D42;"
-                + "    -fx-font-family: SansSerif;"
-                + "    -fx-font-size: 11pt;"
-                + "    -fx-text-fill: whitesmoke;"
-                + "    -fx-background-insets: 0 0 0 0, 0, 1, 2;");
+                        + "    -fx-border-color: #e2e2e2;"
+                        + "    -fx-border-width: 2;"
+                        + "    -fx-background-radius: 0;"
+                        + "    -fx-background-color: #FB6D42;"
+                        + "    -fx-font-family: SansSerif;"
+                        + "    -fx-font-size: 11pt;"
+                        + "    -fx-text-fill: whitesmoke;"
+                        + "    -fx-background-insets: 0 0 0 0, 0, 1, 2;");
 
         addBtn.setOnMouseClicked((event) -> {
             taskEditor.addRatioName(numLabel.getText() + "/" + denLabel.getText());
@@ -375,7 +340,7 @@ public class TaskEditorController implements Initializable {
                 = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 25, squidProject.getTask().getIndexOfBackgroundSpecies() + 1, 1);
         backgroundIndexSpinner.setValueFactory(valueFactoryTh);
         backgroundIndexSpinner.valueProperty().addListener((ObservableValue<? extends Integer> observable,
-                Integer oldValue, Integer newValue) -> {
+                                                            Integer oldValue, Integer newValue) -> {
 
             if (newValue == 0) {
                 taskEditor.setIndexOfBackgroundSpecies(-1);
@@ -702,7 +667,6 @@ public class TaskEditorController implements Initializable {
     }
 
     /**
-     *
      * @param expressionName
      * @param expressionString
      * @return
@@ -902,17 +866,17 @@ public class TaskEditorController implements Initializable {
 
             } else {
                 SquidMessageDialog.showInfoDialog("The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                        + " masses, but the Task Editor specifies "
-                        + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + taskEditor.getNominalMasses().size())
-                        + ".",
+                                + " masses, but the Task Editor specifies "
+                                + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + taskEditor.getNominalMasses().size())
+                                + ".",
                         primaryStageWindow);
             }
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The data file is type  " + squidProject.getTask().getTaskType()
-                    + ", but the Task Editor specifies type "
-                    + SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType()
-                    + ".",
+                            + ", but the Task Editor specifies type "
+                            + SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType()
+                            + ".",
                     primaryStageWindow);
         }
     }

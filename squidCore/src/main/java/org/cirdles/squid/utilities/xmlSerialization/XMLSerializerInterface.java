@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author James F. Bowring <bowring at gmail.com>
  */
 public interface XMLSerializerInterface {
@@ -65,7 +64,6 @@ public interface XMLSerializerInterface {
     }
 
     /**
-     *
      * @param filename
      * @param doValidate
      * @return
@@ -83,7 +81,7 @@ public interface XMLSerializerInterface {
             customizeXstream(xstream);
 
             myModelClassInstance = xstream.fromXML(reader);
-        } catch (Exception  iOException) {
+        } catch (Exception iOException) {
             // do nothing for now
         }
 
@@ -91,13 +89,11 @@ public interface XMLSerializerInterface {
     }
 
     /**
-     *
      * @param xstream
      */
     public void customizeXstream(XStream xstream);
 
     /**
-     *
      * @param xml
      * @return
      */

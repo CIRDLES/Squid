@@ -20,15 +20,15 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
+import org.cirdles.squid.parameters.util.RadDates;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.ConcurrentMap;
-import org.cirdles.squid.parameters.util.RadDates;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Age206_238r extends ValueModel implements
@@ -46,18 +46,17 @@ public class Age206_238r extends ValueModel implements
     /**
      * Creates a new instance of Age206_238r
      */
-    public Age206_238r () {
-        super( NAME, UNCT_TYPE );
+    public Age206_238r() {
+        super(NAME, UNCT_TYPE);
     }
 
     /**
-     *
      * @param inputValueModels
      * @param parDerivTerms
      */
-    public void calculateValue (
+    public void calculateValue(
             ValueModel[] inputValueModels,
-            ConcurrentMap<String, BigDecimal> parDerivTerms ) {
+            ConcurrentMap<String, BigDecimal> parDerivTerms) {
 
         r206_238r = inputValueModels[0];
         lambda238 = inputValueModels[1];
@@ -65,11 +64,11 @@ public class Age206_238r extends ValueModel implements
         try {
             setValue(//                    
                     new BigDecimal(//
-                    Double.toString( // testing may 2012
-                    StrictMath.log1p( r206_238r.getValue().doubleValue() ) //
-                    / lambda238.getValue().doubleValue() ) ) );
+                            Double.toString( // testing may 2012
+                                    StrictMath.log1p(r206_238r.getValue().doubleValue()) //
+                                            / lambda238.getValue().doubleValue())));
         } catch (Exception e) {
-            setValue( BigDecimal.ZERO );
+            setValue(BigDecimal.ZERO);
         }
 
 
@@ -82,26 +81,26 @@ public class Age206_238r extends ValueModel implements
 //        }
 
 //        System.out.println(differenceValueCalcs());
-        if ( parDerivTerms != null ) {
+        if (parDerivTerms != null) {
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda238";//dAge206_238r__dLambda238
             try {
-                BigDecimal dAge206_238r__dLambda238 = new BigDecimal( Double.toString( StrictMath.log1p( r206_238r.getValue().doubleValue() ) ) ).//
-                        divide(lambda238.getValue().pow( 2 ), new MathContext(15, RoundingMode.HALF_UP) ).negate();// negate added July 2012 by Noah
-                parDerivTerms.put( partialDerivativeNameAge__Lambda, dAge206_238r__dLambda238 );
+                BigDecimal dAge206_238r__dLambda238 = new BigDecimal(Double.toString(StrictMath.log1p(r206_238r.getValue().doubleValue()))).//
+                        divide(lambda238.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP)).negate();// negate added July 2012 by Noah
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge206_238r__dLambda238);
             } catch (Exception e) {
-                parDerivTerms.put( partialDerivativeNameAge__Lambda, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, BigDecimal.ZERO);
             }
 
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Ratio = "dA" + name.substring(1) + "__dR" + r206_238r.getName().substring(1);//dAge206_238r__dR206_238r
             try {
                 BigDecimal dAge206_238r__dR206_238r = BigDecimal.ONE.//
-                        divide(lambda238.getValue(), new MathContext(15, RoundingMode.HALF_UP) ).//
-                        divide(r206_238r.getValue().add( BigDecimal.ONE ), new MathContext(15, RoundingMode.HALF_UP));
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, dAge206_238r__dR206_238r );
+                        divide(lambda238.getValue(), new MathContext(15, RoundingMode.HALF_UP)).//
+                        divide(r206_238r.getValue().add(BigDecimal.ONE), new MathContext(15, RoundingMode.HALF_UP));
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, dAge206_238r__dR206_238r);
             } catch (Exception e) {
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, BigDecimal.ZERO);
             }
         }
     }

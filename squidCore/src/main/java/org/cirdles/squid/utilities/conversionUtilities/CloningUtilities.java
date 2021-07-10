@@ -16,13 +16,11 @@
 package org.cirdles.squid.utilities.conversionUtilities;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class CloningUtilities {
 
     /**
-     *
      * @param myArray
      * @return
      */
@@ -36,7 +34,6 @@ public class CloningUtilities {
     }
 
     /**
-     *
      * @param myArray
      * @return
      */
@@ -50,7 +47,6 @@ public class CloningUtilities {
     }
 
     /**
-     *
      * @param myArray
      * @return
      */

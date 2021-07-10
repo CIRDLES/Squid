@@ -15,13 +15,12 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots;
 
+import javafx.scene.Node;
+
 import java.util.List;
 import java.util.Map;
-import javafx.scene.Node;
-import org.cirdles.topsoil.data.Uncertainty;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface PlotDisplayInterface {
@@ -38,6 +37,6 @@ public interface PlotDisplayInterface {
     List<Node> toolbarControlsFactory();
 
     public String makeAgeOrValueString(int index);
-    
+
 
 }

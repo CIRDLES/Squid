@@ -15,11 +15,11 @@
  */
 package org.cirdles.squid.tasks.squidTask25;
 
-import java.io.Serializable;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 
+import java.io.Serializable;
+
 /**
- *
  * @author James F. Bowring
  */
 public class TaskSquid25Equation implements ExpressionSpecInterface, Serializable {
@@ -97,7 +97,6 @@ public class TaskSquid25Equation implements ExpressionSpecInterface, Serializabl
     }
 
     /**
-     *
      * @return
      */
     public boolean isSquidSpecialUPbThExpression() {
@@ -105,8 +104,7 @@ public class TaskSquid25Equation implements ExpressionSpecInterface, Serializabl
     }
 
     /**
-     * 
-     * @return 
+     * @return
      */
     public boolean isSquidSwitchConcentrationReferenceMaterialCalculation() {
         return squidSwitchConcentrationReferenceMaterialCalculation;

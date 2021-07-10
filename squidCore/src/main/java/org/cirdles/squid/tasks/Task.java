@@ -3461,7 +3461,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     public Map<String, List<ShrimpFractionExpressionInterface>> produceMapOfRefMatSpotsNames() {
-        Map<String, List<ShrimpFractionExpressionInterface>> mapOfRefMatSpotsNames  = new TreeMap<>();
+        Map<String, List<ShrimpFractionExpressionInterface>> mapOfRefMatSpotsNames = new TreeMap<>();
         mapOfRefMatSpotsNames.put(filterForRefMatSpotNames, referenceMaterialSpots);
         return mapOfRefMatSpotsNames;
     }

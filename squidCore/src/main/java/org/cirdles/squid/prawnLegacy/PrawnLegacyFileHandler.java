@@ -1,14 +1,14 @@
 package org.cirdles.squid.prawnLegacy;
 
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.RunParameterNames;
 import org.cirdles.squid.prawn.RunTableEntryParameterNames;
 import org.cirdles.squid.prawn.SetParameterNames;
-
-import java.util.List;
-import org.cirdles.squid.Squid;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.shrimp.ShrimpDataLegacyFileInterface;
+
+import java.util.List;
 
 public class PrawnLegacyFileHandler {
 
@@ -18,7 +18,7 @@ public class PrawnLegacyFileHandler {
         prawnFile.setSoftwareVersion("Squid3 v" + Squid.VERSION + " - translated from SHRIMP II v2 SW");
 
         prawnFile.setRuns((short) prawnLegacyFile.getRun().size());
-        
+
         for (PrawnLegacyFile.Run legacyRun : prawnLegacyFile.getRun()) {
             PrawnFile.Run run = new PrawnFile.Run();
 

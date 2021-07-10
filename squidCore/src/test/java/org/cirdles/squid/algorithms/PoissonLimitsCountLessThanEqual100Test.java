@@ -2,7 +2,7 @@ package org.cirdles.squid.algorithms;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Griffin Hiers on 1/30/2017.
@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 public class PoissonLimitsCountLessThanEqual100Test {
 
     /**
-     *
      * @throws Exception
      */
     @Test

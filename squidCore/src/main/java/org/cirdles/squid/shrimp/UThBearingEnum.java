@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2006 - 2017 James F. Bowring, CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,41 +16,40 @@
 package org.cirdles.squid.shrimp;
 
 /**
- *
  * @author James F. Bowring
  */
 public enum UThBearingEnum {
- 
-   U("U", "Uranium"), T("Th", "Thorium"), N("No", "No");
- 
-   private final String name;
-   private final String description;
- 
-   private UThBearingEnum(String name, String description) {
-       this.name = name;
-       this.description = description;
-   }
- 
-   public String getName() {
-       return name;
-   }
- 
-   public String getDescription() {
-       return description;
-   }
- 
-   public static UThBearingEnum getByName(String name) {
-       for (UThBearingEnum uth : UThBearingEnum.values()) {
-           if (uth.name.compareTo(name) == 0) {
-               return uth;
-           }
-       }
-       return null;
-   }
- 
-   @Override
-   public String toString() {
-       return this.description;
-   }
- 
+
+    U("U", "Uranium"), T("Th", "Thorium"), N("No", "No");
+
+    private final String name;
+    private final String description;
+
+    private UThBearingEnum(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public static UThBearingEnum getByName(String name) {
+        for (UThBearingEnum uth : UThBearingEnum.values()) {
+            if (uth.name.compareTo(name) == 0) {
+                return uth;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return this.description;
+    }
+
 }

@@ -16,12 +16,13 @@
 package org.cirdles.squid.shrimp;
 
 import com.thoughtworks.xstream.XStream;
-import java.io.Serializable;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+
+import java.io.Serializable;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SquidSpeciesModel implements

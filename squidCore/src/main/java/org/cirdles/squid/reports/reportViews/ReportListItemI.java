@@ -22,35 +22,31 @@
 package org.cirdles.squid.reports.reportViews;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface ReportListItemI {
-    
+
     /**
-     * 
      * @return
      */
     abstract String getDisplayName();
-    
+
     /**
-     * 
      * @return
      */
     abstract boolean isVisible();
+
     /**
-     * 
      * @param visible
      */
     abstract void setVisible(boolean visible);
-    
+
     /**
-     * 
+     *
      */
     abstract void ToggleIsVisible();
-    
+
     /**
-     * 
      * @param positionIndex
      */
     abstract void setPositionIndex(int positionIndex);

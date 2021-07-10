@@ -15,18 +15,17 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
-import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
+import java.util.Map;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface SampleTreeNodeInterface {
 
     /**
-     *
      * @return the java.lang.String
      */
     public String getNodeName();

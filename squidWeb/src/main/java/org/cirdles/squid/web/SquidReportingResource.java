@@ -15,17 +15,14 @@
  */
 package org.cirdles.squid.web;
 
-import java.io.File;
-import java.io.InputStream;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * Created by johnzeringue on 7/27/16.
@@ -57,11 +54,11 @@ public class SquidReportingResource {
 
         java.nio.file.Path pathToZip = squidReportingService.generateReports(
                 projectName,
-                contentDispositionHeader.getFileName(), 
+                contentDispositionHeader.getFileName(),
                 prawnFile, taskFile, useSBM, userLinFits, refMatFilter, concRefMatFilter,
                 preferredIndexIsotopeName);
-        File zippedFile = pathToZip.toFile();        
-        
+        File zippedFile = pathToZip.toFile();
+
         return Response
                 .ok(zippedFile)
                 .header("Content-Disposition",

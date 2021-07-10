@@ -21,20 +21,18 @@
 package org.cirdles.squid.reports;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface ReduxLabDataListElementI {
-    
+
     /**
-     * 
      * @return
      */
     abstract String getReduxLabDataElementName();
-    
+
     /**
-     * 
+     *
      */
     abstract public void removeSelf();
-    
+
 }

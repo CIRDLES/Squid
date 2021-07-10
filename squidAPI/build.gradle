@@ -8,5 +8,5 @@ repositories {
 
 dependencies {
     compile project(":squidCore")
-    testImplementation     'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13'
 }

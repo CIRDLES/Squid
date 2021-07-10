@@ -16,10 +16,10 @@
 package org.cirdles.squid.utilities.squidPrefixTree;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author Casey Wilson
  */
 public class SquidPrefixTreeNodeTest {
@@ -27,19 +27,19 @@ public class SquidPrefixTreeNodeTest {
     /**
      * Test of getValue method, of class SquidPrefixTreeNode.
      */
-    
+
     @Test
     public void testGetValue() {
         SquidPrefixTreeNode instance = new SquidPrefixTreeNode('n');
         String expResult = "n";
         String result = instance.getValue();
         assertEquals(expResult, result);
-        
+
         instance = new SquidPrefixTreeNode("string");
         expResult = "string";
         result = instance.getValue();
         assertEquals(expResult, result);
-        
+
         instance = new SquidPrefixTreeNode(" ");
         expResult = " ";
         result = instance.getValue();
@@ -55,16 +55,16 @@ public class SquidPrefixTreeNodeTest {
         boolean expResult = true;
         boolean result = instance.isSingleCharacter();
         assertEquals(expResult, result);
-        
+
         instance = new SquidPrefixTreeNode("string");
         expResult = false;
         result = instance.isSingleCharacter();
         assertEquals(expResult, result);
-                
+
         instance = new SquidPrefixTreeNode(" ");
         expResult = true;
         result = instance.isSingleCharacter();
         assertEquals(expResult, result);
     }
- 
+
 }

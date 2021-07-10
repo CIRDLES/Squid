@@ -17,18 +17,18 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 import java.io.File;
 import java.io.IOException;
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
+ * @author James F. Bowring
  * @see <a href="http://www.xmlmind.com/tutorials/MathML" target="_blank">http://www.xmlmind.com/tutorials/MathML</a>
  * @see <a href="http://rypress.com/tutorials/mathml/advanced-formatting" target="_blank">http://rypress.com/tutorials/mathml/advanced-formatting</a>
- * @author James F. Bowring
  */
 public class ExpressionTreeWriterMathML {
 
     /**
-     *
      * @param expression
      * @return
      */
@@ -64,20 +64,20 @@ public class ExpressionTreeWriterMathML {
         } else {
             fileContents.append(
                     "<!DOCTYPE html>\n"
-                    + "<html>\n"
-                    + "    <head>\n"
-                    + "        <title>" + expression.getName() + "</title>\n"
-                    + "        <meta charset=\"UTF-8\"/>\n"
+                            + "<html>\n"
+                            + "    <head>\n"
+                            + "        <title>" + expression.getName() + "</title>\n"
+                            + "        <meta charset=\"UTF-8\"/>\n"
 //                    + "        <script type=\"text/javascript\" async\n"
 //                    + "                src=\"https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_SVG\">\n"
 //                    + "        </script>\n"
-                    + "        <script type=\"text/javascript\" async\n"
-                    + "                src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG\">\n"
-                    + "        </script>\n"
-                    + "    </head>\n"
-                    + "    <body>\n"
-                    + "        <math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"block\">\n"
-                    + "        <mstyle  mathsize='100%'>\n"
+                            + "        <script type=\"text/javascript\" async\n"
+                            + "                src=\"https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_SVG\">\n"
+                            + "        </script>\n"
+                            + "    </head>\n"
+                            + "    <body>\n"
+                            + "        <math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"block\">\n"
+                            + "        <mstyle  mathsize='100%'>\n"
             );
 
 //            fileContents.append(
@@ -93,9 +93,9 @@ public class ExpressionTreeWriterMathML {
 
             fileContents.append(
                     "          </mstyle>\n"
-                    + "        </math>\n"
-                    + "    </body>\n"
-                    + "</html>");
+                            + "        </math>\n"
+                            + "    </body>\n"
+                            + "</html>");
         }
 
         return fileContents;
@@ -103,7 +103,6 @@ public class ExpressionTreeWriterMathML {
     }
 
     /**
-     *
      * @param expression
      * @throws IOException
      */

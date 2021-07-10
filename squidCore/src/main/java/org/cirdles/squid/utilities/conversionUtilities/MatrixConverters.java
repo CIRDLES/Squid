@@ -16,13 +16,11 @@
 package org.cirdles.squid.utilities.conversionUtilities;
 
 /**
- *
  * @author James F. Bowring
  */
 public class MatrixConverters {
-    
+
     /**
-     *
      * @param correlations
      * @return
      */

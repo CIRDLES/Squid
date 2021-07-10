@@ -15,34 +15,28 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.topsoil;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
-
 import org.cirdles.topsoil.IsotopeSystem;
 import org.cirdles.topsoil.data.Uncertainty;
 import org.cirdles.topsoil.plot.PlotOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static org.cirdles.topsoil.plot.PlotOption.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {

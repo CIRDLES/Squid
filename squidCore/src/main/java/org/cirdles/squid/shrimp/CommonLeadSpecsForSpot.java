@@ -28,7 +28,6 @@ import java.math.RoundingMode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class CommonLeadSpecsForSpot implements Serializable {
@@ -203,7 +202,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     }
 
     public ReferenceMaterialAgeTypesEnum getRefMatAgeType() {
-        if (refMatAgeType == null){
+        if (refMatAgeType == null) {
             refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
         }
         return refMatAgeType;
@@ -255,7 +254,6 @@ public class CommonLeadSpecsForSpot implements Serializable {
     }
 
     /**
-     *
      * @param targetAge the value of targetAge
      */
     public void updateCommonLeadRatiosFromSK(double targetAge) {

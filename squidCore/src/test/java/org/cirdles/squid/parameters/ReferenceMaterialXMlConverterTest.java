@@ -2,6 +2,7 @@ package org.cirdles.squid.parameters;
 
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.ElementComparer;
+import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -9,7 +10,6 @@ import org.jdom2.input.SAXBuilder;
 import org.junit.Test;
 
 import java.io.File;
-import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;

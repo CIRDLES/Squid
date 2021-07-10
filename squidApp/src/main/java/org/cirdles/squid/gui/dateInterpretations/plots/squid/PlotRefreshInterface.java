@@ -16,18 +16,25 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public interface PlotRefreshInterface {  
-    
+public interface PlotRefreshInterface {
+
     public void toggleSpotExclusionWM(int index);
+
     public void calculateWeightedMean();
+
     public void refreshPlot();
+
     public void showRefMatCalibrationConstantPlot();
+
     public void showActivePlot();
+
     public void setXAxisExpressionName(String xAxisExpressionName);
+
     public void setYAxisExpressionName(String yAxisExpressionName);
+
     public void showExcludedSpots(boolean doShow);
+
     public double getTaskParameterExtPErrU();
 }

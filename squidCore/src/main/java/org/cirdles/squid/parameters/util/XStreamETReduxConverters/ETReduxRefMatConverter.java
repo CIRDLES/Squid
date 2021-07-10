@@ -10,16 +10,16 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.parameters.valueModels.ValueModel;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
-import org.cirdles.squid.parameters.valueModels.ValueModel;
 
 /**
- *
  * @author ryanb
  */
 public class ETReduxRefMatConverter implements Converter {
@@ -66,7 +66,7 @@ public class ETReduxRefMatConverter implements Converter {
         reader.moveDown();
         model.setComments(reader.getValue());
         reader.moveUp();
-        
+
         reader.moveDown();
         reader.moveUp();
         reader.moveDown();

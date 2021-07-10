@@ -18,7 +18,6 @@ package org.cirdles.squid.projects;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**
- *
  * @author bowring
  */
 public interface Squid3ProjectParametersAPI {
@@ -56,5 +55,5 @@ public interface Squid3ProjectParametersAPI {
     void setPhysicalConstantsModel(ParametersModel physicalConstantsModel);
 
     void setReferenceMaterialModel(ParametersModel referenceMaterialModel);
-    
+
 }

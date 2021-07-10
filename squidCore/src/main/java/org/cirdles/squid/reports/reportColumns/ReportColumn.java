@@ -109,7 +109,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param reportColumn
      * @return
      */
@@ -132,8 +131,8 @@ public class ReportColumn implements
     }
 
     // http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+
     /**
-     *
      * @return
      */
     @Override
@@ -143,7 +142,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -152,7 +150,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param displayName1
      */
     @Override
@@ -161,7 +158,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -170,7 +166,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param displayName2
      */
     @Override
@@ -179,7 +174,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -188,7 +182,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param positionIndex
      */
     @Override
@@ -197,7 +190,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -206,7 +198,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param units
      */
     @Override
@@ -215,7 +206,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param xmlCode
      */
     @Override
@@ -227,7 +217,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -236,7 +225,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param retrieveMethodName
      */
     @Override
@@ -245,7 +233,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -254,7 +241,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param retrieveVariableName
      */
     @Override
@@ -263,7 +249,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -272,7 +257,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param uncertaintyColumn
      */
     @Override
@@ -281,7 +265,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -290,7 +273,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param uncertaintyType
      */
     @Override
@@ -299,7 +281,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -308,7 +289,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param displayedWithArbitraryDigitCount
      */
     @Override
@@ -317,7 +297,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -326,7 +305,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param countOfSignificantDigits
      */
     @Override
@@ -335,7 +313,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -344,7 +321,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param visible
      */
     @Override
@@ -353,7 +329,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -362,7 +337,6 @@ public class ReportColumn implements
     }
 
     /**
-     *
      * @param footnoteSpec
      */
     @Override

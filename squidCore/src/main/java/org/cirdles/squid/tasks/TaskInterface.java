@@ -42,7 +42,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface TaskInterface {
@@ -56,7 +55,6 @@ public interface TaskInterface {
     public void buildSquidSpeciesModelList();
 
     /**
-     *
      * @param xstream
      */
     public void customizeXstream(XStream xstream);
@@ -196,7 +194,7 @@ public interface TaskInterface {
 
     /**
      * @param taskExpressionsEvaluationsPerSpotSet the
-     * taskExpressionsEvaluationsPerSpotSet to set
+     *                                             taskExpressionsEvaluationsPerSpotSet to set
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
@@ -228,7 +226,6 @@ public interface TaskInterface {
     public void setTaskType(TaskTypeEnum type);
 
     /**
-     *
      * @param forceReprocess the value of forceReprocess
      */
     public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess);
@@ -253,7 +250,6 @@ public interface TaskInterface {
     public List<Expression> getCustomTaskExpressions();
 
     /**
-     *
      * @param expression Name of the expression to test
      * @return True if the expression exists, false if not
      */
@@ -368,7 +364,6 @@ public interface TaskInterface {
     public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
 
     /**
-     *
      * @return namedParametersMap
      */
     public Map<String, ExpressionTreeInterface> getNamedParametersMap();
@@ -378,13 +373,11 @@ public interface TaskInterface {
     public void applyMassStationLabelsToTask();
 
     /**
-     *
      * @return
      */
     public String getParentNuclide();
 
     /**
-     *
      * @param parentNuclide
      */
     public void setParentNuclide(String parentNuclide);
@@ -609,13 +602,11 @@ public interface TaskInterface {
     public boolean expressionIsNuSwitched(String expressionName);
 
     /**
-     *
      * @return showSpotLabels
      */
     public boolean isShowSpotLabels();
 
     /**
-     *
      * @param showSpotLabels
      */
     public void setShowSpotLabels(boolean showSpotLabels);
@@ -637,7 +628,7 @@ public interface TaskInterface {
 
     /**
      * @param squidAllowsAutoExclusionOfSpots the
-     * squidAllowsAutoExclusionOfSpots to set
+     *                                        squidAllowsAutoExclusionOfSpots to set
      */
     public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
 
@@ -662,12 +653,12 @@ public interface TaskInterface {
     public void setExtPErrTh(double extPErrTh);
 
     public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
-    
+
     public Map<String, ExpressionTreeInterface> getNamedSpotMetaDataFieldsMap();
 
     /**
      * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
-     * to set
+     *                                       to set
      */
     public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap);
 
@@ -677,15 +668,13 @@ public interface TaskInterface {
     public Map<String, String> getSpecialSquidFourExpressionsMap();
 
     /**
-     *
-     * @param taskDesign the value of taskDesign
+     * @param taskDesign   the value of taskDesign
      * @param taskSkeleton the value of taskSkeleton
      */
     public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton);
 
     /**
-     *
-     * @param taskDesign the value of taskDesign
+     * @param taskDesign       the value of taskDesign
      * @param includeCustomExp the value of includeCustomExp
      */
     public void updateTaskDesignFromTask(TaskDesign taskDesign, boolean includeCustomExp);
@@ -707,12 +696,11 @@ public interface TaskInterface {
     public void generateMapOfUnknownsBySampleNames();
 
     /**
-     *
-     * @param refreshCommonLeadModel the value of refreshCommonLeadModel
-     * @param refreshPhysicalConstantsModel the value of
-     * refreshPhysicalConstantsModel
+     * @param refreshCommonLeadModel         the value of refreshCommonLeadModel
+     * @param refreshPhysicalConstantsModel  the value of
+     *                                       refreshPhysicalConstantsModel
      * @param refreshReferenceMaterialsModel the value of
-     * refreshReferenceMaterialsModel
+     *                                       refreshReferenceMaterialsModel
      */
     public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel);
 
@@ -772,7 +760,6 @@ public interface TaskInterface {
     public void updateAllSpotsWithCurrentCommonPbModel();
 
     /**
-     *
      * @param excelExpression
      * @return boolean whether this expression contains a named ratio and thus
      * could use NU handling

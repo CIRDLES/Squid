@@ -16,14 +16,14 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.scene.control.Control;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
 
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface ToolBoxNodeInterface {
@@ -37,7 +37,6 @@ public interface ToolBoxNodeInterface {
     }
 
     /**
-     *
      * @param heightOfBar the value of heightOfBar
      * @return the javafx.scene.shape.Path
      */

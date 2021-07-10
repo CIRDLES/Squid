@@ -56,7 +56,6 @@ import java.util.*;
 
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
-import static org.cirdles.squid.dialogs.SquidMessageDialog.showWarningDialog;
 import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -237,8 +236,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         CommonLeadSampleTreeInterface toolBarSampleType
                 = new CommonLeadSampleToolBar(
-                        Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(),
-                        mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName()));
+                Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName(),
+                mapOfSpotsBySampleNames.get(Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName()));
         toolBarSampleType.getCommonLeadModels().disableProperty().setValue(true);
         TreeItem<CommonLeadSampleTreeInterface> rootItemSamples = new TreeItem<>(toolBarSampleType);
 
@@ -441,7 +440,7 @@ public class CommonLeadAssignmentController implements Initializable {
         /**
          * @param label the value of label
          * @param value the value of value
-         * @param unct the value of unct
+         * @param unct  the value of unct
          */
         private void addVboxFactory(String label, double value, double unct) {
             boolean fontIsBold = false;
@@ -921,8 +920,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         /**
          * @param sampleGroupName the value of sampleGroupName
-         * @param sampleAgeType the value of sampleAgeType
-         * @param corrString the value of corrString
+         * @param sampleAgeType   the value of sampleAgeType
+         * @param corrString      the value of corrString
          */
         private RadioButton ageRadioButtonFactory(String sampleGroupName, SampleAgeTypesEnum sampleAgeType, String corrString) {
             RadioButton ageRB = new RadioButton(corrString + "\n" + sampleAgeType.getExpressionName().replace(corrString, ""));

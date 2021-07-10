@@ -30,10 +30,10 @@ import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterfac
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RefMatConcordiaToolBoxNode extends HBox {
@@ -96,7 +96,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         pb208RadioButton.setDisable(isDirectAltPD || has232);
 
         pb204RadioButton.setSelected(isDirectAltPD || has232 || pb204RadioButton.isSelected());
-        
+
         getChildren().addAll(
                 saveToNewFileButton, separator(), isotopeChoiceLabel, pb204RadioButton /*, pb207RadioButton*/, pb208RadioButton);
 

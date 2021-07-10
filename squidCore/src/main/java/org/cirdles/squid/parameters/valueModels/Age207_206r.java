@@ -20,15 +20,15 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
+import org.cirdles.squid.parameters.util.RadDates;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.ConcurrentMap;
-import org.cirdles.squid.parameters.util.RadDates;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Age207_206r extends ValueModel implements
@@ -54,7 +54,6 @@ public class Age207_206r extends ValueModel implements
     }
 
     /**
-     *
      * @param lambda235
      * @param lambda238
      */
@@ -65,7 +64,6 @@ public class Age207_206r extends ValueModel implements
     }
 
     /**
-     *
      * @param r238_235sDouble
      * @param r207_206rDouble
      * @param startDate
@@ -116,7 +114,6 @@ public class Age207_206r extends ValueModel implements
     }
 
     /**
-     *
      * @param inputValueModels
      * @param parDerivTerms
      */
@@ -165,14 +162,14 @@ public class Age207_206r extends ValueModel implements
 
         BigDecimal denominator = //
                 lambda235.getValue().//
-                multiply(BigDecimal.ONE.//
+                        multiply(BigDecimal.ONE.//
                         add(BDexpLambda235xnMinus1)).//
 
-                subtract(r238_235s.getValue().//
+                        subtract(r238_235s.getValue().//
                         multiply(r207_206r.getValue()).//
                         multiply(lambda238.getValue()).//
                         multiply(BigDecimal.ONE.//
-                                add(BDexpLambda238xnMinus1)));
+                        add(BDexpLambda238xnMinus1)));
 
         if (parDerivTerms != null) {
             // oct 2014 to handle common lead
@@ -188,9 +185,9 @@ public class Age207_206r extends ValueModel implements
 
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda235";//dAge207_206r__dLambda235
             try {
-                BigDecimal dAge207_206r__dLambda235 =getValue().//
+                BigDecimal dAge207_206r__dLambda235 = getValue().//
                         multiply(BigDecimal.ONE.//
-                                add(BDexpLambda235xnMinus1)).//
+                        add(BDexpLambda235xnMinus1)).//
                         divide(denominator, new MathContext(15, RoundingMode.HALF_UP)).//
                         negate(); // negated July 2012 by Noah 
                 parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge207_206r__dLambda235);
@@ -204,7 +201,7 @@ public class Age207_206r extends ValueModel implements
                         multiply(r207_206r.getValue()).//
                         multiply(getValue()).//
                         multiply(BigDecimal.ONE.//
-                                add(BDexpLambda238xnMinus1)).//
+                        add(BDexpLambda238xnMinus1)).//
                         divide(denominator, new MathContext(15, RoundingMode.HALF_UP));
                 parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge207_206r__dLambda238);
             } catch (Exception e) {

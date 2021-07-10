@@ -70,12 +70,18 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     String getFilterForConcRefMatSpotNames();
 
+    void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
+
     /**
      * @return the filterForRefMatSpotNames
      */
     String getFilterForRefMatSpotNames();
 
+    void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+
     Map<String, Integer> getFiltersForUnknownNames();
+
+    void updateFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames);
 
     /**
      * @return the physicalConstantsModel
@@ -113,6 +119,11 @@ public interface Squid3ProjectBasicAPI extends Serializable {
      * @return the projectNotes
      */
     String getProjectNotes();
+
+    /**
+     * @param projectNotes the projectNotes to set
+     */
+    void setProjectNotes(String projectNotes);
 
     /**
      * @return the projectType

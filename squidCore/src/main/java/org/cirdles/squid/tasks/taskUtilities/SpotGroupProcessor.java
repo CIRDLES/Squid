@@ -15,15 +15,17 @@
  */
 package org.cirdles.squid.tasks.taskUtilities;
 
-import java.util.Arrays;
-import java.util.List;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 
 /**
  * Provides statistical operations on groups of spots.
@@ -37,11 +39,10 @@ public class SpotGroupProcessor {
      * spots
      *
      * @param task
-     * @param spotSummaryDetailsWM contains the expression for the weighted mean
-     * and the set of spots it acts on
+     * @param spotSummaryDetailsWM   contains the expression for the weighted mean
+     *                               and the set of spots it acts on
      * @param minCoherentProbability
-     * @see
-     * https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-FindCoherentGroup
+     * @see https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Sub-FindCoherentGroup
      */
     public static void findCoherentGroupOfSpotsForWeightedMean(
             TaskInterface task,
@@ -52,24 +53,24 @@ public class SpotGroupProcessor {
         // we don't care here if too few are chosen even though Ludwig's code does
         // TODO: currently our WM math requires 2 spots minimum - may consider returning simple avg for 1 or 2 spots?
         spotSummaryDetailsWM.rejectNone();
-        
+
         int countOfAcceptedSpots = 0;
         for (int i = 0; i < spotSummaryDetailsWM.getRejectedIndices().length; i++) {
             // reject spot if value is less than or equal to the 1-sigma abs unct > 
             spotSummaryDetailsWM.getRejectedIndices()[i] = (spotSummaryDetailsWM.getValues()[0][0] <= StrictMath.abs(spotSummaryDetailsWM.getValues()[0][1]));
             countOfAcceptedSpots += spotSummaryDetailsWM.getRejectedIndices()[i] ? 0 : 1;
         }
-        
+
         ExpressionTreeInterface expressionTree = spotSummaryDetailsWM.getExpressionTree();
         String selectedExpressionName = expressionTree.getName().split("_WM_")[0];
         List<ShrimpFractionExpressionInterface> spotsUsedForCalculation;
-        
+
         double[][] values = new double[3][7];
         boolean doContinue = true;
         while (doContinue && (countOfAcceptedSpots > 2)) {
-            
+
             spotsUsedForCalculation = spotSummaryDetailsWM.retrieveActiveSpots();
-            
+
             try {
                 values = convertObjectArrayToDoubles(expressionTree.eval(spotSummaryDetailsWM.retrieveActiveSpots(), task));
 
@@ -125,7 +126,7 @@ public class SpotGroupProcessor {
                         }
                         indexOfSpots++;
                     }
-                    
+
                     if (indexToReject > -1) {
                         // reject and repeat
                         spotSummaryDetailsWM.setIndexOfRejectedIndices(indexToReject, true);

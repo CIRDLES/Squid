@@ -15,12 +15,13 @@
  */
 package org.cirdles.squid.utilities.squidPrefixTree;
 
-import java.util.HashMap;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- *
  * @author Casey Wilson
  */
 public class SquidPrefixTreeTest {

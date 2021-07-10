@@ -20,26 +20,20 @@
  */
 package org.cirdles.squid.reports.reportCategories;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.cirdles.squid.reports.reportColumns.ReportColumn;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNTS_PERSEC_4_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.OVER_COUNT_4_6_8;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_CONCEN_PPM_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.U_CONCEN_PPM_RM;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public class ReportCategory implements org.cirdles.squid.reports.reportCategories.ReportCategoryInterface {
@@ -65,7 +59,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
      * @param displayName
      * @param reportCategorySpecs
      * @param isVisible
-     * @param task the value of task
+     * @param task                the value of task
      */
     public ReportCategory(
             String displayName, String[][] reportCategorySpecs, boolean isVisible, TaskInterface task) {
@@ -89,20 +83,20 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                 //     needsLead, needsUranium
                 generatedReportCategorySpecs[i]
                         = new String[]{
-                            "total",
-                            isotopeLabels[i],
-                            "cts",
-                            "/sec",
-                            "",
-                            reportCategorySpecs[0][5],
-                            "<INDEX>" + i,
-                            reportCategorySpecs[0][7],
-                            reportCategorySpecs[0][8],
-                            reportCategorySpecs[0][9],
-                            reportCategorySpecs[0][10],
-                            reportCategorySpecs[0][11],
-                            reportCategorySpecs[0][12], "", "false", "false"
-                        };
+                        "total",
+                        isotopeLabels[i],
+                        "cts",
+                        "/sec",
+                        "",
+                        reportCategorySpecs[0][5],
+                        "<INDEX>" + i,
+                        reportCategorySpecs[0][7],
+                        reportCategorySpecs[0][8],
+                        reportCategorySpecs[0][9],
+                        reportCategorySpecs[0][10],
+                        reportCategorySpecs[0][11],
+                        reportCategorySpecs[0][12], "", "false", "false"
+                };
             }
             categoryColumns = new ReportColumn[generatedReportCategorySpecs.length];
             for (int i = 0; i < categoryColumns.length; i++) {
@@ -121,19 +115,19 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     //     needsLead, needsUranium
                     String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
                     String[] columnSpec = new String[]{
-                        "",
-                        "",
-                        displayNameNoSpaces.split("/")[0],
-                        "/" + displayNameNoSpaces.split("/")[1],
-                        "",
-                        reportCategorySpecs[0][5],
-                        displayNameNoSpaces,
-                        reportCategorySpecs[0][7],
-                        reportCategorySpecs[0][8],
-                        reportCategorySpecs[0][9],
-                        reportCategorySpecs[0][10],
-                        reportCategorySpecs[0][11],
-                        reportCategorySpecs[0][12], "", "false", "false"
+                            "",
+                            "",
+                            displayNameNoSpaces.split("/")[0],
+                            "/" + displayNameNoSpaces.split("/")[1],
+                            "",
+                            reportCategorySpecs[0][5],
+                            displayNameNoSpaces,
+                            reportCategorySpecs[0][7],
+                            reportCategorySpecs[0][8],
+                            reportCategorySpecs[0][9],
+                            reportCategorySpecs[0][10],
+                            reportCategorySpecs[0][11],
+                            reportCategorySpecs[0][12], "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);
@@ -158,19 +152,19 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
                     //     needsLead, needsUranium
                     String expressionName = taskExpressionEval.getExpression().getName().substring(0, StrictMath.min(20, taskExpressionEval.getExpression().getName().length()));
                     String[] columnSpec = new String[]{
-                        "",
-                        "",
-                        "",
-                        expressionName,
-                        "",
-                        reportCategorySpecs[0][5],
-                        expressionName,
-                        reportCategorySpecs[0][7],
-                        reportCategorySpecs[0][8],
-                        reportCategorySpecs[0][9],
-                        reportCategorySpecs[0][10],
-                        reportCategorySpecs[0][11],
-                        reportCategorySpecs[0][12], "", "false", "false"
+                            "",
+                            "",
+                            "",
+                            expressionName,
+                            "",
+                            reportCategorySpecs[0][5],
+                            expressionName,
+                            reportCategorySpecs[0][7],
+                            reportCategorySpecs[0][8],
+                            reportCategorySpecs[0][9],
+                            reportCategorySpecs[0][10],
+                            reportCategorySpecs[0][11],
+                            reportCategorySpecs[0][12], "", "false", "false"
                     };
 
                     generatedReportCategorySpecsList.add(columnSpec);
@@ -231,7 +225,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
             }
 
         }
-        
+
         this.visible = isVisible;
         this.legacyData = false;
 
@@ -243,20 +237,20 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "",
-            "204corr",
-            "232Th",
-            "/238U",
-            "",
-            specs[5],
-            TH_U_EXP_RM,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "",
+                "204corr",
+                "232Th",
+                "/238U",
+                "",
+                specs[5],
+                TH_U_EXP_RM,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
@@ -294,20 +288,20 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "",
-            "204corr",
-            "U",
-            "(ppm)",
-            "",
-            specs[5],
-            U_CONCEN_PPM_RM,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "",
+                "204corr",
+                "U",
+                "(ppm)",
+                "",
+                specs[5],
+                U_CONCEN_PPM_RM,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
@@ -345,20 +339,20 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "",
-            "204corr",
-            "Th",
-            "(ppm)",
-            "",
-            specs[5],
-            TH_CONCEN_PPM_RM,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "",
+                "204corr",
+                "Th",
+                "(ppm)",
+                "",
+                specs[5],
+                TH_CONCEN_PPM_RM,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[1] = "204corr";
@@ -396,17 +390,17 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "204corr", "204", "/206", "(fr. 208)",
-            "",
-            specs[5],
-            OVER_COUNT_4_6_8,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "204corr", "204", "/206", "(fr. 208)",
+                "",
+                specs[5],
+                OVER_COUNT_4_6_8,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
@@ -444,17 +438,17 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "204corr", "204", "overcts/sec", "(fr. 208)",
-            "",
-            specs[5],
-            OVER_COUNTS_PERSEC_4_8,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "204corr", "204", "overcts/sec", "(fr. 208)",
+                "",
+                specs[5],
+                OVER_COUNTS_PERSEC_4_8,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
@@ -492,17 +486,17 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         int colIndex = myColIndex;
 
         String[] columnSpec = new String[]{
-            "204corr", "8-corr", "206Pb/238U", "const delta%",
-            "",
-            specs[5],
-            CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
-            specs[7],
-            specs[8],
-            specs[9],
-            specs[10],
-            specs[11],
-            specs[12],
-            specs[13], "false", "false"};
+                "204corr", "8-corr", "206Pb/238U", "const delta%",
+                "",
+                specs[5],
+                CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
+                specs[7],
+                specs[8],
+                specs[9],
+                specs[10],
+                specs[11],
+                specs[12],
+                specs[13], "false", "false"};
         // perm1 and 3
         if (!isDirect) {
             columnSpec[0] = "204corr";
@@ -585,7 +579,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -594,7 +587,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @param categoryColumns
      */
     @Override
@@ -603,7 +595,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -612,7 +603,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @param displayName
      */
     @Override
@@ -621,7 +611,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -630,7 +619,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @param positionIndex
      */
     @Override
@@ -639,7 +627,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -648,7 +635,6 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
     }
 
     /**
-     *
      * @param visible
      */
     @Override

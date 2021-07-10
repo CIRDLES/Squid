@@ -18,7 +18,6 @@ package org.cirdles.squid.gui.constants;
 import javafx.scene.input.DataFormat;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class Squid3GuiConstants {

@@ -20,34 +20,30 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.tasks.expressions.ExpressionSpec;
+import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.tasks.expressions.ExpressionSpec;
-import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 
 /**
  * A <code>TaskXMLConverter</code> is used to marshal and unmarshal data between
  * <code>Task</code> and XML files.
  *
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
- * com.thoughtworks.xstream.converters.Converter</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html>
- * com.thoughtworks.xstream.converters.MarhsallingContext</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext.html>
- * com.thoughtworks.xstream.converters.UnmarshallingContext</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamReader.html>
- * com.thoughtworks.xstream.io.HierachicalSreamReader</a>
- * @imports
- * <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamWriter.html>
- * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  * @author James F. Bowring, javaDocs by Stan Gasque
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/Converter.html>
+ * com.thoughtworks.xstream.converters.Converter</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/MarshallingContext.html>
+ * com.thoughtworks.xstream.converters.MarhsallingContext</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/converters/UnmarshallingContext.html>
+ * com.thoughtworks.xstream.converters.UnmarshallingContext</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamReader.html>
+ * com.thoughtworks.xstream.io.HierachicalSreamReader</a>
+ * @imports <a href=http://xstream.codehaus.org/javadoc/com/thoughtworks/xstream/io/HierarchicalStreamWriter.html>
+ * com.thoughtworks.xstream.io.HierarchicalStreamWriter</a>
  */
 public class TaskXMLConverter implements Converter {
 
@@ -56,13 +52,13 @@ public class TaskXMLConverter implements Converter {
      * <code>Class</code>. Used to ensure that the object about to be
      * marshalled/unmarshalled is of the correct taskType.
      *
-     * @pre argument <code>clazz</code> is a valid <code>Class</code>
-     * @post    <code>boolean</code> is returned comparing <code>clazz</code>
-     * against <code>Task.class</code>
-     * @param clazz   <code>Class</code> of the <code>Object</code> you wish to
-     * convert to/from XML
-     * @return  <code>boolean</code> - <code>true</code> if <code>clazz</code>
+     * @param clazz <code>Class</code> of the <code>Object</code> you wish to
+     *              convert to/from XML
+     * @return <code>boolean</code> - <code>true</code> if <code>clazz</code>
      * matches <code>Task</code>'s <code>Class</code>; else <code>false</code>.
+     * @pre argument <code>clazz</code> is a valid <code>Class</code>
+     * @post <code>boolean</code> is returned comparing <code>clazz</code>
+     * against <code>Task.class</code>
      */
     @Override
     public boolean canConvert(Class clazz) {
@@ -73,18 +69,18 @@ public class TaskXMLConverter implements Converter {
      * writes the argument <code>value</code> to the XML file specified through
      * <code>writer</code>
      *
-     * @pre     <code>value</code> is a valid <code>Task</code>, <code>
-     *          writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
-     * <code>context</code> is a valid <code>MarshallingContext</code>
-     * @post    <code>value</code> is written to the XML file specified via
-     * <code>writer</code>
      * @param value   <code>Task</code> that you wish to write to a file
-     * @param writer stream to write through
+     * @param writer  stream to write through
      * @param context <code>MarshallingContext</code> used to store generic data
+     * @pre <code>value</code> is a valid <code>Task</code>, <code>
+     * writer</code> is a valid <code>HierarchicalStreamWriter</code>, and
+     * <code>context</code> is a valid <code>MarshallingContext</code>
+     * @post <code>value</code> is written to the XML file specified via
+     * <code>writer</code>
      */
     @Override
     public void marshal(Object value, HierarchicalStreamWriter writer,
-            MarshallingContext context) {
+                        MarshallingContext context) {
 
         TaskInterface task = (Task) value;
 
@@ -150,18 +146,18 @@ public class TaskXMLConverter implements Converter {
      * reads a <code>Task</code> from the XML file specified through
      * <code>reader</code>
      *
-     * @pre     <code>reader</code> leads to a valid <code>Task</code>
-     * @post the <code>Task</code> is read from the XML file and returned
-     * @param reader stream to read through
+     * @param reader  stream to read through
      * @param context <code>UnmarshallingContext</code> used to store generic
-     * data
-     * @return  <code>Task</code> - <code>Task</code> read from file specified by
+     *                data
+     * @return <code>Task</code> - <code>Task</code> read from file specified by
      * <code>reader</code>
+     * @pre <code>reader</code> leads to a valid <code>Task</code>
+     * @post the <code>Task</code> is read from the XML file and returned
      */
     @Override
 
     public Object unmarshal(HierarchicalStreamReader reader,
-            UnmarshallingContext context) {
+                            UnmarshallingContext context) {
 
         TaskInterface task = new Task();
 
@@ -240,14 +236,14 @@ public class TaskXMLConverter implements Converter {
         }
         reader.moveUp();
         task.setSpecialSquidFourExpressionsMap(specialSquidFourExpressionsMap);
-        
+
         // for custom expressions, we retrieve the expressionspec and build expression
         reader.moveDown();
         while (reader.hasMoreChildren()) {
             reader.moveDown();
             ExpressionSpecInterface expressionSpec = new ExpressionSpec();
             expressionSpec = (ExpressionSpecInterface) context.convertAnother(expressionSpec, ExpressionSpec.class);
-            ((Task)task).makeCustomExpression(expressionSpec);
+            ((Task) task).makeCustomExpression(expressionSpec);
             reader.moveUp();
         }
         reader.moveUp();
