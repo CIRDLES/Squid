@@ -17,26 +17,19 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB4CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB7CORR;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PB8CORR;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class SamplesConcordiaToolBoxNode extends HBox {

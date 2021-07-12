@@ -71,7 +71,7 @@ public class ReferenceMaterialModelXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("dates");
-        context.convertAnother((ValueModel[])((ReferenceMaterialModel) model).getDates());
+        context.convertAnother((ValueModel[]) ((ReferenceMaterialModel) model).getDates());
         writer.endNode();
 
         writer.startNode("dataMeasured");

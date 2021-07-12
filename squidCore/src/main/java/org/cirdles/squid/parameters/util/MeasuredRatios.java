@@ -19,7 +19,6 @@
 package org.cirdles.squid.parameters.util;
 
 /**
- *
  * @author James F. Bowring
  */
 /*
@@ -31,104 +30,99 @@ public enum MeasuredRatios {
 
     // measured ratios
     /**
-     * 
+     *
      */
-    r206_204m( "r206_204m" ),
+    r206_204m("r206_204m"),
     /**
-     * 
+     *
      */
-    r207_204m( "r207_204m" ),
+    r207_204m("r207_204m"),
     /**
-     * 
+     *
      */
-    r208_204m( "r208_204m" ),
+    r208_204m("r208_204m"),
     /**
-     * 
+     *
      */
-    r206_207m( "r206_207m" ),    
+    r206_207m("r206_207m"),
     /**
-     * 
+     *
      */
-    r206_208m( "r206_208m" ),
+    r206_208m("r206_208m"),
     /**
-     * 
+     *
      */
-    r204_205m( "r204_205m" ),
+    r204_205m("r204_205m"),
     /**
-     * 
+     *
      */
-    r206_205m( "r206_205m" ),
+    r206_205m("r206_205m"),
     /**
-     * 
+     *
      */
-    r207_205m( "r207_205m" ),
+    r207_205m("r207_205m"),
     /**
-     * 
+     *
      */
-    r208_205m( "r208_205m" ),
+    r208_205m("r208_205m"),
     /**
-     * 
+     *
      */
-    r202_205m( "r202_205m" ),
+    r202_205m("r202_205m"),
     /**
-     * 
+     *
      */
-    r238_235m( "r238_235m" ),
+    r238_235m("r238_235m"),
     /**
-     * 
+     *
      */
-    r233_235m( "r233_235m" ),
+    r233_235m("r233_235m"),
     /**
-     * 
+     *
      */
-    r238_233m( "r238_233m" ),
+    r238_233m("r238_233m"),
     /**
-     * 
+     *
      */
-    r238_236m( "r238_236m" ),
+    r238_236m("r238_236m"),
     /**
-     * 
+     *
      */
-    r233_236m( "r233_236m" );
- 
-
+    r233_236m("r233_236m");
 
 
     private String name;
 
-    private MeasuredRatios ( String name ) {
+    private MeasuredRatios(String name) {
         this.name = name;
     }
 
     /**
-     * 
      * @return
      */
-    public String getName () {
+    public String getName() {
         return name;
     }
 
     /**
-     * 
      * @return
      */
-    public static String[] getNames () {
+    public static String[] getNames() {
         String[] retVal = new String[MeasuredRatios.values().length];
-        for (int i = 0; i < MeasuredRatios.values().length; i ++) {
+        for (int i = 0; i < MeasuredRatios.values().length; i++) {
             retVal[i] = MeasuredRatios.values()[i].getName();
         }
         return retVal;
     }
 
     /**
-     * 
      * @param checkString
      * @return
      */
-    public static boolean contains ( String checkString ) {
+    public static boolean contains(String checkString) {
         boolean retVal = true;
         try {
-            MeasuredRatios.valueOf( checkString );
+            MeasuredRatios.valueOf(checkString);
         } catch (IllegalArgumentException e) {
             retVal = false;
         }

@@ -20,24 +20,24 @@
  */
 package org.cirdles.squid.reports.reportSettings;
 
-import org.cirdles.squid.reports.reportColumns.ReportColumnXMLConverter;
-import org.cirdles.squid.reports.reportColumns.ReportColumn;
-import org.cirdles.squid.reports.reportCategories.ReportCategoryXMLConverter;
-import org.cirdles.squid.reports.reportCategories.ReportCategoryInterface;
-import org.cirdles.squid.reports.reportCategories.ReportCategory;
 import com.thoughtworks.xstream.XStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import org.cirdles.squid.reports.reportCategories.ReportCategory;
+import org.cirdles.squid.reports.reportCategories.ReportCategoryInterface;
+import org.cirdles.squid.reports.reportCategories.ReportCategoryXMLConverter;
+import org.cirdles.squid.reports.reportColumns.ReportColumn;
+import org.cirdles.squid.reports.reportColumns.ReportColumnXMLConverter;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsAbstract;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbReferenceMaterials15Dig;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples15Dig;
 import org.cirdles.squid.tasks.TaskInterface;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 /**
- *
  * @author James F. Bowring
  */
 public class ReportSettings implements
@@ -105,72 +105,72 @@ public class ReportSettings implements
 
         this.fractionCategory
                 = new ReportCategory(
-                        "Fraction",
-                        ReportSpecificationsAbstract.ReportCategory_Fraction, true, task);
+                "Fraction",
+                ReportSpecificationsAbstract.ReportCategory_Fraction, true, task);
 
         this.fractionCategory2
                 = new ReportCategory(
-                        "Fraction",
-                        ReportSpecificationsAbstract.ReportCategory_Fraction2, true, task);
+                "Fraction",
+                ReportSpecificationsAbstract.ReportCategory_Fraction2, true, task);
 
         this.spotFundamentalsCategory
                 = new ReportCategory(
-                        "Spot Fundamentals",
-                        ReportSpecificationsAbstract.ReportCategory_SpotFundamentals, true, task);
+                "Spot Fundamentals",
+                ReportSpecificationsAbstract.ReportCategory_SpotFundamentals, true, task);
         this.cpsCategory
                 = new ReportCategory(
-                        "CPS",
-                        ReportSpecificationsAbstract.ReportCategory_CPS, true, task);
+                "CPS",
+                ReportSpecificationsAbstract.ReportCategory_CPS, true, task);
         this.rawRatiosCategory
                 = new ReportCategory(
-                        "Raw Nuclide Ratios",
-                        ReportSpecificationsAbstract.ReportCategory_RawRatios, true, task);
+                "Raw Nuclide Ratios",
+                ReportSpecificationsAbstract.ReportCategory_RawRatios, true, task);
 
         if (referenceMaterial) {
 
             this.customExpressionsCategory
                     = new ReportCategory(
-                            "Custom",
-                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CustomExpressions, true, task);
+                    "Custom",
+                    ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CustomExpressions, true, task);
             this.correctionIndependentRMCategory
                     = new ReportCategory(
-                            "Correction-Independent Built-In",
-                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CorrectionIndependent, true, task);
+                    "Correction-Independent Built-In",
+                    ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_CorrectionIndependent, true, task);
             this.pb204CorrectedRMCategory
                     = new ReportCategory(
-                            "204Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_204PbCorrected, true, task);
+                    "204Pb-Corrected",
+                    ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_204PbCorrected, true, task);
 
             this.pb207CorrectedRMCategory
                     = new ReportCategory(
-                            "207Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_207PbCorrected, true, task);
+                    "207Pb-Corrected",
+                    ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_207PbCorrected, true, task);
 
             this.pb208CorrectedRMCategory
                     = new ReportCategory(
-                            "208Pb-Corrected",
-                            ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_208PbCorrected, true, task);
+                    "208Pb-Corrected",
+                    ReportSpecificationsUPbReferenceMaterials15Dig.ReportCategory_208PbCorrected, true, task);
 
         } else {
             this.correctionIndependentCategory
                     = new ReportCategory(
-                            "Correction-Independent Data",
-                            ReportSpecificationsUPbSamples15Dig.ReportCategory_CorrectionIndependentData, true, task);
+                    "Correction-Independent Data",
+                    ReportSpecificationsUPbSamples15Dig.ReportCategory_CorrectionIndependentData, true, task);
 
             this.pb204CorrectedCategory
                     = new ReportCategory(
-                            "204Pb-Corrected",
-                            ReportSpecificationsUPbSamples15Dig.ReportCategory_204PbCorrected, true, task);
+                    "204Pb-Corrected",
+                    ReportSpecificationsUPbSamples15Dig.ReportCategory_204PbCorrected, true, task);
 
             this.pb207CorrectedCategory
                     = new ReportCategory(
-                            "207Pb-Corrected",
-                            ReportSpecificationsUPbSamples15Dig.ReportCategory_207PbCorrected, true, task);
+                    "207Pb-Corrected",
+                    ReportSpecificationsUPbSamples15Dig.ReportCategory_207PbCorrected, true, task);
 
             this.pb208CorrectedCategory
                     = new ReportCategory(
-                            "208Pb-Corrected",
-                            ReportSpecificationsUPbSamples15Dig.ReportCategory_208PbCorrected, true, task);
+                    "208Pb-Corrected",
+                    ReportSpecificationsUPbSamples15Dig.ReportCategory_208PbCorrected, true, task);
 
         }
 
@@ -202,7 +202,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param filename
      */
 //    @Override
@@ -234,7 +233,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     public ReportSettingsInterface deepCopy() {
@@ -256,7 +254,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param reportSettingsModel
      * @return
      * @throws ClassCastException
@@ -271,8 +268,8 @@ public class ReportSettings implements
     }
 
 //  accessors
+
     /**
-     *
      * @return
      */
     @Override
@@ -281,7 +278,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param name
      */
     @Override
@@ -290,7 +286,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -299,7 +294,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param version
      */
     @Override
@@ -308,7 +302,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -317,7 +310,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param fractionCategory
      */
     @Override
@@ -326,7 +318,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -335,7 +326,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param correctionIndependentCategory
      */
     @Override
@@ -344,7 +334,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -353,7 +342,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param pb204CorrectedCategory
      */
     @Override
@@ -362,7 +350,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param reportSettingsModel
      * @return
      */
@@ -385,8 +372,8 @@ public class ReportSettings implements
     }
 
 // http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+
     /**
-     *
      * @return
      */
     @Override
@@ -396,15 +383,15 @@ public class ReportSettings implements
     }
 
 // XML Serialization
+
     /**
      * registers converter for argument <code>xstream</code> and sets aliases to
      * make the XML file more human-readable
      *
+     * @param xstream <code>XStream</code> to be customized
      * @pre argument <code>xstream</code> is a valid <code>XStream</code>
      * @post argument <code>xstream</code> is customized to produce a cleaner
      * output <code>file</code>
-     *
-     * @param xstream <code>XStream</code> to be customized
      */
     @Override
     public void customizeXstream(XStream xstream) {
@@ -436,7 +423,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -445,7 +431,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @param reportSettingsComment
      */
     @Override
@@ -470,7 +455,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -480,7 +464,6 @@ public class ReportSettings implements
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -626,7 +609,7 @@ public class ReportSettings implements
 
     /**
      * @param correctionIndependentRMCategory the
-     * correctionIndependentRMCategory to set
+     *                                        correctionIndependentRMCategory to set
      */
     public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory) {
         this.correctionIndependentRMCategory = correctionIndependentRMCategory;

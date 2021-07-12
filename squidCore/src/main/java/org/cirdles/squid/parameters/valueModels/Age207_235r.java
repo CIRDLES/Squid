@@ -20,15 +20,15 @@
  */
 package org.cirdles.squid.parameters.valueModels;
 
+import org.cirdles.squid.parameters.util.RadDates;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.concurrent.ConcurrentMap;
-import org.cirdles.squid.parameters.util.RadDates;
 
 /**
- *
  * @author James F. Bowring
  */
 public class Age207_235r extends ValueModel implements
@@ -46,18 +46,17 @@ public class Age207_235r extends ValueModel implements
     /**
      * Creates a new instance of Age207_235r
      */
-    public Age207_235r () {
-        super( NAME, UNCT_TYPE );
+    public Age207_235r() {
+        super(NAME, UNCT_TYPE);
     }
 
     /**
-     *
      * @param inputValueModels
      * @param parDerivTerms
      */
-    public void calculateValue (
+    public void calculateValue(
             ValueModel[] inputValueModels,
-            ConcurrentMap<String, BigDecimal> parDerivTerms ) {
+            ConcurrentMap<String, BigDecimal> parDerivTerms) {
 
         r207_235r = inputValueModels[0];
         lambda235 = inputValueModels[1];
@@ -65,13 +64,13 @@ public class Age207_235r extends ValueModel implements
         try {
             setValue(//
                     new BigDecimal(//
-                    //
-                    //
-                    //
-                    StrictMath.log1p( r207_235r.getValue().doubleValue() ) //
-                    / lambda235.getValue().doubleValue(), new MathContext(15, RoundingMode.HALF_UP) ) );
+                            //
+                            //
+                            //
+                            StrictMath.log1p(r207_235r.getValue().doubleValue()) //
+                                    / lambda235.getValue().doubleValue(), new MathContext(15, RoundingMode.HALF_UP)));
         } catch (Exception e) {
-            setValue( BigDecimal.ZERO );
+            setValue(BigDecimal.ZERO);
         }
 
 //        try {
@@ -81,28 +80,28 @@ public class Age207_235r extends ValueModel implements
 //        } catch (Exception e) {
 //            setValueTree( ExpTreeII.ZERO );
 //        }
-        
-        
-        if ( parDerivTerms != null ) {
+
+
+        if (parDerivTerms != null) {
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda235";//dAge207_235r__dLambda235
             try {
-                BigDecimal dAge207_235r__dLambda235 =new BigDecimal( StrictMath.log1p( r207_235r.getValue().doubleValue() ), new MathContext(15, RoundingMode.HALF_UP) ).negate().//
-                        divide(lambda235.getValue().pow( 2 ), new MathContext(15, RoundingMode.HALF_UP) );
-                parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge207_235r__dLambda235 );
+                BigDecimal dAge207_235r__dLambda235 = new BigDecimal(StrictMath.log1p(r207_235r.getValue().doubleValue()), new MathContext(15, RoundingMode.HALF_UP)).negate().//
+                        divide(lambda235.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP));
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge207_235r__dLambda235);
             } catch (Exception e) {
-                parDerivTerms.put(partialDerivativeNameAge__Lambda, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Lambda, BigDecimal.ZERO);
             }
 
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Ratio = "dA" + name.substring(1) + "__dR" + r207_235r.getName().substring(1);//dAge207_235r__dR207_235r
             try {
                 BigDecimal dAge207_235r__dR207_235r = BigDecimal.ONE.//
-                        divide(lambda235.getValue(), new MathContext(15, RoundingMode.HALF_UP) ).// removed July 2012 by Noah negate().//
-                        divide(r207_235r.getValue().add( BigDecimal.ONE ), new MathContext(15, RoundingMode.HALF_UP) );
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, dAge207_235r__dR207_235r );
+                        divide(lambda235.getValue(), new MathContext(15, RoundingMode.HALF_UP)).// removed July 2012 by Noah negate().//
+                        divide(r207_235r.getValue().add(BigDecimal.ONE), new MathContext(15, RoundingMode.HALF_UP));
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, dAge207_235r__dR207_235r);
             } catch (Exception e) {
-                parDerivTerms.put( partialDerivativeNameAge__Ratio, BigDecimal.ZERO );
+                parDerivTerms.put(partialDerivativeNameAge__Ratio, BigDecimal.ZERO);
             }
         }
     }

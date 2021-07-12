@@ -16,11 +16,10 @@
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface BuiltInExpressionInterface {
-    
+
     public void buildExpression();
-    
+
 }

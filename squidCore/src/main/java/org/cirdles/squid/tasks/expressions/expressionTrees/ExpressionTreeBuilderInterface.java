@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,11 @@
  */
 package org.cirdles.squid.tasks.expressions.expressionTrees;
 
-import java.util.List;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 
+import java.util.List;
+
 /**
- *
  * @author James F. Bowring
  */
 public interface ExpressionTreeBuilderInterface {
@@ -45,26 +45,22 @@ public interface ExpressionTreeBuilderInterface {
     public ExpressionTreeInterface getRightET();
 
     /**
-     *
      * @param childET
      */
     public void addChild(ExpressionTreeInterface childET);
 
     /**
-     *
      * @param index
      * @param childET
      */
     public void addChild(int index, ExpressionTreeInterface childET);
 
     /**
-     *
      * @return
      */
     public int getCountOfChildren();
 
     /**
-     *
      * @return
      */
     public int getOperationPrecedence();
@@ -73,9 +69,9 @@ public interface ExpressionTreeBuilderInterface {
      * @return the childrenET
      */
     public List<ExpressionTreeInterface> getChildrenET();
-    
+
     public String auditOperationArgumentCount();
-    
+
     public String auditTargetCompatibility();
 
 }

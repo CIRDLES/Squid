@@ -5,6 +5,32 @@
  */
 package org.cirdles.squid.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.text.TextFlow;
+import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
+import org.cirdles.squid.tasks.Task;
+import org.cirdles.squid.tasks.TaskInterface;
+import org.cirdles.squid.tasks.expressions.Expression;
+import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
+import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -15,58 +41,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.TextFlow;
-import javax.xml.XMLConstants;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import org.cirdles.squid.constants.Squid3Constants;
+
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.TaskEditorController.makeMassStackPane;
-import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
-import org.cirdles.squid.tasks.Task;
-import org.cirdles.squid.tasks.TaskInterface;
-import org.cirdles.squid.tasks.expressions.Expression;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_NOMINAL_MASSES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_DEFAULT;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.TH_U_EXP_RM;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR206PB238U_CALIB_CONST;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.UNCOR208PB232TH_CALIB_CONST;
-import org.cirdles.squid.tasks.squidTask25.TaskSquid25;
-import org.cirdles.squid.tasks.taskDesign.TaskDesign;
-import org.cirdles.squid.utilities.IntuitiveStringComparator;
-import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
-import org.xml.sax.SAXException;
 
 /**
  * FXML Controller class
@@ -79,9 +61,9 @@ public class TaskFolderBrowserController implements Initializable {
     // folder or file
     public static File tasksBrowserTarget;
     public static String tasksBrowserType = ".xml";
-    
+
     private ListView<TaskInterface> listViewOfTasksInFolder;
-    
+
     private static Schema taskXMLSchema;
 
     @FXML
@@ -161,12 +143,11 @@ public class TaskFolderBrowserController implements Initializable {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             taskXMLSchema = sf.newSchema(new File(Squid3Constants.URL_STRING_FOR_SQUIDTASK_XML_SCHEMA_LOCAL));
-        }
-        catch (SAXException e){
+        } catch (SAXException e) {
             e.printStackTrace();
         }
         populateListOfTasks();
-        
+
         taskListAnchorPane.prefHeightProperty().bind(taskListScrollPane.heightProperty());
         taskListAnchorPane.prefWidthProperty().bind(taskListScrollPane.widthProperty());
         listViewOfTasksInFolder.prefHeightProperty().bind(taskListAnchorPane.prefHeightProperty());
@@ -187,17 +168,17 @@ public class TaskFolderBrowserController implements Initializable {
                     nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
                     // collect Tasks if any
                     for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File file, String name) {
-                            return name.toLowerCase().endsWith(".xml");
-                        }
-                    }
+                                                                      @Override
+                                                                      public boolean accept(File file, String name) {
+                                                                          return name.toLowerCase().endsWith(".xml");
+                                                                      }
+                                                                  }
                     )) {
                         // check if task 
                         try {
                             TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
-                                        squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
-                            if (task != null){
+                                    squidProject.getTask()).readXMLObject(file.getAbsolutePath(), false);
+                            if (task != null) {
                                 validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
                                 taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                             }
@@ -209,8 +190,8 @@ public class TaskFolderBrowserController implements Initializable {
                     // check if task 
                     try {
                         TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
-                                    squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
-                        if (task != null){
+                                squidProject.getTask()).readXMLObject(tasksBrowserTarget.getAbsolutePath(), false);
+                        if (task != null) {
                             validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
                             taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                         }
@@ -229,11 +210,11 @@ public class TaskFolderBrowserController implements Initializable {
 
                     // collect Tasks if any
                     for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File file, String name) {
-                            return name.toLowerCase().endsWith(".xls");
-                        }
-                    }
+                                                                      @Override
+                                                                      public boolean accept(File file, String name) {
+                                                                          return name.toLowerCase().endsWith(".xls");
+                                                                      }
+                                                                  }
                     )) {
                         // check if task 
                         try {
@@ -250,7 +231,8 @@ public class TaskFolderBrowserController implements Initializable {
                             }
                         } catch (Exception e) {
                         }
-                    };
+                    }
+                    ;
 
                 } else {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
@@ -291,7 +273,7 @@ public class TaskFolderBrowserController implements Initializable {
             listViewOfTasksInFolder = new ListView<>();
             listViewOfTasksInFolder.setCellFactory(
                     (parameter)
-                    -> new TaskDisplayName()
+                            -> new TaskDisplayName()
             );
 
             ObservableList<TaskInterface> items = FXCollections.observableArrayList(taskFilesInFolder);
@@ -520,17 +502,17 @@ public class TaskFolderBrowserController implements Initializable {
             } else {
                 SquidMessageDialog.showInfoDialog(
                         "The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
-                        + " masses, but this task has "
-                        + chosenTask.getNominalMasses().size()
-                        + ".",
+                                + " masses, but this task has "
+                                + chosenTask.getNominalMasses().size()
+                                + ".",
                         primaryStageWindow);
             }
         } else {
             SquidMessageDialog.showInfoDialog(
                     "The Project is type  " + squidProject.getTask().getTaskType()
-                    + ", but this task is type "
-                    + chosenTask.getTaskType()
-                    + ".",
+                            + ", but this task is type "
+                            + chosenTask.getTaskType()
+                            + ".",
                     primaryStageWindow);
         }
     }
@@ -555,6 +537,8 @@ public class TaskFolderBrowserController implements Initializable {
                 setText(task.getName());
             }
         }
-    };
+    }
+
+    ;
 
 }

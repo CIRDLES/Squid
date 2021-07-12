@@ -16,14 +16,13 @@
 package org.cirdles.squid.utilities.conversionUtilities;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class RoundingUtilities {
-    
+
 //    public static boolean USE_SIG_FIG_15 = true; // starting v1.5.8 sept 202 per bodorkos false;
-    
-    public static double squid3RoundedToSize(double value, int sigFigs){
+
+    public static double squid3RoundedToSize(double value, int sigFigs) {
 //        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, USE_SIG_FIG_15 ? 15 : sigFigs);
         return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, 15);
     }

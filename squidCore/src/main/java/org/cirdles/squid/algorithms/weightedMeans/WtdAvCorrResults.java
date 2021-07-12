@@ -16,7 +16,6 @@
 package org.cirdles.squid.algorithms.weightedMeans;
 
 /**
- *
  * @author James F. Bowring
  */
 public final class WtdAvCorrResults {
@@ -107,5 +106,5 @@ public final class WtdAvCorrResults {
     public void setProb(double prob) {
         this.prob = prob;
     }
-    
+
 }

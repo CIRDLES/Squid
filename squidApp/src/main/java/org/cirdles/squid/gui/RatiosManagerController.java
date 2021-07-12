@@ -15,10 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,8 +27,14 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 /**
  * FXML Controller class
@@ -231,7 +233,7 @@ public class RatiosManagerController implements Initializable {
 
             ratioToolTip = new Tooltip("Click to select entire " + (String) (row == -1 ? "column" : "row"));
             setTooltip(ratioToolTip);
-            
+
             selected = false;
 
             setOnMousePressed(new SquidRowColButtonEventHandler(row, col, selected));

@@ -16,22 +16,21 @@
 package org.cirdles.squid.reports.reportCategories;
 
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.reports.reportViews.ReportListItemI;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
- *
  * @author bowring
  */
 public interface ReportCategoryInterface extends ReportListItemI, Serializable {
 
 
     /**
-     *
      * @return
      */
     public default int getCountOfCategoryColumns() {
@@ -53,7 +52,6 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     }
 
     /**
-     *
      * @param columnName
      * @param isVisible
      */
@@ -66,7 +64,6 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     }
 
     /**
-     *
      * @return
      */
     public default Map<Integer, ReportColumnInterface> getCategoryColumnOrder() {
@@ -86,20 +83,17 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     void ToggleIsVisible();
 
     /**
-     *
      * @return
      */
     ReportColumnInterface[] getCategoryColumns();
 
     /**
-     *
      * @return
      */
     @Override
     String getDisplayName();
 
     /**
-     *
      * @return
      */
     int getPositionIndex();
@@ -110,20 +104,17 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     boolean isLegacyData();
 
     /**
-     *
      * @return
      */
     @Override
     boolean isVisible();
 
     /**
-     *
      * @param categoryColumns
      */
     void setCategoryColumns(ReportColumnInterface[] categoryColumns);
 
     /**
-     *
      * @param displayName
      */
     void setDisplayName(String displayName);
@@ -134,14 +125,12 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     void setLegacyData(boolean legacyData);
 
     /**
-     *
      * @param positionIndex
      */
     @Override
     void setPositionIndex(int positionIndex);
 
     /**
-     *
      * @param visible
      */
     @Override

@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks.evaluationEngines;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface TaskExpressionEvaluatedPerSpotPerScanModelInterface {

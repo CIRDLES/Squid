@@ -15,15 +15,16 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
-import java.util.Map;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
-import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
+import java.util.Map;
+
+import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.plot;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
@@ -64,7 +65,6 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
     }
 
     /**
-     *
      * @return the fraction name with age data appended
      */
     @Override
@@ -72,8 +72,7 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
         String retVal = shrimpFraction.getFractionID();
         if (shrimpFraction.isReferenceMaterial()) {
             retVal += ((plot == null) ? "" : "  " + plot.makeAgeOrValueString(indexOfSpot));
-        } 
-        else {
+        } else {
             double[] age = shrimpFraction.getTaskExpressionsEvaluationsPerSpotByField(shrimpFraction.getSelectedAgeExpressionName())[0];
             retVal += "  " + WeightedMeanPlot.makeAgeString(age[0], age[1]);
         }

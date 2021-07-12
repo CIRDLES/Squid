@@ -15,17 +15,16 @@
  */
 package org.cirdles.squid;
 
+import org.cirdles.commons.util.ResourceExtractor;
+
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.cirdles.commons.util.ResourceExtractor;
 
 /**
- *
  * @author James F. Bowring
  */
 public final class Squid {

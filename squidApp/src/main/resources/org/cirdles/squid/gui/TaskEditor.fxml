@@ -1,248 +1,304 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright 2018 James F. Bowring and CIRDLES.org.
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+ -->
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Ellipse?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
-
-<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.TaskEditorController">
+<?import javafx.scene.text.*?>
+<GridPane fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0" prefHeight="660.0"
+          prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" vgap="10.0"
+          xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="org.cirdles.squid.gui.TaskEditorController">
     <columnConstraints>
-        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0" />
-        <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0" />
+        <ColumnConstraints halignment="RIGHT" hgrow="NEVER" maxWidth="110.0" minWidth="110.0" prefWidth="110.0"/>
+        <ColumnConstraints hgrow="ALWAYS" prefWidth="1220.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="NEVER" />
-        <RowConstraints valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
-        <RowConstraints valignment="CENTER" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER" />
-        <RowConstraints valignment="CENTER" vgrow="NEVER" />
-        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="TOP" vgrow="NEVER" />
-        <RowConstraints minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="NEVER" />
-        <RowConstraints maxHeight="55.0" minHeight="55.0" prefHeight="55.0" valignment="TOP" vgrow="NEVER" />
-        <RowConstraints maxHeight="100.0" minHeight="120.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
-        <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints valignment="CENTER" vgrow="NEVER"/>
+        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="TOP" vgrow="NEVER"/>
+        <RowConstraints minHeight="20.0" prefHeight="20.0" valignment="TOP" vgrow="NEVER"/>
+        <RowConstraints maxHeight="55.0" minHeight="55.0" prefHeight="55.0" valignment="TOP" vgrow="NEVER"/>
+        <RowConstraints maxHeight="100.0" minHeight="120.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="296.0" minHeight="5.0" prefHeight="5.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="32.0" minHeight="32.0" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="836.0" spacing="10.0" GridPane.columnIndex="1"
+              GridPane.hgrow="ALWAYS">
             <children>
-                <Label fx:id="titleLabel" prefHeight="25.0" prefWidth="162.0" style="-fx-font-size: 14;" text="Task Editor" />
+                <Label fx:id="titleLabel" prefHeight="25.0" prefWidth="162.0" style="-fx-font-size: 14;"
+                       text="Task Editor"/>
             </children>
         </HBox>
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <children>
-            <TextField fx:id="taskNameTextField" prefHeight="27.0" prefWidth="877.0" promptText="Task name" />
-                <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false" onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
+                <TextField fx:id="taskNameTextField" prefHeight="27.0" prefWidth="877.0" promptText="Task name"/>
+                <RadioButton id="GEOCHRON" fx:id="geochronTaskTypeRadioButton" mnemonicParsing="false"
+                             onAction="#geochronTaskTypeRadioButtonAction" selected="true" text="Geochron">
                     <toggleGroup>
-                        <ToggleGroup fx:id="taskTypeToggleGroup" />
+                        <ToggleGroup fx:id="taskTypeToggleGroup"/>
                     </toggleGroup>
                     <HBox.margin>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </HBox.margin>
                 </RadioButton>
-                <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false" onAction="#generalTaskTypeRadioButtonAction" text="General" toggleGroup="$taskTypeToggleGroup" />
+                <RadioButton id="GENERAL" fx:id="generalTaskTypeRadioButton" disable="true" mnemonicParsing="false"
+                             onAction="#generalTaskTypeRadioButtonAction" text="General"
+                             toggleGroup="$taskTypeToggleGroup"/>
             </children>
         </HBox>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Author &amp; Lab:" GridPane.rowIndex="3" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Author &amp; Lab:" GridPane.rowIndex="3"/>
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <children>
-                <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS" />
-                <Label text="Lab Name:" />
-                <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS" />
+                <TextField fx:id="authorsNameTextField" promptText="Author's Name" HBox.hgrow="ALWAYS"/>
+                <Label text="Lab Name:"/>
+                <TextField fx:id="labNameTextField" promptText="Lab Name:" HBox.hgrow="ALWAYS"/>
             </children>
         </HBox>
         <VBox GridPane.rowIndex="9">
             <children>
-                <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:" />
-                <Label fx:id="directivesLabel" prefHeight="91.0" prefWidth="110.0" style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;" text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect." textAlignment="CENTER" wrapText="true" />
+                <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="156.0"
+                       style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Directives:"/>
+                <Label fx:id="directivesLabel" prefHeight="91.0" prefWidth="110.0"
+                       style="-fx-font-family: SansSerif; -fx-font-size: 10; -fx-text-fill: red;"
+                       text="Note: Red boxes outline the expressions used for the selected combination of Primary Age and Direct / Indirect."
+                       textAlignment="CENTER" wrapText="true"/>
             </children>
         </VBox>
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="9">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="591.0" minWidth="10.0" prefWidth="165.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1015.0" minWidth="10.0" prefWidth="378.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="319.0" minWidth="8.0" prefWidth="165.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="743.0" minWidth="10.0" prefWidth="362.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="591.0" minWidth="10.0" prefWidth="165.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="1015.0" minWidth="10.0" prefWidth="378.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="377.0" spacing="10.0" GridPane.columnIndex="1">
+                <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="377.0" spacing="10.0"
+                      GridPane.columnIndex="1">
                     <children>
-                        <RadioButton id="238" mnemonicParsing="false" onAction="#toggleParentNuclideAction" selected="true" text="206Pb/238U">
+                        <RadioButton id="238" mnemonicParsing="false" onAction="#toggleParentNuclideAction"
+                                     selected="true" text="206Pb/238U">
                             <toggleGroup>
-                                <ToggleGroup fx:id="primaryAgeToggleGroup" />
+                                <ToggleGroup fx:id="primaryAgeToggleGroup"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton id="232" mnemonicParsing="false" onAction="#toggleParentNuclideAction" text="208Pb/232Th" toggleGroup="$primaryAgeToggleGroup" />
+                        <RadioButton id="232" mnemonicParsing="false" onAction="#toggleParentNuclideAction"
+                                     text="208Pb/232Th" toggleGroup="$primaryAgeToggleGroup"/>
                     </children>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0"
+                      GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <children>
-                        <TextField fx:id="uncorrConstPbUExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+                        <TextField fx:id="uncorrConstPbUExpressionText" alignment="CENTER" prefHeight="25.0"
+                                   prefWidth="350.0" promptText="type default expression here"
+                                   style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;"/>
                     </children>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3">
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0"
+                      GridPane.columnIndex="3">
                     <children>
-                        <RadioButton id="direct" mnemonicParsing="false" onAction="#toggleDirectAltAction" text="Directly">
+                        <RadioButton id="direct" mnemonicParsing="false" onAction="#toggleDirectAltAction"
+                                     text="Directly">
                             <toggleGroup>
-                                <ToggleGroup fx:id="dirctALTtoggleGroup" />
+                                <ToggleGroup fx:id="dirctALTtoggleGroup"/>
                             </toggleGroup>
                         </RadioButton>
-                        <RadioButton id="indirect" mnemonicParsing="false" onAction="#toggleDirectAltAction" selected="true" text="Indirectly" toggleGroup="$dirctALTtoggleGroup" />
+                        <RadioButton id="indirect" mnemonicParsing="false" onAction="#toggleDirectAltAction"
+                                     selected="true" text="Indirectly" toggleGroup="$dirctALTtoggleGroup"/>
                     </children>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
-                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0"
+                      GridPane.columnIndex="3" GridPane.rowIndex="3">
                     <children>
-                        <TextField fx:id="parentConcExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+                        <TextField fx:id="parentConcExpressionText" alignment="CENTER" prefHeight="25.0"
+                                   prefWidth="350.0" promptText="type default expression here"
+                                   style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;"/>
                     </children>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT">
                     <children>
-                        <Label fx:id="primaryDPLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="167.0" style="-fx-font-size: 12;" text="Primary daughter/parent ratio:" />
+                        <Label fx:id="primaryDPLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="167.0"
+                               style="-fx-font-size: 12;" text="Primary daughter/parent ratio:"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="2">
                     <children>
-                        <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="163.0" style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY" />
+                        <Label fx:id="uncorrConstPbUlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="163.0"
+                               style="-fx-font-size: 10;" text="uncorrConstPbU:" textAlignment="JUSTIFY"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" GridPane.rowIndex="3">
                     <children>
-                        <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="183.0" style="-fx-font-size: 10;" text="uncorrConstPbTh:" />
+                        <Label fx:id="uncorrConstPbThlabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="183.0"
+                               style="-fx-font-size: 10;" text="uncorrConstPbTh:"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2">
                     <children>
-                        <Label fx:id="secondaryDPLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0" style="-fx-font-size: 12;" text="Calculate secondary d/p ratio:" />
+                        <Label fx:id="secondaryDPLabel" alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="182.0"
+                               style="-fx-font-size: 12;" text="Calculate secondary d/p ratio:"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">
                     <children>
-                        <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="232Th/238U:" textAlignment="JUSTIFY" />
+                        <Label fx:id="th232U238Label" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0"
+                               style="-fx-font-size: 10;" text="232Th/238U:" textAlignment="JUSTIFY"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="3">
                     <children>
-                        <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0" style="-fx-font-size: 10;" text="parentConc:" />
+                        <Label fx:id="parentConcLabel" alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="165.0"
+                               style="-fx-font-size: 10;" text="parentConc:"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <children>
-                        <TextField fx:id="uncorrConstPbThExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+                        <TextField fx:id="uncorrConstPbThExpressionText" alignment="CENTER" prefHeight="25.0"
+                                   prefWidth="350.0" promptText="type default expression here"
+                                   style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;"/>
                     </children>
                     <opaqueInsets>
-                        <Insets />
+                        <Insets/>
                     </opaqueInsets>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                     <children>
-                        <TextField fx:id="pb208Th232ExpressionText" alignment="CENTER" prefHeight="25.0" prefWidth="350.0" promptText="type default expression here" style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;" />
+                        <TextField fx:id="pb208Th232ExpressionText" alignment="CENTER" prefHeight="25.0"
+                                   prefWidth="350.0" promptText="type default expression here"
+                                   style="-fx-font-size: 14; -fx-background-color: white; -fx-border-color: black; -fx-font-family: SansSerif;"/>
                     </children>
                     <opaqueInsets>
-                        <Insets />
+                        <Insets/>
                     </opaqueInsets>
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                 </HBox>
-                <Text fx:id="hintLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Hint: Hold Shift key and click expression to see audit." textAlignment="RIGHT" wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Text fx:id="hintLabel" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Hint: Hold Shift key and click expression to see audit." textAlignment="RIGHT"
+                      wrappingWidth="574.55224609375" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <font>
-                        <Font size="11.0" />
+                        <Font size="11.0"/>
                     </font>
                 </Text>
             </children>
         </GridPane>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="6" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="6"/>
         <HBox alignment="CENTER_LEFT" prefHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <children>
-                <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses" />
-            <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
-               <content>
-                      <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="997.0" style="-fx-background-color: white; -fx-border-color: black;" />
-               </content>
-            </ScrollPane>
+                <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false"
+                        onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0"
+                        style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses"/>
+                <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
+                    <content>
+                        <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="997.0"
+                                  style="-fx-background-color: white; -fx-border-color: black;"/>
+                    </content>
+                </ScrollPane>
             </children>
         </HBox>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="8" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="8"/>
         <HBox alignment="CENTER_LEFT" prefHeight="90.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
             <children>
-                <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false" onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore" />
-            <ScrollPane HBox.hgrow="ALWAYS">
-               <content>
-                      <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="997.0" style="-fx-background-color: white; -fx-border-color: black;" />
-               </content>
-            </ScrollPane>
+                <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false"
+                        onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0"
+                        style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore"/>
+                <ScrollPane HBox.hgrow="ALWAYS">
+                    <content>
+                        <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="997.0"
+                                  style="-fx-background-color: white; -fx-border-color: black;"/>
+                    </content>
+                </ScrollPane>
             </children>
         </HBox>
-        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Name:" GridPane.rowIndex="1" />
-      <HBox alignment="CENTER" maxHeight="15.0" minHeight="15.0" prefHeight="15.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
-         <children>
-            <Ellipse fill="AQUAMARINE" radiusX="12.0" radiusY="8.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="132.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="  denotes Background mass.  Set 1-based index for Background mass here (0 = none):" wrappingWidth="398.55224609375">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Text>
-            <Spinner fx:id="backgroundIndexSpinner" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="54.0" style="-fx-scale-y: 0.9; -fx-background-color: AQUAMARINE;" />
-              <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;" text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click its oval in the displayed list." textAlignment="RIGHT" wrappingWidth="578.55224609375">
-                  <font>
-                      <Font size="11.0" />
-                  </font>
-              </Text>
-         </children>
-      </HBox>
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Description:" GridPane.rowIndex="2" />
-      <TextField fx:id="taskDescriptionTextField" promptText="Task Description" style="-fx-font-size: 12;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <ToolBar maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1085.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="TOP">
-         <items>
-            <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#viewCurrentTaskAction" text="View Current Task" />
-            <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction" text="Use to Replace Current Task" />
-            <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction" text="Save this Task as a Squid3 Task '.xml' file" />
-         </items>
-      </ToolBar>
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Actions:" GridPane.rowIndex="11" />
-      <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Provenance:" GridPane.rowIndex="4" />
-      <TextField fx:id="provenanceTextField" promptText="Provenance" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label layoutX="76.0" layoutY="623.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Custom Exp:" GridPane.rowIndex="10" />
-      <TextArea fx:id="customExpressionTextArea" editable="false" style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Task Name:" GridPane.rowIndex="1"/>
+        <HBox alignment="CENTER" maxHeight="15.0" minHeight="15.0" prefHeight="15.0" GridPane.columnIndex="1"
+              GridPane.rowIndex="7">
+            <children>
+                <Ellipse fill="AQUAMARINE" radiusX="12.0" radiusY="8.0" stroke="BLACK" strokeType="INSIDE"/>
+                <Text layoutX="132.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;"
+                      text="  denotes Background mass.  Set 1-based index for Background mass here (0 = none):"
+                      wrappingWidth="398.55224609375">
+                    <font>
+                        <Font size="11.0"/>
+                    </font>
+                </Text>
+                <Spinner fx:id="backgroundIndexSpinner" maxHeight="25.0" minHeight="25.0" prefHeight="25.0"
+                         prefWidth="54.0" style="-fx-scale-y: 0.9; -fx-background-color: AQUAMARINE;"/>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;"
+                      text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click its oval in the displayed list."
+                      textAlignment="RIGHT" wrappingWidth="578.55224609375">
+                    <font>
+                        <Font size="11.0"/>
+                    </font>
+                </Text>
+            </children>
+        </HBox>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Description:" GridPane.rowIndex="2"/>
+        <TextField fx:id="taskDescriptionTextField" promptText="Task Description" style="-fx-font-size: 12;"
+                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <ToolBar maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="1085.0" styleClass="backgroundCalamari"
+                 stylesheets="@css/projectManager.css" GridPane.columnIndex="1" GridPane.rowIndex="11"
+                 GridPane.valignment="TOP">
+            <items>
+                <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#viewCurrentTaskAction"
+                        text="View Current Task"/>
+                <Button mnemonicParsing="false" onAction="#updateCurrentTaskWithThisTaskAction"
+                        text="Use to Replace Current Task"/>
+                <Button layoutX="10.0" layoutY="4.0" mnemonicParsing="false" onAction="#saveThisTaskAsXMLFileAction"
+                        text="Save this Task as a Squid3 Task '.xml' file"/>
+            </items>
+        </ToolBar>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Actions:" GridPane.rowIndex="11"/>
+        <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Provenance:" GridPane.rowIndex="4"/>
+        <TextField fx:id="provenanceTextField" promptText="Provenance" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <Label layoutX="76.0" layoutY="623.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Custom Exp:"
+               GridPane.rowIndex="10"/>
+        <TextArea fx:id="customExpressionTextArea" editable="false"
+                  style="-fx-background-color: white; -fx-border-color: black; -fx-font-family: Monospaced; -fx-font-size: 12; -fx-font-weight: bold;"
+                  GridPane.columnIndex="1" GridPane.rowIndex="10"/>
     </children>
     <padding>
-        <Insets bottom="15.0" left="20.0" right="20.0" top="1.0" />
+        <Insets bottom="15.0" left="20.0" right="20.0" top="1.0"/>
     </padding>
 </GridPane>

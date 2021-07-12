@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
 import java.util.List;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface ExpressionTreeWithRatiosInterface {

@@ -15,29 +15,25 @@
  */
 package org.cirdles.squid.reports.reportSettings;
 
-import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
-import org.cirdles.squid.reports.reportCategories.ReportCategoryInterface;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.security.AnyTypePermission;
-import com.thoughtworks.xstream.security.NoTypePermission;
-import com.thoughtworks.xstream.security.NullPermission;
-import com.thoughtworks.xstream.security.PrimitiveTypePermission;
-import java.io.FileNotFoundException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.cirdles.squid.reports.ReduxLabDataListElementI;
 import org.cirdles.squid.reports.XMLSerializationI;
+import org.cirdles.squid.reports.reportCategories.ReportCategoryInterface;
+import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.reports.reportSpecifications.ReportSpecificationsUPbSamples;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
+import java.io.FileNotFoundException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author James F. Bowring <bowring at gmail.com>
  */
 public interface ReportSettingsInterface extends Comparable<ReportSettingsInterface>, ReduxLabDataListElementI, Serializable, XMLSerializationI {
@@ -51,7 +47,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     }
 
     /**
-     *
      * @return
      */
     public default Map<Integer, ReportCategoryInterface> getReportCategoriesInOrder() {
@@ -90,7 +85,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     public ReportSettingsInterface deepCopy();
 
     /**
-     *
      * @return
      */
     public default XStream getXStreamWriter() {
@@ -102,7 +96,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     }
 
     /**
-     *
      * @return
      */
     public default XStream getXStreamReader() {
@@ -110,13 +103,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         XStream xstream = new XStream(new DomDriver());
         xstream.addPermission(AnyTypePermission.ANY);
         customizeXstream(xstream);
-        
+
         return xstream;
     }
 
     /**
-     *
-     *
      * @param filename
      * @param doValidate the value of doValidate
      * @return
@@ -135,16 +126,14 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * registers converter for argument <code>xstream</code> and sets aliases to
      * make the XML file more human-readable
      *
+     * @param xstream <code>XStream</code> to be customized
      * @pre argument <code>xstream</code> is a valid <code>XStream</code>
      * @post argument <code>xstream</code> is customized to produce a cleaner
      * output <code>file</code>
-     *
-     * @param xstream <code>XStream</code> to be customized
      */
     void customizeXstream(XStream xstream);
 
     /**
-     *
      * @param reportSettingsModel
      * @return
      */
@@ -152,7 +141,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     boolean equals(Object reportSettingsModel);
 
     /**
-     *
      * @return
      */
     @Override
@@ -161,7 +149,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     }
 
     /**
-     *
      * @return
      */
     public default String getNameAndVersion() {
@@ -179,13 +166,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     public ReportCategoryInterface getCpsCategory();
 
     /**
-     *
      * @return
      */
     ReportCategoryInterface getCorrectionIndependentCategory();
 
     /**
-     *
      * @return
      */
     ReportCategoryInterface getFractionCategory();
@@ -196,50 +181,43 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     ReportCategoryInterface getFractionCategory2();
 
     /**
-     *
      * @return
      */
     ReportCategoryInterface getPb204CorrectedCategory();
 
     /**
-     *
      * @return
      */
     ReportCategoryInterface getPb207CorrectedCategory();
 
     /**
-     *
      * @return
      */
     ReportCategoryInterface getPb208CorrectedCategory();
 
     /**
-     *
      * @return
      */
     String getName();
 
     //  accessors
+
     /**
-     *
      * @return
      */
     String getReportSettingsComment();
 
     /**
-     *
      * @return
      */
     int getVersion();
 
     /**
-     *
      * @return
      */
     boolean isOutOfDate();
 
     /**
-     *
      * @return
      */
     boolean isOutOfDateUPb();
@@ -260,13 +238,11 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     void setClassXMLSchemaURL();
 
     /**
-     *
      * @param compositionCategory
      */
     void setCorrectionIndependentCategory(ReportCategoryInterface compositionCategory);
 
     /**
-     *
      * @param fractionCategory
      */
     void setFractionCategory(ReportCategoryInterface fractionCategory);
@@ -277,7 +253,6 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     void setFractionCategory2(ReportCategoryInterface fractionCategory2);
 
     /**
-     *
      * @param pb204CorrectedCategory
      */
     void setPb204CorrectedCategory(ReportCategoryInterface pb204CorrectedCategory);
@@ -348,24 +323,21 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
     /**
      * @param correctionIndependentRMCategory the
-     * correctionIndependentRMCategory to set
+     *                                        correctionIndependentRMCategory to set
      */
     public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory);
 
     /**
-     *
      * @param name
      */
     void setName(String name);
 
     /**
-     *
      * @param reportSettingsComment
      */
     void setReportSettingsComment(String reportSettingsComment);
 
     /**
-     *
      * @param version
      */
     void setVersion(int version);
@@ -548,8 +520,8 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             }
 
             for (int i = 0;
-                    i < footNotesMap.size();
-                    i++) {
+                 i < footNotesMap.size();
+                 i++) {
                 String footNote = reportTableFootnotes.get(footNotesMap.get(i)).trim();
 
                 // test for known variables in footnote
@@ -613,7 +585,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                 if (retVal[f][columnCount].length() >= minTrailing) {
                     retVal[f][columnCount]
                             = retVal[f][columnCount].substring(//
-                                    0, retVal[f][columnCount].length() - minTrailing);
+                            0, retVal[f][columnCount].length() - minTrailing);
                 }
             }
         }
@@ -625,10 +597,10 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             // July 2017 removed trim() calls here
             int padLeft
                     = StrictMath.max(minWide,//
-                            StrictMath.max(retVal[1][columnCount].length(), //
-                                    StrictMath.max(retVal[2][columnCount].length(), //
-                                            StrictMath.max(retVal[3][columnCount].length(),
-                                                    retVal[4][columnCount].length() + retVal[6][columnCount].length() / 2))))//footnote length counts as half
+                    StrictMath.max(retVal[1][columnCount].length(), //
+                            StrictMath.max(retVal[2][columnCount].length(), //
+                                    StrictMath.max(retVal[3][columnCount].length(),
+                                            retVal[4][columnCount].length() + retVal[6][columnCount].length() / 2))))//footnote length counts as half
                     - retVal[FRACTION_DATA_START_ROW][columnCount].length();
 
             if (padLeft > 0) {

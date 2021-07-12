@@ -225,10 +225,10 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
 
         return sortingHBox;
     }
-    
+
     private HBox exportButtonHBox() {
         HBox exportHBox = new HBox(2);
-        
+
         Button saveToNewFileButton = new Button("To SVG");
         formatNode(saveToNewFileButton, 50);
         saveToNewFileButton.setStyle("-fx-font-size: 11px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
@@ -237,19 +237,18 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
             public void handle(ActionEvent e) {
                 try {
                     writeWeightedMeanSVG();
-                }
-                catch(IOException ex) {
+                } catch (IOException ex) {
                     SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
                     ex.printStackTrace();
-                }  
+                }
             }
         });
-        
+
         exportHBox.getChildren().addAll(saveToNewFileButton);
-        
+
         return exportHBox;
     }
-    
+
     private void writeWeightedMeanSVG() throws IOException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) plot;
@@ -260,11 +259,11 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
             }
             String reportFileNameSVG = expressionName.replace("/", "_") + ".svg";
             String reportFileNamePDF = expressionName.replace("/", "_") + ".pdf";
-    
+
             try {
                 File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
                 File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
-                
+
                 if (reportFileSVG != null) {
                     BooleanProperty writeReport = new SimpleBooleanProperty(true);
                     boolean confirmedExists = false;
@@ -272,7 +271,7 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
                     if (reportFileSVG.exists()) {
                         switch (osType) {
                             case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
                                         !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
                                     writeReport.setValue(false);
@@ -280,7 +279,7 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
                                 break;
                             case MacOS:
                             case Linux:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) && 
+                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
                                         !FileUtilities.isFileClosedWindows(reportFilePDF)) {
                                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                     alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
@@ -299,7 +298,7 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
                             if (!confirmedExists) {
                                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                         "It appears that a weighted means report already exists. "
-                                        + "Would you like to overwrite it?");
+                                                + "Would you like to overwrite it?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
                                     if (action.equals(ButtonType.CANCEL)) {
@@ -325,7 +324,7 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
         } else {
             SquidMessageDialog.showWarningDialog("The Squid3 Project must be saved before reports can be written out.", primaryStageWindow);
         }
-        
+
     }
 
     /**
@@ -348,11 +347,11 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
                         // Ratio case
                         double[][] resultsFromNode1
                                 = Arrays.stream(((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()
-                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                         valueFromNode1 = resultsFromNode1[0][0];
                         double[][] resultsFromNode2
                                 = Arrays.stream(((SampleTreeNodeInterface) node2.getValue()).getShrimpFraction()
-                                        .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
+                                .getIsotopicRatioValuesByStringName(selectedFieldName)).toArray(double[][]::new);
                         valueFromNode2 = resultsFromNode2[0][0];
                     } else {
                         valueFromNode1 = ((SampleTreeNodeInterface) node1.getValue()).getShrimpFraction()

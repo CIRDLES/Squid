@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface ExpressionSpecInterface {
@@ -60,10 +59,10 @@ public interface ExpressionSpecInterface {
      * @return the squidSwitchSTReferenceMaterialCalculation
      */
     boolean isSquidSwitchSTReferenceMaterialCalculation();
-    
+
     /**
      * @return the notes
      */
     public String getNotes();
-    
+
 }

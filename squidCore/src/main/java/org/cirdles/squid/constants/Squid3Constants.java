@@ -15,17 +15,15 @@
  */
 package org.cirdles.squid.constants;
 
-import javafx.scene.input.DataFormat;
-
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 
 /**
- *
  * @author bowring
  */
 public final class Squid3Constants {
@@ -65,7 +63,7 @@ public final class Squid3Constants {
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                                ../schema/SHRIMP_PRAWN.xsd\">";
-    
+
     public static final String XML_HEADER_FOR_PRAWN_LEGACY_FILES_USING_LOCAL_SCHEMA
             = "<?xml version=\"1.0\"?>\n"
             + "<!-- SHRIMP SW PRAWN Data File -->\n"
@@ -84,7 +82,7 @@ public final class Squid3Constants {
 
     public static final String URL_STRING_FOR_PRAWN_XML_SCHEMA_LOCAL
             = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SHRIMP_PRAWN.xsd";
-    
+
     public static final String URL_STRING_FOR_PRAWN_LEGACY_XML_SCHEMA_LOCAL
             = SCHEMA_FOLDER.getAbsolutePath() + File.separator + "SHRIMP_PRAWN_LEGACY.xsd";
 
@@ -117,7 +115,7 @@ public final class Squid3Constants {
             + "            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "            xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                                ../schema/SquidTask_ExpressionXMLSchema.xsd\">";
-    
+
     /**
      *
      */
@@ -148,12 +146,12 @@ public final class Squid3Constants {
      *
      */
     private static final String[] DEFAULT_RATIOS_LIST_FOR_10_SPECIES = new String[]{
-        "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
+            "204/206", "207/206", "208/206", "238/196", "206/238", "254/238", "248/254", "206/270", "270/254", "206/254", "238/206"};
 
     public static String[] getDEFAULT_RATIOS_LIST_FOR_10_SPECIES() {
         return DEFAULT_RATIOS_LIST_FOR_10_SPECIES.clone();
     }
-    
+
     /**
      *
      */
@@ -174,7 +172,7 @@ public final class Squid3Constants {
             + "      xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
             + "      xsi:schemaLocation=\"https://raw.githubusercontent.com\n"
             + "                          ../schema/SquidTask_XMLSchema.xsd\">";
-    
+
     /**
      *
      */
@@ -203,7 +201,6 @@ public final class Squid3Constants {
         }
 
         /**
-         *
          * @return
          */
         public String getName() {
@@ -308,7 +305,6 @@ public final class Squid3Constants {
     }
 
     /**
-     *
      * @param unit
      * @return
      */

@@ -16,7 +16,6 @@
 package org.cirdles.squid.algorithms.weightedMeans;
 
 /**
- *
  * @author James F. Bowring
  */
 public final class WtdLinCorrResults {
@@ -172,5 +171,5 @@ public final class WtdLinCorrResults {
     public void setMinIndex(int minIndex) {
         this.minIndex = minIndex;
     }
-    
+
 }

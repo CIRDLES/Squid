@@ -18,7 +18,6 @@
 package org.cirdles.squid.exceptions;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SquidException extends Exception {
@@ -39,7 +38,7 @@ public class SquidException extends Exception {
     }
 
     public SquidException(String message, Throwable cause,
-            boolean enableSuppression, boolean writableStackTrace) {
+                          boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 

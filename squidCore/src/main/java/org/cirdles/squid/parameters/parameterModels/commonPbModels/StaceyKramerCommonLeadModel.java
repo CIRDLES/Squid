@@ -15,14 +15,14 @@
  */
 package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
-import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
-import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 
+import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
+
 /**
- * @see https://github.com/CIRDLES/ET_Redux/wiki/Function-SingleStagePbR
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
+ * @see https://github.com/CIRDLES/ET_Redux/wiki/Function-SingleStagePbR
  */
 public class StaceyKramerCommonLeadModel {
 
@@ -44,7 +44,7 @@ public class StaceyKramerCommonLeadModel {
         lambd232 = physicalConstantsModel.getDatumByName(Lambdas.LAMBDA_232.getName()).getValue().doubleValue();
     }
 
-    public static void updateU_Ratio(double u_ratio){
+    public static void updateU_Ratio(double u_ratio) {
         U_RATIO = u_ratio;
         if (u_ratio == 0.0) {
             U_RATIO = REF_238U235U_DEFAULT;
@@ -63,13 +63,13 @@ public class StaceyKramerCommonLeadModel {
         double[] PbLambda = new double[]{lambda238, lambda235, lambd232};
         double[] PbR0 = new double[]{SK_ALPHA0, SK_BETA0, SK_GAMMA0};
         double[] MuIsh = new double[]{
-            SK_MU,
-            (SK_MU / U_RATIO),
-            (SK_MU * SK_KAPPA_MU)};
+                SK_MU,
+                (SK_MU / U_RATIO),
+                (SK_MU * SK_KAPPA_MU)};
         double[] PbExp = new double[]{
-            StrictMath.exp(SK_START_AGE * lambda238),
-            StrictMath.exp(SK_START_AGE * lambda235),
-            StrictMath.exp(SK_START_AGE * lambd232)};
+                StrictMath.exp(SK_START_AGE * lambda238),
+                StrictMath.exp(SK_START_AGE * lambda235),
+                StrictMath.exp(SK_START_AGE * lambd232)};
         double[] eTerm = new double[3];
         double[] singleStagePbR = new double[3];
 

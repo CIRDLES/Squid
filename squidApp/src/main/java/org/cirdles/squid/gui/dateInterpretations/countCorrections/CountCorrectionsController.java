@@ -127,7 +127,7 @@ public class CountCorrectionsController implements Initializable {
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
         biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
-        
+
         returnToCommonLeadButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 

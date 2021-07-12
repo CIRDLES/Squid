@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-           attributeFormDefault="unqualified" 
-           elementFormDefault="qualified" 
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
            targetNamespace="https://raw.githubusercontent.com"
            xmlns="https://raw.githubusercontent.com">
     <xs:annotation>
         <xs:documentation xml:lang="en">
             This schema defines the contents of a SHRIMP PRAWN data file.
-                   
-            Copyright 2015-2017 CIRDLES.org.
+
+            Copyright 2015 James F. Bowring and CIRDLES.org.
 
             Licensed under the Apache License, Version 2.0 (the "License");
             you may not use this file except in compliance with the License.
@@ -28,9 +27,9 @@
             Revised: 23.October.2017
             Revised: 03.July.2018 for SHRIMP SW v4.0 SHR 2
             Revised: 18.June.2019 for SHRIMP SW v4.0 SHR 2 (revised?)
-            
+
         </xs:documentation>
-    </xs:annotation>    
+    </xs:annotation>
     <xs:element name="prawn_file">
         <xs:complexType>
             <xs:sequence>
@@ -38,33 +37,33 @@
                     <xs:documentation xml:lang="en">
                         Session parameters
                     </xs:documentation>
-                </xs:annotation>    
+                </xs:annotation>
                 <!-- Control software version-->
-                <xs:element name="software_version" type="xs:string" />
+                <xs:element name="software_version" type="xs:string"/>
                 <!-- A ‘run’ is an analysis of a sample. This value indicates the number of analyses contained in the file. 
-                Useful for checking.-->                
-                <xs:element name="runs" type="xs:short" />
+                Useful for checking.-->
+                <xs:element name="runs" type="xs:short"/>
                 <!-- The control software provides space to include comments in the data file. Rarely used as comments are 
                 usually recorded elsewhere.-->
-                <xs:element  minOccurs="0" name="session_quality" type="xs:string" />
+                <xs:element minOccurs="0" name="session_quality" type="xs:string"/>
                 <!-- The control software provides space to include comments in the data file. Rarely used as comments are 
                 usually recorded elsewhere-->
-                <xs:element  minOccurs="0" name="session_comments" type="xs:string" />
+                <xs:element minOccurs="0" name="session_comments" type="xs:string"/>
                 <!-- The name or number of the mount being analysed. Recorded as part of the session information in the 
                 control software-->
-                <xs:element minOccurs="0" name="mount" type="xs:string" />
+                <xs:element minOccurs="0" name="mount" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="login_comment" type="xs:string" />                       
+                <xs:element minOccurs="0" name="login_comment" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="stdZrU" type="xs:string" />
+                <xs:element minOccurs="0" name="stdZrU" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="stdUOU" type="xs:string" />
+                <xs:element minOccurs="0" name="stdUOU" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="stdPbU" type="xs:string" />
+                <xs:element minOccurs="0" name="stdPbU" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="stdAge" type="xs:string" />
+                <xs:element minOccurs="0" name="stdAge" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
-                <xs:element minOccurs="0" name="stdConcU" type="xs:string" />                                              
+                <xs:element minOccurs="0" name="stdConcU" type="xs:string"/>
                 <!-- An analysis-->
                 <xs:element maxOccurs="unbounded" name="run">
                     <xs:complexType>
@@ -76,8 +75,8 @@
                             </xs:annotation>
                             <xs:element maxOccurs="unbounded" name="par">
                                 <xs:complexType>
-                                    <xs:attribute name="name" type="RunParameterNames" use="required" />
-                                    <xs:attribute name="value" type="xs:string" use="required" />
+                                    <xs:attribute name="name" type="RunParameterNames" use="required"/>
+                                    <xs:attribute name="value" type="xs:string" use="required"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="run_table">
@@ -88,22 +87,24 @@
                                                 <xs:sequence>
                                                     <xs:annotation>
                                                         <xs:documentation xml:lang="en">
-                                                            Run Table Entry parameters - see type RunTableEntryParameterNames for enumeration.
+                                                            Run Table Entry parameters - see type
+                                                            RunTableEntryParameterNames for enumeration.
                                                         </xs:documentation>
                                                     </xs:annotation>
                                                     <xs:element maxOccurs="unbounded" name="par">
                                                         <xs:complexType>
-                                                            <xs:attribute name="name" type="RunTableEntryParameterNames" use="required" />
-                                                            <xs:attribute name="value" type="xs:string" use="required" />
+                                                            <xs:attribute name="name" type="RunTableEntryParameterNames"
+                                                                          use="required"/>
+                                                            <xs:attribute name="value" type="xs:string" use="required"/>
                                                         </xs:complexType>
                                                     </xs:element>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute name="entries" type="xs:unsignedByte" use="required" />
-                                    <xs:attribute name="parameters" type="xs:unsignedByte" use="required" />
-                                    <xs:attribute name="sample_name" type="xs:string" />
+                                    <xs:attribute name="entries" type="xs:unsignedByte" use="required"/>
+                                    <xs:attribute name="parameters" type="xs:unsignedByte" use="required"/>
+                                    <xs:attribute name="sample_name" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="set">
@@ -116,8 +117,8 @@
                                         </xs:annotation>
                                         <xs:element maxOccurs="unbounded" name="par">
                                             <xs:complexType>
-                                                <xs:attribute name="name" type="SetParameterNames" use="required" />
-                                                <xs:attribute name="value" type="xs:string" use="required" />
+                                                <xs:attribute name="name" type="SetParameterNames" use="required"/>
+                                                <xs:attribute name="value" type="xs:string" use="required"/>
                                             </xs:complexType>
                                         </xs:element>
                                         <xs:element maxOccurs="unbounded" name="scan">
@@ -128,20 +129,26 @@
                                                             <xs:sequence>
                                                                 <xs:annotation>
                                                                     <xs:documentation xml:lang="en">
-                                                                        Measurement parameters - see type MeasurementParameterNames for enumeration.
+                                                                        Measurement parameters - see type
+                                                                        MeasurementParameterNames for enumeration.
                                                                     </xs:documentation>
                                                                 </xs:annotation>
                                                                 <xs:element maxOccurs="unbounded" name="par">
                                                                     <xs:complexType>
-                                                                        <xs:attribute name="name" type="MeasurementParameterNames" use="required" />
-                                                                        <xs:attribute name="value" type="xs:string" use="required" />
+                                                                        <xs:attribute name="name"
+                                                                                      type="MeasurementParameterNames"
+                                                                                      use="required"/>
+                                                                        <xs:attribute name="value" type="xs:string"
+                                                                                      use="required"/>
                                                                     </xs:complexType>
                                                                 </xs:element>
                                                                 <xs:element maxOccurs="unbounded" name="data">
                                                                     <xs:complexType>
                                                                         <xs:simpleContent>
                                                                             <xs:extension base="xs:string">
-                                                                                <xs:attribute name="name" type="xs:string" use="required" />
+                                                                                <xs:attribute name="name"
+                                                                                              type="xs:string"
+                                                                                              use="required"/>
                                                                             </xs:extension>
                                                                         </xs:simpleContent>
                                                                     </xs:complexType>
@@ -150,7 +157,7 @@
                                                         </xs:complexType>
                                                     </xs:element>
                                                 </xs:sequence>
-                                                <xs:attribute name="number" type="xs:unsignedByte" use="required" />
+                                                <xs:attribute name="number" type="xs:unsignedByte" use="required"/>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
@@ -165,7 +172,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    
+
     <xs:simpleType name="RunParameterNames">
         <xs:restriction base="xs:string">
             <!-- The identification of the analysis. Typically it is ‘sample ID · grain number · spot number on grain’-->
@@ -185,33 +192,33 @@
             <xs:enumeration value="dead_time_ns"/>
             <!-- The zero value of the secondary beam monitor set by blanking the beam and measuring the resulting
             ‘dark’ current in the secondary beam monitor. Subtracted from all SBM counts.-->
-            <xs:enumeration value="sbm_zero_cps"/>           
+            <xs:enumeration value="sbm_zero_cps"/>
             <!-- Whether autocentering was on during analysis. Does not directly factor into calculations, 
-            but may be important for interpretation and quality control.-->           
+            but may be important for interpretation and quality control.-->
             <xs:enumeration value="autocentering"/>
             <!-- How the QTY1 lens setting (the first secondary beam tuning) was set in the control software. 
             This setting can compensate for irregularities on the mount surface or drift of the sample stage 
             location motors over a long automated session. Does not directly factor into calculations, 
-            but may be important for interpretation and quality control.-->           
+            but may be important for interpretation and quality control.-->
             <xs:enumeration value="qt1y_mode"/>
             <!-- Whether the beam was deflected between mass species (usually to protect the detector from large amplitudes).
             Unusual to use in typical U-Pb work. Does not directly factor into calculations, 
-            but may be important for interpretation and quality control.-->           
+            but may be important for interpretation and quality control.-->
             <xs:enumeration value="deflect_beam_between_peaks"/>
             <!-- The method used to autocentre the mass species. Does not directly factor into calculations, 
-            but may be important for interpretation and quality control.-->           
+            but may be important for interpretation and quality control.-->
             <xs:enumeration value="autocenter_method"/>
             <!-- The location of the analytical spot in the x-axis. (On SHRIMP the x-axis is along the line of the secondary
             beam, i.e. the distance of the sample surface from the extraction plate, or, broadly, the ‘focus’). 
             Does not directly factor into calculations, but may be important for interpretation and 
-            quality control.-->           
+            quality control.-->
             <xs:enumeration value="stage_x"/>
             <!-- The location of the analytical spot in the y-axis. (On SHRIMP the y-axis is the ‘east-west’ direction).
             Does not directly factor into calculations, but may be important for interpretation and 
-            quality control.-->           
+            quality control.-->
             <xs:enumeration value="stage_y"/>
-            <!-- Description-->           
-            <xs:enumeration value="stage_z"/>           
+            <!-- Description-->
+            <xs:enumeration value="stage_z"/>
             <!-- Description-->
             <xs:enumeration value="stage_center_left_y"/>
             <!-- Description-->
@@ -219,93 +226,93 @@
             <!-- Description-->
             <xs:enumeration value="stage_center_right_y"/>
             <!-- Description-->
-            <xs:enumeration value="stage_center_right_z"/>                      
-            <!-- Description-->           
+            <xs:enumeration value="stage_center_right_z"/>
+            <!-- Description-->
             <xs:enumeration value="stage_map_quad_cal"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="stage_map_cal"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="detector_gains"/>
-            <!-- Description-->           
-            <xs:enumeration value="detector_zero_cps"/>                  
-            <!-- Description-->           
+            <!-- Description-->
+            <xs:enumeration value="detector_zero_cps"/>
+            <!-- Description-->
             <xs:enumeration value="EISIE_measured"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="EISIE_sets"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="detector1_zero_sub_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="detector2_zero_sub_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="detector3_zero_sub_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="detector4_zero_sub_cps"/>
-            <!-- Description-->           
-            <xs:enumeration value="detector5_zero_sub_cps"/>                 
-            <!-- Description-->           
+            <!-- Description-->
+            <xs:enumeration value="detector5_zero_sub_cps"/>
+            <!-- Description-->
             <xs:enumeration value="eisie_1_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="eisie_2_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="eisie_3_cps"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="eisie_1_date_time"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="eisie_2_date_time"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="eisie_3_date_time"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->           
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_cps_all_peaks_cfg"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->           
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_1_cps_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_2_cps_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_3_cps_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_1_date_time_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_2_date_time_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_3_date_time_all_peaks"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="primary_names"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="primary_bits"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="primary_volts"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="secondary_names"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="secondary_names_bits"/>
             <!-- The digital bit settings matching the lens and steering components listed above. Does not directly 
-            factor into calculations, but may be important for interpretation and quality control.-->           
+            factor into calculations, but may be important for interpretation and quality control.-->
             <xs:enumeration value="secondary_bits"/>
             <!-- Names of Secondary beam components (lens and steering). Note that not all secondary beam components 
             have equivalent voltage readings. Does not directly factor into calculations, but may be 
-            important for interpretation and quality control.-->           
+            important for interpretation and quality control.-->
             <xs:enumeration value="secondary_names_volts"/>
             <!-- The equivalent voltage settings matching the lens and steering components listed above.
             Does not directly factor into calculations, but may be important for interpretation and 
-            quality control.-->           
+            quality control.-->
             <xs:enumeration value="secondary_volts"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="faraday_configuration"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="left_mount_name"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="left_mount_owner"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="right_mount_name"/>
-            <!-- Description-->           
+            <!-- Description-->
             <xs:enumeration value="right_mount_owner"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="raster_time_sec"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="raster_after_burn_time_sec"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="RunTableEntryParameterNames">
         <xs:restriction base="xs:string">
             <!-- Mass species used as reference peak for 204Pb measurement and for calculating composition-->
@@ -344,7 +351,7 @@
             <xs:enumeration value="sc_detector"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="SetParameterNames">
         <xs:restriction base="xs:string">
             <!-- Description-->
@@ -360,7 +367,7 @@
             <!-- Description-->
             <xs:enumeration value="egy"/>
             <!-- Description-->
-            <xs:enumeration value="egz"/>                   
+            <xs:enumeration value="egz"/>
             <!-- Description-->
             <xs:enumeration value="egkY"/>
             <!-- Description-->
@@ -368,7 +375,7 @@
             <!-- Description-->
             <xs:enumeration value="egcY"/>
             <!-- Description-->
-            <xs:enumeration value="egcZ"/>                                    
+            <xs:enumeration value="egcZ"/>
             <!-- Description-->
             <xs:enumeration value="prealphay"/>
             <!-- Description-->
@@ -378,11 +385,11 @@
             <!-- Description-->
             <xs:enumeration value="eisie_date_time"/>
             <!-- Electron Induced Secondary Ion Emission all peaks configuration: mass station indexes (eg 0 = 1st peak in the run table)June 2019 SHRIMP SW v4.0 SHR 2 -->
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_cps_all_peaks_cfg"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_cps_all_peaks"/>
-            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->            
+            <!-- Description June 2019 SHRIMP SW v4.0 SHR 2-->
             <xs:enumeration value="eisie_date_time_all_peaks"/>
             <!-- Description-->
             <xs:enumeration value="lab_temperature_degc"/>
@@ -390,7 +397,7 @@
             <xs:enumeration value="detector_set_zero_cps"/>
         </xs:restriction>
     </xs:simpleType>
-    
+
     <xs:simpleType name="MeasurementParameterNames">
         <xs:restriction base="xs:string">
             <!-- Description-->

@@ -1,20 +1,17 @@
 package org.cirdles.squid.core;
 
 import org.cirdles.commons.util.ResourceExtractor;
+import org.cirdles.squid.Squid;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
-import org.cirdles.squid.Squid;
-
 import org.junit.Test;
-
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +42,7 @@ public class ExpressionGroupXMLTest {
                 customExpressions.add(exp);
             }
         });
-        
+
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         File[] files = null;
         try {
@@ -54,11 +51,11 @@ public class ExpressionGroupXMLTest {
             for (File file : files) {
                 try {
                     validateXML(file, schema);
-                }   catch (SAXException | IOException e) {
+                } catch (SAXException | IOException e) {
                     // If any exception is thrown, test will fail
                 }
-        } 
-                
+            }
+
         } catch (SAXException e) {
         }
         if (files != null) {
@@ -68,7 +65,7 @@ public class ExpressionGroupXMLTest {
                 convertedExpressions.add((Expression) converter.readXMLObject(file.getAbsolutePath(), false));
             }
             files = folder.listFiles();
-            for(File file : files) {
+            for (File file : files) {
                 file.delete();
             }
             Comparator<Expression> expressionComparator = Comparator.comparing(Expression::getName);

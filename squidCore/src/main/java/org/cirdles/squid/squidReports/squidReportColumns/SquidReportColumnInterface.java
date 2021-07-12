@@ -15,16 +15,16 @@
  */
 package org.cirdles.squid.squidReports.squidReportColumns;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 
@@ -117,7 +117,6 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
     public void setVisible(boolean visible);
 
     /**
-     *
      * @param uncertaintyColumn the uncertaintyColumn to set
      */
     public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);

@@ -17,12 +17,12 @@
  */
 package org.cirdles.squid.utilities.stateUtilities;
 
-import java.io.*;
-import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
+
+import java.io.*;
 
 /**
- *
  * @author James F. Bowring
  */
 public final class SquidSerializer {
@@ -34,7 +34,6 @@ public final class SquidSerializer {
     }
 
     /**
-     *
      * @param serializableObject
      * @param fileName
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -80,7 +79,6 @@ public final class SquidSerializer {
     }
 
     /**
-     *
      * @param filename
      * @return
      */

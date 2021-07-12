@@ -60,7 +60,7 @@ public class FileValidator {
                 }
             }
         }
-        
+
         tempSerializedFile = writeTextFileFromListOfStringsWithUnixLineEnd(myLines, "squidTempXML", ".xml");
         Validator validator = schema.newValidator();
         Source source = new StreamSource(tempSerializedFile);

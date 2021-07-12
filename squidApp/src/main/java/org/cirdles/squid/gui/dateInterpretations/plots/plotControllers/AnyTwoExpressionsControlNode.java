@@ -15,10 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -27,13 +23,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION_ENVELOPE;
 
@@ -51,9 +53,8 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
     private static boolean plotExcluded = true;
 
     /**
-     *
      * @param plotsController the value of plotsController
-     * @param hasData the value of hasData
+     * @param hasData         the value of hasData
      */
     public AnyTwoExpressionsControlNode(PlotRefreshInterface plotsController, boolean hasData) {
         super(4);

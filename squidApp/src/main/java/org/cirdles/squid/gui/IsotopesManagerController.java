@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -27,27 +25,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
-import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.UThBearingEnum;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
 /**
@@ -94,7 +88,7 @@ public class IsotopesManagerController implements Initializable {
     private void updateBackgroundStatusLabel() {
         backgroundStatusLabel.setText(
                 "Background Status: "
-                + ((task.getIndexOfBackgroundSpecies() == -1) ? "NOT " : "") + "Selected");
+                        + ((task.getIndexOfBackgroundSpecies() == -1) ? "NOT " : "") + "Selected");
     }
 
     private void setupIsotopeTable() {
@@ -138,7 +132,7 @@ public class IsotopesManagerController implements Initializable {
                         .setElementLabel(editElementName);
                 SquidSpeciesModel ssm
                         = task.getSquidSpeciesModelList()
-                                .get(editEvent.getTablePosition().getRow());
+                        .get(editEvent.getTablePosition().getRow());
                 ssm.setElementName(editElementName);
 
                 task.setChanged(true);
@@ -204,7 +198,7 @@ public class IsotopesManagerController implements Initializable {
                             .setIsotopeLabel(editIsotopeName);
                     SquidSpeciesModel ssm
                             = task.getSquidSpeciesModelList()
-                                    .get(editEvent.getTablePosition().getRow());
+                            .get(editEvent.getTablePosition().getRow());
                     ssm.setIsotopeName(editIsotopeName);
                 } else {
                     ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
@@ -246,7 +240,7 @@ public class IsotopesManagerController implements Initializable {
 
                             SquidSpeciesModel ssm
                                     = task.getSquidSpeciesModelList()
-                                            .get(row.getItem().getMassStationIndex());
+                                    .get(row.getItem().getMassStationIndex());
                             int previousIndex = task.selectBackgroundSpeciesReturnPreviousIndex(ssm);
                             if (previousIndex >= 0) {
                                 MassStationDetail previousMassStationDetail = massStationsData.get(previousIndex);
@@ -276,7 +270,7 @@ public class IsotopesManagerController implements Initializable {
                         if (row.getItem().getIsBackground()) {
                             SquidSpeciesModel ssm
                                     = task.getSquidSpeciesModelList()
-                                            .get(row.getItem().getMassStationIndex());
+                                    .get(row.getItem().getMassStationIndex());
                             task.setIndexOfBackgroundSpecies(-1);
                             task.setIndexOfTaskBackgroundMass(-1);
                             task.setChanged(true);
@@ -380,7 +374,7 @@ public class IsotopesManagerController implements Initializable {
             textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> arg0,
-                        Boolean arg1, Boolean arg2) {
+                                    Boolean arg1, Boolean arg2) {
                     if (!arg2) {
                         commitEdit(textField.getText());
                     }

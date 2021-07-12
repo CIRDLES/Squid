@@ -41,7 +41,7 @@ public abstract class AbstractDataView extends Canvas {
     protected static int indexOfSelectedSpot = -1;
     protected static int indexOfSecondSelectedSpotForMultiSelect = -1;
     protected static List<Integer> listOfSelectedIndices = new ArrayList<>();
-    protected static  List<PrawnFile.Run> selectedRuns = new ArrayList<>();
+    protected static List<PrawnFile.Run> selectedRuns = new ArrayList<>();
 
     /**
      *
@@ -202,6 +202,7 @@ public abstract class AbstractDataView extends Canvas {
     }
 
     /**
+     *
      */
     public abstract void preparePanel();
 

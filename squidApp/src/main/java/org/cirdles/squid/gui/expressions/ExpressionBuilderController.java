@@ -3179,7 +3179,8 @@ public class ExpressionBuilderController implements Initializable {
         if (currentMode.get().equals(Mode.EDIT) && !exp.getName().equalsIgnoreCase(selectedExpression.get().getName())) {
             task.removeExpression(selectedExpression.get(), false);
             task.addExpression(exp, true);
-        } else task.addExpression(exp, task.getMissingExpressionsByName().contains(exp.getName().toUpperCase(Locale.ENGLISH)));
+        } else
+            task.addExpression(exp, task.getMissingExpressionsByName().contains(exp.getName().toUpperCase(Locale.ENGLISH)));
 
 //        //Remove if an expression already exists with the same name
 //        task.removeExpression(exp, true);

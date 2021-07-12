@@ -15,12 +15,13 @@
  */
 package org.cirdles.squid.tasks.evaluationEngines;
 
-import java.io.Serializable;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
+
+import java.io.Serializable;
+
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
- *
  * @author James F. Bowring
  */
 public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressionEvaluatedPerSpotPerScanModelInterface, Serializable {
@@ -111,5 +112,5 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
     public double getRatioFractErr() {
         return ratioFractErr;
     }
-    
+
 }

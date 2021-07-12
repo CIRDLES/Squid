@@ -14,12 +14,10 @@ import javafx.stage.FileChooser;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.topsoil.Variable;
+import org.cirdles.topsoil.data.Uncertainty;
 import org.cirdles.topsoil.javafx.PlotView;
-import org.cirdles.topsoil.plot.DataEntry;
-import org.cirdles.topsoil.plot.PlotFunction;
-import org.cirdles.topsoil.plot.PlotOption;
-import org.cirdles.topsoil.plot.PlotOptions;
-import org.cirdles.topsoil.plot.PlotType;
+import org.cirdles.topsoil.plot.*;
 import org.cirdles.topsoil.plot.internal.SVGSaver;
 
 import java.io.File;
@@ -27,10 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.topsoil.Variable;
+
 import static org.cirdles.topsoil.Variable.SIGMA_X;
 import static org.cirdles.topsoil.Variable.SIGMA_Y;
-import org.cirdles.topsoil.data.Uncertainty;
 
 public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
@@ -74,7 +71,7 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
     public final Map<PlotOption<?>, Object> getPlotOptions() {
         return options.get();
     }
-   
+
     public final void setPlotOptions(PlotOptions options) {
         this.options.putAll(options);
     }

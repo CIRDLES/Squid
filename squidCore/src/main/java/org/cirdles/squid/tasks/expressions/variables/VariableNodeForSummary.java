@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,20 +16,21 @@
 package org.cirdles.squid.tasks.expressions.variables;
 
 import com.thoughtworks.xstream.XStream;
-import java.util.List;
-import java.util.Map;
-import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
-import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
+import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.cirdles.squid.constants.Squid3Constants.PCT_UNCERTAINTY_DIRECTIVE;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertArrayToObjects;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.divideWithZeroForNanResult;
 
 /**
- *
  * @author James F. Bowring
  */
 public class VariableNodeForSummary extends ExpressionTree {
@@ -45,7 +46,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @param name
      */
     public VariableNodeForSummary(String name) {
@@ -90,7 +90,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -144,7 +143,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -172,7 +170,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -181,7 +178,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override
@@ -190,7 +186,6 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     /**
-     *
      * @return
      */
     @Override

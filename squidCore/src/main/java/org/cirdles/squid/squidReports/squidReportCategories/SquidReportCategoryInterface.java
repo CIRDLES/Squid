@@ -15,15 +15,12 @@
  */
 package org.cirdles.squid.squidReports.squidReportCategories;
 
-import static java.nio.file.Paths.get;
-import java.util.LinkedList;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumn;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
+import java.util.LinkedList;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface SquidReportCategoryInterface extends XMLSerializerInterface {
@@ -42,6 +39,7 @@ public interface SquidReportCategoryInterface extends XMLSerializerInterface {
      * @return the categoryColumns
      */
     public LinkedList<SquidReportColumnInterface> getCategoryColumns();
+
     public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted();
 
     /**

@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            targetNamespace="https://raw.githubusercontent.com"
@@ -9,7 +8,7 @@
         <xs:documentation xml:lang="en">
             This schema defines the contents of a Squid Task.
 
-            Copyright 2019-2020 CIRDLES.org
+            Copyright 2019 James F. Bowring and CIRDLES.org
 
             Licensed under the Apache License, Version 2.0 (the "License");
             you may not use this file except in compliance with the License.
@@ -25,71 +24,72 @@
 
             Author: Noah Drake[smtp:drakenoah98@yahoo.com]
             Created: October.2020
-            
+
         </xs:documentation>
-    </xs:annotation> 
-    
-  <xs:element name="Task"/>
-  <xs:complexType name="Task" mixed="true">
-      <xs:sequence>
-        <xs:element name="name" type="xs:string" />
-        <xs:element name="taskType" type="xs:string" />
-        <xs:element name="description" type="xs:string" />
-        <xs:element name="authorName" type="xs:string"/>
-        <xs:element name="labName" type="xs:string" />
-        <xs:element name="provenance" type="xs:string" />
-        <xs:element name="dateRevised" type="xs:int" />
-        <xs:element name="parentNuclide" type="xs:int" />
-        <xs:element name="directAltPD" type="xs:boolean" />
-        <xs:element name="nominalMasses">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="string" type="xs:float" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="indexOfBackgroundSpecies" type="xs:int" />
-        <xs:element name="ratioNames">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="string" type="xs:string" />
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="specialSquidFourExpressionsMap">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="entry">
+    </xs:annotation>
+
+    <xs:element name="Task"/>
+    <xs:complexType name="Task" mixed="true">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="taskType" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="authorName" type="xs:string"/>
+            <xs:element name="labName" type="xs:string"/>
+            <xs:element name="provenance" type="xs:string"/>
+            <xs:element name="dateRevised" type="xs:int"/>
+            <xs:element name="parentNuclide" type="xs:int"/>
+            <xs:element name="directAltPD" type="xs:boolean"/>
+            <xs:element name="nominalMasses">
                 <xs:complexType>
-                  <xs:sequence>
-                    <xs:element maxOccurs="unbounded" name="string" type="xs:string" />
-                  </xs:sequence>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="string" type="xs:float"/>
+                    </xs:sequence>
                 </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-        <xs:element name="customExpressions">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element maxOccurs="unbounded" name="ExpressionSpec">
+            </xs:element>
+            <xs:element name="indexOfBackgroundSpecies" type="xs:int"/>
+            <xs:element name="ratioNames">
                 <xs:complexType>
-                  <xs:sequence>
-                    <xs:element name="expressionName" type="xs:string" />
-                    <xs:element name="excelExpressionString" type="xs:string" />
-                    <xs:element name="squidSwitchNU" type="xs:boolean" />
-                    <xs:element name="squidSwitchSCSummaryCalculation" type="xs:boolean" />
-                    <xs:element name="squidSwitchSTReferenceMaterialCalculation" type="xs:boolean" />
-                    <xs:element name="squidSwitchSAUnknownCalculation" type="xs:boolean" />
-                    <xs:element name="squidSpecialUPbThExpression" type="xs:boolean" />
-                    <xs:element name="squidSwitchConcentrationReferenceMaterialCalculation" type="xs:boolean" />
-                    <xs:element name="notes" type="xs:string" />
-                  </xs:sequence>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="string" type="xs:string"/>
+                    </xs:sequence>
                 </xs:complexType>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-        </xs:element>
-      </xs:sequence>
-  </xs:complexType>
+            </xs:element>
+            <xs:element name="specialSquidFourExpressionsMap">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="entry">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element maxOccurs="unbounded" name="string" type="xs:string"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="customExpressions">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" name="ExpressionSpec">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="expressionName" type="xs:string"/>
+                                    <xs:element name="excelExpressionString" type="xs:string"/>
+                                    <xs:element name="squidSwitchNU" type="xs:boolean"/>
+                                    <xs:element name="squidSwitchSCSummaryCalculation" type="xs:boolean"/>
+                                    <xs:element name="squidSwitchSTReferenceMaterialCalculation" type="xs:boolean"/>
+                                    <xs:element name="squidSwitchSAUnknownCalculation" type="xs:boolean"/>
+                                    <xs:element name="squidSpecialUPbThExpression" type="xs:boolean"/>
+                                    <xs:element name="squidSwitchConcentrationReferenceMaterialCalculation"
+                                                type="xs:boolean"/>
+                                    <xs:element name="notes" type="xs:string"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

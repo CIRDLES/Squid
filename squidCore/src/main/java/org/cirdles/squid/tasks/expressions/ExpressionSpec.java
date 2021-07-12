@@ -15,10 +15,7 @@
  */
 package org.cirdles.squid.tasks.expressions;
 
-import org.cirdles.squid.tasks.TaskInterface;
-
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class ExpressionSpec implements ExpressionSpecInterface {
@@ -61,7 +58,7 @@ public class ExpressionSpec implements ExpressionSpecInterface {
     }
 
     public static ExpressionSpecInterface specifyConstantExpression(
-            String constantName, String constantValue, String notes){
+            String constantName, String constantValue, String notes) {
         ExpressionSpec expressionSpec = new ExpressionSpec();
         expressionSpec.expressionName = constantName;
         expressionSpec.excelExpressionString = constantValue;
@@ -73,7 +70,7 @@ public class ExpressionSpec implements ExpressionSpecInterface {
         expressionSpec.squidSwitchConcentrationReferenceMaterialCalculation = false;
         expressionSpec.notes = notes;
 
-        return expressionSpec;       
+        return expressionSpec;
     }
 
     /**

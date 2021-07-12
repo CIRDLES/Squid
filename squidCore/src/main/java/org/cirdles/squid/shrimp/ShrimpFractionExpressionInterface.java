@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface ShrimpFractionExpressionInterface {
@@ -35,7 +34,6 @@ public interface ShrimpFractionExpressionInterface {
     public boolean isReferenceMaterial();
 
     /**
-     *
      * @return
      */
     public boolean isConcentrationReferenceMaterial();
@@ -51,7 +49,6 @@ public interface ShrimpFractionExpressionInterface {
     public double[][] getReducedPkHtFerr();
 
     /**
-     *
      * @return
      */
     public String getFractionID();
@@ -72,6 +69,7 @@ public interface ShrimpFractionExpressionInterface {
     public boolean isUserLinFits();
 
     // getters used by reflection - change names carefully
+
     /**
      * @return the pkInterpScanArray
      */
@@ -127,16 +125,18 @@ public interface ShrimpFractionExpressionInterface {
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
     public double[][] getIsotopicRatioValuesByStringName(String name);
+
     public double[][] getOriginalIsotopicRatioValuesByStringName(String name);
 
     // May 2017 for temp backward comp with ET_Redux
+
     /**
      * @return the nameOfMount
      */
     public String getNameOfMount();
 
     public long getDateTimeMillisecondsLong();
-    
+
     /**
      * @return the dateTimeMilliseconds
      */
@@ -291,7 +291,7 @@ public interface ShrimpFractionExpressionInterface {
      * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
      */
     public void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope);
-    
+
     public String getOverCtCorr();
 
     public String getCommonPbCorrMetaData();

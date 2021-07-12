@@ -7,16 +7,13 @@ package org.cirdles.squid.utilities;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.FileWriteMode;
-//import com.google.common.io.Files;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
@@ -24,7 +21,6 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
- *
  * @author James F. Bowring
  */
 public class FileUtilities {
@@ -73,8 +69,8 @@ public class FileUtilities {
             Process plsof = new ProcessBuilder(new String[]{"lsof", "|", "grep", file.getAbsolutePath()}).start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(plsof.getInputStream()));
             String line;
-            while((line=reader.readLine())!=null) {
-                if(line.contains(file.getAbsolutePath())) {
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(file.getAbsolutePath())) {
                     reader.close();
                     plsof.destroy();
                     return false;
@@ -82,7 +78,7 @@ public class FileUtilities {
             }
             reader.close();
             plsof.destroy();
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 

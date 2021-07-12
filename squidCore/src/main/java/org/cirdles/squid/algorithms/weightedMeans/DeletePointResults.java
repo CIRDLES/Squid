@@ -16,7 +16,6 @@
 package org.cirdles.squid.algorithms.weightedMeans;
 
 /**
- *
  * @author James F. Bowring
  */
 public class DeletePointResults {
@@ -75,5 +74,5 @@ public class DeletePointResults {
     public void setX2(double[] x2) {
         this.x2 = x2.clone();
     }
-    
+
 }

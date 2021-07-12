@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,28 +18,17 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModelXMLConverter;
-import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 import org.cirdles.squid.tasks.TaskInterface;
-import static org.cirdles.squid.tasks.expressions.Expression.MSG_POORLY_FORMED_EXPRESSION;
 import org.cirdles.squid.tasks.expressions.OperationOrFunctionInterface;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.functions.Function;
-import org.cirdles.squid.tasks.expressions.functions.FunctionXMLConverter;
-import org.cirdles.squid.tasks.expressions.functions.If;
-import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
-import org.cirdles.squid.tasks.expressions.functions.SpotNodeLookupFunction;
-import org.cirdles.squid.tasks.expressions.functions.ValueModel;
+import org.cirdles.squid.tasks.expressions.functions.*;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNodeXMLConverter;
 import org.cirdles.squid.tasks.expressions.operations.Divide;
@@ -47,13 +36,20 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummaryXMLConverter;
+import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static org.cirdles.squid.tasks.expressions.Expression.MSG_POORLY_FORMED_EXPRESSION;
 
 /**
- *
  * @author James F. Bowring
  */
 @XStreamAlias("ExpressionTree")
@@ -147,7 +143,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param prettyName the value of prettyName
      */
     public ExpressionTree(String prettyName) {
@@ -155,7 +150,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param operation
      */
     public ExpressionTree(OperationOrFunctionInterface operation) {
@@ -164,22 +158,20 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param prettyName the value of name
-     * @param leftET the value of leftET
-     * @param rightET the value of rightET
-     * @param operation the value of operation
+     * @param leftET     the value of leftET
+     * @param rightET    the value of rightET
+     * @param operation  the value of operation
      */
     public ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation) {
         this(prettyName, leftET, rightET, operation, new ArrayList<String>());
     }
 
     /**
-     *
-     * @param prettyName the value of prettyName
-     * @param leftET the value of leftET
-     * @param rightET the value of rightET
-     * @param operation the value of operation
+     * @param prettyName       the value of prettyName
+     * @param leftET           the value of leftET
+     * @param rightET          the value of rightET
+     * @param operation        the value of operation
      * @param ratiosOfInterest the value of ratiosOfInterest
      */
     private ExpressionTree(String prettyName, ExpressionTreeInterface leftET, ExpressionTreeInterface rightET, OperationOrFunctionInterface operation, List<String> ratiosOfInterest) {
@@ -440,7 +432,7 @@ public class ExpressionTree
         if (targetPhrase.length() == 0) {
             targetPhrase = (!referenceMaterialCalc && squidSwitchSAUnknownCalculation)
                     ? (unknownsGroupSampleName
-                            .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK<" + unknownsGroupSampleName) + ">") : "";
+                    .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK<" + unknownsGroupSampleName) + ">") : "";
         }
         if (targetPhrase.length() == 0) {
             targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
@@ -479,7 +471,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -493,7 +484,7 @@ public class ExpressionTree
 
         xstream.registerConverter(new ConstantNodeXMLConverter());
         xstream.alias("ConstantNode", ConstantNode.class);
-        
+
         xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
         xstream.alias("SpotFieldNode", SpotFieldNode.class);
 
@@ -519,7 +510,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param xml
      * @return String
      */
@@ -530,7 +520,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param shrimpFractions the value of shrimpFraction
      * @param task
      * @return the double[][]
@@ -546,7 +535,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return int ranking of expression evaluation precedence
      */
     @Override
@@ -569,7 +557,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return true if instance of Function class
      */
     @Override
@@ -578,7 +565,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return true if instance of Function or Operation class
      */
     @Override
@@ -587,7 +573,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return true if this expressionTree is built as a ValueModel
      */
     @Override
@@ -601,7 +586,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return String MathML recursively generated
      */
     @Override
@@ -692,7 +676,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return int count of children of node
      */
     @Override
@@ -701,7 +684,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param childET
      */
     @Override
@@ -713,7 +695,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @param index
      * @param childET
      */
@@ -757,7 +738,6 @@ public class ExpressionTree
     }
 
     /**
-     *
      * @return true if ratios-of-interest (raw ratios) included in
      * expressionTree
      */
@@ -831,7 +811,7 @@ public class ExpressionTree
 
     /**
      * @param squidSwitchSCSummaryCalculation the
-     * squidSwitchSCSummaryCalculation to set
+     *                                        squidSwitchSCSummaryCalculation to set
      */
     @Override
     public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation) {
@@ -848,7 +828,7 @@ public class ExpressionTree
 
     /**
      * @param squidSwitchSTReferenceMaterialCalculation the
-     * squidSwitchSTReferenceMaterialCalculation to set
+     *                                                  squidSwitchSTReferenceMaterialCalculation to set
      */
     @Override
     public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation) {
@@ -865,7 +845,7 @@ public class ExpressionTree
 
     /**
      * @param squidSwitchSAUnknownCalculation the
-     * squidSwitchSAUnknownCalculation to set
+     *                                        squidSwitchSAUnknownCalculation to set
      */
     @Override
     public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation) {
@@ -914,7 +894,7 @@ public class ExpressionTree
 
     /**
      * @param squidSwitchConcentrationReferenceMaterialCalculation the
-     * squidSwitchConcentrationReferenceMaterialCalculation to set
+     *                                                             squidSwitchConcentrationReferenceMaterialCalculation to set
      */
     @Override
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation) {

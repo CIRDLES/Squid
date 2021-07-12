@@ -15,16 +15,6 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
@@ -33,8 +23,17 @@ import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan.Measurement;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.UThBearingEnum;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- *
  * @author James F. Bowring
  */
 public final class PrawnFileUtilities {
@@ -141,7 +140,7 @@ public final class PrawnFileUtilities {
             if (detectedMassStationCountAnomaly) {
                 SquidMessageDialog.showWarningDialog(
                         "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
-                        + "Please edit your data file to fix this issue.",
+                                + "Please edit your data file to fix this issue.",
                         null);
             }
         }

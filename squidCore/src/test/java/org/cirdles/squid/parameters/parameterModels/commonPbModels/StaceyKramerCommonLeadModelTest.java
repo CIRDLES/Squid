@@ -15,19 +15,14 @@
  */
 package org.cirdles.squid.parameters.parameterModels.commonPbModels;
 
-import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_EPSILON;
-import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.*;
+
+import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_EPSILON;
+import static org.junit.Assert.assertArrayEquals;
 
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class StaceyKramerCommonLeadModelTest {

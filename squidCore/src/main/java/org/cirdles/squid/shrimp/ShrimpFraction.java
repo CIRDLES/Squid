@@ -1027,7 +1027,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         String expressionName;
         if (referenceMaterial) {
             expressionName = commonLeadSpecsForSpot.getRefMatAgeType().getExpressionName();
-        }else {
+        } else {
             expressionName = commonLeadSpecsForSpot.getSampleAgeType().getExpressionName();
         }
         return expressionName;

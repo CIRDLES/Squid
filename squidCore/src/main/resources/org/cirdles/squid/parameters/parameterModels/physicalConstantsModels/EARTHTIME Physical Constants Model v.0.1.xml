@@ -1,99 +1,99 @@
 <PhysicalConstantsModel>
-  <modelName>EARTHTIME Physical Constants Model</modelName>
-  <labName>EARTHTIME</labName>
-  <version>0.1</version>
-  <dateCertified>2016-01-01</dateCertified>
-  <comments>This Physical Constants Model is the accepted default used before Cheng 2000.</comments>
-  <references>See individual constants for reference.</references>
-  <values>
-    <ValueModel>
-      <name>lambda226</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Holden 1990</reference>
-      <value>0.0004335</value>
-      <oneSigma>0.0000011</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda230</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Meadows et al 1980</reference>
-      <value>0.00000919525053474941</value>
-      <oneSigma>0.00000002794436637510</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda231</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Robert et al. 1969</reference>
-      <value>0.00002118870000000000</value>
-      <oneSigma>0.00000007114741686000</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda232</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Le Roux and Glendenin, 1963</reference>
-      <value>0.00000000004947500000</value>
-      <oneSigma>0.00000000000025234800</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda234</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>De Bievre, et al., 1971; Lounsbury, Durham, 1971</reference>
-      <value>0.00000283500000000000</value>
-      <oneSigma>0.00000000566433000000</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda235</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Jaffey et al. 1971</reference>
-      <value>0.00000000098485000000</value>
-      <oneSigma>0.00000000000067000330</oneSigma>
-    </ValueModel>
-    <ValueModel>
-      <name>lambda238</name>
-      <uncertaintyType>ABS</uncertaintyType>
-      <reference>Jaffey et al. 1971</reference>
-      <value>0.00000000015512500000</value>
-      <oneSigma>0.00000000000008299963</oneSigma>
-    </ValueModel>
-  </values>
-  <rhos/>
-  <isEditable>false</isEditable>
-  <molarMasses>
-    <entry>
-      <string>gmol235</string>
-      <big-decimal>235.043922</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol204</string>
-      <big-decimal>203.973028</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol205</string>
-      <big-decimal>204.9737</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol238</string>
-      <big-decimal>238.050785</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol206</string>
-      <big-decimal>205.974449</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol207</string>
-      <big-decimal>206.975880</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol208</string>
-      <big-decimal>207.976636</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol230</string>
-      <big-decimal>230.033128</big-decimal>
-    </entry>
-    <entry>
-      <string>gmol232</string>
-      <big-decimal>232.038051</big-decimal>
-    </entry>
-  </molarMasses>
+    <modelName>EARTHTIME Physical Constants Model</modelName>
+    <labName>EARTHTIME</labName>
+    <version>0.1</version>
+    <dateCertified>2016-01-01</dateCertified>
+    <comments>This Physical Constants Model is the accepted default used before Cheng 2000.</comments>
+    <references>See individual constants for reference.</references>
+    <values>
+        <ValueModel>
+            <name>lambda226</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Holden 1990</reference>
+            <value>0.0004335</value>
+            <oneSigma>0.0000011</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda230</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Meadows et al 1980</reference>
+            <value>0.00000919525053474941</value>
+            <oneSigma>0.00000002794436637510</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda231</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Robert et al. 1969</reference>
+            <value>0.00002118870000000000</value>
+            <oneSigma>0.00000007114741686000</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda232</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Le Roux and Glendenin, 1963</reference>
+            <value>0.00000000004947500000</value>
+            <oneSigma>0.00000000000025234800</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda234</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>De Bievre, et al., 1971; Lounsbury, Durham, 1971</reference>
+            <value>0.00000283500000000000</value>
+            <oneSigma>0.00000000566433000000</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda235</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Jaffey et al. 1971</reference>
+            <value>0.00000000098485000000</value>
+            <oneSigma>0.00000000000067000330</oneSigma>
+        </ValueModel>
+        <ValueModel>
+            <name>lambda238</name>
+            <uncertaintyType>ABS</uncertaintyType>
+            <reference>Jaffey et al. 1971</reference>
+            <value>0.00000000015512500000</value>
+            <oneSigma>0.00000000000008299963</oneSigma>
+        </ValueModel>
+    </values>
+    <rhos/>
+    <isEditable>false</isEditable>
+    <molarMasses>
+        <entry>
+            <string>gmol235</string>
+            <big-decimal>235.043922</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol204</string>
+            <big-decimal>203.973028</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol205</string>
+            <big-decimal>204.9737</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol238</string>
+            <big-decimal>238.050785</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol206</string>
+            <big-decimal>205.974449</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol207</string>
+            <big-decimal>206.975880</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol208</string>
+            <big-decimal>207.976636</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol230</string>
+            <big-decimal>230.033128</big-decimal>
+        </entry>
+        <entry>
+            <string>gmol232</string>
+            <big-decimal>232.038051</big-decimal>
+        </entry>
+    </molarMasses>
 </PhysicalConstantsModel>

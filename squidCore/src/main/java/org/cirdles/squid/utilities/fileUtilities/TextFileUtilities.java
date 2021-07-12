@@ -23,19 +23,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
-import static java.nio.file.attribute.PosixFilePermission.GROUP_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import static java.nio.file.attribute.PosixFilePermission.*;
+
 /**
  * This utility is primarily used for manipulating XML files.
- * 
+ *
  * @author bowring
  */
 
@@ -43,11 +41,12 @@ public class TextFileUtilities {
 
     /**
      * Writes text file from List< of Strings object, file name, and extension such as ".xml".
+     *
      * @param stringLine
      * @param targetTextFileName
      * @param extension
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public static File writeTextFileFromListOfStringsWithUnixLineEnd(List<String> stringLine, String targetTextFileName, String extension)
             throws IOException {

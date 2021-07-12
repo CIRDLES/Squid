@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2016 James F. Bowring and CIRDLES.org.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,7 +32,6 @@ import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
- *
  * @author James F. Bowring
  */
 public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
@@ -45,12 +44,15 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     private final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE = "getOriginalIsotopicRatioValuesByStringName";
 
     private static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
-    public static void switchToOrigValue(){
+
+    public static void switchToOrigValue() {
         LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE;
     }
-    public static void switchToUsedValue(){
+
+    public static void switchToUsedValue() {
         LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
     }
+
     /**
      *
      */
@@ -59,7 +61,6 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     }
 
     /**
-     *
      * @param name
      */
     public VariableNodeForIsotopicRatios(String name) {
@@ -95,7 +96,6 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     }
 
     /**
-     *
      * @param xstream
      */
     @Override
@@ -134,7 +134,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                     }
                 } else {
                     // return 0 for uncertainty if none exists
-                    if (uncertaintyDirective.length() > 0){
+                    if (uncertaintyDirective.length() > 0) {
                         values[0] = 0.0;
                     }
                 }
@@ -148,7 +148,6 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     }
 
     /**
-     *
      * @return
      */
     @Override

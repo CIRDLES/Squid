@@ -15,11 +15,14 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
-import java.util.*;
-import org.cirdles.squid.constants.Squid3Constants;
+import java.util.Iterator;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 import static org.cirdles.squid.gui.squidReportTable.TextArrayManager.textArrayManagerInitialize;
 
 /**

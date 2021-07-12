@@ -20,11 +20,11 @@ import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.cirdles.ludwig.squid25.Utilities;
+
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 import static org.cirdles.squid.utilities.conversionUtilities.MatrixConverters.convertCorrelationsToCovariances;
 
 /**
- *
  * @author James F. Bowring Based on Simon Bodorkos' interpreation of Ludwig's
  * code: https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Step-4
  */
@@ -220,7 +220,6 @@ public final class WeightedMeanCalculators {
     }
 
     /**
-     *
      * @param y
      * @param x
      * @param sigmaRhoY
@@ -287,7 +286,6 @@ public final class WeightedMeanCalculators {
     }
 
     /**
-     *
      * @param rejPoint
      * @param y1
      * @param sigRho1
@@ -347,7 +345,6 @@ public final class WeightedMeanCalculators {
     }
 
     /**
-     *
      * @param values
      * @param varCov
      * @return

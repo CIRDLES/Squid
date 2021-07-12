@@ -262,7 +262,7 @@ public class SpotManagerController implements Initializable {
 
         shrimpFractionList.setCellFactory(
                 (lv)
-                -> new RunsViewModel.ShrimpFractionListCell()
+                        -> new RunsViewModel.ShrimpFractionListCell()
         );
 
         runsModel.addRunsList(shrimpRuns);
@@ -278,7 +278,7 @@ public class SpotManagerController implements Initializable {
 
         shrimpRefMatList.setCellFactory(
                 (lv)
-                -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
+                        -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpRefMatList.setContextMenu(createRefMatSpotsViewContextMenu());
@@ -288,7 +288,7 @@ public class SpotManagerController implements Initializable {
 
         shrimpConcentrationRefMatList.setCellFactory(
                 (lv)
-                -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
+                        -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());
@@ -324,9 +324,9 @@ public class SpotManagerController implements Initializable {
                     String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, true);
                     SquidMessageDialog.showInfoDialog(
                             "Two Prawn XML files have been written:\n\n"
-                            + "\t" + splitNames[0] + "\n"
-                            + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid3 Project with each of these Prawn XML files.",
+                                    + "\t" + splitNames[0] + "\n"
+                                    + "\t" + splitNames[1] + "\n\n"
+                                    + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {
@@ -337,7 +337,7 @@ public class SpotManagerController implements Initializable {
 
                     SquidMessageDialog.showWarningDialog(
                             "The Project's Prawn File cannot be found ... please use PrawnFile menu to save it:\n\n"
-                            + message,
+                                    + message,
                             primaryStageWindow);
                 }
             }
@@ -352,9 +352,9 @@ public class SpotManagerController implements Initializable {
                     String[] splitNames = squidProject.splitPrawnFileAtRun(selectedRun, false);
                     SquidMessageDialog.showInfoDialog(
                             "Two Prawn XML files have been written:\n\n"
-                            + "\t" + splitNames[0] + "\n"
-                            + "\t" + splitNames[1] + "\n\n"
-                            + "Create a new Squid3 Project with each of these Prawn XML files.",
+                                    + "\t" + splitNames[0] + "\n"
+                                    + "\t" + splitNames[1] + "\n\n"
+                                    + "Create a new Squid3 Project with each of these Prawn XML files.",
                             primaryStageWindow
                     );
                 } catch (SquidException squidException) {
@@ -365,7 +365,7 @@ public class SpotManagerController implements Initializable {
 
                     SquidMessageDialog.showWarningDialog(
                             "The Project's Prawn File cannot be found ... please use PrawnFile menu to save it:\n\n"
-                            + message,
+                                    + message,
                             primaryStageWindow);
                 }
             }
@@ -458,22 +458,22 @@ public class SpotManagerController implements Initializable {
         headerLabel.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabel.setText(
                 String.format("%1$-" + 21 + "s", "Spot Name")
-                + String.format("%1$-" + 12 + "s", "Date")
-                + String.format("%1$-" + 12 + "s", "Time")
-                + String.format("%1$-" + 6 + "s", "Peaks")
-                + String.format("%1$-" + 6 + "s", "Scans"));
+                        + String.format("%1$-" + 12 + "s", "Date")
+                        + String.format("%1$-" + 12 + "s", "Time")
+                        + String.format("%1$-" + 6 + "s", "Peaks")
+                        + String.format("%1$-" + 6 + "s", "Scans"));
 
         headerLabelRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelRefMat.setText(
                 String.format("%1$-" + 21 + "s", "Ref Mat Name")
-                + String.format("%1$-" + 12 + "s", "Date")
-                + String.format("%1$-" + 12 + "s", "Time"));
+                        + String.format("%1$-" + 12 + "s", "Date")
+                        + String.format("%1$-" + 12 + "s", "Time"));
 
         headerLabelConcRefMat.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
         headerLabelConcRefMat.setText(
                 String.format("%1$-" + 21 + "s", "Ref Mat Name")
-                + String.format("%1$-" + 12 + "s", "Date")
-                + String.format("%1$-" + 12 + "s", "Time"));
+                        + String.format("%1$-" + 12 + "s", "Date")
+                        + String.format("%1$-" + 12 + "s", "Time"));
     }
 
     private void alertForZeroNaturalUranium() {
@@ -517,7 +517,7 @@ public class SpotManagerController implements Initializable {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
                         squidProject.getTask().refreshParametersFromModels(false, false, true);
-                        
+
                         alertForZeroNaturalUranium();
                     }
 
@@ -529,14 +529,14 @@ public class SpotManagerController implements Initializable {
                     if (flags[0].contains("F")) {
                         SquidMessageDialog.showInfoDialog(
                                 "This reference material model is missing meaningful age data. \n"
-                                + "Please choose another model.\n\n",
+                                        + "Please choose another model.\n\n",
                                 primaryStageWindow);
                     } else {
                         if (audit[0].contains("1")) {
                             SquidMessageDialog.showInfoDialog(
                                     "This reference material model is missing key age(s), so Squid3 is \n"
-                                    + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
-                                    + audit[1],
+                                            + "temporarily substituting values (shown in red) and refreshing as follows:\n\n"
+                                            + audit[1],
                                     primaryStageWindow);
                         }
                     }
@@ -558,7 +558,7 @@ public class SpotManagerController implements Initializable {
                             ((ReferenceMaterialModel) curValue).getDatumByName(r238_235s.getName())
                                     .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
-                    
+
                 });
 
         // ConcentrationReferenceMaterials
@@ -644,8 +644,8 @@ public class SpotManagerController implements Initializable {
         shrimpRefMatList.setItems(shrimpRunsRefMat);
         rmFilterLabel.setText(
                 squidProject.getFilterForRefMatSpotNames().length() > 0
-                ? squidProject.getFilterForRefMatSpotNames()
-                : "NO FILTER");
+                        ? squidProject.getFilterForRefMatSpotNames()
+                        : "NO FILTER");
         rmCountLabel.setText(String.valueOf(shrimpRunsRefMat.size()));
 
         if (updateTaskStatus) {
@@ -666,7 +666,8 @@ public class SpotManagerController implements Initializable {
     private void updateViewCM() {
         concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
-        concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);;
+        concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
+        ;
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
@@ -682,8 +683,8 @@ public class SpotManagerController implements Initializable {
         shrimpConcentrationRefMatList.setItems(shrimpRunsConcRefMat);
         concrmFilterLabel.setText(
                 squidProject.getFilterForConcRefMatSpotNames().length() > 0
-                ? squidProject.getFilterForConcRefMatSpotNames()
-                : "NO FILTER");
+                        ? squidProject.getFilterForConcRefMatSpotNames()
+                        : "NO FILTER");
         concrmCountLabel.setText(String.valueOf(shrimpRunsConcRefMat.size()));
 
         if (updateTaskStatus) {

@@ -998,6 +998,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      */
     @Override
     public String getProjectNotes() {
+        if (projectNotes == null) {
+            projectNotes = "";
+        }
         return projectNotes;
     }
 
@@ -1019,6 +1022,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return filterForRefMatSpotNames;
     }
 
+    @Override
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
         this.filterForRefMatSpotNames = filterForRefMatSpotNames;
         if (filterForRefMatSpotNames.length() == 0) {
@@ -1034,6 +1038,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return filterForConcRefMatSpotNames;
     }
 
+    @Override
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
         this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
         if (filterForConcRefMatSpotNames.length() == 0) {
@@ -1052,6 +1057,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return new HashMap<>(filtersForUnknownNames);
     }
 
+    @Override
     public void updateFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames) {
         this.filtersForUnknownNames = filtersForUnknownNames;
         if (task != null) {

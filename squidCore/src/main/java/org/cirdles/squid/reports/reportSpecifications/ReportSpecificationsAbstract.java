@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author James F. Bowring
  */
 public abstract class ReportSpecificationsAbstract {
@@ -32,24 +31,24 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public static final String[][] ReportCategory_Fraction = new String[][]{
-        {"", "", "", "Fraction  ", "", "getFractionID", "", "",
-            "", "true", "false", "0", "", "", "false", "false"
-        },
-        {"", "", "", "Sample  ", "", "getSampleName", "", "",
-            "", "false", "false", "0", "", "", "false", "false"
-        },
-        {"", "", "No. of", "Grains", "", "getNumberOfGrains", "", "",
-            "", "false", "false", "0", "", "", "false", "false"
-        }
+            {"", "", "", "Fraction  ", "", "getFractionID", "", "",
+                    "", "true", "false", "0", "", "", "false", "false"
+            },
+            {"", "", "", "Sample  ", "", "getSampleName", "", "",
+                    "", "false", "false", "0", "", "", "false", "false"
+            },
+            {"", "", "No. of", "Grains", "", "getNumberOfGrains", "", "",
+                    "", "false", "false", "0", "", "", "false", "false"
+            }
     };
 
     /**
      *
      */
     public static final String[][] ReportCategory_Fraction2 = new String[][]{
-        {"", "", "", "Fraction  ", "", "getFractionID", "", "",
-            "", "true", "false", "0", "", "Fraction (customizable location)", "false", "false"
-        }
+            {"", "", "", "Fraction  ", "", "getFractionID", "", "",
+                    "", "true", "false", "0", "", "Fraction (customizable location)", "false", "false"
+            }
     };
 
     // Report column order =
@@ -60,30 +59,30 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public static final String[][] ReportCategory_SpotFundamentals = new String[][]{
-        {"", "", "", "Date/Time", "", "getDateTimeMillisecondsLong", "<DATE>", "",
-            "", "true", "false", "0", "", "", "false", "false"
-        },
-        {"", "", "", "Hours", "", "getHours", "<DOUBLE>", "",
-            "", "true", "true", "5", "", "", "false", "false"
-        },
-        {"", "", "Stage", "X", "", "getStageX", "<INT>", "",
-            "", "true", "true", "0", "", "", "false", "false"
-        },
-        {"", "", "Stage", "Y", "", "getStageY", "<INT>", "",
-            "", "true", "true", "0", "", "", "false", "false"
-        },
-        {"", "", "Stage", "Z", "", "getStageZ", "<INT>", "",
-            "", "true", "true", "0", "", "", "false", "false"
-        },
-        {"", "", "", "Qt1y", "", "getQt1Y", "<INT>", "",
-            "", "true", "true", "0", "", "", "false", "false"
-        },
-        {"", "", "", "Qt1z", "", "getQt1Z", "<INT>", "",
-            "", "true", "true", "0", "", "", "false", "false"
-        },
-        {"", "Primary", "beam", "(na)", "", "getPrimaryBeam", "<DOUBLE>", "",
-            "", "true", "true", "2", "", "", "false", "false"
-        }
+            {"", "", "", "Date/Time", "", "getDateTimeMillisecondsLong", "<DATE>", "",
+                    "", "true", "false", "0", "", "", "false", "false"
+            },
+            {"", "", "", "Hours", "", "getHours", "<DOUBLE>", "",
+                    "", "true", "true", "5", "", "", "false", "false"
+            },
+            {"", "", "Stage", "X", "", "getStageX", "<INT>", "",
+                    "", "true", "true", "0", "", "", "false", "false"
+            },
+            {"", "", "Stage", "Y", "", "getStageY", "<INT>", "",
+                    "", "true", "true", "0", "", "", "false", "false"
+            },
+            {"", "", "Stage", "Z", "", "getStageZ", "<INT>", "",
+                    "", "true", "true", "0", "", "", "false", "false"
+            },
+            {"", "", "", "Qt1y", "", "getQt1Y", "<INT>", "",
+                    "", "true", "true", "0", "", "", "false", "false"
+            },
+            {"", "", "", "Qt1z", "", "getQt1Z", "<INT>", "",
+                    "", "true", "true", "0", "", "", "false", "false"
+            },
+            {"", "Primary", "beam", "(na)", "", "getPrimaryBeam", "<DOUBLE>", "",
+                    "", "true", "true", "2", "", "", "false", "false"
+            }
     };
 
     // Report column order =
@@ -94,9 +93,9 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public static final String[][] ReportCategory_CPS = new String[][]{
-        {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
-            "", "true","false", "15", "", "", "", ""
-        }
+            {"", "", "", "", "", "getTotalCps", "<SPECIES_ARRAY>", "",
+                    "", "true", "false", "15", "", "", "", ""
+            }
     };
 
     // Report column order =
@@ -107,9 +106,9 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public static final String[][] ReportCategory_RawRatios = new String[][]{
-        {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "PCT",
-            "", "true", "false", "15", "true", "", "", ""
-        }
+            {"", "", "", "", "", "getIsotopicRatioValuesByStringName", "<RATIOS_ARRAY>", "PCT",
+                    "", "true", "false", "15", "true", "", "", ""
+            }
     };
 
     /**
@@ -117,7 +116,7 @@ public abstract class ReportSpecificationsAbstract {
      * converted by lookup in ReduxConstants
      */
     public final static String[] massUnits = new String[]{
-        "g", "mg", "\u03bcg", "ng", "pg", "fg"
+            "g", "mg", "\u03bcg", "ng", "pg", "fg"
     };
 
     /**
@@ -125,7 +124,7 @@ public abstract class ReportSpecificationsAbstract {
      * and converted by lookup in ReduxConstants
      */
     public final static String[] concUnits = new String[]{
-        "\u0025", "\u2030", "ppm", "ppb", "ppt"
+            "\u0025", "\u2030", "ppm", "ppb", "ppt"
     };
 
     /**
@@ -133,14 +132,14 @@ public abstract class ReportSpecificationsAbstract {
      * converted by lookup in ReduxConstants
      */
     public final static String[] dateUnits = new String[]{
-        "auto", "Ma", "ka", "a"
+            "auto", "Ma", "ka", "a"
     };
     /**
      * mult units are referred to in units position 4 of report column and
      * converted by lookup in ReduxConstants
      */
     public final static String[] multUnits = new String[]{
-        "*1e5", "*1", "*1e3 dpm/g", "*1e6 dpm/g", "*1e9 dpm/g"
+            "*1e5", "*1", "*1e3 dpm/g", "*1e6 dpm/g", "*1e9 dpm/g"
     };
 
     /**

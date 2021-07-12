@@ -16,45 +16,46 @@
 
 
 .project-Title {
-  -fx-font: 30px "SansSerif";
+    -fx-font: 30px "SansSerif";
 }
 
 .main-Pain {
-  -fx-background-color: -main-bg-color;
-  -fx-border-width: 5px;
-  -fx-border-color: -main-border-color;
+    -fx-background-color: -main-bg-color;
+    -fx-border-width: 5px;
+    -fx-border-color: -main-border-color;
 }
 
 .main-Text-Color {
-  -fx-text-fill: -main-text-color;
+    -fx-text-fill: -main-text-color;
 }
 
 .scroll_Pain {
-  -fx-background-color: -main-bg-color;
-  -fx-font-fill: -main-Text-Color;
-}
-.description-Text {
-  -fx-font: 13px "SansSerif";
-  -fx-text-fill: -main-text-color;
+    -fx-background-color: -main-bg-color;
+    -fx-font-fill: -main-Text-Color;
 }
 
-.bars  {
-  -fx-stroke: -main-accent-color;
+.description-Text {
+    -fx-font: 13px "SansSerif";
+    -fx-text-fill: -main-text-color;
+}
+
+.bars {
+    -fx-stroke: -main-accent-color;
 }
 
 .logo {
-  -fx-scale-x: .69;
-  -fx-scale-y: .69;
+    -fx-scale-x: .69;
+    -fx-scale-y: .69;
 }
 
-.links{
-  -fx-text-fill: -main-link-color;
+.links {
+    -fx-text-fill: -main-link-color;
 }
 
-*{
-  -main-bg-color: #C0D6DF;/*#999999;*/
-  -main-text-color: black;/*#ffffff;*/
-  -main-border-color: #ffffff;
-  -main-accent-color: #ffffff;
-  -main-link-color: blue;/*#00ffff;*/
+* {
+    -main-bg-color: #C0D6DF; /*#999999;*/
+    -main-text-color: black; /*#ffffff;*/
+    -main-border-color: #ffffff;
+    -main-accent-color: #ffffff;
+    -main-link-color: blue; /*#00ffff;*/
 }

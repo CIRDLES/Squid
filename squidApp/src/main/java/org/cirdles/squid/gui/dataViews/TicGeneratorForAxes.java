@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- *
  * @author James F. Bowring
  */
 public class TicGeneratorForAxes {
@@ -34,7 +33,6 @@ public class TicGeneratorForAxes {
     private static int indexOfFirstMajorTic = 0;
 
     /**
-     *
      * @param axisMin
      * @param axisMax
      * @param numberTics
@@ -107,7 +105,6 @@ public class TicGeneratorForAxes {
     }
 
     /**
-     *
      * @param min
      * @param max
      * @param marginStretchFactor

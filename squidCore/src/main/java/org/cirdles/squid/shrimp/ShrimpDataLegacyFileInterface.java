@@ -15,22 +15,23 @@
  */
 package org.cirdles.squid.shrimp;
 
-import java.util.List;
 import org.cirdles.squid.prawnLegacy.PrawnLegacyFile;
 
+import java.util.List;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface ShrimpDataLegacyFileInterface {
 
     public int extractCountOfRuns();
-    
+
     public void setSoftwareVersion(String value);
+
     public String getSoftwareVersion();
 
     public List<PrawnLegacyFile.Run> getRun();
-    
+
     public void setRuns(short value);
 
 }

@@ -179,7 +179,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
 
         uncertaintyColumn = null;
         if ((uncertaintyDirective.length() == 0)
-                && ( expTree.builtAsValueModel() || amIsotopicRatio)
+                && (expTree.builtAsValueModel() || amIsotopicRatio)
 //                && (!expressionName.toUpperCase().contains("PCT"))
 //                && (!expressionName.toUpperCase().contains("ERR"))
 //                && (!expressionName.toUpperCase().contains("CONCEN"))
@@ -192,7 +192,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
 //                || ((expressionName.toUpperCase().contains("AGE")
 //                && !expressionName.toUpperCase().contains("TAGE")))
 //                || expTree.builtAsValueModel()
-                ) {
+        ) {
             uncertaintyColumn = createSquidReportColumn(expressionName, units);
             uncertaintyColumn.setExpTree(expTree);
 
@@ -221,12 +221,12 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             uncertaintyColumn.setCountOfSignificantDigits(DEFAULT_COUNT_OF_SIGNIFICANT_DIGITS);
             uncertaintyColumn.setAmIsotopicRatio(amIsotopicRatio);
         }
-        
+
         if ((expressionName.toUpperCase().contains("AGE")
-                && !expressionName.toUpperCase().contains("TAGE"))){
+                && !expressionName.toUpperCase().contains("TAGE"))) {
             units = "Ma";
         }
-        
+
         columnHeaders[5] = units;
         if (columnHeaders[5].length() > 0) {
             columnHeaders[4] += "(" + units + ")";

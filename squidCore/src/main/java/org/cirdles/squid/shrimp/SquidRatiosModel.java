@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
+
 import static org.cirdles.ludwig.squid25.SquidConstants.SQUID_UPPER_LIMIT_1_SIGMA_PERCENT;
 
 /**
- *
  * @author James F. Bowring
  */
 public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosModel> {
@@ -128,7 +128,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     }
 
     /**
-     *
      * @return
      */
     public String getDisplayNameNoSpaces() {
@@ -292,10 +291,11 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     public void setRatioFractErrUsed(double ratioFractErrUsed) {
         this.ratioFractErrUsed = ratioFractErrUsed;
     }
+
     /**
      * Restores original ratio and uncertainty to fields used by expression evaluator
      */
-    public void restoreRatioValueAndUnct(){
+    public void restoreRatioValueAndUnct() {
         this.ratioValUsed = ratioVal;
         this.ratioFractErrUsed = ratioFractErr;
     }

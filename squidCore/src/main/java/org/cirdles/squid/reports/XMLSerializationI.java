@@ -24,19 +24,16 @@ package org.cirdles.squid.reports;
 import java.io.FileNotFoundException;
 
 /**
- *
  * @author James F. Bowring
  */
 public interface XMLSerializationI {
 
     /**
-     * 
      * @param filename
      */
-    abstract void serializeXMLObject(String filename) ;
-    
+    abstract void serializeXMLObject(String filename);
+
     /**
-     * 
      * @param filename
      * @param doValidate
      * @return
@@ -45,6 +42,6 @@ public interface XMLSerializationI {
      * @throws BadOrMissingXMLSchemaException
      */
     public Object readXMLObject(String filename, boolean doValidate)
-    throws FileNotFoundException, FileNotFoundException;
-   
+            throws FileNotFoundException, FileNotFoundException;
+
 }

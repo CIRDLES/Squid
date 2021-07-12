@@ -15,10 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.function.Predicate;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,8 +25,12 @@ import javafx.scene.control.ListCell;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
+
 /**
- *
  * @author James F. Bowring
  */
 public class RunsViewModel {
@@ -63,7 +63,7 @@ public class RunsViewModel {
 
     /**
      * Remove a run (ShrimpRun or spot) from the model
-     *
+     * <p>
      * Will also affect viewableShrimpRuns if the Player being removed adheres
      * to the filter
      *
@@ -101,13 +101,15 @@ public class RunsViewModel {
             } else {
                 setText(
                         String.format("%1$-" + 20 + "s", run.getPar().get(0).getValue()) // name
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()) //time
-                        + String.format("%1$-" + 6 + "s", run.getPar().get(2).getValue()) //peaks
-                        + String.format("%1$-" + 6 + "s", run.getPar().get(3).getValue())); //scans
+                                + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
+                                + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()) //time
+                                + String.format("%1$-" + 6 + "s", run.getPar().get(2).getValue()) //peaks
+                                + String.format("%1$-" + 6 + "s", run.getPar().get(3).getValue())); //scans
             }
         }
-    };
+    }
+
+    ;
 
     static class ShrimpFractionAbbreviatedListCell extends ListCell<PrawnFile.Run> {
 
@@ -119,11 +121,13 @@ public class RunsViewModel {
             } else {
                 setText(
                         String.format("%1$-" + 20 + "s", run.getPar().get(0).getValue()) // name
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
-                        + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()));
+                                + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(0).getValue())//date
+                                + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()));
             }
         }
-    };
+    }
+
+    ;
 
     /**
      * @return the viewableShrimpRuns

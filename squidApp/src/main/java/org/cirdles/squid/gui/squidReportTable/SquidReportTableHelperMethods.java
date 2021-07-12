@@ -1,16 +1,16 @@
 package org.cirdles.squid.gui.squidReportTable;
 
-import java.util.HashMap;
+import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
+import org.cirdles.squid.tasks.Task;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.cirdles.squid.constants.Squid3Constants;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import org.cirdles.squid.tasks.Task;
 
 public class SquidReportTableHelperMethods {
 

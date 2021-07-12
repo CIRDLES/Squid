@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
-import java.util.List;
-import java.util.Map;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -28,8 +26,10 @@ import javafx.scene.text.FontWeight;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- *
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public class MessagePlot extends AbstractDataView implements PlotDisplayInterface {
@@ -87,10 +87,9 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
     @Override
     public void preparePanel() {
     }
-    
-    
+
+
     /**
-     *
      * @param g2d
      */
     @Override

@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.cirdles</groupId>
     <artifactId>Squid</artifactId>
     <version>1.1.3</version>
     <packaging>jar</packaging>
-   
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-       
+
         <timestamp>${maven.build.timestamp}</timestamp>
         <maven.build.timestamp.format>dd MMMM yyyy</maven.build.timestamp.format>
     </properties>
-   
-   
+
+
     <developers>
         <developer>
             <name>James F. Bowring</name>
@@ -39,7 +40,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <repositories>
         <!--These are needed for Swing/Netbeans -->
         <repository>
@@ -109,7 +110,6 @@
             <artifactId>controlsfx</artifactId>
             <version>8.40.14</version>
         </dependency>
-
 
 
     </dependencies>
