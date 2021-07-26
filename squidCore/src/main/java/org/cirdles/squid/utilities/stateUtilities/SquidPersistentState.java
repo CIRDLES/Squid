@@ -115,7 +115,9 @@ public class SquidPersistentState implements Serializable {
     public static SquidPersistentState getExistingPersistentState() {
 
         // squidUserHomeDirectory = System.getProperty("user.home");
-        instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+        if (instance == null){
+            instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+        }
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
