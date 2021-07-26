@@ -498,6 +498,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         Collections.sort(copyOfRuns, (Run pt1, Run pt2)
                 -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
 
+        filtersForUnknownNames = new HashMap<>();
+
         for (int i = 0; i < copyOfRuns.size(); i++) {
             String fractionID = copyOfRuns.get(i).getPar().get(0).getValue();
 
@@ -519,8 +521,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             } else {
                 filtersForUnknownNames.put(sampleName, 1);
             }
-
         }
+
         task.setDelimiterForUnknownNames(delimiterForUnknownNames);
         task.setFiltersForUnknownNames(filtersForUnknownNames);
         task.generateMapOfUnknownsBySampleNames();
