@@ -181,7 +181,7 @@ public class SpotManagerController implements Initializable {
 
     private void setUpSampleNamesComboBox() {
         String allSamples = "All Samples";
-        String[] samples = (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
+        String[] samples = squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
         List<String> samplesList = new ArrayList<String>(Arrays.asList(samples));
         samplesList.add(0, allSamples);
 
@@ -424,7 +424,7 @@ public class SpotManagerController implements Initializable {
 
     private void alertForZeroNaturalUranium() {
         // alert if zero
-        if (((ReferenceMaterialModel) refMatModelComboBox.valueProperty().getValue()).getDatumByName(r238_235s.getName())
+        if (refMatModelComboBox.valueProperty().getValue().getDatumByName(r238_235s.getName())
                 .getValue().compareTo(BigDecimal.ZERO) == 0) {
             u238u235NatAbunLabel.setText(REF_238U235U_DEFAULT + "");
             defaultValueLabel.setVisible(true);
@@ -501,7 +501,7 @@ public class SpotManagerController implements Initializable {
                     pb208Th232AgeLabel.setStyle((flags[2].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
 
                     u238u235NatAbunLabel.setText(
-                            ((ReferenceMaterialModel) curValue).getDatumByName(r238_235s.getName())
+                            curValue.getDatumByName(r238_235s.getName())
                                     .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
 
@@ -613,7 +613,6 @@ public class SpotManagerController implements Initializable {
         concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
         concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-        ;
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
