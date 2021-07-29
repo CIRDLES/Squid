@@ -22,6 +22,7 @@ import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
+import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
 import org.cirdles.squid.projects.Squid3ProjectParametersAPI;
 import org.cirdles.squid.projects.Squid3ProjectReportingAPI;
@@ -40,7 +41,10 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
@@ -93,13 +97,8 @@ public class Squid3Ink implements Squid3API {
      */
     public static void main(String[] args) throws IOException, SquidException, JAXBException, SAXException {
         Squid3API squid3Ink = Squid3Ink.spillSquid3Ink("/Users/TEST");
-
         squid3Ink.openDemonstrationSquid3Project();
-//        squid3Ink.newSquid3GeochronProjectFromPrawnXML(
-//                (new File("Squid3_Resources/ExamplePrawnXMLFiles/836_1_2016_Nov_28_09.50.xml")).toPath());
-//        squid3Ink.newSquid3GeochronProjectFromZippedPrawnXML(
-//                (new File("zippy/836_1_2016_Nov_28_09.50.xml.zip")).toPath());
-//
+
         squid3Ink.generateAllSquid3ProjectReports();
         System.out.println(squid3Ink.getSquid3Project().getProjectName()
                 + "\n" + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
@@ -108,12 +107,21 @@ public class Squid3Ink implements Squid3API {
             System.out.println(squid3Ink.generatePerScanReports().toString());
         } catch (IOException iOException) {
         }
-//        squid3Ink.saveAsSquid3Project(new File("XXXXXX.squid"));
-//        squid3Ink.generateAllSquid3ProjectReports();
-//        System.out.println(squid3Ink.getSquid3Project().getProjectName()
-//                + "   " + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
 
         System.out.println(squid3Ink.retrieveSquid3ProjectListMRU());
+
+        for (int i = 0; i < squid3Ink.getArrayOfSampleNames().length; i++) {
+            System.out.println(squid3Ink.getArrayOfSampleNames()[i]);
+        }
+
+        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("6266").length; i++) {
+            System.out.println(squid3Ink.getArrayOfSpotSummariesFromSample("6266")[i][0]);
+        }
+
+        squid3Ink.updateSpotName("Temora-1.1", "jimmy-1.122");
+        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+        }
     }
 
     @Override
@@ -232,10 +240,6 @@ public class Squid3Ink implements Squid3API {
             ((Task) task).updateSquidSpeciesModelsGeochronMode();
 
             squidPersistentState.updateProjectListMRU(new File(projectFilePath.toString()));
-
-            // this updates output folder for reports to current version
-//            CalamariFileUtilities.initCalamariReportsFolder(squid3Project.getPrawnFileHandler(),
-//                    projectFilePath.toFile().getParentFile());
 
             try {
                 squid3Project.getPrawnFileHandler().getReportsEngine()
@@ -411,6 +415,74 @@ public class Squid3Ink implements Squid3API {
         TaskInterface task = squid3Project.getTask();
         task.refreshParametersFromModels(squid3Project.isTypeGeochron(), true, false);
     }
+
+    // Sample UI management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    @Override
+    public String[] getArrayOfSampleNames() {
+        String[] samples = squid3Project.getFiltersForUnknownNames().keySet().toArray(new String[0]);
+        List<String> samplesList = new ArrayList<String>(Arrays.asList(samples));
+        samplesList.add(0, "All Samples");
+        return samplesList.toArray(new String[0]);
+    }
+
+    public String[][] getArrayOfSpotSummariesFromSample(String sampleName) {
+        List<PrawnFile.Run> spots = squid3Project.getPrawnFileRuns();
+        List<PrawnFile.Run> selectedSpots = new ArrayList<>();
+        if (sampleName.toUpperCase(Locale.ROOT).startsWith("ALL SAMPLES")) {
+            selectedSpots = spots;
+        } else {
+            for (PrawnFile.Run spot : spots) {
+                if (spot.getPar().get(0).getValue().toUpperCase(Locale.ROOT).trim().startsWith(sampleName.toUpperCase(Locale.ROOT))) {
+                    selectedSpots.add(spot);
+                }
+            }
+        }
+        String[][] spotSummaries = new String[selectedSpots.size()][5];
+        int i = 0;
+        for (PrawnFile.Run spot : selectedSpots) {
+            spotSummaries[i][0] = String.format("%1$-" + 20 + "s", spot.getPar().get(0).getValue()); // name
+            spotSummaries[i][1] = String.format("%1$-" + 12 + "s", spot.getSet().getPar().get(0).getValue()); //date
+            spotSummaries[i][2] = String.format("%1$-" + 12 + "s", spot.getSet().getPar().get(1).getValue()); //time
+            spotSummaries[i][3] = String.format("%1$-" + 6 + "s", spot.getPar().get(2).getValue()); //peaks
+            spotSummaries[i][4] = String.format("%1$-" + 6 + "s", spot.getPar().get(3).getValue()); //scans
+            i++;
+        }
+        return spotSummaries;
+    }
+
+    public String getReferenceMaterialSampleName() {
+        return squid3Project.getFilterForRefMatSpotNames();
+    }
+
+    public void setReferenceMaterialSampleName(String refMatSampleName) {
+        squid3Project.updateFilterForRefMatSpotNames(refMatSampleName);
+    }
+
+    public String getConcReferenceMaterialSampleName() {
+        return squid3Project.getFilterForConcRefMatSpotNames();
+    }
+
+    public void setConcReferenceMaterialSampleName(String concRefMatSampleName) {
+        squid3Project.updateFilterForConcRefMatSpotNames(concRefMatSampleName);
+    }
+
+    public void updateSpotName(String oldSpotName, String spotName) {
+        List<PrawnFile.Run> spots = squid3Project.getPrawnFileRuns();
+        for (PrawnFile.Run spot : spots) {
+            if (spot.getPar().get(0).getValue().compareToIgnoreCase(oldSpotName) == 0) {
+                spot.getPar().get(0).setValue(spotName.trim());
+                squid3Project.processPrawnSessionForDuplicateSpotNames();
+                squid3Project.divideSamples();
+                squid3Project.generatePrefixTreeFromSpotNames();
+
+                squid3Project.getTask().setChanged(true);
+                squid3Project.getTask().setPrawnChanged(true);
+                break;
+            }
+        }
+    }
+
 
     // REPORTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -108,8 +108,14 @@ public interface Squid3API {
 
     void refreshModelsAction();
 
-    // Sample management
-
+    // Sample UI management
+    String[] getArrayOfSampleNames();
+    String[][] getArrayOfSpotSummariesFromSample(String sampleName);
+    String getReferenceMaterialSampleName();
+    String getConcReferenceMaterialSampleName();
+    void setReferenceMaterialSampleName(String refMatSampleName);
+    void setConcReferenceMaterialSampleName(String concRefMatSampleName);
+    void updateSpotName(String oldSpotName, String spotName);
 
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

@@ -195,4 +195,10 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     boolean prawnFileExists();
 
+    void processPrawnSessionForDuplicateSpotNames();
+
+    void divideSamples();
+
+    SquidPrefixTree generatePrefixTreeFromSpotNames();
+
 }

@@ -1026,7 +1026,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     @Override
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
-        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (filtersForUnknownNames.containsKey(filterForRefMatSpotNames)) {
+            this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        }
         if (filterForRefMatSpotNames.length() == 0) {
             setReferenceMaterialModel(new ReferenceMaterialModel());
         }
@@ -1042,7 +1044,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     @Override
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
-        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (filtersForUnknownNames.containsKey(filterForConcRefMatSpotNames)) {
+            this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        }
         if (filterForConcRefMatSpotNames.length() == 0) {
             setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
         }
