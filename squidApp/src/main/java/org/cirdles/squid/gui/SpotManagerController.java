@@ -181,7 +181,7 @@ public class SpotManagerController implements Initializable {
 
     private void setUpSampleNamesComboBox() {
         String allSamples = "All Samples";
-        String[] samples = (String[]) squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
+        String[] samples = squidProject.getFiltersForUnknownNames().keySet().toArray(new String[0]);
         List<String> samplesList = new ArrayList<String>(Arrays.asList(samples));
         samplesList.add(0, allSamples);
 
@@ -375,60 +375,6 @@ public class SpotManagerController implements Initializable {
         return contextMenu;
     }
 
-    private class MouseClickEventHandler implements EventHandler<MouseEvent> {
-
-        @Override
-        public void handle(MouseEvent mouseEvent) {
-            if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
-                selectedRuns = shrimpFractionList.getSelectionModel().getSelectedItems();
-
-                if (selectedRuns.size() > 1) {
-                    spotContextRemoveSpotsMenuItem.setText("Remove selected set of " + selectedRuns.size() + " spots.");
-                } else {
-                    spotContextRemoveSpotsMenuItem.setText("Remove selected spot.");
-                }
-
-                prawnFileSplitMenu.setDisable(selectedRuns.size() > 1);
-
-                // customize spotContextMenu
-                if (!squidProject.getRemovedRuns().isEmpty()) {
-                    shrimpFractionList.getContextMenu().getItems().add(0, spotRestoreMenu);
-                    spotRestoreMenu.getItems().clear();
-                    MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
-                    spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
-                    restoreAllSpotMenuItem.setOnAction((evt) -> {
-                        squidProject.restoreAllRunsToPrawnFile();
-
-                        try {
-                            setUpDataFile(true);
-                        } catch (SquidException squidException) {
-                            //TODO: need message here
-                        }
-                        squidProject.generatePrefixTreeFromSpotNames();
-                        SquidProject.setProjectChanged(true);
-                    });
-                    // list all removed runs
-                    for (Run run : squidProject.getRemovedRuns()) {
-                        MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
-                        spotRestoreMenu.getItems().add(restoreSpotMenuItem);
-                        restoreSpotMenuItem.setOnAction((evt) -> {
-                            squidProject.restoreRunToPrawnFile(run);
-                            try {
-                                setUpDataFile(true);
-                            } catch (SquidException squidException) {
-                                //TODO: need message here
-                            }
-                            squidProject.generatePrefixTreeFromSpotNames();
-                            SquidProject.setProjectChanged(true);
-                        });
-                    }
-                } else {
-                    shrimpFractionList.getContextMenu().getItems().remove(spotRestoreMenu);
-                }
-            }
-        }
-    }
-
     private ContextMenu createRefMatSpotsViewContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         MenuItem menuItem = new MenuItem("Clear list.");
@@ -478,7 +424,7 @@ public class SpotManagerController implements Initializable {
 
     private void alertForZeroNaturalUranium() {
         // alert if zero
-        if (((ReferenceMaterialModel) refMatModelComboBox.valueProperty().getValue()).getDatumByName(r238_235s.getName())
+        if (refMatModelComboBox.valueProperty().getValue().getDatumByName(r238_235s.getName())
                 .getValue().compareTo(BigDecimal.ZERO) == 0) {
             u238u235NatAbunLabel.setText(REF_238U235U_DEFAULT + "");
             defaultValueLabel.setVisible(true);
@@ -555,7 +501,7 @@ public class SpotManagerController implements Initializable {
                     pb208Th232AgeLabel.setStyle((flags[2].equals("1") ? savedAgeLabelStyleWithRed : savedAgeLabelStyle));
 
                     u238u235NatAbunLabel.setText(
-                            ((ReferenceMaterialModel) curValue).getDatumByName(r238_235s.getName())
+                            curValue.getDatumByName(r238_235s.getName())
                                     .getValue().setScale(3, RoundingMode.HALF_UP).toString());
 
 
@@ -667,7 +613,6 @@ public class SpotManagerController implements Initializable {
         concRefMatModelComboBox.getSelectionModel().clearSelection();
         concRefMatModelComboBox.getSelectionModel().select(squidProject.getConcentrationReferenceMaterialModel());
         concRefMatModelComboBox.setDisable(squidProject.getFilterForConcRefMatSpotNames().length() == 0);
-        ;
     }
 
     private void updateConcReferenceMaterialsList(boolean updateTaskStatus) {
@@ -700,10 +645,12 @@ public class SpotManagerController implements Initializable {
         if (saveSpotNameButton.getUserData() != null) {
             ((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim());
             squidProject.processPrawnSessionForDuplicateSpotNames();
+            squidProject.divideSamples();
             squidProject.generatePrefixTreeFromSpotNames();
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
             shrimpConcentrationRefMatList.refresh();
+            setUpSampleNamesComboBox();
 
             // refresh textbox in case "DUP" is removed or created
             selectedSpotNameText.setText(((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).getValue());
@@ -717,22 +664,70 @@ public class SpotManagerController implements Initializable {
     private void viewRMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
-//        squidProject.getTask().refreshParametersFromModels(false, false, true);
-//        updateViewRM();
     }
 
     @FXML
     private void viewCMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
-//        squidProject.getTask().refreshParametersFromModels(false, false, true);
-//        updateViewCM();
     }
 
     @FXML
     private void refreshRMmodelButton(ActionEvent event) {
         squidProject.getTask().refreshParametersFromModels(false, false, true);
-//        updateViewRM();
-//        updateViewCM();
+    }
+
+    private class MouseClickEventHandler implements EventHandler<MouseEvent> {
+
+        @Override
+        public void handle(MouseEvent mouseEvent) {
+            if (mouseEvent.getButton().compareTo(MouseButton.SECONDARY) == 0) {
+                selectedRuns = shrimpFractionList.getSelectionModel().getSelectedItems();
+
+                if (selectedRuns.size() > 1) {
+                    spotContextRemoveSpotsMenuItem.setText("Remove selected set of " + selectedRuns.size() + " spots.");
+                } else {
+                    spotContextRemoveSpotsMenuItem.setText("Remove selected spot.");
+                }
+
+                prawnFileSplitMenu.setDisable(selectedRuns.size() > 1);
+
+                // customize spotContextMenu
+                if (!squidProject.getRemovedRuns().isEmpty()) {
+                    shrimpFractionList.getContextMenu().getItems().add(0, spotRestoreMenu);
+                    spotRestoreMenu.getItems().clear();
+                    MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
+                    spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
+                    restoreAllSpotMenuItem.setOnAction((evt) -> {
+                        squidProject.restoreAllRunsToPrawnFile();
+
+                        try {
+                            setUpDataFile(true);
+                        } catch (SquidException squidException) {
+                            //TODO: need message here
+                        }
+                        squidProject.generatePrefixTreeFromSpotNames();
+                        SquidProject.setProjectChanged(true);
+                    });
+                    // list all removed runs
+                    for (Run run : squidProject.getRemovedRuns()) {
+                        MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
+                        spotRestoreMenu.getItems().add(restoreSpotMenuItem);
+                        restoreSpotMenuItem.setOnAction((evt) -> {
+                            squidProject.restoreRunToPrawnFile(run);
+                            try {
+                                setUpDataFile(true);
+                            } catch (SquidException squidException) {
+                                //TODO: need message here
+                            }
+                            squidProject.generatePrefixTreeFromSpotNames();
+                            SquidProject.setProjectChanged(true);
+                        });
+                    }
+                } else {
+                    shrimpFractionList.getContextMenu().getItems().remove(spotRestoreMenu);
+                }
+            }
+        }
     }
 }

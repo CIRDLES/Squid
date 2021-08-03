@@ -498,6 +498,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         Collections.sort(copyOfRuns, (Run pt1, Run pt2)
                 -> (intuitiveString.compare(pt1.getPar().get(0).getValue(), pt2.getPar().get(0).getValue())));
 
+        filtersForUnknownNames = new HashMap<>();
+
         for (int i = 0; i < copyOfRuns.size(); i++) {
             String fractionID = copyOfRuns.get(i).getPar().get(0).getValue();
 
@@ -519,8 +521,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             } else {
                 filtersForUnknownNames.put(sampleName, 1);
             }
-
         }
+
         task.setDelimiterForUnknownNames(delimiterForUnknownNames);
         task.setFiltersForUnknownNames(filtersForUnknownNames);
         task.generateMapOfUnknownsBySampleNames();
@@ -989,6 +991,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param analystName the analystName to set
      */
+    @Override
     public void setAnalystName(String analystName) {
         this.analystName = analystName;
     }
@@ -1024,7 +1027,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     @Override
     public void updateFilterForRefMatSpotNames(String filterForRefMatSpotNames) {
-        this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        if (filtersForUnknownNames.containsKey(filterForRefMatSpotNames)) {
+            this.filterForRefMatSpotNames = filterForRefMatSpotNames;
+        }
         if (filterForRefMatSpotNames.length() == 0) {
             setReferenceMaterialModel(new ReferenceMaterialModel());
         }
@@ -1040,7 +1045,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     @Override
     public void updateFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames) {
-        this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        if (filtersForUnknownNames.containsKey(filterForConcRefMatSpotNames)) {
+            this.filterForConcRefMatSpotNames = filterForConcRefMatSpotNames;
+        }
         if (filterForConcRefMatSpotNames.length() == 0) {
             setConcentrationReferenceMaterialModel(new ReferenceMaterialModel());
         }

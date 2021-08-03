@@ -37,6 +37,11 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     String getAnalystName();
 
     /**
+     * @param analystName the analystName to set
+     */
+    public void setAnalystName(String analystName);
+
+    /**
      * @return the commonPbModel
      */
     ParametersModel getCommonPbModel();
@@ -194,5 +199,11 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     void setUserLinFits(boolean userLinFits);
 
     boolean prawnFileExists();
+
+    void processPrawnSessionForDuplicateSpotNames();
+
+    void divideSamples();
+
+    SquidPrefixTree generatePrefixTreeFromSpotNames();
 
 }
