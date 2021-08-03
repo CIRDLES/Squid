@@ -39,7 +39,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     /**
      * @param analystName the analystName to set
      */
-    public void setAnalystName(String analystName)
+    public void setAnalystName(String analystName);
 
     /**
      * @return the commonPbModel
