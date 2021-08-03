@@ -991,6 +991,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param analystName the analystName to set
      */
+    @Override
     public void setAnalystName(String analystName) {
         this.analystName = analystName;
     }
