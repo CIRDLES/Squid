@@ -35,7 +35,6 @@ import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
-import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
@@ -433,7 +432,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public String[][] getArrayOfSpotSummariesFromSample(@NotNull String sampleName) {
+    public String[][] getArrayOfSpotSummariesFromSample(String sampleName) {
         List<PrawnFile.Run> spots = squid3Project.getPrawnFileRuns();
         List<PrawnFile.Run> selectedSpots = new ArrayList<>();
         if (sampleName.toUpperCase(Locale.ROOT).startsWith("ALL SAMPLES")) {
