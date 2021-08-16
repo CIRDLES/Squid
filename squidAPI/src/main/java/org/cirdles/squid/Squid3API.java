@@ -18,6 +18,7 @@ package org.cirdles.squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.Squid3ProjectBasicAPI;
 import org.xml.sax.SAXException;
 
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public interface Squid3API {
 
-    // project management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // project management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
      * @return
@@ -87,7 +88,7 @@ public interface Squid3API {
      */
     void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException;
 
-    // project UI management
+    // project UI management +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     void setUseSBM(boolean doUse);
 
     void setUseLinearRegression(boolean doUse);
@@ -108,7 +109,7 @@ public interface Squid3API {
 
     void refreshModelsAction();
 
-    // Sample UI management
+    // Sample UI management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     String[] getArrayOfSampleNames();
     String[][] getArrayOfSpotSummariesFromSample(String sampleName);
     String getReferenceMaterialSampleName();
@@ -117,7 +118,29 @@ public interface Squid3API {
     void setConcReferenceMaterialSampleName(String concRefMatSampleName);
     void updateSpotName(String oldSpotName, String spotName);
 
-    // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    void updateRefMatModelChoice(ParametersModel refMatModel);
+    void updateConcRefMatModelChoice(ParametersModel concRefMatModel);
+    /**
+     * Produces 2 element array where [0] is three flags separated by semicolons with one for each of
+     * dates 206_238; 207_206; 208_232 where flags are 0 = no change; 1 = change; F = bad Model.
+     * If "F" is first flag, then produce message: "This reference material model is missing meaningful age data.
+     * Please choose another model." if any flag is "1", produce message: "This reference material model is missing
+     * key age(s), so Squid3 is temporarily substituting values (shown in red) and refreshing as follows:"
+     * At this point append element [1], which reports the results of the audit and any temporary
+     * changes made to the model to make it useful.
+     *
+     * @param curRefMatModel
+     * @return
+     */
+    String[] produceAuditOfRefMatModel(ReferenceMaterialModel curRefMatModel);
+    String get206_238DateMa(ReferenceMaterialModel curRefMatModel);
+    String get207_206DateMa(ReferenceMaterialModel curRefMatModel);
+    String get208_232DateMa(ReferenceMaterialModel curRefMatModel);
+    String get238_235Abundance(ReferenceMaterialModel curRefMatModel);
+    String getU_ppm(ReferenceMaterialModel curConcRefMatModel);
+    String getTh_ppm(ReferenceMaterialModel curConcRefMatModel);
+
+    // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
      * @return

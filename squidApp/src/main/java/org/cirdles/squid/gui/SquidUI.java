@@ -29,6 +29,7 @@ import org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Map;
 
 /**
  * @author James F. Bowring
@@ -135,6 +136,12 @@ public final class SquidUI extends Application {
                 }
             }));
 
+        }
+
+        System.out.println(System.getenv("CATALINA_HOME"));
+        Map<String, String> env = System.getenv();
+        for (String envName : env.keySet()) {
+            System.out.format("%s=%s%n", envName, env.get(envName));
         }
 
         launch(args);
