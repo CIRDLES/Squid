@@ -35,11 +35,14 @@ import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.stateUtilities.SquidSerializer;
+import org.jetbrains.annotations.NotNull;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +50,10 @@ import java.util.List;
 import java.util.Locale;
 
 import static org.cirdles.squid.constants.Squid3Constants.DEMO_SQUID_PROJECTS_FOLDER;
+import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
+import static org.cirdles.squid.parameters.util.RadDates.*;
+import static org.cirdles.squid.parameters.util.ReferenceMaterialEnum.r238_235s;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
 /**
@@ -426,7 +432,8 @@ public class Squid3Ink implements Squid3API {
         return samplesList.toArray(new String[0]);
     }
 
-    public String[][] getArrayOfSpotSummariesFromSample(String sampleName) {
+    @Override
+    public String[][] getArrayOfSpotSummariesFromSample(@NotNull String sampleName) {
         List<PrawnFile.Run> spots = squid3Project.getPrawnFileRuns();
         List<PrawnFile.Run> selectedSpots = new ArrayList<>();
         if (sampleName.toUpperCase(Locale.ROOT).startsWith("ALL SAMPLES")) {
@@ -451,22 +458,27 @@ public class Squid3Ink implements Squid3API {
         return spotSummaries;
     }
 
+    @Override
     public String getReferenceMaterialSampleName() {
         return squid3Project.getFilterForRefMatSpotNames();
     }
 
+    @Override
     public void setReferenceMaterialSampleName(String refMatSampleName) {
         squid3Project.updateFilterForRefMatSpotNames(refMatSampleName);
     }
 
+    @Override
     public String getConcReferenceMaterialSampleName() {
         return squid3Project.getFilterForConcRefMatSpotNames();
     }
 
+    @Override
     public void setConcReferenceMaterialSampleName(String concRefMatSampleName) {
         squid3Project.updateFilterForConcRefMatSpotNames(concRefMatSampleName);
     }
 
+    @Override
     public void updateSpotName(String oldSpotName, String spotName) {
         List<PrawnFile.Run> spots = squid3Project.getPrawnFileRuns();
         for (PrawnFile.Run spot : spots) {
@@ -483,7 +495,76 @@ public class Squid3Ink implements Squid3API {
         }
     }
 
+    @Override
+    public void updateRefMatModelChoice(ParametersModel refMatModel) {
+        ((Squid3ProjectParametersAPI)squid3Project).setReferenceMaterialModel(refMatModel);
+        squid3Project.getTask().setChanged(true);
+        squid3Project.getTask().refreshParametersFromModels(false, false, true);
+    }
 
+    @Override
+    public void updateConcRefMatModelChoice(ParametersModel concRefMatModel) {
+        ((Squid3ProjectParametersAPI)squid3Project).setConcentrationReferenceMaterialModel(concRefMatModel);
+        squid3Project.getTask().setChanged(true);
+        squid3Project.getTask().refreshParametersFromModels(false, false, true);
+    }
+
+    /**
+     * Produces 2 element array where [0] is three flags separated by semicolons with one for each of
+     * dates 206_238; 207_206; 208_232 where flags are 0 = no change; 1 = change; F = bad Model.
+     * If "F" is first flag, then produce message: "This reference material model is missing meaningful age data.
+     * Please choose another model." if any flag is "1", produce message: "This reference material model is missing
+     * key age(s), so Squid3 is temporarily substituting values (shown in red) and refreshing as follows:"
+     * At this point append element [1], which reports the results of the audit and any temporary
+     * changes made to the model to make it useful.
+     *
+     * @param curRefMatModel
+     * @return
+     */
+    @Override
+    public String[] produceAuditOfRefMatModel(ReferenceMaterialModel curRefMatModel) {
+        return curRefMatModel.auditAndTempUpdateRefMatModel().split("Audit:");
+    }
+
+    @Override
+    public String get206_238DateMa(ReferenceMaterialModel curRefMatModel) {
+        return curRefMatModel.getDateByName(
+                age206_238r.getName()).getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString();
+    }
+
+    @Override
+    public String get207_206DateMa(ReferenceMaterialModel curRefMatModel) {
+        return curRefMatModel.getDateByName(
+                age207_206r.getName()).getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString();
+    }
+
+    @Override
+    public String get208_232DateMa(ReferenceMaterialModel curRefMatModel) {
+        return curRefMatModel.getDateByName(
+                age208_232r.getName()).getValue().movePointLeft(6).setScale(3, RoundingMode.HALF_UP).toString();
+    }
+
+    @Override
+    public String get238_235Abundance(ReferenceMaterialModel curRefMatModel) {
+        String abundance = curRefMatModel.getDatumByName(r238_235s.getName())
+                .getValue().setScale(3, RoundingMode.HALF_UP).toString();
+        if (curRefMatModel.getDatumByName(r238_235s.getName()).getValue().compareTo(BigDecimal.ZERO) == 0){
+            abundance = REF_238U235U_DEFAULT + "";
+        }
+        return abundance;
+    }
+
+    @Override
+    public String getU_ppm(ReferenceMaterialModel curConcRefMatModel) {
+        return ((ReferenceMaterialModel) curConcRefMatModel).getConcentrationByName("concU")
+                .getValue().setScale(3, RoundingMode.HALF_UP).toString();
+    }
+
+    @Override
+    public String getTh_ppm(ReferenceMaterialModel curConcRefMatModel) {
+        return ((ReferenceMaterialModel) curConcRefMatModel).getConcentrationByName("concTh")
+                .getValue().setScale(3, RoundingMode.HALF_UP).toString();
+    }
     // REPORTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
