@@ -539,7 +539,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
         if (squidProject.hasReportsFolder()) {
             String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
-            String reportFileName = "WeightedMeanReportForSample_" + sampleNode.getNodeName() + ".csv";
+            String reportFileName = squidProject.getProjectName() +  "_WMReport_RM_" +  sampleNode.getNodeName() + ".csv";
 
             try {
                 File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);

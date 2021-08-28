@@ -248,7 +248,7 @@ public class FileHandler {
         File mruFolder = new File(squidPersistentState.getMRUTaskXMLFolderPath());
         fileChooser.setInitialDirectory(mruFolder.isDirectory() ? mruFolder : null);
 
-        // uipdate task name to match file name
+        // update task name to match file name
         task.setName(task.getName().replaceAll(" ", "_").replaceAll("/", "-").replaceAll("\\\\", "-"));
         fileChooser.setInitialFileName(task.getName() + ".xml");
 
