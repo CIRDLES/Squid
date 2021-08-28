@@ -212,27 +212,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             task.setFiltersForUnknownNames(filtersForUnknownNames);
 
             ((Task) task).initializeTaskAndReduceData(autoGenerateNominalMasses);
-
-//            // four passes needed for percolating results
-//            task.updateAllExpressions(true);
-//            task.setChanged(true);
-//            task.setupSquidSessionSpecsAndReduceAndReport(false);
-//
-//            // autogenerate task basics for type General = Ratio mode
-//            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
-//                List<String> nominalMasses = new ArrayList<>();
-//                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
-//                    // no background assumed
-//                    String proposedNominalMassName
-//                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
-//                                    .get(ssm.getMassStationIndex())
-//                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
-//                    nominalMasses.add(proposedNominalMassName);
-//                }
-//                this.task.setNominalMasses(nominalMasses);
-//
-//                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
-//            }
         }
     }
 
