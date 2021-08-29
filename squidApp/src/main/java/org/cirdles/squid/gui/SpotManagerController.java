@@ -261,8 +261,7 @@ public class SpotManagerController implements Initializable {
         });
 
         shrimpFractionList.setCellFactory(
-                (lv)
-                        -> new RunsViewModel.ShrimpFractionListCell()
+                (lv) -> new RunsViewModel.ShrimpFractionListCell()
         );
 
         runsModel.addRunsList(shrimpRuns);
@@ -277,8 +276,7 @@ public class SpotManagerController implements Initializable {
         shrimpRefMatList.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
         shrimpRefMatList.setCellFactory(
-                (lv)
-                        -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
+                (lv) -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpRefMatList.setContextMenu(createRefMatSpotsViewContextMenu());
@@ -287,8 +285,7 @@ public class SpotManagerController implements Initializable {
         shrimpConcentrationRefMatList.setStyle(SquidUI.SPOT_LIST_CSS_STYLE_SPECS);
 
         shrimpConcentrationRefMatList.setCellFactory(
-                (lv)
-                        -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
+                (lv) -> new RunsViewModel.ShrimpFractionAbbreviatedListCell()
         );
 
         shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());

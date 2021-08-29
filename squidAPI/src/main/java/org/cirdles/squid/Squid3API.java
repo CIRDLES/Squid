@@ -140,6 +140,15 @@ public interface Squid3API {
     String getU_ppm(ReferenceMaterialModel curConcRefMatModel);
     String getTh_ppm(ReferenceMaterialModel curConcRefMatModel);
 
+    /**
+     * Squid3 maintains a list of removed spots so that they can be recovered at anytime
+     * @param spotNames
+     */
+    void removeSpotsFromDataFile(List<String> spotNames);
+    List<String> getRemovedSpotsByName();
+    void restoreSpotToDataFile(String spotName);
+    void restoreAllSpotsToDataFile();
+
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
