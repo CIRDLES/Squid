@@ -102,6 +102,14 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     List<PrawnFile.Run> getPrawnFileRuns();
 
+    public void removeSpotsFromDataFile(List<String> spotNames);
+
+    public List<String> retrieveRemovedSpotsByName();
+
+    public void restoreSpotToDataFile(String spotName);
+
+    public void restoreAllRunsToPrawnFile();
+
     String getPrawnFileShrimpSoftwareVersionName();
 
     String getPrawnSourceFileName();

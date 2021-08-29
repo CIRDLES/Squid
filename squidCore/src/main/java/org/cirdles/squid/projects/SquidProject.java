@@ -212,27 +212,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             task.setFiltersForUnknownNames(filtersForUnknownNames);
 
             ((Task) task).initializeTaskAndReduceData(autoGenerateNominalMasses);
-
-//            // four passes needed for percolating results
-//            task.updateAllExpressions(true);
-//            task.setChanged(true);
-//            task.setupSquidSessionSpecsAndReduceAndReport(false);
-//
-//            // autogenerate task basics for type General = Ratio mode
-//            if (autoGenerateNominalMasses && projectType.equals(GENERAL)) {
-//                List<String> nominalMasses = new ArrayList<>();
-//                for (SquidSpeciesModel ssm : task.getSquidSpeciesModelList()) {
-//                    // no background assumed
-//                    String proposedNominalMassName
-//                            = new BigDecimal(task.getMapOfIndexToMassStationDetails()
-//                                    .get(ssm.getMassStationIndex())
-//                                    .getIsotopeAMU()).setScale(1, RoundingMode.HALF_UP).toPlainString();
-//                    nominalMasses.add(proposedNominalMassName);
-//                }
-//                this.task.setNominalMasses(nominalMasses);
-//
-//                ((Task) task).initializeSquidSpeciesModelsRatioMode(true, false, true, false);
-//            }
         }
     }
 
@@ -764,16 +743,51 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     }
 
+    public void removeSpotsFromDataFile(List<String> spotNames) {
+        List<Run> runs = new ArrayList<>();
+        for (int i = 0; i < spotNames.size(); i++) {
+            Run run = retrieveRunBySpotName(spotNames.get(i));
+            if (run != null) {
+                runs.add(run);
+            }
+        }
+        removeRunsFromPrawnFile(runs);
+    }
+
+    private Run retrieveRunBySpotName(String spotName) {
+        Run retVal = null;
+        List<Run> runs = prawnFile.getRun();
+        for (Run run : runs) {
+            if (run.getPar().get(0).getValue().compareToIgnoreCase(spotName) == 0) {
+                retVal = run;
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    public List<String> retrieveRemovedSpotsByName() {
+        List<String> retVal = new ArrayList<>();
+        for (Run run : removedRuns) {
+            retVal.add(run.getPar().get(0).getValue());
+        }
+        return retVal;
+    }
+
     public void removeRunsFromPrawnFile(List<Run> runs) {
+        if (removedRuns == null){
+            removedRuns = new ArrayList<>();
+        }
+        if (runs.size() > 0) {
+            prawnFile.getRun().removeAll(runs);
+            removedRuns.addAll(runs);
 
-        prawnFile.getRun().removeAll(runs);
-        removedRuns.addAll(runs);
+            // save new count
+            prawnFile.setRuns((short) prawnFile.getRun().size());
 
-        // save new count
-        prawnFile.setRuns((short) prawnFile.getRun().size());
-
-        // update fractions
-        ((Task) task).setupSquidSessionSkeleton();
+            // update fractions
+            ((Task) task).setupSquidSessionSkeleton();
+        }
     }
 
     public void restoreRunToPrawnFile(Run run) {
@@ -786,6 +800,13 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
         // update fractions
         ((Task) task).setupSquidSessionSkeleton();
+    }
+
+    public void restoreSpotToDataFile(String spotName) {
+        Run run = retrieveRunBySpotName(spotName);
+        if (run != null) {
+            restoreRunToPrawnFile(run);
+        }
     }
 
     public void restoreAllRunsToPrawnFile() {

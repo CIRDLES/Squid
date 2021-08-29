@@ -2658,6 +2658,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return
      */
     public void initTaskDefaultSquidReportTables(boolean updateDefaultReports) {
+        // +++++++++++  handle reports for reference materials  ++++++++++++++
+
         if (squidReportTablesRefMat == null) {
             this.squidReportTablesRefMat = new ArrayList<>();
         }
@@ -2675,6 +2677,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
 
+        SquidReportTableInterface labReportRM = SquidLabData.getExistingSquidLabData().getDefaultReportTableRM();
+        if (labReportRM != null){
+            if (!squidReportTablesRefMat.contains(labReportRM)){
+                squidReportTablesRefMat.add(labReportRM);
+                selectedRefMatReportModel = labReportRM;
+            }
+        }
+
+        // +++++++++++  handle reports for unknowns  ++++++++++++++
+
         if (squidReportTablesUnknown == null) {
             this.squidReportTablesUnknown = new ArrayList<>();
         }
@@ -2691,6 +2703,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             squidReportTablesUnknown.remove(holdReportForChange);
         }
         squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
+
+        SquidReportTableInterface labReport = SquidLabData.getExistingSquidLabData().getDefaultReportTable();
+        if (labReport != null){
+            if (!squidReportTablesUnknown.contains(labReport)){
+                squidReportTablesUnknown.add(labReport);
+                selectedUnknownReportModel = labReport;
+            }
+        }
 
         initSquidWeightedMeanPlotSortTable();
         initSquidRMWeightedMeanPlotSortTable();

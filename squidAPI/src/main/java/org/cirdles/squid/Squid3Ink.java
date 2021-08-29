@@ -127,6 +127,20 @@ public class Squid3Ink implements Squid3API {
         for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
             System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
         }
+        System.out.println();
+
+        List<String> spotNames = new ArrayList<>();
+        spotNames.add("Temora-2.1");
+        spotNames.add("Temora-5.1");
+        squid3Ink.removeSpotsFromDataFile(spotNames);
+        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+        }
+        System.out.println();
+        squid3Ink.restoreAllSpotsToDataFile();
+        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+        }
     }
 
     @Override
@@ -489,6 +503,7 @@ public class Squid3Ink implements Squid3API {
 
                 squid3Project.getTask().setChanged(true);
                 squid3Project.getTask().setPrawnChanged(true);
+                SquidProject.setProjectChanged(true);
                 break;
             }
         }
@@ -564,6 +579,37 @@ public class Squid3Ink implements Squid3API {
         return ((ReferenceMaterialModel) curConcRefMatModel).getConcentrationByName("concTh")
                 .getValue().setScale(3, RoundingMode.HALF_UP).toString();
     }
+
+    /**
+     * Squid3 maintains a list of removed spots so that they can be recovered at anytime
+     * @param spotNames
+     */
+    @Override
+    public void removeSpotsFromDataFile(List<String> spotNames) {
+        squid3Project.removeSpotsFromDataFile(spotNames);
+        squid3Project.generatePrefixTreeFromSpotNames();
+        SquidProject.setProjectChanged(true);
+    }
+
+    @Override
+    public List<String> getRemovedSpotsByName() {
+        return squid3Project.retrieveRemovedSpotsByName();
+    }
+
+    @Override
+    public void restoreSpotToDataFile(String spotName) {
+        squid3Project.restoreSpotToDataFile(spotName);
+        squid3Project.generatePrefixTreeFromSpotNames();
+        SquidProject.setProjectChanged(true);
+    }
+
+    @Override
+    public void restoreAllSpotsToDataFile() {
+        squid3Project.restoreAllRunsToPrawnFile();
+        squid3Project.generatePrefixTreeFromSpotNames();
+        SquidProject.setProjectChanged(true);
+    }
+
     // REPORTS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
