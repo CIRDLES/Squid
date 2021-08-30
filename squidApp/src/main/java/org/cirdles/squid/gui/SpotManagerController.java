@@ -578,7 +578,7 @@ public class SpotManagerController implements Initializable {
         String filter = squidProject.getFilterForRefMatSpotNames();
         // initialize list
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
-        if (filter.length() == 0) {
+        if (filter.trim().length() == 0) {
             // prevent populating ref mat list with no filter
             shrimpRunsRefMat.clear();
         } else {
@@ -616,7 +616,7 @@ public class SpotManagerController implements Initializable {
         String filter = squidProject.getFilterForConcRefMatSpotNames();
         // initialize list
         shrimpRunsConcRefMat = runsModel.getViewableShrimpRuns();
-        if (filter.length() == 0) {
+        if (filter.trim().length() == 0) {
             // prevent populating ref mat list with no filter
             shrimpRunsConcRefMat.clear();
         } else {
