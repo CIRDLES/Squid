@@ -149,6 +149,14 @@ public interface Squid3API {
     void restoreSpotToDataFile(String spotName);
     void restoreAllSpotsToDataFile();
 
+    // Task management +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     /**
