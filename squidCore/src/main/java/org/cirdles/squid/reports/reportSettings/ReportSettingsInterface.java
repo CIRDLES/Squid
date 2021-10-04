@@ -40,7 +40,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
     int FRACTION_DATA_START_ROW = 9;
 
-    public default void normalizeReportCategories() {
+    default void normalizeReportCategories() {
         for (int i = 0; i < getReportCategories().size(); i++) {
             getReportCategories().get(i).setPositionIndex(i);
         }
@@ -49,7 +49,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     /**
      * @return
      */
-    public default Map<Integer, ReportCategoryInterface> getReportCategoriesInOrder() {
+    default Map<Integer, ReportCategoryInterface> getReportCategoriesInOrder() {
         Map<Integer, ReportCategoryInterface> retVal = new HashMap<>();
 
         getReportCategories().stream().filter((rc) //
@@ -60,7 +60,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         return retVal;
     }
 
-    public default void assembleReportCategories(boolean referenceMaterial) {
+    default void assembleReportCategories(boolean referenceMaterial) {
         setReportCategories(new ArrayList<>());
         getReportCategories().add(getFractionCategory());
         getReportCategories().add(getSpotFundamentalsCategory());
@@ -82,12 +82,12 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         getReportCategories().add(getFractionCategory2());
     }
 
-    public ReportSettingsInterface deepCopy();
+    ReportSettingsInterface deepCopy();
 
     /**
      * @return
      */
-    public default XStream getXStreamWriter() {
+    default XStream getXStreamWriter() {
         XStream xstream = new XStream();
         xstream.addPermission(AnyTypePermission.ANY);
         customizeXstream(xstream);
@@ -98,7 +98,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     /**
      * @return
      */
-    public default XStream getXStreamReader() {
+    default XStream getXStreamReader() {
 
         XStream xstream = new XStream(new DomDriver());
         xstream.addPermission(AnyTypePermission.ANY);
@@ -116,8 +116,8 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @throws BadOrMissingXMLSchemaException
      */
     @Override
-    public default Object readXMLObject(String filename, boolean doValidate)
-            throws FileNotFoundException, FileNotFoundException {
+    default Object readXMLObject(String filename, boolean doValidate)
+            throws FileNotFoundException {
         ReportSettingsInterface myReportSettings = null;
         return myReportSettings;
     }
@@ -144,26 +144,31 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
      * @return
      */
     @Override
-    public default String getReduxLabDataElementName() {
+    default String getReduxLabDataElementName() {
         return getNameAndVersion();
     }
 
     /**
      * @return
      */
-    public default String getNameAndVersion() {
+    default String getNameAndVersion() {
         return getName().trim() + " v." + getVersion();
     }
 
     /**
      * @return the spotFundamentalsCategory
      */
-    public ReportCategoryInterface getSpotFundamentalsCategory();
+    ReportCategoryInterface getSpotFundamentalsCategory();
 
     /**
      * @return the cpsCategory
      */
-    public ReportCategoryInterface getCpsCategory();
+    ReportCategoryInterface getCpsCategory();
+
+    /**
+     * @param cpsCategory the cpsCategory to set
+     */
+    void setCpsCategory(ReportCategoryInterface cpsCategory);
 
     /**
      * @return
@@ -171,9 +176,19 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     ReportCategoryInterface getCorrectionIndependentCategory();
 
     /**
+     * @param compositionCategory
+     */
+    void setCorrectionIndependentCategory(ReportCategoryInterface compositionCategory);
+
+    /**
      * @return
      */
     ReportCategoryInterface getFractionCategory();
+
+    /**
+     * @param fractionCategory
+     */
+    void setFractionCategory(ReportCategoryInterface fractionCategory);
 
     /**
      * @return the fractionCategory2
@@ -181,26 +196,45 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     ReportCategoryInterface getFractionCategory2();
 
     /**
+     * @param fractionCategory2 the fractionCategory2 to set
+     */
+    void setFractionCategory2(ReportCategoryInterface fractionCategory2);
+
+    //  accessors
+
+    /**
      * @return
      */
     ReportCategoryInterface getPb204CorrectedCategory();
+
+    /**
+     * @param pb204CorrectedCategory
+     */
+    void setPb204CorrectedCategory(ReportCategoryInterface pb204CorrectedCategory);
 
     /**
      * @return
      */
     ReportCategoryInterface getPb207CorrectedCategory();
 
+    void setPb207CorrectedCategory(ReportCategoryInterface pb207CorrectedCategory);
+
     /**
      * @return
      */
     ReportCategoryInterface getPb208CorrectedCategory();
+
+    void setPb208CorrectedCategory(ReportCategoryInterface pb2084CorrectedCategory);
 
     /**
      * @return
      */
     String getName();
 
-    //  accessors
+    /**
+     * @param name
+     */
+    void setName(String name);
 
     /**
      * @return
@@ -208,9 +242,19 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     String getReportSettingsComment();
 
     /**
+     * @param reportSettingsComment
+     */
+    void setReportSettingsComment(String reportSettingsComment);
+
+    /**
      * @return
      */
     int getVersion();
+
+    /**
+     * @param version
+     */
+    void setVersion(int version);
 
     /**
      * @return
@@ -238,113 +282,70 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
     void setClassXMLSchemaURL();
 
     /**
-     * @param compositionCategory
-     */
-    void setCorrectionIndependentCategory(ReportCategoryInterface compositionCategory);
-
-    /**
-     * @param fractionCategory
-     */
-    void setFractionCategory(ReportCategoryInterface fractionCategory);
-
-    /**
-     * @param fractionCategory2 the fractionCategory2 to set
-     */
-    void setFractionCategory2(ReportCategoryInterface fractionCategory2);
-
-    /**
-     * @param pb204CorrectedCategory
-     */
-    void setPb204CorrectedCategory(ReportCategoryInterface pb204CorrectedCategory);
-
-    void setPb207CorrectedCategory(ReportCategoryInterface pb207CorrectedCategory);
-
-    void setPb208CorrectedCategory(ReportCategoryInterface pb2084CorrectedCategory);
-
-    /**
-     * @param cpsCategory the cpsCategory to set
-     */
-    public void setCpsCategory(ReportCategoryInterface cpsCategory);
-
-    /**
      * @return the rawRatiosCategory
      */
-    public ReportCategoryInterface getRawRatiosCategory();
+    ReportCategoryInterface getRawRatiosCategory();
 
     /**
      * @param rawRatiosCategory the rawRatiosCategory to set
      */
-    public void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory);
+    void setRawRatiosCategory(ReportCategoryInterface rawRatiosCategory);
 
     /**
      * @return the customExpressionsCategory
      */
-    public ReportCategoryInterface getCustomExpressionsCategory();
+    ReportCategoryInterface getCustomExpressionsCategory();
 
     /**
      * @param customExpressionsCategory the customExpressionsCategory to set
      */
-    public void setCustomExpressionsCategory(ReportCategoryInterface customExpressionsCategory);
+    void setCustomExpressionsCategory(ReportCategoryInterface customExpressionsCategory);
 
     /**
      * @return the correctionIndependentRMCategory
      */
-    public ReportCategoryInterface getCorrectionIndependentRMCategory();
-
-    /**
-     * @return the pb204CorrectedRMCategory
-     */
-    public ReportCategoryInterface getPb204CorrectedRMCategory();
-
-    /**
-     * @param pb204CorrectedRMCategory the pb204CorrectedRMCategory to set
-     */
-    public void setPb204CorrectedRMCategory(ReportCategoryInterface pb204CorrectedRMCategory);
-
-    /**
-     * @return the pb207CorrectedRMCategory
-     */
-    public ReportCategoryInterface getPb207CorrectedRMCategory();
-
-    /**
-     * @param pb207CorrectedRMCategory the pb207CorrectedRMCategory to set
-     */
-    public void setPb207CorrectedRMCategory(ReportCategoryInterface pb207CorrectedRMCategory);
-
-    /**
-     * @return the pb208CorrectedRMCategory
-     */
-    public ReportCategoryInterface getPb208CorrectedRMCategory();
-
-    /**
-     * @param pb208CorrectedRMCategory the pb208CorrectedRMCategory to set
-     */
-    public void setPb208CorrectedRMCategory(ReportCategoryInterface pb208CorrectedRMCategory);
+    ReportCategoryInterface getCorrectionIndependentRMCategory();
 
     /**
      * @param correctionIndependentRMCategory the
      *                                        correctionIndependentRMCategory to set
      */
-    public void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory);
+    void setCorrectionIndependentRMCategory(ReportCategoryInterface correctionIndependentRMCategory);
 
     /**
-     * @param name
+     * @return the pb204CorrectedRMCategory
      */
-    void setName(String name);
+    ReportCategoryInterface getPb204CorrectedRMCategory();
 
     /**
-     * @param reportSettingsComment
+     * @param pb204CorrectedRMCategory the pb204CorrectedRMCategory to set
      */
-    void setReportSettingsComment(String reportSettingsComment);
+    void setPb204CorrectedRMCategory(ReportCategoryInterface pb204CorrectedRMCategory);
 
     /**
-     * @param version
+     * @return the pb207CorrectedRMCategory
      */
-    void setVersion(int version);
+    ReportCategoryInterface getPb207CorrectedRMCategory();
 
-    public default String[][] reportFractionsByNumberStyle(
+    /**
+     * @param pb207CorrectedRMCategory the pb207CorrectedRMCategory to set
+     */
+    void setPb207CorrectedRMCategory(ReportCategoryInterface pb207CorrectedRMCategory);
+
+    /**
+     * @return the pb208CorrectedRMCategory
+     */
+    ReportCategoryInterface getPb208CorrectedRMCategory();
+
+    /**
+     * @param pb208CorrectedRMCategory the pb208CorrectedRMCategory to set
+     */
+    void setPb208CorrectedRMCategory(ReportCategoryInterface pb208CorrectedRMCategory);
+
+    default String[][] reportFractionsByNumberStyle(
             List<ShrimpFractionExpressionInterface> fractions,
-            boolean numberStyleIsNumeric) {
+            boolean numberStyleIsNumeric,
+            String[] sampleNames) {
 
         // the first six (FRACTION_DATA_START_ROW) rows are provided for naming and formats
         String[][] retVal
@@ -448,16 +449,27 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
 
                             // walk all the fractions for each column
                             int fractionRowCount = FRACTION_DATA_START_ROW;
-                            String aliquotName = "";
+                            String sampleName = "";
+
                             for (ShrimpFractionExpressionInterface f : fractions) {
+
+                                if (sampleNames != null) {
+                                    for (int i = 0; i < sampleNames.length; i++) {
+                                        if (f.getFractionID().startsWith(sampleNames[i])) {
+                                            sampleName = sampleNames[i];
+                                            break;
+                                        }
+                                    }
+                                }
                                 if (((ShrimpFraction) f).getIsotopicRatiosII().isEmpty()) {
                                     // we have a placeholder for sample name
-                                    aliquotName = f.getFractionID();
+                                    // used with public File produceUnknownsBySampleForETReduxCSV(boolean numberStyleIsNumeric)
+                                    sampleName = f.getFractionID();
                                 } else {
                                     // test for included fraction on first data pass col=2==>fractionID
                                     if (columnCount == 2) {
                                         retVal[fractionRowCount][0] = "true";//included
-                                        retVal[fractionRowCount][1] = aliquotName;
+                                        retVal[fractionRowCount][1] = sampleName;
                                         retVal[fractionRowCount][countOfAllColumns - 1] = "true";//filtered
                                     }
 
@@ -535,12 +547,12 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         return retVal;
     }
 
-    public default String determineFootNoteLetter(
+    default String determineFootNoteLetter(
             int location) {
         return "abcdefghijklmnopqrstuvwxyz".substring(location, location + 1);
     }
 
-    public default void trimColumn(String[][] retVal, int columnCount) {
+    default void trimColumn(String[][] retVal, int columnCount) {
         // walk the column(s) and find the minimum count of leading spaces
         // and the minimum count of trailing spaces
         int minLeading = 10;
@@ -552,7 +564,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
                 int lbCount = 0;
                 for (int lb = 0; lb
                         < entry.length(); lb++) {
-                    if (entry.substring(lb, lb + 1).equals(" ")) {
+                    if (entry.charAt(lb) == ' ') {
                         lbCount++;
                     } else {
                         break;
@@ -637,7 +649,7 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         }
     }
 
-    public default int getCountOfAllColumns() {
+    default int getCountOfAllColumns() {
         int retVal = 0;
 
         retVal = getReportCategories().stream().filter((rc) //
@@ -647,13 +659,13 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
         return retVal;
     }
 
-    public ArrayList<ReportCategoryInterface> getReportCategories();
+    ArrayList<ReportCategoryInterface> getReportCategories();
 
     /**
      * @param reportCategories the reportCategories to set
      */
-    public void setReportCategories(ArrayList<ReportCategoryInterface> reportCategories);
+    void setReportCategories(ArrayList<ReportCategoryInterface> reportCategories);
 
-    public String getReportSettingsXMLSchemaURL();
+    String getReportSettingsXMLSchemaURL();
 
 }

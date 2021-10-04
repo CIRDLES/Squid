@@ -513,7 +513,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
-            String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(), numberStyleIsNumeric);
+            String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(),
+                    numberStyleIsNumeric,
+                    ((Task)task).produceMapOfRefMatSpotsNames().keySet().stream().toArray(String[]::new));
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, projectName + "_RefMatReportTablePerSquid25.csv");
         }
@@ -539,7 +541,10 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, task);
-            String[][] report = reportSettings.reportFractionsByNumberStyle(task.getUnknownSpots(), numberStyleIsNumeric);
+            String[][] report =
+                    reportSettings.reportFractionsByNumberStyle(task.getUnknownSpots(),
+                            numberStyleIsNumeric,
+                            task.getMapOfUnknownsBySampleNames().keySet().stream().toArray(String[]::new));
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, projectName + "_UnknownsReportTablePerSquid25.csv");
         }
@@ -553,7 +558,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySampleName();
         if (spotsBySampleNames.size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("UnknownsBySample", false, task);
-            String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric);
+            String[][] report = reportSettings.reportFractionsByNumberStyle(spotsBySampleNames, numberStyleIsNumeric, null);
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, projectName + "_UnknownsBySampleReportTableForET_ReduxAndTopsoil.csv");
         }
