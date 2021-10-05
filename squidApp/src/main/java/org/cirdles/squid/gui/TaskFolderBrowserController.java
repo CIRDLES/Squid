@@ -491,6 +491,11 @@ public class TaskFolderBrowserController implements Initializable {
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
                     == (chosenTask.getNominalMasses().size()));
             if (valid) {
+                // due to associating commonPb and Physical Constants with Project, need to update design
+                // this issue was overlooked and noticed in issue #655
+                chosenTask.setCommonPbModel(squidProject.getCommonPbModel());
+                chosenTask.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
+
                 chosenTask.updateTaskDesignFromTask(taskEditor, true);
                 squidProject.createNewTask();
                 squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
