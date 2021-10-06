@@ -465,7 +465,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         allMasses.addAll(nominalMasses);
         nominalMasses = allMasses;
-        Collections.sort(nominalMasses);
+        Collections.sort(nominalMasses, new IntuitiveStringComparator<>());
 
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
@@ -476,7 +476,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
-        Collections.sort(ratioNames);
+        Collections.sort(ratioNames, new IntuitiveStringComparator<>());
 
         setChanged(true);
         if (!taskSkeleton) {
@@ -796,7 +796,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(String.format("%1$-" + 7 + "s", nominalMasses.get(i) + comma));
         }
 
-        Collections.sort(ratioNames);
+        Collections.sort(ratioNames, new IntuitiveStringComparator<>());
         int countOfRatios = ratioNames.size();
         summary.append("\n\n Task Ratios: ");
         summary.append(countOfRatios > 0 ? String.valueOf(countOfRatios) : "None").append(" specified using available masses.");

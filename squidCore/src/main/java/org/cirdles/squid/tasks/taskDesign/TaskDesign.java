@@ -27,6 +27,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.Serializable;
@@ -420,7 +421,7 @@ public class TaskDesign implements Serializable {
      * @return the nominalMasses
      */
     public List<String> getNominalMasses() {
-        Collections.sort(nominalMasses, String::compareTo);
+        Collections.sort(nominalMasses, new IntuitiveStringComparator<>());
 
         List<String> retVal = new ArrayList<>();
         retVal.addAll(nominalMasses);
@@ -457,8 +458,7 @@ public class TaskDesign implements Serializable {
      * @return the ratioNames
      */
     public List<String> getRatioNames() {
-        Collections.sort(ratioNames, String::compareTo);
-
+        Collections.sort(ratioNames, new IntuitiveStringComparator<>());
         List<String> retVal = new ArrayList<>();
         retVal.addAll(ratioNames);
         return retVal;
@@ -478,6 +478,7 @@ public class TaskDesign implements Serializable {
     public void addRatioName(String ratioName) {
         if (!ratioNames.contains(ratioName)) {
             this.ratioNames.add(ratioName);
+            Collections.sort(ratioNames, new IntuitiveStringComparator<>());
         }
     }
 
