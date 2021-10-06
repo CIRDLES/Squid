@@ -1164,7 +1164,7 @@ public class CalamariReportsEngine implements Serializable {
         File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_TaskAudit.txt");
 
         PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
-        outputWriter.write(squidProject.getTask().printTaskAudit());
+        outputWriter.write(squidProject.getTask().printTaskSummary());
         outputWriter.flush();
         outputWriter.close();
 
@@ -1179,7 +1179,7 @@ public class CalamariReportsEngine implements Serializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_ProjectAudit.txt");
+        File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_ProjectAndTaskAudit.txt");
 
         PrintWriter outputWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(reportTableFile), StandardCharsets.UTF_8));
         outputWriter.write(squidProject.printProjectAudit());

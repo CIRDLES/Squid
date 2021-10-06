@@ -192,7 +192,7 @@ public class PrawnFileHandlerIT {
 
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_4Corr_Unknowns.csv");
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -211,7 +211,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         // assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -230,7 +230,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_8Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -249,7 +249,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm1_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -269,7 +269,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -288,7 +288,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -307,7 +307,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -327,7 +327,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -346,7 +346,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -365,7 +365,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -385,7 +385,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -404,7 +404,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_7Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getUnknownSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
@@ -423,7 +423,7 @@ public class PrawnFileHandlerIT {
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_RefMat.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", true, squidProjectZ6266.getTask());
-        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true);
+        String[][] report = reportSettings.reportFractionsByNumberStyle(squidProjectZ6266.getTask().getReferenceMaterialSpots(), true, null);
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, false);
         File expectedReport = RESOURCE_EXTRACTOR.extractResourceAsFile(reportTableFile.getName());
         assertThat(reportTableFile).hasSameTextualContentAs(expectedReport);
