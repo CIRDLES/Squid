@@ -178,8 +178,13 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         }
 
         uncertaintyColumn = null;
+        // check for NU-switched
+        boolean switchedNU = false;
+        if (task.getExpressionByName(expressionName) != null) {
+            switchedNU = task.getExpressionByName(expressionName).isSquidSwitchNU();
+        }
         if ((uncertaintyDirective.length() == 0)
-                && (expTree.builtAsValueModel() || amIsotopicRatio)
+                && (expTree.builtAsValueModel() || amIsotopicRatio || switchedNU)
 //                && (!expressionName.toUpperCase().contains("PCT"))
 //                && (!expressionName.toUpperCase().contains("ERR"))
 //                && (!expressionName.toUpperCase().contains("CONCEN"))
