@@ -728,39 +728,52 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public String printTaskSummary() {
         StringBuilder summary = new StringBuilder();
 
-        summary.append("TASK SUMMARY REPORT\n")
+        boolean uPicked = getParentNuclide().startsWith("238");
+        boolean directPicked = isDirectAltPD();
+
+        boolean perm1 = uPicked && !directPicked;
+        boolean perm2 = uPicked && directPicked;
+        boolean perm3 = !uPicked && !directPicked;
+        boolean perm4 = !uPicked && directPicked;
+
+        summary.append("\n")
                 .append("Task Name: ")
                 .append(name)
+                .append("\n")
+                .append("Task Mode: ")
+                .append(taskType.getProjectName())
                 .append("\n")
                 .append("Task Description: ")
                 .append(description)
                 .append("\n")
+                .append("Task Author: ")
+                .append(authorName)
+                .append("\n")
+                .append("Task Lab Name: ")
+                .append(labName)
+                .append("\n")
                 .append("Task Provenance: ")
                 .append(provenance)
+                .append("\n\n")
+                .append("Task Directives: ")
                 .append("\n")
-                .append("\tNormalise Ion Counts for SBM?: ")
-                .append(useSBM)
+                .append("\tPrimary daughter/parent ratio: ")
+                .append((getParentNuclide().compareTo("238") == 0) ? "206Pb/238U" : "208Pb/232Th")
                 .append("\n")
-                .append("\tRatio Calculation Method: ")
-                .append(userLinFits ? "Linear" : "Spot Average")
+                .append("\t" + UNCOR206PB238U_CALIB_CONST + ": ")
+                .append((perm1 || perm2 || perm4) ? getExpressionByName(UNCOR206PB238U_CALIB_CONST).getExcelExpressionString() : "Not Used")
                 .append("\n")
-                .append("\tPreferred index isotope: ")
-                .append(selectedIndexIsotope.getIsotope())
+                .append("\t" + UNCOR208PB232TH_CALIB_CONST + ": ")
+                .append((perm2 || perm3 || perm4) ? getExpressionByName(UNCOR208PB232TH_CALIB_CONST).getExcelExpressionString() : "Not Used")
                 .append("\n")
-                .append("\tAuto-reject spots in RefMat weighted means: ")
-                .append(squidAllowsAutoExclusionOfSpots)
+                .append("\tCalculate secondary d/p ratio directly: ")
+                .append(isDirectAltPD())
                 .append("\n")
-                .append("\tReference Material Model: ")
-                .append("not available")
+                .append("\t" + TH_U_EXP_RM + ": ")
+                .append((perm1 || perm3) ? getExpressionByName(TH_U_EXP_RM).getExcelExpressionString() : "Not Used")
                 .append("\n")
-                .append("\tConcentration Reference Material Model: ")
-                .append("not available")
-                .append("\n")
-                .append("\tCommon Pb model: ")
-                .append(commonPbModel.getModelNameWithVersion())
-                .append("\n")
-                .append("\tPhysical Constants model: ")
-                .append(physicalConstantsModel.getModelNameWithVersion())
+                .append("\t" + PARENT_ELEMENT_CONC_CONST + ": ")
+                .append(getExpressionByName(PARENT_ELEMENT_CONC_CONST).getExcelExpressionString())
                 .append("\n");
 
         summary.append("\n");
@@ -774,7 +787,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public String printTaskAudit() {
         StringBuilder summary = new StringBuilder();
 
-        summary.append(" ")
+        summary
                 .append("Data Source File provides ")
                 .append(squidSpeciesModelList.size())
                 .append(" Species:");
@@ -785,7 +798,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(String.format("%1$-" + 7 + "s", squidSpeciesModelList.get(i).getPrawnFileIsotopeName() + comma));
         }
 
-        summary.append("\n\n ")
+        summary.append("\n\n")
                 .append("Task File specifies ")
                 .append(nominalMasses.size())
                 .append(" Masses matching Species found in Data file:");
@@ -798,7 +811,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         Collections.sort(ratioNames, new IntuitiveStringComparator<>());
         int countOfRatios = ratioNames.size();
-        summary.append("\n\n Task Ratios: ");
+        summary.append("\n\nTask Ratios: ");
         summary.append(countOfRatios > 0 ? String.valueOf(countOfRatios) : "None").append(" specified using available masses.");
         summary.append("\n  ");
         for (int i = 0; i < countOfRatios; i++) {
@@ -813,7 +826,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             summary.append(String.format("%1$-" + 6 + "s", ratioNames.get(i).split("/")[1]));
         }
 
-        summary.append("\n\n ")
+        summary.append("\n\n")
                 .append(referenceMaterialSpots.size())
                 .append(" Reference Material Spots extracted by filter: \"")
                 .append(filterForRefMatSpotNames)
@@ -823,17 +836,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         if (taskExpressionsEvaluationsPerSpotSet.get(AV_PARENT_ELEMENT_CONC_CONST) != null) {
             meanConcValue = String.valueOf(taskExpressionsEvaluationsPerSpotSet.get(AV_PARENT_ELEMENT_CONC_CONST).getValues()[0][0]);
         }
-        summary.append("\n ")
+        summary.append("\n")
                 .append(concentrationReferenceMaterialSpots.size())
                 .append(" Concentration Reference Material Spots extracted by filter: \"")
                 .append(filterForConcRefMatSpotNames)
-                .append("\".\n\t\t  Mean Concentration of Primary Parent Element ")
+                .append("\".\n\t  Mean Concentration of Primary Parent Element ")
                 .append(concentrationTypeEnum.getName())
                 .append(" = ")
                 .append(meanConcValue)
-                .append(" ppm.");
+                .append(" ppm.\n");
 
-        summary.append("\n ")
+        summary.append("\n")
                 .append(unknownSpots.size())
                 .append(" Unknown Spots");
 
@@ -861,15 +874,28 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 count++;
             }
         }
-        summary.append("\n\n Task Expressions: ");
+        summary.append("\n\nTask Expressions: ");
         summary.append("\n\t Healthy: ");
         summary.append(count > 0 ? String.valueOf(count) : "None").append(" included.");
         summary.append("\n\t UnHealthy / Mismatched targets: ");
         summary.append((taskExpressionsOrdered.size() - count) > 0
                 ? String.valueOf(taskExpressionsOrdered.size() - count) : "None").append(" excluded.");
 
+        summary.append("\n").append(printCustomExpressions());
+
         return summary.toString();
     }
+
+    public String printCustomExpressions() {
+        StringBuilder customExp = new StringBuilder();
+        customExp.append("\nCustom Expressions: \n");
+        for (Expression exp : getCustomTaskExpressions()) {
+            customExp.append("\t").append(exp.getName())
+                    .append(" : ").append(exp.getExcelExpressionString())
+                    .append("\n");
+        }
+        return customExp.toString();
+}
 
     @Override
     public Expression generateExpressionFromRawExcelStyleText(
@@ -2678,8 +2704,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidReportTablesRefMat.add(SquidReportTable.createDefaultSquidReportTableRefMat(this));
 
         SquidReportTableInterface labReportRM = SquidLabData.getExistingSquidLabData().getDefaultReportTableRM();
-        if (labReportRM != null){
-            if (!squidReportTablesRefMat.contains(labReportRM)){
+        if (labReportRM != null) {
+            if (!squidReportTablesRefMat.contains(labReportRM)) {
                 squidReportTablesRefMat.add(labReportRM);
                 selectedRefMatReportModel = labReportRM;
             }
@@ -2705,8 +2731,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         squidReportTablesUnknown.add(SquidReportTable.createDefaultSquidReportTableUnknown(this));
 
         SquidReportTableInterface labReport = SquidLabData.getExistingSquidLabData().getDefaultReportTable();
-        if (labReport != null){
-            if (!squidReportTablesUnknown.contains(labReport)){
+        if (labReport != null) {
+            if (!squidReportTablesUnknown.contains(labReport)) {
                 squidReportTablesUnknown.add(labReport);
                 selectedUnknownReportModel = labReport;
             }

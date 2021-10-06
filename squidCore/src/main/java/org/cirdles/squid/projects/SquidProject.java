@@ -515,7 +515,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
             String[][] report = reportSettings.reportFractionsByNumberStyle(task.getReferenceMaterialSpots(),
                     numberStyleIsNumeric,
-                    ((Task)task).produceMapOfRefMatSpotsNames().keySet().stream().toArray(String[]::new));
+                    ((Task) task).produceMapOfRefMatSpotsNames().keySet().stream().toArray(String[]::new));
             reportTableFile = prawnFileHandler.getReportsEngine().writeReportTableFiles(
                     report, projectName + "_RefMatReportTablePerSquid25.csv");
         }
@@ -617,9 +617,10 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     public String printProjectAudit() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Project Audit produced by Squid3 v").append(Squid.VERSION).append(" on ").append(LocalDate.now()).append("\n");
+        sb.append("Project Audit produced by Squid3 v").append(Squid.VERSION).append(" on ").append(LocalDate.now())
+                .append(" (see https://github.com/CIRDLES/Squid)").append("\n");
         sb.append("Project Name: ").append(projectName).append("\n");
-        sb.append("Analyst Name: ").append(analystName).append("\n");
+        sb.append("Analyst Name: ").append(analystName).append("\n\n");
         sb.append("Data File: ").append(prawnFileHandler.getCurrentPrawnSourceFileLocation()).append("\n");
         sb.append("Software: ").append(getPrawnFileShrimpSoftwareVersionName()).append("\n\n");
         sb.append("Session\n");
@@ -627,28 +628,40 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         sb.append("\tSummary\n");
         sb.append("\t\t").append(generatePrefixTreeFromSpotNames().buildSummaryDataString().replaceAll(";", "\n\t\t")).append("\n");
         sb.append("\tTotal Time in Hours: ").append((int) sessionDurationHours).append("\n\n");
-        sb.append("Project Notes:\n").append(projectNotes).append("\n");
+        sb.append("Project Notes:\n").append("\t").append(projectNotes).append("\n");
 
         //parameters
+        sb.append("\nProject Parameters: ")
+                .append("\n")
+                .append("\tIon Counts Normalized for SBM: ")
+                .append(useSBM)
+                .append("\n")
+                .append("\tRatio Calculation Method: ")
+                .append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)"))
+                .append("\n")
+                .append("\tPreferred index isotope: ")
+                .append(task.getSelectedIndexIsotope().getName())
+                .append("\n")
+                .append("\tWeighted Means of RefMat:\n")
+                .append("\t\tAllow Squid3 to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots())
+                .append("\n")
+                .append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU())
+                .append("\n")
+                .append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh())
+                .append("\n")
+                .append("\tParameter Models:\n")
+                .append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion())
+                .append("\n")
+                .append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion())
+                .append("\n")
+                .append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion())
+                .append("\n")
+                .append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion())
+                .append("\n\n");
+
+
         if (task != null) {
-            sb.append("\nTask Name: ").append(task.getName());
-            sb.append("\nTask Description: ").append(task.getDescription());
-            sb.append("\nTask Author: ").append(task.getAuthorName());
-            sb.append("\nTask Lab: ").append(task.getLabName());
-            sb.append("\nTask Provenance: ").append(task.getProvenance());
-            sb.append("\n\nParameters:\n");
-            sb.append("\tIon Counts Normalized for SBM: ").append(task.isUseSBM()).append("\n");
-            sb.append("\tRatio Calculation Method: ").append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)")).append("\n");
-            sb.append("\tPreferred Index Isotope: ").append(task.getSelectedIndexIsotope().getName()).append("\n");
-            sb.append("\tWeighted Means of RefMat:\n");
-            sb.append("\t\tAllow Squid3 to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots()).append("\n");
-            sb.append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU()).append("\n");
-            sb.append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh()).append("\n");
-            sb.append("\tParameter Models:\n");
-            sb.append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion()).append("\n");
-            sb.append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion()).append("\n");
-            sb.append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion()).append("\n");
-            sb.append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion()).append("\n");
+            sb.append(task.printTaskSummary());
         }
 
         return sb.toString();
@@ -780,7 +793,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public void removeRunsFromPrawnFile(List<Run> runs) {
-        if (removedRuns == null){
+        if (removedRuns == null) {
             removedRuns = new ArrayList<>();
         }
         if (runs.size() > 0) {
@@ -954,7 +967,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
         if (generateReportsValid()) {
             prawnFileHandler.getReportsEngine().writeProjectAudit();
-            prawnFileHandler.getReportsEngine().writeTaskAudit();
+            //prawnFileHandler.getReportsEngine().writeTaskAudit();
 
             prawnFileHandler.getReportsEngine().writeSummaryReportsForReferenceMaterials();
             produceReferenceMaterialPerSquid25CSV(true);
