@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.shrimp;
 
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.tasks.expressions.builtinExpressions.ReferenceMaterialAgeTypesEnum;
@@ -54,7 +55,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
     private ParametersModel commonLeadModel;
 
-    public CommonLeadSpecsForSpot() {
+    public CommonLeadSpecsForSpot() throws SquidException {
         this.com_206Pb204Pb = 0.0;
         this.com_207Pb206Pb = 0.0;
         this.com_208Pb206Pb = 0.0;

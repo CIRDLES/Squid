@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dateInterpretations.plots;
 
 import javafx.scene.Node;
+import org.cirdles.squid.exceptions.SquidException;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface PlotDisplayInterface {
     /**
      * @return the javafx.scene.Node
      */
-    Node displayPlotAsNode();
+    Node displayPlotAsNode() throws SquidException;
 
     void setData(List<Map<String, Object>> data);
 
@@ -36,7 +37,7 @@ public interface PlotDisplayInterface {
 
     List<Node> toolbarControlsFactory();
 
-    public String makeAgeOrValueString(int index);
+    public String makeAgeOrValueString(int index) throws SquidException;
 
 
 }

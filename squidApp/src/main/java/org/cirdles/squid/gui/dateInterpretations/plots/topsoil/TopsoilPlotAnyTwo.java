@@ -22,6 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -44,11 +45,11 @@ public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
     private String xAxisExpressionName;
     private String yAxisExpressionName;
 
-    public TopsoilPlotAnyTwo() {
+    public TopsoilPlotAnyTwo() throws SquidException{
         this("placeholder");
     }
 
-    public TopsoilPlotAnyTwo(String title) {
+    public TopsoilPlotAnyTwo(String title)throws SquidException {
         this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
                 SquidLabData.getExistingSquidLabData().getPhysConstDefault(),

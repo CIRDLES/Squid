@@ -17,6 +17,7 @@ package org.cirdles.squid.projects;
 
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.PrawnXMLFileHandler;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -44,7 +45,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     /**
      * @return the commonPbModel
      */
-    ParametersModel getCommonPbModel();
+    ParametersModel getCommonPbModel() throws SquidException;
 
     /**
      * @return the concentrationReferenceMaterialModel
@@ -91,7 +92,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     /**
      * @return the physicalConstantsModel
      */
-    ParametersModel getPhysicalConstantsModel();
+    ParametersModel getPhysicalConstantsModel() throws SquidException;
 
     /**
      * @return the prawnFileHandler
@@ -102,13 +103,13 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     List<PrawnFile.Run> getPrawnFileRuns();
 
-    public void removeSpotsFromDataFile(List<String> spotNames);
+    public void removeSpotsFromDataFile(List<String> spotNames) throws SquidException;
 
     public List<String> retrieveRemovedSpotsByName();
 
-    public void restoreSpotToDataFile(String spotName);
+    public void restoreSpotToDataFile(String spotName) throws SquidException;
 
-    public void restoreAllRunsToPrawnFile();
+    public void restoreAllRunsToPrawnFile() throws SquidException;
 
     String getPrawnFileShrimpSoftwareVersionName();
 

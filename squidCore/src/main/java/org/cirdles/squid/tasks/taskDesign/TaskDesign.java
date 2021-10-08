@@ -20,6 +20,7 @@ package org.cirdles.squid.tasks.taskDesign;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -62,33 +63,22 @@ public class TaskDesign implements Serializable {
 
     protected String delimiterForUnknownNames;
     protected String parentNuclide;
-
-    public boolean isPbU() {
-        return (parentNuclide.contains("238"));
-    }
-
     protected boolean directAltPD;
-
     protected Map<String, String> specialSquidFourExpressionsMap;
     protected List<String> nominalMasses;
     protected List<String> ratioNames;
-
     protected int indexOfBackgroundSpecies;
-
     protected Map<String, ShrimpSpeciesNode> shrimpSpeciesNodeMap;
-
     protected ParametersModel physicalConstantsModel;
     protected ParametersModel commonPbModel;
-
     // part of savable defaults
     protected String analystName;
-
     private List<Expression> customTaskExpressions;
 
     /**
      * Creates a new instance of TaskDesign
      */
-    public TaskDesign() {
+    public TaskDesign() throws SquidException {
         this.name = "";
         this.description = "";
         this.provenance = "";
@@ -121,8 +111,8 @@ public class TaskDesign implements Serializable {
         this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
-        // Default to blank  
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{DEFAULT_BACKGROUND_MASS_LABEL}));
+        // Default to blank
+        this.nominalMasses = new ArrayList<>(Arrays.asList(DEFAULT_BACKGROUND_MASS_LABEL));
 
         this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
 
@@ -133,6 +123,10 @@ public class TaskDesign implements Serializable {
         this.customTaskExpressions = new ArrayList<>();
 
         buildShrimpSpeciesNodeMap();
+    }
+
+    public boolean isPbU() {
+        return (parentNuclide.contains("238"));
     }
 
     private void buildShrimpSpeciesNodeMap() {

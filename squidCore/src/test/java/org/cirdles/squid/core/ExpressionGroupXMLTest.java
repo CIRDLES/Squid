@@ -2,6 +2,7 @@ package org.cirdles.squid.core;
 
 import org.cirdles.commons.util.ResourceExtractor;
 import org.cirdles.squid.Squid;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.utilities.fileUtilities.FileNameFixer;
@@ -24,7 +25,7 @@ import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXM
 
 public class ExpressionGroupXMLTest {
     @Test
-    public void testExpressionGroups() {
+    public void testExpressionGroups() throws SquidException {
         boolean retVal = false;
         ResourceExtractor squidProjectExtractor = new ResourceExtractor(SquidProject.class);
         ResourceExtractor squidTaskXMLSchemaExtractor = new ResourceExtractor(Squid.class);

@@ -5,6 +5,8 @@
  */
 package org.cirdles.squid.projects;
 
+import org.cirdles.squid.exceptions.SquidException;
+
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -81,6 +83,6 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public Path generateAllReports() throws IOException;
+    public Path generateAllReports() throws IOException, SquidException;
 
 }

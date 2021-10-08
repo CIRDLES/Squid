@@ -17,7 +17,6 @@
  */
 package org.cirdles.squid.utilities.stateUtilities;
 
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 
 import java.io.*;
@@ -82,7 +81,7 @@ public final class SquidSerializer {
      * @param filename
      * @return
      */
-    public static Object getSerializedObjectFromFile(String filename, boolean verbose) {
+    public static Object getSerializedObjectFromFile(String filename, boolean verbose) throws SquidException {
         //FileInputStream inputStream;
         ObjectInputStream deserializedInputStream;
         Object deserializedObject = null;
@@ -94,18 +93,22 @@ public final class SquidSerializer {
 
         } catch (FileNotFoundException ex) {
             if (verbose) {
-                SquidMessageDialog.showWarningDialog("The file you are attempting to open does not exist:\n"
-                        + " " + filename, null);
+                throw new SquidException("The file you are attempting to open does not exist:\n"
+                        + " " + filename);
+//                SquidMessageDialog.showWarningDialog("The file you are attempting to open does not exist:\n"
+//                        + " " + filename, null);
             }
         } catch (IOException ex) {
             if (verbose) {
-                SquidMessageDialog.showWarningDialog(
-                        "The file you are attempting to open is not a valid '*.squid' file.", null);
+                throw new SquidException("The file you are attempting to open is not a valid '*.squid' file.");
+//                SquidMessageDialog.showWarningDialog(
+//                        "The file you are attempting to open is not a valid '*.squid' file.", null);
             }
         } catch (ClassNotFoundException | ClassCastException ex) {
             if (verbose) {
-                SquidMessageDialog.showWarningDialog(
-                        "The file you are attempting to open is not compatible with this version of Squid3.", null);
+                throw new SquidException("The file you are attempting to open is not compatible with this version of Squid3.");
+//                SquidMessageDialog.showWarningDialog(
+//                        "The file you are attempting to open is not compatible with this version of Squid3.", null);
             }
         }
 

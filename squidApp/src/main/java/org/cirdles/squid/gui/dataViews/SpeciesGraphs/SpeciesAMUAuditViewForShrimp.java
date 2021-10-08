@@ -143,11 +143,18 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
         spotContextMenuItem1.setOnAction((evt) -> {
 
             if (indexOfSelectedSpot >= 0) {
-                squidProject.removeRunsFromPrawnFile(selectedRuns);
+                try {
+                    squidProject.removeRunsFromPrawnFile(selectedRuns);
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
 
                 squidProject.generatePrefixTreeFromSpotNames();
                 SquidProject.setProjectChanged(true);
-                massAuditRefreshInterface.updateSpotsInGraphs();
+                try {
+                    massAuditRefreshInterface.updateSpotsInGraphs();
+                } catch (SquidException squidException) {
+                }
             }
 
         });
@@ -252,7 +259,7 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
      * @param g2d
      */
     @Override
-    public void paint(GraphicsContext g2d) {
+    public void paint(GraphicsContext g2d) throws SquidException {
         super.paint(g2d);
 
         boolean legendOnly = (width - LEGEND_WIDTH == 0);
@@ -621,7 +628,10 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
                     }
                 }
             }
-            massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+            try {
+                massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+            } catch (SquidException squidException) {
+            }
 
             if (selectedRuns.size() > 1) {
                 spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
@@ -639,20 +649,34 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
                     MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
                     spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
-                        squidProject.restoreAllRunsToPrawnFile();
+                        try {
+                            squidProject.restoreAllRunsToPrawnFile();
+                        } catch (SquidException squidException) {
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                        }
                         squidProject.generatePrefixTreeFromSpotNames();
                         SquidProject.setProjectChanged(true);
-                        massAuditRefreshInterface.updateSpotsInGraphs();
+                        try {
+                            massAuditRefreshInterface.updateSpotsInGraphs();
+                        } catch (SquidException squidException) {
+                        }
                     });
                     // list all removed runs
                     for (Run run : squidProject.getRemovedRuns()) {
                         MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
                         spotRestoreMenu.getItems().add(restoreSpotMenuItem);
                         restoreSpotMenuItem.setOnAction((evt) -> {
-                            squidProject.restoreRunToPrawnFile(run);
+                            try {
+                                squidProject.restoreRunToPrawnFile(run);
+                            } catch (SquidException squidException) {
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                            }
                             squidProject.generatePrefixTreeFromSpotNames();
                             SquidProject.setProjectChanged(true);
-                            massAuditRefreshInterface.updateSpotsInGraphs();
+                            try {
+                                massAuditRefreshInterface.updateSpotsInGraphs();
+                            } catch (SquidException squidException) {
+                            }
                         });
                     }
                 } else {

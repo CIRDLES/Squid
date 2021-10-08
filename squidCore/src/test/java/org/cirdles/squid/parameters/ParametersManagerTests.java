@@ -1,5 +1,6 @@
 package org.cirdles.squid.parameters;
 
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
@@ -17,8 +18,15 @@ import static junit.framework.TestCase.assertTrue;
 
 public class ParametersManagerTests {
 
+    //consider moving this method elsewhere such as to Expression.class
+    public static double getDoubleValueOfExpressionWithOneConstantNodeChild(Expression exp) {
+        ExpressionTreeBuilderInterface builderInterface = (ExpressionTreeBuilderInterface) exp.getExpressionTree();
+        ConstantNode node = (ConstantNode) builderInterface.getChildrenET().get(0);
+        return (double) node.getValue();
+    }
+
     @Test
-    public void testReferenceMaterialValueEntry() {
+    public void testReferenceMaterialValueEntry() throws SquidException {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new ReferenceMaterialModel();
@@ -33,7 +41,7 @@ public class ParametersManagerTests {
     }
 
     @Test
-    public void testCommonPbValueEntry() {
+    public void testCommonPbValueEntry() throws SquidException {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new CommonPbModel();
@@ -48,7 +56,7 @@ public class ParametersManagerTests {
     }
 
     @Test
-    public void testPhysicalConstantsModelValueEntry() {
+    public void testPhysicalConstantsModelValueEntry() throws SquidException {
         BigDecimal num = new BigDecimal(Double.MAX_VALUE);
 
         ParametersModel mod = new PhysicalConstantsModel();
@@ -60,12 +68,5 @@ public class ParametersManagerTests {
         Expression exp = task.getExpressionByName(BuiltInExpressionsDataDictionary.LAMBDA234);
 
         assertTrue(exp != null && getDoubleValueOfExpressionWithOneConstantNodeChild(exp) == num.doubleValue());
-    }
-
-    //consider moving this method elsewhere such as to Expression.class
-    public static double getDoubleValueOfExpressionWithOneConstantNodeChild(Expression exp) {
-        ExpressionTreeBuilderInterface builderInterface = (ExpressionTreeBuilderInterface) exp.getExpressionTree();
-        ConstantNode node = (ConstantNode) builderInterface.getChildrenET().get(0);
-        return (double) node.getValue();
     }
 }

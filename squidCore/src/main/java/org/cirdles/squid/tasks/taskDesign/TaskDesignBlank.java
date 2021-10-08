@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.tasks.taskDesign;
 
+import org.cirdles.squid.exceptions.SquidException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,7 +27,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class TaskDesignBlank extends TaskDesign {
 
-    public TaskDesignBlank() {
+    public TaskDesignBlank() throws SquidException {
 
         this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{}));
 

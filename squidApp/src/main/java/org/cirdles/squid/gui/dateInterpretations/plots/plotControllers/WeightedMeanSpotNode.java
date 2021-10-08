@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -29,9 +30,9 @@ import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.Pl
  */
 public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
 
-    private ShrimpFractionExpressionInterface shrimpFraction;
+    private final ShrimpFractionExpressionInterface shrimpFraction;
     private SimpleBooleanProperty selectedProperty;
-    private int indexOfSpot;
+    private final int indexOfSpot;
 
     public WeightedMeanSpotNode(ShrimpFractionExpressionInterface shrimpFraction, int indexOfSpot) {
         this.shrimpFraction = shrimpFraction;
@@ -68,7 +69,7 @@ public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
      * @return the fraction name with age data appended
      */
     @Override
-    public String getNodeName() {
+    public String getNodeName() throws SquidException {
         String retVal = shrimpFraction.getFractionID();
         if (shrimpFraction.isReferenceMaterial()) {
             retVal += ((plot == null) ? "" : "  " + plot.makeAgeOrValueString(indexOfSpot));

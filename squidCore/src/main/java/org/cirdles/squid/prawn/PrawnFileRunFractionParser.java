@@ -19,6 +19,7 @@ import org.cirdles.ludwig.squid25.SquidMathUtils;
 import org.cirdles.ludwig.squid25.Utilities;
 import org.cirdles.squid.algorithms.PoissonLimitsCountLessThanEqual100;
 import org.cirdles.squid.algorithms.weightedMeans.WtdLinCorrResults;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.SquidRatiosModel;
@@ -88,7 +89,7 @@ public class PrawnFileRunFractionParser {
      * @param referenceMaterialLetter
      * @return the org.cirdles.squid.shrimp.ShrimpFraction
      */
-    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) {
+    public ShrimpFraction processRunFraction(PrawnFile.Run runFraction, boolean useSBM, boolean userLinFits, int indexOfBackgroundSpecies, String referenceMaterialLetter) throws SquidException {
         SquidSessionModel squidSessionSpecs = new SquidSessionModel(
                 null, null, useSBM, userLinFits, indexOfBackgroundSpecies, referenceMaterialLetter, "", new HashMap<>());
 
@@ -100,7 +101,7 @@ public class PrawnFileRunFractionParser {
      * @param squidSessionSpecs
      * @return
      */
-    public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) {
+    public ShrimpFraction processRunFraction(Run runFraction, SquidSessionModel squidSessionSpecs) throws SquidException {
 
         boolean useSBM = squidSessionSpecs.isUseSBM();
         boolean userLinFits = squidSessionSpecs.isUserLinFits();

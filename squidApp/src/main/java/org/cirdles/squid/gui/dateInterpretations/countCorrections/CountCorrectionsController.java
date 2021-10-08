@@ -27,8 +27,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUIController;
-import org.cirdles.squid.shrimp.ShrimpFraction;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
@@ -53,14 +54,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class CountCorrectionsController implements Initializable {
 
-    private static int fontSize = 12;
-
+    private static final int fontSize = 12;
+    private final TreeView<TextFlow> spotsTreeViewTextFlow = new TreeView<>();
     @FXML
     private VBox vboxMaster;
     @FXML
     private AnchorPane sampleTreeAnchorPane;
-
-    private TreeView<TextFlow> spotsTreeViewTextFlow = new TreeView<>();
     @FXML
     private HBox headerHBox;
     @FXML
@@ -84,7 +83,11 @@ public class CountCorrectionsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // update 
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        try {
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         spotsTreeViewTextFlow.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         spotsTreeViewTextFlow.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
@@ -115,7 +118,7 @@ public class CountCorrectionsController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter);
 
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
@@ -126,7 +129,7 @@ public class CountCorrectionsController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter);
 
         returnToCommonLeadButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
@@ -160,7 +163,7 @@ public class CountCorrectionsController implements Initializable {
             TreeItem<TextFlow> treeItemSampleInfo = new TreeItem<>(textFlowSampleInfo);
             for (ShrimpFractionExpressionInterface spot : entry.getValue()) {
 
-                double[][] r204_206 = ((ShrimpFraction) spot).getOriginalIsotopicRatioValuesByStringName("204/206");
+                double[][] r204_206 = spot.getOriginalIsotopicRatioValuesByStringName("204/206");
                 double[][] r204_206_207 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From207"));
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
@@ -222,25 +225,25 @@ public class CountCorrectionsController implements Initializable {
     }
 
     @FXML
-    private void correctionNoneAction(ActionEvent event) {
+    private void correctionNoneAction(ActionEvent event) throws SquidException {
         OvercountCorrection.correctionNone(squidProject.getTask());
         updateColumnBold(true, false, false);
     }
 
     @FXML
-    private void correction207Action(ActionEvent event) {
+    private void correction207Action(ActionEvent event) throws SquidException {
         OvercountCorrection.correction207(squidProject.getTask());
         updateColumnBold(false, true, false);
     }
 
     @FXML
-    private void correction208Action(ActionEvent event) {
+    private void correction208Action(ActionEvent event) throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
         updateColumnBold(false, false, true);
     }
 
     @FXML
-    private void returnOnAction(ActionEvent actionEvent) {
+    private void returnOnAction(ActionEvent actionEvent) throws SquidException {
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchCommonLeadAssignment();
     }

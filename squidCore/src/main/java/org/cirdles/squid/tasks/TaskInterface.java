@@ -50,7 +50,7 @@ public interface TaskInterface {
 
     public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
 
-    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots);
+    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) throws SquidException;
 
     public void buildSquidSpeciesModelList();
 
@@ -198,11 +198,11 @@ public interface TaskInterface {
      */
     public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
 
-    public void removeExpression(Expression expression, boolean reprocessExpressions);
+    public void removeExpression(Expression expression, boolean reprocessExpressions) throws SquidException;
 
-    public void restoreRemovedExpressions();
+    public void restoreRemovedExpressions() throws SquidException;
 
-    public void addExpression(Expression exp, boolean reprocessExpressions);
+    public void addExpression(Expression exp, boolean reprocessExpressions) throws SquidException;
 
     public void setReferenceMaterialModel(ParametersModel refMat);
 
@@ -228,7 +228,7 @@ public interface TaskInterface {
     /**
      * @param forceReprocess the value of forceReprocess
      */
-    public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess);
+    public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess) throws SquidException;
 
     public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
@@ -270,7 +270,7 @@ public interface TaskInterface {
      */
     public List<ShrimpFractionExpressionInterface> getShrimpFractions();
 
-    public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs);
+    public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) throws SquidException;
 
     /**
      * @return the referenceMaterialSpots
@@ -332,7 +332,7 @@ public interface TaskInterface {
      */
     public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions(boolean reprocessExpressions);
+    public void updateAllExpressions(boolean reprocessExpressions) throws SquidException;
 
     /**
      * @param reportsEngine the reportsEngine to set
@@ -346,11 +346,11 @@ public interface TaskInterface {
      */
     public File producePerScanReportsToFiles();
 
-    public void updateRatioNames(String[] ratioNames);
+    public void updateRatioNames(String[] ratioNames) throws SquidException;
 
-    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions);
+    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) throws SquidException;
 
-    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException;
 
     public void applyTaskIsotopeLabelsToMassStations();
 
@@ -370,7 +370,7 @@ public interface TaskInterface {
 
     public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
 
-    public void applyMassStationLabelsToTask();
+    public void applyMassStationLabelsToTask() throws SquidException;
 
     /**
      * @return
@@ -385,7 +385,7 @@ public interface TaskInterface {
     /**
      *
      */
-    public default void applyDirectives() {
+    public default void applyDirectives() throws SquidException{
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
 
         // need to remove stored expression results on fractions to clear the decks   
@@ -671,7 +671,7 @@ public interface TaskInterface {
      * @param taskDesign   the value of taskDesign
      * @param taskSkeleton the value of taskSkeleton
      */
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton);
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) throws SquidException;
 
     /**
      * @param taskDesign       the value of taskDesign
@@ -702,7 +702,7 @@ public interface TaskInterface {
      * @param refreshReferenceMaterialsModel the value of
      *                                       refreshReferenceMaterialsModel
      */
-    public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel);
+    public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel) throws SquidException;
 
     /**
      * @return the missingExpressionsByName
@@ -757,7 +757,7 @@ public interface TaskInterface {
      */
     public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 
-    public void updateAllSpotsWithCurrentCommonPbModel();
+    public void updateAllSpotsWithCurrentCommonPbModel() throws SquidException;
 
     /**
      * @param excelExpression

@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.gui.dataViews;
 
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 
 import java.util.List;
@@ -23,14 +24,14 @@ import java.util.List;
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
 public interface MassAuditRefreshInterface {
-    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing);
+    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing) throws SquidException;
 
-    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices, List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing);
+    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices, List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing) throws SquidException;
 
     /**
      *
      */
-    public void updateSpotsInGraphs();
+    public void updateSpotsInGraphs() throws SquidException;
 
     public int[] getCountOfScansCumulative(List<PrawnFile.Run> prawnFileRuns);
 }

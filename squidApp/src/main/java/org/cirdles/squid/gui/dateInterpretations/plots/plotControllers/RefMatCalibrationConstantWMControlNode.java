@@ -28,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Path;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
@@ -57,10 +58,9 @@ import static org.cirdles.squid.squidReports.squidReportCategories.SquidReportCa
  */
 public class RefMatCalibrationConstantWMControlNode extends HBox implements ToolBoxNodeInterface {
 
-    private PlotRefreshInterface plotsController;
-
     private final ComboBox<SquidReportCategoryInterface> categorySortComboBox;
     private final ComboBox<SquidReportColumnInterface> expressionSortComboBox;
+    private final PlotRefreshInterface plotsController;
 
     public RefMatCalibrationConstantWMControlNode(PlotRefreshInterface plotsController) {
         super(4);
@@ -127,8 +127,15 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
             public void handle(ActionEvent event) {
                 squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
                 // this will cause weighted mean expressions to be changed with boolean flag
-                squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
-                plotsController.showActivePlot();
+                try {
+                    squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
+                try {
+                    plotsController.showActivePlot();
+                } catch (SquidException squidException) {
+                }
             }
         });
         formatNode(autoExcludeSpotsCheckBox, 110);
@@ -236,7 +243,10 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    writeWeightedMeanSVG();
+                    try {
+                        writeWeightedMeanSVG();
+                    } catch (SquidException squidException) {
+                    }
                 } catch (IOException ex) {
                     SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
                     ex.printStackTrace();
@@ -249,7 +259,7 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
         return exportHBox;
     }
 
-    private void writeWeightedMeanSVG() throws IOException {
+    private void writeWeightedMeanSVG() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) plot;
             String expressionName = myPlot.getAgeOrValueLookupString().split(" ")[0];

@@ -83,7 +83,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private PlotDisplayInterface sampleNodeSelectedAgeWMPlot;
     private CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem;
 
-    public RefMatWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) {
+    public RefMatWeightedMeanToolBoxNode(PlotRefreshInterface plotsController) throws SquidException {
         super(4);
 
         this.sampleComboBox = new ComboBox<>();
@@ -99,8 +99,13 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
         sampleComboBox.getSelectionModel().selectFirst();
 
-        ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
-        SquidReportTableInterface squidWeightedMeansPlotSortTable = SquidLabData.getExistingSquidLabData().getSpecialRMWMSortingReportTable();
+        SquidReportTableInterface squidWeightedMeansPlotSortTable = null;
+        try {
+            ((Task) squidProject.getTask()).initTaskDefaultSquidReportTables(false);
+            squidWeightedMeansPlotSortTable = SquidLabData.getExistingSquidLabData().getSpecialRMWMSortingReportTable();
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
         categorySortComboBox.getSelectionModel().selectFirst();
@@ -115,7 +120,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
     }
 
-    private void initNode() {
+    private void initNode() throws SquidException {
         setStyle("-fx-padding: 1;" + "-fx-background-color: white;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 0 2 0 2;"
                 + "-fx-border-radius: 4;" + "-fx-border-color: blue;-fx-effect: null;");
@@ -153,7 +158,10 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         sampleComboBox.setItems(FXCollections.observableArrayList(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
 
         sampleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            displaySample(newValue);
+            try {
+                displaySample(newValue);
+            } catch (SquidException squidException) {
+            }
         });
 
         sampleNameToolBox.getChildren().addAll(sampleInfoLabel, sampleComboBox);
@@ -161,7 +169,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         return sampleNameToolBox;
     }
 
-    private void displaySample(String newValue) {
+    private void displaySample(String newValue) throws SquidException {
         sampleNode = new SampleNode(newValue);
 
         List<ShrimpFractionExpressionInterface> shrimpFractions = mapOfSpotsBySampleNames.get(newValue);
@@ -317,20 +325,22 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                 if (newValue != null) {
                     String selectedExpression = newValue.getExpressionName();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
+                        try {
+                            ((Task) squidProject.getTask()).setRefMatGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
+                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
 
-                        ((Task) squidProject.getTask()).setRefMatGroupSelectedAge(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots(), newValue.getExpressionName());
-                        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                            SpotSummaryDetails spotSummaryDetailsWM
+                                    = ((Task) squidProject.getTask())
+                                    .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
+                            spotSummaryDetailsWM.setManualRejectionEnabled(true);
 
-                        SpotSummaryDetails spotSummaryDetailsWM
-                                = ((Task) squidProject.getTask())
-                                .evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
-                        spotSummaryDetailsWM.setManualRejectionEnabled(true);
-
-                        PlotDisplayInterface myPlot = sampleNode.getSamplePlotWM();
-                        ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
-                        ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
-                        sortFractionCheckboxesByValue(spotSummaryDetailsWM);
-                        PlotsController.plot = myPlot;
+                            PlotDisplayInterface myPlot = sampleNode.getSamplePlotWM();
+                            ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
+                            ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
+                            sortFractionCheckboxesByValue(spotSummaryDetailsWM);
+                            PlotsController.plot = myPlot;
+                        } catch (SquidException squidException) {
+                        }
 
                     } else {
                         // non-AGE case for exploration
@@ -420,8 +430,11 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
                 // special case when Ages is picked, we look up stored WM for age name in sample
                 if (newValue.getDisplayName().compareToIgnoreCase("Ages") == 0) {
-                    String selectedAge = sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName();
-                    expressionSortComboBox.getSelectionModel().select(newValue.findColumnByName(selectedAge));
+                    try {
+                        String selectedAge = sampleNode.getSpotSummaryDetailsWM().getSelectedSpots().get(0).getSelectedAgeExpressionName();
+                        expressionSortComboBox.getSelectionModel().select(newValue.findColumnByName(selectedAge));
+                    } catch (SquidException squidException) {
+                    }
                 } else {
                     // show the first
                     expressionSortComboBox.getSelectionModel().selectFirst();
@@ -495,7 +508,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         return saveAsToolBox;
     }
 
-    private HBox publishExpressionAndExportSVGVBox() {
+    private HBox publishExpressionAndExportSVGVBox() throws SquidException {
         HBox publishExpressionVbox = new HBox(2);
         Button showInExpressionsButton = new Button("Show WM in Expressions");
         formatNode(showInExpressionsButton, 80);
@@ -507,8 +520,12 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         showInExpressionsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
-                        sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
+                try {
+                    ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
+                            sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
             }
         });
 
@@ -523,7 +540,10 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    writeWeightedMeanSVG();
+                    try {
+                        writeWeightedMeanSVG();
+                    } catch (SquidException squidException) {
+                    }
                 } catch (IOException ex) {
                     SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
                     ex.printStackTrace();
@@ -539,7 +559,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private void writeWeightedMeanReport(boolean doAppend) throws IOException {
         if (squidProject.hasReportsFolder()) {
             String report = SquidWeightedMeanReportEngine.makeWeightedMeanReportAsCSV(sampleNode.getSpotSummaryDetailsWM());
-            String reportFileName = squidProject.getProjectName() +  "_WMReport_RM_" +  sampleNode.getNodeName() + ".csv";
+            String reportFileName = squidProject.getProjectName() + "_WMReport_RM_" + sampleNode.getNodeName() + ".csv";
 
             try {
                 File reportFile = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileName);
@@ -612,7 +632,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         }
     }
 
-    private void writeWeightedMeanSVG() throws IOException {
+    private void writeWeightedMeanSVG() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
             String expressionName = myPlot.getAgeOrValueLookupString();

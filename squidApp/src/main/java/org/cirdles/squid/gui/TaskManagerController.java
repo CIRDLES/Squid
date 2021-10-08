@@ -24,6 +24,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -32,8 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static org.cirdles.squid.gui.SquidUI.HEALTHY_EXPRESSION_STYLE;
-import static org.cirdles.squid.gui.SquidUI.UNHEALTHY_EXPRESSION_STYLE;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.tasks.expressions.Expression.makeExpressionForAudit;
@@ -100,7 +101,11 @@ public class TaskManagerController implements Initializable {
         if (squidProject.getTask() != null) {
             task = squidProject.getTask();
             // Sept 2020 v1.5.8 this is true USE_SIG_FIG_15 = task.isRoundingForSquid3();
-            task.setupSquidSessionSpecsAndReduceAndReport(false);
+            try {
+                task.setupSquidSessionSpecsAndReduceAndReport(false);
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
             projectModeLabel.setText(squidProject.getProjectType().getProjectName() + " Mode");
             populateTaskFields();
             setupListeners();
@@ -149,20 +154,6 @@ public class TaskManagerController implements Initializable {
         menuItemTaskViewer.fire();
     }
 
-    class MyConverter extends StringConverter<Double> {
-
-        @Override
-        public String toString(Double object) {
-            return object + "";
-        }
-
-        @Override
-        public Double fromString(String string) {
-            return Double.parseDouble(string);
-        }
-
-    }
-
     /**
      * @param expressionName
      * @param expressionString
@@ -173,8 +164,8 @@ public class TaskManagerController implements Initializable {
     }
 
     private void updateDirectiveButtons() {
-        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
-        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#232").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#direct").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives() {
@@ -185,7 +176,7 @@ public class TaskManagerController implements Initializable {
             ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
         } catch (Exception e) {
         }
-        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         boolean uPicked = ((RadioButton) taskManagerGridPane.lookup("#238")).isSelected();
         boolean directPicked = ((RadioButton) taskManagerGridPane.lookup("#direct")).isSelected();
@@ -267,7 +258,11 @@ public class TaskManagerController implements Initializable {
     @FXML
     private void toggleParentNuclideAction(ActionEvent event) {
         task.setParentNuclide(((RadioButton) event.getSource()).getId());
-        task.applyDirectives();
+        try {
+            task.applyDirectives();
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
         populateDirectives();
         taskAuditTextArea.setText(task.printTaskAudit());
     }
@@ -275,8 +270,26 @@ public class TaskManagerController implements Initializable {
     @FXML
     private void toggleDirectAltAction(ActionEvent event) {
         task.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
-        task.applyDirectives();
+        try {
+            task.applyDirectives();
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
         populateDirectives();
         taskAuditTextArea.setText(task.printTaskAudit());
+    }
+
+    class MyConverter extends StringConverter<Double> {
+
+        @Override
+        public String toString(Double object) {
+            return object + "";
+        }
+
+        @Override
+        public Double fromString(String string) {
+            return Double.parseDouble(string);
+        }
+
     }
 }

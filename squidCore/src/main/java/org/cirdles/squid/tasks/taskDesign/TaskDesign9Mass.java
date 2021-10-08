@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.tasks.taskDesign;
 
+import org.cirdles.squid.exceptions.SquidException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,14 +27,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class TaskDesign9Mass extends TaskDesign {
 
-    public TaskDesign9Mass() {
+    public TaskDesign9Mass() throws SquidException {
 
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{
-                "204.1", "196", "238", "248", "254"}));
+        this.nominalMasses = new ArrayList<>(Arrays.asList("204.1", "196", "238", "248", "254"));
 //        DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254"}));
 
-        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{
-                "238/196", "206/238", "254/238", "248/254", "206/254"}));
+        this.ratioNames = new ArrayList<>(Arrays.asList("238/196", "206/238", "254/238", "248/254", "206/254"));
 
         this.name = "New 9 mass task";
 

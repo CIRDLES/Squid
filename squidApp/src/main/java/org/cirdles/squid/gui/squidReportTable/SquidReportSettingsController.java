@@ -163,9 +163,17 @@ public class SquidReportSettingsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
         // update
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
-        ((Task) task).initTaskDefaultSquidReportTables(false);
+        try {
+            ((Task) task).initTaskDefaultSquidReportTables(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         isRefMat = false;
         spotsChoiceBox.setVisible(true);

@@ -42,6 +42,7 @@ import javafx.stage.Stage;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
 import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -68,12 +69,43 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class TaskEditorController implements Initializable {
 
-    private TaskDesign taskEditor;
-
-    public static TaskInterface existingTaskToEdit = null;
     // handle for closing stage when Squid closes
     public static final Stage ADD_RATIOS_STAGE = new Stage();
-
+    public static TaskInterface existingTaskToEdit = null;
+    public static Squid3Constants.TaskEditTypeEnum editType = Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
+    private final List<StackPane> undoMassesList = new ArrayList<>();
+    private final List<VBox> undoRatiosList = new ArrayList<>();
+    private final VBox addNumeratorVBox = new VBox();
+    private final VBox addDenominatorVBox = new VBox();
+    private final HBox numDemHBox = new HBox(addNumeratorVBox, addDenominatorVBox);
+    private final Label instructions = new Label("   Choose numerator and denominator");
+    private final Button addBtn = new Button("Add ratio");
+    private final HBox addBtnHBox = new HBox(addBtn);
+    private final Label numLabel = new Label("");
+    private final Label divLabel = new Label("/");
+    private final Label denLabel = new Label("");
+    private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
+    private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
+    private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
+    private final Map<String, Tooltip> tooltipsMap = new HashMap<>();
+    private final ToggleGroup numTG = new ToggleGroup();
+    private final ToggleGroup denTG = new ToggleGroup();
+    EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
+        }
+    };
+    EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            try {
+                tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
+            } catch (Exception e) {
+            }
+        }
+    };
+    private TaskDesign taskEditor;
     @FXML
     private GridPane taskManagerGridPane;
     @FXML
@@ -122,32 +154,9 @@ public class TaskEditorController implements Initializable {
     private TextField taskDescriptionTextField;
     @FXML
     private TextField provenanceTextField;
-
     private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-    private Map<String, Tooltip> tooltipsMap = new HashMap<>();
-
-    private final List<StackPane> undoMassesList = new ArrayList<>();
-    private final List<VBox> undoRatiosList = new ArrayList<>();
     private ContextMenu massesCM;
     private ContextMenu ratiosCM;
-
-    private final VBox addNumeratorVBox = new VBox();
-    private ToggleGroup numTG = new ToggleGroup();
-    private final VBox addDenominatorVBox = new VBox();
-    private ToggleGroup denTG = new ToggleGroup();
-    private final HBox numDemHBox = new HBox(addNumeratorVBox, addDenominatorVBox);
-    private final Label instructions = new Label("   Choose numerator and denominator");
-    private final Button addBtn = new Button("Add ratio");
-    private final HBox addBtnHBox = new HBox(addBtn);
-    private final Label numLabel = new Label("");
-    private final Label divLabel = new Label("/");
-    private final Label denLabel = new Label("");
-    private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
-    private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
-    private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
-
-    public static Squid3Constants.TaskEditTypeEnum editType = Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
     @FXML
     private TextArea customExpressionTextArea;
     @FXML
@@ -156,7 +165,6 @@ public class TaskEditorController implements Initializable {
     private Label primaryDPLabel;
     @FXML
     private Label secondaryDPLabel;
-
     private boolean amGeochronMode;
     @FXML
     private Text hintLabel;
@@ -220,6 +228,38 @@ public class TaskEditorController implements Initializable {
 
     }
 
+    public static StackPane makeMassStackPane(String massName, String color) {
+        Text massText = new Text(massName);
+        massText.setFont(new Font("Monospaced Bold", 12));
+
+        Shape circle = new Ellipse(15, 15, 20, 13);
+        circle.setFill(Paint.valueOf(color));
+        circle.setStroke(Paint.valueOf("black"));
+        circle.setStrokeWidth(1);
+
+        StackPane mass = new StackPane(circle, massText);
+        mass.setUserData(massName);
+        mass.setAlignment(Pos.CENTER);
+
+        return mass;
+    }
+
+    public static VBox makeRatioVBox(String ratioName) {
+        String[] numDen = ratioName.split("/");
+        Text num = new Text(numDen[0]);
+        num.setFont(new Font("Monospaced Bold", 12));
+        Text den = new Text(numDen[1]);
+        den.setFont(new Font("Monospaced Bold", 12));
+        Shape line = new Line(0, 0, 35, 0);
+
+        VBox ratio = new VBox(num, line, den);
+        ratio.setUserData(ratioName);
+        ratio.setAlignment(Pos.CENTER);
+        ratio.setPadding(new Insets(1, 3, 1, 3));
+
+        return ratio;
+    }
+
     private void updateAddButton() {
         String num = numLabel.getText();
         String den = denLabel.getText();
@@ -236,42 +276,45 @@ public class TaskEditorController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
+        try {
+            taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
+            switch (editType) {
+                case EDIT_CURRENT:
+                    squidProject.getTask().updateTaskDesignFromTask(taskEditor, true);
+                    break;
+                case EDIT_COPY_CURRENT:
+                    SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskEditor, true);
+                    taskEditor.setName("COPY_OF_" + taskEditor.getName());
+                    break;
+                case EDIT_COPY_CURRENT_NO_EXP:
+                    SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskEditor, false);
+                    taskEditor.setName("COPY_OF_" + taskEditor.getName());
+                    break;
+                case EDIT_EMPTY:
+                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
+                    break;
+                case EDIT_DEFAULT_9_MASS:
+                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
+                    break;
+                case EDIT_DEFAULT_10_MASS:
+                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
+                    break;
+                case EDIT_DEFAULT_11_MASS:
+                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
+                    break;
+                case EDIT_EXISTING_TASK:
+                    existingTaskToEdit.updateTaskDesignFromTask(taskEditor, true);
+                    break;
+            }
+            amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
 
-        taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
-        switch (editType) {
-            case EDIT_CURRENT:
-                squidProject.getTask().updateTaskDesignFromTask(taskEditor, true);
-                break;
-            case EDIT_COPY_CURRENT:
-                SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskEditor, true);
-                taskEditor.setName("COPY_OF_" + taskEditor.getName());
-                break;
-            case EDIT_COPY_CURRENT_NO_EXP:
-                SquidUIController.squidProject.getTask().updateTaskDesignFromTask(taskEditor, false);
-                taskEditor.setName("COPY_OF_" + taskEditor.getName());
-                break;
-            case EDIT_EMPTY:
-                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
-                break;
-            case EDIT_DEFAULT_9_MASS:
-                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
-                break;
-            case EDIT_DEFAULT_10_MASS:
-                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
-                break;
-            case EDIT_DEFAULT_11_MASS:
-                SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
-                break;
-            case EDIT_EXISTING_TASK:
-                existingTaskToEdit.updateTaskDesignFromTask(taskEditor, true);
-                break;
+            initTaskDesign();
+        } catch (SquidException squidException) {
+
         }
-        amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
-
-        initTaskDesign();
     }
 
-    private void initTaskDesign() {
+    private void initTaskDesign() throws SquidException {
         taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
         // update to project having parameters spring 2020
         taskEditor.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
@@ -309,10 +352,10 @@ public class TaskEditorController implements Initializable {
             uncorrConstPbThExpressionText.setVisible(false);
             parentConcExpressionText.setVisible(false);
             pb208Th232ExpressionText.setVisible(false);
-            ((RadioButton) taskManagerGridPane.lookup("#232")).setVisible(false);
-            ((RadioButton) taskManagerGridPane.lookup("#238")).setVisible(false);
-            ((RadioButton) taskManagerGridPane.lookup("#direct")).setVisible(false);
-            ((RadioButton) taskManagerGridPane.lookup("#indirect")).setVisible(false);
+            taskManagerGridPane.lookup("#232").setVisible(false);
+            taskManagerGridPane.lookup("#238").setVisible(false);
+            taskManagerGridPane.lookup("#direct").setVisible(false);
+            taskManagerGridPane.lookup("#indirect").setVisible(false);
             directivesLabel.setVisible(false);
             primaryDPLabel.setVisible(false);
             secondaryDPLabel.setVisible(false);
@@ -411,7 +454,7 @@ public class TaskEditorController implements Initializable {
             massText.setTranslateX(1 * count++);
             defaultMassesListTextFlow.getChildren().add(massText);
         }
-        // pad 
+        // pad
         Label padLabel = new Label("        ");
         padLabel.setTranslateX(1 * count++);
         defaultMassesListTextFlow.getChildren().add(padLabel);
@@ -451,48 +494,16 @@ public class TaskEditorController implements Initializable {
         }
     }
 
-    public static StackPane makeMassStackPane(String massName, String color) {
-        Text massText = new Text(massName);
-        massText.setFont(new Font("Monospaced Bold", 12));
-
-        Shape circle = new Ellipse(15, 15, 20, 13);
-        circle.setFill(Paint.valueOf(color));
-        circle.setStroke(Paint.valueOf("black"));
-        circle.setStrokeWidth(1);
-
-        StackPane mass = new StackPane(circle, massText);
-        mass.setUserData(massName);
-        mass.setAlignment(Pos.CENTER);
-
-        return mass;
-    }
-
-    public static VBox makeRatioVBox(String ratioName) {
-        String[] numDen = ratioName.split("/");
-        Text num = new Text(numDen[0]);
-        num.setFont(new Font("Monospaced Bold", 12));
-        Text den = new Text(numDen[1]);
-        den.setFont(new Font("Monospaced Bold", 12));
-        Shape line = new Line(0, 0, 35, 0);
-
-        VBox ratio = new VBox(num, line, den);
-        ratio.setUserData(ratioName);
-        ratio.setAlignment(Pos.CENTER);
-        ratio.setPadding(new Insets(1, 3, 1, 3));
-
-        return ratio;
-    }
-
     private void updateDirectiveButtons() {
-        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
-        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#232").setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#direct").setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives() {
         updateDirectiveButtons();
 
         ((RadioButton) taskManagerGridPane.lookup("#" + taskEditor.getParentNuclide())).setSelected(true);
-        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (taskEditor.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (taskEditor.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         String UTh_U = taskEditor.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
@@ -636,23 +647,6 @@ public class TaskEditorController implements Initializable {
             result.hide();
         }
     }
-
-    EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
-        }
-    };
-
-    EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            try {
-                tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
-            } catch (Exception e) {
-            }
-        }
-    };
 
     private void showToolTip(MouseEvent event, TextField textField, Tooltip tooltip) {
         if (tooltip != null) {
@@ -843,7 +837,7 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) {
+    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) throws SquidException {
         if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
@@ -853,13 +847,16 @@ public class TaskEditorController implements Initializable {
                 // detect if masses or ratios have changed before reconstruction
                 boolean noChange = ((Task) squidProject.getTask()).taskDesignDiffersFromTask(taskEditor);
 
-                squidProject.createNewTask();
-                squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
+                try {
+                    squidProject.createNewTask();
+                    squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
 
-                if (noChange) {
-                    ((Task) squidProject.getTask()).applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+                    if (noChange) {
+                        squidProject.getTask().applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+                    }
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                 }
-
                 MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                         .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
                 menuItemTaskManager.fire();
@@ -883,12 +880,14 @@ public class TaskEditorController implements Initializable {
 
     @FXML
     private void saveThisTaskAsXMLFileAction(ActionEvent event) {
-        TaskInterface task = new Task();
-        task.updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), true);
         try {
+            TaskInterface task = new Task();
+            task.updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), true);
+
             FileHandler.saveTaskFileXML(task, SquidUI.primaryStageWindow);
             taskNameTextField.setText(task.getName());
-        } catch (IOException iOException) {
+        } catch (SquidException | IOException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
 
