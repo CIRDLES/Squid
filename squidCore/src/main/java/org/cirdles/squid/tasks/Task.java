@@ -202,15 +202,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     private Map<String, ExpressionTreeInterface> namedSpotLookupFieldsMap;
     private Map<String, ExpressionTreeInterface> namedSpotMetaDataFieldsMap;
 
-    public Task() throws SquidException{
+    public Task() throws SquidException {
         this("New Task", null, null);
     }
 
-    public Task(String name) throws SquidException{
+    public Task(String name) throws SquidException {
         this(name, null, null);
     }
 
-    public Task(String name, CalamariReportsEngine reportsEngine) throws SquidException{
+    public Task(String name, CalamariReportsEngine reportsEngine) throws SquidException {
         this(name, null, reportsEngine);
     }
 
@@ -219,7 +219,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param prawnFile
      * @param reportsEngine
      */
-    public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) throws SquidException{
+    public Task(String name, ShrimpDataFileInterface prawnFile, CalamariReportsEngine reportsEngine) throws SquidException {
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
         this.prawnFile = prawnFile;
         this.reportsEngine = reportsEngine;
@@ -347,7 +347,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 //
 //    }
 
-    public boolean synchronizeTaskVersion() throws SquidException{
+    public boolean synchronizeTaskVersion() throws SquidException {
         boolean retVal = false;
         if (taskSquidVersion == null) {
             taskSquidVersion = "0.0.0";
@@ -416,7 +416,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param taskSkeleton the value of taskSkeleton
      */
     @Override
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) throws SquidException{
+    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) throws SquidException {
 
         Method[] gettersAndSetters = taskDesign.getClass().getMethods();
 
@@ -609,7 +609,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
      */
-    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) throws SquidException{
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) throws SquidException {
 
         // four passes needed for percolating results
         updateAllExpressions(true);
@@ -902,7 +902,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                     .append("\n");
         }
         return customExp.toString();
-}
+    }
 
     @Override
     public Expression generateExpressionFromRawExcelStyleText(
@@ -921,7 +921,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return exp;
     }
 
-    public void prepareParametersAndRatios()throws SquidException {
+    public void prepareParametersAndRatios() throws SquidException {
         updateParametersFromModels();
 
         buildSquidSpeciesModelList();
@@ -1008,10 +1008,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *                                       refreshReferenceMaterialsModel
      */
     @Override
-    public void refreshParametersFromModels (
+    public void refreshParametersFromModels(
             boolean refreshCommonLeadModel,
             boolean refreshPhysicalConstantsModel,
-            boolean refreshReferenceMaterialsModel) throws SquidException{
+            boolean refreshReferenceMaterialsModel) throws SquidException {
 
         List<ParametersModel> models = null;
 
@@ -1048,7 +1048,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateAllSpotsWithCurrentCommonPbModel()  throws SquidException {
+    public void updateAllSpotsWithCurrentCommonPbModel() throws SquidException {
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             spot.setCommonLeadModel(commonPbModel);
         }
@@ -1084,7 +1084,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    public void updateParametersFromModels()throws SquidException {
+    public void updateParametersFromModels() throws SquidException {
         boolean doUpdateAll
                 = commonPbModelChanged || physicalConstantsModelChanged || referenceMaterialModelChanged || concentrationReferenceMaterialModelChanged;
 
@@ -1157,7 +1157,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * info for mass audit graphs.
      */
     public void setupSquidSessionSkeleton()
-    throws SquidException{
+            throws SquidException {
 
         buildSquidSpeciesModelList();
 
@@ -1171,13 +1171,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 filterForConcRefMatSpotNames,
                 filtersForUnknownNames);
 
-            shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
+        shrimpFractions = processRunFractions(prawnFile, squidSessionModel);
 
 
     }
 
     @Override
-    public void updateRatioNames(String[] ratioNames)throws SquidException {
+    public void updateRatioNames(String[] ratioNames) throws SquidException {
         this.ratioNames.clear();
         for (String rn : ratioNames) {
             this.ratioNames.add(rn);
@@ -1351,7 +1351,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param reprocessExpressions
      */
     @Override
-    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) throws SquidException{
+    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) throws SquidException {
         for (Expression listedExp : taskExpressionsOrdered) {
             if (listedExp.getExpressionTree().usesAnotherExpression(sourceExpression.getExpressionTree())) {
                 updateSingleExpression(listedExp);
@@ -1369,7 +1369,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * Updates expressions by parsing to detect new health or new sickness
      *
      */
-    public void updateAllExpressions(boolean reprocessExpressions) throws SquidException{
+    public void updateAllExpressions(boolean reprocessExpressions) throws SquidException {
         for (Expression listedExp : taskExpressionsOrdered) {
             updateSingleExpression(listedExp);
         }
@@ -1404,7 +1404,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void removeExpression(Expression expression, boolean reprocessExpressions) throws SquidException{
+    public void removeExpression(Expression expression, boolean reprocessExpressions) throws SquidException {
         if (expression != null) {
             if (namedExpressionsMap.containsKey(expression.getName())) {
                 // having issues with remove, so handling by hand
@@ -1429,7 +1429,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void restoreRemovedExpressions() throws SquidException{
+    public void restoreRemovedExpressions() throws SquidException {
         for (Expression exp : taskExpressionsRemoved) {
             addExpression(exp, true);
         }
@@ -1437,7 +1437,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void addExpression(Expression exp, boolean reprocessExpressions) throws SquidException{
+    public void addExpression(Expression exp, boolean reprocessExpressions) throws SquidException {
         taskExpressionsOrdered.add(exp);
 
         updateAffectedExpressions(exp, reprocessExpressions);
@@ -1468,7 +1468,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    private void createMapOfIndexToMassStationDetails() {
+    private void createMapOfIndexToMassStationDetails() throws SquidException {
         if (prawnFile != null) {
             mapOfIndexToMassStationDetails
                     = PrawnFileUtilities.createMapOfIndexToMassStationDetails(indexOfBackgroundSpecies, prawnFile.getRun());
@@ -1512,7 +1512,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots)throws SquidException {
+    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) throws SquidException {
 
         updateRefMatCalibConstWMeanExpression(PB4COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
         updateRefMatCalibConstWMeanExpression(PB7COR206_238CALIB_CONST_WM, squidAllowsAutoExclusionOfSpots);
@@ -1549,7 +1549,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void buildSquidSpeciesModelList() {
+    public void buildSquidSpeciesModelList() throws SquidException {
         createMapOfIndexToMassStationDetails();
         if (squidSpeciesModelList.isEmpty()) {
             buildSquidSpeciesModelListFromMassStationDetails();
@@ -1614,7 +1614,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException{
+    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException {
         applyTaskIsotopeLabelsToMassStations();
         updateTask();
     }
@@ -1666,7 +1666,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
-    public void applyMassStationLabelsToTask() throws SquidException{
+    public void applyMassStationLabelsToTask() throws SquidException {
         // identify isotopelabels to change
         List<Integer> changelings = new ArrayList<>();
         for (int i = 0; i < nominalMasses.size(); i++) {
@@ -1935,7 +1935,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     @Override
     public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs)
-    throws SquidException {
+            throws SquidException {
         shrimpFractions = new ArrayList<>();
         int countOfShrimpFractionsWithInvalidSBMcounts = 0;
 
@@ -2035,25 +2035,25 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
     }
 
-    public void setUnknownGroupCommonLeadMethod(List<ShrimpFractionExpressionInterface> spotsForExpression, int methodFlag) throws SquidException  {
+    public void setUnknownGroupCommonLeadMethod(List<ShrimpFractionExpressionInterface> spotsForExpression, int methodFlag) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
         }
     }
 
-    public void setUnknownGroupCommonLeadModel(List<ShrimpFractionExpressionInterface> spotsForExpression, ParametersModel commonLeadModel) throws SquidException  {
+    public void setUnknownGroupCommonLeadModel(List<ShrimpFractionExpressionInterface> spotsForExpression, ParametersModel commonLeadModel) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.setCommonLeadModel(commonLeadModel);
         }
     }
 
-    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) throws SquidException  {
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, SampleAgeTypesEnum sampleAgeType) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeType(sampleAgeType);
         }
     }
 
-    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) throws SquidException  {
+    public void setUnknownGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) throws SquidException {
         SampleAgeTypesEnum sampleAgeType = null;
         for (SampleAgeTypesEnum sat : SampleAgeTypesEnum.values()) {
             if (sat.getExpressionName().compareTo(sampleAgeName) == 0) {
@@ -2064,13 +2064,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setUnknownGroupSelectedAge(spotsForExpression, sampleAgeType);
     }
 
-    public void setRMGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, ReferenceMaterialAgeTypesEnum sampleAgeType)  throws SquidException {
+    public void setRMGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, ReferenceMaterialAgeTypesEnum sampleAgeType) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setRefMatAgeType(sampleAgeType);
         }
     }
 
-    public void setRefMatGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) throws SquidException{
+    public void setRefMatGroupSelectedAge(List<ShrimpFractionExpressionInterface> spotsForExpression, String sampleAgeName) throws SquidException {
         ReferenceMaterialAgeTypesEnum sampleAgeType = null;
         for (ReferenceMaterialAgeTypesEnum sat : ReferenceMaterialAgeTypesEnum.values()) {
             if (sat.getExpressionName().compareTo(sampleAgeName) == 0) {
@@ -2081,7 +2081,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         setRMGroupSelectedAge(spotsForExpression, sampleAgeType);
     }
 
-    public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) throws SquidException{
+    public void setUnknownGroupAgeSK(List<ShrimpFractionExpressionInterface> spotsForExpression, double sampleAgeSK) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setSampleAgeSK(sampleAgeSK);
         }
@@ -2092,7 +2092,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      *
      * @param spotsForExpression
      */
-    public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression)throws SquidException {
+    public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
@@ -2128,7 +2128,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     public SpotSummaryDetails evaluateSelectedAgeWeightedMeanForUnknownGroup(
             String groupName,
-            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException{
+            List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // use stored selected age expression name from first fraction as each in the sample has the chosen current name
         String selectedAgeExpressionName = spotsForExpression.get(0).getSelectedAgeExpressionName();
 
@@ -2169,7 +2169,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return expressionWM;
     }
 
-    public void includeCustomWMExpressionByName(String expressionName) throws SquidException{
+    public void includeCustomWMExpressionByName(String expressionName) throws SquidException {
         Expression exp = getExpressionByName(expressionName);
         if (exp == null) {
             String[] wmExpNameArray = expressionName.split("_WM_");
@@ -2689,7 +2689,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @param updateDefaultReports the value of updateDefaultReports
      * @return
      */
-    public void initTaskDefaultSquidReportTables(boolean updateDefaultReports) throws SquidException{
+    public void initTaskDefaultSquidReportTables(boolean updateDefaultReports) throws SquidException {
         // +++++++++++  handle reports for reference materials  ++++++++++++++
 
         if (squidReportTablesRefMat == null) {
@@ -3136,7 +3136,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * @return the mapOfIndexToMassStationDetails
      */
     @Override
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() {
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() throws SquidException {
         if (mapOfIndexToMassStationDetails == null) {
             createMapOfIndexToMassStationDetails();
         }
@@ -3759,7 +3759,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the selectedRefMatReportModel
      */
-    public SquidReportTableInterface getSelectedRefMatReportModel() {
+    public SquidReportTableInterface getSelectedRefMatReportModel() throws SquidException {
         if (selectedRefMatReportModel == null) {
             selectedRefMatReportModel = SquidReportTable.createDefaultSquidReportTableRefMat(this);
         }
@@ -3776,7 +3776,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     /**
      * @return the selectedUnknownReportModel
      */
-    public SquidReportTableInterface getSelectedUnknownReportModel() {
+    public SquidReportTableInterface getSelectedUnknownReportModel() throws SquidException {
         if (selectedUnknownReportModel == null) {
             selectedUnknownReportModel = SquidReportTable.createDefaultSquidReportTableUnknown(this);
         }

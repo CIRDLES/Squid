@@ -32,10 +32,10 @@ import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController;
 import org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.PlotTypes;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.expressions.ExpressionBuilderController;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.squidReportTable.SquidReportTableLauncher;
@@ -88,18 +88,9 @@ import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZipped
  */
 public class SquidUIController implements Initializable {
 
+    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     public static SquidLabData squidLabData = null;
     public static SquidPersistentState squidPersistentState = null;
-
-    static {
-        try {
-            squidPersistentState = SquidPersistentState.getExistingPersistentState();
-        } catch (SquidException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     public static SquidProject squidProject;
     public static Node taskFolderBrowserUI;
     public static Node plotUI;
@@ -125,10 +116,20 @@ public class SquidUIController implements Initializable {
     private static Pane reducedDataReportManagerUI;
 
     static {
+        try {
+            squidPersistentState = SquidPersistentState.getExistingPersistentState();
+        } catch (SquidException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static {
         CalamariFileUtilities.initSampleParametersModels();
-        try{squidLabData = SquidLabData.getExistingSquidLabData();
-        squidLabData.testVersionAndUpdate();
-        }catch(SquidException squidException){}
+        try {
+            squidLabData = SquidLabData.getExistingSquidLabData();
+            squidLabData.testVersionAndUpdate();
+        } catch (SquidException squidException) {
+        }
     }
 
     public boolean runSaveMenuDisableCheck;
@@ -368,15 +369,15 @@ public class SquidUIController implements Initializable {
             MenuItem menuItem = new MenuItem(expressionFileName);
             menuItem.setOnAction((ActionEvent t) -> {
 
-               try {
-                   if (!loadExpressionFromXMLFile(new File(menuItem.getText()))) {
-                       squidPersistentState.removeExpressionFileNameFromMRU(menuItem.getText());
-                       squidPersistentState.cleanExpressionListMRU();
-                       openRecentExpressionFileMenu.getItems().remove(menuItem);
-                   }
-               }catch(SquidException squidException){
-                   SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-               }
+                try {
+                    if (!loadExpressionFromXMLFile(new File(menuItem.getText()))) {
+                        squidPersistentState.removeExpressionFileNameFromMRU(menuItem.getText());
+                        squidPersistentState.cleanExpressionListMRU();
+                        openRecentExpressionFileMenu.getItems().remove(menuItem);
+                    }
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
             });
             openRecentExpressionFileMenu.getItems().add(menuItem);
         }
@@ -474,7 +475,7 @@ public class SquidUIController implements Initializable {
     /**
      * @param projectType the value of projectType
      */
-    private void prepareForNewProject(TaskTypeEnum projectType) throws SquidException{
+    private void prepareForNewProject(TaskTypeEnum projectType) throws SquidException {
         confirmSaveOnProjectClose();
         removeAllManagers();
 
@@ -817,7 +818,7 @@ public class SquidUIController implements Initializable {
     private void quitAction(ActionEvent event) {
         try {
             SquidPersistentState.getExistingPersistentState().updateSquidPersistentState();
-        }catch(SquidException squidException){
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
         confirmSaveOnProjectClose();
@@ -872,7 +873,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    public void launchMassesAudit() throws SquidException{
+    public void launchMassesAudit() throws SquidException {
         if (massesAuditUI != null) {
             mainPane.getChildren().remove(massesAuditUI);
             massesAuditUI.getSkin().dispose();
@@ -930,7 +931,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    public void launchTaskViewer()throws SquidException {
+    public void launchTaskViewer() throws SquidException {
         ManageRefMatWarning();
 
         mainPane.getChildren().remove(taskManagerUI);
@@ -960,7 +961,7 @@ public class SquidUIController implements Initializable {
     /**
      * @param editType the value of editType
      */
-    public void launchTaskEditor(TaskEditTypeEnum editType)throws SquidException {
+    public void launchTaskEditor(TaskEditTypeEnum editType) throws SquidException {
         mainPane.getChildren().remove(taskEditorUI);
         try {
             TaskEditorController.editType = editType;
@@ -981,7 +982,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchTaskFolderBrowser() throws SquidException{
+    private void launchTaskFolderBrowser() throws SquidException {
         mainPane.getChildren().remove(taskFolderBrowserUI);
         try {
             taskFolderBrowserUI = FXMLLoader.load(getClass().getResource("TaskFolderBrowser.fxml"));
@@ -1020,7 +1021,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchExpressionBuilder() throws SquidException{
+    private void launchExpressionBuilder() throws SquidException {
 
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
         squidProject.getTask().updateAllExpressions(true);
@@ -1051,7 +1052,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchReducedDataReportManager()throws SquidException {
+    private void launchReducedDataReportManager() throws SquidException {
         try {
             reducedDataReportManagerUI = FXMLLoader.load(getClass().getResource("dataReductionReports/ReducedDataReportManager.fxml"));
             reducedDataReportManagerUI.setId("reducedDataReportManagerUI");
@@ -1077,7 +1078,7 @@ public class SquidUIController implements Initializable {
         launchProjectManager();
     }
 
-    private void showUI(Node myManager) throws SquidException{
+    private void showUI(Node myManager) throws SquidException {
         SquidPersistentState.getExistingPersistentState().updateSquidPersistentState();
 
         for (Node manager : mainPane.getChildren()) {
@@ -1091,26 +1092,26 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void auditSessionMenuItemAction(ActionEvent event)throws SquidException {
+    private void auditSessionMenuItemAction(ActionEvent event) throws SquidException {
         mainPane.getChildren().remove(sessionAuditUI);
         launchSessionAudit();
         showUI(sessionAuditUI);
     }
 
     @FXML
-    private void manageSpotsMenuItemAction(ActionEvent event) throws SquidException{
+    private void manageSpotsMenuItemAction(ActionEvent event) throws SquidException {
         mainPane.getChildren().remove(spotManagerUI);
         launchSpotManager();
         showUI(spotManagerUI);
     }
 
     @FXML
-    private void auditMassesMenuItemAction(ActionEvent event) throws SquidException{
+    private void auditMassesMenuItemAction(ActionEvent event) throws SquidException {
         launchMassesAudit();
     }
 
     @FXML
-    private void specifyIsotopesMenuItemAction(ActionEvent event) throws SquidException{
+    private void specifyIsotopesMenuItemAction(ActionEvent event) throws SquidException {
         mainPane.getChildren().remove(isotopesManagerUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         launchIsotopesManager();
@@ -1139,7 +1140,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private boolean loadExpressionFromXMLFile(File expressionFileXML) throws SquidException{
+    private boolean loadExpressionFromXMLFile(File expressionFileXML) throws SquidException {
         boolean retVal = false;
         if (expressionFileXML != null) {
             Expression exp = (Expression) (new Expression()).readXMLObject(expressionFileXML.getAbsolutePath(), false);
@@ -1186,7 +1187,9 @@ public class SquidUIController implements Initializable {
                             Optional<String> result = dialog.showAndWait();
                             if (result.isPresent()) {
                                 exp.setName(result.get());
-                                try{addExpressionToTask(exp);}catch(SquidException squidException){
+                                try {
+                                    addExpressionToTask(exp);
+                                } catch (SquidException squidException) {
                                     SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                                 }
                             }
@@ -1200,7 +1203,7 @@ public class SquidUIController implements Initializable {
         return retVal;
     }
 
-    private void addExpressionToTask(Expression exp) throws SquidException{
+    private void addExpressionToTask(Expression exp) throws SquidException {
         squidProject.getTask().removeExpression(exp, true);
         squidProject.getTask().addExpression(exp, true);
 
@@ -1211,31 +1214,31 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void showWithinSpotRatiosReferenceMatMenutItemAction(ActionEvent event) throws SquidException{
+    private void showWithinSpotRatiosReferenceMatMenutItemAction(ActionEvent event) throws SquidException {
         SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showWithinSpotRatiosUnknownsMenutItemAction(ActionEvent event) throws SquidException{
+    private void showWithinSpotRatiosUnknownsMenutItemAction(ActionEvent event) throws SquidException {
         SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showMeanRatiosReferenceMatMenutItemAction(ActionEvent event)throws SquidException {
+    private void showMeanRatiosReferenceMatMenutItemAction(ActionEvent event) throws SquidException {
         SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showMeanRatiosUnknownMenutItemAction(ActionEvent event) throws SquidException{
+    private void showMeanRatiosUnknownMenutItemAction(ActionEvent event) throws SquidException {
         SquidUI.calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void reportsMenuSelectedAction(Event event) throws SquidException{
+    private void reportsMenuSelectedAction(Event event) throws SquidException {
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
     }
 
@@ -1283,7 +1286,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void expressionBuilderMenuItemAction(ActionEvent event) throws SquidException{
+    private void expressionBuilderMenuItemAction(ActionEvent event) throws SquidException {
         mainPane.getChildren().remove(expressionBuilderUI);
         launchExpressionBuilder();
         showUI(expressionBuilderUI);
@@ -1314,7 +1317,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException {
+    private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             File reportTableFile = squidProject.produceReferenceMaterialPerSquid25CSV(true);
             if (reportTableFile != null) {
@@ -1328,7 +1331,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void unknownsReportTableAction(ActionEvent event) throws IOException {
+    private void unknownsReportTableAction(ActionEvent event) throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             File reportTableFile = squidProject.produceUnknownsPerSquid25CSV(true);
             if (reportTableFile != null) {
@@ -1439,7 +1442,7 @@ public class SquidUIController implements Initializable {
                 primaryStageWindow);
     }
 
-    public void launchCountCorrections() throws SquidException{
+    public void launchCountCorrections() throws SquidException {
         mainPane.getChildren().remove(countCorrectionsUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1470,7 +1473,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    public void launchCommonLeadAssignment() throws SquidException{
+    public void launchCommonLeadAssignment() throws SquidException {
         mainPane.getChildren().remove(commonLeadAssignmentUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         // if ratios list not populated or no ref mat chosen show warning
@@ -1501,7 +1504,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void launchConcordiaAndWeightedMeanPlots()throws SquidException {
+    private void launchConcordiaAndWeightedMeanPlots() throws SquidException {
         mainPane.getChildren().remove(plotUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         squidProject.getTask().updateAllExpressions(true);
@@ -1534,7 +1537,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1544,7 +1549,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.CALIBRATION_CONSTANT;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1554,7 +1561,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_RM;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1564,7 +1573,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1574,7 +1585,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_SAMPLE;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1584,7 +1597,9 @@ public class SquidUIController implements Initializable {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.ANY_TWO;
         PlotsController.currentlyPlottedSampleTreeNode = null;
-        try{launchConcordiaAndWeightedMeanPlots();}catch(SquidException squidException){
+        try {
+            launchConcordiaAndWeightedMeanPlots();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -1609,7 +1624,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void importCustomExpressionsOnAction(ActionEvent actionEvent) throws SquidException{
+    public void importCustomExpressionsOnAction(ActionEvent actionEvent) throws SquidException {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -1696,16 +1711,16 @@ public class SquidUIController implements Initializable {
                         primaryStageWindow);
             }
 
-           try {
-               squidProject.getTask().setChanged(true);
-               //two passes needed
-               squidProject.getTask().updateAllExpressions(true);
-               squidProject.getTask().updateAllExpressions(true);
+            try {
+                squidProject.getTask().setChanged(true);
+                //two passes needed
+                squidProject.getTask().updateAllExpressions(true);
+                squidProject.getTask().updateAllExpressions(true);
 
-               squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
-           } catch (SquidException squidException){
-                   SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-           }
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
 
 
         } else {
@@ -1714,7 +1729,9 @@ public class SquidUIController implements Initializable {
 
         buildExpressionMenuMRU();
 
-        try{launchExpressionBuilder();} catch (SquidException squidException){
+        try {
+            launchExpressionBuilder();
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
 
@@ -1813,7 +1830,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void reportLayoutManagerOnAction(ActionEvent actionEvent)throws SquidException {
+    public void reportLayoutManagerOnAction(ActionEvent actionEvent) throws SquidException {
         mainPane.getChildren().remove(squidReportSettingsUI);
         launchReportLayoutManager();
         showUI(squidReportSettingsUI);
@@ -1840,7 +1857,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void assignCommonLeadRatiosAction(ActionEvent event) throws SquidException{
+    private void assignCommonLeadRatiosAction(ActionEvent event) throws SquidException {
         launchCommonLeadAssignment();
     }
 
@@ -1859,7 +1876,7 @@ public class SquidUIController implements Initializable {
 
     // Task actions ************************************************************
     @FXML
-    private void browseSquidTasksLibrary(ActionEvent event)throws SquidException {
+    private void browseSquidTasksLibrary(ActionEvent event) throws SquidException {
         if (SQUID_TASK_LIBRARY_FOLDER != null) {
             TaskFolderBrowserController.tasksBrowserTarget = SQUID_TASK_LIBRARY_FOLDER;
             TaskFolderBrowserController.tasksBrowserType = ".xml";
@@ -1868,7 +1885,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void browseTaskFolderTaskMenuItemAction(ActionEvent event)throws SquidException {
+    private void browseTaskFolderTaskMenuItemAction(ActionEvent event) throws SquidException {
         File tasksBrowserTarget = FileHandler.selectSquid3TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
@@ -1878,7 +1895,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void browseSquid25TaskFolderMenuItemAction(ActionEvent event) throws SquidException{
+    private void browseSquid25TaskFolderMenuItemAction(ActionEvent event) throws SquidException {
         File tasksBrowserTarget = FileHandler.selectSquid25TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
@@ -1888,32 +1905,32 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void viewTaskMenuItemAction(ActionEvent event) throws SquidException{
+    private void viewTaskMenuItemAction(ActionEvent event) throws SquidException {
         launchTaskViewer();
     }
 
     @FXML
-    private void editTaskMenuItemAction(ActionEvent event)throws SquidException {
+    private void editTaskMenuItemAction(ActionEvent event) throws SquidException {
         launchTaskEditor(EDIT_CURRENT);
     }
 
     @FXML
-    private void editEmptyTaskAction(ActionEvent event)throws SquidException {
+    private void editEmptyTaskAction(ActionEvent event) throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EMPTY);
     }
 
     @FXML
-    private void editCopyCurrentTaskAction(ActionEvent event) throws SquidException{
+    private void editCopyCurrentTaskAction(ActionEvent event) throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT);
     }
 
     @FXML
-    private void editCopyCurrentTaskNoExpAction(ActionEvent event) throws SquidException{
+    private void editCopyCurrentTaskNoExpAction(ActionEvent event) throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT_NO_EXP);
     }
 
     @FXML
-    private void editExistingTaskMenuItemAction(ActionEvent event) throws SquidException{
+    private void editExistingTaskMenuItemAction(ActionEvent event) throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
     }
 

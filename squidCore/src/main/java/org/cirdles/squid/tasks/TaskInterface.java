@@ -52,7 +52,7 @@ public interface TaskInterface {
 
     public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) throws SquidException;
 
-    public void buildSquidSpeciesModelList();
+    public void buildSquidSpeciesModelList() throws SquidException;
 
     /**
      * @param xstream
@@ -102,7 +102,7 @@ public interface TaskInterface {
     /**
      * @return the mapOfIndexToMassStationDetails
      */
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails();
+    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() throws SquidException;
 
     /**
      * @return the nominalMasses
@@ -730,7 +730,7 @@ public interface TaskInterface {
     /**
      * @return the selectedRefMatReportModel
      */
-    public SquidReportTableInterface getSelectedRefMatReportModel();
+    public SquidReportTableInterface getSelectedRefMatReportModel() throws SquidException;
 
     /**
      * @param selectedRefMatReportModel the selectedRefMatReportModel to set
@@ -740,7 +740,7 @@ public interface TaskInterface {
     /**
      * @return the selectedUnknownReportModel
      */
-    public SquidReportTableInterface getSelectedUnknownReportModel();
+    public SquidReportTableInterface getSelectedUnknownReportModel() throws SquidException;
 
     /**
      * @param selectedUnknownReportModel the selectedUnknownReportModel to set

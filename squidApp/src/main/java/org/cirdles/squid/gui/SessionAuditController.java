@@ -28,7 +28,7 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants.SampleNameDelimitersEnum;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 

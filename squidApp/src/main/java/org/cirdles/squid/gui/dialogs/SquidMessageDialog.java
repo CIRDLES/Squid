@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.cirdles.squid.dialogs;
+package org.cirdles.squid.gui.dialogs;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;

@@ -48,7 +48,7 @@ import javafx.util.StringConverter;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.Token;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
 import org.cirdles.squid.gui.utilities.BrowserControl;

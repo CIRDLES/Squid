@@ -140,7 +140,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         countsRadioButtonChoice = 0B00;
 
-        setupMassStationDetailsListViews();
+        try {
+            setupMassStationDetailsListViews();
+        } catch (SquidException squidException) {
+        }
         setupMassDeltas();
 
         showTimeNormalized = squidProject.getTask().isShowTimeNormalized();
@@ -211,7 +214,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
-    private void setupMassStationDetailsListViews() {
+    private void setupMassStationDetailsListViews() throws SquidException {
         //https://docs.oracle.com/javafx/2/drag_drop/jfxpub-drag_drop.htm
         List<MassStationDetail> availableMassStationDetails = new ArrayList<>();
         List<MassStationDetail> allMassStationDetails = new ArrayList<>();

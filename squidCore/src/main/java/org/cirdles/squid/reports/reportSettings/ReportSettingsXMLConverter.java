@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.reports.reportCategories.ReportCategory;
 
 /**
@@ -138,56 +139,60 @@ public class ReportSettingsXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
                             UnmarshallingContext context) {
 
-        ReportSettings reportSettings = new ReportSettings();
+        ReportSettings reportSettings = null;
+        try {
+            reportSettings = new ReportSettings();
 
-        reader.moveDown();
-        reportSettings.setName(reader.getValue());
-        reader.moveUp();
+            reader.moveDown();
+            reportSettings.setName(reader.getValue());
+            reader.moveUp();
 
-        reader.moveDown();
-        reportSettings.setVersion(Integer.parseInt(reader.getValue()));
-        reader.moveUp();
+            reader.moveDown();
+            reportSettings.setVersion(Integer.parseInt(reader.getValue()));
+            reader.moveUp();
 
-        ReportCategory reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setFractionCategory(reportCategory);
-        reader.moveUp();
+            ReportCategory reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setFractionCategory(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setCorrectionIndependentCategory(reportCategory);
-        reader.moveUp();
+            reader.moveDown();
+            reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setCorrectionIndependentCategory(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setPb204CorrectedCategory(reportCategory);
-        reader.moveUp();
+            reader.moveDown();
+            reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setPb204CorrectedCategory(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setPb207CorrectedCategory(reportCategory);
-        reader.moveUp();
+            reader.moveDown();
+            reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setPb207CorrectedCategory(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setPb208CorrectedCategory(reportCategory);
-        reader.moveUp();
+            reader.moveDown();
+            reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setPb208CorrectedCategory(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportCategory = new ReportCategory();
-        reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
-        reportSettings.setFractionCategory2(reportCategory);
-        reader.moveUp();
+            reader.moveDown();
+            reportCategory = new ReportCategory();
+            reportCategory = (ReportCategory) context.convertAnother(reportCategory, ReportCategory.class);
+            reportSettings.setFractionCategory2(reportCategory);
+            reader.moveUp();
 
-        reader.moveDown();
-        reportSettings.setReportSettingsComment(reader.getValue());
-        reader.moveUp();
+            reader.moveDown();
+            reportSettings.setReportSettingsComment(reader.getValue());
+            reader.moveUp();
 
-        reportSettings.assembleReportCategories(true);
+            reportSettings.assembleReportCategories(true);
+        } catch (SquidException squidException) {
+        }
         return reportSettings;
     }
 }
