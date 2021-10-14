@@ -22,7 +22,7 @@ dependencies {
 
     compile group: 'org.springframework', name: 'spring-web', version: '5.1.3.RELEASE'
 
-
-    testCompile "com.github.cirdles:Commons:-SNAPSHOT"
+    implementation "com.github.cirdles:commons:bc38781605"
+    testImplementation "com.github.cirdles:commons:bc38781605"
     testCompile "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-jetty:2.23.1"
 }
