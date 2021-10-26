@@ -25,10 +25,10 @@ repositories {
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
     //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
+    implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 
-    testCompile "junit:junit:4.13.1"
-    testCompile "org.assertj:assertj-core:3.18.1"
+    testImplementation "junit:junit:4.13.1"
+    testImplementation "org.assertj:assertj-core:3.18.1"
 }
 
 String mavenArtifactId = name
