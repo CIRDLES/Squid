@@ -73,6 +73,7 @@ def timestamp() {
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         include '**/*.txt'
         filter ReplaceTokens, tokens: [
                 "pom.version": version,

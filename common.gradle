@@ -3,7 +3,7 @@
 //
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 String mavenGroupId = 'org.cirdles'
 String mavenVersion = '1.8.6'
@@ -37,15 +37,18 @@ group = mavenGroupId
 version = mavenVersion
 
 task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
-    classifier = 'sources'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    archiveClassifier.set("sources")
     from sourceSets.main.allSource
 }
 
 
 task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
 }
+
+
 
 artifacts {
     archives jar
@@ -54,13 +57,25 @@ artifacts {
     //    archives packageJavadoc
 }
 
-configure(install.repositories.mavenInstaller) {
-    pom.project {
-        groupId = mavenGroupId
-        artifactId = mavenArtifactId
-        version = mavenVersion
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId =    mavenGroupId
+            artifactId = mavenArtifactId
+            version = mavenVersion
+
+            from components.java
+        }
     }
 }
+
+//configure(install.repositories.mavenInstaller) {
+//    pom.project {
+//        groupId = mavenGroupId
+//        artifactId = mavenArtifactId
+//        version = mavenVersion
+//    }
+//}
 
 task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
     sourceSets*.allSource*.srcDirs*.each { File srcDir ->
@@ -95,6 +110,7 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }

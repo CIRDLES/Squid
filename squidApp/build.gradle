@@ -4,7 +4,7 @@
 
 // NetBeans will automatically add "run" and "debug" tasks relying on the
 // "mainClass" property. You may however define the property prior executing
-// tasks by passing a "-PmainClass=<QUALIFIED_CLASS_NAME>" argument.
+// tasks by passing a "mainClass=<QUALIFIED_CLASS_NAME>" argument.
 //
 // Note however, that you may define your own "run" and "debug" task if you
 // prefer. In this case NetBeans will not add these tasks but you may rely on
@@ -19,26 +19,29 @@ if (!hasProperty('mainClass')) {
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 dependencies {
-    implementation 'org.jetbrains:annotations:20.1.0'
+    implementation 'org.jetbrains:annotations:22.0.0'
     implementation "com.github.cirdles:LudwigLibrary:ae99e60ae0"
     implementation project(":squidCore")
 
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.9.1'
     implementation group: 'org.apache.xmlgraphics', name: 'fop', version: '2.2'
     implementation 'com.github.cirdles:topsoil:87d2f107c0'
+
+    implementation 'commons-io:commons-io:20030203.000550'
 }
 
-configurations.all {
-    // Check for updates every build when 0 or not when 2628000
-    resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
-}
 
 task fatAppJar(type: Jar) {
     manifest {
         attributes 'Main-Class': mainClass
     }
-
-    baseName = 'Squid3'
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    archiveBaseName = 'Squid3'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
+}
+
+configurations.all {
+    // Check for updates every build when 0 or not when 2628000
+    resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
 }
