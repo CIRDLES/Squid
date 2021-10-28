@@ -66,7 +66,7 @@ public class Squid3Ink implements Squid3API {
     private static SquidPersistentState squidPersistentState;
     private Squid3ProjectBasicAPI squid3Project;
 
-    private Squid3Ink(String squidUserHomeDirectory) throws SquidException{
+    private Squid3Ink(String squidUserHomeDirectory) throws SquidException {
         System.setProperty("user.home", squidUserHomeDirectory);
         CalamariFileUtilities.initSampleParametersModels();
         squidLabData = SquidLabData.getExistingSquidLabData();
@@ -221,7 +221,7 @@ public class Squid3Ink implements Squid3API {
      * @return
      */
     @Override
-    public void openSquid3Project(Path projectFilePath) throws SquidException{
+    public void openSquid3Project(Path projectFilePath) throws SquidException {
         squid3Project
                 = (SquidProject) SquidSerializer.getSerializedObjectFromFile(projectFilePath.toString(), true);
         if (squid3Project != null && squid3Project.getTask() != null) {
@@ -338,7 +338,7 @@ public class Squid3Ink implements Squid3API {
     // project UI management
 
     @Override
-    public void setUseSBM(boolean doUse) throws SquidException{
+    public void setUseSBM(boolean doUse) throws SquidException {
         squid3Project.setUseSBM(doUse);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
@@ -348,7 +348,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setUseLinearRegression(boolean doUse) throws SquidException{
+    public void setUseLinearRegression(boolean doUse) throws SquidException {
         squid3Project.setUserLinFits(doUse);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
@@ -366,7 +366,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setAutoExcludeSpots(boolean doAutoExclude)throws SquidException {
+    public void setAutoExcludeSpots(boolean doAutoExclude) throws SquidException {
         squid3Project.setSquidAllowsAutoExclusionOfSpots(doAutoExclude);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
@@ -390,7 +390,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setDefaultCommonPbModel(ParametersModel commonPbModel)throws SquidException {
+    public void setDefaultCommonPbModel(ParametersModel commonPbModel) throws SquidException {
         ((Squid3ProjectParametersAPI) squid3Project).setCommonPbModel(commonPbModel);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
@@ -401,7 +401,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setDefaultPhysicalConstantsModel(ParametersModel physicalConstantsModel)throws SquidException {
+    public void setDefaultPhysicalConstantsModel(ParametersModel physicalConstantsModel) throws SquidException {
         ((Squid3ProjectParametersAPI) squid3Project).setPhysicalConstantsModel(physicalConstantsModel);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
@@ -412,7 +412,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setDefaultParametersFromCurrentChoices() throws SquidException{
+    public void setDefaultParametersFromCurrentChoices() throws SquidException {
         TaskDesign taskDesign = squidPersistentState.getTaskDesign();
         taskDesign.setUseSBM(squid3Project.isUseSBM());
         taskDesign.setUserLinFits(squid3Project.isUserLinFits());
@@ -430,7 +430,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void refreshModelsAction() throws SquidException{
+    public void refreshModelsAction() throws SquidException {
         TaskInterface task = squid3Project.getTask();
         task.refreshParametersFromModels(squid3Project.isTypeGeochron(), true, false);
     }
@@ -510,15 +510,15 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void updateRefMatModelChoice(ParametersModel refMatModel) throws SquidException{
-        ((Squid3ProjectParametersAPI)squid3Project).setReferenceMaterialModel(refMatModel);
+    public void updateRefMatModelChoice(ParametersModel refMatModel) throws SquidException {
+        ((Squid3ProjectParametersAPI) squid3Project).setReferenceMaterialModel(refMatModel);
         squid3Project.getTask().setChanged(true);
         squid3Project.getTask().refreshParametersFromModels(false, false, true);
     }
 
     @Override
-    public void updateConcRefMatModelChoice(ParametersModel concRefMatModel) throws SquidException{
-        ((Squid3ProjectParametersAPI)squid3Project).setConcentrationReferenceMaterialModel(concRefMatModel);
+    public void updateConcRefMatModelChoice(ParametersModel concRefMatModel) throws SquidException {
+        ((Squid3ProjectParametersAPI) squid3Project).setConcentrationReferenceMaterialModel(concRefMatModel);
         squid3Project.getTask().setChanged(true);
         squid3Project.getTask().refreshParametersFromModels(false, false, true);
     }
@@ -562,7 +562,7 @@ public class Squid3Ink implements Squid3API {
     public String get238_235Abundance(ReferenceMaterialModel curRefMatModel) {
         String abundance = curRefMatModel.getDatumByName(r238_235s.getName())
                 .getValue().setScale(3, RoundingMode.HALF_UP).toString();
-        if (curRefMatModel.getDatumByName(r238_235s.getName()).getValue().compareTo(BigDecimal.ZERO) == 0){
+        if (curRefMatModel.getDatumByName(r238_235s.getName()).getValue().compareTo(BigDecimal.ZERO) == 0) {
             abundance = REF_238U235U_DEFAULT + "";
         }
         return abundance;
@@ -570,22 +570,23 @@ public class Squid3Ink implements Squid3API {
 
     @Override
     public String getU_ppm(ReferenceMaterialModel curConcRefMatModel) {
-        return ((ReferenceMaterialModel) curConcRefMatModel).getConcentrationByName("concU")
+        return curConcRefMatModel.getConcentrationByName("concU")
                 .getValue().setScale(3, RoundingMode.HALF_UP).toString();
     }
 
     @Override
     public String getTh_ppm(ReferenceMaterialModel curConcRefMatModel) {
-        return ((ReferenceMaterialModel) curConcRefMatModel).getConcentrationByName("concTh")
+        return curConcRefMatModel.getConcentrationByName("concTh")
                 .getValue().setScale(3, RoundingMode.HALF_UP).toString();
     }
 
     /**
      * Squid3 maintains a list of removed spots so that they can be recovered at anytime
+     *
      * @param spotNames
      */
     @Override
-    public void removeSpotsFromDataFile(List<String> spotNames) throws SquidException{
+    public void removeSpotsFromDataFile(List<String> spotNames) throws SquidException {
         squid3Project.removeSpotsFromDataFile(spotNames);
         squid3Project.generatePrefixTreeFromSpotNames();
         SquidProject.setProjectChanged(true);
@@ -597,7 +598,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void restoreSpotToDataFile(String spotName) throws SquidException{
+    public void restoreSpotToDataFile(String spotName) throws SquidException {
         squid3Project.restoreSpotToDataFile(spotName);
         squid3Project.generatePrefixTreeFromSpotNames();
         SquidProject.setProjectChanged(true);
@@ -648,7 +649,7 @@ public class Squid3Ink implements Squid3API {
      * @return @throws IOException
      */
     @Override
-    public Path generateAllSquid3ProjectReports() throws IOException , SquidException{
+    public Path generateAllSquid3ProjectReports() throws IOException, SquidException {
         return ((Squid3ProjectReportingAPI) squid3Project).generateAllReports();
     }
 

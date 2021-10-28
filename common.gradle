@@ -27,6 +27,13 @@ dependencies {
     //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
     implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 
+    implementation "com.sun.activation:javax.activation:1.2.0"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-core
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.2'
+    // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+
     testImplementation "junit:junit:4.13.1"
     testImplementation "org.assertj:assertj-core:3.18.1"
 }
