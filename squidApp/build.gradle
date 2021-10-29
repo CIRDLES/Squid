@@ -10,13 +10,22 @@
 // prefer. In this case NetBeans will not add these tasks but you may rely on
 // your own implementation.
 
-apply plugin: "application"
+//apply plugin: "application"
+plugins {
+    id 'application'
+   // id "org.openjfx.javafxplugin" version "0.0.10"
+}
 
 if (!hasProperty('mainClass')) {
     ext.mainClass = 'org.cirdles.squid.gui.SquidUI'
 }
 
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
+
+//javafx {
+//    version = "17"
+//    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web' ]
+//}
 
 dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
@@ -28,7 +37,18 @@ dependencies {
     implementation 'com.github.cirdles:topsoil:87d2f107c0'
 
     implementation 'commons-io:commons-io:20030203.000550'
+
+//    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:win"
+//    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:linux"
+//    runtimeOnly "org.openjfx:javafx-controls:$javafx.version:mac"
+//    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:win"
+//    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:linux"
+//    runtimeOnly "org.openjfx:javafx-fxml:$javafx.version:mac"
+//    runtimeOnly "org.openjfx:javafx-web:$javafx.version:win"
+//    runtimeOnly "org.openjfx:javafx-web:$javafx.version:linux"
+//    runtimeOnly "org.openjfx:javafx-web:$javafx.version:mac"
 }
+
 
 
 task fatAppJar(type: Jar) {

@@ -843,13 +843,15 @@ public class SquidUIController implements Initializable {
     private void contributeIssueOnGitHubAction(ActionEvent event) {
         String version = "Squid3 Version: " + Squid.VERSION;
         String javaVersion = "Java Version: " + System.getProperties().getProperty("java.version");
+        String javaFXVersion = "JavaFX Version: " + System.getProperties().getProperty("javafx.runtime.version");
         String operatingSystem = "OS: " + System.getProperties().getProperty("os.name") + " " + System.getProperties().getProperty("os.version");
 
         StringBuilder issueBody = new StringBuilder();
         issueBody.append(urlEncode(version + "\n"));
         issueBody.append(urlEncode(javaVersion + "\n"));
+        issueBody.append(urlEncode(javaFXVersion + "\n"));
         issueBody.append(urlEncode(operatingSystem + "\n"));
-        issueBody.append(urlEncode("\n\nIssue details:\n"));
+        issueBody.append(urlEncode("\nIssue details:\n"));
 
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody);
     }
