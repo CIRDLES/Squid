@@ -38,6 +38,7 @@ import org.apache.batik.apps.rasterizer.SVGConverterException;
 import org.apache.batik.dom.GenericDOMImplementation;
 import org.apache.batik.svggen.SVGGraphics2D;
 import org.apache.batik.svggen.SVGGraphics2DIOException;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.TicGeneratorForAxes;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
@@ -128,7 +129,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     bounds.setWidth(newValue.intValue());
                     width = (int) bounds.getWidth();
                     setGraphWidth((int) width - 2 * leftMargin);
-                    displayPlotAsNode();
+                    try {
+                        displayPlotAsNode();
+                    } catch (SquidException squidException) {
+                    }
                 }
             }
         });
@@ -140,7 +144,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     bounds.setHeight(newValue.intValue());
                     height = (int) bounds.getHeight();
                     graphHeight = (int) height - topMargin - topMargin / 2;
-                    displayPlotAsNode();
+                    try {
+                        displayPlotAsNode();
+                    } catch (SquidException squidException) {
+                    }
                 }
             }
         });
@@ -318,7 +325,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
      * @param g2d
      */
     @Override
-    public void paint(GraphicsContext g2d) {
+    public void paint(GraphicsContext g2d) throws SquidException {
         super.paint(g2d);
 
         g2d.setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, 15));
@@ -656,7 +663,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     }
 
-    private void paintToSVG(Graphics2D g2d) {
+    private void paintToSVG(Graphics2D g2d) throws SquidException {
         g2d.clearRect(0, 0, (int) width, (int) height);
 
         g2d.setPaint(java.awt.Color.WHITE);
@@ -999,7 +1006,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     }
 
-    public void outputToSVG(File file) {
+    public void outputToSVG(File file) throws SquidException {
 
         // Get a DOMImplementation.
         DOMImplementation domImpl
@@ -1060,7 +1067,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     @Override
-    public String makeAgeOrValueString(int index) {
+    public String makeAgeOrValueString(int index) throws SquidException {
         double[][] values;
         if (adaptToAgeInMA) {
             values
@@ -1156,7 +1163,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     }
 
     @Override
-    public Node displayPlotAsNode() {
+    public Node displayPlotAsNode() throws SquidException {
         if (extractSpotDetails()) {
             preparePanel();
             this.repaint();
@@ -1242,7 +1249,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 indexOfSelectedSpot = -1;
             }
 
-            repaint();
+            try {
+                repaint();
+            } catch (SquidException squidException) {
+            }
         }
     }
 

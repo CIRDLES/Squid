@@ -16,6 +16,7 @@
 package org.cirdles.squid.shrimp;
 
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -216,76 +217,76 @@ public interface ShrimpFractionExpressionInterface {
     /**
      * @return the com_64
      */
-    public double getCom_206Pb204Pb();
+    public double getCom_206Pb204Pb() throws SquidException;
 
     /**
      * @param com_64 the com_64 to set
      */
-    public void setCom_206Pb204Pb(double com_64);
+    public void setCom_206Pb204Pb(double com_64) throws SquidException;
 
     /**
      * @return the com_207Pb206Pb
      */
-    public double getCom_207Pb206Pb();
+    public double getCom_207Pb206Pb() throws SquidException;
 
     /**
      * @param com_207Pb206Pb the com_207Pb206Pb to set
      */
-    public void setCom_207Pb206Pb(double com_207Pb206Pb);
+    public void setCom_207Pb206Pb(double com_207Pb206Pb) throws SquidException;
 
     /**
      * @return the com_208Pb206Pb
      */
-    public double getCom_208Pb206Pb();
+    public double getCom_208Pb206Pb() throws SquidException;
 
     /**
      * @param com_208Pb206Pb the com_208Pb206Pb to set
      */
-    public void setCom_208Pb206Pb(double com_208Pb206Pb);
+    public void setCom_208Pb206Pb(double com_208Pb206Pb) throws SquidException;
 
     /**
      * @return the com_206Pb208Pb
      */
-    public double getCom_206Pb208Pb();
+    public double getCom_206Pb208Pb() throws SquidException;
 
     /**
      * @param com_206Pb208Pb the com_206Pb208Pb to set
      */
-    public void setCom_206Pb208Pb(double com_206Pb208Pb);
+    public void setCom_206Pb208Pb(double com_206Pb208Pb) throws SquidException;
 
     /**
      * @return the com_207Pb204Pb
      */
-    public double getCom_207Pb204Pb();
+    public double getCom_207Pb204Pb() throws SquidException;
 
     /**
      * @param com_207Pb204Pb the com_207Pb204Pb to set
      */
-    public void setCom_207Pb204Pb(double com_207Pb204Pb);
+    public void setCom_207Pb204Pb(double com_207Pb204Pb) throws SquidException;
 
     /**
      * @return the com_208Pb204Pb
      */
-    public double getCom_208Pb204Pb();
+    public double getCom_208Pb204Pb() throws SquidException;
 
     /**
      * @param com_208Pb204Pb the com_208Pb204Pb to set
      */
-    public void setCom_208Pb204Pb(double com_208Pb204Pb);
+    public void setCom_208Pb204Pb(double com_208Pb204Pb) throws SquidException;
 
-    public ParametersModel getCommonLeadModel();
+    public ParametersModel getCommonLeadModel() throws SquidException;
 
-    public void setCommonLeadModel(ParametersModel commonLeadModel);
+    public void setCommonLeadModel(ParametersModel commonLeadModel) throws SquidException;
 
     /**
      * @return the commonLeadSpecsForSpot
      */
-    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot();
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() throws SquidException;
 
     /**
      * @return the overcountCorrectionIsotope
      */
-    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope();
+    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException;
 
     /**
      * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
@@ -296,5 +297,5 @@ public interface ShrimpFractionExpressionInterface {
 
     public String getCommonPbCorrMetaData();
 
-    public String getSelectedAgeExpressionName();
+    public String getSelectedAgeExpressionName() throws SquidException;
 }

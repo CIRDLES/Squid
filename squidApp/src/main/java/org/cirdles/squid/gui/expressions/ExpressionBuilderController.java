@@ -50,6 +50,7 @@ import org.antlr.v4.runtime.Token;
 import org.cirdles.squid.ExpressionsForSquid2Lexer;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -143,6 +144,9 @@ public class ExpressionBuilderController implements Initializable {
     private final ObjectProperty<Mode> currentMode = new SimpleObjectProperty<>(Mode.EDIT);
     //List of operator used to detect if a string should be an operator node or not
     private final List<String> listOperators = new ArrayList<>();
+    private final Map<String, Tooltip> tooltipsMap = new HashMap<>();
+    private final Map<KeyCode, Boolean> keyMap = new HashMap<>();
+    private final ObservableList<ExpressionTextNode> selectedNodes = FXCollections.observableArrayList();
     //RADIOS
     ToggleGroup toggleGroup;
     //List of all the expressions
@@ -319,9 +323,6 @@ public class ExpressionBuilderController implements Initializable {
     private TabPane spotTabPane;
     private int fontSizeModifier = 0;
     private Expression selectedBeforeCreateOrCopy;
-    private final Map<String, Tooltip> tooltipsMap = new HashMap<>();
-    private final Map<KeyCode, Boolean> keyMap = new HashMap<>();
-    private final ObservableList<ExpressionTextNode> selectedNodes = FXCollections.observableArrayList();
     private TaskInterface task;
 
     {
@@ -1139,7 +1140,11 @@ public class ExpressionBuilderController implements Initializable {
         //Listener that updates the whole builder when the expression to edit is changed
         selectedExpression.addListener((observable, oldValue, newValue) -> {
             if (needUpdateExpressions) {
-                task.updateAllExpressions(true);
+                try {
+                    task.updateAllExpressions(true);
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
                 needUpdateExpressions = false;
             }
             if (editAsText.get()) {
@@ -1266,7 +1271,11 @@ public class ExpressionBuilderController implements Initializable {
 
         if (!nameExists || (currentMode.get().equals(Mode.EDIT)
                 && selectedExpression.get().getName().equals(expressionNameTextField.getText()))) {
-            save();
+            try {
+                save();
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
         } else {
             //Case name already exists -> ask for replacing
             Alert alert = new Alert(Alert.AlertType.WARNING,
@@ -1278,7 +1287,11 @@ public class ExpressionBuilderController implements Initializable {
             alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
-                    save();
+                    try {
+                        save();
+                    } catch (SquidException squidException) {
+                        SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                    }
                 }
             });
         }
@@ -3142,7 +3155,7 @@ public class ExpressionBuilderController implements Initializable {
 
     }
 
-    private void save() {
+    private void save() throws SquidException {
         //Saves the newly built expression
         // remove spurious spaces from [expr]__[n] and expr  [n] ==> [][]
         String expression = expressionString.get();
@@ -3625,7 +3638,11 @@ public class ExpressionBuilderController implements Initializable {
                             ObservableList selectedItemsToRemove = parent.getSelectionModel().getSelectedItems();
                             for (int i = 0; i < selectedItemsToRemove.size(); i++) {
                                 removedExpressions.add((Expression) selectedItemsToRemove.get(i));
-                                task.removeExpression((Expression) selectedItemsToRemove.get(i), true);
+                                try {
+                                    task.removeExpression((Expression) selectedItemsToRemove.get(i), true);
+                                } catch (SquidException squidException) {
+                                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                                }
                             }
 
                             selectedExpression.set(null);
@@ -3660,7 +3677,11 @@ public class ExpressionBuilderController implements Initializable {
                                     }
                                 } while (nameExist);
 
-                                task.addExpression(removedExp, true);
+                                try {
+                                    task.addExpression(removedExp, true);
+                                } catch (SquidException squidException) {
+                                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                                }
                             }
                             removedExpressions.clear();
                             populateExpressionListViews();

@@ -23,6 +23,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 
@@ -34,7 +35,7 @@ import java.util.Map;
  */
 public class MessagePlot extends AbstractDataView implements PlotDisplayInterface {
 
-    private String message;
+    private final String message;
 
     public MessagePlot(String message) {
         super(new Rectangle(1000, 600), 0, 0);
@@ -51,7 +52,10 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
                 if (newValue.intValue() > 100) {
                     width = newValue.intValue();
                     setGraphWidth((int) width - 2 * leftMargin);
-                    displayPlotAsNode();
+                    try {
+                        displayPlotAsNode();
+                    } catch (SquidException squidException) {
+                    }
                 }
             }
         });
@@ -62,7 +66,10 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
                 if (newValue.intValue() > 100) {
                     height = newValue.intValue();
                     graphHeight = (int) height - topMargin - topMargin / 2;
-                    displayPlotAsNode();
+                    try {
+                        displayPlotAsNode();
+                    } catch (SquidException squidException) {
+                    }
                 }
             }
         });
@@ -93,7 +100,7 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
      * @param g2d
      */
     @Override
-    public void paint(GraphicsContext g2d) {
+    public void paint(GraphicsContext g2d) throws SquidException {
         super.paint(g2d);
 
         g2d.setFont(Font.font("SansSerif", FontWeight.SEMI_BOLD, 15));
@@ -110,7 +117,7 @@ public class MessagePlot extends AbstractDataView implements PlotDisplayInterfac
     }
 
     @Override
-    public Node displayPlotAsNode() {
+    public Node displayPlotAsNode() throws SquidException {
         preparePanel();
         this.repaint();
         return this;

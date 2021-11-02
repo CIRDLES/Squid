@@ -23,6 +23,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.AbstractTopsoilPlot;
 import org.cirdles.squid.tasks.expressions.constants.ConstantNode;
@@ -56,7 +57,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
      * @param plotsController the value of plotsController
      * @param hasData         the value of hasData
      */
-    public AnyTwoExpressionsControlNode(PlotRefreshInterface plotsController, boolean hasData) {
+    public AnyTwoExpressionsControlNode(PlotRefreshInterface plotsController, boolean hasData) throws SquidException {
         super(4);
 
         this.xAxisExpressionComboBox = new ComboBox<>();
@@ -68,7 +69,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
 
     }
 
-    private void initNode() {
+    private void initNode() throws SquidException {
         setStyle("-fx-padding: 1;" + "-fx-background-color: white;"
                 + "-fx-border-width: 2;" + "-fx-border-insets: 0 2 0 2;"
                 + "-fx-border-radius: 4;" + "-fx-border-color: blue;-fx-effect: null;");
@@ -110,7 +111,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         xAxisExpressionComboBox.setValue(PlotsController.xAxisExpressionName);
 
         xAxisExpressionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            plotsController.setXAxisExpressionName(newValue);
+            try{plotsController.setXAxisExpressionName(newValue);}catch(SquidException squidException){}
         });
 
         Label yAxisChooseLabel = new Label(" Choose Y-axis expression:");
@@ -121,7 +122,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         yAxisExpressionComboBox.setValue(PlotsController.yAxisExpressionName);
 
         yAxisExpressionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            plotsController.setYAxisExpressionName(newValue);
+            try{plotsController.setYAxisExpressionName(newValue);}catch(SquidException squidException){}
         });
 
         getChildren().addAll(yAxisChooseLabel, yAxisExpressionComboBox,

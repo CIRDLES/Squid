@@ -1,6 +1,7 @@
 package org.cirdles.squid.gui.squidReportTable;
 
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTable;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
@@ -14,7 +15,7 @@ import static org.cirdles.squid.gui.SquidUIController.squidProject;
 
 public class SquidReportTableHelperMethods {
 
-    public static String[][] processReportTextArray(SquidReportTableLauncher.ReportTableTab tab, SquidReportTableInterface squidReportTable, String unknownSpot) {
+    public static String[][] processReportTextArray(SquidReportTableLauncher.ReportTableTab tab, SquidReportTableInterface squidReportTable, String unknownSpot) throws SquidException {
         String[][] textArray = {};
 
         Map<String, List<ShrimpFractionExpressionInterface>> reportSamplesMap = new HashMap<>();

@@ -15,6 +15,7 @@
  */
 package org.cirdles.squid.projects;
 
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 
 /**
@@ -25,7 +26,7 @@ public interface Squid3ProjectParametersAPI {
     /**
      * @return the commonPbModel
      */
-    ParametersModel getCommonPbModel();
+    ParametersModel getCommonPbModel() throws SquidException;
 
     /**
      * @return the concentrationReferenceMaterialModel
@@ -35,7 +36,7 @@ public interface Squid3ProjectParametersAPI {
     /**
      * @return the physicalConstantsModel
      */
-    ParametersModel getPhysicalConstantsModel();
+    ParametersModel getPhysicalConstantsModel() throws SquidException;
 
     /**
      * @return the referenceMaterialModel

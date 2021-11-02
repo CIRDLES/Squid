@@ -17,6 +17,7 @@ package org.cirdles.squid.shrimp;
 
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.core.CalamariReportsEngine;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.tasks.evaluationEngines.TaskExpressionEvaluatedPerSpotPerScanModelInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
@@ -35,7 +36,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInterface {
 
     private static final long serialVersionUID = -8414997835056044184L;
-
+    private final Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
     private String fractionID;
     private int spotNumber;
     // for tracking time spotIndex of spot in all sets of spots as 1-based index
@@ -69,14 +70,10 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     private boolean concentrationReferenceMaterial;
     private boolean useSBM;
     private boolean userLinFits;
-
     private double[][] reducedPkHt;
     private double[][] reducedPkHtFerr;
-
     private double[] pkInterpScanArray;
-
     private List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsForScansEvaluated;
-    private final Map<ExpressionTreeInterface, double[][]> taskExpressionsEvaluationsPerSpot;
     private Map<ExpressionTreeInterface, String> taskExpressionsMetaDataPerSpot;
 
     private boolean selected;
@@ -92,7 +89,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     /**
      *
      */
-    public ShrimpFraction() {
+    public ShrimpFraction() throws SquidException {
         this.fractionID = "NONE";
         this.spotNumber = -1;
         this.spotIndex = 1;
@@ -143,10 +140,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     /**
      * @param fractionID
-     * @param isotopicRatios
      * @param isotopicRatiosII
      */
-    public ShrimpFraction(String fractionID, SortedSet<SquidRatiosModel> isotopicRatiosII) {
+    public ShrimpFraction(String fractionID, SortedSet<SquidRatiosModel> isotopicRatiosII) throws SquidException {
         this();
         this.fractionID = fractionID;
         this.isotopicRatiosII = isotopicRatiosII;
@@ -817,7 +813,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_206Pb204Pb
      */
     @Override
-    public double getCom_206Pb204Pb() {
+    public double getCom_206Pb204Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -828,7 +824,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_206Pb204Pb the com_206Pb204Pb to set
      */
     @Override
-    public void setCom_206Pb204Pb(double com_206Pb204Pb) {
+    public void setCom_206Pb204Pb(double com_206Pb204Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -839,7 +835,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_207Pb206Pb
      */
     @Override
-    public double getCom_207Pb206Pb() {
+    public double getCom_207Pb206Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -850,7 +846,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_207Pb206Pb the com_207Pb206Pb to set
      */
     @Override
-    public void setCom_207Pb206Pb(double com_207Pb206Pb) {
+    public void setCom_207Pb206Pb(double com_207Pb206Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -861,7 +857,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_208Pb206Pb
      */
     @Override
-    public double getCom_208Pb206Pb() {
+    public double getCom_208Pb206Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -872,7 +868,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_208Pb206Pb the com_208Pb206Pb to set
      */
     @Override
-    public void setCom_208Pb206Pb(double com_208Pb206Pb) {
+    public void setCom_208Pb206Pb(double com_208Pb206Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -883,7 +879,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_206Pb208Pb
      */
     @Override
-    public double getCom_206Pb208Pb() {
+    public double getCom_206Pb208Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -894,7 +890,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_206Pb208Pb the com_206Pb208Pb to set
      */
     @Override
-    public void setCom_206Pb208Pb(double com_206Pb208Pb) {
+    public void setCom_206Pb208Pb(double com_206Pb208Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -905,7 +901,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_207Pb204Pb
      */
     @Override
-    public double getCom_207Pb204Pb() {
+    public double getCom_207Pb204Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -916,7 +912,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_207Pb204Pb the com_207Pb204Pb to set
      */
     @Override
-    public void setCom_207Pb204Pb(double com_207Pb204Pb) {
+    public void setCom_207Pb204Pb(double com_207Pb204Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -927,7 +923,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the com_208Pb204Pb
      */
     @Override
-    public double getCom_208Pb204Pb() {
+    public double getCom_208Pb204Pb() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -938,7 +934,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param com_208Pb204Pb the com_208Pb204Pb to set
      */
     @Override
-    public void setCom_208Pb204Pb(double com_208Pb204Pb) {
+    public void setCom_208Pb204Pb(double com_208Pb204Pb) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -949,7 +945,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return
      */
     @Override
-    public ParametersModel getCommonLeadModel() {
+    public ParametersModel getCommonLeadModel() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -960,7 +956,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @param commonLeadModel
      */
     @Override
-    public void setCommonLeadModel(ParametersModel commonLeadModel) {
+    public void setCommonLeadModel(ParametersModel commonLeadModel) throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -971,7 +967,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the commonLeadSpecsForSpot
      */
     @Override
-    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() {
+    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -982,7 +978,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
      * @return the overcountCorrectionIsotope
      */
     @Override
-    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() {
+    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException {
         if (overcountCorrectionIsotope == null) {
             overcountCorrectionIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
         }
@@ -1019,7 +1015,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     @Override
-    public String getSelectedAgeExpressionName() {
+    public String getSelectedAgeExpressionName() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
@@ -1035,7 +1031,13 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(), getDateTimeMillisecondsLong(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(), getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(), getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(), isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(), getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(), isSelected(), getCountOfNonPositiveSBMCounts(), getCommonLeadSpecsForSpot());
+        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(),
+                getDateTimeMillisecondsLong(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(),
+                getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(),
+                getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(),
+                isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(),
+                getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(),
+                isSelected(), getCountOfNonPositiveSBMCounts());//, getCommonLeadSpecsForSpot());
         result = 31 * result + Arrays.hashCode(getCountTimeSec());
         result = 31 * result + Arrays.hashCode(getNamesOfSpecies());
         result = 31 * result + Arrays.hashCode(getRawPeakData());

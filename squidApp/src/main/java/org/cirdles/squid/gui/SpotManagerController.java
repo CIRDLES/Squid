@@ -30,7 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.parameters.ParametersManagerGUIController;
@@ -174,6 +174,7 @@ public class SpotManagerController implements Initializable {
         try {
             setUpDataFile(false);
         } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
 
         alertForZeroNaturalUranium();
@@ -292,16 +293,17 @@ public class SpotManagerController implements Initializable {
     }
 
     private ContextMenu createAllSpotsViewContextMenu()
-            throws SquidException {
+             {
         ContextMenu contextMenu = new ContextMenu();
         spotContextRemoveSpotsMenuItem = new MenuItem();
         spotContextRemoveSpotsMenuItem.setOnAction((evt) -> {
-            squidProject.removeRunsFromPrawnFile(selectedRuns);
+
 
             try {
+                squidProject.removeRunsFromPrawnFile(selectedRuns);
                 setUpDataFile(true);
             } catch (SquidException squidException) {
-
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
             squidProject.generatePrefixTreeFromSpotNames();
             SquidProject.setProjectChanged(true);
@@ -459,8 +461,8 @@ public class SpotManagerController implements Initializable {
                     if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-                        squidProject.getTask().refreshParametersFromModels(false, false, true);
-
+                        try{squidProject.getTask().refreshParametersFromModels(false, false, true);}
+                           catch(SquidException squidException){ SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);}
                         alertForZeroNaturalUranium();
                     }
 
@@ -529,7 +531,11 @@ public class SpotManagerController implements Initializable {
                     if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setConcentrationReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-                        squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        try {
+                            squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        }catch(SquidException squidException){
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                        }
                     }
 
                     ParametersModel curValue = (newValue != null) ? newValue : oldValue;
@@ -593,7 +599,11 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+            try {
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+            }catch(SquidException squidException){
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
         }
 
         updateViewRM();
@@ -631,7 +641,11 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
-            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+            try {
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+            }catch(SquidException squidException){
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
         }
 
         updateViewCM();
@@ -671,7 +685,11 @@ public class SpotManagerController implements Initializable {
 
     @FXML
     private void refreshRMmodelButton(ActionEvent event) {
-        squidProject.getTask().refreshParametersFromModels(false, false, true);
+        try {
+            squidProject.getTask().refreshParametersFromModels(false, false, true);
+        }catch (SquidException squidException){
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
     }
 
     private class MouseClickEventHandler implements EventHandler<MouseEvent> {
@@ -696,13 +714,14 @@ public class SpotManagerController implements Initializable {
                     MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
                     spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
-                        squidProject.restoreAllRunsToPrawnFile();
+                                try {squidProject.restoreAllRunsToPrawnFile();
 
-                        try {
+
                             setUpDataFile(true);
-                        } catch (SquidException squidException) {
-                            //TODO: need message here
+                        } catch (SquidException squidException){
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                         }
+
                         squidProject.generatePrefixTreeFromSpotNames();
                         SquidProject.setProjectChanged(true);
                     });
@@ -711,11 +730,11 @@ public class SpotManagerController implements Initializable {
                         MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
                         spotRestoreMenu.getItems().add(restoreSpotMenuItem);
                         restoreSpotMenuItem.setOnAction((evt) -> {
-                            squidProject.restoreRunToPrawnFile(run);
-                            try {
+
+                            try {squidProject.restoreRunToPrawnFile(run);
                                 setUpDataFile(true);
                             } catch (SquidException squidException) {
-                                //TODO: need message here
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
                             squidProject.generatePrefixTreeFromSpotNames();
                             SquidProject.setProjectChanged(true);

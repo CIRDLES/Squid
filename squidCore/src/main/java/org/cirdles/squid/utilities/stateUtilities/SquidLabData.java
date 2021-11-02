@@ -55,7 +55,7 @@ public class SquidLabData implements Serializable {
         updateSquidLabData();
     }
 
-    public static SquidLabData getExistingSquidLabData() {
+    public static SquidLabData getExistingSquidLabData() throws SquidException{
         SquidLabData retVal;
         try {
             File file = new File(File.separator + SquidPersistentState.squidUserHomeDirectory
@@ -77,7 +77,7 @@ public class SquidLabData implements Serializable {
         return retVal;
     }
 
-    public static SquidLabData deserialize(File file) throws IOException, ClassNotFoundException {
+    public static SquidLabData deserialize(File file) throws IOException, ClassNotFoundException, SquidException {
         return (SquidLabData) SquidSerializer.getSerializedObjectFromFile(file.getAbsolutePath(), false);
     }
 

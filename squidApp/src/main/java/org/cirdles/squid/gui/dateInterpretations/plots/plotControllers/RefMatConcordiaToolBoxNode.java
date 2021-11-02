@@ -25,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.*;
@@ -57,7 +58,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
             @Override
             public void handle(ActionEvent e) {
                 PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = true;
-                plotsController.showActivePlot();
+                try{plotsController.showActivePlot();}catch(SquidException squidException){}
                 PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = false;
             }
         });
@@ -117,7 +118,7 @@ public class RefMatConcordiaToolBoxNode extends HBox {
                 }
 
                 squidProject.getTask().setChanged(true);
-                plotsController.showActivePlot();
+                try{plotsController.showActivePlot();}catch(SquidException squidException){}
             }
         });
     }

@@ -16,6 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.squidReports.squidReportTables.SquidReportTableInterface;
 
 import java.net.URL;
@@ -32,6 +33,9 @@ import static org.cirdles.squid.gui.squidReportTable.TextArrayManager.textArrayM
  */
 public class SquidReportTableController implements Initializable {
 
+    public static SquidReportTableLauncher.ReportTableTab typeOfController;
+    public static SquidReportTableInterface squidReportTable;
+    public static String unknownSpot = Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName();
     @FXML
     private TableView<ObservableList<String>> reportsTable;
     @FXML
@@ -40,14 +44,8 @@ public class SquidReportTableController implements Initializable {
     private AnchorPane root;
     @FXML
     private ScrollBar scrollBar;
-
     private String[][] reportTextArray;
-
     private boolean isSetUpScroller;
-
-    public static SquidReportTableLauncher.ReportTableTab typeOfController;
-    public static SquidReportTableInterface squidReportTable;
-    public static String unknownSpot = Squid3Constants.SpotTypes.UNKNOWN.getSpotTypeName();
 
     /**
      * Initializes the controller class.
@@ -61,7 +59,10 @@ public class SquidReportTableController implements Initializable {
         boundCol.setFixedCellSize(24);
         reportsTable.setFixedCellSize(24);
 
-        reportTextArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        try {
+            reportTextArray = SquidReportTableHelperMethods.processReportTextArray(typeOfController, squidReportTable, unknownSpot);
+        } catch (SquidException squidException) {
+        }
         textArrayManagerInitialize(boundCol, reportsTable, reportTextArray, typeOfController);
 
         EventHandler<MouseEvent> scrollHandler = event -> {

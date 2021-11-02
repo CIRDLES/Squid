@@ -24,6 +24,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.parameters.util.Lambdas;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
@@ -40,13 +41,13 @@ import static org.cirdles.topsoil.plot.PlotOption.*;
 /**
  * @author James F. Bowring
  */
-public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
+public class TopsoilPlotWetherill extends AbstractTopsoilPlot{
 
-    public TopsoilPlotWetherill() {
+    public TopsoilPlotWetherill() throws SquidException{
         this("placeholder");
     }
 
-    public TopsoilPlotWetherill(String title) {
+    public TopsoilPlotWetherill(String title) throws SquidException {
         this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
                 SquidLabData.getExistingSquidLabData().getPhysConstDefault()

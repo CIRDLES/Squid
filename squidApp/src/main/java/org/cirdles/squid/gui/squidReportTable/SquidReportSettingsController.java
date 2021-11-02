@@ -24,9 +24,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUI;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategory;
@@ -163,9 +163,17 @@ public class SquidReportSettingsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         task = squidProject.getTask();
         // update
-        task.setupSquidSessionSpecsAndReduceAndReport(false);
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
-        ((Task) task).initTaskDefaultSquidReportTables(false);
+        try {
+            ((Task) task).initTaskDefaultSquidReportTables(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         isRefMat = false;
         spotsChoiceBox.setVisible(true);
@@ -173,8 +181,11 @@ public class SquidReportSettingsController implements Initializable {
         isDefault.set(false);
         isDefaultLab.set(false);
 
-        selectedRefMatReportModel = task.getSelectedRefMatReportModel();
-        selectedUnknownReportModel = task.getSelectedUnknownReportModel();
+        try {
+            selectedRefMatReportModel = task.getSelectedRefMatReportModel();
+            selectedUnknownReportModel = task.getSelectedUnknownReportModel();
+        } catch (SquidException squidException) {
+        }
 
         initEditing();
         initDefault();
@@ -1358,7 +1369,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    public void exportCSVOnAction(ActionEvent actionEvent) throws IOException {
+    public void exportCSVOnAction(ActionEvent actionEvent) throws IOException, SquidException {
 
         if (isEditing.getValue()) {
             SquidMessageDialog.showInfoDialog(

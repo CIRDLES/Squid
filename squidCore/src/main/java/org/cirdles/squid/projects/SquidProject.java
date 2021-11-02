@@ -103,7 +103,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param projectType the value of projectType
      */
-    public SquidProject(TaskTypeEnum projectType) {
+    public SquidProject(TaskTypeEnum projectType) throws SquidException {
         this.projectType = projectType;
         this.prawnFileHandler = new PrawnXMLFileHandler(this);
         this.projectName = "NO_NAME";
@@ -151,7 +151,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * @param projectName the value of projectName
      * @param projectType the value of projectType
      */
-    public SquidProject(String projectName, TaskTypeEnum projectType) {
+    public SquidProject(String projectName, TaskTypeEnum projectType) throws SquidException {
         this(projectType);
         this.projectName = projectName;
     }
@@ -203,7 +203,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param autoGenerateNominalMasses the value of autoGenerateNominalMasses
      */
-    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) {
+    public void initializeTaskAndReduceData(boolean autoGenerateNominalMasses) throws SquidException {
         if (task != null) {
             task.setPrawnFile(prawnFile);
             task.setReportsEngine(prawnFileHandler.getReportsEngine());
@@ -211,11 +211,12 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
             task.setFiltersForUnknownNames(filtersForUnknownNames);
 
+
             ((Task) task).initializeTaskAndReduceData(autoGenerateNominalMasses);
         }
     }
 
-    public void createNewTask() {
+    public void createNewTask() throws SquidException {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
 
@@ -237,7 +238,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         initializeTaskAndReduceData(false);
     }
 
-    public TaskInterface makeTaskFromSquid25Task(TaskSquid25 taskSquid25) {
+    public TaskInterface makeTaskFromSquid25Task(TaskSquid25 taskSquid25) throws SquidException {
         TaskInterface taskFromSquid25 = new Task(taskSquid25.getTaskName());
 
         taskFromSquid25.setTaskType(taskSquid25.getTaskType());
@@ -295,7 +296,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return taskFromSquid25;
     }
 
-    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) {
+    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) throws SquidException {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
@@ -328,7 +329,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public boolean setupPrawnOPFile(File opFileNew)
-            throws IOException {
+            throws IOException, SquidException {
 
         boolean retVal = false;
         prawnSourceFile = opFileNew;
@@ -509,7 +510,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     // reports
     public File produceReferenceMaterialPerSquid25CSV(boolean numberStyleIsNumeric)
-            throws IOException {
+            throws IOException, SquidException {
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("RefMat", true, task);
@@ -523,7 +524,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public File produceSelectedReferenceMaterialReportCSV()
-            throws IOException {
+            throws IOException, SquidException {
         File reportTableFile = null;
         if (task.getReferenceMaterialSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedRefMatReportModel();
@@ -537,7 +538,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public File produceUnknownsPerSquid25CSV(boolean numberStyleIsNumeric)
-            throws IOException {
+            throws IOException, SquidException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             ReportSettingsInterface reportSettings = new ReportSettings("Unknowns", false, task);
@@ -552,7 +553,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public File produceUnknownsBySampleForETReduxCSV(boolean numberStyleIsNumeric)
-            throws IOException {
+            throws IOException, SquidException {
         File reportTableFile = null;
 
         List<ShrimpFractionExpressionInterface> spotsBySampleNames = makeListOfUnknownsBySampleName();
@@ -566,12 +567,12 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     public void produceSelectedUnknownsReportCSV()
-            throws IOException {
+            throws IOException, SquidException {
         produceTargetedSelectedUnknownsReportCSV(SpotTypes.UNKNOWN.getSpotTypeName());
     }
 
     public File produceTargetedSelectedUnknownsReportCSV(String nameOfTargetSample)
-            throws IOException {
+            throws IOException, SquidException {
         File reportTableFile = null;
         if (task.getUnknownSpots().size() > 0) {
             SquidReportTableInterface reportSettings = task.getSelectedUnknownReportModel();
@@ -672,7 +673,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      *
      * @return List<ShrimpFractionExpressionInterface>
      */
-    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() {
+    public List<ShrimpFractionExpressionInterface> makeListOfUnknownsBySampleName() throws SquidException {
         Map<String, List<ShrimpFractionExpressionInterface>> mapOfUnknownsBySampleNames = task.getMapOfUnknownsBySampleNames();
         List<ShrimpFractionExpressionInterface> listOfUnknownsBySample = new ArrayList<>();
 
@@ -761,7 +762,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
 
     }
 
-    public void removeSpotsFromDataFile(List<String> spotNames) {
+    public void removeSpotsFromDataFile(List<String> spotNames) throws SquidException {
         List<Run> runs = new ArrayList<>();
         for (int i = 0; i < spotNames.size(); i++) {
             Run run = retrieveRunBySpotName(spotNames.get(i));
@@ -792,7 +793,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return retVal;
     }
 
-    public void removeRunsFromPrawnFile(List<Run> runs) {
+    public void removeRunsFromPrawnFile(List<Run> runs) throws SquidException {
         if (removedRuns == null) {
             removedRuns = new ArrayList<>();
         }
@@ -808,7 +809,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         }
     }
 
-    public void restoreRunToPrawnFile(Run run) {
+    public void restoreRunToPrawnFile(Run run) throws SquidException {
         prawnFile.getRun().add(run);
         removedRuns.remove(run);
 
@@ -820,14 +821,14 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         ((Task) task).setupSquidSessionSkeleton();
     }
 
-    public void restoreSpotToDataFile(String spotName) {
+    public void restoreSpotToDataFile(String spotName) throws SquidException {
         Run run = retrieveRunBySpotName(spotName);
         if (run != null) {
             restoreRunToPrawnFile(run);
         }
     }
 
-    public void restoreAllRunsToPrawnFile() {
+    public void restoreAllRunsToPrawnFile() throws SquidException {
 
         prawnFile.getRun().addAll(removedRuns);
         removedRuns.clear();
@@ -958,7 +959,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     }
 
     @Override
-    public Path generateAllReports() throws IOException {
+    public Path generateAllReports() throws IOException, SquidException {
 
         if (prawnFileExists()) {
             // these are raw data reports
@@ -1202,7 +1203,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * @return the physicalConstantsModel
      */
     @Override
-    public ParametersModel getPhysicalConstantsModel() {
+    public ParametersModel getPhysicalConstantsModel() throws SquidException {
         if (physicalConstantsModel == null) {
             physicalConstantsModel = task.getPhysicalConstantsModel();
             //backwards compatible
@@ -1231,7 +1232,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * @return the commonPbModel
      */
     @Override
-    public ParametersModel getCommonPbModel() {
+    public ParametersModel getCommonPbModel() throws SquidException {
         if (commonPbModel == null) {
             //backwards compatible
             if (task != null) {

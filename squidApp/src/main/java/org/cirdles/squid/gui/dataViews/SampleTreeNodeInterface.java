@@ -16,6 +16,7 @@
 package org.cirdles.squid.gui.dataViews;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface SampleTreeNodeInterface {
     /**
      * @return the java.lang.String
      */
-    public String getNodeName();
+    public String getNodeName() throws SquidException;
 
     public ShrimpFractionExpressionInterface getShrimpFraction();
 

@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.squid;
 
+import org.cirdles.squid.exceptions.SquidException;
+
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
@@ -28,11 +30,11 @@ public interface PlotRefreshInterface {
 
     public void showRefMatCalibrationConstantPlot();
 
-    public void showActivePlot();
+    public void showActivePlot() throws SquidException;
 
-    public void setXAxisExpressionName(String xAxisExpressionName);
+    public void setXAxisExpressionName(String xAxisExpressionName) throws SquidException;
 
-    public void setYAxisExpressionName(String yAxisExpressionName);
+    public void setYAxisExpressionName(String yAxisExpressionName) throws SquidException;
 
     public void showExcludedSpots(boolean doShow);
 

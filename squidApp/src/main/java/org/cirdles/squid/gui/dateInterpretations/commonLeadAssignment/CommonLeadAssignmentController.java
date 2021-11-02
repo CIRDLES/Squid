@@ -37,6 +37,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -72,7 +73,7 @@ import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.
 public class CommonLeadAssignmentController implements Initializable {
 
     private static boolean suppressChangeAction = false;
-
+    private final TreeView<CommonLeadSampleTreeInterface> spotsTreeViewCommonLeadTools = new TreeView<>();
     @FXML
     private RadioButton correctionNoneRB;
     @FXML
@@ -95,9 +96,6 @@ public class CommonLeadAssignmentController implements Initializable {
     private HBox footerHBox;
     @FXML
     private AnchorPane sampleTreeAnchorPane;
-
-    private TreeView<CommonLeadSampleTreeInterface> spotsTreeViewCommonLeadTools = new TreeView<>();
-
     private ExpressionTreeInterface expPB4COR206_238AGE;
     private ExpressionTreeInterface expPB4COR208_232AGE;
     private ExpressionTreeInterface expPB4COR207_206AGE;
@@ -116,12 +114,19 @@ public class CommonLeadAssignmentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        init();
+        try {
+            init();
+        } catch (SquidException squidException) {
+        }
     }
 
-    private void init() {
+    private void init() throws SquidException {
         // update
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        try {
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         spotsTreeViewCommonLeadTools.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         spotsTreeViewCommonLeadTools.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
@@ -198,7 +203,7 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter);
 
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
@@ -209,30 +214,34 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter.toString());
+        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter);
 
         viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
 
     @FXML
-    private void correctionNoneAction(ActionEvent event) {
-        OvercountCorrection.correctionNone(squidProject.getTask());
+    private void correctionNoneAction(ActionEvent event) throws SquidException {
+        try {
+            OvercountCorrection.correctionNone(squidProject.getTask());
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
         init();
     }
 
     @FXML
-    private void correction207Action(ActionEvent event) {
+    private void correction207Action(ActionEvent event) throws SquidException {
         OvercountCorrection.correction207(squidProject.getTask());
         init();
     }
 
     @FXML
-    private void correction208Action(ActionEvent event) {
+    private void correction208Action(ActionEvent event) throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
         init();
     }
 
-    private void showUnknownsWithOvercountCorrections() {
+    private void showUnknownsWithOvercountCorrections() throws SquidException {
 
         CommonLeadSampleTreeInterface toolBarSampleType
                 = new CommonLeadSampleToolBar(
@@ -342,7 +351,7 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     @FXML
-    private void viewDetailsOnAction(ActionEvent actionEvent) {
+    private void viewDetailsOnAction(ActionEvent actionEvent) throws SquidException {
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchCountCorrections();
     }
@@ -352,37 +361,49 @@ public class CommonLeadAssignmentController implements Initializable {
         /**
          * @return the chooseModelRB
          */
-        public RadioButton getChooseModelRB();
+        RadioButton getChooseModelRB();
 
         /**
          * @return the commonLeadModels
          */
-        public ComboBox<ParametersModel> getCommonLeadModels();
+        ComboBox<ParametersModel> getCommonLeadModels();
 
         /**
          * @return the chooseModelRB
          */
-        public RadioButton getChooseSKRB();
+        RadioButton getChooseSKRB();
 
         /**
          * @return the chooseSKStarRB
          */
-        public RadioButton getChooseSKStarRB();
+        RadioButton getChooseSKStarRB();
 
         /**
          * @return the skStarValueTextField
          */
-        public TextField getSkStarValueTextField();
+        TextField getSkStarValueTextField();
 
-        public void addSpotDependency(CommonLeadSampleTreeInterface commonLeadToolBar);
+        void addSpotDependency(CommonLeadSampleTreeInterface commonLeadToolBar);
+    }
+
+    static class ParameterModelStringConverter extends StringConverter<ParametersModel> {
+
+        @Override
+        public String toString(ParametersModel model) {
+            return model.getModelNameWithVersion();
+        }
+
+        @Override
+        public ParametersModel fromString(String string) {
+            return null;
+        }
     }
 
     private class CommonLeadSpotDisplay extends HBox implements CommonLeadSampleTreeInterface {
 
-        private ShrimpFractionExpressionInterface spot;
-        private String sampleName;
-        private int indexOfSpot;
-
+        private final ShrimpFractionExpressionInterface spot;
+        private final String sampleName;
+        private final int indexOfSpot;
         @FXML
         protected Label nodeName;
 
@@ -407,34 +428,36 @@ public class CommonLeadAssignmentController implements Initializable {
         public void displayData() {
             getChildren().clear();
             getChildren().add(nodeName);
+            try {
+                addVboxFactory("206Pb/204Pb", spot.getCom_206Pb204Pb(), 0.0);
+                addVboxFactory("207Pb/204Pb", spot.getCom_207Pb204Pb(), 0.0);
+                addVboxFactory("208Pb/204Pb", spot.getCom_208Pb204Pb(), 0.0);
 
-            addVboxFactory("206Pb/204Pb", spot.getCom_206Pb204Pb(), 0.0);
-            addVboxFactory("207Pb/204Pb", spot.getCom_207Pb204Pb(), 0.0);
-            addVboxFactory("208Pb/204Pb", spot.getCom_208Pb204Pb(), 0.0);
+                addVboxFactory(expPB4COR206_238AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][1]);
+                addVboxFactory(expPB4COR208_232AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR208_232AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR208_232AGE)[0][1]);
+                addVboxFactory(expPB4COR207_206AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR207_206AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR207_206AGE)[0][1]);
 
-            addVboxFactory(expPB4COR206_238AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][1]);
-            addVboxFactory(expPB4COR208_232AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR208_232AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR208_232AGE)[0][1]);
-            addVboxFactory(expPB4COR207_206AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR207_206AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR207_206AGE)[0][1]);
-
-            addVboxFactory(expPB7COR206_238AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR206_238AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR206_238AGE)[0][1]);
-            addVboxFactory(expPB7COR208_232AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR208_232AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR208_232AGE)[0][1]);
-            addVboxFactory(expPB8COR206_238AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR206_238AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR206_238AGE)[0][1]);
-            addVboxFactory(expPB8COR207_206AGE.getName(),
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR207_206AGE)[0][0],
-                    spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR207_206AGE)[0][1]);
-
+                addVboxFactory(expPB7COR206_238AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR206_238AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR206_238AGE)[0][1]);
+                addVboxFactory(expPB7COR208_232AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR208_232AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB7COR208_232AGE)[0][1]);
+                addVboxFactory(expPB8COR206_238AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR206_238AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR206_238AGE)[0][1]);
+                addVboxFactory(expPB8COR207_206AGE.getName(),
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR207_206AGE)[0][0],
+                        spot.getTaskExpressionsEvaluationsPerSpot().get(expPB8COR207_206AGE)[0][1]);
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
         }
 
         /**
@@ -442,7 +465,7 @@ public class CommonLeadAssignmentController implements Initializable {
          * @param value the value of value
          * @param unct  the value of unct
          */
-        private void addVboxFactory(String label, double value, double unct) {
+        private void addVboxFactory(String label, double value, double unct) throws SquidException {
             boolean fontIsBold = false;
             Formatter formatter = new Formatter();
             if (unct > 0.0) {
@@ -519,22 +542,16 @@ public class CommonLeadAssignmentController implements Initializable {
 
         @FXML
         protected TextField nodeName;
-
-        @FXML
-        ToggleGroup methodRB_ToggleGroup = new ToggleGroup();
         @FXML
         protected ToggleGroup ageRB_ToggleGroup = new ToggleGroup();
-
         @FXML
         protected RadioButton chooseModelRB;
         @FXML
         protected RadioButton chooseSKRB;
         @FXML
         protected RadioButton chooseSKStarRB;
-
         @FXML
         protected ComboBox<ParametersModel> commonLeadModels;
-
         @FXML
         protected VBox nodNameVbox;
         @FXML
@@ -547,17 +564,15 @@ public class CommonLeadAssignmentController implements Initializable {
         protected VBox skStarVBox;
         @FXML
         protected VBox customModelButtonVbox;
-
         @FXML
         protected TextField skStarValueTextField;
-
         protected List<ShrimpFractionExpressionInterface> sampleGroup;
-
         protected List<CommonLeadSampleTreeInterface> commonLeadSpotToolBarTargets;
-
         protected HBox weightedMeansHBox;
+        @FXML
+        ToggleGroup methodRB_ToggleGroup = new ToggleGroup();
 
-        public CommonLeadSampleToolBar(String sampleGroupName, List<ShrimpFractionExpressionInterface> mySampleGroup) {
+        public CommonLeadSampleToolBar(String sampleGroupName, List<ShrimpFractionExpressionInterface> mySampleGroup) throws SquidException {
             super(2);
 
             this.addEventFilter(EventType.ROOT, new EventHandler<Event>() {
@@ -599,17 +614,18 @@ public class CommonLeadAssignmentController implements Initializable {
                                 treeItem.getChooseModelRB().setSelected(newValue);
                             }
                         } else {
-                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_COMMON_LEAD_MODEL);
-                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetails
-                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
-
                             try {
+                                ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_COMMON_LEAD_MODEL);
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                SpotSummaryDetails spotSummaryDetails
+                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
                                 updateWeightedMeanLabel(
                                         ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
                                         sampleGroupName);
-                            } catch (Exception e) {
+                            } catch (SquidException squidException) {
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
 
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
@@ -642,14 +658,14 @@ public class CommonLeadAssignmentController implements Initializable {
                                 treeItem.getCommonLeadModels().getSelectionModel().select(newModel);
                             }
                         } else {
-
-                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadModel(sampleGroup, newModel);
-                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetails
-                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
-
                             try {
+                                ((Task) squidProject.getTask()).setUnknownGroupCommonLeadModel(sampleGroup, newModel);
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                SpotSummaryDetails spotSummaryDetails
+                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
+
                                 updateWeightedMeanLabel(
                                         ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
                                         sampleGroupName);
@@ -687,17 +703,19 @@ public class CommonLeadAssignmentController implements Initializable {
                                 treeItem.getChooseSKStarRB().setSelected(newValue);
                             }
                         } else {
-                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_STACEY_KRAMER_BY_GROUP);
-                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetails
-                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
-
                             try {
+                                ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_STACEY_KRAMER_BY_GROUP);
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                SpotSummaryDetails spotSummaryDetails
+                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
+
                                 updateWeightedMeanLabel(
                                         ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
                                         sampleGroupName);
-                            } catch (Exception e) {
+                            } catch (SquidException squidException) {
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
 
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
@@ -733,26 +751,25 @@ public class CommonLeadAssignmentController implements Initializable {
                             try {
                                 // set to annum
                                 ((Task) squidProject.getTask()).setUnknownGroupAgeSK(sampleGroup, Double.parseDouble(newValue.trim()) * 1.0e6);
-                            } catch (NumberFormatException numberFormatException) {
-                            }
 
-                            if (chooseSKStarRB.isSelected()) {
-                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                                SpotSummaryDetails spotSummaryDetails
-                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+                                if (chooseSKStarRB.isSelected()) {
+                                    ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                    SpotSummaryDetails spotSummaryDetails
+                                            = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                    mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
 
-                                try {
+
                                     updateWeightedMeanLabel(
                                             ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
                                             sampleGroupName);
-                                } catch (Exception e) {
                                 }
-
-                                for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
-                                    ((CommonLeadSpotDisplay) treeItem).displayData();
-                                }
+                            } catch (Exception e) {
                             }
+
+                            for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
+                                ((CommonLeadSpotDisplay) treeItem).displayData();
+                            }
+
                         }
                         SquidProject.setProjectChanged(true);
                     }
@@ -782,17 +799,19 @@ public class CommonLeadAssignmentController implements Initializable {
                                 treeItem.getChooseSKRB().setSelected(newValue);
                             }
                         } else {
-                            ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_STACEY_KRAMER);
-                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetails
-                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
-
                             try {
+                                ((Task) squidProject.getTask()).setUnknownGroupCommonLeadMethod(sampleGroup, METHOD_STACEY_KRAMER);
+
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                SpotSummaryDetails spotSummaryDetails
+                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetails);
+
                                 updateWeightedMeanLabel(
                                         ((Label) weightedMeansHBox.lookup("#" + spotSummaryDetails.getExpressionTree().getName().split("_WM_")[0])),
                                         sampleGroupName);
-                            } catch (Exception e) {
+                            } catch (SquidException squidException) {
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
 
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
@@ -873,7 +892,7 @@ public class CommonLeadAssignmentController implements Initializable {
             Formatter formatter = new Formatter();
             formatter.format("%5.1f", spotSummaryDetails.getValues()[0][0] / 1e6);
             formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.1f", spotSummaryDetails.getValues()[0][1] / 1e6).toString();
-            wmLabel.setText("WM: " + formatter.toString());
+            wmLabel.setText("WM: " + formatter);
 
             // tool tip
             OperationOrFunctionInterface op = ((ExpressionTree) spotSummaryDetails.getExpressionTree()).getOperation();
@@ -944,20 +963,22 @@ public class CommonLeadAssignmentController implements Initializable {
                         } else {
                             // get some settings from current wm
                             SpotSummaryDetails currentSpotSummaryDetails = mapOfWeightedMeansBySampleNames.get(sampleGroupName);
-
-                            ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleGroup, sampleAgeType);
-                            ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
-                            SpotSummaryDetails spotSummaryDetailsWM
-                                    = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
-                            spotSummaryDetailsWM.setManualRejectionEnabled(true);
-                            spotSummaryDetailsWM.setRejectedIndices(currentSpotSummaryDetails.getRejectedIndices().clone());
-                            spotSummaryDetailsWM.setMinProbabilityWM(currentSpotSummaryDetails.getMinProbabilityWM());
                             try {
-                                spotSummaryDetailsWM.setValues(spotSummaryDetailsWM.eval(squidProject.getTask()));
+                                ((Task) squidProject.getTask()).setUnknownGroupSelectedAge(sampleGroup, sampleAgeType);
+                                ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(sampleGroup);
+                                SpotSummaryDetails spotSummaryDetailsWM
+                                        = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(sampleGroupName, sampleGroup);
+                                spotSummaryDetailsWM.setManualRejectionEnabled(true);
+                                spotSummaryDetailsWM.setRejectedIndices(currentSpotSummaryDetails.getRejectedIndices().clone());
+                                spotSummaryDetailsWM.setMinProbabilityWM(currentSpotSummaryDetails.getMinProbabilityWM());
+                                try {
+                                    spotSummaryDetailsWM.setValues(spotSummaryDetailsWM.eval(squidProject.getTask()));
+                                } catch (SquidException squidException) {
+                                }
+                                mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetailsWM);
                             } catch (SquidException squidException) {
-                            }
-                            mapOfWeightedMeansBySampleNames.put(sampleGroupName, spotSummaryDetailsWM);
 
+                            }
                             for (CommonLeadSampleTreeInterface treeItem : commonLeadSpotToolBarTargets) {
                                 ((CommonLeadSpotDisplay) treeItem).displayData();
                             }
@@ -1044,19 +1065,6 @@ public class CommonLeadAssignmentController implements Initializable {
          */
         public List<CommonLeadSampleTreeInterface> getCommonLeadSpotToolBarTargets() {
             return commonLeadSpotToolBarTargets;
-        }
-    }
-
-    static class ParameterModelStringConverter extends StringConverter<ParametersModel> {
-
-        @Override
-        public String toString(ParametersModel model) {
-            return model.getModelNameWithVersion();
-        }
-
-        @Override
-        public ParametersModel fromString(String string) {
-            return null;
         }
     }
 }

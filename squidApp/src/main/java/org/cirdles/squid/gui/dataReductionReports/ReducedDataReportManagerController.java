@@ -18,7 +18,7 @@ package org.cirdles.squid.gui.dataReductionReports;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
 
 import java.net.URL;

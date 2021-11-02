@@ -3,19 +3,20 @@
 //
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.8.6'
+String mavenVersion = '1.9.0'
 
-sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
-    // You may define additional repositories, or even remove "mavenCentral()".
-    // Read more about repositories here:
-    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+
+    maven {
+        url "https://jitpack.io"
+    }
 
     flatDir {
         dirs 'libs'
@@ -24,11 +25,20 @@ repositories {
 
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
-    //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
-    compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 
-    testCompile "junit:junit:4.13.1"
-    testCompile "org.assertj:assertj-core:3.18.1"
+    implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
+
+    implementation 'com.github.cirdles:LudwigLibrary:-SNAPSHOT'
+
+    implementation "com.sun.activation:javax.activation:1.2.0"
+    implementation "javax.xml.bind:jaxb-api:2.3.1"
+    // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-core
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-core', version: '3.0.2'
+    // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
+    implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
+
+    testImplementation "junit:junit:4.13.1"
+    testImplementation "org.assertj:assertj-core:3.18.1"
 }
 
 String mavenArtifactId = name
@@ -37,14 +47,14 @@ group = mavenGroupId
 version = mavenVersion
 
 task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
-    classifier = 'sources'
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    archiveClassifier.set("sources")
     from sourceSets.main.allSource
 }
 
-
 task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
-    classifier = 'javadoc'
+    archiveClassifier.set("javadoc")
 }
 
 artifacts {
@@ -54,15 +64,32 @@ artifacts {
     //    archives packageJavadoc
 }
 
-configure(install.repositories.mavenInstaller) {
-    pom.project {
-        groupId = mavenGroupId
-        artifactId = mavenArtifactId
-        version = mavenVersion
+// refer to https://github.com/renatoathaydes/rawhttp/blob/master/rawhttp-core/build.gradle#L72
+// refer to https://docs.gradle.org/current/userguide/publishing_maven.html
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = mavenGroupId
+            artifactId = mavenArtifactId
+            version = mavenVersion
+//            description = "Java Port of Squid2.5"
+
+            from components.java
+
+            pom {
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
+        }
     }
 }
 
 task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     sourceSets*.allSource*.srcDirs*.each { File srcDir ->
         if (!srcDir.isDirectory()) {
             println "Creating source folder: ${srcDir}"
@@ -95,6 +122,7 @@ if (JavaVersion.current().isJava8Compatible()) {
         }
     }
 }
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }

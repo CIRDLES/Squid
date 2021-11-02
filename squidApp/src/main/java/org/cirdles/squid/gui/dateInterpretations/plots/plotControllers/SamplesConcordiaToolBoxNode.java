@@ -23,6 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
@@ -34,7 +35,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class SamplesConcordiaToolBoxNode extends HBox {
 
-    private PlotRefreshInterface plotsController;
+    private final PlotRefreshInterface plotsController;
 
     public SamplesConcordiaToolBoxNode(PlotRefreshInterface plotsController) {
         super(5);
@@ -108,7 +109,10 @@ public class SamplesConcordiaToolBoxNode extends HBox {
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 correction = ((String) corrGroup.getSelectedToggle().getUserData());
                 squidProject.getTask().setChanged(true);
-                plotsController.showActivePlot();
+                try {
+                    plotsController.showActivePlot();
+                } catch (SquidException squidException) {
+                }
             }
         });
 
@@ -119,7 +123,10 @@ public class SamplesConcordiaToolBoxNode extends HBox {
                 String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
                 PlotsController.topsoilPlotFlavor = flavor;
                 squidProject.getTask().setChanged(true);
-                plotsController.showActivePlot();
+                try {
+                    plotsController.showActivePlot();
+                } catch (SquidException squidException) {
+                }
             }
         });
 

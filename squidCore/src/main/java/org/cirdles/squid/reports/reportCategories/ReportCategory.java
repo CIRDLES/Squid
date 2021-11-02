@@ -20,6 +20,7 @@
  */
 package org.cirdles.squid.reports.reportCategories;
 
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.reports.reportColumns.ReportColumn;
 import org.cirdles.squid.reports.reportColumns.ReportColumnInterface;
 import org.cirdles.squid.shrimp.ShrimpFraction;
@@ -62,7 +63,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
      * @param task                the value of task
      */
     public ReportCategory(
-            String displayName, String[][] reportCategorySpecs, boolean isVisible, TaskInterface task) {
+            String displayName, String[][] reportCategorySpecs, boolean isVisible, TaskInterface task) throws SquidException {
 
         this.displayName = displayName;
         this.positionIndex = 0;
@@ -140,7 +141,7 @@ public class ReportCategory implements org.cirdles.squid.reports.reportCategorie
         } else if (reportCategorySpecs[0][6].compareToIgnoreCase("<RM_EXPRESSIONS_ARRAY>") == 0) {
             // special case of generation
             List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated
-                    = ((ShrimpFraction) task.getUnknownSpots().get(0)).getTaskExpressionsForScansEvaluated();
+                    = task.getUnknownSpots().get(0).getTaskExpressionsForScansEvaluated();
             List<String[]> generatedReportCategorySpecsList = new ArrayList<>();
             for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
 

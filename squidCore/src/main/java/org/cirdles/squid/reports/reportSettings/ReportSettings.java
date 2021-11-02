@@ -21,6 +21,7 @@
 package org.cirdles.squid.reports.reportSettings;
 
 import com.thoughtworks.xstream.XStream;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.reports.reportCategories.ReportCategory;
 import org.cirdles.squid.reports.reportCategories.ReportCategoryInterface;
 import org.cirdles.squid.reports.reportCategories.ReportCategoryXMLConverter;
@@ -43,21 +44,20 @@ import java.util.ArrayList;
 public class ReportSettings implements
         ReportSettingsInterface {
 
-    //private static final long serialVersionUID = 3742875572117123821L;
-    private transient String reportSettingsXMLSchemaURL;
     /**
      * Each time the report specifications evolve in DataDictionary, this
      * version number is advanced so that any existing analysis will update its
      * report models upon opening in ET_Redux.
      */
-    private static transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 4;
-
+    private static final transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 4;
+    protected ArrayList<ReportCategoryInterface> reportCategories;
+    //private static final long serialVersionUID = 3742875572117123821L;
+    private transient String reportSettingsXMLSchemaURL;
     // Fields
     private String name;
     private int version;
-    private TaskInterface task;
+    private final TaskInterface task;
     private ReportCategoryInterface fractionCategory;
-
     // for reference materials
     private ReportCategoryInterface spotFundamentalsCategory;
     private ReportCategoryInterface cpsCategory;
@@ -67,22 +67,19 @@ public class ReportSettings implements
     private ReportCategoryInterface pb204CorrectedRMCategory;
     private ReportCategoryInterface pb207CorrectedRMCategory;
     private ReportCategoryInterface pb208CorrectedRMCategory;
-
     // for Unknown Samples
     private ReportCategoryInterface correctionIndependentCategory;
     private ReportCategoryInterface pb204CorrectedCategory;
     private ReportCategoryInterface pb207CorrectedCategory;
     private ReportCategoryInterface pb208CorrectedCategory;
-
     private ReportCategoryInterface fractionCategory2;
-    protected ArrayList<ReportCategoryInterface> reportCategories;
     private String reportSettingsComment;
-    private boolean referenceMaterial;
+    private final boolean referenceMaterial;
 
     /**
      * Creates a new instance of ReportSettings
      */
-    public ReportSettings() {
+    public ReportSettings() throws SquidException {
         this("NONE", true, null);
     }
 
@@ -93,7 +90,7 @@ public class ReportSettings implements
      * @param referenceMaterial
      * @param task
      */
-    public ReportSettings(String name, boolean referenceMaterial, TaskInterface task) {
+    public ReportSettings(String name, boolean referenceMaterial, TaskInterface task) throws SquidException {
 
         this.name = name;
         this.referenceMaterial = referenceMaterial;
@@ -201,6 +198,10 @@ public class ReportSettings implements
         return reportSettingsModel;
     }
 
+    public static void main(String[] args) {
+
+    }
+
     /**
      * @param filename
      */
@@ -253,6 +254,8 @@ public class ReportSettings implements
         return reportSettingsModel;
     }
 
+//  accessors
+
     /**
      * @param reportSettingsModel
      * @return
@@ -266,8 +269,6 @@ public class ReportSettings implements
         return this.getNameAndVersion().trim().//
                 compareToIgnoreCase(reportSettingsModelNameAndVersion.trim());
     }
-
-//  accessors
 
     /**
      * @return
@@ -349,6 +350,8 @@ public class ReportSettings implements
         this.pb204CorrectedCategory = pb204CorrectedCategory;
     }
 
+// http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+
     /**
      * @param reportSettingsModel
      * @return
@@ -371,7 +374,7 @@ public class ReportSettings implements
 
     }
 
-// http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+// XML Serialization
 
     /**
      * @return
@@ -381,8 +384,6 @@ public class ReportSettings implements
 
         return 0;
     }
-
-// XML Serialization
 
     /**
      * registers converter for argument <code>xstream</code> and sets aliases to
@@ -487,14 +488,6 @@ public class ReportSettings implements
     }
 
     /**
-     * @return the reportSettingsXMLSchemaURL
-     */
-    @Override
-    public String getReportSettingsXMLSchemaURL() {
-        return reportSettingsXMLSchemaURL;
-    }
-
-    /**
      * @param reportCategories the reportCategories to set
      */
     @Override
@@ -502,8 +495,12 @@ public class ReportSettings implements
         this.reportCategories = reportCategories;
     }
 
-    public static void main(String[] args) {
-
+    /**
+     * @return the reportSettingsXMLSchemaURL
+     */
+    @Override
+    public String getReportSettingsXMLSchemaURL() {
+        return reportSettingsXMLSchemaURL;
     }
 
     /**

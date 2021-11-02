@@ -32,6 +32,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.shrimp.MassStationDetail;
 import org.cirdles.squid.shrimp.SquidSpeciesModel;
 import org.cirdles.squid.shrimp.UThBearingEnum;
@@ -41,6 +43,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.DEFAULT_BACKGROUND_MASS_LABEL;
 
@@ -304,13 +307,17 @@ public class IsotopesManagerController implements Initializable {
 
     @FXML
     private void applyTaskIsotopeLabelsAction(ActionEvent event) {
-        task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
+       try{ task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();} catch (SquidException squidException){
+           SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+       }
         postApplicationOfLabelsUpdate();
     }
 
     @FXML
     private void applyMassStationIsotopeLabelsAction(ActionEvent event) {
-        task.applyMassStationLabelsToTask();
+       try{ task.applyMassStationLabelsToTask();} catch (SquidException squidException){
+           SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+       }
         postApplicationOfLabelsUpdate();
     }
 

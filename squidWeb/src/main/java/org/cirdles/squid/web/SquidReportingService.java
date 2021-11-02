@@ -73,7 +73,7 @@ public class SquidReportingService {
             String refMatFilter,
             String concRefMatFilter,
             String preferredIndexIsotopeName)
-            throws IOException, JAXBException, SAXException {
+            throws IOException, SquidException {
 
         IndexIsoptopesEnum preferredIndexIsotope = IndexIsoptopesEnum.valueOf(preferredIndexIsotopeName);
 

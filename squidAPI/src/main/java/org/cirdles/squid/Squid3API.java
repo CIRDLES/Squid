@@ -63,7 +63,7 @@ public interface Squid3API {
     /**
      * @param projectFilePath
      */
-    void openSquid3Project(Path projectFilePath);
+    void openSquid3Project(Path projectFilePath) throws SquidException;
 
     /**
      * @return
@@ -73,7 +73,7 @@ public interface Squid3API {
     /**
      * @throws IOException
      */
-    void openDemonstrationSquid3Project() throws IOException;
+    void openDemonstrationSquid3Project() throws IOException, SquidException;
 
     /**
      * @throws IOException
@@ -89,25 +89,25 @@ public interface Squid3API {
     void saveAsSquid3Project(File squid3ProjectFileTarget) throws IOException, SquidException;
 
     // project UI management +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    void setUseSBM(boolean doUse);
+    void setUseSBM(boolean doUse) throws SquidException;
 
-    void setUseLinearRegression(boolean doUse);
+    void setUseLinearRegression(boolean doUse) throws SquidException;
 
     void setPreferredIndexIsotope(Squid3Constants.IndexIsoptopesEnum isotope);
 
-    void setAutoExcludeSpots(boolean doAutoExclude);
+    void setAutoExcludeSpots(boolean doAutoExclude) throws SquidException;
 
     void setMinimumExternalSigma206238(double minExternalSigma);
 
     void setMinimumExternalSigma208232(double minExternalSigma);
 
-    void setDefaultCommonPbModel(ParametersModel commonPbModel);
+    void setDefaultCommonPbModel(ParametersModel commonPbModel) throws SquidException;
 
-    void setDefaultPhysicalConstantsModel(ParametersModel physicalConstantsModel);
+    void setDefaultPhysicalConstantsModel(ParametersModel physicalConstantsModel) throws SquidException;
 
-    void setDefaultParametersFromCurrentChoices();
+    void setDefaultParametersFromCurrentChoices() throws SquidException;
 
-    void refreshModelsAction();
+    void refreshModelsAction() throws SquidException;
 
     // Sample UI management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     String[] getArrayOfSampleNames();
@@ -118,8 +118,8 @@ public interface Squid3API {
     void setConcReferenceMaterialSampleName(String concRefMatSampleName);
     void updateSpotName(String oldSpotName, String spotName);
 
-    void updateRefMatModelChoice(ParametersModel refMatModel);
-    void updateConcRefMatModelChoice(ParametersModel concRefMatModel);
+    void updateRefMatModelChoice(ParametersModel refMatModel) throws SquidException;
+    void updateConcRefMatModelChoice(ParametersModel concRefMatModel) throws SquidException;
     /**
      * Produces 2 element array where [0] is three flags separated by semicolons with one for each of
      * dates 206_238; 207_206; 208_232 where flags are 0 = no change; 1 = change; F = bad Model.
@@ -144,10 +144,10 @@ public interface Squid3API {
      * Squid3 maintains a list of removed spots so that they can be recovered at anytime
      * @param spotNames
      */
-    void removeSpotsFromDataFile(List<String> spotNames);
+    void removeSpotsFromDataFile(List<String> spotNames) throws SquidException;
     List<String> getRemovedSpotsByName();
-    void restoreSpotToDataFile(String spotName);
-    void restoreAllSpotsToDataFile();
+    void restoreSpotToDataFile(String spotName) throws SquidException;
+    void restoreAllSpotsToDataFile() throws SquidException;
 
     // Task management +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -192,6 +192,6 @@ public interface Squid3API {
     /**
      * @throws IOException
      */
-    Path generateAllSquid3ProjectReports() throws IOException;
+    Path generateAllSquid3ProjectReports() throws IOException, SquidException;
 
 }

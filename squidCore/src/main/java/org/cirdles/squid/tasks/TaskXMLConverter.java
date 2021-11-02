@@ -21,6 +21,7 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.cirdles.squid.constants.Squid3Constants;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.tasks.expressions.ExpressionSpec;
 import org.cirdles.squid.tasks.expressions.ExpressionSpecInterface;
 
@@ -159,94 +160,98 @@ public class TaskXMLConverter implements Converter {
     public Object unmarshal(HierarchicalStreamReader reader,
                             UnmarshallingContext context) {
 
-        TaskInterface task = new Task();
-
-        reader.moveDown();
-        task.setName(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(reader.getValue()));
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setDescription(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setAuthorName(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setLabName(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setProvenance(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setDateRevised(Long.parseLong(reader.getValue()));
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setParentNuclide(reader.getValue());
-        reader.moveUp();
-
-        reader.moveDown();
-        task.setDirectAltPD(Boolean.parseBoolean(reader.getValue()));
-        reader.moveUp();
-
-        List<String> nominalMasses = new ArrayList<>();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
+        TaskInterface task = null;
+        try {
+            task = new Task();
             reader.moveDown();
-            nominalMasses.add(reader.getValue());
+            task.setName(reader.getValue());
             reader.moveUp();
+
+            reader.moveDown();
+            task.setTaskType(Squid3Constants.TaskTypeEnum.valueOf(reader.getValue()));
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setDescription(reader.getValue());
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setAuthorName(reader.getValue());
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setLabName(reader.getValue());
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setProvenance(reader.getValue());
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setDateRevised(Long.parseLong(reader.getValue()));
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setParentNuclide(reader.getValue());
+            reader.moveUp();
+
+            reader.moveDown();
+            task.setDirectAltPD(Boolean.parseBoolean(reader.getValue()));
+            reader.moveUp();
+
+            List<String> nominalMasses = new ArrayList<>();
+            reader.moveDown();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                nominalMasses.add(reader.getValue());
+                reader.moveUp();
+            }
+            reader.moveUp();
+            task.setNominalMasses(nominalMasses);
+
+            reader.moveDown();
+            task.setIndexOfBackgroundSpecies(Integer.parseInt(reader.getValue()));
+            reader.moveUp();
+
+            List<String> ratioNames = new ArrayList<>();
+            reader.moveDown();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                ratioNames.add(reader.getValue());
+                reader.moveUp();
+            }
+            reader.moveUp();
+            task.setRatioNames(ratioNames);
+
+            Map<String, String> specialSquidFourExpressionsMap = new TreeMap<>();
+            reader.moveDown();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                reader.moveDown();
+                String key = reader.getValue();
+                reader.moveUp();
+                reader.moveDown();
+                String value = reader.getValue();
+                specialSquidFourExpressionsMap.put(key, value);
+                reader.moveUp();
+                reader.moveUp();
+            }
+            reader.moveUp();
+            task.setSpecialSquidFourExpressionsMap(specialSquidFourExpressionsMap);
+
+            // for custom expressions, we retrieve the expressionspec and build expression
+            reader.moveDown();
+            while (reader.hasMoreChildren()) {
+                reader.moveDown();
+                ExpressionSpecInterface expressionSpec = new ExpressionSpec();
+                expressionSpec = (ExpressionSpecInterface) context.convertAnother(expressionSpec, ExpressionSpec.class);
+                ((Task) task).makeCustomExpression(expressionSpec);
+                reader.moveUp();
+            }
+            reader.moveUp();
+        } catch (SquidException squidException) {
+
         }
-        reader.moveUp();
-        task.setNominalMasses(nominalMasses);
-
-        reader.moveDown();
-        task.setIndexOfBackgroundSpecies(Integer.parseInt(reader.getValue()));
-        reader.moveUp();
-
-        List<String> ratioNames = new ArrayList<>();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            ratioNames.add(reader.getValue());
-            reader.moveUp();
-        }
-        reader.moveUp();
-        task.setRatioNames(ratioNames);
-
-        Map<String, String> specialSquidFourExpressionsMap = new TreeMap<>();
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            reader.moveDown();
-            String key = reader.getValue();
-            reader.moveUp();
-            reader.moveDown();
-            String value = reader.getValue();
-            specialSquidFourExpressionsMap.put(key, value);
-            reader.moveUp();
-            reader.moveUp();
-        }
-        reader.moveUp();
-        task.setSpecialSquidFourExpressionsMap(specialSquidFourExpressionsMap);
-
-        // for custom expressions, we retrieve the expressionspec and build expression
-        reader.moveDown();
-        while (reader.hasMoreChildren()) {
-            reader.moveDown();
-            ExpressionSpecInterface expressionSpec = new ExpressionSpec();
-            expressionSpec = (ExpressionSpecInterface) context.convertAnother(expressionSpec, ExpressionSpec.class);
-            ((Task) task).makeCustomExpression(expressionSpec);
-            reader.moveUp();
-        }
-        reader.moveUp();
 
         return task;
     }

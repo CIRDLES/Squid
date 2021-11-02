@@ -34,6 +34,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
@@ -106,14 +107,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     private AnchorPane spotListAnchorPane;
 
     @Override
-    public void setXAxisExpressionName(String xAxisExpressionName) {
+    public void setXAxisExpressionName(String xAxisExpressionName)throws SquidException {
         PlotsController.xAxisExpressionName = xAxisExpressionName;
         ((Task) squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
         showActivePlot();
     }
 
     @Override
-    public void setYAxisExpressionName(String yAxisExpressionName) {
+    public void setYAxisExpressionName(String yAxisExpressionName) throws SquidException {
         PlotsController.yAxisExpressionName = yAxisExpressionName;
         ((Task) squidProject.getTask()).setyAxisExpressionName(yAxisExpressionName);
         showActivePlot();
@@ -132,7 +133,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // update
-        squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        try {
+            squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
+        }catch(SquidException squidException){
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
 
         vboxMaster.prefWidthProperty().bind(primaryStageWindow.getScene().widthProperty());
         vboxMaster.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty().subtract(PIXEL_OFFSET_FOR_MENU));
@@ -150,7 +155,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
         yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
-        showActivePlot();
+        try{showActivePlot();}catch(SquidException squidException){}
     }
 
     private PlotDisplayInterface generateConcordiaPlot(
@@ -374,7 +379,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     public String toString(TreeItem<SampleTreeNodeInterface> object) {
                         SampleTreeNodeInterface item = object.getValue();
 
-                        String nodeString = item.getNodeName();
+                        String nodeString = "";
+
+
+                        try{nodeString = item.getNodeName();}catch(SquidException squidException){}
                         if ((object.getParent() != null) && !(item instanceof SampleNode)) {
                             double[][] expressionValues = item.getShrimpFraction()
                                     .getTaskExpressionsEvaluationsPerSpotByField(
@@ -389,6 +397,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                             nodeString += "  " + ageOrValueSource;
                         }
+
+
+
                         return nodeString;
                     }
 
@@ -433,7 +444,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         currentlyPlottedSampleTreeNode.setExpanded(true);
     }
 
-    private void showAnyTwoExpressions() {
+    private void showAnyTwoExpressions()throws SquidException {
         spotsTreeViewCheckBox = new CheckTreeView<>();
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
@@ -488,14 +499,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
                     mySampleItem.setSelected(newValue);
                 }
-                provisionAnyTwoToolbox(newValue);
+                try{provisionAnyTwoToolbox(newValue);}catch(SquidException squidException){}
             }
         });
 
         rootItem.indeterminateProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                provisionAnyTwoToolbox(newValue || rootItem.isSelected());
+                try{provisionAnyTwoToolbox(newValue || rootItem.isSelected());}catch(SquidException squidException){}
             }
         });
 
@@ -591,7 +602,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                     public String toString(TreeItem<SampleTreeNodeInterface> object) {
                         SampleTreeNodeInterface item = object.getValue();
 
-                        String nodeString = item.getNodeName();
+                        String nodeString = "";
+                        try{nodeString = item.getNodeName();}catch(SquidException squidException){}
                         if ((object.getParent() != null) && !(item instanceof SampleNode)) {
                             double[][] expressionValues = item.getShrimpFraction()
                                     .getTaskExpressionsEvaluationsPerSpotByField(
@@ -656,7 +668,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     /**
      * @param hasData the value of hasData
      */
-    private void provisionAnyTwoToolbox(boolean hasData) {
+    private void provisionAnyTwoToolbox(boolean hasData) throws SquidException {
 
         if (plot instanceof AbstractTopsoilPlot) {
             plot.setProperty(
@@ -794,7 +806,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             public String toString(TreeItem<SampleTreeNodeInterface> object) {
                                 SampleTreeNodeInterface item = object.getValue();
 
-                                String displayVal = item.getNodeName();
+                                String displayVal = "";
+                                try{displayVal = item.getNodeName();}catch(SquidException squidException){}
                                 try {
                                     displayVal = displayVal
                                             + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
@@ -854,7 +867,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                                 setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
                             }
 
-                            String displayVal = item.getNodeName();
+                            String displayVal="";
+                           try{ displayVal = item.getNodeName();}catch(SquidException squidException){}
                             try {
                                 displayVal = displayVal
                                         + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
@@ -891,7 +905,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         refreshPlot();
     }
 
-    private void showSampleWeightedMeanPlot() {
+    private void showSampleWeightedMeanPlot()throws SquidException {
         // dec 2019 new approach per @NicoleRayner
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
@@ -943,7 +957,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             }
 
                         }
-                        return (object.getParent() == null) ? object.getValue().getNodeName() : (item instanceof SampleNode) ? "" : nodeStringWM;
+                        String nodeName = "";
+                        try{nodeName = object.getValue().getNodeName();}catch(SquidException squidException){}
+                        return (object.getParent() == null) ? nodeName : (item instanceof SampleNode) ? "" : nodeStringWM;
                     }
 
                     @Override
@@ -962,7 +978,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
     }
 
-    private void showRMWeightedMeanPlot() {
+    private void showRMWeightedMeanPlot() throws SquidException {
         // MAY 2021 requested by @NicoleRayner
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
@@ -1014,7 +1030,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             }
 
                         }
-                        return (object.getParent() == null) ? object.getValue().getNodeName() : (item instanceof SampleNode) ? "" : nodeStringWM;
+                        String nodeName = "";
+                        try{nodeName = object.getValue().getNodeName();}catch(SquidException squidException){}
+                        return (object.getParent() == null) ? nodeName : (item instanceof SampleNode) ? "" : nodeStringWM;
                     }
 
                     @Override
@@ -1066,7 +1084,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     }
 
     @Override
-    public void showActivePlot() {
+    public void showActivePlot() throws SquidException{
         switch (plotTypeSelected) {
             case CONCORDIA:
             case TERA_WASSERBURG:

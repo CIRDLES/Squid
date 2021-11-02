@@ -15,7 +15,7 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
 import org.cirdles.squid.prawn.PrawnFile.Run.Set.Scan;
@@ -63,7 +63,7 @@ public final class PrawnFileUtilities {
      * @return the
      * java.util.Map<java.lang.Integer,org.cirdles.squid.shrimp.MassStationDetail>
      */
-    public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(int indexOfBackgroundSpecies, List<Run> runs) {
+    public static Map<Integer, MassStationDetail> createMapOfIndexToMassStationDetails(int indexOfBackgroundSpecies, List<Run> runs) throws SquidException {
         Map<Integer, MassStationDetail> mapOfIndexToMassStationDetails = new TreeMap<>();
 
         if (!runs.isEmpty()) {
@@ -138,10 +138,12 @@ public final class PrawnFileUtilities {
             }
 
             if (detectedMassStationCountAnomaly) {
-                SquidMessageDialog.showWarningDialog(
-                        "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
-                                + "Please edit your data file to fix this issue.",
-                        null);
+                throw new SquidException("Squid3 has detected that there are different mass station counts among the spot analyses.\n"
+                        + "Please edit your data file to fix this issue.");
+//                SquidMessageDialog.showWarningDialog(
+//                        "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
+//                                + "Please edit your data file to fix this issue.",
+//                        null);
             }
         }
         return mapOfIndexToMassStationDetails;

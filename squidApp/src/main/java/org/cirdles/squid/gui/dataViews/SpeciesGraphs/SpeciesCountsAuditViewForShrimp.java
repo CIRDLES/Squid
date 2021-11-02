@@ -32,7 +32,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.cirdles.ludwig.squid25.SquidMathUtils;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
@@ -150,11 +150,18 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
         spotContextMenuItem1.setOnAction((evt) -> {
 
             if (indexOfSelectedSpot >= 0) {
-                squidProject.removeRunsFromPrawnFile(selectedRuns);
+                try {
+                    squidProject.removeRunsFromPrawnFile(selectedRuns);
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
 
                 squidProject.generatePrefixTreeFromSpotNames();
                 SquidProject.setProjectChanged(true);
-                massAuditRefreshInterface.updateSpotsInGraphs();
+                try {
+                    massAuditRefreshInterface.updateSpotsInGraphs();
+                } catch (SquidException squidException) {
+                }
             }
 
         });
@@ -258,7 +265,7 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
      * @param g2d
      */
     @Override
-    public void paint(GraphicsContext g2d) {
+    public void paint(GraphicsContext g2d) throws SquidException {
         super.paint(g2d);
 
         boolean legendOnly = (width - LEGEND_WIDTH == 0);
@@ -711,7 +718,10 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
                     }
                 }
             }
-            massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+            try {
+                massAuditRefreshInterface.updateGraphsWithSelectedIndices(listOfSelectedIndices, selectedRuns, leadingZoomingTrailing);
+            } catch (SquidException squidException) {
+            }
 
             if (selectedRuns.size() > 1) {
                 spotContextMenuItem1.setText("Remove selected set of " + selectedRuns.size() + " spots.");
@@ -729,20 +739,34 @@ public class SpeciesCountsAuditViewForShrimp extends AbstractDataView implements
                     MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
                     spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
-                        squidProject.restoreAllRunsToPrawnFile();
+                        try {
+                            squidProject.restoreAllRunsToPrawnFile();
+                        } catch (SquidException squidException) {
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                        }
                         squidProject.generatePrefixTreeFromSpotNames();
                         SquidProject.setProjectChanged(true);
-                        massAuditRefreshInterface.updateSpotsInGraphs();
+                        try {
+                            massAuditRefreshInterface.updateSpotsInGraphs();
+                        } catch (SquidException squidException) {
+                        }
                     });
                     // list all removed runs
                     for (Run run : squidProject.getRemovedRuns()) {
                         MenuItem restoreSpotMenuItem = new MenuItem(run.getPar().get(0).getValue());
                         spotRestoreMenu.getItems().add(restoreSpotMenuItem);
                         restoreSpotMenuItem.setOnAction((evt) -> {
-                            squidProject.restoreRunToPrawnFile(run);
+                            try {
+                                squidProject.restoreRunToPrawnFile(run);
+                            } catch (SquidException squidException) {
+                                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                            }
                             squidProject.generatePrefixTreeFromSpotNames();
                             SquidProject.setProjectChanged(true);
-                            massAuditRefreshInterface.updateSpotsInGraphs();
+                            try {
+                                massAuditRefreshInterface.updateSpotsInGraphs();
+                            } catch (SquidException squidException) {
+                            }
                         });
                     }
                 } else {

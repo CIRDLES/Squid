@@ -71,7 +71,7 @@ public class SquidPersistentState implements Serializable {
 
         initMRULists();
 
-        taskDesign = new TaskDesign();
+        try{taskDesign = new TaskDesign();}catch(SquidException squidException){}
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
@@ -112,7 +112,7 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return
      */
-    public static SquidPersistentState getExistingPersistentState() {
+    public static SquidPersistentState getExistingPersistentState() throws SquidException{
 
         // squidUserHomeDirectory = System.getProperty("user.home");
         if (instance == null){

@@ -16,7 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.dialogs.SquidMessageDialog;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -57,15 +58,12 @@ import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXM
  */
 public class TaskFolderBrowserController implements Initializable {
 
-    private List<TaskInterface> taskFilesInFolder = new ArrayList<>();
     // folder or file
     public static File tasksBrowserTarget;
     public static String tasksBrowserType = ".xml";
-
-    private ListView<TaskInterface> listViewOfTasksInFolder;
-
     private static Schema taskXMLSchema;
-
+    private List<TaskInterface> taskFilesInFolder = new ArrayList<>();
+    private ListView<TaskInterface> listViewOfTasksInFolder;
     @FXML
     private VBox vboxMaster;
     @FXML
@@ -232,7 +230,6 @@ public class TaskFolderBrowserController implements Initializable {
                         } catch (Exception e) {
                         }
                     }
-                    ;
 
                 } else {
                     nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
@@ -286,7 +283,7 @@ public class TaskFolderBrowserController implements Initializable {
                 @Override
                 public void changed(ObservableValue<? extends TaskInterface> observable, TaskInterface oldValue, TaskInterface selectedTask) {
                     taskNameTextField.setText(selectedTask.getName());
-                    projectModeLabel.setText(((Task) selectedTask).getTaskType().getName());
+                    projectModeLabel.setText(selectedTask.getTaskType().getName());
                     taskDescriptionTextField.setText(selectedTask.getDescription());
                     authorsNameTextField.setText(selectedTask.getAuthorName());
                     labNameTextField.setText(selectedTask.getLabName());
@@ -308,10 +305,10 @@ public class TaskFolderBrowserController implements Initializable {
                         uncorrConstPbThExpressionText.setVisible(false);
                         parentConcExpressionText.setVisible(false);
                         pb208Th232ExpressionText.setVisible(false);
-                        ((RadioButton) taskManagerGridPane.lookup("#232")).setVisible(false);
-                        ((RadioButton) taskManagerGridPane.lookup("#238")).setVisible(false);
-                        ((RadioButton) taskManagerGridPane.lookup("#direct")).setVisible(false);
-                        ((RadioButton) taskManagerGridPane.lookup("#indirect")).setVisible(false);
+                        taskManagerGridPane.lookup("#232").setVisible(false);
+                        taskManagerGridPane.lookup("#238").setVisible(false);
+                        taskManagerGridPane.lookup("#direct").setVisible(false);
+                        taskManagerGridPane.lookup("#indirect").setVisible(false);
                         directivesLabel.setVisible(false);
                         primaryDPLabel.setVisible(false);
                         secondaryDPLabel.setVisible(false);
@@ -413,8 +410,8 @@ public class TaskFolderBrowserController implements Initializable {
     }
 
     private void updateDirectiveButtons(TaskInterface task) {
-        ((RadioButton) taskManagerGridPane.lookup("#232")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
-        ((RadioButton) taskManagerGridPane.lookup("#direct")).setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#232").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#direct").setDisable(task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives(TaskInterface task) {
@@ -422,7 +419,7 @@ public class TaskFolderBrowserController implements Initializable {
 
         // namedExpressionsMap = buildNamedExpressionsMap(task);
         ((RadioButton) taskManagerGridPane.lookup("#" + task.getParentNuclide())).setSelected(true);
-        ((RadioButton) taskManagerGridPane.lookup("#" + (String) (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
+        ((RadioButton) taskManagerGridPane.lookup("#" + (task.isDirectAltPD() ? "direct" : "indirect"))).setSelected(true);
 
         uncorrConstPbUlabel.setText(UNCOR206PB238U_CALIB_CONST + ":");
         String UTh_U = task.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST);
@@ -481,7 +478,7 @@ public class TaskFolderBrowserController implements Initializable {
     }
 
     @FXML
-    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) {
+    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) throws SquidException {
 
         TaskInterface chosenTask = listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue();
         TaskDesign taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
@@ -497,8 +494,12 @@ public class TaskFolderBrowserController implements Initializable {
                 chosenTask.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
 
                 chosenTask.updateTaskDesignFromTask(taskEditor, true);
-                squidProject.createNewTask();
-                squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
+                try {
+                    squidProject.createNewTask();
+                    squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
 
                 MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                         .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
@@ -543,7 +544,5 @@ public class TaskFolderBrowserController implements Initializable {
             }
         }
     }
-
-    ;
 
 }

@@ -23,6 +23,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile;
 
 import java.math.BigDecimal;
@@ -34,15 +35,14 @@ import java.util.List;
  */
 public abstract class AbstractDataView extends Canvas {
 
-    protected double x;
-    protected double y;
-    protected double width;
-    protected double height;
     protected static int indexOfSelectedSpot = -1;
     protected static int indexOfSecondSelectedSpotForMultiSelect = -1;
     protected static List<Integer> listOfSelectedIndices = new ArrayList<>();
     protected static List<PrawnFile.Run> selectedRuns = new ArrayList<>();
-
+    protected double x;
+    protected double y;
+    protected double width;
+    protected double height;
     /**
      *
      */
@@ -151,13 +151,13 @@ public abstract class AbstractDataView extends Canvas {
     /**
      * @param g2d
      */
-    public void paint(GraphicsContext g2d) {
+    public void paint(GraphicsContext g2d) throws SquidException {
         paintInit(g2d);
 
         drawBorder(g2d);
     }
 
-    public void repaint() {
+    public void repaint() throws SquidException {
         paint(this.getGraphicsContext2D());
     }
 

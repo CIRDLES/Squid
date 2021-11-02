@@ -33,6 +33,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.AbstractDataView;
 import org.cirdles.squid.gui.dataViews.MassAuditRefreshInterface;
 import org.cirdles.squid.gui.dataViews.SpeciesGraphs.SpeciesAMUAuditViewForShrimp;
@@ -139,7 +140,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         countsRadioButtonChoice = 0B00;
 
-        setupMassStationDetailsListViews();
+        try {
+            setupMassStationDetailsListViews();
+        } catch (SquidException squidException) {
+        }
         setupMassDeltas();
 
         showTimeNormalized = squidProject.getTask().isShowTimeNormalized();
@@ -183,11 +187,17 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     zoomedEnd = ((zoomedEnd + delta) <= (zoomScrollBar.getMax())) ? (zoomedEnd + delta) : (int) zoomScrollBar.getMax();
                     zoomedStart = Math.max(1, zoomedEnd - zoomedWidth + 1);
                 }
-                updateAllMassesCanvases(savedZoomedStart);
+                try {
+                    updateAllMassesCanvases(savedZoomedStart);
+                } catch (SquidException squidException) {
+                }
             }
         });
 
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
         zoomScrollBar.prefWidthProperty().bind(rightScrollPane.widthProperty());
 
         massesAccordian.setExpandedPane(massesTitledPane);
@@ -204,7 +214,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
-    private void setupMassStationDetailsListViews() {
+    private void setupMassStationDetailsListViews() throws SquidException {
         //https://docs.oracle.com/javafx/2/drag_drop/jfxpub-drag_drop.htm
         List<MassStationDetail> availableMassStationDetails = new ArrayList<>();
         List<MassStationDetail> allMassStationDetails = new ArrayList<>();
@@ -258,28 +268,40 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {
         showTimeNormalized = normalizeTimeAxisCheckBox.isSelected();
         squidProject.getTask().setShowTimeNormalized(showTimeNormalized);
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void showPrimaryBeamCheckBoxAction(ActionEvent event) {
         showPrimaryBeam = showPrimaryBeamCheckBox.isSelected();
         squidProject.getTask().setShowPrimaryBeam(showPrimaryBeam);
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void showQt1yCheckBoxAction(ActionEvent event) {
         showQt1y = showQt1yCheckBox.isSelected();
         squidProject.getTask().setShowQt1y(showQt1y);
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void showQt1zCheckBoxAction(ActionEvent event) {
         showQt1z = showQt1zCheckBox.isSelected();
         squidProject.getTask().setShowQt1z(showQt1z);
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
@@ -305,7 +327,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     private void displaySpotLabelsCheckBoxAction(ActionEvent event) {
         showSpotLabels = displaySpotLabelsCheckBox.isSelected();
         squidProject.getTask().setShowSpotLabels(showSpotLabels);
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     private void setupMassDeltas() {
@@ -388,28 +413,40 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     @FXML
     private void displayMassesAction(ActionEvent actionEvent) {
         countsRadioButtonChoice = 0b00;
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void displayTotalCountsAction(ActionEvent actionEvent) {
         countsRadioButtonChoice = 0b10;
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void displayTotalSBMAction(ActionEvent actionEvent) {
         countsRadioButtonChoice = 0b01;
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
     @FXML
     private void displayBothCountsAction(ActionEvent actionEvent) {
         countsRadioButtonChoice = 0b11;
-        displayMassStationsForReview();
+        try {
+            displayMassStationsForReview();
+        } catch (SquidException squidException) {
+        }
     }
 
-    private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry) {
+    private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry) throws SquidException {
         // plot legend
         AbstractDataView legendCanvas
                 = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, LEGEND_WIDTH, heightOfMassPlot),
@@ -525,7 +562,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     private void updateSpeciesAMUAuditCanvas(
-            SpeciesGraphInterface spotsCanvas, List<Double> data, List<Double> dataII, int index, int startIndex, int endIndex, int startSpotIndex, int endSpotIndex) {
+            SpeciesGraphInterface spotsCanvas, List<Double> data, List<Double> dataII, int index, int startIndex, int endIndex, int startSpotIndex, int endSpotIndex) throws SquidException {
 
         if (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) {
             ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCounts(data.subList(startIndex, endIndex));
@@ -547,7 +584,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         ((AbstractDataView) spotsCanvas).repaint();
     }
 
-    private void updateAllMassesCanvases(int savedZoomedStart) {
+    private void updateAllMassesCanvases(int savedZoomedStart) throws SquidException {
         int endLeadingIndex = 0;
         int endZoomedIndex = 0;
         List<Integer> entry0 = ((SpeciesGraphInterface) legendGraphs.get(0)).getIndicesOfRunsAtMeasurementTimes();
@@ -644,7 +681,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
-    private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry) {
+    private void produceCountsModeGraphOnScrolledPane(int massCounter, String title, List<Double> countsData, List<Double> countsSBMData, MassStationDetail entry) throws SquidException {
         // plot legend
         AbstractDataView legendCanvas
                 = new SpeciesCountsAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, LEGEND_WIDTH, heightOfMassPlot),
@@ -768,7 +805,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
         }
     }
 
-    private void displayMassStationsForReview() {
+    private void displayMassStationsForReview() throws SquidException {
 
         scrolledBox.getChildren().clear();
         scrolledBoxLeft.getChildren().clear();
@@ -913,7 +950,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @Override
-    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing) {
+    public void updateGraphsWithSelectedIndex(int index, int leadingZoomingTrailing) throws SquidException {
         List<AbstractDataView> activeGraphs = new ArrayList<>();
         switch (leadingZoomingTrailing) {
             case -1:
@@ -934,7 +971,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @Override
-    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices, List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing) {
+    public void updateGraphsWithSelectedIndices(List<Integer> listOfSelectedSpotsIndices, List<PrawnFile.Run> selectedRuns, int leadingZoomingTrailing) throws SquidException {
         List<AbstractDataView> activeGraphs = new ArrayList<>();
         switch (leadingZoomingTrailing) {
             case -1:
@@ -959,9 +996,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
      *
      */
     @Override
-    public void updateSpotsInGraphs() {
+    public void updateSpotsInGraphs() throws SquidException {
         // May 2021 fixes issue #618
         squidProject.getTask().setChanged(true);
+
         squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(true);
 
         calculateCountOfScansCumulative();
@@ -970,7 +1008,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void resetMassesAuditGraphs(ActionEvent actionEvent) {
+    private void resetMassesAuditGraphs(ActionEvent actionEvent) throws SquidException {
         ((Task) squidProject.getTask()).resetMassStationGraphViews();
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchMassesAudit();
@@ -1082,7 +1120,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 SquidSpeciesModel ssm = squidProject.getTask().getSquidSpeciesModelList().get(massStationDetail.getMassStationIndex());
                 ssm.setViewedAsGraph(massStationDetail.isViewedAsGraph());
 
-                displayMassStationsForReview();
+                try {
+                    displayMassStationsForReview();
+                } catch (SquidException squidException) {
+                }
             }
             event.consume();
         }
@@ -1120,7 +1161,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     }
                 }
 
-                displayMassStationsForReview();
+                try {
+                    displayMassStationsForReview();
+                } catch (SquidException squidException) {
+                }
             }
         }
 
@@ -1185,7 +1229,10 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     // setup first add button
                     massDeltasGridPane.add(addRemoveButtonFactory("+"), 0, 0);
                 }
-                displayMassStationsForReview();
+                try {
+                    displayMassStationsForReview();
+                } catch (SquidException squidException) {
+                }
             }
         }
 
