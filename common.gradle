@@ -6,8 +6,8 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 
-//String mavenGroupId = 'org.cirdles'
-//String mavenVersion = '1.9.0'
+String mavenGroupId = 'org.cirdles'
+String mavenVersion = '1.9.0'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -41,10 +41,10 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.18.1"
 }
 
-//String mavenArtifactId = "Squid3"
-//
-//group = mavenGroupId
-//version = mavenVersion
+String mavenArtifactId = name
+
+group = mavenGroupId
+version = mavenVersion
 
 task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from the source files.') {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
@@ -52,12 +52,10 @@ task sourcesJar(type: Jar, dependsOn: classes, description: 'Creates a jar from 
     from sourceSets.main.allSource
 }
 
-
 task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
     archiveClassifier.set("javadoc")
 }
-
 
 artifacts {
     archives jar
@@ -66,28 +64,15 @@ artifacts {
     //    archives packageJavadoc
 }
 
-//publishing {
-//    publications {
-//        maven(MavenPublication) {
-//            groupId = mavenGroupId
-//            artifactId = mavenArtifactId
-//            version = mavenVersion
-//
-//            from components.java
-//        }
-//    }
-//}
-
 // refer to https://github.com/renatoathaydes/rawhttp/blob/master/rawhttp-core/build.gradle#L72
 // refer to https://docs.gradle.org/current/userguide/publishing_maven.html
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = 'org.cirdles'
-            artifactId = "Squid3"
-            version = '1.9.0'
-
-            description = "Java Port of Squid2.5"
+            groupId = mavenGroupId
+            artifactId = mavenArtifactId
+            version = mavenVersion
+//            description = "Java Port of Squid2.5"
 
             from components.java
 
