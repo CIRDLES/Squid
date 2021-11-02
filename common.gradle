@@ -6,16 +6,16 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.8.6'
+String mavenVersion = '1.9.0'
 
-//sourceCompatibility = '1.8'
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 repositories {
     mavenCentral()
-    // You may define additional repositories, or even remove "mavenCentral()".
-    // Read more about repositories here:
-    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+
+    maven {
+        url "https://jitpack.io"
+    }
 
     flatDir {
         dirs 'libs'
@@ -24,8 +24,10 @@ repositories {
 
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
-    //compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
     implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
+
+    implementation 'com.github.cirdles:LudwigLibrary:-SNAPSHOT'
 
     implementation "com.sun.activation:javax.activation:1.2.0"
     implementation "javax.xml.bind:jaxb-api:2.3.1"
@@ -76,6 +78,7 @@ publishing {
 }
 
 task createFolders(description: 'Creates the source folders if they do not exist.') doLast {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     sourceSets*.allSource*.srcDirs*.each { File srcDir ->
         if (!srcDir.isDirectory()) {
             println "Creating source folder: ${srcDir}"
