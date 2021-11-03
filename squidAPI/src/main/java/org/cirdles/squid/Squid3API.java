@@ -61,6 +61,17 @@ public interface Squid3API {
             throws IOException, JAXBException, SAXException, SquidException;
 
     /**
+     *
+     * @param dataFileOPSourcePath
+     * @throws IOException
+     * @throws JAXBException
+     * @throws SAXException
+     * @throws SquidException
+     */
+    void newSquid3GeochronProjectFromDataFileOP(Path dataFileOPSourcePath)
+            throws IOException, JAXBException, SAXException, SquidException;
+
+    /**
      * @param projectFilePath
      */
     void openSquid3Project(Path projectFilePath) throws SquidException;

@@ -23,6 +23,8 @@ import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +118,9 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     String getPrawnSourceFileName();
 
     String getPrawnSourceFilePath();
+
+    public boolean setupPrawnOPFile(File opFileNew)
+            throws IOException, SquidException;
 
     /**
      * @return the prefixTree

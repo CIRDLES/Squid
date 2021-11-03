@@ -215,6 +215,34 @@ public class Squid3Ink implements Squid3API {
     }
 
     /**
+     * @param opFileSourcePath
+     * @throws IOException
+     * @throws SquidException
+     */
+    public void newSquid3GeochronProjectFromDataFileOP(Path dataFileOPSourcePath)
+            throws IOException, SquidException {
+        File opSourceFile = dataFileOPSourcePath.toFile();
+
+        if (opSourceFile != null) {
+            if (squid3Project.setupPrawnOPFile(opSourceFile)) {
+                squid3Project = new SquidProject(GEOCHRON);
+                ((SquidProject) squid3Project).autoDivideSamples();
+                squidPersistentState.updateOPFileListMRU(opSourceFile);
+            } else {
+                squid3Project.getTask().setChanged(false);
+                SquidProject.setProjectChanged(false);
+                throw new SquidException(
+                        "Squid3 encountered an error while trying to open the selected data file.");
+            }
+        } else {
+            squid3Project.getTask().setChanged(false);
+            SquidProject.setProjectChanged(false);
+            throw new SquidException(
+                    "Squid3 encountered an error while trying to open the selected data file.");
+        }
+    }
+
+    /**
      * Loads existing Squid3 project file.
      *
      * @param projectFilePath
