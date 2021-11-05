@@ -102,16 +102,19 @@ public class Squid3Ink implements Squid3API {
      */
     public static void main(String[] args) throws IOException, SquidException, JAXBException, SAXException {
         Squid3API squid3Ink = Squid3Ink.spillSquid3Ink("/Users/TEST");
-        squid3Ink.openDemonstrationSquid3Project();
+        //squid3Ink.openDemonstrationSquid3Project();
 
-        squid3Ink.generateAllSquid3ProjectReports();
-        System.out.println(squid3Ink.getSquid3Project().getProjectName()
-                + "\n" + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
-        try {
-            System.out.println(squid3Ink.generateReferenceMaterialSummaryExpressionsReport().toString());
-            System.out.println(squid3Ink.generatePerScanReports().toString());
-        } catch (IOException iOException) {
-        }
+        File file = new File("/Users/bowring/Google Drive/_SQUID3/OP_Files/180050_GA6392_18081912.13.op");
+        squid3Ink.newSquid3GeochronProjectFromDataFileOP(file.toPath());
+
+//        squid3Ink.generateAllSquid3ProjectReports();
+//        System.out.println(squid3Ink.getSquid3Project().getProjectName()
+//                + "\n" + squid3Ink.getSquid3Project().getPrawnFileHandler().getReportsEngine().makeReportFolderStructure());
+//        try {
+//            System.out.println(squid3Ink.generateReferenceMaterialSummaryExpressionsReport().toString());
+//            System.out.println(squid3Ink.generatePerScanReports().toString());
+//        } catch (IOException iOException) {
+//        }
 
         System.out.println(squid3Ink.retrieveSquid3ProjectListMRU());
 
@@ -119,28 +122,28 @@ public class Squid3Ink implements Squid3API {
             System.out.println(squid3Ink.getArrayOfSampleNames()[i]);
         }
 
-        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("6266").length; i++) {
-            System.out.println(squid3Ink.getArrayOfSpotSummariesFromSample("6266")[i][0]);
-        }
-
-        squid3Ink.updateSpotName("Temora-1.1", "jimmy-1.122");
-        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
-            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
-        }
-        System.out.println();
-
-        List<String> spotNames = new ArrayList<>();
-        spotNames.add("Temora-2.1");
-        spotNames.add("Temora-5.1");
-        squid3Ink.removeSpotsFromDataFile(spotNames);
-        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
-            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
-        }
-        System.out.println();
-        squid3Ink.restoreAllSpotsToDataFile();
-        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
-            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
-        }
+//        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("6266").length; i++) {
+//            System.out.println(squid3Ink.getArrayOfSpotSummariesFromSample("6266")[i][0]);
+//        }
+//
+//        squid3Ink.updateSpotName("Temora-1.1", "jimmy-1.122");
+//        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+//            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+//        }
+//        System.out.println();
+//
+//        List<String> spotNames = new ArrayList<>();
+//        spotNames.add("Temora-2.1");
+//        spotNames.add("Temora-5.1");
+//        squid3Ink.removeSpotsFromDataFile(spotNames);
+//        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+//            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+//        }
+//        System.out.println();
+//        squid3Ink.restoreAllSpotsToDataFile();
+//        for (int i = 0; i < squid3Ink.getArrayOfSpotSummariesFromSample("TEMORA").length; i++) {
+//            System.out.println("  " + squid3Ink.getArrayOfSpotSummariesFromSample("Temora")[i][0]);
+//        }
     }
 
     @Override
@@ -224,8 +227,8 @@ public class Squid3Ink implements Squid3API {
         File opSourceFile = dataFileOPSourcePath.toFile();
 
         if (opSourceFile != null) {
+            squid3Project = new SquidProject(GEOCHRON);
             if (squid3Project.setupPrawnOPFile(opSourceFile)) {
-                squid3Project = new SquidProject(GEOCHRON);
                 ((SquidProject) squid3Project).autoDivideSamples();
                 squidPersistentState.updateOPFileListMRU(opSourceFile);
             } else {
