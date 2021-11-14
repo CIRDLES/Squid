@@ -47,6 +47,10 @@ Squid3 "jar" file can then be built:
 gradle fatappjar
 ```
 
+***Addendum***
+
+Azul also provides JDKs and JREs for Java 8, 11, and 17 pre-packaged with JavaFX <a href="https://www.azul.com/downloads/?package=jdk-fx" target="_blank">here</a>.
+
 ***Note to Users***
 
 Thank you for using Squid3.  We depend on your feedback to keep Squid3 up-to-date and useful to you.  To contribute issues and feedback, please join GitHub <a href="https://github.com/" target="_blank">here</a>. While

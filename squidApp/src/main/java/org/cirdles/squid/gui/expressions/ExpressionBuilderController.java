@@ -75,6 +75,7 @@ import org.cirdles.squid.tasks.expressions.parsing.ShuntingYard.TokenTypes;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 
@@ -2185,6 +2186,17 @@ public class ExpressionBuilderController implements Initializable {
         }
         sb.append(String.format("%1$-18s", "SpotName"));
         String[][] resultLabels;
+
+        // nov 2021 handle aliased expressions
+        if (!((ExpressionTree) expTree).getChildrenET().isEmpty()
+                &&
+                ((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
+            if ( expTree.getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
+                ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
+                expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+            }
+        }
+
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
                 if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
@@ -2225,6 +2237,9 @@ public class ExpressionBuilderController implements Initializable {
                 } else {
                     resultLabels = new String[][]{{contextAgeFieldName, "1\u03C3Abs", "1\u03C3%"}, {}};
                 }
+            } else if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("ValueModel") == 0)) {
+                // nov 2021 handle aliased expressions
+                resultLabels = new String[][]{{expTree.getName(), "1\u03C3Abs", "1\u03C3%"}, {}};
             } else {
                 // some smarts
                 // if only one label, keep it; if two, assume 1sigma abs
@@ -2250,7 +2265,7 @@ public class ExpressionBuilderController implements Initializable {
 
             sb.append("\n");
 
-            // produce values
+            // produce values ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             if (((ExpressionTree) expTree).getLeftET() instanceof ShrimpSpeciesNode) {
                 // Check for functions of species
                 if (((ExpressionTree) expTree).getOperation() instanceof ShrimpSpeciesNodeFunction) {
@@ -2312,6 +2327,13 @@ public class ExpressionBuilderController implements Initializable {
                     }
                 }
             } else {
+//                // nov 2021
+//                if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
+//                    if (((ExpressionTree) expTree).getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
+//                        ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
+//                        expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+//                    }
+//                }
                 for (ShrimpFractionExpressionInterface spot : spots) {
                     if (spot.getTaskExpressionsEvaluationsPerSpot().get(expTree) != null) {
                         sb.append(String.format("%1$-18s", spot.getFractionID()));
