@@ -45,6 +45,7 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
@@ -665,6 +666,17 @@ public class SquidReportSettingsController implements Initializable {
         }
         sb.append(String.format("%1$-" + 18 + "s", "SpotName"));
         String[][] resultLabels;
+
+        // nov 2021 handle aliased expressions
+        if (!((ExpressionTree) expTree).getChildrenET().isEmpty()
+                &&
+                ((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
+            if (expTree.getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
+                ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
+                expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+            }
+        }
+
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
                 if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForSummary) {
@@ -705,6 +717,9 @@ public class SquidReportSettingsController implements Initializable {
                 } else {
                     resultLabels = new String[][]{{contextAgeFieldName, "1\u03C3Abs", "1\u03C3%"}, {}};
                 }
+            } else if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("ValueModel") == 0)) {
+                // nov 2021 handle aliased expressions
+                resultLabels = new String[][]{{expTree.getName(), "1\u03C3Abs", "1\u03C3%"}, {}};
             } else {
                 // some smarts
 //                String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());

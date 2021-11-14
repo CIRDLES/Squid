@@ -24,11 +24,13 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Objects;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
@@ -115,6 +117,17 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
 
         // extract properties of expTree
         expTree = task.findNamedExpression(expressionName);
+
+        // nov 2021 handle aliased expressions
+        if (!((ExpressionTree) expTree).getChildrenET().isEmpty()
+                &&
+                ((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
+            if ( expTree.getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
+                ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
+                expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+            }
+        }
+
         if (expTree instanceof SpotFieldNode) {
             ((Task) task).evaluateTaskExpression(expTree);
         } else if (expTree instanceof ShrimpSpeciesNode) {
