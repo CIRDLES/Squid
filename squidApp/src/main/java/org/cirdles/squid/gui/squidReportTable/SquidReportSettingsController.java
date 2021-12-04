@@ -159,6 +159,9 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private Button makeDefaultButton;
 
+    @FXML
+    private Button createCategoryButton;
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -215,7 +218,8 @@ public class SquidReportSettingsController implements Initializable {
     private void initCategoryTextField() {
         categoryTextField.setOnKeyPressed(val -> {
             if (val.getCode() == KeyCode.ENTER) {
-                createCategory();
+                createCategoryButton.requestFocus();
+                createCategoryButton.fire();
             }
         });
     }
