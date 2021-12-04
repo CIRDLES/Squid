@@ -430,11 +430,11 @@ public class SquidReportSettingsController implements Initializable {
         spotMetaDataExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue != null) {
+                if ((oldValue != null) && (newValue != null)) {
                     Expression exp = new Expression(task.getNamedExpressionsMap().get(newValue),
                             newValue, false, false, false);
-                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(task.getNamedExpressionsMap().get(oldValue).isSquidSpecialUPbThExpression());
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(task.getNamedExpressionsMap().get(oldValue).isSquidSwitchSTReferenceMaterialCalculation());
                     exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(task.getNamedExpressionsMap().get(oldValue).isSquidSwitchSAUnknownCalculation());
                     selectedExpression.set(exp);
                     selectInAllPanes(exp, false);
