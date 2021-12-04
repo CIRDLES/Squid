@@ -144,6 +144,10 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface commPbCorrMetaData = buildSpotNode("getCommonPbCorrMetaData");
         spotMetaDataFields.put(commPbCorrMetaData.getName(), commPbCorrMetaData);
 
+        // nov 2021 add age for SK column
+        ExpressionTreeInterface comPbCorrSKTargetAge = buildSpotNode("getComPbCorrSKTargetAge");
+        spotMetaDataFields.put(comPbCorrSKTargetAge.getName(), comPbCorrSKTargetAge);
+
         ExpressionTreeInterface overCountCorrMetaData = buildSpotNode("getOverCtCorr");
         spotMetaDataFields.put(overCountCorrMetaData.getName(), overCountCorrMetaData);
 

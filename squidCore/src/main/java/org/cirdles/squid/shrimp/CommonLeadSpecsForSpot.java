@@ -52,6 +52,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private SampleAgeTypesEnum sampleAgeType;
     private ReferenceMaterialAgeTypesEnum refMatAgeType;
     private double sampleAgeSK;
+    private double targetAge;
 
     private ParametersModel commonLeadModel;
 
@@ -86,7 +87,23 @@ public class CommonLeadSpecsForSpot implements Serializable {
                 metaData.append("SK @ " + (new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
                 break;
         }
+        return metaData.toString();
+    }
 
+    public String correctionSKTargetAge() {
+        StringBuilder metaData = new StringBuilder();
+
+        switch (methodSelected) {
+            case METHOD_COMMON_LEAD_MODEL:
+                metaData.append("n/a");
+                break;
+            case METHOD_STACEY_KRAMER:
+                metaData.append((new BigDecimal(targetAge)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                break;
+            case METHOD_STACEY_KRAMER_BY_GROUP:
+                metaData.append((new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                break;
+        }
         return metaData.toString();
     }
 
@@ -258,6 +275,8 @@ public class CommonLeadSpecsForSpot implements Serializable {
      * @param targetAge the value of targetAge
      */
     public void updateCommonLeadRatiosFromSK(double targetAge) {
+        // save target age for metadata report
+        this.targetAge = targetAge;
         // Output is a 3-element vector of model [206Pb/204Pb, 207Pb/204Pb,
         // 208Pb/204Pb] corresponding to TargetAge, as per Stacey & Kramers (1975).
         double[] staceyKramerSingleStagePbR

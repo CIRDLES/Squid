@@ -50,8 +50,13 @@ public class SpotFieldNode extends ExpressionTree {
         this.squidSwitchSAUnknownCalculation = true;
     }
 
+    /**
+     *
+     * @param methodNameForShrimpFraction
+     * @return SpotFieldNode using getter name with leading get removed as name
+     */
     public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
-        SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
+        SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replaceFirst("get", ""), methodNameForShrimpFraction);
         return spotNode;
     }
 
