@@ -3039,6 +3039,21 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return parentNuclide;
     }
 
+    @Override
+    public String getPrimaryDaughterParentRatio() {
+        return parentNuclide.startsWith("238")? "206Pb/238U" : "208Pb/232Th";
+    }
+
+    @Override
+    public String getSecondaryDaughterParentCalculation() {
+        return directAltPD ? "Direct" : "Indirect";
+    }
+
+    @Override
+    public String getIndexIsotope() {
+        return selectedIndexIsotope.getIsotope() + "Pb";
+    }
+
     /**
      * @param parentNuclide
      */

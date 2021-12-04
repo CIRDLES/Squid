@@ -62,10 +62,8 @@ public class ExpressionTree
         Serializable,
         XMLSerializerInterface {
 
-    private static final long serialVersionUID = 69881766695649050L;
-
     public static final String ANONYMOUS_NAME = "Anonymous";
-
+    private static final long serialVersionUID = 69881766695649050L;
     /**
      *
      */
@@ -127,14 +125,6 @@ public class ExpressionTree
 
     protected transient boolean hasNoTargetSpots;
 
-    public void setHasNoTargetSpots(boolean hasNoTargetSpots) {
-        this.hasNoTargetSpots = hasNoTargetSpots;
-    }
-
-    public boolean doesHaveNoTargetSpots() {
-        return hasNoTargetSpots;
-    }
-
     /**
      *
      */
@@ -190,6 +180,14 @@ public class ExpressionTree
         this.rootExpressionTree = false;
         this.uncertaintyDirective = "";
         this.hasNoTargetSpots = false;
+    }
+
+    public void setHasNoTargetSpots(boolean hasNoTargetSpots) {
+        this.hasNoTargetSpots = hasNoTargetSpots;
+    }
+
+    public boolean doesHaveNoTargetSpots() {
+        return hasNoTargetSpots;
     }
 
     public ExpressionTree copy() {
@@ -358,9 +356,9 @@ public class ExpressionTree
         if (operation == null) {
             if (!(this instanceof ConstantNode)
                     && !(this instanceof SpotFieldNode)
-                    && !(((ExpressionTreeInterface) this) instanceof ShrimpSpeciesNode)
-                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForIsotopicRatios)
-                    && !(((ExpressionTreeInterface) this) instanceof VariableNodeForSummary)) {
+                    && !(this instanceof ShrimpSpeciesNode)
+                    && !(this instanceof VariableNodeForIsotopicRatios)
+                    && !(this instanceof VariableNodeForSummary)) {
                 audit.append("    ").append(this.getName()).append(" is unhealthy expression");
             } else {
                 if (this.amHealthy()) {
@@ -389,7 +387,7 @@ public class ExpressionTree
                 if (child instanceof ShrimpSpeciesNode) {
                     if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
                             && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
-                        audit.append("\n    Expression '").append((String) ((ShrimpSpeciesNode) child).getName()).append("' is not a valid argument.");
+                        audit.append("\n    Expression '").append(child.getName()).append("' is not a valid argument.");
                     }
                 }
 
@@ -552,8 +550,23 @@ public class ExpressionTree
         return uncertaintyDirective;
     }
 
+    /**
+     * @param uncertaintyDirective the uncertaintyDirective to set
+     */
+    @Override
+    public void setUncertaintyDirective(String uncertaintyDirective) {
+        this.uncertaintyDirective = uncertaintyDirective;
+    }
+
     public int getIndex() {
         return index;
+    }
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     /**
@@ -899,20 +912,5 @@ public class ExpressionTree
     @Override
     public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation) {
         this.squidSwitchConcentrationReferenceMaterialCalculation = squidSwitchConcentrationReferenceMaterialCalculation;
-    }
-
-    /**
-     * @param uncertaintyDirective the uncertaintyDirective to set
-     */
-    @Override
-    public void setUncertaintyDirective(String uncertaintyDirective) {
-        this.uncertaintyDirective = uncertaintyDirective;
-    }
-
-    /**
-     * @param index the index to set
-     */
-    public void setIndex(int index) {
-        this.index = index;
     }
 }

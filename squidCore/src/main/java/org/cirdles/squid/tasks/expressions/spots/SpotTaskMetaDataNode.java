@@ -28,26 +28,26 @@ import java.util.List;
 /**
  * @author James F. Bowring
  */
-public class SpotFieldNode extends ExpressionTree {
+public class SpotTaskMetaDataNode extends ExpressionTree {
 
-    private static final long serialVersionUID = 2173277234623108736L;
+    //private static final long serialVersionUID = 2173277234623108736L;
 
     private String fieldName;
-    private String methodNameForShrimpFraction;
+    private String methodNameForTask;
 
     /**
      * Used in unmarshalling
      */
-    public SpotFieldNode() {
+    public SpotTaskMetaDataNode() {
     }
 
-    private SpotFieldNode(String fieldName, String methodNameForShrimpFraction) {
+    private SpotTaskMetaDataNode(String fieldName, String methodNameForTask) {
         this.fieldName = fieldName;
         this.name = fieldName;
-        this.methodNameForShrimpFraction = methodNameForShrimpFraction;
+        this.methodNameForTask = methodNameForTask;
         this.parentET = null;
         this.squidSwitchSTReferenceMaterialCalculation = true;
-        this.squidSwitchSAUnknownCalculation = true;
+        this.squidSwitchSAUnknownCalculation = false;
     }
 
     /**
@@ -55,13 +55,13 @@ public class SpotFieldNode extends ExpressionTree {
      * @param methodNameForShrimpFraction
      * @return SpotFieldNode using getter name with leading get removed as name
      */
-    public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
-        return new SpotFieldNode(methodNameForShrimpFraction.replaceFirst("get", ""), methodNameForShrimpFraction);
+    public static SpotTaskMetaDataNode buildTaskMetaDataNode(String methodNameForTask) {
+        return new SpotTaskMetaDataNode(methodNameForTask.replaceFirst("get", ""), methodNameForTask);
     }
 
     @Override
     public boolean amHealthy() {
-        return (methodNameForShrimpFraction.length() > 0);
+        return (methodNameForTask.length() > 0);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class SpotFieldNode extends ExpressionTree {
 
     @Override
     public boolean usesOtherExpression() {
-        return true;
+        return false;
     }
 
     /**
@@ -79,8 +79,8 @@ public class SpotFieldNode extends ExpressionTree {
      */
     @Override
     public void customizeXstream(XStream xstream) {
-        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
-        xstream.alias("SpotFieldNode", SpotFieldNode.class);
+//        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
+//        xstream.alias("SpotFieldNode", SpotTaskMetaDataNode.class);
     }
 
     /**
@@ -91,23 +91,23 @@ public class SpotFieldNode extends ExpressionTree {
      * @param shrimpFractions
      * @param task
      * @return object array
-     * @throws org.cirdles.squid.exceptions.SquidException
+     * @throws SquidException
      */
     @Override
     public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
         Object[][] retVal = new Object[shrimpFractions.size()][];
 
         try {
-            Method method = ShrimpFractionExpressionInterface.class.getMethod(//
-                    methodNameForShrimpFraction
+            Method method = TaskInterface.class.getMethod(//
+                    methodNameForTask
             );
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 // this generalization handles various types
-                retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i))};
+                retVal[i] = new Object[]{method.invoke(task)};
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
-            throw new SquidException("Could not find field name: " + fieldName);
+            throw new SquidException("Could not find Task field name: " + fieldName);
         }
 
         return retVal;
@@ -126,15 +126,15 @@ public class SpotFieldNode extends ExpressionTree {
     /**
      * @return the methodNameForShrimpFraction
      */
-    public String getMethodNameForShrimpFraction() {
-        return methodNameForShrimpFraction;
+    public String getMethodNameForTask() {
+        return methodNameForTask;
     }
 
     /**
-     * @param methodNameForShrimpFraction the methodNameForShrimpFraction to set
+     * @param methodNameForTask the methodNameForShrimpFraction to set
      */
-    public void setMethodNameForShrimpFraction(String methodNameForShrimpFraction) {
-        this.methodNameForShrimpFraction = methodNameForShrimpFraction;
+    public void setMethodNameForTask(String methodNameForTask) {
+        this.methodNameForTask = methodNameForTask;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class SpotFieldNode extends ExpressionTree {
     @Override
     public String toStringMathML() {
         return "<mrow>"
-                + "<mi>" + fieldName + "</mi>"
+                + "<mi>Task " + fieldName + "</mi>"
                 + "</mrow>\n";
     }
 

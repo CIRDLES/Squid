@@ -435,7 +435,7 @@ public class SquidReportSettingsController implements Initializable {
                             newValue, false, false, false);
                     exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
                     exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(task.getNamedExpressionsMap().get(oldValue).isSquidSwitchSAUnknownCalculation());
                     selectedExpression.set(exp);
                     selectInAllPanes(exp, false);
                 }
@@ -544,7 +544,13 @@ public class SquidReportSettingsController implements Initializable {
     private void populateSpotMetaDataListView() {
         final ObservableList<String> obList = FXCollections.observableArrayList();
         task.getNamedSpotLookupFieldsMap().forEach((key, value) -> obList.add(value.getName()));
-        task.getNamedSpotMetaDataFieldsMap().forEach((key, value) -> obList.add(value.getName()));
+        task.getNamedSpotMetaDataFieldsMap().forEach((key, exp) -> {
+            if (!exp.isSquidSwitchSCSummaryCalculation()
+                    && ((exp.isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
+                    || (exp.isSquidSwitchSAUnknownCalculation() && !isRefMat))) {
+                obList.add(exp.getName());
+            }
+        });
         obList.sort(new IntuitiveStringComparator<>());
         spotMetaDataExpressionsListView.setItems(obList);
     }
