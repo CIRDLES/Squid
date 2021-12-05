@@ -49,7 +49,7 @@ public class Rad8corConcRho extends Function {
         argumentCount = 9;
         precedence = 4;
         rowCount = 1;
-        colCount = 2;
+        colCount = 1;
         labelsForOutputValues = new String[][]{{"rho"}};
         labelsForInputValues = new String[]{
                 "Total 206/238, Total 206/238 1%Unct,"

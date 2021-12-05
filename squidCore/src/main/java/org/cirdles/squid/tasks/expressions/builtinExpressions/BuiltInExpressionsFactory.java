@@ -40,6 +40,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
 import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
+import static org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode.buildTaskMetaDataNode;
 
 /**
  * @author James F. Bowring
@@ -143,6 +144,20 @@ public abstract class BuiltInExpressionsFactory {
         // Oct 2020 special metadata fields for reports
         ExpressionTreeInterface commPbCorrMetaData = buildSpotNode("getCommonPbCorrMetaData");
         spotMetaDataFields.put(commPbCorrMetaData.getName(), commPbCorrMetaData);
+
+        // nov 2021 add age for SK column
+        ExpressionTreeInterface comPbCorrSKTargetAge = buildSpotNode("getComPbCorrSKTargetAge");
+        spotMetaDataFields.put(comPbCorrSKTargetAge.getName(), comPbCorrSKTargetAge);
+
+        // dec 2021 issue # 667
+        ExpressionTreeInterface primaryDaughterParentRatio = buildTaskMetaDataNode("getPrimaryDaughterParentRatio");
+        spotMetaDataFields.put(primaryDaughterParentRatio.getName(), primaryDaughterParentRatio);
+
+        ExpressionTreeInterface secondaryDaughterParentCalculation = buildTaskMetaDataNode("getSecondaryDaughterParentCalculation");
+        spotMetaDataFields.put(secondaryDaughterParentCalculation.getName(), secondaryDaughterParentCalculation);
+
+        ExpressionTreeInterface indexIsotope = buildTaskMetaDataNode("getIndexIsotope");
+        spotMetaDataFields.put(indexIsotope.getName(), indexIsotope);
 
         ExpressionTreeInterface overCountCorrMetaData = buildSpotNode("getOverCtCorr");
         spotMetaDataFields.put(overCountCorrMetaData.getName(), overCountCorrMetaData);

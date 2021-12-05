@@ -189,14 +189,14 @@
                 </VBox>
                 <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="693.0" prefWidth="777.0">
                     <items>
-                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" text="Categories - used to organize template columns. Drag as needed to organize Categories. Right mouse click to rename or delete.">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" text="Categories - use to organize template columns.  Drag to re-order. Right click to rename or delete." textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>
                                         <HBox alignment="CENTER_LEFT" maxHeight="700.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0" promptText="Create additional category names here as needed, then select to add columns." HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#createCategoryOnAction" text="Create Category" />
+                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0" promptText="Type a new category name here, then click &quot;Create Category&quot; button." style="-fx-font-weight: bold; -fx-background-color: aqua;" HBox.hgrow="ALWAYS" />
+                                                <Button fx:id="createCategoryButton" mnemonicParsing="false" onAction="#createCategoryOnAction" prefHeight="31.0" prefWidth="221.0" text="&lt;&lt;&lt;  Create Category" />
                                             </children>
                                             <opaqueInsets>
                                                 <Insets />
@@ -213,7 +213,7 @@
                                 <Insets right="5.0" />
                             </padding>
                         </TitledPane>
-                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" maxHeight="700.0" text="Columns - for a category, drag and drop expression(s) from the the lists on left and then drag as needed within the column.">
+                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" maxHeight="700.0" text="Columns - for a category, drag 'n drop expression(s) from the the lists on left and then drag to re-order them.  Right click to delete." textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>
@@ -225,7 +225,7 @@
                                 <Insets right="5.0" />
                             </padding>
                         </TitledPane>
-                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" prefHeight="208.0" prefWidth="687.0" text="Column Details - peek at the values in each column.">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" prefHeight="208.0" prefWidth="687.0" text="Column Details - peek at the values in each column." textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>

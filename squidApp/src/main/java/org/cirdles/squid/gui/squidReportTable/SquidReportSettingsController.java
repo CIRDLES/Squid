@@ -159,6 +159,9 @@ public class SquidReportSettingsController implements Initializable {
     @FXML
     private Button makeDefaultButton;
 
+    @FXML
+    private Button createCategoryButton;
+
     //INIT
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -215,7 +218,8 @@ public class SquidReportSettingsController implements Initializable {
     private void initCategoryTextField() {
         categoryTextField.setOnKeyPressed(val -> {
             if (val.getCode() == KeyCode.ENTER) {
-                createCategory();
+                createCategoryButton.requestFocus();
+                createCategoryButton.fire();
             }
         });
     }
@@ -430,12 +434,12 @@ public class SquidReportSettingsController implements Initializable {
         spotMetaDataExpressionsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (newValue != null) {
+                if ((oldValue != null) && (newValue != null)) {
                     Expression exp = new Expression(task.getNamedExpressionsMap().get(newValue),
                             newValue, false, false, false);
-                    exp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(true);
+                    exp.getExpressionTree().setSquidSpecialUPbThExpression(task.getNamedExpressionsMap().get(oldValue).isSquidSpecialUPbThExpression());
+                    exp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(task.getNamedExpressionsMap().get(oldValue).isSquidSwitchSTReferenceMaterialCalculation());
+                    exp.getExpressionTree().setSquidSwitchSAUnknownCalculation(task.getNamedExpressionsMap().get(oldValue).isSquidSwitchSAUnknownCalculation());
                     selectedExpression.set(exp);
                     selectInAllPanes(exp, false);
                 }
@@ -544,7 +548,13 @@ public class SquidReportSettingsController implements Initializable {
     private void populateSpotMetaDataListView() {
         final ObservableList<String> obList = FXCollections.observableArrayList();
         task.getNamedSpotLookupFieldsMap().forEach((key, value) -> obList.add(value.getName()));
-        task.getNamedSpotMetaDataFieldsMap().forEach((key, value) -> obList.add(value.getName()));
+        task.getNamedSpotMetaDataFieldsMap().forEach((key, exp) -> {
+            if (!exp.isSquidSwitchSCSummaryCalculation()
+                    && ((exp.isSquidSwitchSTReferenceMaterialCalculation() && isRefMat)
+                    || (exp.isSquidSwitchSAUnknownCalculation() && !isRefMat))) {
+                obList.add(exp.getName());
+            }
+        });
         obList.sort(new IntuitiveStringComparator<>());
         spotMetaDataExpressionsListView.setItems(obList);
     }

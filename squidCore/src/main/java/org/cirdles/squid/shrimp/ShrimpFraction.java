@@ -1015,6 +1015,11 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     @Override
+    public String getComPbCorrSKTargetAge() {
+        return commonLeadSpecsForSpot.correctionSKTargetAge();
+    }
+
+    @Override
     public String getSelectedAgeExpressionName() throws SquidException {
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();

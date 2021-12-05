@@ -376,6 +376,9 @@ public interface TaskInterface {
      * @return
      */
     public String getParentNuclide();
+    public String getPrimaryDaughterParentRatio();
+    public String getSecondaryDaughterParentCalculation();
+    public String getIndexIsotope();
 
     /**
      * @param parentNuclide

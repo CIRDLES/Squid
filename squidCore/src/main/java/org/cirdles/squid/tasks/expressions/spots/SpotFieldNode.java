@@ -50,9 +50,13 @@ public class SpotFieldNode extends ExpressionTree {
         this.squidSwitchSAUnknownCalculation = true;
     }
 
+    /**
+     *
+     * @param methodNameForShrimpFraction
+     * @return SpotFieldNode using getter name with leading get removed as name
+     */
     public static SpotFieldNode buildSpotNode(String methodNameForShrimpFraction) {
-        SpotFieldNode spotNode = new SpotFieldNode(methodNameForShrimpFraction.replace("get", ""), methodNameForShrimpFraction);
-        return spotNode;
+        return new SpotFieldNode(methodNameForShrimpFraction.replaceFirst("get", ""), methodNameForShrimpFraction);
     }
 
     @Override
@@ -95,11 +99,11 @@ public class SpotFieldNode extends ExpressionTree {
 
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
-                    methodNameForShrimpFraction,
-                    new Class[]{});
+                    methodNameForShrimpFraction
+            );
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 // this generalization handles various types
-                retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i), new Object[]{})};
+                retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i))};
             }
 
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {

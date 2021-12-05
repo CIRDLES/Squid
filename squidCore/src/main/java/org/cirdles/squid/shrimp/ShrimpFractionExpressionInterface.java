@@ -297,5 +297,7 @@ public interface ShrimpFractionExpressionInterface {
 
     public String getCommonPbCorrMetaData();
 
+    public String getComPbCorrSKTargetAge();
+
     public String getSelectedAgeExpressionName() throws SquidException;
 }
