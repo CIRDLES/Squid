@@ -24,6 +24,7 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTree;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
@@ -128,7 +129,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             }
         }
 
-        if (expTree instanceof SpotFieldNode) {
+        if ((expTree instanceof SpotFieldNode) ||(expTree instanceof SpotTaskMetaDataNode)){
             ((Task) task).evaluateTaskExpression(expTree);
         } else if (expTree instanceof ShrimpSpeciesNode) {
             // default view of species nodes

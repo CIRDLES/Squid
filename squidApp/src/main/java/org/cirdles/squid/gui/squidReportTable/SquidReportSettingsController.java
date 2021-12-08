@@ -45,6 +45,7 @@ import org.cirdles.squid.tasks.expressions.functions.ShrimpSpeciesNodeFunction;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
+import org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
@@ -704,6 +705,8 @@ public class SquidReportSettingsController implements Initializable {
                 } else if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof ConstantNode) {
                     resultLabels = new String[][]{{"Constant"}, {}};
                 } else if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof SpotFieldNode) {
+                    resultLabels = new String[][]{{((ExpressionTree) expTree).getChildrenET().get(0).getName()}, {}};
+                } else if (((ExpressionTree) expTree).getChildrenET().get(0) instanceof SpotTaskMetaDataNode) {
                     resultLabels = new String[][]{{((ExpressionTree) expTree).getChildrenET().get(0).getName()}, {}};
                 } else {
                     // ShrimpSpeciesNode

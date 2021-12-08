@@ -520,6 +520,8 @@ public class SquidUIController implements Initializable {
                 customizeDataMenu();
                 squidPersistentState.updateOPFileListMRU(file);
                 buildOPFileMenuMRU();
+                squidPersistentState.setMRUProjectFolderPath(file.getParent());
+                saveAsSquidProject();
             } else {
                 SquidMessageDialog.showWarningDialog(
                         "Squid3 encountered an error while trying to open the selected data file.",
@@ -550,6 +552,8 @@ public class SquidUIController implements Initializable {
                     launchProjectManager();
                     saveSquidProjectMenuItem.setDisable(true);
                     customizeDataMenu();
+                    squidPersistentState.setMRUProjectFolderPath(prawnZippedSourceFile.getParent());
+                    saveAsSquidProject();
                 } else {
                     SquidMessageDialog.showWarningDialog(
                             "Squid3 encountered an error while trying to open the selected data file.",
@@ -585,6 +589,8 @@ public class SquidUIController implements Initializable {
                     launchProjectManager();
                     saveSquidProjectMenuItem.setDisable(true);
                     customizeDataMenu();
+                    squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
+                    saveAsSquidProject();
                 } else {
                     SquidMessageDialog.showWarningDialog(
                             "Squid3 encountered an error while trying to open the selected data file.",
@@ -625,6 +631,8 @@ public class SquidUIController implements Initializable {
                     launchProjectManager();
                     saveSquidProjectMenuItem.setDisable(true);
                     customizeDataMenu();
+                    squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
+                    saveAsSquidProject();
                 } else {
                     SquidMessageDialog.showWarningDialog(
                             "Squid3 encountered an error while trying to open the selected data file.",
@@ -668,6 +676,8 @@ public class SquidUIController implements Initializable {
                     launchProjectManager();
                     saveSquidProjectMenuItem.setDisable(true);
                     customizeDataMenu();
+                    squidPersistentState.setMRUProjectFolderPath(prawnXMLFilesNew.get(0).getParent());
+                    saveAsSquidProject();
                 } else {
                     SquidMessageDialog.showWarningDialog(
                             "Squid3 encountered an error while trying to open and join the selected files.",
@@ -693,21 +703,25 @@ public class SquidUIController implements Initializable {
     @FXML
     private void saveAsSquidProjectMenuItemAction(ActionEvent event) {
         if (squidProject != null) {
-            try {
-                File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
-                if (projectFile != null) {
-                    saveSquidProjectMenuItem.setDisable(false);
-                    squidPersistentState.updateProjectListMRU(projectFile);
-                    SquidUI.updateStageTitle(projectFile.getAbsolutePath());
-                    buildProjectMenuMRU();
-                    launchProjectManager();
-                    runSaveMenuDisableCheck = true;
-                    squidProjectOriginalHash = squidProject.hashCode();
-                }
+            saveAsSquidProject();
+        }
+    }
 
-            } catch (IOException ex) {
+    private void saveAsSquidProject(){
+        try {
+            File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+            if (projectFile != null) {
                 saveSquidProjectMenuItem.setDisable(false);
+                squidPersistentState.updateProjectListMRU(projectFile);
+                SquidUI.updateStageTitle(projectFile.getAbsolutePath());
+                buildProjectMenuMRU();
+                launchProjectManager();
+                runSaveMenuDisableCheck = true;
+                squidProjectOriginalHash = squidProject.hashCode();
             }
+
+        } catch (IOException ex) {
+            saveSquidProjectMenuItem.setDisable(false);
         }
     }
 

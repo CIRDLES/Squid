@@ -25,8 +25,10 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.VLineTo;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 
 import static org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum.*;
+import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.PlotsController.correction;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
@@ -149,8 +151,13 @@ public class RefMatCalibrationConstantWMToolBoxNode extends HBox {
             public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
                 String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
                 PlotsController.calibrConstAgeBaseName = flavor;
-
-                squidProject.getTask().setChanged(true);
+                // updated dec 2021 to change task and recalculate all - somehow this got dropped and not noticed.
+                squidProject.getTask().setParentNuclide(flavor.contains("238") ? "238" : "232");
+                try {
+                    squidProject.getTask().applyDirectives();
+                } catch (SquidException squidException) {
+                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                }
 
                 try {
                     plotsController.showActivePlot();

@@ -28,8 +28,8 @@ dependencies {
 
     implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.18'
 
-    antlr 'org.antlr:antlr4:4.9.2'
-    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.9.2'
+    antlr 'org.antlr:antlr4:4.9.3'
+    implementation group: 'org.antlr', name: 'antlr4-runtime', version: '4.9.3'
 
     // https://mvnrepository.com/artifact/org.apache.poi/poi
     implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'

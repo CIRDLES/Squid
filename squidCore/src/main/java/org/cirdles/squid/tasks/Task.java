@@ -3376,6 +3376,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setSelectedIndexIsotope(IndexIsoptopesEnum selectedIndexIsotope) {
         this.selectedIndexIsotope = selectedIndexIsotope;
+        try {
+            changed = true;
+            setupSquidSessionSpecsAndReduceAndReport(false);
+        } catch (SquidException squidException) {
+        }
     }
 
     @Override
