@@ -48,14 +48,17 @@ dependencies {
 //    runtimeOnly "org.openjfx:javafx-web:$javafx.version:mac"
 }
 
-
+project(":squidApp") {
+    description = "Squid3 GUI"
+    archivesBaseName = "Squid3"
+}
 
 task fatAppJar(type: Jar) {
+    dependsOn(squidCore:build)
     manifest {
-        attributes 'Main-Class': mainClass
+        attributes ('Main-Class': mainClass)
     }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    archiveBaseName = 'Squid3'
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
