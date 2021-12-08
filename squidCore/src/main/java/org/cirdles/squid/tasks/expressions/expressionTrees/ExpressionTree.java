@@ -36,6 +36,7 @@ import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.OperationXMLConverter;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNodeNodeXMLConverter;
+import org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -356,6 +357,7 @@ public class ExpressionTree
         if (operation == null) {
             if (!(this instanceof ConstantNode)
                     && !(this instanceof SpotFieldNode)
+                    && !(this instanceof SpotTaskMetaDataNode)
                     && !(this instanceof ShrimpSpeciesNode)
                     && !(this instanceof VariableNodeForIsotopicRatios)
                     && !(this instanceof VariableNodeForSummary)) {

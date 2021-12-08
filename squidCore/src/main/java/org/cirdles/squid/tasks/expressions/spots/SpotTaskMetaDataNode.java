@@ -26,11 +26,11 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
+ * This class is a helper class in the guise of an expression to retrieve task meta data for reports.
+ * It does not need to support serialization.
  * @author James F. Bowring
  */
 public class SpotTaskMetaDataNode extends ExpressionTree {
-
-    //private static final long serialVersionUID = 2173277234623108736L;
 
     private String fieldName;
     private String methodNameForTask;
@@ -79,8 +79,7 @@ public class SpotTaskMetaDataNode extends ExpressionTree {
      */
     @Override
     public void customizeXstream(XStream xstream) {
-//        xstream.registerConverter(new SpotFieldNodeNodeXMLConverter());
-//        xstream.alias("SpotFieldNode", SpotTaskMetaDataNode.class);
+        // do nothing
     }
 
     /**
