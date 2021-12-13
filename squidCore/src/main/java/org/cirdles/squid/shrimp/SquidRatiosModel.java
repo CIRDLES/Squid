@@ -237,9 +237,8 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
      * @return the ratioFractErr
      */
     public double getRatioFractErrUsedAsOneSigmaPercent() {
-//        return ratioFractErr / ratioVal * 100.0;
         // use of getters provides backward compatibility
-        return getRatioFractErrUsed() / getRatioValUsed() * 100.0;
+        return StrictMath.abs(getRatioFractErrUsed() / getRatioValUsed() * 100.0);
     }
 
     /**

@@ -667,7 +667,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         // if value == 0, use second method to generate "0"
         if ((value != 0.0) && (uncertaintyType.equalsIgnoreCase("PCT"))) {
             return formatBigDecimalForPublicationSigDigMode(//
-                    new BigDecimal(oneSigmaAbs / value * 100.0).movePointRight(movePointRightCount),//
+                    new BigDecimal(StrictMath.abs(oneSigmaAbs / value * 100.0)).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
         } else {
             return formatBigDecimalForPublicationSigDigMode(//
@@ -715,7 +715,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @return
      */
     static BigDecimal getOneSigmaPct(double value, double oneSigmaAbs) {
-        return new BigDecimal(oneSigmaAbs / value * 100.0);
+        return new BigDecimal(StrictMath.abs(oneSigmaAbs / value * 100.0));
 //        TODO: Redo tests with this math return (new BigDecimal(oneSigmaAbs)).divide((new BigDecimal(value)),new MathContext(15, RoundingMode.HALF_EVEN)).movePointRight(2);
     }
 

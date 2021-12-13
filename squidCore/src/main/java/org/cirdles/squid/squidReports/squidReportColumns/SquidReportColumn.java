@@ -25,13 +25,11 @@ import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterfa
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Objects;
 
 import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECTIVE;
@@ -120,14 +118,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         expTree = task.findNamedExpression(expressionName);
 
         // nov 2021 handle aliased expressions
-        if (!((ExpressionTree) expTree).getChildrenET().isEmpty()
-                &&
-                ((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
-            if ( expTree.getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
-                ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
-                expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
-            }
-        }
+        expTree = ((Task)task).retrieveAliasedExpression(expTree);
 
         if ((expTree instanceof SpotFieldNode) ||(expTree instanceof SpotTaskMetaDataNode)){
             ((Task) task).evaluateTaskExpression(expTree);
@@ -163,12 +154,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             columnHeaders[headerRow] = headers[i - 1];
             headerRow--;
         }
-        //columnHeaders[HEADER_ROW_COUNT - 1] = expTree.getName();
-
-//        columnHeaders[5] = units;
-//        if (columnHeaders[5].length() > 0) {
-//            columnHeaders[4] += "(" + units + ")";
-//        }
 
         // propose uncertainty column and type if detected in expTree
         // if expTree has uncertaintyDirective, then this column is itself an uncertainty column as defined
@@ -183,7 +168,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
             }
         }
 
-        // temporary hacks until this functionality is finished for specifying units and sigdigs
+        // TODO: temporary hacks until this functionality is finished for specifying units and sigdigs
         if ((expressionName.toUpperCase().contains("Hours"))
                 || (expressionName.toUpperCase().contains("Stage"))
                 || (expressionName.toUpperCase().contains("Qt1"))
@@ -296,7 +281,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
                         double uncertainty;
                         try {
                             if (uncertaintyDirective.compareToIgnoreCase(PCT_UNCERTAINTY_DIRECTIVE) == 0) {
-                                uncertainty = results[0][1] / results[0][0] * 100.0;
+                                uncertainty = StrictMath.abs(results[0][1] / results[0][0] * 100.0);
                                 retVal = formatBigDecimalForPublicationSigDigMode(
                                         new BigDecimal(uncertainty),
                                         countOfSignificantDigits);

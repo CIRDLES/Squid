@@ -628,19 +628,19 @@ public abstract class BuiltInExpressionsFactory {
 
         Expression expression4CorrExtPerrU = buildExpression(PB4CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "IF([\"" + PB4COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                        + "[\"" + PB4COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB4COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
+                        + "ABS([\"" + PB4COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB4COR206_238CALIB_CONST_WM + "\"][0]*100)))", true, false, true);
         Expression expression7CorrExtPerrU = buildExpression(PB7CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "IF([\"" + PB7COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                        + "[\"" + PB7COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
+                        + "ABS([\"" + PB7COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB7COR206_238CALIB_CONST_WM + "\"][0]*100)))", true, false, true);
         Expression expression8CorrExtPerrU = buildExpression(PB8CORR + PBU_EXT_1_SIGMA_ERR_PCT,
                 "IF([\"" + PB8COR206_238CALIB_CONST_WM + "\"][6]==0," + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_206PB238U_EXT_1SIGMA_ERR_PCT + ","
-                        + "[\"" + PB8COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB8COR206_238CALIB_CONST_WM + "\"][0]*100))", true, false, true);
+                        + "ABS([\"" + PB8COR206_238CALIB_CONST_WM + "\"][1]/[\"" + PB8COR206_238CALIB_CONST_WM + "\"][0]*100)))", true, false, true);
         Expression expression4CorrExtPerrT = buildExpression("" + PB4CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
                 "IF([\"" + PB4COR208_232CALIB_CONST_WM + "\"][6]==0," + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
-                        + "[\"" + PB4COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB4COR208_232CALIB_CONST_WM + "\"][0]*100))", true, false, true);
+                        + "ABS([\"" + PB4COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB4COR208_232CALIB_CONST_WM + "\"][0]*100)))", true, false, true);
         Expression expression7CorrExtPerrT = buildExpression("" + PB7CORR + PBTH_EXT_1_SIGMA_ERR_PCT,
                 "IF([\"" + PB7COR208_232CALIB_CONST_WM + "\"][6]==0," + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ",Max(" + MIN_208PB232TH_EXT_1SIGMA_ERR_PCT + ","
-                        + "[\"" + PB7COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*100))", true, false, true);
+                        + "ABS([\"" + PB7COR208_232CALIB_CONST_WM + "\"][1]/[\"" + PB7COR208_232CALIB_CONST_WM + "\"][0]*100)))", true, false, true);
 
         // perm 2,3,4
         if (parentNuclide.contains("232") || isDirectAltPD) {
@@ -684,7 +684,7 @@ public abstract class BuiltInExpressionsFactory {
         overCountExpressionsOrdered.add(expressionOverCountPerSec4_7);
 
         Expression expressionOverCount7CorrCalib = buildExpression(CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT,
-                "100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"])-1)", true, false, false);
+                "ABS(100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"])-1))", true, false, false);
         overCountExpressionsOrdered.add(expressionOverCount7CorrCalib);
 
         // new section to accommodate reporting corrections per Bodorkos 13 Aug 2018
@@ -700,7 +700,7 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expressionOverCountPerSec4_8);
 
             Expression expressionOverCount8CorrCalib = buildExpression(CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
-                    "100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
+                    "ABS(100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"])-1)) ", true, false, false);
             overCountExpressionsOrdered.add(expressionOverCount8CorrCalib);
 
         } else {
@@ -716,7 +716,7 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expression4CorrOverCountPerSec4_8);
 
             Expression expression4CorrOverCount8CorrCalib = buildExpression("" + PB4CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
-                    "100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
+                    "ABS(100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + PB4CORR + OVER_COUNT_4_6_8 + "\"])-1)) ", true, false, false);
             overCountExpressionsOrdered.add(expression4CorrOverCount8CorrCalib);
 
             Expression expression7CorrOverCount4_6_8 = buildExpression(PB7CORR + OVER_COUNT_4_6_8,
@@ -730,7 +730,7 @@ public abstract class BuiltInExpressionsFactory {
             overCountExpressionsOrdered.add(expression7CorrOverCountPerSec4_8);
 
             Expression expression7CorrOverCount8CorrCalib = buildExpression(PB7CORR + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT,
-                    "100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"])-1) ", true, false, false);
+                    "ABS(100*((1-" + COM_64 + "*[" + R204206 + "])/(1-" + COM_64 + "*[\"" + PB7CORR + OVER_COUNT_4_6_8 + "\"])-1)) ", true, false, false);
             overCountExpressionsOrdered.add(expression7CorrOverCount8CorrCalib);
         }
 
@@ -787,44 +787,44 @@ public abstract class BuiltInExpressionsFactory {
         // for ref materials
         // sept 2019 - remove double duty RU expressions - 3 cases below
         Expression expression4corCom206RM = buildExpression(PB4CORR + COM206PB_PCT_RM,
-                "100*" + COM_64 + "*[" + R204206 + "]", true, false, false);
+                "ABS(100*" + COM_64 + "*[" + R204206 + "])", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression4corCom206RM);
 
         Expression expression7corCom206RM = buildExpression(PB7CORR + COM206PB_PCT_RM,
-                "100*" + COM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
+                "ABS(100*" + COM_64 + "*[\"" + OVER_COUNT_4_6_7 + "\"])", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom206RM);
 
         Expression expression8corCom206RM = buildExpression(PB8CORR + COM206PB_PCT_RM,
-                "100*" + COM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"]", true, false, false);
+                "ABS(100*" + COM_64 + "*[\"" + OVER_COUNT_4_6_8 + "\"])", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206RM);
 
         Expression expression4corCom208RM = buildExpression(PB4CORR + COM208PB_PCT_RM,
-                "100*" + COM_84 + "/[" + R208206 + "]*[" + R204206 + "]", true, false, false);
+                "ABS(100*" + COM_84 + "/[" + R208206 + "]*[" + R204206 + "])", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression4corCom208RM);
 
         Expression expression7corCom208RM = buildExpression(PB7CORR + COM208PB_PCT_RM,
-                "100*" + COM_84 + "/[" + R208206 + "]*[\"" + OVER_COUNT_4_6_7 + "\"]", true, false, false);
+                "ABS(100*" + COM_84 + "/[" + R208206 + "]*[\"" + OVER_COUNT_4_6_7 + "\"])", true, false, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom208RM);
 
         // for samples
         Expression expression4corCom206 = buildExpression(PB4CORR + COM206PB_PCT,
-                "100*" + COM_64 + "*[" + R204206 + "]", false, true, false);
+                "ABS(100*" + COM_64 + "*[" + R204206 + "])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression4corCom206);
 
         Expression expression7corCom206 = buildExpression(PB7CORR + COM206PB_PCT,
-                "100*" + COM_64 + "*[\"" + PB7CORR + R204PB_206PB + "\"]", false, true, false);
+                "ABS(100*" + COM_64 + "*[\"" + PB7CORR + R204PB_206PB + "\"])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom206);
 
         Expression expression8corCom206 = buildExpression(PB8CORR + COM206PB_PCT,
-                "100*" + COM_64 + "*[\"" + PB8CORR + R204PB_206PB + "\"]", false, true, false);
+                "ABS(100*" + COM_64 + "*[\"" + PB8CORR + R204PB_206PB + "\"])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression8corCom206);
 
         Expression expression4corCom208 = buildExpression(PB4CORR + COM208PB_PCT,
-                "100*" + COM_84 + "/[" + R208206 + "]*[" + R204206 + "]", false, true, false);
+                "ABS(100*" + COM_84 + "/[" + R208206 + "]*[" + R204206 + "])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression4corCom208);
 
         Expression expression7corCom208 = buildExpression(PB7CORR + COM208PB_PCT,
-                "100*" + COM_84 + "/[" + R208206 + "]*[\"" + PB7CORR + R204PB_206PB + "\"]", false, true, false);
+                "ABS(100*" + COM_84 + "/[" + R208206 + "]*[\"" + PB7CORR + R204PB_206PB + "\"])", false, true, false);
         perSpotPbCorrectionsOrdered.add(expression7corCom208);
 
         // The next step is to calculate all the applicable radiogenic 208Pb/206Pb values. 
@@ -1803,7 +1803,7 @@ public abstract class BuiltInExpressionsFactory {
     public static Expression buildExpression(String name, String excelExpression, boolean isRefMatCalc, boolean isSampleCalc, boolean isSummaryCalc) {
         // March 2019 experiment with removing unnecessary brackets (code borrowed from SquidTask25)
         // finally remove unnecessary ["..."]
-        Pattern squid25FunctionPattern = Pattern.compile("\\[\\\"([^]]+)\\\"\\]*", Pattern.CASE_INSENSITIVE);
+        Pattern squid25FunctionPattern = Pattern.compile("\\[\"([^]]+)\"]*", Pattern.CASE_INSENSITIVE);
         Matcher matcher = squid25FunctionPattern.matcher(excelExpression);
         while (matcher.find()) {
             String bracketed = matcher.group();

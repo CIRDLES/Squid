@@ -54,6 +54,8 @@ import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.PrawnFileUtilities;
@@ -1434,6 +1436,26 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             addExpression(exp, true);
         }
         taskExpressionsRemoved.clear();
+    }
+
+    public ExpressionTreeInterface retrieveAliasedExpression(ExpressionTreeInterface expTree) {
+        // nov 2021 handle aliased expressions
+        ExpressionTreeInterface aliasedExpTree = expTree;
+        while (!((ExpressionTree) aliasedExpTree).getChildrenET().isEmpty()
+                &&
+                ((((ExpressionTree) aliasedExpTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions)
+                ||
+                ((ExpressionTree) aliasedExpTree).getChildrenET().get(0).isSquidSwitchSCSummaryCalculation())) {
+            ExpressionTreeInterface lookupExpTree = ((ExpressionTree) aliasedExpTree).getChildrenET().get(0);
+            if (((ExpressionTree) lookupExpTree).getUncertaintyDirective().isEmpty()
+                    && (((ExpressionTree) lookupExpTree).getIndex() == 0)
+                    && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
+                aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+            } else {
+                break;
+            }
+        }
+        return aliasedExpTree;
     }
 
     @Override
@@ -3039,9 +3061,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         return parentNuclide;
     }
 
+    /**
+     * @param parentNuclide
+     */
+    @Override
+    public void setParentNuclide(String parentNuclide) {
+        this.parentNuclide = parentNuclide;
+    }
+
     @Override
     public String getPrimaryDaughterParentRatio() {
-        return parentNuclide.startsWith("238")? "206Pb/238U" : "208Pb/232Th";
+        return parentNuclide.startsWith("238") ? "206Pb/238U" : "208Pb/232Th";
     }
 
     @Override
@@ -3052,14 +3082,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public String getIndexIsotope() {
         return selectedIndexIsotope.getIsotope() + "Pb";
-    }
-
-    /**
-     * @param parentNuclide
-     */
-    @Override
-    public void setParentNuclide(String parentNuclide) {
-        this.parentNuclide = parentNuclide;
     }
 
     /**

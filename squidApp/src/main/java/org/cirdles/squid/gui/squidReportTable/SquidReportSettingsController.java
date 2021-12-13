@@ -46,7 +46,6 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotFieldNode;
 import org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode;
-import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.fileUtilities.ProjectFileUtilities;
@@ -679,14 +678,7 @@ public class SquidReportSettingsController implements Initializable {
         String[][] resultLabels;
 
         // nov 2021 handle aliased expressions
-        if (!((ExpressionTree) expTree).getChildrenET().isEmpty()
-                &&
-                ((ExpressionTree) expTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions) {
-            if (expTree.getName().toUpperCase(Locale.ROOT).startsWith("TOTAL_")) {
-                ExpressionTreeInterface lookupExpTree = ((ExpressionTree) expTree).getChildrenET().get(0);
-                expTree = task.getExpressionByName(lookupExpTree.getName()).getExpressionTree();
-            }
-        }
+        expTree = ((Task)task).retrieveAliasedExpression(expTree);
 
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
@@ -734,14 +726,6 @@ public class SquidReportSettingsController implements Initializable {
                 // nov 2021 handle aliased expressions
                 resultLabels = new String[][]{{expTree.getName(), "1\u03C3Abs", "1\u03C3%"}, {}};
             } else {
-                // some smarts
-//                String[][] resultLabelsFirst = clone2dArray(((ExpressionTree) expTree).getOperation().getLabelsForOutputValues());
-//                resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : 3];
-//                resultLabels[0][0] = contextAgeFieldName;
-//                if (resultLabelsFirst[0].length > 1) {
-//                    resultLabels[0][1] = contextAge1SigmaAbsName;
-//                    resultLabels[0][2] = "1\u03C3%";
-//                }
                 // if only one label, keep it; if two, assume 1sigma abs
                 resultLabels = new String[1][resultLabelsFirst[0].length == 1 ? 1 : resultLabelsFirst[0].length == 2 ? 3 : resultLabelsFirst[0].length];
                 resultLabels[0][0] = contextAgeFieldName;
