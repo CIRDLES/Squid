@@ -36,7 +36,8 @@ import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
-    private boolean showIndex;
+    protected boolean usesArrayIndex;
+    private final boolean showIndex;
 
     /**
      *
@@ -53,10 +54,25 @@ public class VariableNodeForSummary extends ExpressionTree {
     }
 
     public VariableNodeForSummary(String name, int index) {
-        this(name, index, "");
+        this(name, index, false);
     }
 
-    public VariableNodeForSummary(String name, int index, String uncertaintyDirective) {
+    public VariableNodeForSummary(String name, int index, boolean usesArrayIndex) {
+        this(name, index, "", usesArrayIndex);
+       /* this.name = name;
+        this.index = index;
+        this.uncertaintyDirective = uncertaintyDirective;
+        if (uncertaintyDirective.length() > 0) {
+            this.index = 1;
+        }
+        this.showIndex = index > 0;
+
+        this.squidSwitchSTReferenceMaterialCalculation = true;
+        this.squidSwitchSAUnknownCalculation = true;*/
+    }
+
+
+    public VariableNodeForSummary(String name, int index, String uncertaintyDirective, boolean usesArrayIndex) {
         this.name = name;
         this.index = index;
         this.uncertaintyDirective = uncertaintyDirective;
@@ -64,6 +80,7 @@ public class VariableNodeForSummary extends ExpressionTree {
             this.index = 1;
         }
         this.showIndex = index > 0;
+        this.usesArrayIndex = usesArrayIndex;
 
         this.squidSwitchSTReferenceMaterialCalculation = true;
         this.squidSwitchSAUnknownCalculation = true;
@@ -87,6 +104,14 @@ public class VariableNodeForSummary extends ExpressionTree {
     @Override
     public boolean usesOtherExpression() {
         return true;
+    }
+
+    public boolean isUsesArrayIndex() {
+        return usesArrayIndex;
+    }
+
+    public void setUsesArrayIndex(boolean usesArrayIndex) {
+        this.usesArrayIndex = usesArrayIndex;
     }
 
     /**

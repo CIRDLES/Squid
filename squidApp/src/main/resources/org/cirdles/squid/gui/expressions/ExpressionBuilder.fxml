@@ -285,7 +285,7 @@
                                             <children>
                                                 <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="500.0" HBox.hgrow="ALWAYS">
                                                     <children>
-                                                        <Button fx:id="expressionCopyBtn" mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy exp">
+                                                        <Button mnemonicParsing="false" onAction="#expressionCopyAction" text="Copy exp">
                                                             <tooltip>
                                                                 <Tooltip text="Copy the whole expression to clipboard" />
                                                             </tooltip>
@@ -326,16 +326,16 @@
                                         <Insets bottom="5.0" left="5.0" right="5.0" />
                                     </padding>
                                 </VBox>
-                                <SplitPane fx:id="bigSplitPane" dividerPositions="0.5" orientation="VERTICAL" styleClass="backgroundCalamari">
+                                <SplitPane dividerPositions="0.5" orientation="VERTICAL" styleClass="backgroundCalamari">
                                     <items>
                                         <AnchorPane>
                                             <children>
-                                                <TitledPane fx:id="graphPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <content>
                                                         <WebView fx:id="graphView" minHeight="-1.0" minWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" />
                                                     </content>
                                                     <graphic>
-                                                        <HBox fx:id="graphTitleHbox" alignment="CENTER_LEFT" spacing="10.0">
+                                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                             <children>
                                                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Typeset image">
                                                                     <HBox.margin>
@@ -350,7 +350,7 @@
                                                 </TitledPane>
                                             </children>
                                         </AnchorPane>
-                                        <SplitPane fx:id="smallSplitPane" dividerPositions="0.33" prefHeight="200.0" prefWidth="200.0">
+                                        <SplitPane dividerPositions="0.33" prefHeight="200.0" prefWidth="200.0">
                                             <items>
                                                 <AnchorPane>
                                                     <children>
@@ -370,7 +370,7 @@
                                                 </AnchorPane>
                                                 <AnchorPane>
                                                     <children>
-                                                        <TitledPane fx:id="peekPane" alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" style="-fx-font-family: SanSerif;" text="Peek (Display Context: Ages in Ma, concentrations in ppm)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                        <TitledPane alignment="TOP_LEFT" animated="false" collapsible="false" minHeight="100.0" minWidth="300.0" style="-fx-font-family: SanSerif;" text="Peek (Display Context: Ages in Ma, concentrations in ppm)" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                             <content>
                                                                 <TabPane fx:id="spotTabPane" style="-fx-tab-min-width: 116;" tabClosingPolicy="UNAVAILABLE">
                                                                     <tabs>

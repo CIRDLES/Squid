@@ -36,7 +36,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
 
     private static final long serialVersionUID = -7828719973319583270L;
 
-    private static String lookupMethodNameForShrimpFraction = "getTaskExpressionsEvaluationsPerSpotByField";
+    private static final String lookupMethodNameForShrimpFraction = "getTaskExpressionsEvaluationsPerSpotByField";
 
     private boolean healthy;
 
@@ -63,10 +63,15 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
     }
 
     public VariableNodeForPerSpotTaskExpressions(String name, String uncertaintyDirective, int index) {
+        this(name, uncertaintyDirective, index, false);
+    }
+
+    public VariableNodeForPerSpotTaskExpressions(String name, String uncertaintyDirective, int index, boolean usesArrayIndex) {
         this.name = name;
         this.uncertaintyDirective = uncertaintyDirective;
         this.healthy = true;
         this.index = index;
+        this.usesArrayIndex = usesArrayIndex;
         if (uncertaintyDirective.length() > 0) {
             this.index = 1;
         }
@@ -128,7 +133,7 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
             try {
                 Method method = ShrimpFractionExpressionInterface.class.getMethod(//
                         lookupMethodNameForShrimpFraction,
-                        new Class[]{String.class});
+                        String.class);
                 for (int i = 0; i < shrimpFractions.size(); i++) {
                     double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
                     if (values.length > 1) {

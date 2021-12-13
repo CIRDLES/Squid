@@ -53,7 +53,7 @@ import static org.cirdles.squid.tasks.expressions.operations.Operation.OPERATION
  */
 public class ExpressionParser {
 
-    private Map<String, ExpressionTreeInterface> namedExpressionsMap;
+    private final Map<String, ExpressionTreeInterface> namedExpressionsMap;
     private boolean eqnSwitchNU;
 
     private ExpressionParser() {
@@ -66,7 +66,6 @@ public class ExpressionParser {
 
     /**
      * @param expression
-     * @param expressionString
      * @return
      */
     public ExpressionTreeInterface parseExpressionStringAndBuildExpressionTree(Expression expression) {
@@ -103,7 +102,7 @@ public class ExpressionParser {
             if (descriptiveErrorListenerLexer.getSyntaxErrors().length() + descriptiveErrorListenerParser.getSyntaxErrors().length() > 0) {
                 expression.setParsingStatusReport(
                         descriptiveErrorListenerLexer.getSyntaxErrors()
-                                + (String) (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
+                                + (descriptiveErrorListenerLexer.getSyntaxErrors().length() > 0 ? descriptiveErrorListenerLexer.getSyntaxErrors() + "\n" : "")
                                 + descriptiveErrorListenerParser.getSyntaxErrors());
             } else {
                 parser.setBuildParseTree(true);
@@ -221,6 +220,7 @@ public class ExpressionParser {
         TokenTypes tokenType = TokenTypes.getType(token);
         ExpressionTreeInterface exp = myExp;
         int index = 0;
+        boolean usesArrayIndex = false;
 
         ExpressionTreeInterface retExpTree = null;
 
@@ -256,7 +256,8 @@ public class ExpressionParser {
                 token = token.replaceAll("\\]( )*", "\\]");
                 String indexString = token.substring(token.length() - 2, token.length() - 1);
                 index = Integer.parseInt(indexString);
-                token = token.replaceFirst("\\[\\d\\]", "");
+                token = token.replaceFirst("\\[\\d]", "");
+                usesArrayIndex = true;
 
             case NAMED_EXPRESSION:
                 // handle special cases of array index references and ± references to uncertainty
@@ -287,7 +288,12 @@ public class ExpressionParser {
                             if (index >= 0) {
                                 retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
                                 if (retExpTreeKnown != null) {
-                                    retExpTree = new VariableNodeForSummary(baseExpressionName, index);
+                                    usesArrayIndex = true;
+                                    if (((ExpressionTree) retExpTreeKnown).isSquidSwitchSCSummaryCalculation()) {
+                                        retExpTree = new VariableNodeForSummary(baseExpressionName, index, usesArrayIndex);
+                                    } else {
+                                        retExpTree = new VariableNodeForPerSpotTaskExpressions(baseExpressionName,  "", index,  usesArrayIndex);
+                                    }
                                     retExpTree.copySettings(retExpTreeKnown);
                                 }
                             }
@@ -322,10 +328,10 @@ public class ExpressionParser {
                     retExpTree.setUncertaintyDirective(uncertaintyDirective);
 
                 } else if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
-                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective);
+                    retExpTree = new VariableNodeForSummary(retExpTreeKnown.getName(), index, uncertaintyDirective, usesArrayIndex);
                     retExpTree.copySettings(retExpTreeKnown);
                 } else {
-                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index);
+                    retExpTree = new VariableNodeForPerSpotTaskExpressions(retExpTreeKnown.getName(), uncertaintyDirective, index, usesArrayIndex);
                     retExpTree.copySettings(retExpTreeKnown);
                 }
                 break;
