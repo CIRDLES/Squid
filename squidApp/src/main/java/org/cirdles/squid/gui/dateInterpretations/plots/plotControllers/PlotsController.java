@@ -155,7 +155,9 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
         yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
-        try{showActivePlot();}catch(SquidException squidException){}
+        try{showActivePlot();
+
+        }catch(SquidException squidException){}
     }
 
     private PlotDisplayInterface generateConcordiaPlot(

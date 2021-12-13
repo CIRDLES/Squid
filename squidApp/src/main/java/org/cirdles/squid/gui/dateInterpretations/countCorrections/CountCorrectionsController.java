@@ -177,7 +177,6 @@ public class CountCorrectionsController implements Initializable {
 
                 // no correction
                 Formatter formatter = new Formatter();
-                //formatter.format("% 12.8f   % 12.2f         ", r204_206[0][0], StrictMath.abs(r204_206[0][1] / r204_206[0][0] * 100.0));
                 formatter.format("% 12.6E   % 12.3f         ", r204_206[0][0], StrictMath.abs(r204_206[0][1] / r204_206[0][0] * 100.0));
                 Text textNone = new Text(formatter.toString());
                 textNone.setFont(Font.font("Monospaced", correctionNoneRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
@@ -185,7 +184,6 @@ public class CountCorrectionsController implements Initializable {
 
                 // 207 correction
                 formatter = new Formatter();
-                //formatter.format("% 24.14E   % 20.14f         ", r204_206_207[0][0], StrictMath.abs(r204_206_207[0][1] / r204_206_207[0][0] * 100.0));
                 formatter.format("% 12.6E   % 12.3f         ", r204_206_207[0][0], StrictMath.abs(r204_206_207[0][1] / r204_206_207[0][0] * 100.0));
                 Text text207 = new Text(formatter.toString());
                 text207.setFont(Font.font("Monospaced", correction207RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));

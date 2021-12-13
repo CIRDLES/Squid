@@ -413,7 +413,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.fillText(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + widthOffset, currentTextHeightPixels);
+            g2d.fillText(Double.toString(StrictMath.abs(weightedMeanStats[2] / weightedMeanStats[0] * 100.0)), rightOfText + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3 external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
@@ -422,7 +422,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             if (weightedMeanStats[6] == 0.0) {
                 g2d.fillText(min206238ExtOneSigmaPct + " (1\u03C3 ext error = 0.0 %)", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
-                double externalSpotToSpotError = weightedMeanStats[1] / weightedMeanStats[0] * 100.0;
+                double externalSpotToSpotError = StrictMath.abs(weightedMeanStats[1] / weightedMeanStats[0] * 100.0);
                 if (min206238ExtOneSigmaPct > externalSpotToSpotError) {
                     g2d.fillText(min206238ExtOneSigmaPct + " (1\u03C3 ext error = " + externalSpotToSpotError + " %)", rightOfText + widthOffset, currentTextHeightPixels);
                 } else {
@@ -763,7 +763,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             text.setText("1\u03C3 error of mean (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - 1 - textWidth, currentTextHeightPixels += heightOffset);
-            g2d.drawString(Double.toString(weightedMeanStats[2] / weightedMeanStats[0] * 100.0), rightOfText + 5 + widthOffset, currentTextHeightPixels);
+            g2d.drawString(Double.toString(StrictMath.abs(weightedMeanStats[2] / weightedMeanStats[0] * 100.0)), rightOfText + 5 + widthOffset, currentTextHeightPixels);
 
             text.setText("1\u03C3  external spot-to-spot error (%)");
             textWidth = (int) text.getLayoutBounds().getWidth();
@@ -773,7 +773,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                 g2d.drawString(min206238ExtOneSigmaPct + " (1\u03C3 ext error = 0.0 %)",
                         rightOfText + 5 + widthOffset, currentTextHeightPixels);
             } else {
-                double externalSpotToSpotError = weightedMeanStats[1] / weightedMeanStats[0] * 100.0;
+                double externalSpotToSpotError = StrictMath.abs(weightedMeanStats[1] / weightedMeanStats[0] * 100.0);
                 if (min206238ExtOneSigmaPct > externalSpotToSpotError) {
                     g2d.drawString(min206238ExtOneSigmaPct + " (1\u03C3 ext error = " + externalSpotToSpotError + " %)",
                             rightOfText + 5 + widthOffset, currentTextHeightPixels);

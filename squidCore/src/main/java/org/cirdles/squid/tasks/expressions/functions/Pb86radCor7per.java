@@ -83,8 +83,8 @@ public class Pb86radCor7per extends Function {
             double[] age7corPb6U8 = convertObjectArrayToDoubles(childrenET.get(4).eval(shrimpFractions, task)[0]);
 
             // convert uncertainties to percents for function call
-            double pb208_206Unct = divideWithZeroForNanResult(pb208_206RatioAndUnct[1], pb208_206RatioAndUnct[0]) * 100.0;
-            double pb207_206Unct = divideWithZeroForNanResult(pb207_206RatioAndUnct[1], pb207_206RatioAndUnct[0]) * 100.0;
+            double pb208_206Unct = StrictMath.abs(divideWithZeroForNanResult(pb208_206RatioAndUnct[1], pb208_206RatioAndUnct[0]) * 100.0);
+            double pb207_206Unct = StrictMath.abs(divideWithZeroForNanResult(pb207_206RatioAndUnct[1], pb207_206RatioAndUnct[0]) * 100.0);
 
 //            double sComm_64 = task.getTaskExpressionsEvaluationsPerSpotSet().get(DEFCOM_64).getValues()[0][0];
             double sComm_64 = shrimpFractions.get(0).getCom_206Pb204Pb();
