@@ -253,6 +253,7 @@ public class ProjectManagerController implements Initializable {
             squidProject.setExtPErrU(newValue);
             SquidProject.setProjectChanged(true);
             task.setExtPErrU(newValue);
+            task.setChanged(true);
         });
 
         SpinnerValueFactory<Double> valueFactoryTh
@@ -263,6 +264,7 @@ public class ProjectManagerController implements Initializable {
             squidProject.setExtPErrTh(newValue);
             SquidProject.setProjectChanged(true);
             task.setExtPErrTh(newValue);
+            task.setChanged(true);
         });
     }
 

@@ -65,22 +65,6 @@ public abstract class BuiltInExpressionsFactory {
     }
 
     /**
-     * @return
-     */
-    public static Map<String, ExpressionTreeInterface> generateParameters() {
-        Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-        // over written by task
-        ExpressionTreeInterface extPErrU = new ConstantNode(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, 0.75);
-        parameters.put(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, extPErrU);
-
-        ExpressionTreeInterface extPErrTh = new ConstantNode(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, 0.75);
-        parameters.put(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, extPErrTh);
-
-        return parameters;
-    }
-
-    /**
      * @return Map<String, ExpressionTreeInterface> spotLookupFields
      */
     public static Map<String, ExpressionTreeInterface> generateSpotLookupFields() {

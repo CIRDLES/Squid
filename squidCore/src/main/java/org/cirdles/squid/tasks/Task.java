@@ -574,7 +574,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     public boolean taskDesignDiffersFromTask(TaskDesign taskDesign) {
         boolean noChange = false;
-//        if (taskType.equals(TaskTypeEnum.GEOCHRON)) {
         List<String> taskMasses = getNominalMasses();
         List<String> designerMasses = taskDesign.getNominalMasses();
         designerMasses.addAll(REQUIRED_NOMINAL_MASSES);
@@ -584,27 +583,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         List<String> designerRatios = taskDesign.getRatioNames();
         designerRatios.addAll(REQUIRED_RATIO_NAMES);
         noChange = noChange && taskRatios.containsAll(designerRatios) && designerRatios.containsAll(taskRatios);
-
-//            // test background index and 4 horsemen and directives
-//            noChange = noChange && (isDirectAltPD() == taskDesign.isDirectAltPD());
-//            noChange = noChange && (isPbU() == taskDesign.isPbU());
-//            noChange = noChange
-//                    && (getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST).compareToIgnoreCase(
-//                            taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR206PB238U_CALIB_CONST)) == 0);
-//            noChange = noChange
-//                    && (getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST).compareToIgnoreCase(
-//                            taskDesign.getSpecialSquidFourExpressionsMap().get(UNCOR208PB232TH_CALIB_CONST)) == 0);
-//            noChange = noChange
-//                    && (getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT).compareToIgnoreCase(
-//                            taskDesign.getSpecialSquidFourExpressionsMap().get(TH_U_EXP_DEFAULT)) == 0);
-//            noChange = noChange
-//                    && (getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST).compareToIgnoreCase(
-//                            taskDesign.getSpecialSquidFourExpressionsMap().get(PARENT_ELEMENT_CONC_CONST)) == 0);
-//
         noChange = noChange && (getIndexOfBackgroundSpecies() == taskDesign.getIndexOfBackgroundSpecies());
 
         System.out.println("nochange = " + noChange);
-//        }
+
         return noChange;
     }
 
@@ -642,8 +624,15 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     private void generateParameters() {
-        Map<String, ExpressionTreeInterface> parameters = BuiltInExpressionsFactory.generateParameters();
         this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+        // dec 2021 issue #674 - parameters were set to defaults in builder and need to be set here instead
+        Map<String, ExpressionTreeInterface> parameters = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        ExpressionTreeInterface extPErrUExp = new ConstantNode(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, extPErrU);
+        parameters.put(MIN_206PB238U_EXT_1SIGMA_ERR_PCT, extPErrUExp);
+        ExpressionTreeInterface extPErrThExp = new ConstantNode(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, extPErrTh);
+        parameters.put(MIN_208PB232TH_EXT_1SIGMA_ERR_PCT, extPErrThExp);
+
         namedParametersMap.putAll(parameters);
     }
 

@@ -1825,6 +1825,10 @@ public class SquidUIController implements Initializable {
 
 
             if (SquidProject.isProjectChanged()) {
+                // dec 2021 for issue #674
+                task.setExtPErrU(squidProject.getExtPErrU());
+                task.setExtPErrTh(squidProject.getExtPErrTh());
+
                 // next two lines make sure 15-digit rounding is used by reprocessing data
                 task.setChanged(true);
                 task.setupSquidSessionSpecsAndReduceAndReport(true);
