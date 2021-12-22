@@ -15,9 +15,12 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
-import java.io.*;
+import org.cirdles.squid.utilities.FileUtilities;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
-import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -60,7 +63,7 @@ public class ZipUtility {
                 try {
                     Files.copy(entry, zipFileFileSystem.getPath(level + entry.getFileName()));
 
-                    if (Files.isDirectory(entry, new LinkOption[]{})) {
+                    if (Files.isDirectory(entry)) {
                         zipDirectoryOrFile(level + entry.getFileName() + "/", entry, zipFileFileSystem);
                     }
                 } catch (IOException iOException) {
@@ -70,38 +73,15 @@ public class ZipUtility {
     }
 
     public static Path extractZippedFile(File inFile, File destination) throws IOException {
-        File outFile = null;
-        OutputStream out = null;
         Path retVal = null;
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(inFile))) {
-            //open infile for reading
-            ZipEntry entry;
-
-            //checks first entry exists
-            if ((entry = zis.getNextEntry()) != null) {
-                String outFilename = entry.getName();
-                outFile = new File(destination, outFilename);
-
-                try {
-                    //open outFile for writing
-                    out = new FileOutputStream(outFile);
-                    byte[] buff = new byte[2048];
-                    int len;
-
-                    while ((len = zis.read(buff)) > 0) {
-                        out.write(buff, 0, len);
-                    }
-                } finally {
-                    //close outFile
-                    if (out != null) {
-                        out.close();
-                        retVal = Paths.get(outFile.getPath());
-                    }
-                }
+            ZipEntry zipEntry;
+            if ((zipEntry = zis.getNextEntry()) != null) {
+                File outDirectory = new File(destination.getPath());
+                FileUtilities.unpackZipFile(inFile, outDirectory);
+                retVal = Paths.get(outDirectory.getPath() + File.separator + zipEntry);
             }
         }
-
         return retVal;
-
     }
 }
