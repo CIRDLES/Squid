@@ -5,19 +5,14 @@
  */
 package org.cirdles.squid.utilities;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.FileWriteMode;
+import org.apache.poi.util.IOUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 /**
@@ -86,19 +81,26 @@ public class FileUtilities {
     }
 
     public static void unpackZipFile(final File archive, final File targetDirectory)
-            throws ZipException, IOException {
+            throws IOException {
         ZipFile zipFile = new ZipFile(archive);
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        // Dec 2021 this fix comes from https://cwe.mitre.org/data/definitions/23.html and SNYK CODE
+        // via https://app.snyk.io/org/bowring/project/7dd848fc-362b-4514-a91c-3c04628633ac
         while (entries.hasMoreElements()) {
-            final ZipEntry zipEntry = entries.nextElement();
-            if (zipEntry.isDirectory()) {
-                continue;
+            ZipEntry entry = entries.nextElement();
+            Path entryPath = targetDirectory.toPath().resolve(entry.getName());
+            if (!entryPath.normalize().startsWith(targetDirectory.toPath()))
+                throw new IOException("Zip entry contained path traversal");
+            if (entry.isDirectory()) {
+                Files.createDirectories(entryPath);
+            } else {
+                Files.createDirectories(entryPath.getParent());
+                try (InputStream in = zipFile.getInputStream(entry)) {
+                    try (OutputStream out = new FileOutputStream(entryPath.toFile())) {
+                        IOUtils.copy(in, out);
+                    }
+                }
             }
-            final File targetFile = new File(targetDirectory,
-                    zipEntry.getName());
-            com.google.common.io.Files.createParentDirs(targetFile);
-            ByteStreams.copy(zipFile.getInputStream(zipEntry),
-                    com.google.common.io.Files.asByteSink(targetFile, FileWriteMode.APPEND).openStream());
         }
     }
 }
