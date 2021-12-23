@@ -34,7 +34,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.poi/poi
     implementation group: 'org.apache.poi', name: 'poi', version: '5.0.0'
 
-    implementation group: 'org.jdom', name: 'jdom2', version: '2.0.6'
+    // https://mvnrepository.com/artifact/org.jdom/jdom2
+    implementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
 
     implementation 'com.github.opencollab.jlatexmath:jlatexmath:1.0.7'
     implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '1.0.10'

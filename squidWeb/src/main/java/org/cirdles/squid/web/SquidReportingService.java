@@ -107,6 +107,9 @@ public class SquidReportingService {
                 Path prawnFilePathZip = uploadDirectory.resolve("prawn-file.zip");
                 Files.copy(prawnFile, prawnFilePathZip);
                 prawnFilePath = extractZippedFile(prawnFilePathZip.toFile(), uploadDirectory.toFile());
+                // dec 2021 in response to Snyk Path Traversal issue: https://app.snyk.io/org/bowring/project/7dd848fc-362b-4514-a91c-3c04628633ac
+                if (!prawnFilePath.normalize().startsWith(uploadDirectory))
+                    throw new IOException("Zip entry contained path traversal");
             } else {
                 prawnFilePath = uploadDirectory.resolve("prawn-file.xml");
                 Files.copy(prawnFile, prawnFilePath);
