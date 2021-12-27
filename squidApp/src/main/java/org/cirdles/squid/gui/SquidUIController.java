@@ -844,6 +844,11 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
+    void sustainableVideoAction(ActionEvent event) {
+        BrowserControl.showURI("https://www.youtube.com/watch?v=mC5eNrMjfk4");
+    }
+
+    @FXML
     private void onlineHelpAction(ActionEvent event) {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid#readme"); //"http://cirdles.org/projects/squid/#Development");
     }

@@ -1,18 +1,21 @@
-<img src="https://github.com/CIRDLES/DRAKE/blob/master/logos/Squid/SquidLogo.png" width="100">
+<img src="https://github.com/CIRDLES/DRAKE/blob/master/logos/Squid/SquidLogo.png" alt="Squid3 Logo" width="100">
 
 Squid3
 =======
 
 [![Build Status](https://travis-ci.org/CIRDLES/Squid.svg?branch=master)](https://travis-ci.org/CIRDLES/Squid)
+[![Known Vulnerabilities](https://snyk.io/test/github/CIRDLES/Squid/badge.svg)](https://snyk.io/test/github/CIRDLES/Squid)
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 [***Click to View New HowTo Videos***](https://www.youtube.com/playlist?list=PLfF8bcNRe2WTWx2IuDaHW_XpLh36bWkUc)
 
+[***Click to View New Sustainable Software Development Video***](https://www.youtube.com/watch?v=mC5eNrMjfk4)
+
 ***UPDATE NOV 2021***
 
 We encourage you to download and evaluate the latest Squid3 release, the ".jar" file
-found <a href="https://github.com/CIRDLES/Squid/releases" target="_blank">here</a>.  
+found <a href="https://github.com/CIRDLES/Squid/releases/latest" target="_blank">here</a>.  
 
 Squid3 requires
 Oracle's <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">
@@ -184,15 +187,16 @@ Squid3.
 6) '_Topsoil Github Repository_' links to [Topsoil](https://github.com/CIRDLES/Topsoil), used to provide Concordia diagrams in Squid3.
 
 **Help** menu - 
-1) '_Introduction and Guide to Menu_' opens this document. 
-2) '_Video Tutorials on YouTube_' features 
+1) '_Video Intro to Sustainable Software Development' shows video introduction.
+2) '_Introduction and Guide to Menu_' opens this document. 
+3) '_Video Tutorials on YouTube_' features 
 videos produced by [@NicoleRayner](https://github.com/NicoleRayner) and
 found [here](https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists). 
-3) '_Video Tutorials on Google Drive_' features the same
+4) '_Video Tutorials on Google Drive_' features the same
    videos and
    found [here](https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX).
-4) '_Contribute an Issue on Github_'
-is a shortcut to creating a new issue with key metadata automatically supplied.
+5) '_Contribute an Issue on Github_'
+is a shortcut to creating a new issue with key runtime environment metadata automatically supplied.
 
 Thank you in advance for any suggestions you contribute. We are available for walk-throughs, etc. if needed to help
 convince you to participate and contribute.
@@ -202,4 +206,4 @@ your ideas via the issues tracker.
 
 Please volunteer to help with documentation, how-to videos, coding, etc.
 
-Updated 1 November 2021.
+Updated 27 December 2021.

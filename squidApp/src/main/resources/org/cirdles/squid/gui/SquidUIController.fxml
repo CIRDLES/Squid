@@ -205,6 +205,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
+                  <MenuItem mnemonicParsing="false" onAction="#sustainableVideoAction" text="Video Intro to Sustainable Software Development" />
 
                         <MenuItem mnemonicParsing="false" onAction="#onlineHelpAction" text="Introduction and Guide to Menu" />
                         <MenuItem mnemonicParsing="false" onAction="#videoTutorialsMenuItemAction" text="Video Tutorials on YouTube" />
