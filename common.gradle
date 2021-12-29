@@ -37,7 +37,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl
     implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.3.1'
 
-    testImplementation "junit:junit:4.13.1"
+    testImplementation "junit:junit:4.13.2"
     testImplementation "org.assertj:assertj-core:3.18.1"
 }
 
