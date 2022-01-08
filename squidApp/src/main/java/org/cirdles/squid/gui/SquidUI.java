@@ -117,7 +117,7 @@ public final class SquidUI extends Application {
         logo.append("       | \\____) || \\__/ |  | \\_/ |, | || \\__/  |  | \\____) |\n");
         logo.append("        \\______.' \\__.; |  '.__.'_/[___]'.__.;__]  \\______.'\n");
         logo.append("                      |__]                        \n");
-        System.out.println((logo));
+        System.out.println(logo);
 
         // detect if running from jar file
         if (!verbose && (ClassLoader.getSystemResource("org/cirdles/squid/gui/SquidUI.class").toExternalForm().startsWith("jar"))) {
@@ -136,12 +136,6 @@ public final class SquidUI extends Application {
             }));
 
         }
-
-//        System.out.println(System.getenv("CATALINA_HOME"));
-//        Map<String, String> env = System.getenv();
-//        for (String envName : env.keySet()) {
-//            System.out.format("%s=%s%n", envName, env.get(envName));
-//        }
 
         launch(args);
     }
