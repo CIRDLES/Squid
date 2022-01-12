@@ -53,6 +53,7 @@ import org.cirdles.squid.tasks.expressions.functions.SqWtdAv;
 import org.cirdles.squid.tasks.expressions.functions.WtdMeanACalc;
 import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
+import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
@@ -1430,18 +1431,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public ExpressionTreeInterface retrieveAliasedExpression(ExpressionTreeInterface expTree) {
         // nov 2021 handle aliased expressions
         ExpressionTreeInterface aliasedExpTree = expTree;
-        while (!((ExpressionTree) aliasedExpTree).getChildrenET().isEmpty()
-                &&
-                ((((ExpressionTree) aliasedExpTree).getChildrenET().get(0) instanceof VariableNodeForPerSpotTaskExpressions)
-                ||
-                ((ExpressionTree) aliasedExpTree).getChildrenET().get(0).isSquidSwitchSCSummaryCalculation())) {
+
+        // test for alias and retrieve true expression
+        if (((ExpressionTree) aliasedExpTree).getChildrenET().size() == 1) {
             ExpressionTreeInterface lookupExpTree = ((ExpressionTree) aliasedExpTree).getChildrenET().get(0);
-            if (((ExpressionTree) lookupExpTree).getUncertaintyDirective().isEmpty()
-                    && (((ExpressionTree) lookupExpTree).getIndex() == 0)
-                    && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
-                aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
-            } else {
-                break;
+            if (((lookupExpTree instanceof VariableNodeForPerSpotTaskExpressions)
+                    ||
+                    lookupExpTree.isSquidSwitchSCSummaryCalculation())
+                    && (((ExpressionTree) aliasedExpTree).getOperation() instanceof Value)) {
+                if (((ExpressionTree) lookupExpTree).getUncertaintyDirective().isEmpty()
+                        && (((ExpressionTree) lookupExpTree).getIndex() == 0)
+                        && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
+                    aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
+                }
             }
         }
         return aliasedExpTree;

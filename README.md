@@ -41,7 +41,7 @@ If you need to have a copy of Squid3 that runs on a specific OS and a Java JDK o
 
 ***Note to Developers***
 
-Squid3 can be compiled from the source code by using Gradle 7.2 running Java 8 and it will run on any of the Liberica full JDKs or JREs 8, 11, 17.  If Gradle 7.2 is set to use a higher version of Java (Liberica), then Squid3 will not run on lower numbered versionbs of Java.
+Squid3 can be compiled from the source code by using Gradle 7.2 running Java 8, and it will run on any of the Liberica full JDKs or JREs 8, 11, 17.  If Gradle 7.2 is set to use a higher version of Java (Liberica), then Squid3 will not run on lower numbered versions of Java.
 ```text
 gradle clean build 
 ```
@@ -72,7 +72,7 @@ demonstration Squid3 project is available from this menu, thanks to [@NicoleRayn
 The project manager allows for naming the project, naming the analyst, and reviewing statistics about the loaded data as
 well as keeping notes about the project.
 
-&ensp;&ensp;&ensp;&ensp;All data-processing parameters are specified on the Project Manager page: whether or not to
+&ensp;&ensp;&ensp;&ensp;All data-processing parameters are specified on the Project Manager page: whether to
 normalize counts for SBM; ratio calculation method; preferred index isotope, constraints on weighted means of reference
 materials; the common lead model for reference materials; and the physical constants model to be used in the project.
 Note on parameter models: See below for how to manage these models from the **Parameters** menu item. Changing these
@@ -84,13 +84,13 @@ store of models available to Squid3, if not already present.
 
 The **Data** menu: 1) _Manage Sample Names_, 2) _Manage Spots and Reference Materials_, and 3) _Audit Raw Data_ for all data files. For Prawn data files, it also
    provides for saving and swapping out data files.  '_Manage Sample Names_' automates with overrides the naming of
-   samples based on delimeters or leading character counts.  '_Manage Spots and Reference Materials_' supports editing
+   samples based on delimiters or leading character counts.  '_Manage Spots and Reference Materials_' supports editing
    spot names, filtering spots by name, and setting both the project's reference material spots and concentration
    reference material spots by using the same filtering feature. The reference material models are selected here as
    well. The context menu on the left-side list is accessed by a right-mouse click and has items for removing a spot and
    splitting the data file into two files. Any modifications to the data file can be saved to a new file if needed. Note
    that saving the project preserves the changes to the data within the project file but without changing the source
-   data file.  '_Audit masses_' provides time-based views of masses and is configuable to show mass diferences as well.
+   data file.  '_Audit masses_' provides time-based views of masses and is configurable to show mass differences as well.
 
 The **Task** menu - 
 1) '_View Current Task_' provides for the user to configure the metadata about a task including
@@ -114,7 +114,7 @@ a list of tasks with their details, which can then be edited or used directly in
 counts align.
 
 The **Isotopes** menu:  1) '_Map Isotopes from Data to Task_' provides for mapping the isotope or mass labels provided
-by the data file for each mass staton to the task's isotope or mass labels. Tasks generally refer to masses using
+by the data file for each mass station to the task's isotope or mass labels. Tasks generally refer to masses using
 integers such as '204' or simple decimals such as '195.8', whereas the labels for the mass stations recorded in the data
 file usually have several significant digits of atomic mass, such as '195.75123'. The background mass can be specified
 here or in the task editor. After clicking the orange button at the bottom to copy the labels, the columns D (Data
@@ -123,12 +123,12 @@ Isotope Label) and T (Task Isotope Label) will contain the same values.
 **Expressions** menu -
 '_Manage Expressions_' has a left panel organized by expression type that provides for sorting
 the expressions within each list by Name, Execution order, or Target spot set - reference material, concentration
-reference material, and unknowns - denoted by left-hand superscripts of ```R or C, and U```. All of the built-in
+reference material, and unknowns - denoted by left-hand superscripts of ```R or C, and U```. All the built-in
 expressions have been named in a consistent fashion per issue [#164](https://github.com/CIRDLES/Squid/issues/164)
 discussions and have explanatory text in their 'notes' panel provided by [@sbodorkos](https://github.com/sbodorkos) . Of
 particular note (idea thanks to [@NicoleRayner](https://github.com/NicoleRayner) ) is that the expressions targeting
 reference materials only are suffixed by "\_RM". The tab for 'Unhealthy Expressions / Mismatched Targets' will appear in
-red ![red](https://placehold.it/15/f03c15/000000?text=+) if any are present. Squid3 supports the assignment of a sample (a group of unknowns) as the target of custom expressions - see the drop down box populated with the sample names to
+red ![red](https://placehold.it/15/f03c15/000000?text=+) if any are present. Squid3 supports the assignment of a sample (a group of unknowns) as the target of custom expressions - see the drop-down box populated with the sample names to
 the right of the unknown samples checkbox. The drop down only appears if unknowns is checked and reference material is
 not checked.
 
@@ -179,15 +179,15 @@ input from [@NicoleRayner](https://github.com/NicoleRayner).
 1) '_About Squid3_' summarizes Squid3's purpose and identifies collaborators and financial supporters.
 2) '_How to cite Squid3_' provides a [link](https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/133870)
 to our latest publication. 
-3) '_Squid3 Github Repository_' provides a link to this repository. 
+3) '_Squid3 GitHub Repository_' provides a link to this repository. 
 4) '_Squid3 Development
 Notes_' links to a [wiki](https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Intro) documenting the porting of Squid2.5 to
 Squid3. 
-5) '_CIRDLES.org_" links [here](https://cirdles.org/), the home of the College of Charleston development team.
-6) '_Topsoil Github Repository_' links to [Topsoil](https://github.com/CIRDLES/Topsoil), used to provide Concordia diagrams in Squid3.
+5) '_CIRDLES.org_' links [here](https://cirdles.org/), the home of the College of Charleston development team.
+6) '_Topsoil GitHub Repository_' links to [Topsoil](https://github.com/CIRDLES/Topsoil), used to provide Concordia diagrams in Squid3.
 
 **Help** menu - 
-1) '_Video Intro to Sustainable Software Development' shows video introduction.
+1) 'Video Intro to Sustainable Software Development' shows video introduction.
 2) '_Introduction and Guide to Menu_' opens this document. 
 3) '_Video Tutorials on YouTube_' features 
 videos produced by [@NicoleRayner](https://github.com/NicoleRayner) and
@@ -195,7 +195,7 @@ found [here](https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists)
 4) '_Video Tutorials on Google Drive_' features the same
    videos and
    found [here](https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX).
-5) '_Contribute an Issue on Github_'
+5) '_Contribute an Issue on GitHub_'
 is a shortcut to creating a new issue with key runtime environment metadata automatically supplied.
 
 Thank you in advance for any suggestions you contribute. We are available for walk-throughs, etc. if needed to help
