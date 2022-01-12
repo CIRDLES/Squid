@@ -17,20 +17,16 @@ package org.cirdles.squid.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.gui.utilities.BrowserControl;
-
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * FXML Controller class for About Window
  *
  * @author James F. Bowring
  */
-public class AboutSquidController implements Initializable {
+public class AboutSquidController {
 
     @FXML
     private Label versionText;
@@ -49,8 +45,9 @@ public class AboutSquidController implements Initializable {
      * @param url
      * @param rb
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @FXML
+    // This method is called by the FXMLLoader when initialization is complete
+    void initialize() {
         versionText.setText("Squid3 v" + Squid.VERSION);
         buildDate.setText("Release Date: " + Squid.RELEASE_DATE);
         aboutDetailsLabel.setText(Squid.ABOUT_WINDOW_CONTENT.toString());
