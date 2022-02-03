@@ -104,7 +104,7 @@ public interface Squid3API {
 
     void setUseLinearRegression(boolean doUse) throws SquidException;
 
-    void setPreferredIndexIsotope(Squid3Constants.IndexIsoptopesEnum isotope);
+    void setPreferredIndexIsotope(Squid3Constants.IndexIsoptopesEnum isotope) throws SquidException;
 
     void setAutoExcludeSpots(boolean doAutoExclude) throws SquidException;
 

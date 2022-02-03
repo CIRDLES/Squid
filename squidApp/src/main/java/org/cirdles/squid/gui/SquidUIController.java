@@ -748,6 +748,8 @@ public class SquidUIController implements Initializable {
 
                 // fixes #624 by correcting out of synch tasks
                 squidProject.getTask().setSelectedIndexIsotope(squidProject.getSelectedIndexIsotope());
+                squidProject.getTask().setChanged(true);
+                squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
                 ((Task) squidProject.getTask()).buildExpressionDependencyGraphs();
                 ((Task) squidProject.getTask()).updateSquidSpeciesModelsGeochronMode();

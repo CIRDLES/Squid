@@ -389,7 +389,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     @Override
-    public void setPreferredIndexIsotope(Squid3Constants.IndexIsoptopesEnum isotope) {
+    public void setPreferredIndexIsotope(Squid3Constants.IndexIsoptopesEnum isotope) throws SquidException {
         squid3Project.setSelectedIndexIsotope(isotope);
         SquidProject.setProjectChanged(true);
         TaskInterface task = squid3Project.getTask();
