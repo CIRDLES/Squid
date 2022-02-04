@@ -164,7 +164,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     /**
      * @param selectedIndexIsotope the selectedIndexIsotope to set
      */
-    void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope);
+    void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope) throws SquidException;
 
     /**
      * @return the sessionDurationHours

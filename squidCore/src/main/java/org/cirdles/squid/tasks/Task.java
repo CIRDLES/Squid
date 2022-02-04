@@ -3389,11 +3389,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setSelectedIndexIsotope(IndexIsoptopesEnum selectedIndexIsotope) {
         this.selectedIndexIsotope = selectedIndexIsotope;
-        try {
-            changed = true;
-            setupSquidSessionSpecsAndReduceAndReport(false);
-        } catch (SquidException squidException) {
-        }
+//        try {
+//            changed = true;
+//            setupSquidSessionSpecsAndReduceAndReport(false);
+//        } catch (SquidException squidException) {
+//        }
     }
 
     @Override
@@ -3872,7 +3872,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public String getxAxisExpressionName() {
         if (xAxisExpressionName == null) {
-            xAxisExpressionName = "204/206";
+            if (namedExpressionsMap.containsKey("LnUOU")) {
+                xAxisExpressionName = "LnUOU";
+            } else {
+                xAxisExpressionName = "204/206";
+            }
         }
         return xAxisExpressionName;
     }
@@ -3889,7 +3893,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      */
     public String getyAxisExpressionName() {
         if (yAxisExpressionName == null) {
-            yAxisExpressionName = "204/206";
+            if (namedExpressionsMap.containsKey("LnPbU")) {
+                yAxisExpressionName = "LnPbU";
+            } else {
+                yAxisExpressionName = "204/206";
+            }
         }
         return yAxisExpressionName;
     }

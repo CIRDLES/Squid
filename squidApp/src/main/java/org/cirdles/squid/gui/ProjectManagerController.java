@@ -348,21 +348,21 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void pb204RadioButtonAction(ActionEvent event) {
+    private void pb204RadioButtonAction(ActionEvent event) throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);
     }
 
     @FXML
-    private void pb207RadioButtonAction(ActionEvent event) {
+    private void pb207RadioButtonAction(ActionEvent event) throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);
     }
 
     @FXML
-    private void pb208RadioButtonAction(ActionEvent event) {
+    private void pb208RadioButtonAction(ActionEvent event) throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);

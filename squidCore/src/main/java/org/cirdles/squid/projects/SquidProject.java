@@ -227,6 +227,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         this.task.setCommonPbModel(commonPbModel);
         this.task.setPhysicalConstantsModel(physicalConstantsModel);
         this.task.setSelectedIndexIsotope(selectedIndexIsotope);
+        this.task.setupSquidSessionSpecsAndReduceAndReport(false);
         this.task.setSquidAllowsAutoExclusionOfSpots(squidAllowsAutoExclusionOfSpots);
         this.task.setExtPErrU(extPErrU);
         this.task.setExtPErrTh(extPErrTh);
@@ -1339,9 +1340,11 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     /**
      * @param selectedIndexIsotope the selectedIndexIsotope to set
      */
-    public void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope) {
+    public void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope) throws SquidException {
         if (task != null) {
             task.setSelectedIndexIsotope(selectedIndexIsotope);
+            task.setChanged(true);
+            task.setupSquidSessionSpecsAndReduceAndReport(false);
         }
         this.selectedIndexIsotope = selectedIndexIsotope;
     }

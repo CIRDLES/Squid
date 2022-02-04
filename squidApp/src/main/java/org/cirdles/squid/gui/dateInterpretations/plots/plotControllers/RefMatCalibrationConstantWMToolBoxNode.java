@@ -128,13 +128,25 @@ public class RefMatCalibrationConstantWMToolBoxNode extends HBox {
                 correction = ((String) isotopeGroup.getSelectedToggle().getUserData());
                 switch (correction.substring(0, 1)) {
                     case "4":
-                        squidProject.setSelectedIndexIsotope(PB_204);
+                        try {
+                            squidProject.setSelectedIndexIsotope(PB_204);
+                        } catch (SquidException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case "7":
-                        squidProject.setSelectedIndexIsotope(PB_207);
+                        try {
+                            squidProject.setSelectedIndexIsotope(PB_207);
+                        } catch (SquidException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     default: // case 8
-                        squidProject.setSelectedIndexIsotope(PB_208);
+                        try {
+                            squidProject.setSelectedIndexIsotope(PB_208);
+                        } catch (SquidException e) {
+                            e.printStackTrace();
+                        }
                 }
                 squidProject.getTask().setChanged(true);
 
