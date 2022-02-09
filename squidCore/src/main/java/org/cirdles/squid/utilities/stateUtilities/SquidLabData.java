@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
+import static org.cirdles.squid.utilities.stateUtilities.SquidPersistentState.getExistingPersistentState;
 
 /**
  * @author ryanb
@@ -45,7 +46,7 @@ public class SquidLabData implements Serializable {
     private SquidReportTableInterface defaultReportTable;
     private SquidReportTableInterface defaultReportTableRM;
 
-    public SquidLabData() {
+    public SquidLabData() throws SquidException {
         laboratoryName = "Your lab";
 
         referenceMaterials = new ArrayList<>();
@@ -58,7 +59,7 @@ public class SquidLabData implements Serializable {
     public static SquidLabData getExistingSquidLabData() throws SquidException{
         SquidLabData retVal;
         try {
-            File file = new File(File.separator + SquidPersistentState.squidUserHomeDirectory
+            File file = new File(File.separator + getExistingPersistentState().getSquidUserHomeDirectoryLocal()
                     + File.separator + SQUID_USERS_DATA_FOLDER_NAME + File.separator
                     + SQUID_LAB_DATA_SERIALIZED_NAME);
             if (file.exists() && !file.isDirectory()) {
@@ -81,7 +82,7 @@ public class SquidLabData implements Serializable {
         return (SquidLabData) SquidSerializer.getSerializedObjectFromFile(file.getAbsolutePath(), false);
     }
 
-    private void updateSquidLabData() {
+    private void updateSquidLabData() throws SquidException {
         referenceMaterials.removeAll(ReferenceMaterialModel.getDefaultModels());
         referenceMaterials.addAll(ReferenceMaterialModel.getDefaultModels());
         referenceMaterials.sort(new ParametersModelComparator());
@@ -109,23 +110,23 @@ public class SquidLabData implements Serializable {
         storeState();
     }
 
-    public void testVersionAndUpdate() {
+    public void testVersionAndUpdate() throws SquidException {
         if (version < CURRENT_VERSION) {
             updateSquidLabData();
         }
     }
 
-    public void storeState() {
+    public void storeState() throws SquidException {
         String mySerializedName
                 = File.separator//
-                + SquidPersistentState.squidUserHomeDirectory//
+                + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal()//
                 + File.separator//
                 + SQUID_USERS_DATA_FOLDER_NAME //
                 + File.separator + SQUID_LAB_DATA_SERIALIZED_NAME;
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
-                File.separator + SquidPersistentState.squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+                File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal() + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }

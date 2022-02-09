@@ -22,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.StageStyle;
+import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher.ParametersTab;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
@@ -1314,7 +1315,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     physConstCB.getSelectionModel().selectLast();
                                     physConstModel = importedMod;
                                     setUpPhysConst();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
@@ -1350,7 +1355,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     physConstCB.getSelectionModel().selectLast();
                                     physConstModel = importedMod;
                                     setUpPhysConst();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
@@ -1363,7 +1372,11 @@ public class ParametersManagerGUIController implements Initializable {
                             physConstCB.getSelectionModel().selectLast();
                             physConstModel = importedMod;
                             setUpPhysConst();
-                            squidLabData.storeState();
+                            try {
+                                squidLabData.storeState();
+                            } catch (SquidException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -1475,7 +1488,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     refMatCB.getSelectionModel().selectLast();
                                     refMatModel = importedMod;
                                     setUpRefMat();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
@@ -1511,7 +1528,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     refMatCB.getSelectionModel().selectLast();
                                     refMatModel = importedMod;
                                     setUpRefMat();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
@@ -1524,7 +1545,11 @@ public class ParametersManagerGUIController implements Initializable {
                             refMatCB.getSelectionModel().selectLast();
                             refMatModel = importedMod;
                             setUpRefMat();
-                            squidLabData.storeState();
+                            try {
+                                squidLabData.storeState();
+                            } catch (SquidException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -1606,7 +1631,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     physConstCB.getSelectionModel().selectLast();
                                     physConstModel = importedMod;
                                     setUpPhysConst();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
@@ -1642,7 +1671,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     physConstCB.getSelectionModel().selectLast();
                                     physConstModel = importedMod;
                                     setUpPhysConst();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
@@ -1655,7 +1688,11 @@ public class ParametersManagerGUIController implements Initializable {
                             physConstCB.getSelectionModel().selectLast();
                             physConstModel = importedMod;
                             setUpPhysConst();
-                            squidLabData.storeState();
+                            try {
+                                squidLabData.storeState();
+                            } catch (SquidException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -1737,7 +1774,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     refMatCB.getSelectionModel().selectLast();
                                     refMatModel = importedMod;
                                     setUpRefMat();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
@@ -1773,7 +1814,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     refMatCB.getSelectionModel().selectLast();
                                     refMatModel = importedMod;
                                     setUpRefMat();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
@@ -1786,7 +1831,11 @@ public class ParametersManagerGUIController implements Initializable {
                             refMatCB.getSelectionModel().selectLast();
                             refMatModel = importedMod;
                             setUpRefMat();
-                            squidLabData.storeState();
+                            try {
+                                squidLabData.storeState();
+                            } catch (SquidException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -1936,7 +1985,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstRemoveCurrMod(ActionEvent event) {
+    private void physConstRemoveCurrMod(ActionEvent event) throws SquidException {
         physConstModels.remove(physConstModel);
         physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
@@ -1990,7 +2039,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstSaveAndRegisterEdit(ActionEvent event) {
+    private void physConstSaveAndRegisterEdit(ActionEvent event) throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = physConstModelName.getText();
         String version = physConstVersion.getText();
@@ -2043,7 +2092,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatSaveAndRegisterEdit(ActionEvent event) {
+    private void refMatSaveAndRegisterEdit(ActionEvent event) throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = refMatModelName.getText();
         String version = refMatVersion.getText();
@@ -2092,7 +2141,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatRemoveCurrMod(ActionEvent event) {
+    private void refMatRemoveCurrMod(ActionEvent event) throws SquidException {
         refMatModels.remove(refMatModel);
         refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
@@ -2490,7 +2539,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     commonPbCB.getSelectionModel().selectLast();
                                     commonPbModel = importedMod;
                                     setUpCommonPb();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new name, model not imported", squidLabDataStage);
                                 }
@@ -2526,7 +2579,11 @@ public class ParametersManagerGUIController implements Initializable {
                                     commonPbCB.getSelectionModel().selectLast();
                                     commonPbModel = importedMod;
                                     setUpCommonPb();
-                                    squidLabData.storeState();
+                                    try {
+                                        squidLabData.storeState();
+                                    } catch (SquidException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else {
                                     SquidMessageDialog.showWarningDialog("Invalid new version, model not imported", squidLabDataStage);
                                 }
@@ -2539,7 +2596,11 @@ public class ParametersManagerGUIController implements Initializable {
                             commonPbCB.getSelectionModel().selectLast();
                             commonPbModel = importedMod;
                             setUpCommonPb();
-                            squidLabData.storeState();
+                            try {
+                                squidLabData.storeState();
+                            } catch (SquidException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
 
@@ -2579,7 +2640,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbSaveAndRegisterEdit(ActionEvent event) {
+    private void commonPbSaveAndRegisterEdit(ActionEvent event) throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = commonPbModelName.getText();
         String version = commonPbVersion.getText();
@@ -2632,7 +2693,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbRemoveCurrMod(ActionEvent event) {
+    private void commonPbRemoveCurrMod(ActionEvent event) throws SquidException {
         commonPbModels.remove(commonPbModel);
         commonPbModels.sort(new ParametersModelComparator());
         setUpCommonPbCBItems();
@@ -2836,27 +2897,27 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatExportAllAction(ActionEvent event) {
+    private void refMatExportAllAction(ActionEvent event) throws SquidException {
         exportAllRefMatFiles(refMatModels);
     }
 
     @FXML
-    private void commonPbExportAllAction(ActionEvent event) {
+    private void commonPbExportAllAction(ActionEvent event) throws SquidException {
         exportAllRefMatFiles(commonPbModels);
     }
 
     @FXML
-    private void phyConstExportAllAction(ActionEvent event) {
+    private void phyConstExportAllAction(ActionEvent event) throws SquidException {
         exportAllRefMatFiles(physConstModels);
     }
 
-    private void exportAllRefMatFiles(List<ParametersModel> parameterModels) {
+    private void exportAllRefMatFiles(List<ParametersModel> parameterModels) throws SquidException {
 
         File parametgerModelsFilesFolder;
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Export Folder for Parameter Model files");
-        File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
+        File userHome = new File(File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal());
         chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
 
         //directory chooser doesn't have an option to set initial folder name, find solution

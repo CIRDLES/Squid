@@ -336,13 +336,13 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File getCustomExpressionFolder(Window ownerWindow) {
+    public static File getCustomExpressionFolder(Window ownerWindow) throws SquidException {
         File retVal;
 
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select Custom Expressions Folder");
         chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()
-                ? squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + SquidPersistentState.squidUserHomeDirectory));
+                ? squidPersistentState.getCustomExpressionsFile().getParentFile() : new File(File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal()));
 
         retVal = chooser.showDialog(ownerWindow);
 
@@ -353,7 +353,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File setCustomExpressionFolder(Window ownerWindow) {
+    public static File setCustomExpressionFolder(Window ownerWindow) throws SquidException {
         File retVal;
 
         DirectoryChooser chooser = new DirectoryChooser();
@@ -361,7 +361,7 @@ public class FileHandler {
         if (squidPersistentState.getCustomExpressionsFile() != null && squidPersistentState.getCustomExpressionsFile().isDirectory()) {
             chooser.setInitialDirectory(squidPersistentState.getCustomExpressionsFile().getParentFile());
         } else {
-            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
+            File userHome = new File(File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal());
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 
@@ -469,7 +469,7 @@ public class FileHandler {
         return retVal;
     }
 
-    public static File selectSquid3TasksFolderForBrowsing(Window ownerWindow) {
+    public static File selectSquid3TasksFolderForBrowsing(Window ownerWindow) throws SquidException {
         File tasksFolder;
 
         DirectoryChooser chooser = new DirectoryChooser();
@@ -478,7 +478,7 @@ public class FileHandler {
         if (recentFolder.isDirectory()) {
             chooser.setInitialDirectory(recentFolder);
         } else {
-            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
+            File userHome = new File(File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal());
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 
@@ -491,7 +491,7 @@ public class FileHandler {
         return tasksFolder;
     }
 
-    public static File selectSquid25TasksFolderForBrowsing(Window ownerWindow) {
+    public static File selectSquid25TasksFolderForBrowsing(Window ownerWindow) throws SquidException {
         File tasksFolder;
 
         DirectoryChooser chooser = new DirectoryChooser();
@@ -500,7 +500,7 @@ public class FileHandler {
         if (recentFolder.isDirectory()) {
             chooser.setInitialDirectory(recentFolder);
         } else {
-            File userHome = new File(File.separator + SquidPersistentState.squidUserHomeDirectory);
+            File userHome = new File(File.separator + SquidPersistentState.getExistingPersistentState().getSquidUserHomeDirectoryLocal());
             chooser.setInitialDirectory(userHome.isDirectory() ? userHome : null);
         }
 

@@ -37,8 +37,9 @@ public class SquidPersistentState implements Serializable {
     private static final long serialVersionUID = 9131785805774520290L;
     private static final String SQUID_PERSISTENT_STATE_FILE_NAME = "SquidPersistentState.ser";
     private static final int MRU_COUNT = 10;
-    public static String squidUserHomeDirectory = System.getProperty("user.home");
-    private static volatile SquidPersistentState instance;// = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+    //public static String squidUserHomeDirectory = System.getProperty("user.home");
+    private String squidUserHomeDirectoryLocal;
+    private static volatile SquidPersistentState instance;
     // instance variables
     private TaskDesign taskDesign;
     private File MRUProjectFile;
@@ -63,19 +64,28 @@ public class SquidPersistentState implements Serializable {
     private String MRUTaskXMLFolderPath;
     private File customExpressionsFile;
 
+    public String getSquidUserHomeDirectoryLocal() {
+        if (squidUserHomeDirectoryLocal == null){
+            squidUserHomeDirectoryLocal = System.getProperty("user.home");
+        }
+        return squidUserHomeDirectoryLocal;
+    }
+
     /**
      *
      */
     private SquidPersistentState() {
 
-
         initMRULists();
 
         try{taskDesign = new TaskDesign();}catch(SquidException squidException){}
 
+        squidUserHomeDirectoryLocal = System.getProperty("user.home");
+
+
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
-                File.separator + squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+                File.separator + squidUserHomeDirectoryLocal + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
@@ -114,14 +124,20 @@ public class SquidPersistentState implements Serializable {
      */
     public static SquidPersistentState getExistingPersistentState() throws SquidException{
 
-        // squidUserHomeDirectory = System.getProperty("user.home");
+        String mySerializedName
+                = File.separator//
+                + System.getProperty("user.home")//
+                + File.separator//
+                + SQUID_USERS_DATA_FOLDER_NAME //
+                + File.separator + SQUID_PERSISTENT_STATE_FILE_NAME;
+
         if (instance == null){
-            instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(SquidPersistentState.getMySerializedName(), false);
+            instance = (SquidPersistentState) SquidSerializer.getSerializedObjectFromFile(mySerializedName, false);
         }
 
         // check if user data folder exists and create if it does not
         File dataFolder = new File(
-                File.separator + SquidPersistentState.squidUserHomeDirectory + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
+                File.separator + System.getProperty("user.home") + File.separator + SQUID_USERS_DATA_FOLDER_NAME);
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
         }
@@ -145,10 +161,10 @@ public class SquidPersistentState implements Serializable {
     /**
      * @return
      */
-    public static String getMySerializedName() {
+    public static String getMySerializedName() throws SquidException {
         String mySerializedName
                 = File.separator//
-                + SquidPersistentState.squidUserHomeDirectory//
+                + System.getProperty("user.home")//
                 + File.separator//
                 + SQUID_USERS_DATA_FOLDER_NAME //
                 + File.separator + SQUID_PERSISTENT_STATE_FILE_NAME;
