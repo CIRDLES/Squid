@@ -16,4 +16,4 @@ ls gradle7/gradle-7.3.3
 echo ""
 
 echo "building Squid          **************************"
-gradle7/gradle-7.3.3/bin/gradle clean build  -Dorg.gradle.java.home=./jdk8u322-full/
+gradle7/gradle-7.3.3/bin/gradle clean build --refresh-dependencies -Dorg.gradle.java.home=./jdk8u322-full/
