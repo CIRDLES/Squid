@@ -1762,7 +1762,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void exportCustomExpressionsOnAction(ActionEvent actionEvent) {
+    public void exportCustomExpressionsOnAction(ActionEvent actionEvent) throws SquidException {
         File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
         if (folder != null) {
             folder.mkdirs();

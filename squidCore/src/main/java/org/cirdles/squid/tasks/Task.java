@@ -368,7 +368,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         serializeXMLObject(taskFileXML.getAbsolutePath());
     }
 
-    public List<ParametersModel> verifySquidLabDataParameters() {
+    public List<ParametersModel> verifySquidLabDataParameters() throws SquidException {
         List<ParametersModel> retVal = new ArrayList<>(3);
 
         ParametersModel refMat = getReferenceMaterialModel();
@@ -2761,7 +2761,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         initSquidRMWeightedMeanPlotSortTable();
     }
 
-    private void initSquidWeightedMeanPlotSortTable() {
+    private void initSquidWeightedMeanPlotSortTable() throws SquidException {
         SquidReportTableInterface squidWeightedMeanPlotSortTable = null;
 
         boolean containsFilterReport = false;
@@ -2802,7 +2802,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         rawRatiosCategory.setCategoryColumns(categoryColumns);
     }
 
-    private void initSquidRMWeightedMeanPlotSortTable() {
+    private void initSquidRMWeightedMeanPlotSortTable() throws SquidException {
         SquidReportTableInterface squidRMWeightedMeanPlotSortTable = null;
 
         boolean containsFilterReport = false;

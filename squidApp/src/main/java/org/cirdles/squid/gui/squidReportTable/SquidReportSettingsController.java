@@ -1299,7 +1299,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void saveOnAction(ActionEvent event) {
+    private void saveOnAction(ActionEvent event) throws SquidException {
         SquidReportTableInterface currTable = reportTableCB.getSelectionModel().getSelectedItem();
 
         if (currTable.isDefault()) {
