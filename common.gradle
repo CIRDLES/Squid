@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.9.8'
+String mavenVersion = '1.9.9'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -80,7 +80,7 @@ publishing {
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
             }

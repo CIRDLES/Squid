@@ -25,10 +25,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.squidPrefixTree.SquidPrefixTree;
@@ -82,6 +83,10 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private ToggleGroup toggleGroupSBM;
     @FXML
+    private Label invalidSBMCounts;
+    @FXML
+    private Label invalidSBMCountsDescription;
+    @FXML
     private RadioButton linearRegressionRatioCalcRadioButton;
     @FXML
     private RadioButton spotAverageRatioCalcRadioButton;
@@ -131,7 +136,15 @@ public class ProjectManagerController implements Initializable {
 
         if (task != null) {
 //            roundingSquid3.setSelected(task.isRoundingForSquid3());
-            try{setUpParametersModelsComboBoxes();}catch(SquidException squidException){ SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow); }
+            try {
+                setUpParametersModelsComboBoxes();
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
+
+            invalidSBMCounts.setText("" + ((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts());
+            invalidSBMCounts.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
+            invalidSBMCountsDescription.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
             if (squidProject.isUseSBM()) {
                 yesSBMRadioButton.setSelected(true);
             } else {
@@ -161,7 +174,7 @@ public class ProjectManagerController implements Initializable {
         titleLabel.setStyle(STYLE_MANAGER_TITLE);
     }
 
-    private void setUpParametersModelsComboBoxes() throws SquidException{
+    private void setUpParametersModelsComboBoxes() throws SquidException {
 
         // PhysicalConstantsModels
         physConstModelComboBox.setConverter(new ParameterModelStringConverter());
@@ -174,9 +187,11 @@ public class ProjectManagerController implements Initializable {
                     SquidProject.setProjectChanged(true);
                     task.setChanged(true);
                     if (task.getReferenceMaterialSpots().size() > 0) {
-                       try{ task.setupSquidSessionSpecsAndReduceAndReport(false);} catch (SquidException squidException){
-                           SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-                       }
+                        try {
+                            task.setupSquidSessionSpecsAndReduceAndReport(false);
+                        } catch (SquidException squidException) {
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+                        }
                     }
                 });
 
@@ -192,8 +207,9 @@ public class ProjectManagerController implements Initializable {
                         SquidProject.setProjectChanged(true);
                         task.setChanged(true);
                         if (task.getReferenceMaterialSpots().size() > 0) {
-                            try{
-                            task.setupSquidSessionSpecsAndReduceAndReport(false);} catch (SquidException squidException){
+                            try {
+                                task.setupSquidSessionSpecsAndReduceAndReport(false);
+                            } catch (SquidException squidException) {
                                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
                         }
@@ -309,8 +325,13 @@ public class ProjectManagerController implements Initializable {
         SquidProject.setProjectChanged(true);
         task.setUseSBM(true);
         task.setChanged(true);
-        try{task.setupSquidSessionSpecsAndReduceAndReport(true);} catch (SquidException squidException){
-            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(true);
+        } catch (SquidException squidException) {
+            boolean chooseNoSBM = SquidMessageDialog.showChoiceDialog(squidException.getMessage(), primaryStageWindow);
+            if (chooseNoSBM){
+                noSBMRadioButton.setSelected(true);
+            }
         }
     }
 
@@ -320,7 +341,9 @@ public class ProjectManagerController implements Initializable {
         SquidProject.setProjectChanged(true);
         task.setUseSBM(false);
         task.setChanged(true);
-        try{task.setupSquidSessionSpecsAndReduceAndReport(true);} catch (SquidException squidException){
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(true);
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -331,9 +354,11 @@ public class ProjectManagerController implements Initializable {
         SquidProject.setProjectChanged(true);
         task.setUserLinFits(true);
         task.setChanged(true);
-       try{ task.setupSquidSessionSpecsAndReduceAndReport(true);} catch (SquidException squidException){
-           SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-       }
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(true);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
     }
 
     @FXML
@@ -342,7 +367,9 @@ public class ProjectManagerController implements Initializable {
         SquidProject.setProjectChanged(true);
         task.setUserLinFits(false);
         task.setChanged(true);
-        try{task.setupSquidSessionSpecsAndReduceAndReport(true);} catch (SquidException squidException){
+        try {
+            task.setupSquidSessionSpecsAndReduceAndReport(true);
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -373,7 +400,9 @@ public class ProjectManagerController implements Initializable {
         // this will cause weighted mean expressions to be changed with boolean flag
         squidProject.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
         SquidProject.setProjectChanged(true);
-        try{task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());} catch (SquidException squidException){
+        try {
+            task.updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -409,9 +438,11 @@ public class ProjectManagerController implements Initializable {
 
     @FXML
     private void refreshModelsAction(ActionEvent event) {
-try{        task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);} catch (SquidException squidException){
-    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-}
+        try {
+            task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
+        } catch (SquidException squidException) {
+            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+        }
     }
 
     static class ParameterModelStringConverter extends StringConverter<ParametersModel> {

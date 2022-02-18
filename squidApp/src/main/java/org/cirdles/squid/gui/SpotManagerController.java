@@ -656,8 +656,6 @@ public class SpotManagerController implements Initializable {
         if (saveSpotNameButton.getUserData() != null) {
             ((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim());
             squidProject.processPrawnSessionForDuplicateSpotNames();
-            squidProject.divideSamples();
-            squidProject.generatePrefixTreeFromSpotNames();
             shrimpFractionList.refresh();
             shrimpRefMatList.refresh();
             shrimpConcentrationRefMatList.refresh();

@@ -529,9 +529,6 @@ public class Squid3Ink implements Squid3API {
             if (spot.getPar().get(0).getValue().compareToIgnoreCase(oldSpotName) == 0) {
                 spot.getPar().get(0).setValue(spotName.trim());
                 squid3Project.processPrawnSessionForDuplicateSpotNames();
-                squid3Project.divideSamples();
-                squid3Project.generatePrefixTreeFromSpotNames();
-
                 squid3Project.getTask().setChanged(true);
                 squid3Project.getTask().setPrawnChanged(true);
                 SquidProject.setProjectChanged(true);

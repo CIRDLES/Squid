@@ -360,14 +360,6 @@ public class TaskDesign implements Serializable {
     public String getDelimiterForUnknownNames() {
         return delimiterForUnknownNames;
     }
-
-    /**
-     * @param delimiterForUnknownNames the delimiterForUnknownNames to set
-     */
-    public void setDelimiterForUnknownNames(String delimiterForUnknownNames) {
-        this.delimiterForUnknownNames = delimiterForUnknownNames;
-    }
-
     /**
      * @return the parentNuclide
      */

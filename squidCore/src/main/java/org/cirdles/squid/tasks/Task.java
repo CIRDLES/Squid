@@ -123,6 +123,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected String provenance;
     protected long dateRevised;
     protected boolean useSBM;
+    protected int countOfShrimpFractionsWithInvalidSBMcounts;
     protected boolean userLinFits;
     // comes from prawn file mass station
     protected int indexOfBackgroundSpecies;
@@ -217,6 +218,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this(name, null, reportsEngine);
     }
 
+    public int getCountOfShrimpFractionsWithInvalidSBMcounts() {
+        return countOfShrimpFractionsWithInvalidSBMcounts;
+    }
+
     /**
      * @param name
      * @param prawnFile
@@ -239,10 +244,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.authorName = taskDesign.getAuthorName();
         this.labName = taskDesign.getLabName();
         this.provenance = "";
-        this.dateRevised = 0l;
+        this.dateRevised = 0L;
         this.filterForRefMatSpotNames = "";
         this.filterForConcRefMatSpotNames = "";
         this.filtersForUnknownNames = new HashMap<>();
+
+        this.countOfShrimpFractionsWithInvalidSBMcounts = 0;
 
         this.indexOfBackgroundSpecies = -1;
         this.indexOfTaskBackgroundMass = -1;
@@ -340,16 +347,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         generateSpotMetaDataFields();
     }
 
-//    public static void main(String[] args) {
-//        SquidProject sp = new SquidProject(GEOCHRON);
-//        TaskInterface task = sp.getTask();
-//        task.setNominalMasses(REQUIRED_NOMINAL_MASSES);
-//        task.setRatioNames(REQUIRED_RATIO_NAMES);
-//
-//        ((XMLSerializerInterface) task).serializeXMLObject("TASK.xml");
-//
-//    }
-
     public boolean synchronizeTaskVersion() throws SquidException {
         boolean retVal = false;
         if (taskSquidVersion == null) {
@@ -362,10 +359,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         return retVal;
-    }
-
-    public void saveTaskToXML(File taskFileXML) {
-        serializeXMLObject(taskFileXML.getAbsolutePath());
     }
 
     public List<ParametersModel> verifySquidLabDataParameters() throws SquidException {
@@ -475,7 +468,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         allMasses.addAll(nominalMasses);
         nominalMasses = allMasses;
-        Collections.sort(nominalMasses, new IntuitiveStringComparator<>());
+        nominalMasses.sort(new IntuitiveStringComparator<>());
 
         nominalMasses.remove(DEFAULT_BACKGROUND_MASS_LABEL);
         indexOfTaskBackgroundMass = indexOfBackgroundSpecies;
@@ -486,7 +479,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
-        Collections.sort(ratioNames, new IntuitiveStringComparator<>());
+        ratioNames.sort(new IntuitiveStringComparator<>());
 
         setChanged(true);
         if (!taskSkeleton) {
@@ -555,13 +548,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         // housekeeping
-        List<String> myNominalMasses = new ArrayList<>();
-        myNominalMasses.addAll(nominalMasses);
+        List<String> myNominalMasses = new ArrayList<>(nominalMasses);
         myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
         taskDesign.setNominalMasses(myNominalMasses);
 
-        List<String> myRatioNames = new ArrayList<>();
-        myRatioNames.addAll(ratioNames);
+        List<String> myRatioNames = new ArrayList<>(ratioNames);
         myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
         taskDesign.setRatioNames(myRatioNames);
 
@@ -1005,7 +996,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             boolean refreshPhysicalConstantsModel,
             boolean refreshReferenceMaterialsModel) throws SquidException {
 
-        List<ParametersModel> models = null;
+        List<ParametersModel> models;
 
         if (refreshCommonLeadModel) {
             models = squidLabData.getCommonPbModels();
@@ -1950,7 +1941,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs)
             throws SquidException {
         shrimpFractions = new ArrayList<>();
-        int countOfShrimpFractionsWithInvalidSBMcounts = 0;
+        countOfShrimpFractionsWithInvalidSBMcounts = 0;
 
         ShrimpFraction shrimpFraction = null;
         for (int f = 0; f < prawnFile.extractCountOfRuns(); f++) {
@@ -1975,12 +1966,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         // June 2019 per issue #340
         if (useSBM && (countOfShrimpFractionsWithInvalidSBMcounts > 0)) {
-            throw new SquidException("Squid3 detected that " + countOfShrimpFractionsWithInvalidSBMcounts + " spots contain invalid SBM counts. \n\n"
-                    + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.");
-//            SquidMessageDialog.showWarningDialog(
-//                    "Squid3 detected that " + countOfShrimpFractionsWithInvalidSBMcounts + " spots contain invalid SBM counts. \n\n"
-//                            + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.",
-//                    null);
+            // this first case is for creating a new project from data file
+            if (unknownSpots.isEmpty()) {
+                useSBM = false;
+            } else {
+                throw new SquidException("Squid3 detected that " + countOfShrimpFractionsWithInvalidSBMcounts + " spots contain invalid SBM counts. \n\n"
+                        + "Squid3 recommends switching SBM normalisation OFF until you diagnose the problem.");
+            }
         }
 
         // prepare for task expressions to be evaluated
@@ -3389,11 +3381,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void setSelectedIndexIsotope(IndexIsoptopesEnum selectedIndexIsotope) {
         this.selectedIndexIsotope = selectedIndexIsotope;
-//        try {
-//            changed = true;
-//            setupSquidSessionSpecsAndReduceAndReport(false);
-//        } catch (SquidException squidException) {
-//        }
     }
 
     @Override
