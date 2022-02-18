@@ -730,6 +730,10 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
+            if (spotName.isEmpty()){
+                spotName = "NO.NAME";
+                runs.get(i).getPar().get(0).setValue(spotName);
+            }
             String spotNameKey = spotName.toUpperCase(Locale.ENGLISH);
             // remove existing duplicate label in case editing occurred
             int indexDUP = spotName.indexOf("-DUP");
@@ -747,6 +751,10 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                 spotNameCountMap.put(spotNameKey, 0);
             }
         }
+
+        // reprocess to handle any changes to spot names from here or caller
+        divideSamples();
+        generatePrefixTreeFromSpotNames();
     }
 
     public void preProcessPrawnSession() {
