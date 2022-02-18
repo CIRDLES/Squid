@@ -137,6 +137,8 @@
                             </toggleGroup>
                         </RadioButton>
                         <RadioButton fx:id="noSBMRadioButton" mnemonicParsing="false" onAction="#noSBMRadioButtonActions" text="No" toggleGroup="$toggleGroupSBM" />
+                  <Label fx:id="invalidSBMCounts" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #c53d13;" text="0" />
+                  <Label fx:id="invalidSBMCountsDescription" layoutX="113.0" layoutY="11.0" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #c53d13;" text="spots detected with invalid SBM counts" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
