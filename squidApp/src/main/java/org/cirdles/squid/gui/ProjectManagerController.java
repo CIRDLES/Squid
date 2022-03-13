@@ -264,6 +264,11 @@ public class ProjectManagerController implements Initializable {
         SpinnerValueFactory<Double> valueFactoryU
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrU(), 0.05);
         assignedExternalErrUSpinner.setValueFactory(valueFactoryU);
+        assignedExternalErrUSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                assignedExternalErrUSpinner.increment(0); // won't change value, but will commit editor
+            }
+        });
         assignedExternalErrUSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable,
                                                                  Double oldValue, Double newValue) -> {
             squidProject.setExtPErrU(newValue);
@@ -275,6 +280,11 @@ public class ProjectManagerController implements Initializable {
         SpinnerValueFactory<Double> valueFactoryTh
                 = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.00, 1.00, task.getExtPErrTh(), 0.05);
         assignedExternalErrThSpinner.setValueFactory(valueFactoryTh);
+        assignedExternalErrThSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                assignedExternalErrThSpinner.increment(0); // won't change value, but will commit editor
+            }
+        });
         assignedExternalErrThSpinner.valueProperty().addListener((ObservableValue<? extends Double> observable, //
                                                                   Double oldValue, Double newValue) -> {
             squidProject.setExtPErrTh(newValue);
