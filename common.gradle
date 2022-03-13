@@ -7,7 +7,7 @@ apply plugin: 'maven-publish'
 
 
 String mavenGroupId = 'org.cirdles'
-String mavenVersion = '1.9.9'
+String mavenVersion = '1.9.10'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
