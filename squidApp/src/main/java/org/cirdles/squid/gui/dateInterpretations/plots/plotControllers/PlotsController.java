@@ -34,7 +34,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants.IndexIsoptopesEnum;
 import org.cirdles.squid.constants.Squid3Constants.SpotTypes;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
@@ -43,6 +42,7 @@ import org.cirdles.squid.gui.dateInterpretations.plots.squid.MessagePlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
 import org.cirdles.squid.gui.dateInterpretations.plots.topsoil.*;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.tasks.Task;
@@ -90,6 +90,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     private static List<Map<String, Object>> rootData;
     private static Map<String, PlotDisplayInterface> mapOfPlotsOfSpotSets;
     private static CheckBoxTreeItem<SampleTreeNodeInterface> chosenSample;
+    private static ChangeListener<TreeItem<SampleTreeNodeInterface>> topsoilPlotsCheckBoxListener;
     private HBox anyTwoToolBox;
     @FXML
     private VBox vboxMaster;
@@ -107,7 +108,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     private AnchorPane spotListAnchorPane;
 
     @Override
-    public void setXAxisExpressionName(String xAxisExpressionName)throws SquidException {
+    public void setXAxisExpressionName(String xAxisExpressionName) throws SquidException {
         PlotsController.xAxisExpressionName = xAxisExpressionName;
         ((Task) squidProject.getTask()).setxAxisExpressionName(xAxisExpressionName);
         showActivePlot();
@@ -135,7 +136,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         // update
         try {
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
-        }catch(SquidException squidException){
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
 
@@ -155,9 +156,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         xAxisExpressionName = ((Task) squidProject.getTask()).getxAxisExpressionName();
         yAxisExpressionName = ((Task) squidProject.getTask()).getyAxisExpressionName();
 
-        try{showActivePlot();
+        try {
+            showActivePlot();
 
-        }catch(SquidException squidException){}
+        } catch (SquidException squidException) {
+        }
     }
 
     private PlotDisplayInterface generateConcordiaPlot(
@@ -277,15 +280,15 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
         spotsTreeViewCheckBox.setRoot(rootItem);
         spotsTreeViewCheckBox.setShowRoot((fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0));
-        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
-                if (newValue == null) {
-                    newValue = rootItem;
-                }
-                currentlyPlottedSampleTreeNode = newValue;
-            }
-        });
+//        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
+//            @Override
+//            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
+//                if (newValue == null) {
+//                    newValue = rootItem;
+//                }
+//                currentlyPlottedSampleTreeNode = newValue;
+//            }
+//        });
 
         // want plot choices sticky during execution
         if (mapOfPlotsOfSpotSets == null) {
@@ -382,9 +385,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                         SampleTreeNodeInterface item = object.getValue();
 
                         String nodeString = "";
-
-
-                        try{nodeString = item.getNodeName();}catch(SquidException squidException){}
+                        try {
+                            nodeString = item.getNodeName();
+                        } catch (SquidException squidException) {
+                        }
                         if ((object.getParent() != null) && !(item instanceof SampleNode)) {
                             double[][] expressionValues = item.getShrimpFraction()
                                     .getTaskExpressionsEvaluationsPerSpotByField(
@@ -399,8 +403,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                             nodeString += "  " + ageOrValueSource;
                         }
-
-
 
                         return nodeString;
                     }
@@ -419,26 +421,25 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         // dec 2018 improvement suggested by Nicole Rayner to use checkboxes to select members
         // thus selecting tree item displays it and checkbox (see above) for a sample will
         // allow toggling of all spots
-        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable,
-                                TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
-                rootPlot.setData(rootData);
-                try {
-                    if (newValue.getValue() instanceof SampleNode) {
-                        if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
-                            plot = rootPlot;
-                        } else if (chosenSample != newValue) {
-                            plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + topsoilPlotFlavor);
+        topsoilPlotsCheckBoxListener =
+                (observable, oldValue, newValue) -> {
+                    rootPlot.setData(rootData);
+                    try {
+                        if (newValue.getValue() instanceof SampleNode) {
+                            if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
+                                plot = rootPlot;
+                            } else if (chosenSample != newValue) {
+                                plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + topsoilPlotFlavor);
+                            }
+                            chosenSample = (CheckBoxTreeItem<SampleTreeNodeInterface>) newValue;
+                            currentlyPlottedSampleTreeNode = chosenSample;
                         }
-                        chosenSample = (CheckBoxTreeItem<SampleTreeNodeInterface>) newValue;
-                        currentlyPlottedSampleTreeNode = chosenSample;
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
-                }
-                refreshPlot();
-            }
-        });
+                    refreshPlot();
+                };
+
+        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(topsoilPlotsCheckBoxListener);
 
         refreshPlot();
 
@@ -446,7 +447,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         currentlyPlottedSampleTreeNode.setExpanded(true);
     }
 
-    private void showAnyTwoExpressions()throws SquidException {
+    private void showAnyTwoExpressions() throws SquidException {
         spotsTreeViewCheckBox = new CheckTreeView<>();
         spotsTreeViewCheckBox.setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS);
 
@@ -501,28 +502,34 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             = (CheckBoxTreeItem<SampleTreeNodeInterface>) mySamplesIterator.next();
                     mySampleItem.setSelected(newValue);
                 }
-                try{provisionAnyTwoToolbox(newValue);}catch(SquidException squidException){}
+                try {
+                    provisionAnyTwoToolbox(newValue);
+                } catch (SquidException squidException) {
+                }
             }
         });
 
         rootItem.indeterminateProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                try{provisionAnyTwoToolbox(newValue || rootItem.isSelected());}catch(SquidException squidException){}
+                try {
+                    provisionAnyTwoToolbox(newValue || rootItem.isSelected());
+                } catch (SquidException squidException) {
+                }
             }
         });
 
         spotsTreeViewCheckBox.setRoot(rootItem);
         spotsTreeViewCheckBox.setShowRoot((fractionTypeSelected.compareTo(SpotTypes.UNKNOWN) == 0));
-        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
-                if (newValue == null) {
-                    newValue = rootItem;
-                }
-                currentlyPlottedSampleTreeNode = newValue;
-            }
-        });
+//        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
+//            @Override
+//            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable, TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
+//                if (newValue == null) {
+//                    newValue = rootItem;
+//                }
+//                currentlyPlottedSampleTreeNode = newValue;
+//            }
+//        });
 
         for (Map.Entry<String, List<ShrimpFractionExpressionInterface>> entry : mapOfSpotsBySampleNames.entrySet()) {
             CheckBoxTreeItem<SampleTreeNodeInterface> sampleItem
@@ -570,7 +577,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             myPlot.setData(myData);
                         }
                     });
-
                 }
             }
 
@@ -590,7 +596,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
             if (currentlyPlottedSampleTreeNode == null) {
                 currentlyPlottedSampleTreeNode = sampleItem;
             }
-
         }
         rootPlot.setData(rootData);
 
@@ -605,7 +610,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                         SampleTreeNodeInterface item = object.getValue();
 
                         String nodeString = "";
-                        try{nodeString = item.getNodeName();}catch(SquidException squidException){}
+                        try {
+                            nodeString = item.getNodeName();
+                        } catch (SquidException squidException) {
+                        }
                         if ((object.getParent() != null) && !(item instanceof SampleNode)) {
                             double[][] expressionValues = item.getShrimpFraction()
                                     .getTaskExpressionsEvaluationsPerSpotByField(
@@ -639,32 +647,30 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         spotsTreeViewCheckBox.prefHeightProperty().bind(spotListAnchorPane.prefHeightProperty());
         spotsTreeViewCheckBox.prefWidthProperty().bind(spotListAnchorPane.prefWidthProperty());
 
-        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<SampleTreeNodeInterface>>() {
-            @Override
-            public void changed(ObservableValue<? extends TreeItem<SampleTreeNodeInterface>> observable,
-                                TreeItem<SampleTreeNodeInterface> oldValue, TreeItem<SampleTreeNodeInterface> newValue) {
-                rootPlot.setData(rootData);
-                try {
-                    if (newValue.getValue() instanceof SampleNode) {
-                        if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
-                            plot = rootPlot;
-                        } else if (chosenSample != newValue) {
-                            plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + xAxisExpressionName + yAxisExpressionName);
+        topsoilPlotsCheckBoxListener =
+                (observable, oldValue, newValue) -> {
+                    rootPlot.setData(rootData);
+                    try {
+                        if (newValue.getValue() instanceof SampleNode) {
+                            if (newValue.getValue().getNodeName().equals(SpotTypes.UNKNOWN.getSpotTypeName())) {
+                                plot = rootPlot;
+                            } else if (chosenSample != newValue) {
+                                plot = mapOfPlotsOfSpotSets.get(newValue.getValue().getNodeName() + xAxisExpressionName + yAxisExpressionName);
+                            }
+                            chosenSample = (CheckBoxTreeItem<SampleTreeNodeInterface>) newValue;
+                            currentlyPlottedSampleTreeNode = chosenSample;
                         }
-                        chosenSample = (CheckBoxTreeItem<SampleTreeNodeInterface>) newValue;
-                        currentlyPlottedSampleTreeNode = chosenSample;
+                    } catch (Exception e) {
                     }
-                } catch (Exception e) {
-                }
-                refreshPlot();
-            }
-        });
+                    refreshPlot();
+                };
+
+        spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().addListener(topsoilPlotsCheckBoxListener);
 
         spotsTreeViewCheckBox.getSelectionModel().select(currentlyPlottedSampleTreeNode);
         currentlyPlottedSampleTreeNode.setExpanded(true);
 
         provisionAnyTwoToolbox(true);
-
     }
 
     /**
@@ -800,6 +806,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 TreeItem<SampleTreeNodeInterface> rootItemWM
                         = new CheckBoxTreeItem<>(new SampleNode(((Task) squidProject.getTask()).getFilterForRefMatSpotNames()));
 
+                removeSpotsTreeViewCheckBoxListener();
+
                 spotsTreeViewCheckBox.setCellFactory(p -> new CheckBoxTreeCell<>(
                         (TreeItem<SampleTreeNodeInterface> item) -> item.getValue().getSelectedProperty(),
                         new StringConverter<TreeItem<SampleTreeNodeInterface>>() {
@@ -809,7 +817,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                                 SampleTreeNodeInterface item = object.getValue();
 
                                 String displayVal = "";
-                                try{displayVal = item.getNodeName();}catch(SquidException squidException){}
+                                try {
+                                    displayVal = item.getNodeName();
+                                } catch (SquidException squidException) {
+                                }
                                 try {
                                     displayVal = displayVal
                                             + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
@@ -869,8 +880,11 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                                 setStyle(SPOT_TREEVIEW_CSS_STYLE_SPECS + "-fx-text-fill: blue;");
                             }
 
-                            String displayVal="";
-                           try{ displayVal = item.getNodeName();}catch(SquidException squidException){}
+                            String displayVal = "";
+                            try {
+                                displayVal = item.getNodeName();
+                            } catch (SquidException squidException) {
+                            }
                             try {
                                 displayVal = displayVal
                                         + prettyPrintSortedWM(item.getShrimpFraction(), spotSummaryDetails.getSelectedExpressionName());
@@ -907,13 +921,25 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         refreshPlot();
     }
 
-    private void showSampleWeightedMeanPlot()throws SquidException {
+    public void removeSpotsTreeViewCheckBoxListener() {
+        if (topsoilPlotsCheckBoxListener != null) {
+            try {
+                spotsTreeViewCheckBox.getSelectionModel().selectedItemProperty().removeListener(topsoilPlotsCheckBoxListener);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void showSampleWeightedMeanPlot() throws SquidException {
         // dec 2019 new approach per @NicoleRayner
         if (vboxMaster.getChildren().get(0) instanceof ToolBoxNodeInterface) {
             vboxMaster.getChildren().remove(0);
         }
         HBox toolBox = new SamplesWeightedMeanToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
+
+        removeSpotsTreeViewCheckBoxListener();
 
         spotsTreeViewCheckBox.setCellFactory(cell -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> item.getValue().getSelectedProperty(),
@@ -960,7 +986,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                         }
                         String nodeName = "";
-                        try{nodeName = object.getValue().getNodeName();}catch(SquidException squidException){}
+                        try {
+                            nodeName = object.getValue().getNodeName();
+                        } catch (SquidException squidException) {
+                        }
                         return (object.getParent() == null) ? nodeName : (item instanceof SampleNode) ? "" : nodeStringWM;
                     }
 
@@ -987,6 +1016,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }
         HBox toolBox = new RefMatWeightedMeanToolBoxNode(this);
         vboxMaster.getChildren().add(0, toolBox);
+
+        removeSpotsTreeViewCheckBoxListener();
 
         spotsTreeViewCheckBox.setCellFactory(cell -> new CheckBoxTreeCell<>(
                 (TreeItem<SampleTreeNodeInterface> item) -> item.getValue().getSelectedProperty(),
@@ -1033,7 +1064,10 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
 
                         }
                         String nodeName = "";
-                        try{nodeName = object.getValue().getNodeName();}catch(SquidException squidException){}
+                        try {
+                            nodeName = object.getValue().getNodeName();
+                        } catch (SquidException squidException) {
+                        }
                         return (object.getParent() == null) ? nodeName : (item instanceof SampleNode) ? "" : nodeStringWM;
                     }
 
@@ -1086,7 +1120,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
     }
 
     @Override
-    public void showActivePlot() throws SquidException{
+    public void showActivePlot() throws SquidException {
         switch (plotTypeSelected) {
             case CONCORDIA:
             case TERA_WASSERBURG:

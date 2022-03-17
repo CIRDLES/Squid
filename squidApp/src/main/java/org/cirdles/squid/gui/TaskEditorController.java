@@ -315,7 +315,6 @@ public class TaskEditorController implements Initializable {
     }
 
     private void initTaskDesign() throws SquidException {
-        taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
         // update to project having parameters spring 2020
         taskEditor.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
         taskEditor.setCommonPbModel(squidProject.getCommonPbModel());
