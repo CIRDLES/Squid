@@ -115,6 +115,8 @@ public class SquidUIController implements Initializable {
     private static Pane reductionManagerUI;
     private static Pane reducedDataReportManagerUI;
 
+    private static int enjoyImageRotationIndex = 0;
+
     static {
         try {
             squidPersistentState = SquidPersistentState.getExistingPersistentState();
@@ -1853,7 +1855,12 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void enjoySquidMenuItemAction(ActionEvent event) {
-        BrowserControl.showURI("https://www.popsci.com/resizer/BHnnigECLPVEb2Ypab_mQTar8dk=/795x474/arc-anglerfish-arc2-prod-bonnier.s3.amazonaws.com/public/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
+        List<String> enjoyImageRotationList = new ArrayList<>();
+        enjoyImageRotationList.add("https://www.popsci.com/uploads/2019/06/24/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
+        enjoyImageRotationList.add("https://www.marinespecies.org/carms/photogallery.php?album=2003&pic=34970");
+
+        BrowserControl.showURI(enjoyImageRotationList.get(enjoyImageRotationIndex % enjoyImageRotationList.size()));
+        enjoyImageRotationIndex++;
     }
 
     @FXML

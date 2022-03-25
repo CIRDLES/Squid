@@ -257,6 +257,8 @@ public class FileHandler {
         if (taskFileXML != null) {
             retVal = taskFileXML;
             squidPersistentState.updateTaskXMLFileListMRU(taskFileXML);
+            // capture squid project file name from file for project itself
+            task.setName(taskFileXML.getName().substring(0, taskFileXML.getName().lastIndexOf(".")));
             ((XMLSerializerInterface) task)
                     .serializeXMLObject(taskFileXML.getAbsolutePath());
         }
