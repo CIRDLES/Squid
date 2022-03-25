@@ -292,15 +292,19 @@ public class TaskEditorController implements Initializable {
                     break;
                 case EDIT_EMPTY:
                     SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
+                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
                 case EDIT_DEFAULT_9_MASS:
                     SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
+                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
                 case EDIT_DEFAULT_10_MASS:
                     SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
+                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
                 case EDIT_DEFAULT_11_MASS:
                     SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
+                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
                 case EDIT_EXISTING_TASK:
                     existingTaskToEdit.updateTaskDesignFromTask(taskEditor, true);
@@ -837,7 +841,7 @@ public class TaskEditorController implements Initializable {
 
     @FXML
     private void updateCurrentTaskWithThisTaskAction(ActionEvent event) throws SquidException {
-        if (squidProject.getTask().getTaskType().equals(SquidPersistentState.getExistingPersistentState().getTaskDesign().getTaskType())) {
+        if (squidProject.getTask().getTaskType().equals(taskEditor.getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
                     == (taskEditor.getNominalMasses().size()
@@ -881,7 +885,7 @@ public class TaskEditorController implements Initializable {
     private void saveThisTaskAsXMLFileAction(ActionEvent event) {
         try {
             TaskInterface task = new Task();
-            task.updateTaskFromTaskDesign(SquidPersistentState.getExistingPersistentState().getTaskDesign(), true);
+            task.updateTaskFromTaskDesign(taskEditor, true);
 
             FileHandler.saveTaskFileXML(task, SquidUI.primaryStageWindow);
             taskNameTextField.setText(task.getName());
