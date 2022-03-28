@@ -294,18 +294,6 @@ public class TaskEditorController implements Initializable {
                     SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
                     taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
-                case EDIT_DEFAULT_9_MASS:
-                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign9Mass());
-                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
-                    break;
-                case EDIT_DEFAULT_10_MASS:
-                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign10Mass());
-                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
-                    break;
-                case EDIT_DEFAULT_11_MASS:
-                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesign11Mass());
-                    taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
-                    break;
                 case EDIT_EXISTING_TASK:
                     existingTaskToEdit.updateTaskDesignFromTask(taskEditor, true);
                     break;
