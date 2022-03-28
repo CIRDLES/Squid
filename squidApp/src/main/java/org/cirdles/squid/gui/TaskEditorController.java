@@ -370,9 +370,9 @@ public class TaskEditorController implements Initializable {
             }
         });
 
-        SpinnerValueFactory<Integer> valueFactoryTh
-                = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 25, squidProject.getTask().getIndexOfBackgroundSpecies() + 1, 1);
-        backgroundIndexSpinner.setValueFactory(valueFactoryTh);
+        SpinnerValueFactory<Integer> valueFactoryBackgroundIndex
+                = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 25, taskEditor.getIndexOfBackgroundSpecies() + 1, 1);
+        backgroundIndexSpinner.setValueFactory(valueFactoryBackgroundIndex);
         backgroundIndexSpinner.valueProperty().addListener((ObservableValue<? extends Integer> observable,
                                                             Integer oldValue, Integer newValue) -> {
 
@@ -486,8 +486,8 @@ public class TaskEditorController implements Initializable {
     }
 
     private void updateDirectiveButtons() {
-        taskManagerGridPane.lookup("#232").setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
-        taskManagerGridPane.lookup("#direct").setDisable(squidProject.getTask().getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#232").setDisable(taskEditor.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
+        taskManagerGridPane.lookup("#direct").setDisable(taskEditor.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0);
     }
 
     private void populateDirectives() {
