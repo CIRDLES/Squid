@@ -1948,7 +1948,7 @@ public class ExpressionBuilderController implements Initializable {
 
         // nov 2021 handle aliased expressions
         ExpressionTreeInterface sumExpTree = spotSummary.getExpressionTree();
-        sumExpTree = ((Task)task).retrieveAliasedExpression(sumExpTree);
+        sumExpTree = ((Task) task).retrieveAliasedExpression(sumExpTree);
 
         // context-sensitivity - we use Ma in Squid for display
         boolean isAge = sumExpTree.getName().toUpperCase(Locale.ENGLISH).contains("AGE");
@@ -1961,7 +1961,7 @@ public class ExpressionBuilderController implements Initializable {
             if (op instanceof Value) {
                 if (((ExpressionTree) sumExpTree).getLeftET() instanceof ShrimpSpeciesNode) {
                     labels = new String[][]{{"TotalCPS"}};
-                } else if (((ExpressionTree)sumExpTree).getLeftET() instanceof ConstantNode) {
+                } else if (((ExpressionTree) sumExpTree).getLeftET() instanceof ConstantNode) {
                     labels = new String[][]{{"Constant"}};
                 } else {
                     labels = new String[][]{{"Value"}};
@@ -2096,7 +2096,7 @@ public class ExpressionBuilderController implements Initializable {
         String[][] resultLabels;
 
         // nov 2021 handle aliased expressions
-        expTree = ((Task)task).retrieveAliasedExpression(expTree);
+        expTree = ((Task) task).retrieveAliasedExpression(expTree);
 
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {
@@ -2376,18 +2376,23 @@ public class ExpressionBuilderController implements Initializable {
                 || etn.getText().trim().matches("^(\\[(±?)(%?)\")?[a-zA-Z0-9_]*[a-zA-Z][a-zA-Z0-9]*(\"])?( )*(\\[\\d]( )*)?$"))) {
 
             String text = etn.getText().trim().replaceAll("(^(\\[(±?)(%?)\")?)|((\"])?( )*(\\[\\d]( )*)?)", "");
+
+            // updated April 2022 to restore handling of ratios in context menu uncertainty option
+            boolean legalExpressionForUncertainty = task.getRatioNames().contains(text);
+
             Expression ex = task.getExpressionByName(text);
-            ExpressionTreeInterface expTree = null;
-            if (ex != null){
-                expTree = ex.getExpressionTree();
+            if (ex != null) {
+                ExpressionTreeInterface expTree = ex.getExpressionTree();
                 // nov 2021 handle aliased expressions
-                expTree = ((Task)task).retrieveAliasedExpression(expTree);
-        //    }
-        //    if (((ex != null)
-                    if(( (!expTree.isSquidSwitchSCSummaryCalculation())
-                    && ((((ExpressionTreeBuilderInterface) expTree).getOperation().getLabelsForOutputValues()[0].length > 1)
-                    || ex.isSquidSwitchNU()))
-                    || task.getRatioNames().contains(text)) {
+                expTree = ((Task) task).retrieveAliasedExpression(expTree);
+
+                legalExpressionForUncertainty = legalExpressionForUncertainty ||
+                        (((!expTree.isSquidSwitchSCSummaryCalculation())
+                                && ((((ExpressionTreeBuilderInterface) expTree).getOperation().getLabelsForOutputValues()[0].length > 1)
+                                || ex.isSquidSwitchNU())));
+            }
+
+            if (legalExpressionForUncertainty) {
                 MenuItem menuItem1 = new MenuItem("1 \u03C3 (%)");
                 menuItem1.setOnAction((evt) -> {
                     ExpressionTextNode etn2 = new ExpressionTextNode("[%\"" + text + "\"]");
@@ -2413,8 +2418,9 @@ public class ExpressionBuilderController implements Initializable {
                     updateExpressionTextFlowChildren();
                 });
                 itemsForThisNode.add(new Menu("Select uncertainty...", null, menuItem1, menuItem2, menuItem3));
-            }}
+            }
         }
+
 
         // provide special modification for array access for summary expressions
         if (!(etn instanceof NumberTextNode || etn instanceof OperationTextNode)
