@@ -64,7 +64,8 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.com_207Pb204Pb = 0.0;
         this.com_208Pb204Pb = 0.0;
 
-        this.methodSelected = METHOD_COMMON_LEAD_MODEL;
+        // April 2022 issue #698
+        this.methodSelected = METHOD_STACEY_KRAMER;
 
         this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
         this.refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
