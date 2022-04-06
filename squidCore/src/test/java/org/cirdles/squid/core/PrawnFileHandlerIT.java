@@ -23,6 +23,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.reports.reportSettings.ReportSettings;
 import org.cirdles.squid.reports.reportSettings.ReportSettingsInterface;
+import org.cirdles.squid.shrimp.CommonLeadSpecsForSpot;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -77,6 +78,9 @@ public class PrawnFileHandlerIT {
      */
     @BeforeClass // provides to run setup once
     public static void setUp() throws Exception {
+        // april 2022 to preserve tests due to change in issue #698
+        CommonLeadSpecsForSpot.DEFAULT_METHOD = CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
+
         prawnFileHandler = (new SquidProject(GEOCHRON)).getPrawnFileHandler();
         reportsFolder = temporaryFolder.getRoot();
 

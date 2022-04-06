@@ -37,6 +37,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     public static final int METHOD_COMMON_LEAD_MODEL = 0;
     public static final int METHOD_STACEY_KRAMER = 1;
     public static final int METHOD_STACEY_KRAMER_BY_GROUP = 2;
+    public static int DEFAULT_METHOD = METHOD_STACEY_KRAMER;
 
     private double com_206Pb204Pb;
     private double com_207Pb206Pb;
@@ -64,7 +65,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.com_208Pb204Pb = 0.0;
 
         // April 2022 issue #698
-        this.methodSelected = METHOD_STACEY_KRAMER;
+        this.methodSelected = DEFAULT_METHOD;
 
         this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
         this.refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
