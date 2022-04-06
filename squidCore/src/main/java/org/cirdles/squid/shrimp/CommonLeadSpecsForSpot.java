@@ -23,10 +23,9 @@ import org.cirdles.squid.tasks.expressions.builtinExpressions.SampleAgeTypesEnum
 import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
 
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
@@ -72,6 +71,9 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.sampleAgeSK = 0.0;
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
+
+        // April 2022 issue #698
+        updateCommonLeadRatiosFromAgeSK();
     }
 
     public String correctionMetaData() {
@@ -85,7 +87,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
                 metaData.append("SK");
                 break;
             case METHOD_STACEY_KRAMER_BY_GROUP:
-                metaData.append("SK @ " + (new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                metaData.append("SK @ " + squid3RoundedToSize(sampleAgeSK / 1e6, 15));//(new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
                 break;
         }
         return metaData.toString();
@@ -99,10 +101,10 @@ public class CommonLeadSpecsForSpot implements Serializable {
                 metaData.append("n/a");
                 break;
             case METHOD_STACEY_KRAMER:
-                metaData.append((new BigDecimal(targetAge)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                metaData.append(squid3RoundedToSize(targetAge / 1e6, 15));
                 break;
             case METHOD_STACEY_KRAMER_BY_GROUP:
-                metaData.append((new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
+                metaData.append(squid3RoundedToSize(sampleAgeSK / 1e6, 15));//(new BigDecimal(sampleAgeSK)).movePointLeft(6).setScale(0, RoundingMode.HALF_UP) + " Ma");
                 break;
         }
         return metaData.toString();
