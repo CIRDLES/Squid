@@ -41,7 +41,7 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
     /**
      * Structure to store results of Squid Switch NU expression evaluation using
      * ratios of interest and per Simon Bodorkos, rounded to 12 sig digits to
-     * comply with VBA comparisons.
+     * comply with VBA comparisons.  Switched to 15 sigdigs in 2020.
      *
      * @param expression
      * @param ratEqVal
@@ -54,8 +54,7 @@ public class TaskExpressionEvaluatedPerSpotPerScanModel implements TaskExpressio
             ExpressionTreeInterface expression, double[] ratEqVal, double[] ratEqTime, double[] ratEqErr, double ratioVal, double ratioFractErr) {
 
         // April 2017 Rounding per Bodorkos
-        int sigDigs = 12;
-//////System.out.println("ROUNDING  " + expression.getName());
+        int sigDigs = 12; // this value is ignored in call below as of 2020
         this.expression = expression;
         this.ratEqVal = ratEqVal.clone();
         this.ratEqTime = ratEqTime.clone();

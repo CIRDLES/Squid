@@ -55,6 +55,7 @@ import org.cirdles.squid.tasks.expressions.isotopes.ShrimpSpeciesNode;
 import org.cirdles.squid.tasks.expressions.operations.Operation;
 import org.cirdles.squid.tasks.expressions.operations.Value;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
+import org.cirdles.squid.tasks.expressions.variables.VariableNodeForIsotopicRatios;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForPerSpotTaskExpressions;
 import org.cirdles.squid.tasks.expressions.variables.VariableNodeForSummary;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
@@ -218,10 +219,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this(name, null, reportsEngine);
     }
 
-    public int getCountOfShrimpFractionsWithInvalidSBMcounts() {
-        return countOfShrimpFractionsWithInvalidSBMcounts;
-    }
-
     /**
      * @param name
      * @param prawnFile
@@ -345,6 +342,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         generateParameters();
         generateSpotLookupFields();
         generateSpotMetaDataFields();
+    }
+
+    public int getCountOfShrimpFractionsWithInvalidSBMcounts() {
+        return countOfShrimpFractionsWithInvalidSBMcounts;
     }
 
     public boolean synchronizeTaskVersion() throws SquidException {
@@ -1435,6 +1436,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
                     aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
                 }
+            } else if (lookupExpTree instanceof VariableNodeForIsotopicRatios){
+                aliasedExpTree = namedExpressionsMap.get(lookupExpTree.getName());
             }
         }
         return aliasedExpTree;

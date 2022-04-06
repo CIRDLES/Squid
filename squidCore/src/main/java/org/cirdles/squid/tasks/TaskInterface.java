@@ -772,7 +772,8 @@ public interface TaskInterface {
 
         for (String ratioName : getRatioNames()) {
             if (excelExpression.contains(ratioName)) {
-                retVal = true;
+                // check to make sure excelExpression is not just a ratio
+                retVal = (excelExpression.trim().compareTo("[\"" + ratioName + "\"]") != 0);
                 break;
             }
         }
