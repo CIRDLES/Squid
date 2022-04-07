@@ -60,23 +60,6 @@ public final class SquidSerializer {
         }
     }
 
-    public static void serializeObjectToFileRAF(Object serializableObject, String fileName) throws SquidException, IOException {
-        ObjectOutputStream objectOutputStream = null;
-        try {
-            RandomAccessFile raf = new RandomAccessFile(fileName, "rwd");
-            FileOutputStream fos = new FileOutputStream(raf.getFD());
-            objectOutputStream = new ObjectOutputStream(fos);
-            objectOutputStream.writeObject(serializableObject);
-        } catch (IOException ex) {
-            throw new SquidException("Cannot serialize object of " + serializableObject.getClass().getSimpleName() + " to: " + fileName);
-
-        } finally {
-            if (objectOutputStream != null) {
-                objectOutputStream.close();
-            }
-        }
-    }
-
     /**
      * @param filename
      * @return
@@ -95,20 +78,15 @@ public final class SquidSerializer {
             if (verbose) {
                 throw new SquidException("The file you are attempting to open does not exist:\n"
                         + " " + filename);
-//                SquidMessageDialog.showWarningDialog("The file you are attempting to open does not exist:\n"
-//                        + " " + filename, null);
+
             }
         } catch (IOException ex) {
             if (verbose) {
                 throw new SquidException("The file you are attempting to open is not a valid '*.squid' file.");
-//                SquidMessageDialog.showWarningDialog(
-//                        "The file you are attempting to open is not a valid '*.squid' file.", null);
             }
         } catch (ClassNotFoundException | ClassCastException ex) {
             if (verbose) {
                 throw new SquidException("The file you are attempting to open is not compatible with this version of Squid3.");
-//                SquidMessageDialog.showWarningDialog(
-//                        "The file you are attempting to open is not compatible with this version of Squid3.", null);
             }
         }
 
