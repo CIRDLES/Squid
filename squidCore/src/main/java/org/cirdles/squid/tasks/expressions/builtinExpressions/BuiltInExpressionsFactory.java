@@ -149,6 +149,10 @@ public abstract class BuiltInExpressionsFactory {
         ExpressionTreeInterface expDateTime = buildSpotNode("getDateTimeMilliseconds");
         spotMetaDataFields.put(expDateTime.getName(), expDateTime);
 
+        // april 2022 issue # 701
+        ExpressionTreeInterface commonLeadAgeType = buildSpotNode("getComPbSelectedAgeType");
+        spotMetaDataFields.put(commonLeadAgeType.getName(), commonLeadAgeType);
+
         return spotMetaDataFields;
     }
 
