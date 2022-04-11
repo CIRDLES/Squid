@@ -60,7 +60,8 @@
         </HBox>
         <HBox fx:id="headerHBox" minHeight="25.0" prefHeight="25.0" prefWidth="1200.0" spacing="35.0" styleClass="backgroundCalamari">
             <children>
-                <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="   Common Lead Assignment" translateY="-2.0" />
+                <Label style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="   Common Lead Assignment:" translateY="-2.0" />
+            <Label layoutX="10.0" layoutY="13.0" style="-fx-font-family: SansSerif; -fx-font-size: 14; -fx-text-fill: #c53d13; -fx-font-weight: bold;" text="Age Type:" translateX="260.0" />
             </children>
             <padding>
                 <Insets top="3.0" />

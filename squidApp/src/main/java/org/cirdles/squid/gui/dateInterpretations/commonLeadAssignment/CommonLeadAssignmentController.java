@@ -109,6 +109,9 @@ public class CommonLeadAssignmentController implements Initializable {
     @FXML
     private Button viewDetailsButton;
 
+    private int widthOfSelectedAgeColumn = 105;
+    private int ageTypeDisplayTranslationX = 70;
+
     /**
      * Initializes the controller class.
      */
@@ -312,18 +315,20 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     private void setUpFooter() {
+        int ageLabelWidth = 88;
         footerHBox.getChildren().addAll(
-                makeLabel("", 135, true, 10),
+                makeLabel("", 125, true, 10),
                 makeLabel("206Pb/204Pb", 90, true, 10),
                 makeLabel("207Pb/204Pb", 90, true, 10),
                 makeLabel("208Pb/204Pb", 90, true, 10),
-                makeLabel(PB4CORR + "\n" + PB4COR206_238AGE.replace(PB4CORR, ""), 90, true, 10),
-                makeLabel(PB4CORR + "\n" + PB4COR208_232AGE.replace(PB4CORR, ""), 90, true, 10),
-                makeLabel(PB4CORR + "\n" + PB4COR207_206AGE.replace(PB4CORR, ""), 90, true, 10),
-                makeLabel(PB7CORR + "\n" + PB7COR206_238AGE.replace(PB7CORR, ""), 90, true, 10),
-                makeLabel(PB7CORR + "\n" + PB7COR208_232AGE.replace(PB7CORR, ""), 90, true, 10),
-                makeLabel(PB8CORR + "\n" + PB8COR206_238AGE.replace(PB8CORR, ""), 90, true, 10),
-                makeLabel(PB8CORR + "\n" + PB8COR207_206AGE.replace(PB8CORR, ""), 90, true, 10));
+                makeLabel("", 35, true, 10),
+                makeLabel(PB4CORR + "\n" + PB4COR206_238AGE.replace(PB4CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB4CORR + "\n" + PB4COR208_232AGE.replace(PB4CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB4CORR + "\n" + PB4COR207_206AGE.replace(PB4CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB7CORR + "\n" + PB7COR206_238AGE.replace(PB7CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB7CORR + "\n" + PB7COR208_232AGE.replace(PB7CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB8CORR + "\n" + PB8COR206_238AGE.replace(PB8CORR, "").replace("_Age", ""), ageLabelWidth, true, 10),
+                makeLabel(PB8CORR + "\n" + PB8COR207_206AGE.replace(PB8CORR, "").replace("_Age", ""), ageLabelWidth, true, 10));
     }
 
     private Label makeLabel(String label, int width, boolean fontIsBold, int fontSize) {
@@ -433,6 +438,10 @@ public class CommonLeadAssignmentController implements Initializable {
                 addVboxFactory("207Pb/204Pb", spot.getCom_207Pb204Pb(), 0.0);
                 addVboxFactory("208Pb/204Pb", spot.getCom_208Pb204Pb(), 0.0);
 
+                Label aValue = new Label("");
+                aValue.setPrefWidth(35);
+                getChildren().add(aValue);
+
                 addVboxFactory(expPB4COR206_238AGE.getName(),
                         spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][0],
                         spot.getTaskExpressionsEvaluationsPerSpot().get(expPB4COR206_238AGE)[0][1]);
@@ -488,7 +497,7 @@ public class CommonLeadAssignmentController implements Initializable {
                 aValue.setTextFill(Paint.valueOf("red"));
                 aValue.setFont(Font.font("Monospaced", FontWeight.BOLD, 12));
             }
-            aValue.setPrefWidth(102);
+            aValue.setPrefWidth(widthOfSelectedAgeColumn - 5);
             aValue.setMinWidth(USE_PREF_SIZE);
             aValue.setPrefHeight(20);
             aValue.setMinHeight(USE_PREF_SIZE);
@@ -827,7 +836,7 @@ public class CommonLeadAssignmentController implements Initializable {
 
             VBox groupDetailsVBox = new VBox(-10);
             HBox ageChoosersHBox = new HBox();
-            ageChoosersHBox.setTranslateX(15);
+            ageChoosersHBox.setTranslateX(ageTypeDisplayTranslationX);
 
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(sampleGroupName, SampleAgeTypesEnum.PB4COR206_238AGE, PB4CORR));
             ageChoosersHBox.getChildren().add(ageRadioButtonFactory(sampleGroupName, SampleAgeTypesEnum.PB4COR208_232AGE, PB4CORR));
@@ -844,9 +853,9 @@ public class CommonLeadAssignmentController implements Initializable {
             // be sure we are on sample group toolbar
             if (sampleGroup != null) {
                 weightedMeansHBox = new HBox();
-                weightedMeansHBox.setTranslateX(15);
+                weightedMeansHBox.setTranslateX(ageTypeDisplayTranslationX);
 
-                int wmWidth = 107;
+                int wmWidth = widthOfSelectedAgeColumn;
                 Label weightedMeanLabel = makeRedLabel("", wmWidth, true, 11, 4.0);
                 weightedMeanLabel.setId(SampleAgeTypesEnum.PB4COR206_238AGE.getExpressionName());
                 weightedMeansHBox.getChildren().add(weightedMeanLabel);
@@ -892,7 +901,7 @@ public class CommonLeadAssignmentController implements Initializable {
             Formatter formatter = new Formatter();
             formatter.format("%5.1f", spotSummaryDetails.getValues()[0][0] / 1e6);
             formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.1f", spotSummaryDetails.getValues()[0][1] / 1e6).toString();
-            wmLabel.setText("WM: " + formatter);
+            wmLabel.setText("WM:" + formatter);
 
             // tool tip
             OperationOrFunctionInterface op = ((ExpressionTree) spotSummaryDetails.getExpressionTree()).getOperation();
@@ -943,11 +952,11 @@ public class CommonLeadAssignmentController implements Initializable {
          * @param corrString      the value of corrString
          */
         private RadioButton ageRadioButtonFactory(String sampleGroupName, SampleAgeTypesEnum sampleAgeType, String corrString) {
-            RadioButton ageRB = new RadioButton(corrString + "\n" + sampleAgeType.getExpressionName().replace(corrString, ""));
+            RadioButton ageRB = new RadioButton(corrString + "\n" + sampleAgeType.getExpressionName().replace(corrString, "").replace("_Age", ""));
             ageRB.setId(sampleAgeType.getExpressionName());
             ageRB.setToggleGroup(ageRB_ToggleGroup);
             ageRB.setFont(Font.font("Monospaced", FontWeight.BOLD, 10));
-            ageRB.setPrefWidth(107);
+            ageRB.setPrefWidth(widthOfSelectedAgeColumn);
             ageRB.setMinWidth(USE_PREF_SIZE);
             ageRB.setPrefHeight(25);
             ageRB.setMinHeight(USE_PREF_SIZE);
