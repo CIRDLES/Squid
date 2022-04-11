@@ -300,4 +300,11 @@ public interface ShrimpFractionExpressionInterface {
     public String getComPbCorrSKTargetAge();
 
     public String getSelectedAgeExpressionName() throws SquidException;
+
+    /**
+     * Used in custom reports per issue # 701.
+     * @return
+     * @throws SquidException
+     */
+    public String getComPbSelectedAgeType() throws SquidException;
 }

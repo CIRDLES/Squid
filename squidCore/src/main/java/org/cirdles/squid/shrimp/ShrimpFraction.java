@@ -1035,6 +1035,20 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     @Override
+    public String getComPbSelectedAgeType() throws SquidException {
+
+        String ageName = getSelectedAgeExpressionName();
+
+        try {
+            ageName.replaceFirst("_Age", "");
+        } catch (Exception e) {
+            //e.printStackTrace();
+        }
+
+        return ageName;
+    }
+
+    @Override
     public int hashCode() {
         int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(),
                 getDateTimeMillisecondsLong(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(),

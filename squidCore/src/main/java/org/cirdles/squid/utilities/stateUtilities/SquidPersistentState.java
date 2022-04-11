@@ -63,6 +63,19 @@ public class SquidPersistentState implements Serializable {
     private String MRUTaskXMLFolderPath;
     private File customExpressionsFile;
 
+
+//    private void readObject(ObjectInputStream stream) throws IOException,
+//            ClassNotFoundException {
+//        stream.defaultReadObject();
+//
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+//                Class.forName(SquidPersistentState.class.getCanonicalName()));
+//        long theSUID = myObject.getSerialVersionUID();
+//
+//        System.out.println("Customized De-serialization of SquidPersistentState "
+//                + theSUID);
+//    }
+
     /**
      *
      */
@@ -131,7 +144,7 @@ public class SquidPersistentState implements Serializable {
             myInstance = new SquidPersistentState();
             myInstance.serializeSelf();
             myInstance.setTaskDesign(new TaskDesign());
-            
+
             // check to update TaskDesign
             TaskDesign sup = myInstance.getTaskDesign();
             if (sup == null) {
@@ -198,7 +211,6 @@ public class SquidPersistentState implements Serializable {
     private void initMRULists() {
         MRUProjectList = new ArrayList<>(MRU_COUNT);
         MRUPrawnFileList = new ArrayList<>(MRU_COUNT);
-//        MRUTaskList = new ArrayList<>(MRU_COUNT);
         MRUExpressionList = new ArrayList<>(MRU_COUNT);
     }
 
