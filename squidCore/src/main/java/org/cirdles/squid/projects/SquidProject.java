@@ -216,6 +216,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         }
     }
 
+    @Override
     public void createNewTask() throws SquidException {
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
