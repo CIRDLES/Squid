@@ -218,7 +218,7 @@ public class Squid3Ink implements Squid3API {
     }
 
     /**
-     * @param opFileSourcePath
+     * @param dataFileOPSourcePath
      * @throws IOException
      * @throws SquidException
      */
