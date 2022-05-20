@@ -176,6 +176,8 @@ public interface Squid3ProjectBasicAPI extends Serializable {
      */
     TaskInterface getTask();
 
+    void createNewTask() throws SquidException;
+
     boolean hasReportsFolder();
 
     /**
