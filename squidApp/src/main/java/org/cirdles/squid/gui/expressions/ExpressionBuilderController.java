@@ -688,7 +688,9 @@ public class ExpressionBuilderController implements Initializable {
         customExpressionsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 if (currentMode.get().equals(Mode.VIEW)) {
-                    selectedExpressionIsEditable.set(!SampleAgeTypesEnum.isReservedName(newValue.getName()));
+                    selectedExpressionIsEditable.set(!(SampleAgeTypesEnum.isReservedName(newValue.getName())
+                            ||
+                            (newValue.getName().contains("_WM"))));
                     selectedExpressionIsBuiltIn.set(false);
                     selectedExpression.set(newValue);
 

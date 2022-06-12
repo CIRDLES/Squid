@@ -372,7 +372,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 .evaluateSelectedExpressionWeightedMeanForUnknownGroup(
                                         selectedExpression, sampleNode.getNodeName(), sampleNode.getSpotSummaryDetailsWM().getSelectedSpots());
                         spotSummaryDetailsWM.setManualRejectionEnabled(true);
-//                        spotSummaryDetailsWM.setMinProbabilityWM(probabilitySlider.getValue());
+
                         if (filterInfoCheckBox.isSelected()) {
                             spotSummaryDetailsWM.setRejectedIndices(((WeightedMeanPlot) sampleNode.getSamplePlotWM()).getRejectedIndices());
                         }

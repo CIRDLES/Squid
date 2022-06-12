@@ -2112,10 +2112,14 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
                     // run SK 3 times per Ludwig
                     for (int i = 0; i < 3; i++) {
-                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
-                                spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
-                        // update
-                        evaluateExpressionsForSampleSpot(spot);
+                        try {
+                            spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
+                                    spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
+                            // update
+                            evaluateExpressionsForSampleSpot(spot);
+                        } catch (Exception e) {
+                            throw new SquidException("");
+                        }
                     }
                     break;
                 case METHOD_COMMON_LEAD_MODEL:
@@ -2163,11 +2167,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     private Expression constructCustomWMExpression(String expressionName, String sampleName) {
         // calculate weighted mean of selected expressionName without auto-rejection
-        boolean isRefMat = expressionName.contains("_RM");
+        boolean isRefMat = expressionName.contains("_RM") || filterForRefMatSpotNames.compareToIgnoreCase(sampleName) == 0;
         Expression expressionWM = buildExpression(expressionName + "_WM_" + sampleName,
                 "WtdAv([\"" + expressionName + "\"])", isRefMat, !isRefMat, true);
-//                "WtdMeanACalc([\"" + expressionName + "\"],[%\"" + expressionName + "\"],TRUE,FALSE)", false, true, true);
-        expressionWM.setNotes("Expression generated from the Samples Weighted Mean screen under Interpretations.");
+        expressionWM.setNotes("Expression generated from the " + (isRefMat ? "RM" : "Samples") + " Weighted Mean screen under Interpretations.");
 
         expressionWM.getExpressionTree().setUnknownsGroupSampleName(sampleName);
         expressionWM.getExpressionTree().setSquidSpecialUPbThExpression(false);

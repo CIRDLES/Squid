@@ -59,9 +59,8 @@ import static org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDat
 import static org.cirdles.squid.gui.dateInterpretations.plots.topsoil.TopsoilDataFactory.prepareWetherillDatum;
 import static org.cirdles.squid.gui.utilities.stringUtilities.StringTester.stringIsSquidRatio;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
-import static org.cirdles.topsoil.Variable.X;
-import static org.cirdles.topsoil.Variable.Y;
+import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSizeForPlottingDisplay;
+import static org.cirdles.topsoil.Variable.*;
 import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION;
 import static org.cirdles.topsoil.plot.PlotOption.SHOW_UNINCLUDED;
 
@@ -626,10 +625,14 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             }
                             String ageOrValueSource = WeightedMeanPlot.makeAgeString(expressionValues[0][0], uncertainty);
 
+                            // updated June 2022 issue # 709 to show uncertainties
                             try {
                                 nodeString += "  " + ageOrValueSource
-                                        + " (" + squid3RoundedToSize(((Double) item.getDatum().get(X.getTitle())), 5)
-                                        + ", " + squid3RoundedToSize(((Double) item.getDatum().get(Y.getTitle())), 5) + ")";
+                                        + " (" + squid3RoundedToSizeForPlottingDisplay(((Double) item.getDatum().get(X.getTitle())), 5)
+                                        + " ±" + squid3RoundedToSizeForPlottingDisplay(((Double) item.getDatum().get(SIGMA_X.getTitle())), 5)
+                                        + ", " + squid3RoundedToSizeForPlottingDisplay(((Double) item.getDatum().get(Y.getTitle())), 5)
+                                        + " ±" + squid3RoundedToSizeForPlottingDisplay(((Double) item.getDatum().get(SIGMA_Y.getTitle())), 5)
+                                        + ")";
                             } catch (Exception e) {
                             }
                         }
@@ -844,7 +847,6 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                             = new CheckBoxTreeItem<>(fractionNodes.get(i));
                     rootItemWM.getChildren().add(checkBoxTreeItemWM);
 
-                    checkBoxTreeItemWM.setSelected(!spotSummaryDetails.getRejectedIndices()[i]);
                     checkBoxTreeItemWM.selectedProperty().addListener((observable, oldValue, newValue) -> {
                         checkBoxTreeItemWM.getValue().setSelectedProperty(new SimpleBooleanProperty(newValue));
                         spotSummaryDetails.setIndexOfRejectedIndices(((WeightedMeanSpotNode) checkBoxTreeItemWM.getValue())
@@ -855,6 +857,8 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                         }
                         refreshPlot();
                     });
+                    // June 2022 issue #709 moved the next line from before setting listener in order to force update
+                    checkBoxTreeItemWM.setSelected(!spotSummaryDetails.getRejectedIndices()[i]);
                 }
 
                 spotListAnchorPane.getChildren().clear();
