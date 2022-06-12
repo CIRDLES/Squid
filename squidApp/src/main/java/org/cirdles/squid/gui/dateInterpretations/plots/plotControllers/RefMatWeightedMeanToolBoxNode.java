@@ -31,13 +31,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -323,6 +323,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             @Override
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
                 if (newValue != null) {
+                    PlotsController.spotsTreeViewCheckBox.setRoot(sampleItem);
                     String selectedExpression = newValue.getExpressionName();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
                         try {
@@ -337,9 +338,12 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                             PlotDisplayInterface myPlot = sampleNode.getSamplePlotWM();
                             ((WeightedMeanPlot) myPlot).setSpotSummaryDetails(spotSummaryDetailsWM);
                             ((WeightedMeanPlot) myPlot).setAgeOrValueLookupString(selectedExpression);
+                            refreshSampleCheckboxSelectionStatus(spotSummaryDetailsWM);
                             sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                             PlotsController.plot = myPlot;
                         } catch (SquidException squidException) {
+                            PlotsController.plot = null;
+                            PlotsController.spotsTreeViewCheckBox.setRoot(null);
                         }
 
                     } else {
@@ -355,12 +359,13 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                         WeightedMeanPlot.switchRefMatViewToCalibConst = false;
                         PlotDisplayInterface myPlot = new WeightedMeanPlot(
                                 new Rectangle(1000, 600),
-                                " Sample " + sampleNode.getNodeName(),
+                                " Reference Material " + sampleNode.getNodeName(),
                                 spotSummaryDetailsWM,
                                 selectedExpression,
                                 0.0,
                                 plotsController);
 
+                        refreshSampleCheckboxSelectionStatus(spotSummaryDetailsWM);
                         sortFractionCheckboxesByValue(spotSummaryDetailsWM);
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
@@ -370,6 +375,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                     if (sampleNode != null) {
                         String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
                         sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
+                        refreshSampleCheckboxSelectionStatus(sampleNode.getSpotSummaryDetailsWM());
                         sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
                         plotsController.refreshPlot();
                     }
@@ -452,6 +458,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                         String selectedExpression = newValue.getExpressionName();
                         sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(
                                 selectedExpression);
+                        refreshSampleCheckboxSelectionStatus(sampleNode.getSpotSummaryDetailsWM());
                         sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
                         plotsController.refreshPlot();
                     }
@@ -731,5 +738,12 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
             return Double.compare(valueFromNode1, valueFromNode2);
         });
+    }
+
+    private void refreshSampleCheckboxSelectionStatus(SpotSummaryDetails spotSummaryDetails){
+        for (int i = 0; i < sampleItem.getChildren().size(); i++) {
+            ((CheckBoxTreeItem<SampleTreeNodeInterface>)sampleItem.getChildren().get(i)).setSelected(!spotSummaryDetails
+                    .getRejectedIndices()[i]);
+        }
     }
 }

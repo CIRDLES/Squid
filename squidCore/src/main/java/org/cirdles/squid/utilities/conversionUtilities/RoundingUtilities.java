@@ -26,4 +26,8 @@ public class RoundingUtilities {
 //        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, USE_SIG_FIG_15 ? 15 : sigFigs);
         return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, 15);
     }
+
+    public static double squid3RoundedToSizeForPlottingDisplay(double value, int sigFigs) {
+        return org.cirdles.ludwig.squid25.Utilities.roundedToSize(value, sigFigs);
+    }
 }

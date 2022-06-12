@@ -33,6 +33,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -770,11 +771,14 @@ public interface TaskInterface {
     public default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression) {
         boolean retVal = false;
 
-        for (String ratioName : getRatioNames()) {
-            if (excelExpression.contains(ratioName)) {
-                // check to make sure excelExpression is not just a ratio
-                retVal = (excelExpression.trim().compareTo("[\"" + ratioName + "\"]") != 0);
-                break;
+        // june 2022 added WM condition
+        if (!excelExpression.toUpperCase(Locale.ROOT).contains("WTDAV")) {
+            for (String ratioName : getRatioNames()) {
+                if (excelExpression.contains(ratioName)) {
+                    // check to make sure excelExpression is not just a ratio
+                    retVal = (excelExpression.trim().compareTo("[\"" + ratioName + "\"]") != 0);
+                    break;
+                }
             }
         }
 
