@@ -738,14 +738,19 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
                 plotToolBar.getItems().addAll(plot.toolbarControlsFactory());
 
             } catch (Exception e) {
+                plot = null;
+                removePlotWhenNull();
             }
         } else {
-            plotAndConfigAnchorPane.getChildren().clear();
-            plotToolBar.getItems().clear();
-
-            plotVBox.getChildren().remove(plotToolBar);
+            removePlotWhenNull();
         }
+    }
 
+    private void removePlotWhenNull()
+    {
+        plotAndConfigAnchorPane.getChildren().clear();
+        plotToolBar.getItems().clear();
+        plotVBox.getChildren().remove(plotToolBar);
     }
 
     @Override

@@ -333,6 +333,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             @Override
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
                 if (newValue != null) {
+                    PlotsController.spotsTreeViewCheckBox.setRoot(sampleItem);
                     String selectedExpression = newValue.getExpressionName();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
 
@@ -363,6 +364,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                 probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
                             }
                         } catch (SquidException squidException) {
+                            PlotsController.plot = null;
+                            PlotsController.spotsTreeViewCheckBox.setRoot(null);
                         }
 
                     } else {
@@ -392,7 +395,6 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         PlotsController.plot = myPlot;
                         sampleNode.setSamplePlotWM(myPlot);
 
-//                        updateSampleFromSlider(probabilitySlider.getValue());
                         // if value is unchanged, then we need to force update
                         if (Double.compare(probabilitySlider.getValue(), spotSummaryDetailsWM.getMinProbabilityWM()) == 0) {
                             updateSampleFromSlider(probabilitySlider.getValue());
@@ -400,7 +402,6 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                             // this also forces an update
                             probabilitySlider.valueProperty().setValue(spotSummaryDetailsWM.getMinProbabilityWM());
                         }
-
                     }
 
                     // sort by selected sort expression

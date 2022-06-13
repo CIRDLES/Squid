@@ -741,11 +741,17 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         });
     }
 
-    private void refreshSampleCheckboxSelectionStatus(SpotSummaryDetails spotSummaryDetails){
-        for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
-            int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
-            ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
-                    !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
+    private void refreshSampleCheckboxSelectionStatus(SpotSummaryDetails spotSummaryDetails) {
+        if (PlotsController.plot != null) {
+            try {
+                for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
+                    int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
+                    ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
+                            !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
+                }
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
         }
     }
 }
