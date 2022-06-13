@@ -176,6 +176,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
 
         // each fraction stores this info, so get from first one
         String selectedAge = shrimpFractions.get(0).getSelectedAgeExpressionName();
+        ((Task) squidProject.getTask()).evaluateUnknownsWithChangedParameters(shrimpFractions);
         SpotSummaryDetails spotSummaryDetailsWM
                 = ((Task) squidProject.getTask()).evaluateSelectedAgeWeightedMeanForUnknownGroup(newValue, shrimpFractions);
         spotSummaryDetailsWM.setManualRejectionEnabled(true);
@@ -458,7 +459,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                         String selectedExpression = newValue.getExpressionName();
                         sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(
                                 selectedExpression);
-                        refreshSampleCheckboxSelectionStatus(sampleNode.getSpotSummaryDetailsWM());
+
                         sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
                         plotsController.refreshPlot();
                     }
@@ -740,10 +741,17 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         });
     }
 
-    private void refreshSampleCheckboxSelectionStatus(SpotSummaryDetails spotSummaryDetails){
-        for (int i = 0; i < sampleItem.getChildren().size(); i++) {
-            ((CheckBoxTreeItem<SampleTreeNodeInterface>)sampleItem.getChildren().get(i)).setSelected(!spotSummaryDetails
-                    .getRejectedIndices()[i]);
+    private void refreshSampleCheckboxSelectionStatus(SpotSummaryDetails spotSummaryDetails) {
+        if (PlotsController.plot != null) {
+            try {
+                for (TreeItem<SampleTreeNodeInterface> spotCheckBox : PlotsController.spotsTreeViewCheckBox.getRoot().getChildren()) {
+                    int indexOfSpot = ((WeightedMeanSpotNode) spotCheckBox.getValue()).getIndexOfSpot();
+                    ((CheckBoxTreeItem<SampleTreeNodeInterface>) spotCheckBox).setSelected(
+                            !sampleNode.getSpotSummaryDetailsWM().getRejectedIndices()[indexOfSpot]);
+                }
+            } catch (Exception e) {
+                //e.printStackTrace();
+            }
         }
     }
 }
