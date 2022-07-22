@@ -142,9 +142,9 @@ public class ProjectManagerController implements Initializable {
                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
 
-            invalidSBMCounts.setText("" + ((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts());
-            invalidSBMCounts.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
-            invalidSBMCountsDescription.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
+            invalidSBMCounts.setText("" + ((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts());
+            invalidSBMCounts.setVisible(((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
+            invalidSBMCountsDescription.setVisible(((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
             if (squidProject.isUseSBM()) {
                 yesSBMRadioButton.setSelected(true);
             } else {
@@ -339,7 +339,7 @@ public class ProjectManagerController implements Initializable {
             task.setupSquidSessionSpecsAndReduceAndReport(true);
         } catch (SquidException squidException) {
             boolean chooseNoSBM = SquidMessageDialog.showChoiceDialog(squidException.getMessage(), primaryStageWindow);
-            if (chooseNoSBM){
+            if (chooseNoSBM) {
                 noSBMRadioButton.setSelected(true);
             }
         }
@@ -450,6 +450,8 @@ public class ProjectManagerController implements Initializable {
     private void refreshModelsAction(ActionEvent event) {
         try {
             task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
+            physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
+            commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
         } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
@@ -459,7 +461,11 @@ public class ProjectManagerController implements Initializable {
 
         @Override
         public String toString(ParametersModel model) {
-            return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+            if (model == null) {
+                return null;
+            } else {
+                return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+            }
         }
 
         @Override
@@ -467,5 +473,4 @@ public class ProjectManagerController implements Initializable {
             return null;
         }
     }
-
 }

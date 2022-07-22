@@ -29,9 +29,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.parameters.ParametersManagerGUIController;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -438,22 +437,6 @@ public class SpotManagerController implements Initializable {
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
-        refMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
-            @Override
-            public String toString(ParametersModel model) {
-                if (model == null) {
-                    return null;
-                } else {
-                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
-                }
-            }
-
-            @Override
-            public ParametersModel fromString(String userId) {
-                return null;
-            }
-        });
-
         updateViewRM();
 
         refMatModelComboBox.valueProperty()
@@ -461,7 +444,9 @@ public class SpotManagerController implements Initializable {
                     if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-                        try{squidProject.getTask().refreshParametersFromModels(false, false, true);}
+                        try{
+                            squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        }
                            catch(SquidException squidException){ SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);}
                         alertForZeroNaturalUranium();
                     }
@@ -509,21 +494,6 @@ public class SpotManagerController implements Initializable {
         // ConcentrationReferenceMaterials
         concRefMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
-        concRefMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
-            @Override
-            public String toString(ParametersModel model) {
-                if (model == null) {
-                    return null;
-                } else {
-                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
-                }
-            }
-
-            @Override
-            public ParametersModel fromString(String userId) {
-                return null;
-            }
-        });
         updateViewCM();
 
         concRefMatModelComboBox.valueProperty()
@@ -673,18 +643,24 @@ public class SpotManagerController implements Initializable {
     private void viewRMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
     }
 
     @FXML
     private void viewCMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
     }
 
     @FXML
     private void refreshRMmodelButton(ActionEvent event) {
         try {
             squidProject.getTask().refreshParametersFromModels(false, false, true);
+            refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+            concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
         }catch (SquidException squidException){
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
