@@ -28,6 +28,7 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -41,6 +42,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 
 /**
  * FXML Controller class
@@ -209,6 +211,13 @@ public class ProjectManagerController implements Initializable {
                         if (task.getReferenceMaterialSpots().size() > 0) {
                             try {
                                 task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+                                // issue #714 prime the models
+                                StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
+                                StaceyKramerCommonLeadModel.updateU_Ratio(
+                                        squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+                                ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+
                             } catch (SquidException squidException) {
                                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }

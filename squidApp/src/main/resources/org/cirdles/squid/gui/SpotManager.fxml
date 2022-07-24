@@ -162,7 +162,7 @@
                                         </Label>
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
                                             <children>
-                                                <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="190.0" text="Manage RM Model" />
+                                                <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="190.0" text="Manage RM Models" />
                                             </children>
                                         </HBox>
                                         <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
@@ -253,7 +253,7 @@
                                                 <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                     <children>
-                                                        <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="190.0" text="Manage CRM Model" />
+                                                        <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="190.0" text="Manage CRM Models" />
                                                     </children>
                                                 </HBox>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">

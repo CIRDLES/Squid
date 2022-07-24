@@ -960,7 +960,13 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         if (commonLeadSpecsForSpot == null) {
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
-        commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
+
+        // issue #714
+        if (isReferenceMaterial()){
+            commonLeadSpecsForSpot.setRMCommonLeadModel(commonLeadModel);
+        } else {
+            commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);
+        }
     }
 
     /**

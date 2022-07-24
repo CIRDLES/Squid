@@ -1436,7 +1436,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
                     aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
                 }
-            } else if (lookupExpTree instanceof VariableNodeForIsotopicRatios){
+            } else if (lookupExpTree instanceof VariableNodeForIsotopicRatios) {
                 aliasedExpTree = namedExpressionsMap.get(lookupExpTree.getName());
             }
         }
@@ -2002,6 +2002,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             if (spot.isReferenceMaterial()) {
                 referenceMaterialSpots.add(spot);
+
                 // assign 1-based spotIndex for sorting at WM visualization
                 ((ShrimpFraction) spot).setSpotIndex(refMatSpotIndex);
                 refMatSpotIndex++;
@@ -2046,6 +2047,13 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void setUnknownGroupCommonLeadMethod(List<ShrimpFractionExpressionInterface> spotsForExpression, int methodFlag) throws SquidException {
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
             spot.getCommonLeadSpecsForSpot().setMethodSelected(methodFlag);
+        }
+    }
+
+    public void resetReferenceMaterialCommonLeadMethod() throws SquidException {
+        for (ShrimpFractionExpressionInterface spot : referenceMaterialSpots) {
+            spot.getCommonLeadSpecsForSpot().setMethodSelected(METHOD_COMMON_LEAD_MODEL);
+            spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
         }
     }
 
@@ -2103,37 +2111,40 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     public void evaluateUnknownsWithChangedParameters(List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException {
         // first iterate the spots and perform individual evaluations
         for (ShrimpFractionExpressionInterface spot : spotsForExpression) {
-            switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
-                case METHOD_STACEY_KRAMER:
-                    // per Bodorkos Oct 2019 first restore original age values
-                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
-                    evaluateExpressionsForSampleSpot(spot);
-                    ExpressionTreeInterface selectedAgeExpression
-                            = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
-                    // run SK 3 times per Ludwig
-                    for (int i = 0; i < 3; i++) {
-                        try {
-                            spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
-                                    spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
-                            // update
-                            evaluateExpressionsForSampleSpot(spot);
-                        } catch (Exception e) {
-                            throw new SquidException("");
+            // Issue #714 - problem with common lead
+            if (!spot.isReferenceMaterial()) {
+                switch (spot.getCommonLeadSpecsForSpot().getMethodSelected()) {
+                    case METHOD_STACEY_KRAMER:
+                        // per Bodorkos Oct 2019 first restore original age values
+                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                        evaluateExpressionsForSampleSpot(spot);
+                        ExpressionTreeInterface selectedAgeExpression
+                                = namedExpressionsMap.get(spot.getSelectedAgeExpressionName());
+                        // run SK 3 times per Ludwig
+                        for (int i = 0; i < 3; i++) {
+                            try {
+                                spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromSK(
+                                        spot.getTaskExpressionsEvaluationsPerSpot().get(selectedAgeExpression)[0][0]);
+                                // update
+                                evaluateExpressionsForSampleSpot(spot);
+                            } catch (Exception e) {
+                                throw new SquidException("");
+                            }
                         }
-                    }
-                    break;
-                case METHOD_COMMON_LEAD_MODEL:
-                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
-                    evaluateExpressionsForSampleSpot(spot);
-                    break;
-                // todo
-                case METHOD_STACEY_KRAMER_BY_GROUP:
-                    spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromAgeSK();
-                    // update
-                    evaluateExpressionsForSampleSpot(spot);
-                    break;
-                default:
-                    break;
+                        break;
+                    case METHOD_COMMON_LEAD_MODEL:
+                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+                        evaluateExpressionsForSampleSpot(spot);
+                        break;
+                    // todo
+                    case METHOD_STACEY_KRAMER_BY_GROUP:
+                        spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromAgeSK();
+                        // update
+                        evaluateExpressionsForSampleSpot(spot);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

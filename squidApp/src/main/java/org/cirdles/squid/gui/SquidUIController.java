@@ -45,6 +45,7 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -80,6 +81,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
@@ -1886,7 +1888,16 @@ public class SquidUIController implements Initializable {
 
                 // next two lines make sure 15-digit rounding is used by reprocessing data
                 task.setChanged(true);
+
                 task.setupSquidSessionSpecsAndReduceAndReport(true);
+
+                // prime the models - this staceykramer code is for fixing issue #714 backwards compatible
+                StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
+                StaceyKramerCommonLeadModel.updateU_Ratio(
+                        squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+                ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+                // Issue #714
+                ((Task) task).resetReferenceMaterialCommonLeadMethod();
 
                 ((Task) task).initTaskDefaultSquidReportTables(true);
 

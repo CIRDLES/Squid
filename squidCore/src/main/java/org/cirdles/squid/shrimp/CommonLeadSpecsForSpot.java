@@ -46,7 +46,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private double com_207Pb204Pb;
     private double com_208Pb204Pb;
 
-    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group
+    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
     private int methodSelected;
 
     private SampleAgeTypesEnum sampleAgeType;
@@ -73,8 +73,15 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
-        // April 2022 issue #698
-        updateCommonLeadRatiosFromAgeSK();
+        // Issue #714
+        switch (this.methodSelected){
+            case METHOD_COMMON_LEAD_MODEL:
+            case METHOD_STACEY_KRAMER:
+                updateCommonLeadRatiosFromModel();
+                break;
+            case METHOD_STACEY_KRAMER_BY_GROUP:
+                updateCommonLeadRatiosFromAgeSK();
+        }
     }
 
     public String correctionMetaData() {
@@ -260,9 +267,16 @@ public class CommonLeadSpecsForSpot implements Serializable {
      */
     public void setCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;
-        if (methodSelected == METHOD_COMMON_LEAD_MODEL) {
+        if ((methodSelected == METHOD_COMMON_LEAD_MODEL)||(methodSelected == METHOD_STACEY_KRAMER)) {
             updateCommonLeadRatiosFromModel();
         }
+    }
+
+    // Issue #714 - problem with common lead
+    public void setRMCommonLeadModel(ParametersModel commonPbModel) {
+        this.commonLeadModel = commonPbModel;
+        methodSelected = METHOD_COMMON_LEAD_MODEL;
+            updateCommonLeadRatiosFromModel();
     }
 
     public void updateCommonLeadRatiosFromModel() {

@@ -38,6 +38,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -52,6 +53,7 @@ import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.parameters.util.RadDates.*;
 import static org.cirdles.squid.parameters.util.ReferenceMaterialEnum.r238_235s;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
 
 /**
  * FXML Controller class
@@ -379,7 +381,11 @@ public class SpotManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             squidProject.updateFilterForRefMatSpotNames("");
             squidProject.setReferenceMaterialModel(new ReferenceMaterialModel());
-            updateReferenceMaterialsList(true);
+            try {
+                updateReferenceMaterialsList(true);
+            } catch (SquidException e) {
+                e.printStackTrace();
+            }
         });
         contextMenu.getItems().add(menuItem);
         return contextMenu;
@@ -537,7 +543,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void setFilteredSpotsToRefMatAction(ActionEvent event) {
+    private void setFilteredSpotsToRefMatAction(ActionEvent event) throws SquidException {
         squidProject.updateFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateReferenceMaterialsList(true);
@@ -550,7 +556,7 @@ public class SpotManagerController implements Initializable {
         updateConcReferenceMaterialsList(true);
     }
 
-    private void updateReferenceMaterialsList(boolean updateTaskStatus) {
+    private void updateReferenceMaterialsList(boolean updateTaskStatus) throws SquidException {
         String filter = squidProject.getFilterForRefMatSpotNames();
         // initialize list
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
@@ -569,6 +575,12 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
+            // issue #714
+            // update ref mat spots to be model-based common lead
+            for (ShrimpFractionExpressionInterface spot : squidProject.getTask().getReferenceMaterialSpots()){
+                spot.getCommonLeadSpecsForSpot().setMethodSelected(METHOD_COMMON_LEAD_MODEL);
+                spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+            }
             try {
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
             }catch(SquidException squidException){
