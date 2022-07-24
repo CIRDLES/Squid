@@ -146,13 +146,13 @@ public class SquidPersistentState implements Serializable {
             myInstance.setTaskDesign(new TaskDesign());
 
             // check to update TaskDesign
-            TaskDesign sup = myInstance.getTaskDesign();
-            if (sup == null) {
-                sup = new TaskDesign();
-                myInstance.setTaskDesign(sup);
-            } else if (sup.getRatioNames() == null) {
-                sup = new TaskDesign();
-                myInstance.setTaskDesign(sup);
+            TaskDesign taskDesign = myInstance.getTaskDesign();
+            if (taskDesign == null) {
+                taskDesign = new TaskDesign();
+                myInstance.setTaskDesign(taskDesign);
+            } else if (taskDesign.getRatioNames() == null) {
+                taskDesign = new TaskDesign();
+                myInstance.setTaskDesign(taskDesign);
             }
 
             myInstance.serializeSelf();

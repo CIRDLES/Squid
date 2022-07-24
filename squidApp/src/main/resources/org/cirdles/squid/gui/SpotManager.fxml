@@ -162,7 +162,7 @@
                                         </Label>
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="8">
                                             <children>
-                                                <Button minWidth="172.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="172.0" text="Manage RM Model" />
+                                                <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewRMmodelButton" prefWidth="190.0" text="Manage RM Models" />
                                             </children>
                                         </HBox>
                                         <Label fx:id="pbb206U238AgeLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
@@ -170,7 +170,7 @@
                                         <Label fx:id="pb208Th232AgeLabel" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="9">
                                             <children>
-                                                <Button minWidth="172.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="172.0" text="Refresh RM Model" visible="false" />
+                                                <Button minWidth="190.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="190.0" text="Refresh RM Models" />
                                             </children>
                                         </HBox>
                                         <Label fx:id="u238u235NatAbunLabel" layoutX="168.0" layoutY="140.0" prefHeight="31.0" prefWidth="106.0" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-font-family: monospaced;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="6">
@@ -253,12 +253,12 @@
                                                 <Label fx:id="thPpmLabel" prefHeight="23.0" prefWidth="105.0" style="-fx-font-size: 14; -fx-font-family: Monospaced; -fx-font-weight: bold;" text="0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                                 <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
                                                     <children>
-                                                        <Button minWidth="183.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="183.0" text="Manage CRM Model" />
+                                                        <Button minWidth="190.0" mnemonicParsing="false" onAction="#viewCMmodelButton" prefWidth="190.0" text="Manage CRM Models" />
                                                     </children>
                                                 </HBox>
                                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2147483647" GridPane.rowIndex="6">
                                                     <children>
-                                                        <Button minWidth="183.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="183.0" text="Refresh CRM Model" visible="false" />
+                                                        <Button minWidth="190.0" mnemonicParsing="false" onAction="#refreshRMmodelButton" prefWidth="190.0" text="Refresh CRM Models" />
                                                     </children>
                                                 </HBox>
                                             </children>

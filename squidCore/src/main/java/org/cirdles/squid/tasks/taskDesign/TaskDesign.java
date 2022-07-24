@@ -34,6 +34,7 @@ import org.cirdles.squid.utilities.stateUtilities.SquidLabData;
 import java.io.Serializable;
 import java.util.*;
 
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
@@ -73,6 +74,9 @@ public class TaskDesign implements Serializable {
     protected ParametersModel commonPbModel;
     // part of savable defaults
     protected String analystName;
+    // issue #714
+    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    protected int commonLeadForUnknownsMethodSelected;
     private List<Expression> customTaskExpressions;
 
     /**
@@ -121,6 +125,8 @@ public class TaskDesign implements Serializable {
         this.analystName = "";
 
         this.customTaskExpressions = new ArrayList<>();
+
+        this.commonLeadForUnknownsMethodSelected = METHOD_STACEY_KRAMER;
 
         buildShrimpSpeciesNodeMap();
     }
@@ -360,6 +366,7 @@ public class TaskDesign implements Serializable {
     public String getDelimiterForUnknownNames() {
         return delimiterForUnknownNames;
     }
+
     /**
      * @return the parentNuclide
      */
@@ -542,5 +549,13 @@ public class TaskDesign implements Serializable {
      */
     public void setCustomTaskExpressions(List<Expression> customTaskExpressions) {
         this.customTaskExpressions = customTaskExpressions;
+    }
+
+    public int getCommonLeadForUnknownsMethodSelected() {
+        return commonLeadForUnknownsMethodSelected;
+    }
+
+    public void setCommonLeadForUnknownsMethodSelected(int commonLeadForUnknownsMethodSelected) {
+        this.commonLeadForUnknownsMethodSelected = commonLeadForUnknownsMethodSelected;
     }
 }

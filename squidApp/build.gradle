@@ -21,7 +21,7 @@ if (!hasProperty('mainClass')) {
 mainClassName = 'org.cirdles.squid.gui.SquidUI'
 
 dependencies {
-    implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'org.jetbrains:annotations:23.0.0'
     implementation project(":squidCore")
     implementation group: 'org.apache.xmlgraphics', name: 'batik-svg-dom', version: '1.14'
     implementation group: 'org.apache.xmlgraphics', name: 'fop', version: '2.7'
@@ -59,4 +59,8 @@ task fatAppJar(type: Jar) {
 configurations.all {
     // Check for updates every build when 0 or not when 2628000
     resolutionStrategy.cacheChangingModulesFor 2628000, 'seconds'
+}
+
+repositories {
+    mavenCentral()
 }

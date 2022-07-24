@@ -16,8 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextFlow;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -494,6 +494,9 @@ public class TaskFolderBrowserController implements Initializable {
                 chosenTask.setPhysicalConstantsModel(squidProject.getPhysicalConstantsModel());
 
                 chosenTask.updateTaskDesignFromTask(taskEditor, true);
+                // issue #714
+                taskEditor.setCommonLeadForUnknownsMethodSelected(squidProject.getCommonLeadForUnknownsMethodSelected());
+
                 try {
                     squidProject.createNewTask();
                     squidProject.getTask().updateTaskFromTaskDesign(taskEditor, false);

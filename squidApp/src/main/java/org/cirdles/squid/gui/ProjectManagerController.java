@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -28,6 +27,7 @@ import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.projects.SquidProject;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
@@ -41,6 +41,8 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 
 /**
  * FXML Controller class
@@ -51,7 +53,7 @@ import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_T
 public class ProjectManagerController implements Initializable {
 
     @FXML
-    private TextField orignalPrawnFileName;
+    private TextField originalPrawnFileName;
     @FXML
     private Label softwareVersionLabel;
     @FXML
@@ -103,11 +105,6 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
-    private Button parametersSetDefaultsButton;
-
-    private TaskInterface task;
-    private TaskDesign taskDesign;
-    @FXML
     private ToggleGroup toggleGroupIsotope;
     @FXML
     private Label projectModeLabel;
@@ -121,6 +118,13 @@ public class ProjectManagerController implements Initializable {
     private HBox weightedMeansHBox;
     @FXML
     private Label weightedMeanRefMatLabel;
+    @FXML
+    private CheckBox useCommonPbModelForUnknownsCheckBox;
+
+
+
+    private TaskInterface task;
+    private TaskDesign taskDesign;
 
     /**
      * Initializes the controller class.
@@ -142,9 +146,9 @@ public class ProjectManagerController implements Initializable {
                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
 
-            invalidSBMCounts.setText("" + ((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts());
-            invalidSBMCounts.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
-            invalidSBMCountsDescription.setVisible(((Task)task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
+            invalidSBMCounts.setText("" + ((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts());
+            invalidSBMCounts.setVisible(((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
+            invalidSBMCountsDescription.setVisible(((Task) task).getCountOfShrimpFractionsWithInvalidSBMcounts() > 0);
             if (squidProject.isUseSBM()) {
                 yesSBMRadioButton.setSelected(true);
             } else {
@@ -155,14 +159,19 @@ public class ProjectManagerController implements Initializable {
             } else {
                 spotAverageRatioCalcRadioButton.setSelected(true);
             }
+
+            useCommonPbModelForUnknownsCheckBox.setSelected(squidProject.getCommonLeadForUnknownsMethodSelected() == 1);
+            DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 1 : 0;
         }
 
-        orignalPrawnFileName.setEditable(false);
+        originalPrawnFileName.setEditable(false);
 
         preferredIndexIsotopeLabel.setVisible(squidProject.isTypeGeochron());
         isotopeHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeansHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeanRefMatLabel.setVisible(squidProject.isTypeGeochron());
+
+
 
         setupListeners();
 
@@ -209,6 +218,13 @@ public class ProjectManagerController implements Initializable {
                         if (task.getReferenceMaterialSpots().size() > 0) {
                             try {
                                 task.setupSquidSessionSpecsAndReduceAndReport(false);
+
+                                // issue #714 prime the models
+                                StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
+                                StaceyKramerCommonLeadModel.updateU_Ratio(
+                                        squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+                                ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+
                             } catch (SquidException squidException) {
                                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                             }
@@ -221,26 +237,11 @@ public class ProjectManagerController implements Initializable {
     }
 
     private void setupListeners() {
-        projectNameText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setProjectName(newValue);
-            }
-        });
+        projectNameText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setProjectName(newValue));
 
-        analystNameText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setAnalystName(newValue);
-            }
-        });
+        analystNameText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setAnalystName(newValue));
 
-        projectNotesText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setProjectNotes(newValue);
-            }
-        });
+        projectNotesText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setProjectNotes(newValue));
 
         pb208RadioButton.setVisible(!task.isDirectAltPD() && !task.getParentNuclide().contains("232"));
         if (!pb208RadioButton.isVisible() && task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0) {
@@ -302,7 +303,7 @@ public class ProjectManagerController implements Initializable {
         analystNameText.setText(squidProject.getAnalystName());
         projectNotesText.setText(squidProject.getProjectNotes());
 
-        orignalPrawnFileName.setText(squidProject.getPrawnFileHandler().getCurrentPrawnSourceFileLocation());
+        originalPrawnFileName.setText(squidProject.getPrawnFileHandler().getCurrentPrawnSourceFileLocation());
 
         squidFileNameText.setText(SquidUIController.projectFileName);
 
@@ -339,7 +340,7 @@ public class ProjectManagerController implements Initializable {
             task.setupSquidSessionSpecsAndReduceAndReport(true);
         } catch (SquidException squidException) {
             boolean chooseNoSBM = SquidMessageDialog.showChoiceDialog(squidException.getMessage(), primaryStageWindow);
-            if (chooseNoSBM){
+            if (chooseNoSBM) {
                 noSBMRadioButton.setSelected(true);
             }
         }
@@ -443,13 +444,23 @@ public class ProjectManagerController implements Initializable {
 
         taskDesign.setAnalystName(analystNameText.getText());
 
+        taskDesign.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER);
+
         SquidUIController.squidPersistentState.updateSquidPersistentState();
+    }
+
+    @FXML
+    void useCommonPbModelForUnkownsAction(ActionEvent event) {
+        squidProject.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER);
+        DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER;
     }
 
     @FXML
     private void refreshModelsAction(ActionEvent event) {
         try {
             task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
+            physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));
+            commonPbModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getCommonPbModels()));
         } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
@@ -459,7 +470,11 @@ public class ProjectManagerController implements Initializable {
 
         @Override
         public String toString(ParametersModel model) {
-            return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+            if (model == null) {
+                return null;
+            } else {
+                return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
+            }
         }
 
         @Override
@@ -467,5 +482,4 @@ public class ProjectManagerController implements Initializable {
             return null;
         }
     }
-
 }

@@ -27,6 +27,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 import org.cirdles.squid.Squid;
@@ -43,6 +45,7 @@ import org.cirdles.squid.gui.utilities.BrowserControl;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.parameters.ParametersModelComparator;
 import org.cirdles.squid.parameters.parameterModels.commonPbModels.CommonPbModel;
+import org.cirdles.squid.parameters.parameterModels.commonPbModels.StaceyKramerCommonLeadModel;
 import org.cirdles.squid.parameters.parameterModels.physicalConstantsModels.PhysicalConstantsModel;
 import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.ReferenceMaterialModel;
 import org.cirdles.squid.projects.SquidProject;
@@ -78,6 +81,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStage;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 import static org.cirdles.squid.utilities.fileUtilities.FileValidator.validateXML;
 import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZippedFile;
 
@@ -250,6 +254,30 @@ public class SquidUIController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        // June 2022 implement drag n drop of files
+        mainPane.setOnDragOver(event -> {
+            event.acceptTransferModes(TransferMode.MOVE);
+        });
+        mainPane.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            if (event.getDragboard().hasFiles()) {
+                File fileToLoad = db.getFiles().get(0);
+                try {
+                    if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".squid")) {
+                        openProject(fileToLoad.getAbsolutePath());
+                    } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".xml")) {
+                        processPrawnXMLFile(fileToLoad);
+                    } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".zip")) {
+                        Path prawnFilePathParent = fileToLoad.toPath().getParent();
+                        Path prawnFilePath = extractZippedFile(fileToLoad, prawnFilePathParent.toFile());
+                        File prawnSourceFileNew = prawnFilePath.toFile();
+                        processPrawnXMLFile(prawnSourceFileNew);
+                    }
+                } catch (IOException | SquidException | JAXBException | SAXException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         squidVersionLabel.setText("v" + Squid.VERSION);
         versionBuildDate.setText(Squid.RELEASE_DATE);
@@ -581,23 +609,25 @@ public class SquidUIController implements Initializable {
     @FXML
     private void newSquidProjectAction(ActionEvent event) {
         try {
-            prepareForNewProject(GEOCHRON);
+//            prepareForNewProject(GEOCHRON);
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFile != null) {
-                if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
-                    squidProject.autoDivideSamples();
-                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
-                    SquidUI.updateStageTitle("");
-                    launchProjectManager();
-                    saveSquidProjectMenuItem.setDisable(true);
-                    customizeDataMenu();
-                    squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
-                    saveAsSquidProject();
-                } else {
-                    SquidMessageDialog.showWarningDialog(
-                            "Squid3 encountered an error while trying to open the selected data file.",
-                            primaryStageWindow);
-                }
+                processPrawnXMLFile(prawnSourceFile);
+//                prepareForNewProject(GEOCHRON);
+//                if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
+//                    squidProject.autoDivideSamples();
+//                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+//                    SquidUI.updateStageTitle("");
+//                    launchProjectManager();
+//                    saveSquidProjectMenuItem.setDisable(true);
+//                    customizeDataMenu();
+//                    squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
+//                    saveAsSquidProject();
+//                } else {
+//                    SquidMessageDialog.showWarningDialog(
+//                            "Squid3 encountered an error while trying to open the selected data file.",
+//                            primaryStageWindow);
+//                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
@@ -612,6 +642,24 @@ public class SquidUIController implements Initializable {
             SquidMessageDialog.showWarningDialog(
                     "Squid3 encountered an error while trying to open the selected file:\n\n"
                             + message,
+                    primaryStageWindow);
+        }
+    }
+
+    private void processPrawnXMLFile(File prawnSourceFile) throws SquidException, JAXBException, IOException, SAXException {
+        prepareForNewProject(GEOCHRON);
+        if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
+            squidProject.autoDivideSamples();
+            squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
+            SquidUI.updateStageTitle("");
+            launchProjectManager();
+            saveSquidProjectMenuItem.setDisable(true);
+            customizeDataMenu();
+            squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
+            saveAsSquidProject();
+        } else {
+            SquidMessageDialog.showWarningDialog(
+                    "Squid3 encountered an error while trying to open the selected data file.",
                     primaryStageWindow);
         }
     }
@@ -709,7 +757,7 @@ public class SquidUIController implements Initializable {
         }
     }
 
-    private void saveAsSquidProject(){
+    private void saveAsSquidProject() {
         try {
             File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
             if (projectFile != null) {
@@ -1840,7 +1888,16 @@ public class SquidUIController implements Initializable {
 
                 // next two lines make sure 15-digit rounding is used by reprocessing data
                 task.setChanged(true);
+
                 task.setupSquidSessionSpecsAndReduceAndReport(true);
+
+                // prime the models - this staceykramer code is for fixing issue #714 backwards compatible
+                StaceyKramerCommonLeadModel.updatePhysicalConstants(squidProject.getTask().getPhysicalConstantsModel());
+                StaceyKramerCommonLeadModel.updateU_Ratio(
+                        squidProject.getTask().getReferenceMaterialModel().getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue());
+                ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+                // Issue #714
+                ((Task) task).resetReferenceMaterialCommonLeadMethod();
 
                 ((Task) task).initTaskDefaultSquidReportTables(true);
 

@@ -34,10 +34,10 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
     private static final long serialVersionUID = -3180471908770010857L;
 
-    public static final int METHOD_COMMON_LEAD_MODEL = 0;
-    public static final int METHOD_STACEY_KRAMER = 1;
+    public static final int METHOD_COMMON_LEAD_MODEL = 1;
+    public static final int METHOD_STACEY_KRAMER = 0;
     public static final int METHOD_STACEY_KRAMER_BY_GROUP = 2;
-    public static int DEFAULT_METHOD = METHOD_STACEY_KRAMER;
+    public static int DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = METHOD_STACEY_KRAMER;
 
     private double com_206Pb204Pb;
     private double com_207Pb206Pb;
@@ -46,7 +46,8 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private double com_207Pb204Pb;
     private double com_208Pb204Pb;
 
-    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group
+    // changed per issue #714
+    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
     private int methodSelected;
 
     private SampleAgeTypesEnum sampleAgeType;
@@ -65,7 +66,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.com_208Pb204Pb = 0.0;
 
         // April 2022 issue #698
-        this.methodSelected = DEFAULT_METHOD;
+        this.methodSelected = DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS;
 
         this.sampleAgeType = SampleAgeTypesEnum.PB4COR206_238AGE;
         this.refMatAgeType = ReferenceMaterialAgeTypesEnum.PB4COR206_238AGE_RM;
@@ -73,8 +74,15 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
-        // April 2022 issue #698
-        updateCommonLeadRatiosFromAgeSK();
+        // Issue #714
+        switch (this.methodSelected){
+            case METHOD_COMMON_LEAD_MODEL:
+            case METHOD_STACEY_KRAMER:
+                updateCommonLeadRatiosFromModel();
+                break;
+            case METHOD_STACEY_KRAMER_BY_GROUP:
+                updateCommonLeadRatiosFromAgeSK();
+        }
     }
 
     public String correctionMetaData() {
@@ -260,9 +268,16 @@ public class CommonLeadSpecsForSpot implements Serializable {
      */
     public void setCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;
-        if (methodSelected == METHOD_COMMON_LEAD_MODEL) {
+        if ((methodSelected == METHOD_COMMON_LEAD_MODEL)||(methodSelected == METHOD_STACEY_KRAMER)) {
             updateCommonLeadRatiosFromModel();
         }
+    }
+
+    // Issue #714 - problem with common lead
+    public void setRMCommonLeadModel(ParametersModel commonPbModel) {
+        this.commonLeadModel = commonPbModel;
+        methodSelected = METHOD_COMMON_LEAD_MODEL;
+            updateCommonLeadRatiosFromModel();
     }
 
     public void updateCommonLeadRatiosFromModel() {

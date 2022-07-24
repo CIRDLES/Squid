@@ -29,9 +29,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.parameters.ParametersLauncher;
 import org.cirdles.squid.gui.parameters.ParametersManagerGUIController;
 import org.cirdles.squid.parameters.parameterModels.ParametersModel;
@@ -39,6 +38,7 @@ import org.cirdles.squid.parameters.parameterModels.referenceMaterialModels.Refe
 import org.cirdles.squid.prawn.PrawnFile;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.projects.SquidProject;
+import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -53,6 +53,7 @@ import static org.cirdles.squid.gui.SquidUIController.*;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
 import static org.cirdles.squid.parameters.util.RadDates.*;
 import static org.cirdles.squid.parameters.util.ReferenceMaterialEnum.r238_235s;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
 
 /**
  * FXML Controller class
@@ -380,7 +381,11 @@ public class SpotManagerController implements Initializable {
         menuItem.setOnAction((evt) -> {
             squidProject.updateFilterForRefMatSpotNames("");
             squidProject.setReferenceMaterialModel(new ReferenceMaterialModel());
-            updateReferenceMaterialsList(true);
+            try {
+                updateReferenceMaterialsList(true);
+            } catch (SquidException e) {
+                e.printStackTrace();
+            }
         });
         contextMenu.getItems().add(menuItem);
         return contextMenu;
@@ -438,22 +443,6 @@ public class SpotManagerController implements Initializable {
         // ReferenceMaterials
         refMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
-        refMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
-            @Override
-            public String toString(ParametersModel model) {
-                if (model == null) {
-                    return null;
-                } else {
-                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
-                }
-            }
-
-            @Override
-            public ParametersModel fromString(String userId) {
-                return null;
-            }
-        });
-
         updateViewRM();
 
         refMatModelComboBox.valueProperty()
@@ -461,7 +450,9 @@ public class SpotManagerController implements Initializable {
                     if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-                        try{squidProject.getTask().refreshParametersFromModels(false, false, true);}
+                        try{
+                            squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        }
                            catch(SquidException squidException){ SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);}
                         alertForZeroNaturalUranium();
                     }
@@ -509,21 +500,6 @@ public class SpotManagerController implements Initializable {
         // ConcentrationReferenceMaterials
         concRefMatModelComboBox.setConverter(new ProjectManagerController.ParameterModelStringConverter());
         concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
-        concRefMatModelComboBox.setConverter(new StringConverter<ParametersModel>() {
-            @Override
-            public String toString(ParametersModel model) {
-                if (model == null) {
-                    return null;
-                } else {
-                    return model.getModelNameWithVersion() + (model.isEditable() ? "" : " <Built-in>");
-                }
-            }
-
-            @Override
-            public ParametersModel fromString(String userId) {
-                return null;
-            }
-        });
         updateViewCM();
 
         concRefMatModelComboBox.valueProperty()
@@ -567,7 +543,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void setFilteredSpotsToRefMatAction(ActionEvent event) {
+    private void setFilteredSpotsToRefMatAction(ActionEvent event) throws SquidException {
         squidProject.updateFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateReferenceMaterialsList(true);
@@ -580,7 +556,7 @@ public class SpotManagerController implements Initializable {
         updateConcReferenceMaterialsList(true);
     }
 
-    private void updateReferenceMaterialsList(boolean updateTaskStatus) {
+    private void updateReferenceMaterialsList(boolean updateTaskStatus) throws SquidException {
         String filter = squidProject.getFilterForRefMatSpotNames();
         // initialize list
         shrimpRunsRefMat = runsModel.getViewableShrimpRuns();
@@ -599,6 +575,12 @@ public class SpotManagerController implements Initializable {
 
         if (updateTaskStatus) {
             squidProject.getTask().setChanged(true);
+            // issue #714
+            // update ref mat spots to be model-based common lead
+            for (ShrimpFractionExpressionInterface spot : squidProject.getTask().getReferenceMaterialSpots()){
+                spot.getCommonLeadSpecsForSpot().setMethodSelected(METHOD_COMMON_LEAD_MODEL);
+                spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
+            }
             try {
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
             }catch(SquidException squidException){
@@ -673,18 +655,24 @@ public class SpotManagerController implements Initializable {
     private void viewRMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
     }
 
     @FXML
     private void viewCMmodelButton(ActionEvent event) {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
+        refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+        concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
     }
 
     @FXML
     private void refreshRMmodelButton(ActionEvent event) {
         try {
             squidProject.getTask().refreshParametersFromModels(false, false, true);
+            refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
+            concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
         }catch (SquidException squidException){
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
