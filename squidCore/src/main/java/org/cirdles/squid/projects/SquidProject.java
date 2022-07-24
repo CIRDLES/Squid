@@ -99,6 +99,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     private TaskTypeEnum projectType;
     // jan 2021 issue #547
     private List<Run> removedRuns;
+    // issue #714
+    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    protected int commonLeadForUnknownsMethodSelected;
 
     /**
      * @param projectType the value of projectType
@@ -138,6 +141,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         this.task.setConcentrationReferenceMaterialModel(this.concentrationReferenceMaterialModel);
         this.task.setPhysicalConstantsModel(physicalConstantsModel);
         this.task.setCommonPbModel(commonPbModel);
+
+        //issue #714
+        this.commonLeadForUnknownsMethodSelected = taskDesignDefault.getCommonLeadForUnknownsMethodSelected();
 
         this.filtersForUnknownNames = new HashMap<>();
         this.delimiterForUnknownNames
@@ -1400,6 +1406,14 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
             task.setUserLinFits(userLinFits);
         }
         this.userLinFits = userLinFits;
+    }
+
+    public int getCommonLeadForUnknownsMethodSelected() {
+        return commonLeadForUnknownsMethodSelected;
+    }
+
+    public void setCommonLeadForUnknownsMethodSelected(int commonLeadForUnknownsMethodSelected) {
+        this.commonLeadForUnknownsMethodSelected = commonLeadForUnknownsMethodSelected;
     }
 
     @Override

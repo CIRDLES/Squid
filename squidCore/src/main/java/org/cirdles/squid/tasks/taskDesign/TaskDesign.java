@@ -74,6 +74,9 @@ public class TaskDesign implements Serializable {
     // part of savable defaults
     protected String analystName;
     private List<Expression> customTaskExpressions;
+    // issue #714
+    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    protected int commonLeadForUnknownsMethodSelected;
 
     /**
      * Creates a new instance of TaskDesign
@@ -121,6 +124,8 @@ public class TaskDesign implements Serializable {
         this.analystName = "";
 
         this.customTaskExpressions = new ArrayList<>();
+
+        this.commonLeadForUnknownsMethodSelected = 1;
 
         buildShrimpSpeciesNodeMap();
     }
@@ -360,6 +365,7 @@ public class TaskDesign implements Serializable {
     public String getDelimiterForUnknownNames() {
         return delimiterForUnknownNames;
     }
+
     /**
      * @return the parentNuclide
      */
@@ -542,5 +548,13 @@ public class TaskDesign implements Serializable {
      */
     public void setCustomTaskExpressions(List<Expression> customTaskExpressions) {
         this.customTaskExpressions = customTaskExpressions;
+    }
+
+    public int getCommonLeadForUnknownsMethodSelected() {
+        return commonLeadForUnknownsMethodSelected;
+    }
+
+    public void setCommonLeadForUnknownsMethodSelected(int commonLeadForUnknownsMethodSelected) {
+        this.commonLeadForUnknownsMethodSelected = commonLeadForUnknownsMethodSelected;
     }
 }

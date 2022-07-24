@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -42,6 +41,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 
 /**
@@ -53,7 +53,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 public class ProjectManagerController implements Initializable {
 
     @FXML
-    private TextField orignalPrawnFileName;
+    private TextField originalPrawnFileName;
     @FXML
     private Label softwareVersionLabel;
     @FXML
@@ -105,11 +105,6 @@ public class ProjectManagerController implements Initializable {
     @FXML
     private Spinner<Double> assignedExternalErrThSpinner;
     @FXML
-    private Button parametersSetDefaultsButton;
-
-    private TaskInterface task;
-    private TaskDesign taskDesign;
-    @FXML
     private ToggleGroup toggleGroupIsotope;
     @FXML
     private Label projectModeLabel;
@@ -123,6 +118,13 @@ public class ProjectManagerController implements Initializable {
     private HBox weightedMeansHBox;
     @FXML
     private Label weightedMeanRefMatLabel;
+    @FXML
+    private CheckBox useCommonPbModelForUnknownsCheckBox;
+
+
+
+    private TaskInterface task;
+    private TaskDesign taskDesign;
 
     /**
      * Initializes the controller class.
@@ -157,14 +159,19 @@ public class ProjectManagerController implements Initializable {
             } else {
                 spotAverageRatioCalcRadioButton.setSelected(true);
             }
+
+            useCommonPbModelForUnknownsCheckBox.setSelected(squidProject.getCommonLeadForUnknownsMethodSelected() == 0);
+            DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1;
         }
 
-        orignalPrawnFileName.setEditable(false);
+        originalPrawnFileName.setEditable(false);
 
         preferredIndexIsotopeLabel.setVisible(squidProject.isTypeGeochron());
         isotopeHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeansHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeanRefMatLabel.setVisible(squidProject.isTypeGeochron());
+
+
 
         setupListeners();
 
@@ -230,26 +237,11 @@ public class ProjectManagerController implements Initializable {
     }
 
     private void setupListeners() {
-        projectNameText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setProjectName(newValue);
-            }
-        });
+        projectNameText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setProjectName(newValue));
 
-        analystNameText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setAnalystName(newValue);
-            }
-        });
+        analystNameText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setAnalystName(newValue));
 
-        projectNotesText.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                squidProject.setProjectNotes(newValue);
-            }
-        });
+        projectNotesText.textProperty().addListener((observable, oldValue, newValue) -> squidProject.setProjectNotes(newValue));
 
         pb208RadioButton.setVisible(!task.isDirectAltPD() && !task.getParentNuclide().contains("232"));
         if (!pb208RadioButton.isVisible() && task.getSelectedIndexIsotope().compareTo(Squid3Constants.IndexIsoptopesEnum.PB_208) == 0) {
@@ -311,7 +303,7 @@ public class ProjectManagerController implements Initializable {
         analystNameText.setText(squidProject.getAnalystName());
         projectNotesText.setText(squidProject.getProjectNotes());
 
-        orignalPrawnFileName.setText(squidProject.getPrawnFileHandler().getCurrentPrawnSourceFileLocation());
+        originalPrawnFileName.setText(squidProject.getPrawnFileHandler().getCurrentPrawnSourceFileLocation());
 
         squidFileNameText.setText(SquidUIController.projectFileName);
 
@@ -452,7 +444,15 @@ public class ProjectManagerController implements Initializable {
 
         taskDesign.setAnalystName(analystNameText.getText());
 
+        taskDesign.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1);
+
         SquidUIController.squidPersistentState.updateSquidPersistentState();
+    }
+
+    @FXML
+    void useCommonPbModelForUnkownsAction(ActionEvent event) {
+        squidProject.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1);
+        DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1;
     }
 
     @FXML
