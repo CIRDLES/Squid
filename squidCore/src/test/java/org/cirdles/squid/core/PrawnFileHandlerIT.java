@@ -79,7 +79,7 @@ public class PrawnFileHandlerIT {
     @BeforeClass // provides to run setup once
     public static void setUp() throws Exception {
         // april 2022 to preserve tests due to change in issue #698
-        CommonLeadSpecsForSpot.DEFAULT_METHOD = CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
+        CommonLeadSpecsForSpot.DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = CommonLeadSpecsForSpot.METHOD_COMMON_LEAD_MODEL;
 
         prawnFileHandler = (new SquidProject(GEOCHRON)).getPrawnFileHandler();
         reportsFolder = temporaryFolder.getRoot();

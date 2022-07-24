@@ -20,11 +20,11 @@ import static org.cirdles.squid.gui.SquidUI.SQUID_LOGO_SANS_TEXT_URL;
 public class ParametersLauncher {
 
     public static Stage squidLabDataStage;
-    private static Stage primaryStage;
     public static Window squidLabDataWindow;
+    private static Stage primaryStage;
 
     public ParametersLauncher(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        ParametersLauncher.primaryStage = primaryStage;
         squidLabDataStage = new Stage();
         squidLabDataStage.setMinHeight(600);
         squidLabDataStage.setMinWidth(900);
@@ -49,12 +49,10 @@ public class ParametersLauncher {
                 e.printStackTrace();
             }
             squidLabDataWindow = squidLabDataStage.getScene().getWindow();
-
-            squidLabDataStage.show();
-
+            squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getMinWidth()) / 2);
+            squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getMinHeight()) / 2);
+            squidLabDataStage.showAndWait();
         }
-        squidLabDataStage.setX(primaryStage.getX() + (primaryStage.getWidth() - squidLabDataStage.getWidth()) / 2);
-        squidLabDataStage.setY(primaryStage.getY() + (primaryStage.getHeight() - squidLabDataStage.getHeight()) / 2);
         squidLabDataStage.requestFocus();
     }
 

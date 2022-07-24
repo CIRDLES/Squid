@@ -63,7 +63,7 @@
         </HBox>
         <HBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <children>
-                <TextField fx:id="orignalPrawnFileName" editable="false" prefHeight="27.0" prefWidth="775.0" promptText="name and location of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
+                <TextField fx:id="originalPrawnFileName" editable="false" prefHeight="27.0" prefWidth="775.0" promptText="name and location of selected Prawn XML or OP file will appear here" style="-fx-font-family: SansSerif; -fx-font-size: 13;" HBox.hgrow="ALWAYS" />
             </children>
         </HBox>
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" styleClass="backgroundCalamari" text="Project Name:" GridPane.rowIndex="1" />
@@ -96,7 +96,7 @@
             <children>
 
                 <Label alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="109.0" style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Parameters:" />
-                <Button fx:id="parametersSetDefaultsButton" mnemonicParsing="false" onAction="#parametersSetDefaultsOnAction" prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0 0 0 0;" text="Set Defaults" />
+                <Button mnemonicParsing="false" onAction="#parametersSetDefaultsOnAction" prefHeight="31.0" prefWidth="108.0" style="-fx-padding: 0 0 0 0;" text="Set Defaults" />
             </children>
         </VBox>
         <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
@@ -182,6 +182,7 @@
                         </Button>
                     </children>
                 </HBox>
+            <CheckBox fx:id="useCommonPbModelForUnknownsCheckBox" mnemonicParsing="false" onAction="#useCommonPbModelForUnkownsAction" text="Default for Unknowns" GridPane.rowIndex="6" />
             </children>
 
 
