@@ -34,8 +34,8 @@ public class CommonLeadSpecsForSpot implements Serializable {
 
     private static final long serialVersionUID = -3180471908770010857L;
 
-    public static final int METHOD_COMMON_LEAD_MODEL = 0;
-    public static final int METHOD_STACEY_KRAMER = 1;
+    public static final int METHOD_COMMON_LEAD_MODEL = 1;
+    public static final int METHOD_STACEY_KRAMER = 0;
     public static final int METHOD_STACEY_KRAMER_BY_GROUP = 2;
     public static int DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = METHOD_STACEY_KRAMER;
 
@@ -46,7 +46,8 @@ public class CommonLeadSpecsForSpot implements Serializable {
     private double com_207Pb204Pb;
     private double com_208Pb204Pb;
 
-    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    // changed per issue #714
+    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
     private int methodSelected;
 
     private SampleAgeTypesEnum sampleAgeType;

@@ -100,7 +100,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     // jan 2021 issue #547
     private List<Run> removedRuns;
     // issue #714
-    // methods: 0 = commonLeadModel, 1 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
     protected int commonLeadForUnknownsMethodSelected;
 
     /**

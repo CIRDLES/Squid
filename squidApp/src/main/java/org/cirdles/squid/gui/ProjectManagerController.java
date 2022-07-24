@@ -41,7 +41,7 @@ import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidLabData;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
 import static org.cirdles.squid.gui.constants.Squid3GuiConstants.STYLE_MANAGER_TITLE;
-import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS;
+import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
 
 /**
@@ -160,8 +160,8 @@ public class ProjectManagerController implements Initializable {
                 spotAverageRatioCalcRadioButton.setSelected(true);
             }
 
-            useCommonPbModelForUnknownsCheckBox.setSelected(squidProject.getCommonLeadForUnknownsMethodSelected() == 0);
-            DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1;
+            useCommonPbModelForUnknownsCheckBox.setSelected(squidProject.getCommonLeadForUnknownsMethodSelected() == 1);
+            DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 1 : 0;
         }
 
         originalPrawnFileName.setEditable(false);
@@ -444,15 +444,15 @@ public class ProjectManagerController implements Initializable {
 
         taskDesign.setAnalystName(analystNameText.getText());
 
-        taskDesign.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1);
+        taskDesign.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER);
 
         SquidUIController.squidPersistentState.updateSquidPersistentState();
     }
 
     @FXML
     void useCommonPbModelForUnkownsAction(ActionEvent event) {
-        squidProject.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1);
-        DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? 0 : 1;
+        squidProject.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER);
+        DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER;
     }
 
     @FXML
