@@ -92,7 +92,6 @@ import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZipped
  */
 public class SquidUIController implements Initializable {
 
-    private static final Map<String, String> taskLibraryDescriptions = new HashMap<>();
     public static SquidLabData squidLabData = null;
     public static SquidPersistentState squidPersistentState = null;
     public static SquidProject squidProject;

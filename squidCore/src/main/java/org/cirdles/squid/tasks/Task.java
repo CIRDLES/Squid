@@ -3847,6 +3847,16 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     @Override
+    public boolean equals(Object o) {
+        return o instanceof Task && this.compareTo(((Task) o)) == 0;
+    }
+
+    private int compareTo(Task o) {
+        IntuitiveStringComparator<String> comparator = new IntuitiveStringComparator<>();
+        return comparator.compare(name, o.getName()) + comparator.compare(description, o.getDescription());
+    }
+
+    @Override
     public int hashCode() {
         int result = Objects.hash(name, taskSquidVersion, taskType, description, authorName, labName,
                 provenance, dateRevised, useSBM, userLinFits, indexOfBackgroundSpecies,

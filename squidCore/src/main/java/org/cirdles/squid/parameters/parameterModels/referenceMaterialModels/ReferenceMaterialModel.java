@@ -502,12 +502,44 @@ public class ReferenceMaterialModel extends ParametersModel {
         return model;
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        if (!super.equals(o)) return false;
+//        ReferenceMaterialModel that = (ReferenceMaterialModel) o;
+//        return referenceDates == that.referenceDates
+//                && Arrays.equals(concentrations, that.concentrations)
+//                && Arrays.equals(dataMeasured, that.dataMeasured) && Arrays.equals(dates, that.dates);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        int result = Objects.hash(super.hashCode(), parDerivTerms, referenceDates, flags);
+//        result = 31 * result + Arrays.hashCode(concentrations);
+//        result = 31 * result + Arrays.hashCode(dataMeasured);
+//        result = 31 * result + Arrays.hashCode(dates);
+//        return result;
+//    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ReferenceMaterialModel that = (ReferenceMaterialModel) o;
+        return referenceDates == that.referenceDates
+                && Arrays.equals(concentrations, that.concentrations)
+                && Arrays.equals(dataMeasured, that.dataMeasured)
+                && Arrays.equals(dates, that.dates);
+    }
+
     @Override
     public int hashCode() {
-        int result = Objects.hash(super.hashCode(), getParDerivTerms(), isReferenceDates());
-        result = 31 * result + Arrays.hashCode(getConcentrations());
-        result = 31 * result + Arrays.hashCode(getDataMeasured());
-        result = 31 * result + Arrays.hashCode(getDates());
+        int result = Objects.hash(super.hashCode(), parDerivTerms, referenceDates, flags);
+        result = 31 * result + Arrays.hashCode(concentrations);
+        result = 31 * result + Arrays.hashCode(dataMeasured);
+        result = 31 * result + Arrays.hashCode(dates);
         return result;
     }
 }

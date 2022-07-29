@@ -193,14 +193,8 @@ public class ExpressionParser {
                 } else {
                     didAscend = false;
                 }
-            } else if (savedExp instanceof ConstantNode) {
-                expParent = savedExp.getParentET();
-                savedExp = expParent;
-            } else if (savedExp instanceof ShrimpSpeciesNode) {
-                expParent = savedExp.getParentET();
-                savedExp = expParent;
             } else if (savedExp.isRootExpressionTree()) {
-                // when referrring to stored expression
+                // when referring to stored expression
                 expParent = savedExp.getParentET();
                 savedExp = expParent;
             } else {

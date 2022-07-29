@@ -45,10 +45,8 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.xml.sax.SAXException;
 
 import javax.xml.bind.JAXBException;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1416,21 +1414,54 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         this.commonLeadForUnknownsMethodSelected = commonLeadForUnknownsMethodSelected;
     }
 
+//    @Override
+//    public int hashCode() {
+//        /*return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
+//                prawnSourceFile, prawnFile, getFilterForRefMatSpotNames(), getFilterForConcRefMatSpotNames(),
+//                getSessionDurationHours(), getTask(), getFiltersForUnknownNames(), getDelimiterForUnknownNames(),
+//                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());*/
+//        int result = 0;
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        try {
+//            ObjectOutputStream oos = new ObjectOutputStream(bos);
+//            oos.writeObject(this);
+//            result = Arrays.hashCode(bos.toByteArray());
+//        } catch (IOException e) {
+//        }
+//        return result;// + 31 * Objects.hash(task);
+//        //return HashCodeBuilder.reflectionHashCode(17, 31, this, false, Object.class);
+//    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SquidProject that = (SquidProject) o;
+        return squidAllowsAutoExclusionOfSpots == that.squidAllowsAutoExclusionOfSpots
+                && Double.compare(that.extPErrU, extPErrU) == 0 && Double.compare(that.extPErrTh, extPErrTh) == 0
+                && useSBM == that.useSBM && userLinFits == that.userLinFits
+                && commonLeadForUnknownsMethodSelected == that.commonLeadForUnknownsMethodSelected
+                && projectName.equals(that.projectName) && analystName.equals(that.analystName)
+                && projectNotes.equals(that.projectNotes) && prawnSourceFile.equals(that.prawnSourceFile)
+                && filterForRefMatSpotNames.equals(that.filterForRefMatSpotNames)
+                && filterForConcRefMatSpotNames.equals(that.filterForConcRefMatSpotNames) && task.equals(that.task)
+                && filtersForUnknownNames.equals(that.filtersForUnknownNames)
+                && delimiterForUnknownNames.equals(that.delimiterForUnknownNames)
+                && referenceMaterialModel.equals(that.referenceMaterialModel)
+                && concentrationReferenceMaterialModel.equals(that.concentrationReferenceMaterialModel)
+                && physicalConstantsModel.equals(that.physicalConstantsModel) && commonPbModel.equals(that.commonPbModel)
+                && selectedIndexIsotope == that.selectedIndexIsotope && projectType == that.projectType
+                && removedRuns.equals(that.removedRuns);
+    }
+
     @Override
     public int hashCode() {
-        /*return Objects.hash(getPrefixTree(), getPrawnFileHandler(), getProjectName(), getAnalystName(), getProjectNotes(),
-                prawnSourceFile, prawnFile, getFilterForRefMatSpotNames(), getFilterForConcRefMatSpotNames(),
-                getSessionDurationHours(), getTask(), getFiltersForUnknownNames(), getDelimiterForUnknownNames(),
-                getReferenceMaterialModel(), getConcentrationReferenceMaterialModel());*/
-        int result = 0;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            oos.writeObject(this);
-            result = Arrays.hashCode(bos.toByteArray());
-        } catch (IOException e) {
-        }
-        return result;// + 31 * Objects.hash(task);
-        //return HashCodeBuilder.reflectionHashCode(17, 31, this, false, Object.class);
+        return Objects.hash(prefixTree, prawnFileHandler, projectName, analystName, projectNotes, prawnSourceFile,
+                prawnFile, filterForRefMatSpotNames, filterForConcRefMatSpotNames, sessionDurationHours, task,
+                filtersForUnknownNames, delimiterForUnknownNames, referenceMaterialModel,
+                concentrationReferenceMaterialModel, physicalConstantsModel, commonPbModel,
+                squidAllowsAutoExclusionOfSpots, extPErrU, extPErrTh, selectedIndexIsotope, useSBM, userLinFits,
+                projectType, removedRuns, commonLeadForUnknownsMethodSelected);
     }
 }
