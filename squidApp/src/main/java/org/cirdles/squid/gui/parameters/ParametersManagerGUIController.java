@@ -786,7 +786,7 @@ public class ParametersManagerGUIController implements Initializable {
         for (int i = 0; i < values.length; i++) {
             ValueModel valMod = values[i];
             if (!valMod.getName().equals("r238_235s")) {
-                Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
+                boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[i];
                 String value = refMatDataNotation.format(round(valMod.getValue(), precision));
                 String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
                 String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));
@@ -804,7 +804,7 @@ public class ParametersManagerGUIController implements Initializable {
         int precision = UUSigFigSpinner.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel valMod = refMatModel.getValues()[4];
-        Boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[4];
+        boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[4];
         String value = refMatDataNotation.format(round(valMod.getValue(), precision));
         String oneSigmaABS = refMatDataNotation.format(round(valMod.getOneSigmaABS(), precision));
         String oneSigmaPCT = refMatDataNotation.format(round(valMod.getOneSigmaPCT(), precision));

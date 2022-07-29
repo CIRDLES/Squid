@@ -162,13 +162,13 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                 method = ShrimpFractionExpressionInterface.class.getMethod(//
                         methodNameForShrimpFraction,
                         new Class[0]);
-            } catch (NoSuchMethodException | SecurityException noSuchMethodException) {
+            } catch (NoSuchMethodException | SecurityException ignored) {
             }
         }
 
         Object[][] retVal = new Object[shrimpFractions.size()][];
         if (method != null) {
-            Integer index = squidSpeciesModel.getMassStationIndex();
+            int index = squidSpeciesModel.getMassStationIndex();
             if (index != -1) {
                 for (int i = 0; i < shrimpFractions.size(); i++) {
                     double retVala = 0.0;
@@ -179,7 +179,7 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                             retVala = isotopeValues[index];
                         }
                         retVal[i] = convertArrayToObjects(new double[]{retVala});
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SquidException illegalAccessException) {
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SquidException ignored) {
                     }
                 }
             }
@@ -193,22 +193,20 @@ public class ShrimpSpeciesNode extends ExpressionTree {
      */
     @Override
     public String toStringMathML() {
-        String retVal
-                = "<msubsup>\n"
-                + "<mstyle mathsize='90%'>\n"
-                + "<mtext>\n"
-                + squidSpeciesModel.getIsotopeName()
-                + "\n</mtext>\n"
-                + "</mstyle>\n"
-                + "<mstyle  mathsize='150%'>\n"
-                + "<mtext>\n"
-                + squidSpeciesModel.getElementName()//.split("2")[0]
-                + "\n</mtext>\n"
-                + "</mstyle>\n"
-                + "<mtext/>"
-                + "</msubsup>\n";
 
-        return retVal;
+        return "<msubsup>\n"
+        + "<mstyle mathsize='90%'>\n"
+        + "<mtext>\n"
+        + squidSpeciesModel.getIsotopeName()
+        + "\n</mtext>\n"
+        + "</mstyle>\n"
+        + "<mstyle  mathsize='150%'>\n"
+        + "<mtext>\n"
+        + squidSpeciesModel.getElementName()//.split("2")[0]
+        + "\n</mtext>\n"
+        + "</mstyle>\n"
+        + "<mtext/>"
+        + "</msubsup>\n";
     }
 
     /**
@@ -226,7 +224,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
 
     /**
      * @param squidSpeciesModel
-     * @param name              the name to set
      */
     public void setsquidSpeciesModel(SquidSpeciesModel squidSpeciesModel) {
         this.squidSpeciesModel = squidSpeciesModel;
