@@ -297,15 +297,5 @@ public abstract class AbstractMatrixModel implements Serializable {
     protected String createPartialDerivName(String variableName) {
         return "d" + variableName.substring(0, 1).toUpperCase(Locale.ENGLISH) + variableName.substring(1);
     }
-//    private void readObject ( ObjectInputStream stream ) throws IOException,
-//            ClassNotFoundException {
-//        stream.defaultReadObject();
-//
-//        ObjectStreamClass myObject = ObjectStreamClass.lookup(
-//                Class.forName( AbstractMatrixModel.class.getCanonicalName()) );
-//        long theSUID = myObject.getSerialVersionUID();
-//
-//        System.out.println( "Customized De-serialization of AbstractMatrixModel "
-//                + theSUID );
-//    }
+
 }

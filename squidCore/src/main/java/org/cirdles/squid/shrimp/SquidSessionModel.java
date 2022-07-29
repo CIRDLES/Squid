@@ -209,7 +209,22 @@ public class SquidSessionModel implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SquidSessionModel that = (SquidSessionModel) o;
+        return useSBM == that.useSBM && userLinFits == that.userLinFits
+                && indexOfBackgroundSpecies == that.indexOfBackgroundSpecies
+                && squidSpeciesModelList.equals(that.squidSpeciesModelList)
+                && squidRatiosModelList.equals(that.squidRatiosModelList)
+                && referenceMaterialNameFilter.equals(that.referenceMaterialNameFilter)
+                && concentrationReferenceMaterialNameFilter.equals(that.concentrationReferenceMaterialNameFilter)
+                && filtersForUnknownNames.equals(that.filtersForUnknownNames);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(getSquidSpeciesModelList(), getSquidRatiosModelList(), isUseSBM(), isUserLinFits(), getIndexOfBackgroundSpecies(), getReferenceMaterialNameFilter(), getConcentrationReferenceMaterialNameFilter(), filtersForUnknownNames);
+        return Objects.hash(squidSpeciesModelList, squidRatiosModelList, useSBM, userLinFits,
+                indexOfBackgroundSpecies, referenceMaterialNameFilter, concentrationReferenceMaterialNameFilter, filtersForUnknownNames);
     }
 }

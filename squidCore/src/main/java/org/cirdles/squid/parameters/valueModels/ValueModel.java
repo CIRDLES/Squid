@@ -10,12 +10,12 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
 
-/**
- * @author ryanb
- */
 public class ValueModel implements Comparable<ValueModel>, Serializable {
+
+    private static final long serialVersionUID = -1469128438073058092L;
 
     protected String name;
     protected String uncertaintyType;
@@ -24,36 +24,20 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     protected BigDecimal oneSigma;
 
     public ValueModel() {
-        this.name = "";
-        uncertaintyType = "ABS";
-        reference = "";
-        value = BigDecimal.ZERO;
-        oneSigma = BigDecimal.ZERO;
+        this("");
     }
 
     public ValueModel(String name) {
-        this.name = name;
-        uncertaintyType = "ABS";
-        reference = "";
-        value = BigDecimal.ZERO;
-        oneSigma = BigDecimal.ZERO;
+        this(name, "ABS");
     }
 
     public ValueModel(String name, String uncertaintyType) {
-        this.name = name;
-        this.uncertaintyType = uncertaintyType;
-        reference = "";
-        value = BigDecimal.ZERO;
-        oneSigma = BigDecimal.ZERO;
+        this(name, uncertaintyType,BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public ValueModel(String name, String uncertaintyType, BigDecimal value,
                       BigDecimal oneSigma) {
-        this.name = name;
-        this.uncertaintyType = uncertaintyType;
-        this.value = value;
-        this.oneSigma = oneSigma;
-        this.reference = "";
+        this(name, uncertaintyType, "", value, oneSigma);
     }
 
     public ValueModel(String name, String uncertaintyType, String reference,
@@ -63,6 +47,21 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         this.reference = reference;
         this.value = value;
         this.oneSigma = oneSigma;
+    }
+
+    public static String formatBigDecimalForPublicationSigDigMode(
+            BigDecimal number,
+            int uncertaintySigDigits) {
+
+        if ((number.compareTo(BigDecimal.ZERO) == 0)//
+                || // jan 2011 to trap for absurdly small uncertainties
+                // july 2011 added abs to handle negative values in tripoli alphas
+                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
+            return "0";
+        } else {
+            return number.round(new MathContext(//
+                    uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
+        }
     }
 
     @Override
@@ -77,6 +76,11 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
             retVal = false;
         }
         return retVal;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, uncertaintyType, value, oneSigma);
     }
 
     public BigDecimal getOneSigmaABS() {
@@ -113,13 +117,13 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
         // sept 2009 modified to force use of ABS uncertainty for sigfig counting
         // first determine the shape of significant digits of ABS uncertainty
         String twoSigmaUnct
-                = //
+                =
                 formatTwoSigmaForPublicationSigDigMode(//
                         "ABS", movePointRightCount, uncertaintySigDigits);
 
         // then generate the ouput string based on uncertainty type
         String twoSigmaUnctOutput
-                = //
+                =
                 formatTwoSigmaForPublicationSigDigMode(//
                         uncertaintyType, movePointRightCount, uncertaintySigDigits);
 
@@ -128,7 +132,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
 
         // create string from value
         String valueString
-                = //
+                =
                 getValue().movePointRight(movePointRightCount).toPlainString();
 
         // revised feb 2008 to do rounding !!
@@ -183,21 +187,6 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
             return formatBigDecimalForPublicationSigDigMode(//
                     getTwoSigmaAbs().movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
-        }
-    }
-
-    public static String formatBigDecimalForPublicationSigDigMode(
-            BigDecimal number,
-            int uncertaintySigDigits) {
-
-        if ((number.compareTo(BigDecimal.ZERO) == 0)//
-                || // jan 2011 to trap for absurdly small uncertainties
-                // july 2011 added abs to handle negative values in tripoli alphas
-                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
-            return "0";
-        } else {
-            return number.round(new MathContext(//
-                    uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
         }
     }
 

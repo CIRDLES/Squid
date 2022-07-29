@@ -45,7 +45,8 @@ public class BrowserControl {
             if (!isLinuxOrUnixOperatingSystem()) {
                 java.awt.Desktop.getDesktop().browse(oURL);
             } else {
-                Runtime.getRuntime().exec("xdg-open " + oURL);
+                // https://lgtm.com/rules/7870097/
+                Runtime.getRuntime().exec(new String[]{"xdg-open ", oURL.toString()});
             }
         } catch (URISyntaxException | IOException e) {
             SquidMessageDialog.showWarningDialog("An error ocurred:\n" + e.getMessage(), ownerWindow);

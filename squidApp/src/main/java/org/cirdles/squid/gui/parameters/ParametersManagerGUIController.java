@@ -2055,18 +2055,18 @@ public class ParametersManagerGUIController implements Initializable {
             physConstModel.setDateCertified(physConstDateCertified.getText());
             physConstModel.setLabName(physConstLabName.getText());
 
-            Map<String, BigDecimal> masses = new HashMap<>();
-            String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
-            for (int i = 0; i < defaultMasses.length; i++) {
-                String[] defaultMass = defaultMasses[i];
-                try {
-                    if (Double.parseDouble(defaultMass[1]) != 0) {
-                        masses.put(defaultMass[0], new BigDecimal(molarMasses.get(i).getText()));
-                    }
-                } catch (Exception e) {
-                    masses.put(defaultMass[0], new BigDecimal(defaultMass[1]));
-                }
-            }
+//            Map<String, BigDecimal> masses = new HashMap<>();
+//            String[][] defaultMasses = DataDictionary.AtomicMolarMasses;
+//            for (int i = 0; i < defaultMasses.length; i++) {
+//                String[] defaultMass = defaultMasses[i];
+//                try {
+//                    if (Double.parseDouble(defaultMass[1]) != 0) {
+//                        masses.put(defaultMass[0], new BigDecimal(molarMasses.get(i).getText()));
+//                    }
+//                } catch (Exception e) {
+//                    masses.put(defaultMass[0], new BigDecimal(defaultMass[1]));
+//                }
+//            }
 
             physConstModel.setReferences(physConstReferencesArea.getText());
             physConstModel.setComments(physConstCommentsArea.getText());

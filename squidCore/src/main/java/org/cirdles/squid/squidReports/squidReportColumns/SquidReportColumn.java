@@ -494,11 +494,27 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     }
 
     @Override
-    public int hashCode() {
-        int result = Objects.hash(expTree, amIsotopicRatio, getExpressionName(), getUnits(), getUncertaintyColumn(), isAmUncertaintyColumn(), getUncertaintyDirective(), getCountOfSignificantDigits(), isVisible(), getFootnoteSpec());
-        result = 31 * result + Arrays.hashCode(getColumnHeaders());
-        return result;
-
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SquidReportColumn that = (SquidReportColumn) o;
+        return amIsotopicRatio == that.amIsotopicRatio
+                && amUncertaintyColumn == that.amUncertaintyColumn
+                && countOfSignificantDigits == that.countOfSignificantDigits
+                && visible == that.visible
+                && Objects.equals(expTree, that.expTree)
+                && Arrays.equals(columnHeaders, that.columnHeaders)
+                && Objects.equals(expressionName, that.expressionName)
+                && Objects.equals(units, that.units)
+                && Objects.equals(uncertaintyColumn, that.uncertaintyColumn)
+                && Objects.equals(uncertaintyDirective, that.uncertaintyDirective)
+                && Objects.equals(footnoteSpec, that.footnoteSpec);
     }
 
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(expTree, amIsotopicRatio, expressionName, units, uncertaintyColumn, amUncertaintyColumn, uncertaintyDirective, countOfSignificantDigits, visible, footnoteSpec);
+        result = 31 * result + Arrays.hashCode(columnHeaders);
+        return result;
+    }
 }
