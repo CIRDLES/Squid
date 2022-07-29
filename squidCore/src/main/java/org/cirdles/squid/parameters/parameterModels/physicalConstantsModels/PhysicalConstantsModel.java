@@ -158,7 +158,16 @@ public class PhysicalConstantsModel extends ParametersModel {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PhysicalConstantsModel that = (PhysicalConstantsModel) o;
+        return molarMasses.equals(that.molarMasses);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getMolarMasses());
+        return Objects.hash(super.hashCode(), molarMasses);
     }
 }

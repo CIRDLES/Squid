@@ -26,20 +26,16 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author James F. Bowring
  */
 public class CovarianceMatrixModel extends AbstractMatrixModel {
 
-    /**
-     *
-     */
+    private static final long serialVersionUID = -7441703773685119581L;
+
     public CovarianceMatrixModel() {
         super("Covariances");
     }
@@ -315,32 +311,6 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
     }
 
     /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        AbstractMatrixModel myMatrix = new CovarianceMatrixModel();
-
-        String[] rowNames = new String[]{"first", "second", "third", "fourth", "fifth"};
-        myMatrix.setRows(rowNames);
-        myMatrix.setCols(myMatrix.getRows());
-
-        ConcurrentMap<String, BigDecimal> varianceTerms = new ConcurrentHashMap<String, BigDecimal>();
-        varianceTerms.put("third", new BigDecimal(1));
-        varianceTerms.put("fourth", new BigDecimal(2));
-        varianceTerms.put("fifth", new BigDecimal(3));
-
-        Map<String, BigDecimal> coVariances = new HashMap<String, BigDecimal>();
-        coVariances.put("covThird__fourth", new BigDecimal(9));
-
-//        if (myMatrix.initializeMatrixModelWithVariances(varianceTerms)) {
-//            ((CovarianceMatrixModel)myMatrix).initializeCoVariances(coVariances);
-//            System.out.println(myMatrix.toStringWithLabels());
-//        }
-
-
-    }
-
-    /**
      * @param row
      * @param col
      * @param value
@@ -352,4 +322,17 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
             matrix.set(col, row, value);
         }
     }
+
+
+//    private void readObject ( ObjectInputStream stream ) throws IOException,
+//            ClassNotFoundException {
+//        stream.defaultReadObject();
+//
+//        ObjectStreamClass myObject = ObjectStreamClass.lookup(
+//                Class.forName( CovarianceMatrixModel.class.getCanonicalName()) );
+//        long theSUID = myObject.getSerialVersionUID();
+//
+//        System.out.println( "Customized De-serialization of CovarianceMatrixModel "
+//                + theSUID );
+//    }
 }

@@ -317,7 +317,7 @@ public final class WeightedMeanCalculators {
                 if (linReg) {
                     x2[j] = x1[j];
                 }
-            } else if (j < (n - 1)) {
+            } else if ((j < (n - 1)) && (m < n)) {
                 sigRho2[j][j] = sigRho1[m][m];
                 y2[j] = y1[m];
                 if (linReg) {

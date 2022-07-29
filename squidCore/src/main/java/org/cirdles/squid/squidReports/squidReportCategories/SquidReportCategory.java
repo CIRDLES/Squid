@@ -221,8 +221,15 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(getDisplayName(), getCategoryColumns(), isVisible());
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SquidReportCategory that = (SquidReportCategory) o;
+        return visible == that.visible && displayName.equals(that.displayName) && categoryColumns.equals(that.categoryColumns);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(displayName, categoryColumns, visible);
+    }
 }

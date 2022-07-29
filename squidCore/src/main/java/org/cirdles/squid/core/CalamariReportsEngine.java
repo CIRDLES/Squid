@@ -981,7 +981,7 @@ public class CalamariReportsEngine implements Serializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + baseReportTableName);
+        File reportTableFile = new File(reportsPath + baseReportTableName.replaceAll("/", ""));
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, true);
 
         return reportTableFile;
@@ -994,7 +994,7 @@ public class CalamariReportsEngine implements Serializable {
             //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
         }
 
-        File reportTableFile = new File(reportsPath + baseReportTableName);
+        File reportTableFile = new File(reportsPath + baseReportTableName.replaceAll(".", "").replaceAll("/", ""));
         ReportSerializerToCSV.writeSquid3CustomCSVReport(reportTableFile, report);
 
         return reportTableFile;

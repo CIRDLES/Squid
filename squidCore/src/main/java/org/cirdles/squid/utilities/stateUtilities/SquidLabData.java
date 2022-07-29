@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_LAB_DATA_SERIALIZED_NAME;
 import static org.cirdles.squid.constants.Squid3Constants.SQUID_USERS_DATA_FOLDER_NAME;
@@ -306,8 +307,16 @@ public class SquidLabData implements Serializable {
         return difference;
     }
 
+    @Override
     public boolean equals(Object o) {
         return o instanceof SquidLabData && this.compareTo(((SquidLabData) o)) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(referenceMaterials, physicalConstantsModels, commonPbModels, laboratoryName,
+                commonPbDefault, refMatDefault, refMatConcDefault, physConstDefault, version,
+                specialWMSortingReportTable, specialRMWMSortingReportTable, defaultReportTable, defaultReportTableRM);
     }
 
     /**
