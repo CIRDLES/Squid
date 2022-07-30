@@ -42,8 +42,6 @@ public class AboutSquidController {
     /**
      * Initializes the controller class.
      *
-     * @param url
-     * @param rb
      */
     @FXML
     // This method is called by the FXMLLoader when initialization is complete

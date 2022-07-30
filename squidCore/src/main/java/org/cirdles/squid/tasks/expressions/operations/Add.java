@@ -82,7 +82,7 @@ public class Add extends Operation {
     }
 
     /**
-     * @param rightET    the value of rightET
+     *
      * @param childrenET the value of childrenET
      * @return
      */

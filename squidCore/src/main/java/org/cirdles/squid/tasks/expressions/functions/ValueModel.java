@@ -85,7 +85,7 @@ public class ValueModel extends Function {
     }
 
     /**
-     * @param rightET    the value of rightET
+     *
      * @param childrenET the value of childrenET
      * @return
      */
