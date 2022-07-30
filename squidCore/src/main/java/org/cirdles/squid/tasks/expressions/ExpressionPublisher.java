@@ -1,6 +1,5 @@
 package org.cirdles.squid.tasks.expressions;
 
-import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import org.antlr.v4.misc.MutableInt;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.parameters.util.DateHelper;
@@ -17,9 +16,7 @@ import javax.xml.transform.stream.StreamSource;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.List;
 
 import static org.cirdles.squid.utilities.fileUtilities.CalamariFileUtilities.XSLTMLFolder;
@@ -223,13 +220,18 @@ public class ExpressionPublisher {
             string.append(getEndHTML());
 
             boolean worked;
+            PrintWriter writer = null;
             try {
-                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                writer = new PrintWriter(new FileOutputStream(file));
                 writer.write(string.toString());
                 writer.flush();
                 worked = true;
             } catch (IOException e) {
                 worked = false;
+            } finally {
+                if (writer != null){
+                    writer.close();
+                }
             }
             return worked;
         }
@@ -268,8 +270,8 @@ public class ExpressionPublisher {
                 + getExpressionFooterHTML(exp, project);
     }
 
-    public static boolean createHTMLDocumentFromExpression(File file, Expression exp, SquidProject project) {
-        return createHTMLDocumentFromExpression(file, exp, project, null);
+    public static void createHTMLDocumentFromExpression(File file, Expression exp, SquidProject project) {
+        createHTMLDocumentFromExpression(file, exp, project, null);
     }
 
     public static boolean createHTMLDocumentFromExpression(File file, Expression exp, SquidProject project, MutableInt width) {
@@ -309,71 +311,84 @@ public class ExpressionPublisher {
             string.append(getEndHTML());
 
             boolean worked;
+            PrintWriter writer = null;
             try {
-                PrintWriter writer = new PrintWriter(new FileOutputStream(file));
+                writer = new PrintWriter(new FileOutputStream(file));
                 writer.write(string.toString());
                 writer.flush();
                 worked = true;
             } catch (IOException e) {
                 worked = false;
+            } finally {
+                if (writer != null){
+                    writer.close();
+                }
             }
             return worked;
         }
         return false;
     }
 
-    public static boolean createPDFFromExpressions(File file, List<Expression> expressions) {
-        boolean retVal;
-        Integer[] widths = new Integer[expressions.size()];
+//    public static boolean createPDFFromExpressions(File file, List<Expression> expressions) throws IOException {
+//        boolean retVal;
+//        Integer[] widths = new Integer[expressions.size()];
+//
+//        File htmlFile = new File("ExpressionsHTMLToPDFConversionFile.html");
+//        retVal = createHTMLDocumentFromExpressions(htmlFile, expressions, null, widths);
+//
+//        if (retVal) {
+//            OutputStream os = null;
+//            try {
+//                os = new FileOutputStream(file);
+//                PdfRendererBuilder builder = new PdfRendererBuilder();
+//                double max = Collections.max(Arrays.asList(widths)) / IMAGE_DPI + .5;
+//                double width = (max > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH) ? max : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH;
+//                builder.useDefaultPageSize((float) width, PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
+//                builder.withFile(htmlFile);
+//                builder.toStream(os);
+//                builder.run();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }finally {
+//                if (os != null){
+//                    os.close();
+//                }
+//            }
+//        }
+//        htmlFile.delete();
+//
+//        return retVal;
+//    }
 
-        File htmlFile = new File("ExpressionsHTMLToPDFConversionFile.html");
-        retVal = createHTMLDocumentFromExpressions(htmlFile, expressions, null, widths);
-
-        if (retVal) {
-            try {
-                OutputStream os = new FileOutputStream(file);
-                PdfRendererBuilder builder = new PdfRendererBuilder();
-                double max = Collections.max(Arrays.asList(widths)) / IMAGE_DPI + .5;
-                double width = (max > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH) ? max : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH;
-                builder.useDefaultPageSize((float) width, PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
-                builder.withFile(htmlFile);
-                builder.toStream(os);
-                builder.run();
-                retVal = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        htmlFile.delete();
-
-        return retVal;
-    }
-
-    public static boolean createPDFFromExpression(File file, Expression exp) {
-        boolean retVal;
-        MutableInt width = new MutableInt(0);
-
-        File htmlFile = new File("ExpressionHTMLToPDFConversionFile.html");
-        retVal = createHTMLDocumentFromExpression(htmlFile, exp, null, width);
-
-        if (retVal) {
-            try {
-                OutputStream os = new FileOutputStream(file);
-                PdfRendererBuilder builder = new PdfRendererBuilder();
-                double actualWidth = width.v / IMAGE_DPI + .5;
-                builder.useDefaultPageSize((actualWidth > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH)
-                                ? (float) actualWidth : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
-                        PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
-                builder.withFile(htmlFile);
-                builder.toStream(os);
-                builder.run();
-                retVal = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        htmlFile.delete();
-        return retVal;
-    }
+//    public static boolean createPDFFromExpression(File file, Expression exp) throws IOException {
+//        boolean retVal;
+//        MutableInt width = new MutableInt(0);
+//
+//        File htmlFile = new File("ExpressionHTMLToPDFConversionFile.html");
+//        retVal = createHTMLDocumentFromExpression(htmlFile, exp, null, width);
+//
+//        if (retVal) {
+//            OutputStream os = null;
+//            try {
+//                os = new FileOutputStream(file);
+//                PdfRendererBuilder builder = new PdfRendererBuilder();
+//                double actualWidth = width.v / IMAGE_DPI + .5;
+//                builder.useDefaultPageSize((actualWidth > PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH)
+//                                ? (float) actualWidth : PdfRendererBuilder.PAGE_SIZE_LETTER_WIDTH,
+//                        PdfRendererBuilder.PAGE_SIZE_LETTER_HEIGHT, PdfRendererBuilder.PageSizeUnits.INCHES);
+//                builder.withFile(htmlFile);
+//                builder.toStream(os);
+//                builder.run();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (os != null){
+//                    os.close();
+//                }
+//            }
+//        }
+//        htmlFile.delete();
+//        return retVal;
+//    }
 
 }

@@ -274,54 +274,52 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
                 File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
                 File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
 
-                if (reportFileSVG != null) {
-                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
-                    boolean confirmedExists = false;
-                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                    if (reportFileSVG.exists()) {
-                        switch (osType) {
-                            case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
-                                    writeReport.setValue(false);
-                                }
-                                break;
-                            case MacOS:
-                            case Linux:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
-                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                                    alert.showAndWait().ifPresent(action -> {
-                                        if (action != ButtonType.OK) {
-                                            writeReport.setValue(false);
-                                        }
-                                    });
-                                    confirmedExists = true;
-                                }
-                                break;
-                        }
-                    }
-                    if (writeReport.getValue()) {
-                        if (reportFileSVG.exists()) {
-                            if (!confirmedExists) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                        "It appears that a weighted means report already exists. "
-                                                + "Would you like to overwrite it?");
+                BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                boolean confirmedExists = false;
+                OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                if (reportFileSVG.exists()) {
+                    switch (osType) {
+                        case Windows:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                writeReport.setValue(false);
+                            }
+                            break;
+                        case MacOS:
+                        case Linux:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
-                                    if (action.equals(ButtonType.CANCEL)) {
+                                    if (action != ButtonType.OK) {
                                         writeReport.setValue(false);
                                     }
                                 });
+                                confirmedExists = true;
                             }
+                            break;
+                    }
+                }
+                if (writeReport.getValue()) {
+                    if (reportFileSVG.exists()) {
+                        if (!confirmedExists) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                    "It appears that a weighted means report already exists. "
+                                            + "Would you like to overwrite it?");
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.showAndWait().ifPresent(action -> {
+                                if (action.equals(ButtonType.CANCEL)) {
+                                    writeReport.setValue(false);
+                                }
+                            });
                         }
-                        if (writeReport.getValue()) {
-                            myPlot.outputToSVG(reportFileSVG);
-                            myPlot.outputToPDF(reportFileSVG);
-                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
-                        }
+                    }
+                    if (writeReport.getValue()) {
+                        myPlot.outputToSVG(reportFileSVG);
+                        myPlot.outputToPDF(reportFileSVG);
+                        SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
                     }
                 }
             } catch (NoSuchFileException e) {

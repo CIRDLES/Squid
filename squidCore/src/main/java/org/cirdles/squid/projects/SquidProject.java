@@ -68,6 +68,9 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     private static final long serialVersionUID = 7099919411562934142L;
     public static transient boolean sampleNamingNotStandard = false;
     private static boolean projectChanged;
+    // issue #714
+    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
+    protected int commonLeadForUnknownsMethodSelected;
     private transient SquidPrefixTree prefixTree;
     private PrawnXMLFileHandler prawnFileHandler;
     private String projectName;
@@ -97,9 +100,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     private TaskTypeEnum projectType;
     // jan 2021 issue #547
     private List<Run> removedRuns;
-    // issue #714
-    // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
-    protected int commonLeadForUnknownsMethodSelected;
 
     /**
      * @param projectType the value of projectType
@@ -302,7 +302,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         return taskFromSquid25;
     }
 
-    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) throws SquidException {
+    public void replaceCurrentTaskWithImportedSquid25Task(File squidTaskFile) throws SquidException, IOException {
 
         TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(squidTaskFile);
 
@@ -638,36 +638,35 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         sb.append("Project Notes:\n").append("\t").append(projectNotes).append("\n");
 
         //parameters
-        sb.append("\nProject Parameters: ")
-                .append("\n")
-                .append("\tIon Counts Normalized for SBM: ")
-                .append(useSBM)
-                .append("\n")
-                .append("\tRatio Calculation Method: ")
-                .append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)"))
-                .append("\n")
-                .append("\tPreferred index isotope: ")
-                .append(task.getSelectedIndexIsotope().getName())
-                .append("\n")
-                .append("\tWeighted Means of RefMat:\n")
-                .append("\t\tAllow Squid3 to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots())
-                .append("\n")
-                .append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU())
-                .append("\n")
-                .append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh())
-                .append("\n")
-                .append("\tParameter Models:\n")
-                .append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion())
-                .append("\n")
-                .append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion())
-                .append("\n")
-                .append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion())
-                .append("\n")
-                .append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion())
-                .append("\n\n");
-
-
         if (task != null) {
+            sb.append("\nProject Parameters: ")
+                    .append("\n")
+                    .append("\tIon Counts Normalized for SBM: ")
+                    .append(useSBM)
+                    .append("\n")
+                    .append("\tRatio Calculation Method: ")
+                    .append((task.isUserLinFits() ? "Linear Regression to Burn Mid-Time" : "Spot Average (time-invariant)"))
+                    .append("\n")
+                    .append("\tPreferred index isotope: ")
+                    .append(task.getSelectedIndexIsotope().getName())
+                    .append("\n")
+                    .append("\tWeighted Means of RefMat:\n")
+                    .append("\t\tAllow Squid3 to Auto Reject Spots: ").append(task.isSquidAllowsAutoExclusionOfSpots())
+                    .append("\n")
+                    .append("\t\tMinimum external 1sigma % err for 206Pb/238U: ").append(task.getExtPErrU())
+                    .append("\n")
+                    .append("\t\tMinimum external 1sigma % err for 208Pb/232Th: ").append(task.getExtPErrTh())
+                    .append("\n")
+                    .append("\tParameter Models:\n")
+                    .append("\t\tDef Comm Pb: ").append(task.getCommonPbModel().getModelNameWithVersion())
+                    .append("\n")
+                    .append("\t\tPhys Const: ").append(task.getPhysicalConstantsModel().getModelNameWithVersion())
+                    .append("\n")
+                    .append("\t\tRef Mat: ").append(task.getReferenceMaterialModel().getModelNameWithVersion())
+                    .append("\n")
+                    .append("\t\tConc Ref Mat: ").append(task.getConcentrationReferenceMaterialModel().getModelNameWithVersion())
+                    .append("\n\n");
+
             sb.append(task.printTaskSummary());
         }
 
@@ -735,7 +734,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         Map<String, Integer> spotNameCountMap = new HashMap<>();
         for (int i = 0; i < runs.size(); i++) {
             String spotName = runs.get(i).getPar().get(0).getValue().trim();
-            if (spotName.isEmpty()){
+            if (spotName.isEmpty()) {
                 spotName = "NO.NAME";
                 runs.get(i).getPar().get(0).setValue(spotName);
             }
@@ -902,7 +901,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * the original.
      *
      * @param run
-     * @param useOriginalData, when true, the original unedited file is used,
+     * @param useOriginalData  when true, the original unedited file is used,
      *                         otherwise the edited file is used.
      * @return String [2] containing the file names of the two Prawn XML files
      * written as a result of the split.
@@ -937,36 +936,28 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         // keep first
         runs.clear();
         // preserve order
-        for (Run runF : first) {
-            runs.add(runF);
-        }
+        runs.addAll(first);
 
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[0]);
-        } catch (IOException | JAXBException Exception) {
+        } catch (IOException | JAXBException ignored) {
         }
 
         runs.clear();
         // preserve order
-        for (Run runS : second) {
-            runs.add(runS);
-        }
+        runs.addAll(second);
         prawnFile.setRuns((short) runs.size());
         try {
             prawnFileHandler.writeRawDataFileAsXML(prawnFile, retVal[1]);
-        } catch (IOException | JAXBException Exception) {
+        } catch (IOException | JAXBException ignored) {
         }
 
         // restore list
         runs.clear();
         // preserve order
-        for (Run runF : first) {
-            runs.add(runF);
-        }
-        for (Run runS : second) {
-            runs.add(runS);
-        }
+        runs.addAll(first);
+        runs.addAll(second);
         prawnFile.setRuns((short) runs.size());
 
         return retVal;
@@ -1219,7 +1210,6 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
     @Override
     public ParametersModel getPhysicalConstantsModel() throws SquidException {
         if (physicalConstantsModel == null) {
-            physicalConstantsModel = task.getPhysicalConstantsModel();
             //backwards compatible
             if (task != null) {
                 physicalConstantsModel = task.getPhysicalConstantsModel();

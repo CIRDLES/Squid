@@ -40,7 +40,6 @@ import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
-import static java.util.Arrays.asList;
 import static org.cirdles.squid.constants.Squid3Constants.DEFAULT_PRAWNFILE_NAME;
 import static org.cirdles.squid.squidReports.squidWeightedMeanReports.SquidWeightedMeanReportEngine.makeWeightedMeanReportHeaderAsCSV;
 import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.squid3RoundedToSize;
@@ -52,7 +51,7 @@ public class CalamariReportsEngine implements Serializable {
 
     private static final long serialVersionUID = 9086141392949762545L;
 
-    private SquidProject squidProject;
+    private final SquidProject squidProject;
 
     private String folderToWriteCalamariReportsPath;
     private String reportParameterValues;
@@ -285,7 +284,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(ionIntegrations_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
+                Files.write(ionIntegrations_PerScan.toPath(), Collections.singletonList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -334,7 +333,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(sBMIntegrations_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
+                Files.write(sBMIntegrations_PerScan.toPath(), Collections.singletonList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -396,7 +395,7 @@ public class CalamariReportsEngine implements Serializable {
             }
 
             if (doWriteReportFiles) {
-                Files.write(totalCounts_IonsAndSBM_PerScan.toPath(), asList(dataLine), UTF_8, APPEND);
+                Files.write(totalCounts_IonsAndSBM_PerScan.toPath(), Collections.singletonList(dataLine), UTF_8, APPEND);
             }
         }
     }
@@ -435,9 +434,9 @@ public class CalamariReportsEngine implements Serializable {
 
         double[] totalCps = shrimpFraction.getTotalCps();
 
-        for (int i = 0; i < totalCps.length; i++) {
+        for (double totalCp : totalCps) {
             //rounding was done to saved values per Bodorkos April 2017
-            dataLine.append(", ").append(totalCps[i]);
+            dataLine.append(", ").append(totalCp);
         }
 
         dataLine.append("\n");
@@ -459,7 +458,7 @@ public class CalamariReportsEngine implements Serializable {
         int nDodCount = 0;
         try {
             nDodCount = shrimpFraction.getIsotopicRatiosII().iterator().next().getRatEqTime().size();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         for (int nDodNum = 0; nDodNum < nDodCount; nDodNum++) {
@@ -478,9 +477,7 @@ public class CalamariReportsEngine implements Serializable {
                         .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
             }
 
-            Iterator<SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
-            while (squidRatiosIterator.hasNext()) {
-                SquidRatiosModel isotopeRatioModel = squidRatiosIterator.next();
+            for (SquidRatiosModel isotopeRatioModel : shrimpFraction.getIsotopicRatiosII()) {
                 if (isotopeRatioModel.isActive()) {
                     if (doWriteReportFiles) {
                         // July 2016 case of less than nDodCount = rare
@@ -574,9 +571,7 @@ public class CalamariReportsEngine implements Serializable {
                     .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
         }
 
-        Iterator<SquidRatiosModel> squidRatiosIterator = shrimpFraction.getIsotopicRatiosII().iterator();
-        while (squidRatiosIterator.hasNext()) {
-            SquidRatiosModel isotopeRatioModel = squidRatiosIterator.next();
+        for (SquidRatiosModel isotopeRatioModel : shrimpFraction.getIsotopicRatiosII()) {
             if (isotopeRatioModel.isActive()) {
                 // April 2017 rounding was performed on calculated numbers
                 if (doWriteReportFiles) {
@@ -931,7 +926,7 @@ public class CalamariReportsEngine implements Serializable {
     public static String getFormattedDate(long milliseconds) {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTimeInMillis(milliseconds);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         return dateFormat.format(calendar.getTime());
     }
@@ -977,9 +972,7 @@ public class CalamariReportsEngine implements Serializable {
     public File writeReportTableFiles(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
+        reportsFolder.mkdirs();//throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
 
         File reportTableFile = new File(reportsPath + baseReportTableName.replaceAll("/", ""));
         ReportSerializerToCSV.writeCSVReport(false, reportTableFile, report, true);
@@ -990,9 +983,7 @@ public class CalamariReportsEngine implements Serializable {
     public File writeReportTableFilesPerSquid3(String[][] report, String baseReportTableName) throws IOException {
         String reportsPath = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
+        reportsFolder.mkdirs();//throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
 
         File reportTableFile = new File(reportsPath + baseReportTableName.replaceAll(".", "").replaceAll("/", ""));
         ReportSerializerToCSV.writeSquid3CustomCSVReport(reportTableFile, report);
@@ -1147,19 +1138,15 @@ public class CalamariReportsEngine implements Serializable {
         String reportsPath
                 = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-        }
-        File reportFile = new File(reportsPath + baseSummaryCalcName);
-        return reportFile;
+        reportsFolder.mkdirs();
+        return new File(reportsPath + baseSummaryCalcName);
     }
 
     public File writeTaskAudit() throws IOException {
         String reportsPath
                 = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
+        reportsFolder.mkdirs();//throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
 
         File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_TaskAudit.txt");
 
@@ -1175,9 +1162,7 @@ public class CalamariReportsEngine implements Serializable {
         String reportsPath
                 = makeReportFolderStructure();
         File reportsFolder = new File(reportsPath);
-        if (!reportsFolder.mkdirs()) {
-            //throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
-        }
+        reportsFolder.mkdirs();//throw new IOException("Failed to delete reports folder '" + reportsPath + "'");
 
         File reportTableFile = new File(reportsPath + squidProject.getProjectName().replaceAll("\\s", "_") + "_ProjectAndTaskAudit.txt");
 

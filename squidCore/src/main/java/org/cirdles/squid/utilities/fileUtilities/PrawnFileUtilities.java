@@ -15,6 +15,8 @@
  */
 package org.cirdles.squid.utilities.fileUtilities;
 
+import com.google.re2j.Matcher;
+import com.google.re2j.Pattern;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.prawn.PrawnFile.Run;
 import org.cirdles.squid.prawn.PrawnFile.Run.RunTable.Entry;
@@ -30,8 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 /**
  * @author James F. Bowring
@@ -76,7 +77,7 @@ public final class PrawnFileUtilities {
                 double centeringTimeSec = Double.parseDouble(entry.getPar().get(7).getValue());
                 String isotopeLabel = new BigDecimal(atomicMassUnit).setScale(5, RoundingMode.HALF_UP).toPlainString();
 
-                // upated July 2020
+                // updated July 2020
                 Pattern pattern = Pattern.compile("^(\\d\\d)?(\\d)?(\\D+\\d?\\D?)*(\\d\\d\\d)?$", Pattern.CASE_INSENSITIVE);
                 Matcher matcher = pattern.matcher(massStationLabel);
                 String elementLabel = massStationLabel;
@@ -140,10 +141,6 @@ public final class PrawnFileUtilities {
             if (detectedMassStationCountAnomaly) {
                 throw new SquidException("Squid3 has detected that there are different mass station counts among the spot analyses.\n"
                         + "Please edit your data file to fix this issue.");
-//                SquidMessageDialog.showWarningDialog(
-//                        "Squid3 has detected that there are different mass station counts among the spot analyses.\n"
-//                                + "Please edit your data file to fix this issue.",
-//                        null);
             }
         }
         return mapOfIndexToMassStationDetails;

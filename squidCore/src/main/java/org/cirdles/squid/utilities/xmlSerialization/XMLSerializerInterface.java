@@ -20,6 +20,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
@@ -44,7 +45,7 @@ public interface XMLSerializerInterface {
             String xml = xstream.toXML(this).trim();
             xml = customizeXML(xml).trim();
 
-            outFile = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
+            outFile = new OutputStreamWriter(new FileOutputStream(filename), StandardCharsets.UTF_8);
             try (PrintWriter out = new PrintWriter(outFile)) {
                 // Write xml to file
                 out.println(xml);
@@ -74,7 +75,7 @@ public interface XMLSerializerInterface {
 
         try {
             InputStream bis = new ByteArrayInputStream(Files.readAllBytes(Paths.get(filename)));
-            Reader reader = new InputStreamReader(bis, "UTF-8");
+            Reader reader = new InputStreamReader(bis, StandardCharsets.UTF_8);
 
             XStream xstream = new XStream(new DomDriver());
             xstream.addPermission(AnyTypePermission.ANY);

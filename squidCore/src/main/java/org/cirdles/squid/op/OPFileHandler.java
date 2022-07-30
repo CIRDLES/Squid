@@ -8,6 +8,7 @@ import org.cirdles.squid.prawn.SetParameterNames;
 import org.cirdles.squid.shrimp.ShrimpDataFileInterface;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
@@ -34,10 +35,9 @@ public class OPFileHandler {
     private static final String[] massStationAMUsELEVEN
             = new String[]{"190", "195.8", "195.9", "204", "204.1", "206", "207", "208", "238", "248", "254"};
 
-    public ShrimpDataFileInterface convertOPFileToPrawnFile(File opFile) {
+    public ShrimpDataFileInterface convertOPFileToPrawnFile(File opFile) throws FileNotFoundException {
         List<OPFraction> opFractions = OPFileRunFractionParser.parseOPFile(opFile);
-        ShrimpDataFileInterface prawnFile = convertOPFilesToPrawnFile(opFractions);
-        return prawnFile;
+        return convertOPFilesToPrawnFile(opFractions);
     }
 
     private ShrimpDataFileInterface convertOPFilesToPrawnFile(List<OPFraction> opFractions) {

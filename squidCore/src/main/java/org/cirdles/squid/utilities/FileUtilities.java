@@ -102,5 +102,6 @@ public class FileUtilities {
                 }
             }
         }
+        zipFile.close();
     }
 }

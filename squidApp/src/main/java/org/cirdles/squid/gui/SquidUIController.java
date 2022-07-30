@@ -1960,18 +1960,16 @@ public class SquidUIController implements Initializable {
     private void openDemoSquiProjectAction(ActionEvent event) {
         try {
             openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
-        } catch (IOException | SquidException iOException) {
+        } catch (IOException | SquidException ignored) {
         }
     }
 
     // Task actions ************************************************************
     @FXML
     private void browseSquidTasksLibrary(ActionEvent event) throws SquidException {
-        if (SQUID_TASK_LIBRARY_FOLDER != null) {
-            TaskFolderBrowserController.tasksBrowserTarget = SQUID_TASK_LIBRARY_FOLDER;
-            TaskFolderBrowserController.tasksBrowserType = ".xml";
-            launchTaskFolderBrowser();
-        }
+        TaskFolderBrowserController.tasksBrowserTarget = SQUID_TASK_LIBRARY_FOLDER;
+        TaskFolderBrowserController.tasksBrowserType = ".xml";
+        launchTaskFolderBrowser();
     }
 
     @FXML

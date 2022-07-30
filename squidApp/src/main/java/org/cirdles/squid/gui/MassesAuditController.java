@@ -448,7 +448,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
     private void produceMassModeGraphOnScrolledPane(int massCounter, String title, List<Double> data, MassStationDetail entry) throws SquidException {
         // plot legend
-        AbstractDataView legendCanvas
+        SpeciesAMUAuditViewForShrimp legendCanvas
                 = new SpeciesAMUAuditViewForShrimp(new Rectangle(0, (massCounter * heightOfMassPlot) + 25, LEGEND_WIDTH, heightOfMassPlot),
                 title,
                 data,
@@ -501,7 +501,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     showSpotLabels,
                     this,
                     -1,
-                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), legendCanvas.getPlottedMean());
 
             graphsBox.getChildren().add(leadingCanvas);
             leadingGraphs.add(leadingCanvas);
@@ -526,7 +526,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                 showSpotLabels,
                 this,
                 0,
-                legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+                legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), legendCanvas.getPlottedMean());
 
         graphsBox.getChildren().add(zoomedCanvas);
         zoomingGraphs.add(zoomedCanvas);
@@ -551,7 +551,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
                     showSpotLabels,
                     this,
                     1,
-                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), ((SpeciesAMUAuditViewForShrimp) legendCanvas).getPlottedMean());
+                    legendCanvas.getMinY_Display(), legendCanvas.getMaxY_Display(), legendCanvas.getPlottedMean());
 
             graphsBox.getChildren().add(trailingCanvas);
             trailingGraphs.add(trailingCanvas);
@@ -566,7 +566,9 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
 
         if (spotsCanvas instanceof SpeciesCountsAuditViewForShrimp) {
             ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCounts(data.subList(startIndex, endIndex));
-            ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCountsSBM(dataII.subList(startIndex, endIndex));
+            if (dataII != null) {
+                ((SpeciesCountsAuditViewForShrimp) spotsCanvas).setTotalCountsSBM(dataII.subList(startIndex, endIndex));
+            }
         } else {
             spotsCanvas.setMeasuredTrimMasses(data.subList(startIndex, endIndex));
         }

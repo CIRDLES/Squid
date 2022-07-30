@@ -39,6 +39,10 @@ dependencies {
 
     implementation 'com.github.opencollab.jlatexmath:jlatexmath:1.0.7'
     implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '1.0.10'
+
+    // https://mvnrepository.com/artifact/com.google.re2j/re2j
+    implementation("com.google.re2j:re2j:1.7")
+
 }
 
 sourceSets {

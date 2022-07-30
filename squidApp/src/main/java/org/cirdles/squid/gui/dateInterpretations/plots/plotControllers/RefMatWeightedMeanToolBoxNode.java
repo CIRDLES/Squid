@@ -107,17 +107,18 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
 
-        categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
-        categorySortComboBox.getSelectionModel().selectFirst();
-        expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
+        if (squidWeightedMeansPlotSortTable != null) {
+            categorySortComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
+            categorySortComboBox.getSelectionModel().selectFirst();
+            expressionSortComboBox.setItems(FXCollections.observableArrayList(categorySortComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
 
-        categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
-        //Category Housekeeping : No Time, Ages is first
-        categoryComboBox.getItems().remove(0);
-        categoryComboBox.getSelectionModel().selectFirst();
-        expressionComboBox.setItems(FXCollections.observableArrayList(
-                categoryComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
-
+            categoryComboBox.setItems(FXCollections.observableArrayList(squidWeightedMeansPlotSortTable.getReportCategories()));
+            //Category Housekeeping : No Time, Ages is first
+            categoryComboBox.getItems().remove(0);
+            categoryComboBox.getSelectionModel().selectFirst();
+            expressionComboBox.setItems(FXCollections.observableArrayList(
+                    categoryComboBox.getSelectionModel().getSelectedItem().getCategoryColumnsSorted()));
+        }
     }
 
     private void initNode() throws SquidException {
@@ -323,7 +324,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         expressionComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
-                if (newValue != null) {
+                if ((newValue != null) && (sampleNode != null)) {
                     PlotsController.spotsTreeViewCheckBox.setRoot(sampleItem);
                     String selectedExpression = newValue.getExpressionName();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
@@ -373,13 +374,11 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
                     }
 
                     // sort by selected sort expression
-                    if (sampleNode != null) {
-                        String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
-                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
-                        refreshSampleCheckboxSelectionStatus(sampleNode.getSpotSummaryDetailsWM());
-                        sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
-                        plotsController.refreshPlot();
-                    }
+                    String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
+                    sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
+                    refreshSampleCheckboxSelectionStatus(sampleNode.getSpotSummaryDetailsWM());
+                    sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
+                    plotsController.refreshPlot();
                 }
             }
         });
@@ -649,54 +648,52 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
             try {
                 File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
                 File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
-                if (reportFileSVG != null) {
-                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
-                    boolean confirmedExists = false;
-                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                    if (reportFileSVG.exists()) {
-                        switch (osType) {
-                            case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
-                                    writeReport.setValue(false);
-                                }
-                                break;
-                            case MacOS:
-                            case Linux:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
-                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                                    alert.showAndWait().ifPresent(action -> {
-                                        if (action != ButtonType.OK) {
-                                            writeReport.setValue(false);
-                                        }
-                                    });
-                                    confirmedExists = true;
-                                }
-                                break;
-                        }
-                    }
-                    if (writeReport.getValue()) {
-                        if (reportFileSVG.exists()) {
-                            if (!confirmedExists) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                        "It appears that a weighted means report already exists. "
-                                                + "Would you like to overwrite it?");
+                BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                boolean confirmedExists = false;
+                OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                if (reportFileSVG.exists()) {
+                    switch (osType) {
+                        case Windows:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                writeReport.setValue(false);
+                            }
+                            break;
+                        case MacOS:
+                        case Linux:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
-                                    if (action.equals(ButtonType.CANCEL)) {
+                                    if (action != ButtonType.OK) {
                                         writeReport.setValue(false);
                                     }
                                 });
+                                confirmedExists = true;
                             }
+                            break;
+                    }
+                }
+                if (writeReport.getValue()) {
+                    if (reportFileSVG.exists()) {
+                        if (!confirmedExists) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                    "It appears that a weighted means report already exists. "
+                                            + "Would you like to overwrite it?");
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.showAndWait().ifPresent(action -> {
+                                if (action.equals(ButtonType.CANCEL)) {
+                                    writeReport.setValue(false);
+                                }
+                            });
                         }
-                        if (writeReport.getValue()) {
-                            myPlot.outputToSVG(reportFileSVG);
-                            myPlot.outputToPDF(reportFileSVG);
-                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
-                        }
+                    }
+                    if (writeReport.getValue()) {
+                        myPlot.outputToSVG(reportFileSVG);
+                        myPlot.outputToPDF(reportFileSVG);
+                        SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
                     }
                 }
             } catch (NoSuchFileException e) {

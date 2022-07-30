@@ -235,11 +235,9 @@ public class SpeciesAMUAuditViewForShrimp extends AbstractDataView implements Sp
             }
 
             // handle case of last age
-            if (index == -1) {
-                if ((StrictMath.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
-                    index = myOnPeakNormalizedAquireTimes.length - 1;
-                    break;
-                }
+            if ((StrictMath.abs(convertedX - myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1]) < 0.25)) {
+                index = myOnPeakNormalizedAquireTimes.length - 1;
+                break;
             }
         }
 
