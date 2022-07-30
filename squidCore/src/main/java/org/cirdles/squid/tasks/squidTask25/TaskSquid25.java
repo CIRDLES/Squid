@@ -33,7 +33,6 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 public class TaskSquid25 implements Serializable {
 
     private static final long serialVersionUID = -2805382700088270719L;
-    private static TaskSquid25 taskSquid25;
     private String squidVersion;
     private String squidTaskFileName;
     private TaskTypeEnum taskType;
@@ -46,19 +45,19 @@ public class TaskSquid25 implements Serializable {
     private String backgroundMass;
     private String parentNuclide;
     private boolean directAltPD;
-    private String primaryParentElement;
     private List<TaskSquid25Equation> task25Equations;
     private List<String> constantNames;
     private List<String> constantValues;
     private Map<String, String> specialSquidFourExpressionsMap;
 
-    public static TaskSquid25 importSquidTaskFile(File squidTaskFile) {
+    public static TaskSquid25 importSquidTaskFile(File squidTaskFile) throws IOException {
 
-        taskSquid25 = null;
+        TaskSquid25 taskSquid25 = null;
 
+        InputStream inputStream = null;
         try {
-            InputStream inp = new FileInputStream(squidTaskFile);
-            HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(inp));
+            inputStream = new FileInputStream(squidTaskFile);
+            HSSFWorkbook wb = new HSSFWorkbook(new POIFSFileSystem(inputStream));
             ExcelExtractor extractor = new org.apache.poi.hssf.extractor.ExcelExtractor(wb);
 
             extractor.setFormulasNotResults(true);
@@ -87,11 +86,9 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.labName = lines[firstRow + 7].split("\t")[1];
 
                 String[] nominalMasses = lines[firstRow + 13].split("\t");
-                int countOfMasses = Integer.valueOf(nominalMasses[1]);
+                int countOfMasses = Integer.parseInt(nominalMasses[1]);
                 taskSquid25.nominalMasses = new ArrayList<>();
-                for (int i = 0; i < countOfMasses; i++) {
-                    taskSquid25.nominalMasses.add(nominalMasses[i + 2]);
-                }
+                taskSquid25.nominalMasses.addAll(Arrays.asList(nominalMasses).subList(2, countOfMasses + 2));
 
                 // July 2018
                 // decrement first row to handle missing line for Hidden Masses in Squid 2.20
@@ -105,11 +102,9 @@ public class TaskSquid25 implements Serializable {
                     firstRow++;
                     ratioStrings = lines[firstRow + 15].split("\t");
                 }
-                int countOfRatios = Integer.valueOf(ratioStrings[1]);
+                int countOfRatios = Integer.parseInt(ratioStrings[1]);
                 taskSquid25.ratioNames = new ArrayList<>();
-                for (int i = 0; i < countOfRatios; i++) {
-                    taskSquid25.ratioNames.add(ratioStrings[i + 2]);
-                }
+                taskSquid25.ratioNames.addAll(Arrays.asList(ratioStrings).subList(2, countOfRatios + 2));
 
                 String[] backgroundStrings = lines[firstRow + 19].split("\t");
                 taskSquid25.backgroundMass = backgroundStrings[1];
@@ -118,7 +113,7 @@ public class TaskSquid25 implements Serializable {
                 taskSquid25.parentNuclide = parentNuclideStrings[1];
 
                 String[] directAltPDStrings = lines[firstRow + 21].split("\t");
-                taskSquid25.directAltPD = Boolean.valueOf(directAltPDStrings[1]);
+                taskSquid25.directAltPD = Boolean.parseBoolean(directAltPDStrings[1]);
 
                 taskSquid25.task25Equations = new ArrayList<>();
 
@@ -157,7 +152,7 @@ public class TaskSquid25 implements Serializable {
                 }
 
                 String[] equations = lines[firstRow + 26].split("\t");
-                int countOfEquations = Integer.valueOf(equations[1]);
+                int countOfEquations = Integer.parseInt(equations[1]);
 
                 String[] equationNames = lines[firstRow + 27].split("\t");
 
@@ -182,7 +177,7 @@ public class TaskSquid25 implements Serializable {
 
                 int countOfConstants = 0;
                 if (constantNamesSource.length > 1) {
-                    countOfConstants = Integer.valueOf(constantNamesSource[1]);
+                    countOfConstants = Integer.parseInt(constantNamesSource[1]);
                 }
 
                 for (int i = 0; i < countOfConstants; i++) {
@@ -220,7 +215,11 @@ public class TaskSquid25 implements Serializable {
                     }
                 }
             }
-        } catch (IOException iOException) {
+        } catch (IOException ignored) {
+        } finally {
+            if (inputStream != null){
+                inputStream.close();
+            }
         }
 
         return taskSquid25;
@@ -534,13 +533,6 @@ public class TaskSquid25 implements Serializable {
      */
     public boolean isDirectAltPD() {
         return directAltPD;
-    }
-
-    /**
-     * @return
-     */
-    public String getPrimaryParentElement() {
-        return primaryParentElement;
     }
 
     /**

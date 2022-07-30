@@ -33,13 +33,13 @@ import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.TextAlignment;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.dataViews.SampleNode;
 import org.cirdles.squid.gui.dataViews.SampleTreeNodeInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.PlotDisplayInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.PlotRefreshInterface;
 import org.cirdles.squid.gui.dateInterpretations.plots.squid.WeightedMeanPlot;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
 import org.cirdles.squid.squidReports.squidReportCategories.SquidReportCategoryInterface;
 import org.cirdles.squid.squidReports.squidReportColumns.SquidReportColumnInterface;
@@ -163,7 +163,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         sampleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 displaySample(newValue);
-            } catch (SquidException squidException) {
+            } catch (SquidException ignored) {
             }
         });
 
@@ -223,9 +223,9 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         PlotsController.spotsTreeViewCheckBox.setShowRoot(true);
         PlotsController.currentlyPlottedSampleTreeNode = sampleItem;
 
-        for (int i = 0; i < fractionNodesWM.size(); i++) {
+        for (SampleTreeNodeInterface sampleTreeNodeInterface : fractionNodesWM) {
             final CheckBoxTreeItem<SampleTreeNodeInterface> checkBoxTreeItemWM
-                    = new CheckBoxTreeItem<>(fractionNodesWM.get(i));
+                    = new CheckBoxTreeItem<>(sampleTreeNodeInterface);
             sampleItem.getChildren().add(checkBoxTreeItemWM);
 
             checkBoxTreeItemWM.setSelected(!spotSummaryDetailsWM
@@ -239,7 +239,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                         .getIndexOfSpot(), !newChoice);
                 try {
                     spotSummaryDetailsCB.setValues(spotSummaryDetailsCB.eval(squidProject.getTask()));
-                } catch (SquidException squidException) {
+                } catch (SquidException ignored) {
                 }
 
                 plotsController.refreshPlot();
@@ -332,7 +332,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         expressionComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SquidReportColumnInterface>() {
             @Override
             public void changed(ObservableValue<? extends SquidReportColumnInterface> observable, SquidReportColumnInterface oldValue, SquidReportColumnInterface newValue) {
-                if (newValue != null) {
+                if ((newValue != null) && (sampleNode != null)) {
                     PlotsController.spotsTreeViewCheckBox.setRoot(sampleItem);
                     String selectedExpression = newValue.getExpressionName();
                     if (categoryComboBox.getSelectionModel().getSelectedItem().getDisplayName().compareToIgnoreCase("AGES") == 0) {
@@ -405,12 +405,10 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                     }
 
                     // sort by selected sort expression
-                    if (sampleNode != null) {
-                        String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
-                        sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
-                        sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
-                        plotsController.refreshPlot();
-                    }
+                    String selectedSortExpression = expressionSortComboBox.getSelectionModel().getSelectedItem().getExpressionName();
+                    sampleNode.getSpotSummaryDetailsWM().setSelectedExpressionName(selectedSortExpression);
+                    sortFractionCheckboxesByValue(sampleNode.getSpotSummaryDetailsWM());
+                    plotsController.refreshPlot();
                 }
             }
         });
@@ -770,54 +768,52 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
             try {
                 File reportFileSVG = squidProject.getPrawnFileHandler().getReportsEngine().getWeightedMeansReportFile(reportFileNameSVG);
                 File reportFilePDF = new File(reportFileSVG.getCanonicalPath().replaceFirst("svg", "pdf"));
-                if (reportFileSVG != null) {
-                    BooleanProperty writeReport = new SimpleBooleanProperty(true);
-                    boolean confirmedExists = false;
-                    OsCheck.OSType osType = OsCheck.getOperatingSystemType();
-                    if (reportFileSVG.exists()) {
-                        switch (osType) {
-                            case Windows:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
-                                    writeReport.setValue(false);
-                                }
-                                break;
-                            case MacOS:
-                            case Linux:
-                                if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
-                                        !FileUtilities.isFileClosedWindows(reportFilePDF)) {
-                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
-                                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                                    alert.showAndWait().ifPresent(action -> {
-                                        if (action != ButtonType.OK) {
-                                            writeReport.setValue(false);
-                                        }
-                                    });
-                                    confirmedExists = true;
-                                }
-                                break;
-                        }
-                    }
-                    if (writeReport.getValue()) {
-                        if (reportFileSVG.exists()) {
-                            if (!confirmedExists) {
-                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                        "It appears that a weighted means report already exists. "
-                                                + "Would you like to overwrite it?");
+                BooleanProperty writeReport = new SimpleBooleanProperty(true);
+                boolean confirmedExists = false;
+                OsCheck.OSType osType = OsCheck.getOperatingSystemType();
+                if (reportFileSVG.exists()) {
+                    switch (osType) {
+                        case Windows:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                SquidMessageDialog.showWarningDialog("Please close the file in other applications and try again.", primaryStageWindow);
+                                writeReport.setValue(false);
+                            }
+                            break;
+                        case MacOS:
+                        case Linux:
+                            if (!FileUtilities.isFileClosedWindows(reportFileSVG) &&
+                                    !FileUtilities.isFileClosedWindows(reportFilePDF)) {
+                                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The report file seems to be open in another application. Do you wish to continue?");
                                 alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                                 alert.showAndWait().ifPresent(action -> {
-                                    if (action.equals(ButtonType.CANCEL)) {
+                                    if (action != ButtonType.OK) {
                                         writeReport.setValue(false);
                                     }
                                 });
+                                confirmedExists = true;
                             }
+                            break;
+                    }
+                }
+                if (writeReport.getValue()) {
+                    if (reportFileSVG.exists()) {
+                        if (!confirmedExists) {
+                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                    "It appears that a weighted means report already exists. "
+                                            + "Would you like to overwrite it?");
+                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                            alert.showAndWait().ifPresent(action -> {
+                                if (action.equals(ButtonType.CANCEL)) {
+                                    writeReport.setValue(false);
+                                }
+                            });
                         }
-                        if (writeReport.getValue()) {
-                            myPlot.outputToSVG(reportFileSVG);
-                            myPlot.outputToPDF(reportFileSVG);
-                            SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
-                        }
+                    }
+                    if (writeReport.getValue()) {
+                        myPlot.outputToSVG(reportFileSVG);
+                        myPlot.outputToPDF(reportFileSVG);
+                        SquidMessageDialog.showSavedAsDialog(reportFileSVG, primaryStageWindow);
                     }
                 }
             } catch (NoSuchFileException e) {

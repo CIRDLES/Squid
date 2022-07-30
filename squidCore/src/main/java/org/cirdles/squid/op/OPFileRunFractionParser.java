@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OPFileRunFractionParser {
-    public static List<OPFraction> parseOPFile(File file) {
+    public static List<OPFraction> parseOPFile(File file)  {
         List<OPFraction> opList = new ArrayList<>();
+        Scanner scanner = null;
         try {
             InputStreamReader fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-            Scanner scanner = new Scanner(fis);
+            scanner = new Scanner(fis);
 
             while (scanner.hasNextLine()) {
 
@@ -100,8 +101,11 @@ public class OPFileRunFractionParser {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (scanner != null){
+                scanner.close();
+            }
         }
 
         return opList;

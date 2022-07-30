@@ -193,10 +193,21 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SpotSummaryDetails that = (SpotSummaryDetails) o;
+        return manualRejectionEnabled == that.manualRejectionEnabled && Double.compare(that.minProbabilityWM, minProbabilityWM) == 0
+                && Arrays.equals(values, that.values) && selectedSpots.equals(that.selectedSpots)
+                && expressionTree.equals(that.expressionTree) && Arrays.equals(rejectedIndices, that.rejectedIndices)
+                && selectedExpressionName.equals(that.selectedExpressionName);
+    }
+
+    @Override
     public int hashCode() {
-        int result = Objects.hash(getSelectedSpots(), getExpressionTree(), isManualRejectionEnabled(), getMinProbabilityWM(), getSelectedExpressionName());
-        result = 31 * result + Arrays.hashCode(getValues());
-        result = 31 * result + Arrays.hashCode(getRejectedIndices());
+        int result = Objects.hash(selectedSpots, expressionTree, manualRejectionEnabled, minProbabilityWM, selectedExpressionName);
+        result = 31 * result + Arrays.hashCode(values);
+        result = 31 * result + Arrays.hashCode(rejectedIndices);
         return result;
     }
 }

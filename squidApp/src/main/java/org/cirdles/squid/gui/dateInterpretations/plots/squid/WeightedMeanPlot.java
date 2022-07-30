@@ -78,7 +78,6 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
     private String plotTitle = "NONE";
     private SpotSummaryDetails spotSummaryDetails;
     private List<ShrimpFractionExpressionInterface> shrimpFractions;
-    private List<ShrimpFractionExpressionInterface> storedShrimpFractions;
     private List<Double> agesOrValues;
     private List<Double> agesOrValuesTwoSigma;
     private List<Double> hours;
@@ -131,7 +130,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     setGraphWidth((int) width - 2 * leftMargin);
                     try {
                         displayPlotAsNode();
-                    } catch (SquidException squidException) {
+                    } catch (SquidException ignored) {
                     }
                 }
             }
@@ -146,7 +145,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     graphHeight = (int) height - topMargin - topMargin / 2;
                     try {
                         displayPlotAsNode();
-                    } catch (SquidException squidException) {
+                    } catch (SquidException ignored) {
                     }
                 }
             }
@@ -160,7 +159,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString()
                     + " ±" + new BigDecimal(twoSigmaUncert)
                     .movePointLeft(6).setScale(2, RoundingMode.HALF_UP).toEngineeringString() + "Ma ";
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return retVal;
     }
@@ -169,7 +168,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         Formatter formatter = new Formatter();
         formatter.format("%3.2E", value);
         if (twoSigmaUncert > 0.0) {
-            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert).toString();
+            formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.2E", twoSigmaUncert);//.toString();
         }
         return formatter + " ";
     }
@@ -209,7 +208,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             selectedSpot = shrimpFractions.get(indexOfSelectedSpot);
         }
 
-        storedShrimpFractions = spotSummaryDetails.getSelectedSpots();
+        List<ShrimpFractionExpressionInterface> storedShrimpFractions = spotSummaryDetails.getSelectedSpots();
         shrimpFractions = new ArrayList<>();
 
         boolean[] storedRejectedIndices = spotSummaryDetails.getRejectedIndices();
@@ -217,11 +216,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         boolean retVal = storedShrimpFractions.size() > 0;
         if (retVal) {
-            for (ShrimpFractionExpressionInterface sf : storedShrimpFractions) {
-                shrimpFractions.add(sf);
-            }
+            shrimpFractions.addAll(storedShrimpFractions);
 
-            Collections.sort(shrimpFractions, (ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
+            shrimpFractions.sort((ShrimpFractionExpressionInterface fraction1, ShrimpFractionExpressionInterface fraction2) -> {
                 double valueFromNode1 = 0.0;
                 double valueFromNode2 = 0.0;
 
@@ -375,17 +372,17 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
-                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
-                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[2], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
             }
             text.setText("err 95");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.fillText(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
-                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
-                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.fillText(squid3RoundedToSize(weightedMeanStats[3], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             }
             text.setText("MSWD");
@@ -503,7 +500,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             g2d.strokeLine(
                     mapX(minX), mapY(weightedMeanStats[0]), mapX(maxX), mapY(weightedMeanStats[0]));
             // show plus minus 2 sigma
-            g2d.setFill(new Color(153 / 255, 1, 204 / 255, 0.2));
+            g2d.setFill(new Color((float) (153.0 / 255.0), 1.0F, (float) (204.0 / 255.0), 0.2F));
             g2d.fillRect(
                     mapX(minX),
                     mapY(weightedMeanStats[0] + 2.0 * weightedMeanStats[1]),
@@ -530,7 +527,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
                     graphWidth,
                     StrictMath.abs(mapY(ticsY[ticsY.length - 1].doubleValue()) - mapY(ticsY[0].doubleValue())));
-            g2d.setFill(new Color(1, 1, 224 / 255, 0.1));
+            g2d.setFill(new Color(1.0F, 1.0F, (float) (224.0 / 255.0), 0.5F));
             g2d.fillRect(
                     mapX(minX),
                     mapY(ticsY[ticsY.length - 1].doubleValue()),
@@ -587,7 +584,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                             (float) mapX(ticsX[i].doubleValue()) - 5f,
                             (float) mapY(ticsY[0].doubleValue()) + 15);
 
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -605,12 +602,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.rotate(90);
 
         // X- label
-        StringBuilder description = new StringBuilder();
-        description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
-        text.setText(description.toString());
+        text.setText(spotSummaryDetails.getSelectedExpressionName() + " >> ascending >>");
 
         textWidth = (int) text.getLayoutBounds().getWidth();
-        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
+        g2d.fillText(text.getText(), leftMargin + (graphWidth - textWidth) / 2.0, topMargin + graphHeight + 45);
 
         // legend
         text.setText("Legend:");
@@ -630,10 +625,10 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         g2d.setFill(Paint.valueOf("BLACK"));
         g2d.setFont(Font.font("SansSerif", 10));
-        g2d.fillText("Mouse:", leftMargin + 0, topMargin + graphHeight + 60);
-        g2d.fillText(" left = spot details", leftMargin + 0, topMargin + graphHeight + 70);
+        g2d.fillText("Mouse:", leftMargin, topMargin + graphHeight + 60);
+        g2d.fillText(" left = spot details", leftMargin, topMargin + graphHeight + 70);
         if (spotSummaryDetails.isManualRejectionEnabled()) {
-            g2d.fillText(" right = spot menu", leftMargin + 0, topMargin + graphHeight + 80);
+            g2d.fillText(" right = spot menu", leftMargin, topMargin + graphHeight + 80);
         }
 
         // provide highlight and info about selected spot
@@ -725,17 +720,17 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
-                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
-                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[2], 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
             }
             text.setText("err 95");
             textWidth = (int) text.getLayoutBounds().getWidth();
             g2d.drawString(text.getText(), rightOfText - textWidth, currentTextHeightPixels += heightOffset);
             if (adaptToAgeInMA) {
-                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / 1e6, 5) + " Ma", rightOfText + widthOffset, currentTextHeightPixels);
             } else {
-                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / (adaptToAgeInMA ? 1e6 : 1.0), 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
+                g2d.drawString(squid3RoundedToSize(weightedMeanStats[3] / 1.0, 5) + "", rightOfText + widthOffset, currentTextHeightPixels);
 
             }
             text.setText("MSWD");
@@ -892,32 +887,30 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             // ticsY
             float verticalTextShift = 3.2f;
             g2d.setFont(new java.awt.Font("SansSerif", java.awt.Font.PLAIN, 10));
-            if (ticsY != null) {
-                for (int i = 0; i < ticsY.length; i++) {
-                    g2d.drawLine(
-                            (int) mapX(minX), (int) mapY(ticsY[i].doubleValue()), (int) mapX(maxX), (int) mapY(ticsY[i].doubleValue()));
+            for (int i = 0; i < ticsY.length; i++) {
+                g2d.drawLine(
+                        (int) mapX(minX), (int) mapY(ticsY[i].doubleValue()), (int) mapX(maxX), (int) mapY(ticsY[i].doubleValue()));
 
-                    // left side
-                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
-                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
-                    } else {
-                        text.setText(ticsY[i].toString());
-                    }
-                    textWidth = (int) text.getLayoutBounds().getWidth();
-                    g2d.drawString(text.getText(),//
-                            (float) mapX(minX) - textWidth + 5f,
-                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
-
-                    // right side
-                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
-                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
-                    } else {
-                        text.setText(ticsY[i].toString());
-                    }
-                    g2d.drawString(text.getText(),//
-                            (float) mapX(maxX) + 5f,
-                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                // left side
+                if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                    text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                } else {
+                    text.setText(ticsY[i].toString());
                 }
+                textWidth = (int) text.getLayoutBounds().getWidth();
+                g2d.drawString(text.getText(),//
+                        (float) mapX(minX) - textWidth + 5f,
+                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+
+                // right side
+                if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                    text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                } else {
+                    text.setText(ticsY[i].toString());
+                }
+                g2d.drawString(text.getText(),//
+                        (float) mapX(maxX) + 5f,
+                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
             }
         }
         // ticsX
@@ -956,9 +949,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         g2d.rotate(1.5708);
 
         // X- label
-        StringBuilder description = new StringBuilder();
-        description.append(spotSummaryDetails.getSelectedExpressionName()).append(" >> ascending >>");
-        text.setText(description.toString());
+        text.setText(spotSummaryDetails.getSelectedExpressionName() + " >> ascending >>");
 
         textWidth = (int) text.getLayoutBounds().getWidth();
         g2d.drawString(text.getText(), leftMargin + (graphWidth - textWidth) / 2, topMargin + graphHeight + 45);
@@ -1039,7 +1030,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         try {
-            out.close();
+            if (out != null) {
+                out.close();
+            }
         } catch (IOException ex) {
             Logger.getLogger(WeightedMeanPlot.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1081,7 +1074,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
         String retVal = makeAgeString(values[0][0], values[0][1]);
         if (!adaptToAgeInMA) {
-            retVal += "\n\t\t" + ageOrValueLookupString + " = " + (new BigDecimal(myOnPeakData[index]).setScale(4, RoundingMode.HALF_UP).toEngineeringString());
+            retVal += "\n\t\t" + ageOrValueLookupString + " = " + (BigDecimal.valueOf(myOnPeakData[index]).setScale(4, RoundingMode.HALF_UP).toEngineeringString());
         }
 
         return retVal;
@@ -1125,6 +1118,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         ticsY = TicGeneratorForAxes.generateTics(minY, maxY, (int) (graphHeight / 20.0));
+        if (ticsY == null) {
+            ticsY = new BigDecimal[0];
+        }
 
         // check for no data
         if ((ticsY != null) && (ticsY.length > 1)) {
@@ -1152,9 +1148,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
     @Override
     public List<Node> toolbarControlsFactory() {
-        List<Node> controls = new ArrayList<>();
-
-        return controls;
+        return new ArrayList<>();
     }
 
     @Override
@@ -1242,7 +1236,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
                     try {
                         spotContextMenu.show((Node) mouseEvent.getSource(), Side.LEFT,
                                 mapX(myOnPeakNormalizedAquireTimes[indexOfSelectedSpot]), mouseEvent.getY());
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                 }
             } else {
@@ -1251,7 +1245,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
 
             try {
                 repaint();
-            } catch (SquidException squidException) {
+            } catch (SquidException ignored) {
             }
         }
     }

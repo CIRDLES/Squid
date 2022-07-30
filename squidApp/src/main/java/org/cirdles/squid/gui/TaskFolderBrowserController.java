@@ -38,10 +38,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.cirdles.squid.constants.Squid3Constants.XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA;
 import static org.cirdles.squid.gui.SquidUI.EXPRESSION_LIST_CSS_STYLE_SPECS;
@@ -62,7 +59,6 @@ public class TaskFolderBrowserController implements Initializable {
     public static File tasksBrowserTarget;
     public static String tasksBrowserType = ".xml";
     private static Schema taskXMLSchema;
-    private List<TaskInterface> taskFilesInFolder = new ArrayList<>();
     private ListView<TaskInterface> listViewOfTasksInFolder;
     @FXML
     private VBox vboxMaster;
@@ -159,19 +155,19 @@ public class TaskFolderBrowserController implements Initializable {
 
     private void populateListOfTasks() {
 
-        taskFilesInFolder = new ArrayList<>();
+        List<TaskInterface> taskFilesInFolder = new ArrayList<>();
         if (tasksBrowserTarget != null) {
             if (tasksBrowserType.compareToIgnoreCase(".xml") == 0) {
                 if (tasksBrowserTarget.isDirectory()) {
                     nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
                     // collect Tasks if any
-                    for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
-                                                                      @Override
-                                                                      public boolean accept(File file, String name) {
-                                                                          return name.toLowerCase().endsWith(".xml");
-                                                                      }
-                                                                  }
-                    )) {
+                    for (File file : Objects.requireNonNull(tasksBrowserTarget.listFiles(new FilenameFilter() {
+                                                                                             @Override
+                                                                                             public boolean accept(File file, String name) {
+                                                                                                 return name.toLowerCase().endsWith(".xml");
+                                                                                             }
+                                                                                         }
+                    ))) {
                         // check if task 
                         try {
                             TaskInterface task = (Task) ((XMLSerializerInterface)  // Filtering out non-Task XML files
@@ -180,7 +176,7 @@ public class TaskFolderBrowserController implements Initializable {
                                 validateXML(file, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
                                 taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                             }
-                        } catch (IOException | ArrayIndexOutOfBoundsException | SAXException e) {
+                        } catch (IOException | ArrayIndexOutOfBoundsException | SAXException ignored) {
                         }
                     } // End for loop for files
                 } else {
@@ -193,7 +189,7 @@ public class TaskFolderBrowserController implements Initializable {
                             validateXML(tasksBrowserTarget, taskXMLSchema, XML_HEADER_FOR_SQUIDTASK_FILES_USING_LOCAL_SCHEMA);
                             taskFilesInFolder.add(task); // Not added if exception thrown from validateXML
                         }
-                    } catch (IOException | ArrayIndexOutOfBoundsException | SAXException e) {
+                    } catch (IOException | ArrayIndexOutOfBoundsException | SAXException ignored) {
                     }
                 }
             } else {
@@ -201,25 +197,45 @@ public class TaskFolderBrowserController implements Initializable {
                 Path path = null;
                 try {
                     path = Files.createTempDirectory("convertedTasks");
-                } catch (IOException iOException) {
+                } catch (IOException ignored) {
                 }
-                if (tasksBrowserTarget.isDirectory()) {
-                    nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
+                if (path != null) {
+                    if (tasksBrowserTarget.isDirectory()) {
+                        nameOfTasksFolderLabel.setText("Browsing Tasks Folder: " + tasksBrowserTarget.getName());
 
-                    // collect Tasks if any
-                    for (File file : tasksBrowserTarget.listFiles(new FilenameFilter() {
-                                                                      @Override
-                                                                      public boolean accept(File file, String name) {
-                                                                          return name.toLowerCase().endsWith(".xls");
-                                                                      }
-                                                                  }
-                    )) {
-                        // check if task 
+                        // collect Tasks if any
+                        for (File file : Objects.requireNonNull(tasksBrowserTarget.listFiles(new FilenameFilter() {
+                                                                                                 @Override
+                                                                                                 public boolean accept(File file, String name) {
+                                                                                                     return name.toLowerCase().endsWith(".xls");
+                                                                                                 }
+                                                                                             }
+                        ))) {
+                            // check if task
+                            try {
+                                // first convert to xml
+                                TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(file);
+                                TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
+                                File tempTaskFile = new File(path + File.separator + taskSquid25.getTaskName() + ".xml");
+                                ((XMLSerializerInterface) taskFromSquid25)
+                                        .serializeXMLObject(tempTaskFile.getAbsolutePath());
+
+                                TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
+                                if (task != null) {
+                                    taskFilesInFolder.add(task);
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
+
+                    } else {
+                        nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
+                        // check if task
                         try {
                             // first convert to xml
-                            TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(file);
+                            TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(tasksBrowserTarget);
                             TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
-                            File tempTaskFile = new File(path.toString() + File.separator + taskSquid25.getTaskName() + ".xml");
+                            File tempTaskFile = new File(path + File.separator + taskSquid25.getTaskName() + ".xml");
                             ((XMLSerializerInterface) taskFromSquid25)
                                     .serializeXMLObject(tempTaskFile.getAbsolutePath());
 
@@ -227,26 +243,8 @@ public class TaskFolderBrowserController implements Initializable {
                             if (task != null) {
                                 taskFilesInFolder.add(task);
                             }
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
-                    }
-
-                } else {
-                    nameOfTasksFolderLabel.setText("Browsing Task: " + tasksBrowserTarget.getName());
-                    // check if task 
-                    try {
-                        // first convert to xml
-                        TaskSquid25 taskSquid25 = TaskSquid25.importSquidTaskFile(tasksBrowserTarget);
-                        TaskInterface taskFromSquid25 = squidProject.makeTaskFromSquid25Task(taskSquid25);
-                        File tempTaskFile = new File(path.toString() + File.separator + taskSquid25.getTaskName() + ".xml");
-                        ((XMLSerializerInterface) taskFromSquid25)
-                                .serializeXMLObject(tempTaskFile.getAbsolutePath());
-
-                        TaskInterface task = (Task) ((XMLSerializerInterface) squidProject.getTask()).readXMLObject(tempTaskFile.getAbsolutePath(), false);
-                        if (task != null) {
-                            taskFilesInFolder.add(task);
-                        }
-                    } catch (Exception e) {
                     }
                 }
             }

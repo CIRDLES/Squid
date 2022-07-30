@@ -125,7 +125,10 @@ public abstract class AbstractDataView extends Canvas {
         graphWidth = (int) width - leftMargin;
         graphHeight = (int) height - topMargin;
 
-        this.ticsY = null;
+        this.ticsX = new BigDecimal[0];
+        this.ticsY = new BigDecimal[0];
+        this.ticsYII = new BigDecimal[0];
+
     }
 
     public static List<Integer> getListOfSelectedIndices() {
