@@ -1273,10 +1273,10 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists. "
                                 + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists. "
                                 + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
@@ -1446,10 +1446,10 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists. "
                                 + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists. "
                                 + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
@@ -1589,10 +1589,10 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (physConstModels.get(physConstModels.indexOf(importedMod)).isEditable()) {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists. "
                                 + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Physical Constants Model with the same name and version exists. "
                                 + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
@@ -1732,10 +1732,10 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (refMatModels.get(refMatModels.indexOf(importedMod)).isEditable()) {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists. "
                                 + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Reference Material Model with the same name and version exists. "
                                 + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);
@@ -2497,10 +2497,10 @@ public class ParametersManagerGUIController implements Initializable {
                     ButtonType overwriteButton = new ButtonType("Overwrite");
                     Alert alert;
                     if (commonPbModels.get(commonPbModels.indexOf(importedMod)).isEditable()) {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists. "
                                 + "What would you like to do?", overwriteButton, renameButton, changeVersionButton, cancelButton);
                     } else {
-                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists."
+                        alert = new Alert(Alert.AlertType.WARNING, "A Common Pb Model with the same name and version exists. "
                                 + "What would you like to do?", renameButton, changeVersionButton, cancelButton);
                     }
                     alert.initStyle(StageStyle.UNDECORATED);

@@ -174,8 +174,8 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     /**
      * @param taskIsotopeLabel the taskIsotopeLabel to set
      */
-    public void setTaskIsotopeLabel(String label) {
-        taskIsotopeLabel = label;
+    public void setTaskIsotopeLabel(String taskIsotopeLabel) {
+        this.taskIsotopeLabel = taskIsotopeLabel;
     }
 
     public void updateTaskIsotopeLabelForBackground(String nominalMass) {
@@ -204,7 +204,7 @@ public class MassStationDetail implements Comparable<MassStationDetail>, Seriali
     }
 
     /**
-     * @param backgroundLabel the backgroundLabel to set
+     * @param isBackground the isBackground to set
      */
     public void setIsBackground(boolean isBackground) {
         this.isBackground = isBackground;

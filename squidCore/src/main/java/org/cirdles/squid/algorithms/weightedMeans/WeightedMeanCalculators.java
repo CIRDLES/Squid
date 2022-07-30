@@ -307,36 +307,37 @@ public final class WeightedMeanCalculators {
             x2 = new double[n - 1];
         }
 
-        for (int j = 0; j < n; j++) {
-            int m = j + 1;
-            int p = j + 2;
+        if ((sigRho1.length == n) && (sigRho1[0].length == n)) {
+            for (int j = 0; j < (n - 1); j++) {
+                int m = j + 1;
+                int p = j + 2;
 
-            if (j < rejPoint) {
-                sigRho2[j][j] = sigRho1[j][j];
-                y2[j] = y1[j];
-                if (linReg) {
-                    x2[j] = x1[j];
+                if (j < rejPoint) {
+                    sigRho2[j][j] = sigRho1[j][j];
+                    y2[j] = y1[j];
+                    if (linReg) {
+                        x2[j] = x1[j];
+                    }
+                } else {
+                    sigRho2[j][j] = sigRho1[m][m];
+                    y2[j] = y1[m];
+                    if (linReg) {
+                        x2[j] = x1[m];
+                    }
                 }
-            } else if ((j < (n - 1)) && (m < n)) {
-                sigRho2[j][j] = sigRho1[m][m];
-                y2[j] = y1[m];
-                if (linReg) {
-                    x2[j] = x1[m];
-                }
-            }
 
-            if (j < (rejPoint - 1)) {
-                sigRho2[j][m] = sigRho1[j][m];
-                sigRho2[m][j] = sigRho1[m][j];
-            } else if ((j == (rejPoint - 1)) && (m < (n - 1))) {
-                sigRho2[j][m] = 0.0;
-                sigRho2[m][j] = 0.0;
-            } else if (j < (n - 2)) {
-                sigRho2[j][m] = sigRho1[m][p];
-                sigRho2[m][j] = sigRho1[p][m];
+                if (j < (rejPoint - 1)) {
+                    sigRho2[j][m] = sigRho1[j][m];
+                    sigRho2[m][j] = sigRho1[m][j];
+                } else if ((j == (rejPoint - 1)) && (m < (n - 1))) {
+                    sigRho2[j][m] = 0.0;
+                    sigRho2[m][j] = 0.0;
+                } else if (j < (n - 2)) {
+                    sigRho2[j][m] = sigRho1[m][p];
+                    sigRho2[m][j] = sigRho1[p][m];
+                }
             }
         }
-
         results.setY2(y2);
         results.setSigRho2(sigRho2);
         results.setX2(x2);

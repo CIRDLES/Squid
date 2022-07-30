@@ -52,7 +52,7 @@ public class SpotTaskMetaDataNode extends ExpressionTree {
 
     /**
      *
-     * @param methodNameForShrimpFraction
+     * @param methodNameForTask
      * @return SpotFieldNode using getter name with leading get removed as name
      */
     public static SpotTaskMetaDataNode buildTaskMetaDataNode(String methodNameForTask) {

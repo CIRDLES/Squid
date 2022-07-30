@@ -284,7 +284,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     void setVisible(boolean visible);
 
     /**
-     * @param numericString
+     * @param aNumericString
      * @return
      */
     public static String FormatNumericStringAlignDecimalPoint(String aNumericString) {

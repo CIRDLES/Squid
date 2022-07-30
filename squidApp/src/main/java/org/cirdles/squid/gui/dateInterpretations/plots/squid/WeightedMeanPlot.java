@@ -538,54 +538,50 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             // ticsY
             float verticalTextShift = 3.2f;
             g2d.setFont(Font.font("SansSerif", 10));
-            if (ticsY != null) {
-                for (int i = 0; i < ticsY.length; i++) {
-                    g2d.strokeLine(
-                            mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
+            for (int i = 0; i < ticsY.length; i++) {
+                g2d.strokeLine(
+                        mapX(minX), mapY(ticsY[i].doubleValue()), mapX(maxX), mapY(ticsY[i].doubleValue()));
 
-                    // left side
-                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
-                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
-                    } else {
-                        text.setText(ticsY[i].toString());
-                    }
-                    textWidth = (int) text.getLayoutBounds().getWidth();
-                    g2d.fillText(text.getText(),//
-                            (float) mapX(minX) - textWidth + 5f,
-                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
-
-                    // right side
-                    if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
-                        text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
-                    } else {
-                        text.setText(ticsY[i].toString());
-                    }
-                    g2d.fillText(text.getText(),//
-                            (float) mapX(maxX) + 5f,
-                            (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+                // left side
+                if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                    text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                } else {
+                    text.setText(ticsY[i].toString());
                 }
+                textWidth = (int) text.getLayoutBounds().getWidth();
+                g2d.fillText(text.getText(),//
+                        (float) mapX(minX) - textWidth + 5f,
+                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
+
+                // right side
+                if (adaptToAgeInMA && !switchRefMatViewToCalibConst) {
+                    text.setText(ticsY[i].movePointLeft(6).toBigInteger().toString());
+                } else {
+                    text.setText(ticsY[i].toString());
+                }
+                g2d.fillText(text.getText(),//
+                        (float) mapX(maxX) + 5f,
+                        (float) mapY(ticsY[i].doubleValue()) + verticalTextShift);
             }
         }
         // ticsX
-        if (ticsX != null) {
-            for (int i = 0; i < ticsX.length - 1; i++) {
-                try {
-                    g2d.strokeLine(
-                            mapX(ticsX[i].doubleValue()),
-                            mapY(ticsY[0].doubleValue()),
-                            mapX(ticsX[i].doubleValue()),
-                            mapY(ticsY[0].doubleValue()) + 5);
+        for (int i = 0; i < ticsX.length - 1; i++) {
+            try {
+                g2d.strokeLine(
+                        mapX(ticsX[i].doubleValue()),
+                        mapY(ticsY[0].doubleValue()),
+                        mapX(ticsX[i].doubleValue()),
+                        mapY(ticsY[0].doubleValue()) + 5);
 
-                    // bottom
-                    // feb 2020 force to appear as 1-based index
-                    boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
-                    String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
-                    g2d.fillText(xText,
-                            (float) mapX(ticsX[i].doubleValue()) - 5f,
-                            (float) mapY(ticsY[0].doubleValue()) + 15);
+                // bottom
+                // feb 2020 force to appear as 1-based index
+                boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
+                String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
+                g2d.fillText(xText,
+                        (float) mapX(ticsX[i].doubleValue()) - 5f,
+                        (float) mapY(ticsY[0].doubleValue()) + 15);
 
-                } catch (Exception ignored) {
-                }
+            } catch (Exception ignored) {
             }
         }
 
@@ -914,25 +910,23 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
             }
         }
         // ticsX
-        if (ticsX != null) {
-            for (int i = 0; i < ticsX.length - 1; i++) {
-                try {
-                    g2d.drawLine(
-                            (int) mapX(ticsX[i].doubleValue()),
-                            (int) mapY(ticsY[0].doubleValue()),
-                            (int) mapX(ticsX[i].doubleValue()),
-                            (int) mapY(ticsY[0].doubleValue()) + 5);
+        for (int i = 0; i < ticsX.length - 1; i++) {
+            try {
+                g2d.drawLine(
+                        (int) mapX(ticsX[i].doubleValue()),
+                        (int) mapY(ticsY[0].doubleValue()),
+                        (int) mapX(ticsX[i].doubleValue()),
+                        (int) mapY(ticsY[0].doubleValue()) + 5);
 
-                    // bottom
-                    // feb 2020 force to appear as 1-based index
-                    boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
-                    String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
-                    g2d.drawString(xText,
-                            (float) mapX(ticsX[i].doubleValue()) - 5f,
-                            (float) mapY(ticsY[0].doubleValue()) + 15);
+                // bottom
+                // feb 2020 force to appear as 1-based index
+                boolean oneBasedIndex = spotSummaryDetails.getSelectedExpressionName().compareToIgnoreCase("Hours") != 0;
+                String xText = oneBasedIndex ? ticsX[i].add(BigDecimal.ONE).toBigInteger().toString() : ticsX[i].toBigInteger().toString();
+                g2d.drawString(xText,
+                        (float) mapX(ticsX[i].doubleValue()) - 5f,
+                        (float) mapY(ticsY[0].doubleValue()) + 15);
 
-                } catch (Exception e) {
-                }
+            } catch (Exception e) {
             }
         }
 
@@ -1101,6 +1095,9 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         minX = myOnPeakNormalizedAquireTimes[0];
         maxX = myOnPeakNormalizedAquireTimes[myOnPeakNormalizedAquireTimes.length - 1];
         ticsX = TicGeneratorForAxes.generateTics(minX, maxX, (int) (graphWidth / 50.0));
+        if (ticsX == null) {
+            ticsX = new BigDecimal[0];
+        }
         double xMarginStretch = TicGeneratorForAxes.generateMarginAdjustment(minX, maxX, 0.05);
         minX -= xMarginStretch;
         maxX += xMarginStretch;
@@ -1123,7 +1120,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         // check for no data
-        if ((ticsY != null) && (ticsY.length > 1)) {
+        if (ticsY.length > 1) {
             // force y to tics
             minY = ticsY[0].doubleValue();
             maxY = ticsY[ticsY.length - 1].doubleValue();
