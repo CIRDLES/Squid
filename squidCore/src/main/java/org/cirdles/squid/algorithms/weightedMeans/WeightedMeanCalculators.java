@@ -308,17 +308,17 @@ public final class WeightedMeanCalculators {
         }
 
         if ((sigRho1.length == n) && (sigRho1[0].length == n)) {
-            for (int j = 0; j < n; j++) {
+            for (int j = 0; j < (n - 1); j++) {
                 int m = j + 1;
                 int p = j + 2;
 
                 if (j < rejPoint) {
                     sigRho2[j][j] = sigRho1[j][j];
                     y2[j] = y1[j];
-                    if (linReg && (x1.length == n)) {
+                    if (linReg) {
                         x2[j] = x1[j];
                     }
-                } else if (j < (n - 1)) {
+                } else {
                     sigRho2[j][j] = sigRho1[m][m];
                     y2[j] = y1[m];
                     if (linReg) {
