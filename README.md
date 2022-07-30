@@ -3,7 +3,7 @@
 Squid3
 =======
 
-[![Build Status](https://travis-ci.org/CIRDLES/Squid.svg?branch=master)](https://travis-ci.org/CIRDLES/Squid)
+[![Build Status](https://app.travis-ci.com/CIRDLES/Squid.svg?branch=master)](https://app.travis-ci.com/CIRDLES/Squid)
 [![Known Vulnerabilities](https://snyk.io/test/github/CIRDLES/Squid/badge.svg)](https://snyk.io/test/github/CIRDLES/Squid)
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
