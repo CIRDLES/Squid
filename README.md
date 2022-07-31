@@ -12,7 +12,6 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 [***Click to View New Sustainable Software Development Video***](https://www.youtube.com/watch?v=mC5eNrMjfk4)
 
-***UPDATE NOV 2021***
 
 We encourage you to download and evaluate the latest Squid3 release, the ".jar" file
 found <a href="https://github.com/CIRDLES/Squid/releases/latest" target="_blank">here</a>.  
