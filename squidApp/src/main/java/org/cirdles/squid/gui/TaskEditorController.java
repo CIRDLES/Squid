@@ -41,14 +41,15 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.Task;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
-import org.cirdles.squid.tasks.taskDesign.*;
+import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
@@ -71,107 +72,39 @@ public class TaskEditorController implements Initializable {
 
     // handle for closing stage when Squid closes
     public static final Stage ADD_RATIOS_STAGE = new Stage();
+    private static final List<VBox> undoRatiosList = new ArrayList<>();
+    private static final VBox addNumeratorVBox = new VBox();
+    private static final VBox addDenominatorVBox = new VBox();
+    private static final HBox numDemHBox = new HBox(addNumeratorVBox, addDenominatorVBox);
+    private static final Label instructions = new Label("   Choose numerator and denominator");
+    private static final Button addBtn = new Button("Add ratio");
+    private static final HBox addBtnHBox = new HBox(addBtn);
+    private static final Label numLabel = new Label("");
+    private static final Label divLabel = new Label("/");
+    private static final Label denLabel = new Label("");
+    private static final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
+    private static final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
+    private static final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
+    private static final Map<String, Tooltip> tooltipsMap = new HashMap<>();
+    private static final ToggleGroup numTG = new ToggleGroup();
+    private static final ToggleGroup denTG = new ToggleGroup();
     public static TaskInterface existingTaskToEdit = null;
     public static Squid3Constants.TaskEditTypeEnum editType = Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
-    private final List<StackPane> undoMassesList = new ArrayList<>();
-    private final List<VBox> undoRatiosList = new ArrayList<>();
-    private final VBox addNumeratorVBox = new VBox();
-    private final VBox addDenominatorVBox = new VBox();
-    private final HBox numDemHBox = new HBox(addNumeratorVBox, addDenominatorVBox);
-    private final Label instructions = new Label("   Choose numerator and denominator");
-    private final Button addBtn = new Button("Add ratio");
-    private final HBox addBtnHBox = new HBox(addBtn);
-    private final Label numLabel = new Label("");
-    private final Label divLabel = new Label("/");
-    private final Label denLabel = new Label("");
-    private final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
-    private final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
-    private final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
-    private final Map<String, Tooltip> tooltipsMap = new HashMap<>();
-    private final ToggleGroup numTG = new ToggleGroup();
-    private final ToggleGroup denTG = new ToggleGroup();
-    EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
-        }
-    };
-    EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
-        @Override
-        public void handle(MouseEvent event) {
-            try {
-                tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
-            } catch (Exception e) {
-            }
-        }
-    };
-    private TaskDesign taskEditor;
+    private static TaskDesign taskEditor;
     @FXML
-    private GridPane taskManagerGridPane;
+    private static TextField uncorrConstPbUExpressionText;
     @FXML
-    private RadioButton geochronTaskTypeRadioButton;
+    private static TextField uncorrConstPbThExpressionText;
     @FXML
-    private ToggleGroup taskTypeToggleGroup;
+    private static TextField parentConcExpressionText;
     @FXML
-    private RadioButton generalTaskTypeRadioButton;
+    private static TextField pb208Th232ExpressionText;
     @FXML
-    private TextField authorsNameTextField;
-    @FXML
-    private TextField labNameTextField;
-    @FXML
-    private Label titleLabel;
-    @FXML
-    private ToggleGroup primaryAgeToggleGroup;
-    @FXML
-    private ToggleGroup dirctALTtoggleGroup;
-    @FXML
-    private Label uncorrConstPbUlabel;
-    @FXML
-    private Label uncorrConstPbThlabel;
-    @FXML
-    private Label th232U238Label;
-    @FXML
-    private Label parentConcLabel;
-    @FXML
-    private TextField uncorrConstPbUExpressionText;
-    @FXML
-    private TextField uncorrConstPbThExpressionText;
-    @FXML
-    private TextField parentConcExpressionText;
-    @FXML
-    private TextField pb208Th232ExpressionText;
-    @FXML
-    private TextFlow defaultMassesListTextFlow;
-    @FXML
-    private TextFlow defaultRatiosListTextFlow;
-    @FXML
-    private Button chooseMassesButton;
-    @FXML
-    private Button chooseRatiosButton;
-    @FXML
-    private TextField taskNameTextField;
-    @FXML
-    private TextField taskDescriptionTextField;
-    @FXML
-    private TextField provenanceTextField;
-    private Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private ContextMenu massesCM;
-    private ContextMenu ratiosCM;
-    @FXML
-    private TextArea customExpressionTextArea;
-    @FXML
-    private Label directivesLabel;
-    @FXML
-    private Label primaryDPLabel;
-    @FXML
-    private Label secondaryDPLabel;
-    private boolean amGeochronMode;
-    @FXML
-    private Text hintLabel;
-    @FXML
-    private Spinner<Integer> backgroundIndexSpinner;
+    private static TextFlow defaultRatiosListTextFlow;
+    private static Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static boolean amGeochronMode;
 
-    {
+    static {
         addBtnHBox.setAlignment(Pos.CENTER);
         addBtn.setStyle(
                 "-fx-padding: 5 22 5 22;\n"
@@ -228,6 +161,75 @@ public class TaskEditorController implements Initializable {
 
     }
 
+    private final List<StackPane> undoMassesList = new ArrayList<>();
+    EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            showToolTip(event, ((TextField) event.getSource()), tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()));
+        }
+    };
+    EventHandler<MouseEvent> mouseExitedEventHandler = new EventHandler<MouseEvent>() {
+        @Override
+        public void handle(MouseEvent event) {
+            try {
+                tooltipsMap.get((String) ((TextField) event.getSource()).getUserData()).hide();
+            } catch (Exception e) {
+            }
+        }
+    };
+    @FXML
+    private GridPane taskManagerGridPane;
+    @FXML
+    private RadioButton geochronTaskTypeRadioButton;
+    @FXML
+    private ToggleGroup taskTypeToggleGroup;
+    @FXML
+    private RadioButton generalTaskTypeRadioButton;
+    @FXML
+    private TextField authorsNameTextField;
+    @FXML
+    private TextField labNameTextField;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private ToggleGroup primaryAgeToggleGroup;
+    @FXML
+    private ToggleGroup dirctALTtoggleGroup;
+    @FXML
+    private Label uncorrConstPbUlabel;
+    @FXML
+    private Label uncorrConstPbThlabel;
+    @FXML
+    private Label th232U238Label;
+    @FXML
+    private Label parentConcLabel;
+    @FXML
+    private TextFlow defaultMassesListTextFlow;
+    @FXML
+    private Button chooseMassesButton;
+    @FXML
+    private Button chooseRatiosButton;
+    @FXML
+    private TextField taskNameTextField;
+    @FXML
+    private TextField taskDescriptionTextField;
+    @FXML
+    private TextField provenanceTextField;
+    private ContextMenu massesCM;
+    private ContextMenu ratiosCM;
+    @FXML
+    private TextArea customExpressionTextArea;
+    @FXML
+    private Label directivesLabel;
+    @FXML
+    private Label primaryDPLabel;
+    @FXML
+    private Label secondaryDPLabel;
+    @FXML
+    private Text hintLabel;
+    @FXML
+    private Spinner<Integer> backgroundIndexSpinner;
+
     public static StackPane makeMassStackPane(String massName, String color) {
         Text massText = new Text(massName);
         massText.setFont(new Font("Monospaced Bold", 12));
@@ -260,7 +262,7 @@ public class TaskEditorController implements Initializable {
         return ratio;
     }
 
-    private void updateAddButton() {
+    private static void updateAddButton() {
         String num = numLabel.getText();
         String den = denLabel.getText();
         boolean valid = (num.compareTo(den) != 0)
@@ -268,6 +270,84 @@ public class TaskEditorController implements Initializable {
                 && !REQUIRED_RATIO_NAMES.contains(num + "/" + den)
                 && num.length() > 0 && den.length() > 0;
         addBtn.setDisable(!valid);
+    }
+
+    private static void populateRatios() {
+        defaultRatiosListTextFlow.getChildren().clear();
+        defaultRatiosListTextFlow.setMaxHeight(30);
+        int count = 1;
+
+        if (amGeochronMode) {
+            for (String ratioName : REQUIRED_RATIO_NAMES) {
+                VBox ratio = makeRatioVBox(ratioName);
+                ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
+                ratio.setTranslateX(count++);
+                defaultRatiosListTextFlow.getChildren().add(ratio);
+            }
+        }
+
+        List<String> ratioNames = taskEditor.getRatioNames();
+        for (String ratioName : ratioNames) {
+            VBox ratio = makeRatioVBox(ratioName);
+            ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
+            ratio.setTranslateX(count++);
+            ratio.setOnMouseClicked((MouseEvent event) -> {
+                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
+                    namedExpressionsMap.remove(ratioName);
+                    defaultRatiosListTextFlow.getChildren().remove(ratio);
+                    undoRatiosList.add(0, ratio);
+                    taskEditor.removeRatioName(ratioName);
+                    refreshExpressionAudits();
+                }
+            });
+
+            defaultRatiosListTextFlow.getChildren().add(ratio);
+        }
+    }
+
+    private static void refreshExpressionAudits() {
+        Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionText.getText());
+        tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
+        updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
+
+        exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionText.getText());
+        tooltipMapPut(exp, UNCOR208PB232TH_CALIB_CONST);
+        updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
+
+        exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionText.getText());
+        tooltipMapPut(exp, TH_U_EXP_DEFAULT);
+        updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
+
+        exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionText.getText());
+        tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
+        updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
+
+    }
+
+    private static void tooltipMapPut(Expression exp, String expressionText) {
+        Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+        audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+        Tooltip result = tooltipsMap.put(expressionText, audit);
+        if (result != null) {
+            result.hide();
+        }
+    }
+
+    /**
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
+    private static Expression makeExpression(String expressionName, final String expressionString) {
+        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
+    }
+
+    private static void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
+        if (healthy) {
+            expressionText.setStyle(expressionText.getStyle().replace("wrongx_icon", "icon_checkmark"));
+        } else {
+            expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
+        }
     }
 
     /**
@@ -301,7 +381,7 @@ public class TaskEditorController implements Initializable {
             amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
 
             initTaskDesign();
-        } catch (SquidException squidException) {
+        } catch (SquidException ignored) {
 
         }
     }
@@ -403,11 +483,11 @@ public class TaskEditorController implements Initializable {
     }
 
     private String genSpaces(String name) {
-        String retVal = "";
+        StringBuilder retVal = new StringBuilder();
         for (int i = name.length(); i < 25; i++) {
-            retVal += " ";
+            retVal.append(" ");
         }
-        return retVal;
+        return retVal.toString();
     }
 
     private void populateMasses() {
@@ -419,7 +499,7 @@ public class TaskEditorController implements Initializable {
         }
         allMasses.addAll(taskEditor.getNominalMasses());
 
-        Collections.sort(allMasses, new IntuitiveStringComparator<>());
+        allMasses.sort(new IntuitiveStringComparator<>());
 
         int count = 1;
         for (String mass : allMasses) {
@@ -442,47 +522,13 @@ public class TaskEditorController implements Initializable {
                     }
                 });
             }
-            massText.setTranslateX(1 * count++);
+            massText.setTranslateX(count++);
             defaultMassesListTextFlow.getChildren().add(massText);
         }
         // pad
         Label padLabel = new Label("        ");
-        padLabel.setTranslateX(1 * count++);
+        padLabel.setTranslateX(count);
         defaultMassesListTextFlow.getChildren().add(padLabel);
-    }
-
-    private void populateRatios() {
-        defaultRatiosListTextFlow.getChildren().clear();
-        defaultRatiosListTextFlow.setMaxHeight(30);
-        List<String> ratioNamesR = REQUIRED_RATIO_NAMES;
-        int count = 1;
-
-        if (amGeochronMode) {
-            for (String ratioName : ratioNamesR) {
-                VBox ratio = makeRatioVBox(ratioName);
-                ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
-                ratio.setTranslateX(1 * count++);
-                defaultRatiosListTextFlow.getChildren().add(ratio);
-            }
-        }
-
-        List<String> ratioNames = taskEditor.getRatioNames();
-        for (String ratioName : ratioNames) {
-            VBox ratio = makeRatioVBox(ratioName);
-            ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");
-            ratio.setTranslateX(1 * count++);
-            ratio.setOnMouseClicked((MouseEvent event) -> {
-                if (event.getEventType().equals(MouseEvent.MOUSE_CLICKED)) {
-                    namedExpressionsMap.remove(ratioName);
-                    defaultRatiosListTextFlow.getChildren().remove(ratio);
-                    undoRatiosList.add(0, ratio);
-                    taskEditor.removeRatioName(ratioName);
-                    refreshExpressionAudits();
-                }
-            });
-
-            defaultRatiosListTextFlow.getChildren().add(ratio);
-        }
     }
 
     private void updateDirectiveButtons() {
@@ -611,53 +657,16 @@ public class TaskEditorController implements Initializable {
         parentConcExpressionText.setOnMouseExited(mouseExitedEventHandler);
     }
 
-    private void refreshExpressionAudits() {
-        Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionText.getText());
-        tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
-        updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
-
-        exp = makeExpression(UNCOR208PB232TH_CALIB_CONST, uncorrConstPbThExpressionText.getText());
-        tooltipMapPut(exp, UNCOR208PB232TH_CALIB_CONST);
-        updateExpressionHealthFlag(uncorrConstPbThExpressionText, exp.amHealthy());
-
-        exp = makeExpression(TH_U_EXP_DEFAULT, pb208Th232ExpressionText.getText());
-        tooltipMapPut(exp, TH_U_EXP_DEFAULT);
-        updateExpressionHealthFlag(pb208Th232ExpressionText, exp.amHealthy());
-
-        exp = makeExpression(PARENT_ELEMENT_CONC_CONST, parentConcExpressionText.getText());
-        tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
-        updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
-
-    }
-
-    private void tooltipMapPut(Expression exp, String expressionText) {
-        Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-        audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-        Tooltip result = tooltipsMap.put(expressionText, audit);
-        if (result != null) {
-            result.hide();
-        }
-    }
-
     private void showToolTip(MouseEvent event, TextField textField, Tooltip tooltip) {
         if (tooltip != null) {
             tooltip.hide();
             if (event.isShiftDown()) {
-                // force calculation of tolltip extents so it locates correctly
+                // force calculation of tooltip extents so it locates correctly
                 tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
                 tooltip.hide();
                 tooltip.show(textField, event.getScreenX() - 50, event.getScreenY() - tooltip.getHeight() - 50);
             }
         }
-    }
-
-    /**
-     * @param expressionName
-     * @param expressionString
-     * @return
-     */
-    private Expression makeExpression(String expressionName, final String expressionString) {
-        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
     }
 
     @FXML
@@ -684,7 +693,7 @@ public class TaskEditorController implements Initializable {
         updateExpressionStyle(uncorrConstPbUExpressionText, (perm1 || perm2 || perm4));
         updateExpressionStyle(uncorrConstPbThExpressionText, (perm2 || perm3 || perm4));
         updateExpressionStyle(pb208Th232ExpressionText, (perm1 || perm3));
-        updateExpressionStyle(parentConcExpressionText, (perm1 || perm2 || perm3 || perm4));
+        updateExpressionStyle(parentConcExpressionText, true);
     }
 
     private void updateExpressionStyle(TextField expressionText, boolean player) {
@@ -696,14 +705,6 @@ public class TaskEditorController implements Initializable {
         boolean unhealthy = expressionText.getStyle().contains("wrongx_icon");
 
         expressionText.setStyle((player ? playerStyle : notPlayerStyle) + (unhealthy ? UNHEALTHY_EXPRESSION_STYLE : HEALTHY_EXPRESSION_STYLE));
-    }
-
-    private void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
-        if (healthy) {
-            expressionText.setStyle(expressionText.getStyle().replace("wrongx_icon", "icon_checkmark"));
-        } else {
-            expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
-        }
     }
 
     @FXML
@@ -736,7 +737,7 @@ public class TaskEditorController implements Initializable {
                 masses.addAll(REQUIRED_NOMINAL_MASSES);
                 masses.addAll(taskEditor.getNominalMasses());
                 //                 DEFAULT_BACKGROUND_MASS_LABEL);
-                Collections.sort(masses, new IntuitiveStringComparator<>());
+                masses.sort(new IntuitiveStringComparator<>());
                 masses.remove(taskEditor.getIndexOfBackgroundSpecies());
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
@@ -784,8 +785,8 @@ public class TaskEditorController implements Initializable {
             if (mass.length() > 0) {
                 // split on commas
                 String[] massesAdded = massName.getText().split(",");
-                for (int i = 0; i < massesAdded.length; i++) {
-                    taskEditor.addNominalMass(massesAdded[i].trim());
+                for (String s : massesAdded) {
+                    taskEditor.addNominalMass(s.trim());
                 }
             }
             populateMasses();
@@ -808,7 +809,6 @@ public class TaskEditorController implements Initializable {
                 // do nothing
             }
         });
-        //itemsForThisNode.add(menuItem);
 
         menuItem = new MenuItem("Restore mass");
         menuItem.setDisable(undoMassesList.isEmpty());
@@ -820,7 +820,6 @@ public class TaskEditorController implements Initializable {
                 populateMasses();
             }
         });
-        //itemsForThisNode.add(menuItem);
 
         ContextMenu contextMenu = new ContextMenu();
         contextMenu.getItems().setAll(itemsForThisNode);

@@ -72,18 +72,14 @@ public class RatiosManagerController implements Initializable {
     private static final String STYLE_RATIO_LABEL = "-fx-font-family: 'SansSerif';\n"
             + "    -fx-font-weight: bold;\n"
             + "    -fx-font-size: 7pt;\n";
-
-    @FXML
-    private GridPane ratiosGridPane;
-
     private final int BUTTON_WIDTH = 45;
     private final int BUTTON_HEIGHT = 30;
-
-    private List<SquidSpeciesModel> squidSpeciesList;
-    private int indexOfBackgroundSpecies;
-
     List<Button> rowButtons = new ArrayList<>();
     List<Button> colButtons = new ArrayList<>();
+    @FXML
+    private GridPane ratiosGridPane;
+    private List<SquidSpeciesModel> squidSpeciesList;
+    private int indexOfBackgroundSpecies;
 
     /**
      * Initializes the controller class.
@@ -124,43 +120,24 @@ public class RatiosManagerController implements Initializable {
         int rowCounter = 0;
         int colCounter = 0;
         for (int i = 0; i < squidSpeciesList.size(); i++) {
-            if (squidSpeciesList.get(i).getIsBackground()) {
-//                indexOfBackgroundSpecies = squidSpeciesList.get(i).getMassStationIndex();
-//                squidProject.getTask().setIndexOfBackgroundSpecies(indexOfBackgroundSpecies);
-//
-//                if (squidSpeciesList.get(i).isNumeratorRole()) {
-//                    Label rowBackgroundLabel = new SquidLabel(rowCounter + 1, 0, squidSpeciesList.get(i).getIsotopeName());
-//                    ratiosGridPane.add(rowBackgroundLabel, 0, rowCounter + 1);
-//                    rowButtons.add(null);
-//                    rowCounter++;
-//                }
-//
-//                if (squidSpeciesList.get(i).isDenominatorRole()) {
-//                    Label colBackgroundLabel = new SquidLabel(0, colCounter + 1, squidSpeciesList.get(i).getIsotopeName());
-//                    ratiosGridPane.add(colBackgroundLabel, colCounter + 1, 0);
-//                    colButtons.add(null);
-//                    colCounter++;
-//                }
 
-            } else {
-                if (squidSpeciesList.get(i).isNumeratorRole()) {
-                    Button rowNumeratorButton = new SquidRowColButton(i, -1, squidSpeciesList.get(i).getIsotopeName());
-                    ratiosGridPane.add(rowNumeratorButton, 0, rowCounter + 1);
-                    rowButtons.add(rowNumeratorButton);
-                    rowCounter++;
-                }
-
-                if (squidSpeciesList.get(i).isDenominatorRole()) {
-                    Button colDenominatorButton = new SquidRowColButton(-1, i, squidSpeciesList.get(i).getIsotopeName());
-                    ratiosGridPane.add(colDenominatorButton, colCounter + 1, 0);
-                    colButtons.add(colDenominatorButton);
-                    colCounter++;
-                }
+            if (squidSpeciesList.get(i).isNumeratorRole()) {
+                Button rowNumeratorButton = new SquidRowColButton(i, -1, squidSpeciesList.get(i).getIsotopeName());
+                ratiosGridPane.add(rowNumeratorButton, 0, rowCounter + 1);
+                rowButtons.add(rowNumeratorButton);
+                rowCounter++;
             }
 
-            Label cornerLabel = new SquidLabel(0, 0, "Num/\nDen");
-            ratiosGridPane.add(cornerLabel, 0, 0);
+            if (squidSpeciesList.get(i).isDenominatorRole()) {
+                Button colDenominatorButton = new SquidRowColButton(-1, i, squidSpeciesList.get(i).getIsotopeName());
+                ratiosGridPane.add(colDenominatorButton, colCounter + 1, 0);
+                colButtons.add(colDenominatorButton);
+                colCounter++;
+            }
         }
+
+        Label cornerLabel = new SquidLabel(0, 0, "Num/\nDen");
+        ratiosGridPane.add(cornerLabel, 0, 0);
 
         populateRatioGrid();
     }
@@ -183,11 +160,11 @@ public class RatiosManagerController implements Initializable {
                         if (!selected) {
                             try {
                                 ((SquidRowColButton) rowButtons.get(rowCounter)).setSelected(false);
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                             }
                             try {
                                 ((SquidRowColButton) colButtons.get(colCounter)).setSelected(false);
-                            } catch (Exception e) {
+                            } catch (Exception ignored) {
                             }
                         }
                     }
@@ -195,6 +172,37 @@ public class RatiosManagerController implements Initializable {
                 }
             }
             rowCounter = rowCounter + (squidSpeciesList.get(i).isNumeratorRole() ? 1 : 0);
+        }
+    }
+
+    static class SquidRatioButtonEventHandler implements EventHandler<Event> {
+
+        private final int row;
+        private final int col;
+        private final String ratioName;
+        private final Button btn;
+        private boolean selected;
+
+        public SquidRatioButtonEventHandler(int row, int col, String ratioName, boolean selected, Button btn) {
+            this.row = row;
+            this.col = col;
+            this.ratioName = ratioName;
+            this.selected = selected;
+            this.btn = btn;
+        }
+
+        @Override
+        public void handle(Event event) {
+            selected = !selected;
+            ((Button) event.getSource()).setText(selected ? ratioName : "");
+
+            if (selected) {
+                btn.setStyle(STYLE_RATIO_SELECTED);
+            } else {
+                btn.setStyle(STYLE_RATIO_UNSELECTED);
+            }
+
+            squidProject.getTask().updateTableOfSelectedRatiosByMassStationIndex(row, col, selected);
         }
     }
 
@@ -231,7 +239,7 @@ public class RatiosManagerController implements Initializable {
         public SquidRowColButton(int row, int col, String ratioName) {
             super(ratioName);
 
-            ratioToolTip = new Tooltip("Click to select entire " + (String) (row == -1 ? "column" : "row"));
+            ratioToolTip = new Tooltip("Click to select entire " + (row == -1 ? "column" : "row"));
             setTooltip(ratioToolTip);
 
             selected = false;
@@ -272,45 +280,7 @@ public class RatiosManagerController implements Initializable {
 
     }
 
-    class SquidRatioButtonEventHandler implements EventHandler<Event> {
-
-        private final int row;
-        private final int col;
-        private final String ratioName;
-        private boolean selected;
-        private final Button btn;
-
-        public SquidRatioButtonEventHandler(int row, int col, String ratioName, boolean selected, Button btn) {
-            this.row = row;
-            this.col = col;
-            this.ratioName = ratioName;
-            this.selected = selected;
-            this.btn = btn;
-        }
-
-        @Override
-        public void handle(Event event) {
-            selected = !selected;
-            ((Button) event.getSource()).setText(selected ? ratioName : "");
-
-            if (selected) {
-                btn.setStyle(STYLE_RATIO_SELECTED);
-            } else {
-                btn.setStyle(STYLE_RATIO_UNSELECTED);
-            }
-
-            squidProject.getTask().updateTableOfSelectedRatiosByMassStationIndex(row, col, selected);
-        }
-    }
-
     class SquidRowColButtonEventHandler implements EventHandler<Event> {
-
-        /**
-         * @param selected the selected to set
-         */
-        public void setSelected(boolean selected) {
-            this.selected = selected;
-        }
 
         private final int row;
         private final int col;
@@ -322,10 +292,17 @@ public class RatiosManagerController implements Initializable {
             this.selected = selected;
         }
 
+        /**
+         * @param selected the selected to set
+         */
+        public void setSelected(boolean selected) {
+            this.selected = selected;
+        }
+
         @Override
         public void handle(Event event) {
             selected = !selected;
-            ((SquidRowColButton) event.getSource()).setToolTipText("Click to " + (selected ? "de-" : "") + "select entire " + (String) (row == -1 ? "column" : "row"));
+            ((SquidRowColButton) event.getSource()).setToolTipText("Click to " + (selected ? "de-" : "") + "select entire " + (row == -1 ? "column" : "row"));
             ((SquidRowColButton) event.getSource()).setSelected(selected);
             squidProject.getTask().updateTableOfSelectedRatiosByRowOrCol(row, col, selected);
             populateRatioGrid();

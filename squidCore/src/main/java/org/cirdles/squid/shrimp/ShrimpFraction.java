@@ -1042,45 +1042,15 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
 
     @Override
     public String getComPbSelectedAgeType() throws SquidException {
-
         String ageName = getSelectedAgeExpressionName();
 
         try {
-            ageName.replaceFirst("_Age", "");
-        } catch (Exception e) {
-            //e.printStackTrace();
+            ageName = ageName.replaceFirst("_Age", "");
+        } catch (Exception ignored) {
         }
 
         return ageName;
     }
-
-//    @Override
-//    public int hashCode() {
-//        int result = Objects.hash(getFractionID(), getSpotNumber(), getSpotIndex(), getNameOfMount(),
-//                getDateTimeMillisecondsLong(), getHours(), getDeadTimeNanoseconds(), getSbmZeroCps(),
-//                getStageX(), getStageY(), getStageZ(), getQt1Y(), getQt1Z(), getPrimaryBeam(),
-//                getPeakMeasurementsCount(), getIsotopicRatiosII(), isReferenceMaterial(),
-//                isConcentrationReferenceMaterial(), isUseSBM(), isUserLinFits(),
-//                getTaskExpressionsForScansEvaluated(), getTaskExpressionsEvaluationsPerSpot(),
-//                isSelected(), getCountOfNonPositiveSBMCounts());//, getCommonLeadSpecsForSpot());
-//        result = 31 * result + Arrays.hashCode(getCountTimeSec());
-//        result = 31 * result + Arrays.hashCode(getNamesOfSpecies());
-//        result = 31 * result + Arrays.hashCode(getRawPeakData());
-//        result = 31 * result + Arrays.hashCode(getRawSBMData());
-//        result = 31 * result + Arrays.hashCode(getTotalCounts());
-//        result = 31 * result + Arrays.hashCode(getTotalCountsOneSigmaAbs());
-//        result = 31 * result + Arrays.hashCode(getTotalCountsSBM());
-//        result = 31 * result + Arrays.hashCode(getTimeStampSec());
-//        result = 31 * result + Arrays.hashCode(getTrimMass());
-//        result = 31 * result + Arrays.hashCode(getTotalCps());
-//        result = 31 * result + Arrays.hashCode(getNetPkCps());
-//        result = 31 * result + Arrays.hashCode(getPkFerr());
-//        result = 31 * result + Arrays.hashCode(getReducedPkHt());
-//        result = 31 * result + Arrays.hashCode(getReducedPkHtFerr());
-//        result = 31 * result + Arrays.hashCode(getPkInterpScanArray());
-//        return result;
-//    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -1099,13 +1069,13 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
                 && taskExpressionsEvaluationsPerSpot.equals(that.taskExpressionsEvaluationsPerSpot)
                 && fractionID.equals(that.fractionID) && nameOfMount.equals(that.nameOfMount)
                 && Arrays.equals(countTimeSec, that.countTimeSec) && Arrays.equals(namesOfSpecies, that.namesOfSpecies)
-                && isotopicRatiosII.equals(that.isotopicRatiosII) && Arrays.equals(rawPeakData, that.rawPeakData)
-                && Arrays.equals(rawSBMData, that.rawSBMData) && Arrays.equals(totalCounts, that.totalCounts)
-                && Arrays.equals(totalCountsOneSigmaAbs, that.totalCountsOneSigmaAbs)
-                && Arrays.equals(totalCountsSBM, that.totalCountsSBM) && Arrays.equals(timeStampSec, that.timeStampSec)
-                && Arrays.equals(trimMass, that.trimMass) && Arrays.equals(totalCps, that.totalCps)
-                && Arrays.equals(netPkCps, that.netPkCps) && Arrays.equals(pkFerr, that.pkFerr)
-                && Arrays.equals(reducedPkHt, that.reducedPkHt) && Arrays.equals(reducedPkHtFerr, that.reducedPkHtFerr)
+                && isotopicRatiosII.equals(that.isotopicRatiosII) && Arrays.deepEquals(rawPeakData, that.rawPeakData)
+                && Arrays.deepEquals(rawSBMData, that.rawSBMData) && Arrays.deepEquals(totalCounts, that.totalCounts)
+                && Arrays.deepEquals(totalCountsOneSigmaAbs, that.totalCountsOneSigmaAbs)
+                && Arrays.deepEquals(totalCountsSBM, that.totalCountsSBM) && Arrays.deepEquals(timeStampSec, that.timeStampSec)
+                && Arrays.deepEquals(trimMass, that.trimMass) && Arrays.equals(totalCps, that.totalCps)
+                && Arrays.deepEquals(netPkCps, that.netPkCps) && Arrays.deepEquals(pkFerr, that.pkFerr)
+                && Arrays.deepEquals(reducedPkHt, that.reducedPkHt) && Arrays.deepEquals(reducedPkHtFerr, that.reducedPkHtFerr)
                 && Arrays.equals(pkInterpScanArray, that.pkInterpScanArray)
                 && taskExpressionsForScansEvaluated.equals(that.taskExpressionsForScansEvaluated)
                 && taskExpressionsMetaDataPerSpot.equals(that.taskExpressionsMetaDataPerSpot)
@@ -1121,18 +1091,18 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
                 countOfNonPositiveSBMCounts, commonLeadSpecsForSpot, overcountCorrectionIsotope);
         result = 31 * result + Arrays.hashCode(countTimeSec);
         result = 31 * result + Arrays.hashCode(namesOfSpecies);
-        result = 31 * result + Arrays.hashCode(rawPeakData);
-        result = 31 * result + Arrays.hashCode(rawSBMData);
-        result = 31 * result + Arrays.hashCode(totalCounts);
-        result = 31 * result + Arrays.hashCode(totalCountsOneSigmaAbs);
-        result = 31 * result + Arrays.hashCode(totalCountsSBM);
-        result = 31 * result + Arrays.hashCode(timeStampSec);
-        result = 31 * result + Arrays.hashCode(trimMass);
+        result = 31 * result + Arrays.deepHashCode(rawPeakData);
+        result = 31 * result + Arrays.deepHashCode(rawSBMData);
+        result = 31 * result + Arrays.deepHashCode(totalCounts);
+        result = 31 * result + Arrays.deepHashCode(totalCountsOneSigmaAbs);
+        result = 31 * result + Arrays.deepHashCode(totalCountsSBM);
+        result = 31 * result + Arrays.deepHashCode(timeStampSec);
+        result = 31 * result + Arrays.deepHashCode(trimMass);
         result = 31 * result + Arrays.hashCode(totalCps);
-        result = 31 * result + Arrays.hashCode(netPkCps);
-        result = 31 * result + Arrays.hashCode(pkFerr);
-        result = 31 * result + Arrays.hashCode(reducedPkHt);
-        result = 31 * result + Arrays.hashCode(reducedPkHtFerr);
+        result = 31 * result + Arrays.deepHashCode(netPkCps);
+        result = 31 * result + Arrays.deepHashCode(pkFerr);
+        result = 31 * result + Arrays.deepHashCode(reducedPkHt);
+        result = 31 * result + Arrays.deepHashCode(reducedPkHtFerr);
         result = 31 * result + Arrays.hashCode(pkInterpScanArray);
         return result;
     }

@@ -42,13 +42,12 @@ import static org.cirdles.squid.utilities.FileUtilities.unpackZipFile;
  */
 public class CalamariFileUtilities {
 
+    public static File XSLTMLFolder;
+    public static List<String> taskLibraryFileNamesList;
     private static File exampleFolder;
     private static File physicalConstantsFolder;
     private static File referenceMaterialsFolder;
     private static File commonPbModelsFolder;
-    public static File XSLTMLFolder;
-
-    public static List<String> taskLibraryFileNamesList;
 
     // June 2021 reworked
     static {
@@ -82,19 +81,20 @@ public class CalamariFileUtilities {
                 }
                 if (exampleFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfPrawnFiles, ISO_8859_1);
-                    for (int i = 0; i < fileNames.size(); i++) {
+                    for (String fileName : fileNames) {
                         // test for empty string
-                        if (fileNames.get(i).trim().length() > 0) {
-                            File prawnFileResource = prawnFileResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                        if (fileName.trim().length() > 0) {
+                            File prawnFileResource = prawnFileResourceExtractor.extractResourceAsFile(fileName);
+                            File prawnFile = new File(exampleFolder.getCanonicalPath() + File.separator + fileName);
 
-                            if (prawnFileResource.renameTo(prawnFile)) {
-                            } else {
+                            boolean renameTo = prawnFileResource.renameTo(prawnFile);
+                            if (!renameTo) {
+                                throw new IOException();
                             }
                         }
                     }
                 }
-            } catch (IOException iOException) {
+            } catch (IOException ignored) {
             }
 
         }
@@ -149,19 +149,20 @@ public class CalamariFileUtilities {
                 }
                 if (SQUID_TASK_LIBRARY_FOLDER.mkdir()) {
                     taskLibraryFileNamesList = Files.readAllLines(listOfTaskXMLFiles, ISO_8859_1);
-                    for (int i = 0; i < taskLibraryFileNamesList.size(); i++) {
+                    for (String s : taskLibraryFileNamesList) {
                         // test for empty string
-                        if (taskLibraryFileNamesList.get(i).trim().length() > 0) {
-                            File taskXMLFileResource = taskFileResourceExtractor.extractResourceAsFile(taskLibraryFileNamesList.get(i));
-                            File taskFile = new File(SQUID_TASK_LIBRARY_FOLDER.getCanonicalPath() + File.separator + taskLibraryFileNamesList.get(i));
+                        if (s.trim().length() > 0) {
+                            File taskXMLFileResource = taskFileResourceExtractor.extractResourceAsFile(s);
+                            File taskFile = new File(SQUID_TASK_LIBRARY_FOLDER.getCanonicalPath() + File.separator + s);
 
-                            if (taskXMLFileResource.renameTo(taskFile)) {
-                            } else {
+                            boolean renameTo = taskXMLFileResource.renameTo(taskFile);
+                            if (!renameTo) {
+                                throw new IOException();
                             }
                         }
                     }
                 }
-            } catch (IOException iOException) {
+            } catch (IOException ignored) {
             }
         }
     }
@@ -178,16 +179,16 @@ public class CalamariFileUtilities {
                 }
                 if (XSLTMLFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfXSLTMLFiles, ISO_8859_1);
-                    for (int i = 0; i < fileNames.size(); i++) {
+                    for (String fileName : fileNames) {
                         // test for empty string
-                        if (fileNames.get(i).trim().length() > 0) {
-                            File resource = extractor.extractResourceAsFile(fileNames.get(i));
-                            File file = new File(XSLTMLFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                        if (fileName.trim().length() > 0) {
+                            File resource = extractor.extractResourceAsFile(fileName);
+                            File file = new File(XSLTMLFolder.getCanonicalPath() + File.separator + fileName);
 
                             if (resource.renameTo(file)) {
-                                System.out.println("XSLTML File added: " + fileNames.get(i));
+                                System.out.println("XSLTML File added: " + fileName);
                             } else {
-                                System.out.println("XSLTML File failed to add: " + fileNames.get(i));
+                                System.out.println("XSLTML File failed to add: " + fileName);
                             }
                         }
                     }
@@ -211,16 +212,16 @@ public class CalamariFileUtilities {
                 }
                 if (physicalConstantsFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfPhysicalConstants, ISO_8859_1);
-                    for (int i = 0; i < fileNames.size(); i++) {
+                    for (String fileName : fileNames) {
                         // test for empty string
-                        if (fileNames.get(i).trim().length() > 0) {
-                            File physConstResource = physConstResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File physConstFile = new File(physicalConstantsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                        if (fileName.trim().length() > 0) {
+                            File physConstResource = physConstResourceExtractor.extractResourceAsFile(fileName);
+                            File physConstFile = new File(physicalConstantsFolder.getCanonicalPath() + File.separator + fileName);
 
                             if (physConstResource.renameTo(physConstFile)) {
-                                System.out.println("PhysicalConstantsModelFile added: " + fileNames.get(i));
+                                System.out.println("PhysicalConstantsModelFile added: " + fileName);
                             } else {
-                                System.out.println("PhysicalConstantsModelFile failed to add: " + fileNames.get(i));
+                                System.out.println("PhysicalConstantsModelFile failed to add: " + fileName);
                             }
                         }
                     }
@@ -242,16 +243,16 @@ public class CalamariFileUtilities {
                 }
                 if (referenceMaterialsFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfReferenceMaterials, ISO_8859_1);
-                    for (int i = 0; i < fileNames.size(); i++) {
+                    for (String fileName : fileNames) {
                         // test for empty string
-                        if (fileNames.get(i).trim().length() > 0) {
-                            File refMatResource = refMatResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File refMatFile = new File(referenceMaterialsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                        if (fileName.trim().length() > 0) {
+                            File refMatResource = refMatResourceExtractor.extractResourceAsFile(fileName);
+                            File refMatFile = new File(referenceMaterialsFolder.getCanonicalPath() + File.separator + fileName);
 
                             if (refMatResource.renameTo(refMatFile)) {
-                                System.out.println("ReferenceMaterialFile added: " + fileNames.get(i));
+                                System.out.println("ReferenceMaterialFile added: " + fileName);
                             } else {
-                                System.out.println("ReferenceMaterialFile failed to add: " + fileNames.get(i));
+                                System.out.println("ReferenceMaterialFile failed to add: " + fileName);
                             }
                         }
                     }
@@ -273,22 +274,21 @@ public class CalamariFileUtilities {
                 }
                 if (commonPbModelsFolder.mkdir()) {
                     List<String> fileNames = Files.readAllLines(listOfCommonPbModels, ISO_8859_1);
-                    for (int i = 0; i < fileNames.size(); i++) {
+                    for (String fileName : fileNames) {
                         // test for empty string
-                        if (fileNames.get(i).trim().length() > 0) {
-                            File commonPbResource = commonPbResourceExtractor.extractResourceAsFile(fileNames.get(i));
-                            File commonPbFile = new File(commonPbModelsFolder.getCanonicalPath() + File.separator + fileNames.get(i));
+                        if (fileName.trim().length() > 0) {
+                            File commonPbResource = commonPbResourceExtractor.extractResourceAsFile(fileName);
+                            File commonPbFile = new File(commonPbModelsFolder.getCanonicalPath() + File.separator + fileName);
 
                             if (commonPbResource.renameTo(commonPbFile)) {
-                                System.out.println("Common Pb Model added: " + fileNames.get(i));
+                                System.out.println("Common Pb Model added: " + fileName);
                             } else {
-                                System.out.println("Common Pb Model failed to add: " + fileNames.get(i));
+                                System.out.println("Common Pb Model failed to add: " + fileName);
                             }
                         }
                     }
                 }
-            } catch (IOException iOException) {
-                iOException.printStackTrace();
+            } catch (IOException ignored) {
             }
 
         }
@@ -309,51 +309,29 @@ public class CalamariFileUtilities {
                 File shrimpPrawnFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN.xsd");
                 File shrimpPrawnFileSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SHRIMP_PRAWN.xsd");
 
-                if (shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema)) {
-                    //System.out.println("SHRIMP_PRAWN.xsd added.");
-                } else {
-                    //System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
-                }
+                shrimpPrawnFileSchemaResource.renameTo(shrimpPrawnFileSchema);
 
                 File shrimpPrawnLegacyFileSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SHRIMP_PRAWN_LEGACY.xsd");
                 File shrimpPrawnLegacyFileSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SHRIMP_PRAWN_LEGACY.xsd");
 
-                if (shrimpPrawnLegacyFileSchemaResource.renameTo(shrimpPrawnLegacyFileSchema)) {
-                    //System.out.println("SHRIMP_PRAWN.xsd added.");
-                } else {
-                    //System.out.println("Failed to add SHRIMP_PRAWN.xsd.");
-                }
+                shrimpPrawnLegacyFileSchemaResource.renameTo(shrimpPrawnLegacyFileSchema);
 
                 File shrimpExpressionSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_ExpressionXMLSchema.xsd");
                 File shrimpExpressionSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidTask_ExpressionXMLSchema.xsd");
 
-                if (shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema)) {
-                    //System.out.println("SquidTask_ExpressionXMLSchema.xsd added.");
-                } else {
-                    //System.out.println("Failed to add SquidTask_ExpressionXMLSchema.xsd.");
-                }
-
+                shrimpExpressionSchemaResource.renameTo(shrimpExpressionSchema);
 
                 File squidTaskSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidTask_XMLSchema.xsd");
                 File squidTaskSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidTask_XMLSchema.xsd");
 
-                if (squidTaskSchemaResource.renameTo(squidTaskSchema)) {
-                    //System.out.println("SquidTask_XMLSchema.xsd added.");
-                } else {
-                    //System.out.println("Failed to add SquidTask_XMLSchema.xsd.");
-                }
+                squidTaskSchemaResource.renameTo(squidTaskSchema);
 
                 File squidReportTableSchemaResource = prawnFileResourceExtractor.extractResourceAsFile("schema/SquidReportTable.xsd");
                 File squidReportTableSchema = new File(SCHEMA_FOLDER.getCanonicalPath() + File.separator + "SquidReportTable.xsd");
 
-                if (squidReportTableSchemaResource.renameTo(squidReportTableSchema)) {
-                    //System.out.println("SquidReportTable.xsd added.");
-                } else {
-                    //System.out.println("Failed to add SquidReportTable.xsd.");
-
-                }
+                squidReportTableSchemaResource.renameTo(squidReportTableSchema);
             }
-        } catch (IOException iOException) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -370,15 +348,11 @@ public class CalamariFileUtilities {
                 if (ludwigLibraryJavadocResource.renameTo(ludwigLibraryJavadoc)) {
                     try {
                         unpackZipFile(ludwigLibraryJavadoc, LUDWIGLIBRARY_JAVADOC_FOLDER);
-                    } catch (IOException iOException) {
+                    } catch (IOException ignored) {
                     }
-                } else {
-                    //System.out.println("Failed to add LudwigLibraryJavadoc.jar.");
                 }
-            } else {
-                //System.out.println("Failed to make LudwigLibraryJavadoc folder.");
             }
-        } catch (IOException iOException) {
+        } catch (IOException ignored) {
         }
     }
 

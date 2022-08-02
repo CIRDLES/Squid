@@ -31,7 +31,7 @@ import static org.junit.Assert.fail;
 public class ExpressionXMLConverterTest {
 
     @Test
-    public void ExpressionXMLConverterTest() {
+    public void expressionXMLConverterTest() {
         try {
             ExpressionTree LnUOU = new ExpressionTree("LnUO/U");
             List<String> ratiosOfInterest = new ArrayList<>();

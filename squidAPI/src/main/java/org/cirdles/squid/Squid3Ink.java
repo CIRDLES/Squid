@@ -66,7 +66,7 @@ public class Squid3Ink implements Squid3API {
     private static SquidPersistentState squidPersistentState;
     private Squid3ProjectBasicAPI squid3Project;
 
-    private Squid3Ink(String squidUserHomeDirectory) throws SquidException {
+    private Squid3Ink(String squidUserHomeDirectory) throws SquidException, IOException {
         System.setProperty("user.home", squidUserHomeDirectory);
         CalamariFileUtilities.initSampleParametersModels();
         squidLabData = SquidLabData.getExistingSquidLabData();
@@ -89,7 +89,7 @@ public class Squid3Ink implements Squid3API {
         return squidPersistentState;
     }
 
-    public static Squid3API spillSquid3Ink(String squidUserHomeDirectory) throws SquidException {
+    public static Squid3API spillSquid3Ink(String squidUserHomeDirectory) throws SquidException, IOException {
         return new Squid3Ink(squidUserHomeDirectory);
     }
 
