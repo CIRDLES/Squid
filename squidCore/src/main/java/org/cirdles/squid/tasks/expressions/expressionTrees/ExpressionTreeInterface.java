@@ -269,10 +269,8 @@ public interface ExpressionTreeInterface {
     public default int argumentCount() {
         int retVal = 0;
 
-        if (this instanceof ExpressionTreeBuilderInterface) {
-            if (((ExpressionTreeBuilderInterface) this).getOperation() != null) {
-                retVal = ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
-            }
+        if (this instanceof ExpressionTreeBuilderInterface && ((ExpressionTreeBuilderInterface) this).getOperation() != null) {
+            retVal = ((ExpressionTreeBuilderInterface) this).getOperation().getArgumentCount();
         }
 
         return retVal;

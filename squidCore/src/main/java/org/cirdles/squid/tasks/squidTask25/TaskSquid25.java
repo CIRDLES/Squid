@@ -197,10 +197,9 @@ public class TaskSquid25 implements Serializable {
                     String excelExpression = prepareSquid25ExcelEquationStringForSquid3(equations[i + 2]);
                     if (excelExpression.length() > 0) {
                         //detect if name contains "Age" or "abs" - undo change to % for errors
-                        if ((equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("ABS")) || (equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("AGE"))) {
-                            if (excelExpression.startsWith("[%\"")) {
-                                excelExpression = excelExpression.replaceFirst("\\[%\"", "\\[±\"");
-                            }
+                        if (((equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("ABS")) || (equationNames[i + 2].toUpperCase(Locale.ENGLISH).contains("AGE")))
+                                && excelExpression.startsWith("[%\"")) {
+                            excelExpression = excelExpression.replaceFirst("\\[%\"", "\\[±\"");
                         }
                         taskSquid25.task25Equations.add(new TaskSquid25Equation(
                                 excelExpression,

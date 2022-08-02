@@ -217,10 +217,10 @@ public class ExpressionTree
         boolean retVal = (isValid() && !hasNoTargetSpots);
         // check for correct number of operands for operation
         if (retVal) {
-            retVal = retVal && (getCountOfChildren() == argumentCount());
+            retVal = getCountOfChildren() == argumentCount();
             if (retVal) {
                 for (ExpressionTreeInterface exp : childrenET) {
-                    retVal = retVal && exp.amHealthy();
+                    retVal = exp.amHealthy();
                     if (!retVal) {
                         break;
                     }
@@ -228,11 +228,9 @@ public class ExpressionTree
             }
         }
         // Jan 2020 added in missing check for divide by zero
-        if (operation instanceof Divide) {
-            if ((childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Double)) {
-                if (((Double) ((ConstantNode) childrenET.get(1)).getValue()) == 0) {
-                    retVal = false;
-                }
+        if (operation instanceof Divide && (childrenET.get(1) instanceof ConstantNode) && (((ConstantNode) childrenET.get(1)).getValue() instanceof Double)) {
+            if (((Double) ((ConstantNode) childrenET.get(1)).getValue()) == 0) {
+                retVal = false;
             }
         }
 
@@ -379,37 +377,29 @@ public class ExpressionTree
 
             int count = 0;
             for (ExpressionTreeInterface child : getChildrenET()) {
-                if (child instanceof ConstantNode) {
-                    if (((ConstantNode) child).isMissingExpression()) {
-                        audit.append("\n    Expression '").append((String) ((ConstantNode) child).getValue()).append("' is missing.");
-                    }
+                if (child instanceof ConstantNode && ((ConstantNode) child).isMissingExpression()) {
+                    audit.append("\n    Expression '").append((String) ((ConstantNode) child).getValue()).append("' is missing.");
                 }
 
                 // backwards compatible with use of ShrimpSpeciesNodes directly
-                if (child instanceof ShrimpSpeciesNode) {
-                    if (!(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
-                            && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
-                        audit.append("\n    Expression '").append(child.getName()).append("' is not a valid argument.");
-                    }
+                if (child instanceof ShrimpSpeciesNode && !(((ExpressionTree) child.getParentET()).getOperation() instanceof ShrimpSpeciesNodeFunction)
+                        && (((ShrimpSpeciesNode) child).getMethodNameForShrimpFraction().length() == 0)) {
+                    audit.append("\n    Expression '").append(child.getName()).append("' is not a valid argument.");
                 }
 
                 // Jan 2020 refinement
-                if (count == 1) {
-                    if (operation instanceof Divide) {
-                        if ((child instanceof ConstantNode) && (((ConstantNode) child).getValue() instanceof Double)) {
-                            if (((Double) ((ConstantNode) child).getValue()) == 0) {
-                                audit.append("\n    ** NOTE: Division by Zero! **");
-                            }
+                if (count == 1 && operation instanceof Divide) {
+                    if ((child instanceof ConstantNode) && (((ConstantNode) child).getValue() instanceof Double)) {
+                        if (((Double) ((ConstantNode) child).getValue()) == 0) {
+                            audit.append("\n    ** NOTE: Division by Zero! **");
                         }
                     }
                 }
 
                 // Jan 2020 refinement
-                if ((count > 0) && (child instanceof ConstantNode)) {
-                    if (((ExpressionTree) child.getParentET()).getOperation() instanceof If) {
-                        if (((ConstantNode) child).getValue() instanceof Boolean) {
-                            audit.append("\n    ** NOTE: Boolean Operand Not Allowed **");
-                        }
+                if ((count > 0) && (child instanceof ConstantNode) && ((ExpressionTree) child.getParentET()).getOperation() instanceof If) {
+                    if (((ConstantNode) child).getValue() instanceof Boolean) {
+                        audit.append("\n    ** NOTE: Boolean Operand Not Allowed **");
                     }
                 }
 
@@ -435,7 +425,7 @@ public class ExpressionTree
                     .compareTo(SpotTypes.UNKNOWN.getSpotTypeName()) == 0 ? "UNKNOWN:    " : ("UNK<" + unknownsGroupSampleName) + ">") : "";
         }
         if (targetPhrase.length() == 0) {
-            targetPhrase = (referenceMaterialCalc && squidSwitchSAUnknownCalculation)
+            targetPhrase = referenceMaterialCalc
                     ? "BOTH:           " : "";
         }
         if (targetPhrase.length() == 0) {
@@ -611,7 +601,7 @@ public class ExpressionTree
         } else {
             try {
                 retVal = operation.toStringMathML(childrenET);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         return retVal;
@@ -672,7 +662,7 @@ public class ExpressionTree
         ExpressionTreeInterface retVal = null;
         try {
             retVal = childrenET.get(0);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return retVal;
     }
@@ -685,7 +675,7 @@ public class ExpressionTree
         ExpressionTreeInterface retVal = null;
         try {
             retVal = childrenET.get(1);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return retVal;
     }
@@ -765,26 +755,23 @@ public class ExpressionTree
     }
 
     private List<String> getAllRatiosOfInterest(List<String> ratiosList) {
-        if (operation != null) {
-            if (!(operation instanceof SpotNodeLookupFunction)) {
-                addOnlyNewRatios(ratiosList, ratiosOfInterest);
-                for (ExpressionTreeInterface child : childrenET) {
-                    addOnlyNewRatios(ratiosList, ((ExpressionTree) child).getAllRatiosOfInterest(ratiosList));
-                }
+        if (operation != null && !(operation instanceof SpotNodeLookupFunction)) {
+            addOnlyNewRatios(ratiosList, ratiosOfInterest);
+            for (ExpressionTreeInterface child : childrenET) {
+                addOnlyNewRatios(ratiosList, ((ExpressionTree) child).getAllRatiosOfInterest(ratiosList));
             }
         }
 
         return ratiosList;
     }
 
-    private List<String> addOnlyNewRatios(List<String> target, List<String> source) {
-        for (int i = 0; i < source.size(); i++) {
-            if (!target.contains(source.get(i))) {
-                target.add(source.get(i));
+    private void addOnlyNewRatios(List<String> target, List<String> source) {
+        for (String s : source) {
+            if (!target.contains(s)) {
+                target.add(s);
             }
         }
 
-        return target;
     }
 
     /**

@@ -148,15 +148,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
         // make sure summary refers to correct target
         if ((targetBits > 0) && expressionTree.isSquidSwitchSCSummaryCalculation()) {
-            if (expressionTree.isSquidSwitchSTReferenceMaterialCalculation() || expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) {
-                if (targetBits != 2) {
-                    targetBits = 3;
-                }
+            if ((expressionTree.isSquidSwitchSTReferenceMaterialCalculation() || expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation()) && targetBits != 2) {
+                targetBits = 3;
             }
-            if (expressionTree.isSquidSwitchSAUnknownCalculation()) {
-                if (targetBits != 1) {
-                    targetBits = 3;
-                }
+            if (expressionTree.isSquidSwitchSAUnknownCalculation() && targetBits != 1) {
+                targetBits = 3;
             }
         }
 
@@ -248,15 +244,12 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     }
 
     public String produceExpressionTreeAudit() {
-        String auditReport = "";
+        StringBuilder auditReport = new StringBuilder();
         if (!((ExpressionTreeInterface) expressionTree).isValid()) {
             if (((ExpressionTree) expressionTree).getOperation() == null) {
-                auditReport
-                        += MSG_POORLY_FORMED_EXPRESSION;
+                auditReport.append(MSG_POORLY_FORMED_EXPRESSION);
             } else {
-                auditReport
-                        += "Errors occurred in parsing:\n"
-                        + ((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
+                auditReport.append("Errors occurred in parsing:\n").append((parsingStatusReport.trim().length() == 0) ? "expression not valid" : parsingStatusReport);
             }
         } else {
             auditExpressionTreeDependencies();
@@ -264,65 +257,58 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
             int match = haveMatchedTargetSpots();
 
-            auditReport
-                    += "Target Spots: "
-                    + (String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
-                    ? "NOT MATCHED" : "MATCHED")
-                    + "\n";
+            auditReport.append("Target Spots: ").append((String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
+                    ? "NOT MATCHED" : "MATCHED")).append("\n");
             if (targetAudit.size() > 0) {
-                auditReport += "Target Spots Audit:\n";
+                auditReport.append("Target Spots Audit:\n");
                 for (String audit : targetAudit) {
-                    auditReport += audit + "\n";
+                    auditReport.append(audit).append("\n");
                 }
-                auditReport += "\n";
+                auditReport.append("\n");
             }
 
-            auditReport
-                    += "Expression healthy: "
-                    + String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH);
+            auditReport.append("Expression healthy: ").append(String.valueOf(expressionTree.amHealthy()).toUpperCase(Locale.ENGLISH));
             if (argumentAudit.size() > 0) {
-                auditReport += "\nAudit:\n";
+                auditReport.append("\nAudit:\n");
                 for (String audit : argumentAudit) {
-                    auditReport += audit + "\n";
+                    auditReport.append(audit).append("\n");
                 }
             } else {
                 // case of no arguments = ConstantNode, ShrimpSpeciesNode or SpotFieldNode ALL Default if missing to ConstantNode with name "Missing Expression"
-                auditReport += "\n  " + (expressionTree.amHealthy() ? "Found " : "") + expressionTree.getName();
+                auditReport.append("\n  ").append(expressionTree.amHealthy() ? "Found " : "").append(expressionTree.getName());
                 if ((expressionTree instanceof ConstantNode) && expressionTree.amHealthy()) {
-                    auditReport += ", value = " + String.valueOf((double) ((ConstantNode) expressionTree).getValue());
+                    auditReport.append(", value = ").append(String.valueOf((double) ((ConstantNode) expressionTree).getValue()));
                 }
             }
         }
 
-        return auditReport;
+        return auditReport.toString();
     }
 
     private void auditExpressionTreeTargetCompatibility() {
-        if (((ExpressionTreeInterface) expressionTree).isValid()) {
+        if (expressionTree.isValid()) {
             if (expressionTree instanceof ExpressionTree) {
                 this.targetAudit = new ArrayList<>();
-                ((ExpressionTree) expressionTree).auditExpressionTreeTargetMatching(targetAudit);
+                expressionTree.auditExpressionTreeTargetMatching(targetAudit);
             }
         }
     }
 
     private void auditExpressionTreeDependencies() {
-        if (((ExpressionTreeInterface) expressionTree).isValid()) {
-            if (expressionTree instanceof ExpressionTree) {
-                this.argumentAudit = new ArrayList<>();
-                ((ExpressionTree) expressionTree).auditExpressionTreeDependencies(argumentAudit);
-            }
+        if (expressionTree.isValid() && expressionTree instanceof ExpressionTree) {
+            this.argumentAudit = new ArrayList<>();
+            expressionTree.auditExpressionTreeDependencies(argumentAudit);
         }
     }
 
     public String buildSignatureString() {
         StringBuilder signature = new StringBuilder();
-        if (((ExpressionTree) expressionTree).isValid()) {
+        if (expressionTree.isValid()) {
             signature.append(((ExpressionTree) expressionTree).hasRatiosOfInterest() ? "  " + String.valueOf(((ExpressionTree) expressionTree).getRatiosOfInterest().size()) : "  -");
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
-            signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
-            signature.append(((ExpressionTree) expressionTree).isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
+            signature.append(expressionTree.isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
+            signature.append(expressionTree.isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
+            signature.append(expressionTree.isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");
+            signature.append(expressionTree.isSquidSpecialUPbThExpression() ? "  +  " : "  -  ");
             signature.append(name);
         } else {
             signature.append("  Parsing Error! ").append(name);
@@ -333,11 +319,11 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public String buildShortSignatureString() {
         StringBuilder signature = new StringBuilder();
-        if (((ExpressionTree) expressionTree).isValid()) {
+        if (expressionTree.isValid()) {
             if (!(referenceMaterialValue || parameterValue)) {
-                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
-                        : ((ExpressionTree) expressionTree).isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
-                signature.append(((ExpressionTree) expressionTree).isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
+                signature.append(expressionTree.isSquidSwitchSTReferenceMaterialCalculation() ? SUPERSCRIPT_R_FOR_REFMAT
+                        : expressionTree.isSquidSwitchConcentrationReferenceMaterialCalculation() ? SUPERSCRIPT_C_FOR_CONCREFMAT : SUPERSCRIPT_SPACE);
+                signature.append(expressionTree.isSquidSwitchSAUnknownCalculation() ? SUPERSCRIPT_U_FOR_UNKNOWN : SUPERSCRIPT_SPACE);
                 signature.append(" ");
             }
             signature.append(name);
