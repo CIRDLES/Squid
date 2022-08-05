@@ -188,7 +188,7 @@ public class SquidReportSettingsController implements Initializable {
         try {
             selectedRefMatReportModel = task.getSelectedRefMatReportModel();
             selectedUnknownReportModel = task.getSelectedUnknownReportModel();
-        } catch (SquidException squidException) {
+        } catch (SquidException ignored) {
         }
 
         initEditing();
@@ -275,7 +275,7 @@ public class SquidReportSettingsController implements Initializable {
         isDefaultLab.setValue(false);
         try {
             isDefaultLab.addListener(ob -> processButtons());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -1590,8 +1590,7 @@ public class SquidReportSettingsController implements Initializable {
             });
 
             cell.setOnMousePressed((event) -> {
-                if (cell.isEmpty()) {
-                } else if (event.isSecondaryButtonDown()) {
+                if (event.isSecondaryButtonDown()) {
                     ContextMenu contextMenu = new ContextMenu();
 
                     // special case prevent showing if one of three base categories in Weighted Mean Plot Sort Table
@@ -1615,8 +1614,8 @@ public class SquidReportSettingsController implements Initializable {
                             boolean hasFixedCats = false;
                             int numDeletedCats = 0;
                             String name;
-                            for (int i = 0; i < selectedIndices.length; i++) {
-                                SquidReportCategoryInterface cat = categoryListView.getItems().get(selectedIndices[i] - numDeletedCats);
+                            for (Integer selectedIndex : selectedIndices) {
+                                SquidReportCategoryInterface cat = categoryListView.getItems().get(selectedIndex - numDeletedCats);
                                 name = cat.getDisplayName();
                                 if (reportTableCB.getSelectionModel().getSelectedItem().amWeightedMeanPlotAndSortReport()
                                         && (name.compareTo("Time") == 0
@@ -1625,7 +1624,7 @@ public class SquidReportSettingsController implements Initializable {
                                         || name.compareTo("Corr. Ratios") == 0)) {
                                     hasFixedCats = true;
                                 } else {
-                                    categoryListView.getItems().remove(selectedIndices[i] - numDeletedCats++);
+                                    categoryListView.getItems().remove(selectedIndex - numDeletedCats++);
                                 }
                             }
 

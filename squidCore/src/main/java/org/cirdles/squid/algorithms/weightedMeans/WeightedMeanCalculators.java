@@ -332,7 +332,7 @@ public final class WeightedMeanCalculators {
                 } else if ((j == (rejPoint - 1)) && (m < (n - 1))) {
                     sigRho2[j][m] = 0.0;
                     sigRho2[m][j] = 0.0;
-                } else if (j < (n - 2)) {
+                } else if ((j < (n - 2)) && (p < n)){
                     sigRho2[j][m] = sigRho1[m][p];
                     sigRho2[m][j] = sigRho1[p][m];
                 }

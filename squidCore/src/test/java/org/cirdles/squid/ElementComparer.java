@@ -16,7 +16,7 @@ public class ElementComparer {
                 while (!firstList.isEmpty() && returnValue) {
                     Element firstChild = firstList.remove(0);
                     Element secondChild = secondList.remove(0);
-                    if (compareElements(firstChild, secondChild) == false) {
+                    if (!compareElements(firstChild, secondChild)) {
                         returnValue = false;
                     }
                 }

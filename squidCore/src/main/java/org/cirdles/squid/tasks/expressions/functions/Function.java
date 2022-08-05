@@ -156,11 +156,9 @@ public abstract class Function
     public static String replaceAliasedFunctionNamesInExpressionString(String excelExpressionString) {
         String retVal = excelExpressionString;
         for (Entry<String, String> entry : ALIASED_FUNCTIONS_MAP.entrySet()) {
-            if (retVal != null && retVal.matches(".*(?i)" + entry.getKey() + "(.*)")) {
-                // replace alias if not null
-                if (entry.getValue() != null) {
-                    retVal = retVal.replaceAll("(?i)" + entry.getKey(), entry.getValue());
-                }
+            // replace alias if not null
+            if (retVal != null && retVal.matches(".*(?i)" + entry.getKey() + "(.*)") && entry.getValue() != null) {
+                retVal = retVal.replaceAll("(?i)" + entry.getKey(), entry.getValue());
             }
         }
 

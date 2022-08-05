@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -84,11 +83,7 @@ public class ReferenceMaterialModel extends ParametersModel {
 
         Map<String, BigDecimal> newRhos = new HashMap<>();
         model.setRhos(newRhos);
-        Iterator<Entry<String, BigDecimal>> rhosIterator = rhos.entrySet().iterator();
-        while (rhosIterator.hasNext()) {
-            Entry<String, BigDecimal> entry = rhosIterator.next();
-            newRhos.put(entry.getKey(), entry.getValue());
-        }
+        newRhos.putAll(rhos);
 
         ValueModel[] concs = new ValueModel[concentrations.length];
         for (int i = 0; i < concs.length; i++) {
@@ -147,7 +142,6 @@ public class ReferenceMaterialModel extends ParametersModel {
             }
 
             if (dates[3].hasPositiveValue()) {
-//            flagsArray[2] = "0;";
                 if (!dates[0].hasPositiveValue()) {
                     dates[0].setValue(dates[3].getValue());
                     dates[0].setOneSigma(dates[3].getOneSigmaABS());
@@ -162,8 +156,6 @@ public class ReferenceMaterialModel extends ParametersModel {
                     dates[1].setOneSigma(dates[3].getOneSigmaABS());
                     flagsArray[1] = "1;";
                     audit.append("Age 207/206 set to Age 208/232\n");
-                } else {
-//                flagsArray[1] = "0;";
                 }
             }
 
@@ -181,9 +173,7 @@ public class ReferenceMaterialModel extends ParametersModel {
         values[3] = new ValueModel("r208_232r");
         values[4] = new ValueModel("r238_235s");
         dataMeasured = new boolean[5];
-        for (int i = 0; i < dataMeasured.length; i++) {
-            dataMeasured[i] = false;
-        }
+        Arrays.fill(dataMeasured, false);
     }
 
     public ValueModel getConcentrationByName(String name) {
