@@ -5,6 +5,7 @@ Squid3
 
 [![Build Status](https://app.travis-ci.com/CIRDLES/Squid.svg?branch=master)](https://app.travis-ci.com/CIRDLES/Squid)
 [![Known Vulnerabilities](https://snyk.io/test/github/CIRDLES/Squid/badge.svg)](https://snyk.io/test/github/CIRDLES/Squid)
+[![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/CIRDLES/Squid.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/CIRDLES/Squid/context:java)
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
@@ -12,7 +13,6 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 [***Click to View New Sustainable Software Development Video***](https://www.youtube.com/watch?v=mC5eNrMjfk4)
 
-***UPDATE NOV 2021***
 
 We encourage you to download and evaluate the latest Squid3 release, the ".jar" file
 found <a href="https://github.com/CIRDLES/Squid/releases/latest" target="_blank">here</a>.  
