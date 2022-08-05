@@ -306,12 +306,15 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
     private static SquidReportCategoryInterface createDefaultRawNuclideRatiosCategory(TaskInterface task) {
         SquidReportCategoryInterface rawNuclideRatios = createReportCategory("Raw Nuclide Ratios");
         // special case of generation
-        Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getUnknownSpots().get(0)).getIsotopicRatiosII().iterator();
-        while (squidRatiosIterator.hasNext()) {
-            SquidRatiosModel entry = squidRatiosIterator.next();
-            if (entry.isActive()) {
-                String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
-                rawNuclideRatios.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(displayNameNoSpaces));
+        // issue #721
+        if (!task.getUnknownSpots().isEmpty()) {
+            Iterator<SquidRatiosModel> squidRatiosIterator = ((ShrimpFraction) task.getUnknownSpots().get(0)).getIsotopicRatiosII().iterator();
+            while (squidRatiosIterator.hasNext()) {
+                SquidRatiosModel entry = squidRatiosIterator.next();
+                if (entry.isActive()) {
+                    String displayNameNoSpaces = entry.getDisplayNameNoSpaces().substring(0, StrictMath.min(20, entry.getDisplayNameNoSpaces().length()));
+                    rawNuclideRatios.getCategoryColumns().add(SquidReportColumn.createSquidReportColumn(displayNameNoSpaces));
+                }
             }
         }
 
