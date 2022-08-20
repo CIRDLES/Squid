@@ -1436,7 +1436,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
                     aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
                 }
-            } else if (lookupExpTree instanceof VariableNodeForIsotopicRatios) {
+            } else if ((lookupExpTree instanceof VariableNodeForIsotopicRatios) && (((ExpressionTree) aliasedExpTree).getOperation() instanceof Value)){
                 aliasedExpTree = namedExpressionsMap.get(lookupExpTree.getName());
             }
         }
