@@ -32,11 +32,11 @@ public class WeightedMeanCalculatorsTest {
                 {0.0, 0.0, 0.25, 0.003803284943932538, 0.25},
                 {0.0, 0.0, 0.0, 0.25, 0.003803284943932538}};
         expectedBad = false;
-        expectedSlope = 0.0;
+        expectedSlope = -4.5494878620412566E-5;
         expectedIntercept = 1.8464967500150462;
-        expectedSigmaSlope = 0.0;
+        expectedSigmaSlope = 6.924027363443903E-6;
         expectedSigmaIntercept = 0.004522048443740375;
-        expectedCovSlopeInter = 0.0;
+        expectedCovSlopeInter = -2.8336583202677104E-8;
         expectedMswd = 1.2623509241318576;
         expectedProbFit = 0.2853957071615587;
         WtdLinCorrResults results = WeightedMeanCalculators.wtdLinCorr(y, sigRho, x);
