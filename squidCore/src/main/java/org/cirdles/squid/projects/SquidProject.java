@@ -66,11 +66,11 @@ import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyConstant
 public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectReportingAPI, Squid3ProjectParametersAPI {
 
     private static final long serialVersionUID = 7099919411562934142L;
-    public static transient boolean sampleNamingNotStandard = false;
+    public static boolean sampleNamingNotStandard = false;
     private static boolean projectChanged;
     // issue #714
     // methods: 1 = commonLeadModel, 0 = StaceyKramer, 2 = StaceyKramer per group (asterisk - uses sampleSKAge)
-    protected int commonLeadForUnknownsMethodSelected;
+    private int commonLeadForUnknownsMethodSelected;
     private transient SquidPrefixTree prefixTree;
     private PrawnXMLFileHandler prawnFileHandler;
     private String projectName;
@@ -240,7 +240,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         this.task.setReferenceMaterialModel(referenceMaterialModel);
         this.task.setConcentrationReferenceMaterialModel(concentrationReferenceMaterialModel);
         this.task.setChanged(true);
-        this.task.applyDirectives();
+        this.task.applyDirectives(false);
         initializeTaskAndReduceData(false);
     }
 
@@ -329,7 +329,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         // first pass
         task.setChanged(true);
         task.setupSquidSessionSpecsAndReduceAndReport(false);
-        this.task.applyDirectives();
+        this.task.applyDirectives(false);
 
         initializeTaskAndReduceData(false);
     }
@@ -865,8 +865,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
                 String run1DateTime = generateDateTimeMillisecondsStringForRun(run1);
                 String run2DateTime = generateDateTimeMillisecondsStringForRun(run2);
 
-                long run1DateTimeMilliseconds = 0l;
-                long run2DateTimeMilliseconds = 0l;
+                long run1DateTimeMilliseconds = 0L;
+                long run2DateTimeMilliseconds = 0L;
                 try {
                     run1DateTimeMilliseconds = dateFormat.parse(run1DateTime).getTime();
                     run2DateTimeMilliseconds = dateFormat.parse(run2DateTime).getTime();
@@ -903,8 +903,8 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
      * the original.
      *
      * @param run
-     * @param useOriginalData  when true, the original unedited file is used,
-     *                         otherwise the edited file is used.
+     * @param useOriginalData when true, the original unedited file is used,
+     *                        otherwise the edited file is used.
      * @return String [2] containing the file names of the two Prawn XML files
      * written as a result of the split.
      */

@@ -21,10 +21,7 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -65,6 +62,31 @@ public class SpotSummaryDetails implements Serializable {
         this.manualRejectionEnabled = false;
         this.minProbabilityWM = 0.0;
         this.selectedExpressionName = "SpotIndex";
+    }
+
+    public static boolean compareTwoSpotLists(List<ShrimpFractionExpressionInterface> listA, List<ShrimpFractionExpressionInterface> listB) {
+        boolean retVal = listA.size() == listB.size();
+        if (retVal) {
+            // check if two lists contain the same spots by fractionID only
+            List<ShrimpFractionExpressionInterface> listAclone = new ArrayList<>();
+            listAclone.addAll(listA);
+            Collections.sort(listAclone, Comparator.comparing(ShrimpFractionExpressionInterface::getFractionID));
+
+            List<ShrimpFractionExpressionInterface> listBclone = new ArrayList<>();
+            listBclone.addAll(listB);
+            Collections.sort(listBclone, Comparator.comparing(ShrimpFractionExpressionInterface::getFractionID));
+
+            for (int i = 0; i < listAclone.size(); i++) {
+                {
+                    if (listAclone.get(i).getFractionID().compareToIgnoreCase(listBclone.get(i).getFractionID()) != 0) {
+                        retVal = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return retVal;
     }
 
     public double[][] eval(TaskInterface task) throws SquidException {
@@ -115,13 +137,6 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     * @param expressionTree
-     */
-    public void setExpressionTree(ExpressionTreeInterface expressionTree) {
-        this.expressionTree = expressionTree;
-    }
-
-    /**
      * @return
      */
     public ExpressionTreeInterface getExpressionTree() {
@@ -129,10 +144,10 @@ public class SpotSummaryDetails implements Serializable {
     }
 
     /**
-     * @param rejectedIndices the rejectedIndices to set
+     * @param expressionTree
      */
-    public void setRejectedIndices(boolean[] rejectedIndices) {
-        this.rejectedIndices = rejectedIndices.clone();
+    public void setExpressionTree(ExpressionTreeInterface expressionTree) {
+        this.expressionTree = expressionTree;
     }
 
     public void rejectNone() {
@@ -141,6 +156,13 @@ public class SpotSummaryDetails implements Serializable {
 
     public boolean[] getRejectedIndices() {
         return this.rejectedIndices.clone();
+    }
+
+    /**
+     * @param rejectedIndices the rejectedIndices to set
+     */
+    public void setRejectedIndices(boolean[] rejectedIndices) {
+        this.rejectedIndices = rejectedIndices.clone();
     }
 
     public void setIndexOfRejectedIndices(int index, boolean value) {

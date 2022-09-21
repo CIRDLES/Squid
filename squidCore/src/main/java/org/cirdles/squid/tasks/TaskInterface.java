@@ -47,75 +47,115 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpr
  */
 public interface TaskInterface {
 
-    public ExpressionTreeInterface findNamedExpression(String ratioName);
+    ExpressionTreeInterface findNamedExpression(String ratioName);
 
-    public Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
+    Expression generateExpressionFromRawExcelStyleText(String name, String originalExpressionText, boolean eqnSwitchNU, boolean referenceMaterialValue, boolean parameterValue);
 
-    public void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) throws SquidException;
+    void updateRefMatCalibConstWMeanExpressions(boolean squidAllowsAutoExclusionOfSpots) throws SquidException;
 
-    public void buildSquidSpeciesModelList() throws SquidException;
+    void buildSquidSpeciesModelList() throws SquidException;
 
     /**
      * @param xstream
      */
-    public void customizeXstream(XStream xstream);
+    void customizeXstream(XStream xstream);
 
     /**
      *
      */
-    public void evaluateTaskExpressions();
+    void evaluateTaskExpressions();
 
     /**
      * @return the authorName
      */
-    public String getAuthorName();
+    String getAuthorName();
+
+    /**
+     * @param authorName the authorName to set
+     */
+    void setAuthorName(String authorName);
 
     /**
      * @return the dateRevised
      */
-    public long getDateRevised();
+    long getDateRevised();
+
+    /**
+     * @param dateRevised the dateRevised to set
+     */
+    void setDateRevised(long dateRevised);
 
     /**
      * @return the description
      */
-    public String getDescription();
+    String getDescription();
+
+    /**
+     * @param description the description to set
+     */
+    void setDescription(String description);
 
     /**
      * @return the labName
      */
-    public String getLabName();
+    String getLabName();
+
+    /**
+     * @param labName the labName to set
+     */
+    void setLabName(String labName);
 
     /**
      * @return the name
      */
-    public String getName();
+    String getName();
+
+    /**
+     * @param name the name to set
+     */
+    void setName(String name);
 
     /**
      * @return the provenance
      */
-    public String getProvenance();
+    String getProvenance();
+
+    /**
+     * @param provenance the provenance to set
+     */
+    void setProvenance(String provenance);
 
     /**
      * @return the ratioNames
      */
-    public List<String> getRatioNames();
+    List<String> getRatioNames();
+
+    /**
+     * @param ratioNames the ratioNames to set
+     */
+    void setRatioNames(List<String> ratioNames);
 
     /**
      * @return the mapOfIndexToMassStationDetails
      */
-    public Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() throws SquidException;
+    Map<Integer, MassStationDetail> getMapOfIndexToMassStationDetails() throws SquidException;
 
     /**
      * @return the nominalMasses
      */
-    public List<String> getNominalMasses();
+    List<String> getNominalMasses();
+
+    /**
+     * @param nominalMasses the nominalMasses to set
+     */
+    void setNominalMasses(List<String> nominalMasses);
 
     /**
      * @param prawnFile the prawnFile to set
      */
-    public void setPrawnFile(ShrimpDataFileInterface prawnFile);
+    void setPrawnFile(ShrimpDataFileInterface prawnFile);
 
-    public SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
+    SquidSpeciesModel lookUpSpeciesByName(String isotopeName);
 
     /**
      * @return the squidRatiosModelList
@@ -138,258 +178,221 @@ public interface TaskInterface {
     Map<String, SpotSummaryDetails> getTaskExpressionsEvaluationsPerSpotSet();
 
     /**
+     * @param taskExpressionsEvaluationsPerSpotSet the
+     *                                             taskExpressionsEvaluationsPerSpotSet to set
+     */
+    void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
+
+    /**
      * @return the type
      */
     TaskTypeEnum getTaskType();
+
+    /**
+     * @param type the type to set
+     */
+    void setTaskType(TaskTypeEnum type);
 
     /**
      * @return the mapOfIndexToMassStationDetails
      */
     List<MassStationDetail> makeListOfMassStationDetails();
 
-    public String printTaskAudit();
+    String printTaskAudit();
 
-    public String printTaskSummary();
+    String printTaskSummary();
 
-    public int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
+    int selectBackgroundSpeciesReturnPreviousIndex(SquidSpeciesModel ssm);
 
-    /**
-     * @param authorName the authorName to set
-     */
-    public void setAuthorName(String authorName);
+    void removeExpression(Expression expression, boolean reprocessExpressions) throws SquidException;
 
-    /**
-     * @param dateRevised the dateRevised to set
-     */
-    public void setDateRevised(long dateRevised);
+    void restoreRemovedExpressions() throws SquidException;
 
-    /**
-     * @param description the description to set
-     */
-    public void setDescription(String description);
+    void addExpression(Expression exp, boolean reprocessExpressions) throws SquidException;
 
-    /**
-     * @param labName the labName to set
-     */
-    public void setLabName(String labName);
+    ParametersModel getReferenceMaterialModel();
 
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name);
+    void setReferenceMaterialModel(ParametersModel refMat);
 
-    /**
-     * @param provenance the provenance to set
-     */
-    public void setProvenance(String provenance);
+    ParametersModel getPhysicalConstantsModel();
 
-    /**
-     * @param nominalMasses the nominalMasses to set
-     */
-    public void setNominalMasses(List<String> nominalMasses);
+    void setPhysicalConstantsModel(ParametersModel physConst);
 
-    /**
-     * @param ratioNames the ratioNames to set
-     */
-    public void setRatioNames(List<String> ratioNames);
+    ParametersModel getCommonPbModel();
 
-    /**
-     * @param taskExpressionsEvaluationsPerSpotSet the
-     *                                             taskExpressionsEvaluationsPerSpotSet to set
-     */
-    public void setTaskExpressionsEvaluationsPerSpotSet(Map<String, SpotSummaryDetails> taskExpressionsEvaluationsPerSpotSet);
+    void setCommonPbModel(ParametersModel model);
 
-    public void removeExpression(Expression expression, boolean reprocessExpressions) throws SquidException;
+    ParametersModel getConcentrationReferenceMaterialModel();
 
-    public void restoreRemovedExpressions() throws SquidException;
-
-    public void addExpression(Expression exp, boolean reprocessExpressions) throws SquidException;
-
-    public void setReferenceMaterialModel(ParametersModel refMat);
-
-    public ParametersModel getReferenceMaterialModel();
-
-    public void setPhysicalConstantsModel(ParametersModel physConst);
-
-    public ParametersModel getPhysicalConstantsModel();
-
-    public void setCommonPbModel(ParametersModel model);
-
-    public ParametersModel getCommonPbModel();
-
-    public void setConcentrationReferenceMaterialModel(ParametersModel refMat);
-
-    public ParametersModel getConcentrationReferenceMaterialModel();
-
-    /**
-     * @param type the type to set
-     */
-    public void setTaskType(TaskTypeEnum type);
+    void setConcentrationReferenceMaterialModel(ParametersModel refMat);
 
     /**
      * @param forceReprocess the value of forceReprocess
      */
-    public void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess) throws SquidException;
+    void setupSquidSessionSpecsAndReduceAndReport(boolean forceReprocess) throws SquidException;
 
-    public void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
+    void updateTableOfSelectedRatiosByMassStationIndex(int row, int col, boolean selected);
 
     /**
      * @return the NAMED_EXPRESSIONS_MAP
      */
-    public Map<String, ExpressionTreeInterface> getNamedExpressionsMap();
+    Map<String, ExpressionTreeInterface> getNamedExpressionsMap();
 
     /**
      * @return the squidSessionModel
      */
-    public SquidSessionModel getSquidSessionModel();
+    SquidSessionModel getSquidSessionModel();
 
     /**
      * @return the taskExpressionsOrdered
      */
-    public List<Expression> getTaskExpressionsOrdered();
+    List<Expression> getTaskExpressionsOrdered();
 
-    public List<Expression> getCustomTaskExpressions();
+    /**
+     * @param taskExpressionsOrdered
+     */
+    void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
+
+    List<Expression> getCustomTaskExpressions();
 
     /**
      * @param expression Name of the expression to test
      * @return True if the expression exists, false if not
      */
-    public boolean expressionExists(Expression expression);
-
-    /**
-     * @param taskExpressionsOrdered
-     */
-    public void setTaskExpressionsOrdered(List<Expression> taskExpressionsOrdered);
+    boolean expressionExists(Expression expression);
 
     /**
      * @param changed the changed to set
      */
-    public void setChanged(boolean changed);
+    void setChanged(boolean changed);
 
     /**
      * @return the shrimpFractions
      */
-    public List<ShrimpFractionExpressionInterface> getShrimpFractions();
+    List<ShrimpFractionExpressionInterface> getShrimpFractions();
 
-    public List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) throws SquidException;
+    List<ShrimpFractionExpressionInterface> processRunFractions(ShrimpDataFileInterface prawnFile, SquidSessionModel squidSessionSpecs) throws SquidException;
 
     /**
      * @return the referenceMaterialSpots
      */
-    public List<ShrimpFractionExpressionInterface> getReferenceMaterialSpots();
+    List<ShrimpFractionExpressionInterface> getReferenceMaterialSpots();
 
     /**
      * @return the unknownSpots
      */
-    public List<ShrimpFractionExpressionInterface> getUnknownSpots();
+    List<ShrimpFractionExpressionInterface> getUnknownSpots();
 
     /**
      * @return the concentrationReferenceMaterialSpots
      */
-    public List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots();
+    List<ShrimpFractionExpressionInterface> getConcentrationReferenceMaterialSpots();
 
     /**
      * @param filterForRefMatSpotNames the filterForRefMatSpotNames to set
      */
-    public void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
+    void setFilterForRefMatSpotNames(String filterForRefMatSpotNames);
 
     /**
      * @param filterForConcRefMatSpotNames
      */
-    public void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
+    void setFilterForConcRefMatSpotNames(String filterForConcRefMatSpotNames);
 
     /**
      * @param filtersForUnknownNames the filtersForUnknownNames to set
      */
-    public void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames);
+    void setFiltersForUnknownNames(Map<String, Integer> filtersForUnknownNames);
 
     /**
      * @return the useSBM
      */
-    public boolean isUseSBM();
+    boolean isUseSBM();
 
     /**
      * @param useSBM the useSBM to set
      */
-    public void setUseSBM(boolean useSBM);
+    void setUseSBM(boolean useSBM);
 
     /**
      * @return the userLinFits
      */
-    public boolean isUserLinFits();
+    boolean isUserLinFits();
 
     /**
      * @param userLinFits the userLinFits to set
      */
-    public void setUserLinFits(boolean userLinFits);
+    void setUserLinFits(boolean userLinFits);
 
     /**
      * @return the indexOfBackgroundSpecies
      */
-    public int getIndexOfBackgroundSpecies();
+    int getIndexOfBackgroundSpecies();
 
     /**
      * @param indexOfBackgroundSpecies the indexOfBackgroundSpecies to set
      */
-    public void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
+    void setIndexOfBackgroundSpecies(int indexOfBackgroundSpecies);
 
-    public void updateAllExpressions(boolean reprocessExpressions) throws SquidException;
+    void updateAllExpressions(boolean reprocessExpressions) throws SquidException;
 
     /**
      * @param reportsEngine the reportsEngine to set
      */
-    public void setReportsEngine(CalamariReportsEngine reportsEngine);
+    void setReportsEngine(CalamariReportsEngine reportsEngine);
 
     /**
      * The original Calamari Reports
      *
      * @return
      */
-    public File producePerScanReportsToFiles();
+    File producePerScanReportsToFiles();
 
-    public void updateRatioNames(String[] ratioNames) throws SquidException;
+    void updateRatioNames(String[] ratioNames) throws SquidException;
 
-    public void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) throws SquidException;
+    void updateAffectedExpressions(Expression sourceExpression, boolean reprocessExpressions) throws SquidException;
 
-    public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException;
+    void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException;
 
-    public void applyTaskIsotopeLabelsToMassStations();
+    void applyTaskIsotopeLabelsToMassStations();
 
-    public void populateTableOfSelectedRatiosFromRatiosList();
+    void populateTableOfSelectedRatiosFromRatiosList();
 
-    public void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected);
+    void updateTableOfSelectedRatiosByRowOrCol(int row, int col, boolean selected);
 
     /**
      * @return the namedConstantsMap
      */
-    public Map<String, ExpressionTreeInterface> getNamedConstantsMap();
+    Map<String, ExpressionTreeInterface> getNamedConstantsMap();
 
     /**
      * @return namedParametersMap
      */
-    public Map<String, ExpressionTreeInterface> getNamedParametersMap();
+    Map<String, ExpressionTreeInterface> getNamedParametersMap();
 
-    public void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
+    void setIndexOfTaskBackgroundMass(int indexOfTask25BackgroundMass);
 
-    public void applyMassStationLabelsToTask() throws SquidException;
+    void applyMassStationLabelsToTask() throws SquidException;
 
     /**
      * @return
      */
-    public String getParentNuclide();
-    public String getPrimaryDaughterParentRatio();
-    public String getSecondaryDaughterParentCalculation();
-    public String getIndexIsotope();
+    String getParentNuclide();
 
     /**
      * @param parentNuclide
      */
-    public void setParentNuclide(String parentNuclide);
+    void setParentNuclide(String parentNuclide);
+
+    String getPrimaryDaughterParentRatio();
+
+    String getSecondaryDaughterParentCalculation();
+
+    String getIndexIsotope();
 
     /**
      *
      */
-    public default void applyDirectives() throws SquidException{
+    default void applyDirectives(boolean customizeTaskExpressions) throws SquidException {
         TaskDesign taskDesign = SquidPersistentState.getExistingPersistentState().getTaskDesign();
 
         // need to remove stored expression results on fractions to clear the decks   
@@ -398,8 +401,18 @@ public interface TaskInterface {
             spot.getTaskExpressionsEvaluationsPerSpot().clear();
             spot.getTaskExpressionsMetaDataPerSpot().clear();
         });
+
         // clear task expressions
-        setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
+        // issue #729 this next line was also removing memory of rejected spots
+        // expressions in this map are checked at evaluateExpressionForSpotSet
+        // the solution is to put in a flag for updating old files that would specify
+        // which expressions to rewrite as part of an update and then restore the rejections.
+
+        if (customizeTaskExpressions) {
+            // handle individual summary expressions and their existing rejection flags
+        } else {
+            setTaskExpressionsEvaluationsPerSpotSet(new TreeMap<>(String.CASE_INSENSITIVE_ORDER));
+        }
 
         List<Expression> customExpressions = getCustomTaskExpressions();
         // special temporary case Sep 2019
@@ -497,207 +510,207 @@ public interface TaskInterface {
         setChanged(true);
     }
 
-    public void evaluateExpressionForSpotSet(
+    void evaluateExpressionForSpotSet(
             ExpressionTreeInterface expressionTree,
             List<ShrimpFractionExpressionInterface> spotsForExpression) throws SquidException;
 
-    public void processAndSortExpressions();
+    void processAndSortExpressions();
 
-    public default boolean isPbU() {
+    default boolean isPbU() {
         return (getParentNuclide().contains("238"));
     }
 
     /**
      * @return the directAltPD
      */
-    public boolean isDirectAltPD();
+    boolean isDirectAltPD();
 
     /**
      * @param directAltPD the directAltPD to set
      */
-    public void setDirectAltPD(boolean directAltPD);
+    void setDirectAltPD(boolean directAltPD);
 
     /**
      * @return the useCalculatedAv_ParentElement_ConcenConst
      */
-    public boolean isUseCalculatedAv_ParentElement_ConcenConst();
+    boolean isUseCalculatedAv_ParentElement_ConcenConst();
 
     /**
      * @param useCalculatedAv_ParentElement_ConcenConst
      */
-    public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst);
+    void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst);
 
     /**
      * @return the selectedIndexIsotope
      */
-    public Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope();
+    Squid3Constants.IndexIsoptopesEnum getSelectedIndexIsotope();
 
     /**
      * @param selectedIndexIsotope the selectedIndexIsotope to set
      */
-    public void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope);
+    void setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum selectedIndexIsotope);
 
-    public Expression getExpressionByName(String name);
+    Expression getExpressionByName(String name);
 
-    public void generateBuiltInExpressions();
+    void generateBuiltInExpressions();
 
-    public void produceSummaryReportsForGUI();
+    void produceSummaryReportsForGUI();
 
     /**
      * @return the massMinuends
      */
-    public List<MassStationDetail> getMassMinuends();
+    List<MassStationDetail> getMassMinuends();
 
     /**
      * @param massMinuends the massMinuends to set
      */
-    public void setMassMinuends(List<MassStationDetail> massMinuends);
+    void setMassMinuends(List<MassStationDetail> massMinuends);
 
     /**
      * @return the massSubtrahends
      */
-    public List<MassStationDetail> getMassSubtrahends();
+    List<MassStationDetail> getMassSubtrahends();
 
     /**
      * @param massSubtrahends the massSubtrahends to set
      */
-    public void setMassSubtrahends(List<MassStationDetail> massSubtrahends);
+    void setMassSubtrahends(List<MassStationDetail> massSubtrahends);
 
     /**
      * @return the showTimeNormalized
      */
-    public boolean isShowTimeNormalized();
+    boolean isShowTimeNormalized();
 
     /**
      * @param showTimeNormalized the showTimeNormalized to set
      */
-    public void setShowTimeNormalized(boolean showTimeNormalized);
+    void setShowTimeNormalized(boolean showTimeNormalized);
 
     /**
      * @return the showPrimaryBeam
      */
-    public boolean isShowPrimaryBeam();
+    boolean isShowPrimaryBeam();
 
     /**
      * @param showPrimaryBeam the showPrimaryBeam to set
      */
-    public void setShowPrimaryBeam(boolean showPrimaryBeam);
+    void setShowPrimaryBeam(boolean showPrimaryBeam);
 
     /**
      * @return the showQt1y
      */
-    public boolean isShowQt1y();
+    boolean isShowQt1y();
 
     /**
      * @param aShowQt1y the showQt1y to set
      */
-    public void setShowQt1y(boolean aShowQt1y);
+    void setShowQt1y(boolean aShowQt1y);
 
     /**
      * @return the showQt1z
      */
-    public boolean isShowQt1z();
+    boolean isShowQt1z();
 
     /**
      * @param aShowQt1z the showQt1z to set
      */
-    public void setShowQt1z(boolean aShowQt1z);
+    void setShowQt1z(boolean aShowQt1z);
 
-    public boolean expressionIsNuSwitched(String expressionName);
+    boolean expressionIsNuSwitched(String expressionName);
 
     /**
      * @return showSpotLabels
      */
-    public boolean isShowSpotLabels();
+    boolean isShowSpotLabels();
 
     /**
      * @param showSpotLabels
      */
-    public void setShowSpotLabels(boolean showSpotLabels);
+    void setShowSpotLabels(boolean showSpotLabels);
 
     /**
      * @return the mapOfUnknownsBySampleNames
      */
-    public Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();
+    Map<String, List<ShrimpFractionExpressionInterface>> getMapOfUnknownsBySampleNames();
 
     /**
      * @param prawnChanged the prawnChanged to set
      */
-    public void setPrawnChanged(boolean prawnChanged);
+    void setPrawnChanged(boolean prawnChanged);
 
     /**
      * @return the squidAllowsAutoExclusionOfSpots
      */
-    public boolean isSquidAllowsAutoExclusionOfSpots();
+    boolean isSquidAllowsAutoExclusionOfSpots();
 
     /**
      * @param squidAllowsAutoExclusionOfSpots the
      *                                        squidAllowsAutoExclusionOfSpots to set
      */
-    public void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
-
-    /**
-     * @param extPErr the extPErr to set
-     */
-    public void setExtPErrU(double extPErr);
+    void setSquidAllowsAutoExclusionOfSpots(boolean squidAllowsAutoExclusionOfSpots);
 
     /**
      * @return the extPErr
      */
-    public double getExtPErrU();
+    double getExtPErrU();
+
+    /**
+     * @param extPErr the extPErr to set
+     */
+    void setExtPErrU(double extPErr);
 
     /**
      * @return the extPErrTh
      */
-    public double getExtPErrTh();
+    double getExtPErrTh();
 
     /**
      * @param extPErrTh the extPErrTh to set
      */
-    public void setExtPErrTh(double extPErrTh);
+    void setExtPErrTh(double extPErrTh);
 
-    public Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
+    Map<String, ExpressionTreeInterface> getNamedSpotLookupFieldsMap();
 
-    public Map<String, ExpressionTreeInterface> getNamedSpotMetaDataFieldsMap();
+    Map<String, ExpressionTreeInterface> getNamedSpotMetaDataFieldsMap();
+
+    /**
+     * @return the specialSquidFourExpressionsMap
+     */
+    Map<String, String> getSpecialSquidFourExpressionsMap();
 
     /**
      * @param specialSquidFourExpressionsMap the specialSquidFourExpressionsMap
      *                                       to set
      */
-    public void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap);
-
-    /**
-     * @return the specialSquidFourExpressionsMap
-     */
-    public Map<String, String> getSpecialSquidFourExpressionsMap();
+    void setSpecialSquidFourExpressionsMap(Map<String, String> specialSquidFourExpressionsMap);
 
     /**
      * @param taskDesign   the value of taskDesign
      * @param taskSkeleton the value of taskSkeleton
      */
-    public void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) throws SquidException;
+    void updateTaskFromTaskDesign(TaskDesign taskDesign, boolean taskSkeleton) throws SquidException;
 
     /**
      * @param taskDesign       the value of taskDesign
      * @param includeCustomExp the value of includeCustomExp
      */
-    public void updateTaskDesignFromTask(TaskDesign taskDesign, boolean includeCustomExp);
+    void updateTaskDesignFromTask(TaskDesign taskDesign, boolean includeCustomExp);
 
     /**
      * @return the delimiterForUnknownNames
      */
-    public String getDelimiterForUnknownNames();
+    String getDelimiterForUnknownNames();
 
     /**
      * @param delimiterForUnknownNames the delimiterForUnknownNames to set
      */
-    public void setDelimiterForUnknownNames(String delimiterForUnknownNames);
+    void setDelimiterForUnknownNames(String delimiterForUnknownNames);
 
-    public String printExpressionRequiresGraph(Expression exp);
+    String printExpressionRequiresGraph(Expression exp);
 
-    public String printExpressionProvidesGraph(Expression exp);
+    String printExpressionProvidesGraph(Expression exp);
 
-    public void generateMapOfUnknownsBySampleNames();
+    void generateMapOfUnknownsBySampleNames();
 
     /**
      * @param refreshCommonLeadModel         the value of refreshCommonLeadModel
@@ -706,69 +719,69 @@ public interface TaskInterface {
      * @param refreshReferenceMaterialsModel the value of
      *                                       refreshReferenceMaterialsModel
      */
-    public void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel) throws SquidException;
+    void refreshParametersFromModels(boolean refreshCommonLeadModel, boolean refreshPhysicalConstantsModel, boolean refreshReferenceMaterialsModel) throws SquidException;
 
     /**
      * @return the missingExpressionsByName
      */
-    public List<String> getMissingExpressionsByName();
+    List<String> getMissingExpressionsByName();
 
     /**
      * @return the roundingForSquid3
      */
-    public boolean isRoundingForSquid3();
+    boolean isRoundingForSquid3();
 
     /**
      * @param roundingForSquid3 the roundingForSquid3 to set
      */
-    public void setRoundingForSquid3(boolean roundingForSquid3);
+    void setRoundingForSquid3(boolean roundingForSquid3);
 
-    public List<SquidReportTableInterface> getSquidReportTablesRefMat();
+    List<SquidReportTableInterface> getSquidReportTablesRefMat();
 
-    public void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat);
+    void setSquidReportTablesRefMat(List<SquidReportTableInterface> squidReportTablesRefMat);
 
-    public List<SquidReportTableInterface> getSquidReportTablesUnknown();
+    List<SquidReportTableInterface> getSquidReportTablesUnknown();
 
-    public void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown);
+    void setSquidReportTablesUnknown(List<SquidReportTableInterface> squidReportTablesUnknown);
 
     /**
      * @return the selectedRefMatReportModel
      */
-    public SquidReportTableInterface getSelectedRefMatReportModel() throws SquidException;
+    SquidReportTableInterface getSelectedRefMatReportModel() throws SquidException;
 
     /**
      * @param selectedRefMatReportModel the selectedRefMatReportModel to set
      */
-    public void setSelectedRefMatReportModel(SquidReportTableInterface selectedRefMatReportModel);
+    void setSelectedRefMatReportModel(SquidReportTableInterface selectedRefMatReportModel);
 
     /**
      * @return the selectedUnknownReportModel
      */
-    public SquidReportTableInterface getSelectedUnknownReportModel() throws SquidException;
+    SquidReportTableInterface getSelectedUnknownReportModel() throws SquidException;
 
     /**
      * @param selectedUnknownReportModel the selectedUnknownReportModel to set
      */
-    public void setSelectedUnknownReportModel(SquidReportTableInterface selectedUnknownReportModel);
+    void setSelectedUnknownReportModel(SquidReportTableInterface selectedUnknownReportModel);
 
     /**
      * @return the overcountCorrectionType
      */
-    public Squid3Constants.OvercountCorrectionTypes getOvercountCorrectionType();
+    Squid3Constants.OvercountCorrectionTypes getOvercountCorrectionType();
 
     /**
      * @param overcountCorrectionType the overcountCorrectionType to set
      */
-    public void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
+    void setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes overcountCorrectionType);
 
-    public void updateAllSpotsWithCurrentCommonPbModel() throws SquidException;
+    void updateAllSpotsWithCurrentCommonPbModel() throws SquidException;
 
     /**
      * @param excelExpression
      * @return boolean whether this expression contains a named ratio and thus
      * could use NU handling
      */
-    public default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression) {
+    default boolean expressionTreeIsCandidateForSwitchNU(String excelExpression) {
         boolean retVal = false;
 
         // june 2022 added WM condition
