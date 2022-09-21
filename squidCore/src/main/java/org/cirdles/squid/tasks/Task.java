@@ -166,7 +166,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected ShrimpDataFileInterface prawnFile;
     protected CalamariReportsEngine reportsEngine;
     protected boolean changed;
-    protected boolean useCalculatedAv_ParentElement_ConcenConst;
+    protected boolean useCalculatedAvParentElementConcenConst;
     protected IndexIsoptopesEnum selectedIndexIsotope;
     // next 7 fields used to track user's choice of displayed options in mass audits
     protected List<MassStationDetail> massMinuends;
@@ -279,7 +279,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.changed = true;
         SquidProject.setProjectChanged(true);
 
-        this.useCalculatedAv_ParentElement_ConcenConst = false;
+        this.useCalculatedAvParentElementConcenConst = false;
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -355,7 +355,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
         if (taskSquidVersion.compareTo(Squid.VERSION) != 0) {
             taskSquidVersion = Squid.VERSION;
-            updateTask();
+            updateTask(true);
             retVal = true;
         }
 
@@ -370,7 +370,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         ParametersModel physConst = getPhysicalConstantsModel();
         ParametersModel commonPbMod = getCommonPbModel();
 
-//        SquidLabData squidLabData = SquidLabData.getExistingSquidLabData();
         if (physConst == null) {
             setPhysicalConstantsModel(squidLabData.getPhysConstDefault());
         } else if (!squidLabData.getPhysicalConstantsModels().contains(physConst)) {
@@ -450,7 +449,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             methodName.replaceFirst("is", "set"),
                             gettersAndSetters[i].getReturnType()).invoke(this, gettersAndSetters[i].invoke(taskDesign));
                 }
-            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException |
+                     InvocationTargetException e) {
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
             }
         }
@@ -543,7 +543,8 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                             methodName);
                     methSetPref.invoke(taskDesign, methGetTask.invoke(this));
                 }
-            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalArgumentException | IllegalAccessException |
+                     InvocationTargetException e) {
                 System.out.println(">>>  " + methodName + "     " + e.getMessage());
             }
         }
@@ -1163,9 +1164,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void updateRatioNames(String[] ratioNames) throws SquidException {
         this.ratioNames.clear();
-        for (String rn : ratioNames) {
-            this.ratioNames.add(rn);
-        }
+        Collections.addAll(this.ratioNames, ratioNames);
 
         populateTableOfSelectedRatiosFromRatiosList();
 
@@ -1315,9 +1314,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         }
 
         taskExpressionsOrdered.clear();
-        for (Expression listedExp : expArray) {
-            taskExpressionsOrdered.add(listedExp);
-        }
+        Collections.addAll(taskExpressionsOrdered, expArray);
     }
 
     /**
@@ -1436,7 +1433,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                         && !((VariableNodeForSummary) lookupExpTree).isUsesArrayIndex()) {
                     aliasedExpTree = getExpressionByName(lookupExpTree.getName()).getExpressionTree();
                 }
-            } else if ((lookupExpTree instanceof VariableNodeForIsotopicRatios) && (((ExpressionTree) aliasedExpTree).getOperation() instanceof Value)){
+            } else if ((lookupExpTree instanceof VariableNodeForIsotopicRatios) && (((ExpressionTree) aliasedExpTree).getOperation() instanceof Value)) {
                 aliasedExpTree = namedExpressionsMap.get(lookupExpTree.getName());
             }
         }
@@ -1538,20 +1535,17 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             wmExp.setExcelExpressionString(wmExp.getExcelExpressionString()
                     .replaceFirst("\\s*,\\s*(TRUE|FALSE)\\s*,\\s*",
                             "," + String.valueOf(!squidAllowsAutoExclusionOfSpots).toUpperCase(Locale.ENGLISH) + ","));
-            completeUpdateRefMatCalibConstWMeanExpressions(wmExp);
-        }
-    }
 
-    private void completeUpdateRefMatCalibConstWMeanExpressions(Expression listedExp) {
-        listedExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-        listedExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
-        listedExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
-        listedExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(true);
+            wmExp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+            wmExp.getExpressionTree().setSquidSpecialUPbThExpression(true);
+            wmExp.getExpressionTree().setSquidSwitchSTReferenceMaterialCalculation(true);
+            wmExp.getExpressionTree().setSquidSwitchSCSummaryCalculation(true);
 
-        // Aug 2018 change logic to clear the spots list now that task manager has checkbox for auto reject
-        SpotSummaryDetails spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(listedExp.getName());
-        if (spotSummaryDetails != null) {
-            spotSummaryDetails.rejectNone();
+            // Aug 2018 change logic to clear the spots list now that task manager has checkbox for auto reject
+            SpotSummaryDetails spotSummaryDetails = taskExpressionsEvaluationsPerSpotSet.get(wmExp.getName());
+            if ((spotSummaryDetails != null) && squidAllowsAutoExclusionOfSpots) {
+                spotSummaryDetails.rejectNone();
+            }
         }
     }
 
@@ -1623,10 +1617,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void applyTaskIsotopeLabelsToMassStationsAndUpdateTask() throws SquidException {
         applyTaskIsotopeLabelsToMassStations();
-        updateTask();
+        updateTask(false);
     }
 
-    private void updateTask() throws SquidException {
+    private void updateTask(boolean customizeTaskExpressions) throws SquidException {
         changed = true;
 
         // Sept 2020 - need to comb out bad ratios accidentally introduced
@@ -1640,7 +1634,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ratioNames.remove(ratio);
         }
 
-        applyDirectives();
+        applyDirectives(customizeTaskExpressions);
 
     }
 
@@ -1740,7 +1734,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             for (int i = 0; i < nominalMasses.size(); i++) {//            String taskIsotopeLabel : nominalMasses) {
                 String taskIsotopeLabel = nominalMasses.get(i);
                 boolean matched = false;
-                int intTaskIsotopeLabel = new BigDecimal(taskIsotopeLabel).add(new BigDecimal(0.5)).intValue();
+                int intTaskIsotopeLabel = new BigDecimal(taskIsotopeLabel).add(new BigDecimal("0.5")).intValue();
                 for (Map.Entry<Integer, MassStationDetail> entry : mapOfIndexToMassStationDetails.entrySet()) {
                     if (!matched) {
                         int intPrawnIsoptopeLabel = new BigDecimal(entry.getValue().getIsotopeLabel()).setScale(0, RoundingMode.HALF_EVEN).intValue();//               Integer.parseInt(entry.getValue().getIsotopeLabel());
@@ -1992,7 +1986,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         concentrationReferenceMaterialSpots = new ArrayList<>();
         unknownSpots = new ArrayList<>();
         boolean firstReferenceMaterial = true;
-        long baseTimeOfFirstRefMatForCalcHoursField = 0l;
+        long baseTimeOfFirstRefMatForCalcHoursField = 0L;
         int refMatSpotIndex = 1;
         for (ShrimpFractionExpressionInterface spot : shrimpFractions) {
             // spots that are concentrationReferenceMaterialModel will also be in one of the other two buckets
@@ -2282,11 +2276,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             }
 
             // if the spotsForExpression are the same, then preserve list of indices of rejected
-            // otherwise reset the list of indices to empty
-            if (!spotSummaryDetails.getSelectedSpots().equals(spotsForExpression)) {
+            // otherwise reset the list of indices
+            // issue #729 reworked logic here
+            if (!SpotSummaryDetails.compareTwoSpotLists(spotSummaryDetails.getSelectedSpots(), spotsForExpression)) {
                 spotSummaryDetails.setRejectedIndices(new boolean[spotsForExpression.size()]);
-                spotSummaryDetails.setSelectedSpots(spotsForExpression);
             }
+            spotSummaryDetails.setSelectedSpots(spotsForExpression);
 
             if (((expressionTree instanceof ConstantNode) || ((ExpressionTree) expressionTree).getOperation().isScalarResult())
                     && !expressionTree.isRootExpressionTree()) {
@@ -3368,20 +3363,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the useCalculatedAv_ParentElement_ConcenConst
+     * @return the useCalculatedAvParentElementConcenConst
      */
     @Override
-    public boolean isUseCalculatedAv_ParentElement_ConcenConst() {
-        return useCalculatedAv_ParentElement_ConcenConst;
+    public boolean isUseCalculatedAvParentElementConcenConst() {
+        return useCalculatedAvParentElementConcenConst;
     }
 
     /**
-     * @param useCalculatedAv_ParentElement_ConcenConst the
-     *                                                  useCalculatedAv_ParentElement_ConcenConst to set
+     * @param useCalculatedAvParentElementConcenConst the
+     *                                                  useCalculatedAvParentElementConcenConst to set
      */
     @Override
-    public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst) {
-        this.useCalculatedAv_ParentElement_ConcenConst = useCalculatedAv_ParentElement_ConcenConst;
+    public void setUseCalculatedAvParentElementConcenConst(boolean useCalculatedAvParentElementConcenConst) {
+        this.useCalculatedAvParentElementConcenConst = useCalculatedAvParentElementConcenConst;
     }
 
     /**
@@ -3867,7 +3862,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions,
                 referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots,
                 mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet,
-                prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst,
+                prawnFile, reportsEngine, changed, useCalculatedAvParentElementConcenConst,
                 selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized,
                 showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots,
                 extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel,

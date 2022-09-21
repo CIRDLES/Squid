@@ -190,7 +190,7 @@ public class PrawnFileHandlerIT {
         System.out.println("Testing 836_1_2016_Nov_28_09_TaskPerm1 with 4cor unknowns.");
 
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().applyDirectives();
+        squidProjectZ6266.getTask().applyDirectives(false);
         squidProjectZ6266.getTask().setChanged(true);
         squidProjectZ6266.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
 
@@ -269,7 +269,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setDirectAltPD(true);
         // keep selected index isotope
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().applyDirectives();
+        squidProjectZ6266.getTask().applyDirectives(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm2_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -327,7 +327,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setParentNuclide("232");
         // keep selected index isotope
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().applyDirectives();
+        squidProjectZ6266.getTask().applyDirectives(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm4_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());
@@ -385,7 +385,7 @@ public class PrawnFileHandlerIT {
         squidProjectZ6266.getTask().setDirectAltPD(false);
         // keep selected index isotope
         squidProjectZ6266.getTask().setChanged(true);
-        squidProjectZ6266.getTask().applyDirectives();
+        squidProjectZ6266.getTask().applyDirectives(false);
 
         File reportTableFile = new File(reportsFolder + File.separator + "836_1_2016_Nov_28_09_TaskPerm3_4Corr_Unknowns.csv");
         ReportSettingsInterface reportSettings = new ReportSettings("TEST", false, squidProjectZ6266.getTask());

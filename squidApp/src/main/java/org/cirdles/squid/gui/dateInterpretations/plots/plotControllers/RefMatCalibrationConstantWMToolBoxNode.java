@@ -166,7 +166,7 @@ public class RefMatCalibrationConstantWMToolBoxNode extends HBox {
                 // updated dec 2021 to change task and recalculate all - somehow this got dropped and not noticed.
                 squidProject.getTask().setParentNuclide(flavor.contains("238") ? "238" : "232");
                 try {
-                    squidProject.getTask().applyDirectives();
+                    squidProject.getTask().applyDirectives(false);
                 } catch (SquidException squidException) {
                     SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                 }

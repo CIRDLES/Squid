@@ -24,8 +24,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.StringConverter;
 import org.cirdles.squid.constants.Squid3Constants;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.exceptions.SquidException;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.utilities.fileUtilities.FileHandler;
 import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
@@ -259,7 +259,7 @@ public class TaskManagerController implements Initializable {
     private void toggleParentNuclideAction(ActionEvent event) {
         task.setParentNuclide(((RadioButton) event.getSource()).getId());
         try {
-            task.applyDirectives();
+            task.applyDirectives(false);
         } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
@@ -271,7 +271,7 @@ public class TaskManagerController implements Initializable {
     private void toggleDirectAltAction(ActionEvent event) {
         task.setDirectAltPD(((RadioButton) event.getSource()).getId().compareToIgnoreCase("DIRECT") == 0);
         try {
-            task.applyDirectives();
+            task.applyDirectives(false);
         } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
