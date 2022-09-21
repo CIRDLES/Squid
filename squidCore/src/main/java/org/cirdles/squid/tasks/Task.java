@@ -166,7 +166,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected ShrimpDataFileInterface prawnFile;
     protected CalamariReportsEngine reportsEngine;
     protected boolean changed;
-    protected boolean useCalculatedAv_ParentElement_ConcenConst;
+    protected boolean useCalculatedAvParentElementConcenConst;
     protected IndexIsoptopesEnum selectedIndexIsotope;
     // next 7 fields used to track user's choice of displayed options in mass audits
     protected List<MassStationDetail> massMinuends;
@@ -279,7 +279,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.changed = true;
         SquidProject.setProjectChanged(true);
 
-        this.useCalculatedAv_ParentElement_ConcenConst = false;
+        this.useCalculatedAvParentElementConcenConst = false;
 
         this.massMinuends = new ArrayList<>();
         this.massSubtrahends = new ArrayList<>();
@@ -3363,20 +3363,20 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     /**
-     * @return the useCalculatedAv_ParentElement_ConcenConst
+     * @return the useCalculatedAvParentElementConcenConst
      */
     @Override
-    public boolean isUseCalculatedAv_ParentElement_ConcenConst() {
-        return useCalculatedAv_ParentElement_ConcenConst;
+    public boolean isUseCalculatedAvParentElementConcenConst() {
+        return useCalculatedAvParentElementConcenConst;
     }
 
     /**
-     * @param useCalculatedAv_ParentElement_ConcenConst the
-     *                                                  useCalculatedAv_ParentElement_ConcenConst to set
+     * @param useCalculatedAvParentElementConcenConst the
+     *                                                  useCalculatedAvParentElementConcenConst to set
      */
     @Override
-    public void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst) {
-        this.useCalculatedAv_ParentElement_ConcenConst = useCalculatedAv_ParentElement_ConcenConst;
+    public void setUseCalculatedAvParentElementConcenConst(boolean useCalculatedAvParentElementConcenConst) {
+        this.useCalculatedAvParentElementConcenConst = useCalculatedAvParentElementConcenConst;
     }
 
     /**
@@ -3862,7 +3862,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions,
                 referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots,
                 mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet,
-                prawnFile, reportsEngine, changed, useCalculatedAv_ParentElement_ConcenConst,
+                prawnFile, reportsEngine, changed, useCalculatedAvParentElementConcenConst,
                 selectedIndexIsotope, massMinuends, massSubtrahends, showTimeNormalized,
                 showPrimaryBeam, showQt1y, showQt1z, squidAllowsAutoExclusionOfSpots,
                 extPErrU, extPErrTh, physicalConstantsModel, referenceMaterialModel, commonPbModel,

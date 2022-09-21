@@ -531,14 +531,14 @@ public interface TaskInterface {
     void setDirectAltPD(boolean directAltPD);
 
     /**
-     * @return the useCalculatedAv_ParentElement_ConcenConst
+     * @return the useCalculatedAvParentElementConcenConst
      */
-    boolean isUseCalculatedAv_ParentElement_ConcenConst();
+    boolean isUseCalculatedAvParentElementConcenConst();
 
     /**
      * @param useCalculatedAv_ParentElement_ConcenConst
      */
-    void setUseCalculatedAv_ParentElement_ConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst);
+    void setUseCalculatedAvParentElementConcenConst(boolean useCalculatedAv_ParentElement_ConcenConst);
 
     /**
      * @return the selectedIndexIsotope
