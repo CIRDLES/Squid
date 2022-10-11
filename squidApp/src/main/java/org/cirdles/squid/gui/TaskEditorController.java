@@ -90,20 +90,8 @@ public class TaskEditorController implements Initializable {
     private static final ToggleGroup denTG = new ToggleGroup();
     public static TaskInterface existingTaskToEdit = null;
     public static Squid3Constants.TaskEditTypeEnum editType = Squid3Constants.TaskEditTypeEnum.EDIT_CURRENT;
-    private  TaskDesign taskEditor;
-    @FXML
-    private  TextField uncorrConstPbUExpressionText;
-    @FXML
-    private  TextField uncorrConstPbThExpressionText;
-    @FXML
-    private  TextField parentConcExpressionText;
-    @FXML
-    private  TextField pb208Th232ExpressionText;
-    @FXML
-    private TextFlow defaultRatiosListTextFlow;
     private static Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private static boolean amGeochronMode;
-
     private final List<StackPane> undoMassesList = new ArrayList<>();
     EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
         @Override
@@ -120,6 +108,17 @@ public class TaskEditorController implements Initializable {
             }
         }
     };
+    private TaskDesign taskEditor;
+    @FXML
+    private TextField uncorrConstPbUExpressionText;
+    @FXML
+    private TextField uncorrConstPbThExpressionText;
+    @FXML
+    private TextField parentConcExpressionText;
+    @FXML
+    private TextField pb208Th232ExpressionText;
+    @FXML
+    private TextFlow defaultRatiosListTextFlow;
     @FXML
     private GridPane taskManagerGridPane;
     @FXML
@@ -205,7 +204,33 @@ public class TaskEditorController implements Initializable {
         return ratio;
     }
 
-    private  void updateAddButton() {
+    private static void tooltipMapPut(Expression exp, String expressionText) {
+        Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
+        audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
+        Tooltip result = tooltipsMap.put(expressionText, audit);
+        if (result != null) {
+            result.hide();
+        }
+    }
+
+    /**
+     * @param expressionName
+     * @param expressionString
+     * @return
+     */
+    private static Expression makeExpression(String expressionName, final String expressionString) {
+        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
+    }
+
+    private static void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
+        if (healthy) {
+            expressionText.setStyle(expressionText.getStyle().replace("wrongx_icon", "icon_checkmark"));
+        } else {
+            expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
+        }
+    }
+
+    private void updateAddButton() {
         String num = numLabel.getText();
         String den = denLabel.getText();
         boolean valid = (num.compareTo(den) != 0)
@@ -215,7 +240,7 @@ public class TaskEditorController implements Initializable {
         addBtn.setDisable(!valid);
     }
 
-    private  void populateRatios() {
+    private void populateRatios() {
         defaultRatiosListTextFlow.getChildren().clear();
         defaultRatiosListTextFlow.setMaxHeight(30);
         int count = 1;
@@ -248,7 +273,7 @@ public class TaskEditorController implements Initializable {
         }
     }
 
-    private  void refreshExpressionAudits() {
+    private void refreshExpressionAudits() {
         Expression exp = makeExpression(UNCOR206PB238U_CALIB_CONST, uncorrConstPbUExpressionText.getText());
         tooltipMapPut(exp, UNCOR206PB238U_CALIB_CONST);
         updateExpressionHealthFlag(uncorrConstPbUExpressionText, exp.amHealthy());
@@ -265,32 +290,6 @@ public class TaskEditorController implements Initializable {
         tooltipMapPut(exp, PARENT_ELEMENT_CONC_CONST);
         updateExpressionHealthFlag(parentConcExpressionText, exp.amHealthy());
 
-    }
-
-    private static void tooltipMapPut(Expression exp, String expressionText) {
-        Tooltip audit = new Tooltip(exp.produceExpressionTreeAudit());
-        audit.setStyle(EXPRESSION_TOOLTIP_CSS_STYLE_SPECS);
-        Tooltip result = tooltipsMap.put(expressionText, audit);
-        if (result != null) {
-            result.hide();
-        }
-    }
-
-    /**
-     * @param expressionName
-     * @param expressionString
-     * @return
-     */
-    private static Expression makeExpression(String expressionName, final String expressionString) {
-        return makeExpressionForAudit(expressionName, expressionString, namedExpressionsMap);
-    }
-
-    private static void updateExpressionHealthFlag(TextField expressionText, boolean healthy) {
-        if (healthy) {
-            expressionText.setStyle(expressionText.getStyle().replace("wrongx_icon", "icon_checkmark"));
-        } else {
-            expressionText.setStyle(expressionText.getStyle().replace("icon_checkmark", "wrongx_icon"));
-        }
     }
 
     /**
