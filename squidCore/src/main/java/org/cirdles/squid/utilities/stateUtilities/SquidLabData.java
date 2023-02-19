@@ -57,7 +57,7 @@ public class SquidLabData implements Serializable {
         updateSquidLabData();
     }
 
-    public static SquidLabData getExistingSquidLabData() throws SquidException{
+    public static SquidLabData getExistingSquidLabData() throws SquidException {
         SquidLabData retVal;
         try {
             File file = new File(File.separator + getExistingPersistentState().getSquidUserHomeDirectoryLocal()

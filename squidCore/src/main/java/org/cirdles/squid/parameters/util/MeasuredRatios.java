@@ -100,13 +100,6 @@ public enum MeasuredRatios {
     /**
      * @return
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return
-     */
     public static String[] getNames() {
         String[] retVal = new String[MeasuredRatios.values().length];
         for (int i = 0; i < MeasuredRatios.values().length; i++) {
@@ -128,5 +121,12 @@ public enum MeasuredRatios {
         }
 
         return retVal;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
     }
 }

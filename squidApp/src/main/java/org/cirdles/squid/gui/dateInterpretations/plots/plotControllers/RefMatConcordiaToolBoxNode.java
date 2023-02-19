@@ -58,7 +58,10 @@ public class RefMatConcordiaToolBoxNode extends HBox {
             @Override
             public void handle(ActionEvent e) {
                 PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = true;
-                try{plotsController.showActivePlot();}catch(SquidException squidException){}
+                try {
+                    plotsController.showActivePlot();
+                } catch (SquidException squidException) {
+                }
                 PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = false;
             }
         });
@@ -130,7 +133,10 @@ public class RefMatConcordiaToolBoxNode extends HBox {
                 }
 
                 squidProject.getTask().setChanged(true);
-                try{plotsController.showActivePlot();}catch(SquidException squidException){}
+                try {
+                    plotsController.showActivePlot();
+                } catch (SquidException squidException) {
+                }
             }
         });
     }

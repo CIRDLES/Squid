@@ -31,148 +31,6 @@ import java.util.List;
 public interface ExpressionTreeInterface {
 
     /**
-     * @param shrimpFractions the value of shrimpFraction
-     * @param task
-     * @return the double[][]
-     * @throws org.cirdles.squid.exceptions.SquidException
-     */
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
-
-    /**
-     * @return
-     */
-    public String getName();
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name);
-
-    /**
-     * @return the parentET
-     */
-    public ExpressionTreeInterface getParentET();
-
-    /**
-     * @param parentET the parentET to set
-     */
-    public void setParentET(ExpressionTreeInterface parentET);
-
-    /**
-     * @return the rootExpressionTree
-     */
-    public boolean isRootExpressionTree();
-
-    /**
-     * @param rootExpressionTree the rootExpressionTree to set
-     */
-    public void setRootExpressionTree(boolean rootExpressionTree);
-
-    /**
-     * @return
-     */
-    public String toStringMathML();
-
-    /**
-     * @return
-     */
-    public boolean isTypeFunction();
-
-    /**
-     * @return
-     */
-    public boolean isTypeFunctionOrOperation();
-
-    public boolean builtAsValueModel();
-
-    public boolean amHealthy();
-
-    public boolean isValid();
-
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp);
-
-    public boolean usesOtherExpression();
-
-    /**
-     * @return the squidSwitchSTReferenceMaterialCalculation
-     */
-    public boolean isSquidSwitchSTReferenceMaterialCalculation();
-
-    /**
-     * @param origin
-     */
-    public void copySettings(ExpressionTreeInterface origin);
-
-    /**
-     * @param squidSwitchSTReferenceMaterialCalculation the
-     *                                                  squidSwitchSTReferenceMaterialCalculation to set
-     */
-    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
-
-    /**
-     * @return the squidSwitchSAUnknownCalculation
-     */
-    public boolean isSquidSwitchSAUnknownCalculation();
-
-    /**
-     * @return the unknownsGroupSampleName
-     */
-    public String getUnknownsGroupSampleName();
-
-    /**
-     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
-     */
-    public void setUnknownsGroupSampleName(String unknownsGroupSampleName);
-
-    /**
-     * @param squidSwitchSAUnknownCalculation the
-     *                                        squidSwitchSAUnknownCalculation to set
-     */
-    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
-
-    /**
-     * @return the squidSwitchSCSummaryCalculation
-     */
-    public boolean isSquidSwitchSCSummaryCalculation();
-
-    /**
-     * @param squidSwitchSCSummaryCalculation the
-     *                                        squidSwitchSCSummaryCalculation to set
-     */
-    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
-
-    /**
-     * @return the squidSpecialUPbThExpression
-     */
-    public boolean isSquidSpecialUPbThExpression();
-
-    /**
-     * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
-     */
-    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
-
-    /**
-     * @return the squidSwitchConcentrationReferenceMaterialCalculation
-     */
-    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
-
-    /**
-     * @param squidSwitchConcentrationReferenceMaterialCalculation the
-     *                                                             squidSwitchConcentrationReferenceMaterialCalculation to set
-     */
-    public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
-
-    /**
-     * @param uncertaintyDirective the uncertaintyDirective to set
-     */
-    public void setUncertaintyDirective(String uncertaintyDirective);
-
-    /**
-     * @param index the index to set
-     */
-    public void setIndex(int index);
-
-    /**
      * @param objects
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
@@ -265,6 +123,148 @@ public interface ExpressionTreeInterface {
         }
         return retVal;
     }
+
+    /**
+     * @param shrimpFractions the value of shrimpFraction
+     * @param task
+     * @return the double[][]
+     * @throws org.cirdles.squid.exceptions.SquidException
+     */
+    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
+
+    /**
+     * @return
+     */
+    public String getName();
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name);
+
+    /**
+     * @return the parentET
+     */
+    public ExpressionTreeInterface getParentET();
+
+    /**
+     * @param parentET the parentET to set
+     */
+    public void setParentET(ExpressionTreeInterface parentET);
+
+    /**
+     * @return the rootExpressionTree
+     */
+    public boolean isRootExpressionTree();
+
+    /**
+     * @param rootExpressionTree the rootExpressionTree to set
+     */
+    public void setRootExpressionTree(boolean rootExpressionTree);
+
+    /**
+     * @return
+     */
+    public String toStringMathML();
+
+    /**
+     * @return
+     */
+    public boolean isTypeFunction();
+
+    /**
+     * @return
+     */
+    public boolean isTypeFunctionOrOperation();
+
+    public boolean builtAsValueModel();
+
+    public boolean amHealthy();
+
+    public boolean isValid();
+
+    public boolean usesAnotherExpression(ExpressionTreeInterface exp);
+
+    public boolean usesOtherExpression();
+
+    /**
+     * @return the squidSwitchSTReferenceMaterialCalculation
+     */
+    public boolean isSquidSwitchSTReferenceMaterialCalculation();
+
+    /**
+     * @param squidSwitchSTReferenceMaterialCalculation the
+     *                                                  squidSwitchSTReferenceMaterialCalculation to set
+     */
+    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
+
+    /**
+     * @param origin
+     */
+    public void copySettings(ExpressionTreeInterface origin);
+
+    /**
+     * @return the squidSwitchSAUnknownCalculation
+     */
+    public boolean isSquidSwitchSAUnknownCalculation();
+
+    /**
+     * @param squidSwitchSAUnknownCalculation the
+     *                                        squidSwitchSAUnknownCalculation to set
+     */
+    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
+
+    /**
+     * @return the unknownsGroupSampleName
+     */
+    public String getUnknownsGroupSampleName();
+
+    /**
+     * @param unknownsGroupSampleName the unknownsGroupSampleName to set
+     */
+    public void setUnknownsGroupSampleName(String unknownsGroupSampleName);
+
+    /**
+     * @return the squidSwitchSCSummaryCalculation
+     */
+    public boolean isSquidSwitchSCSummaryCalculation();
+
+    /**
+     * @param squidSwitchSCSummaryCalculation the
+     *                                        squidSwitchSCSummaryCalculation to set
+     */
+    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
+
+    /**
+     * @return the squidSpecialUPbThExpression
+     */
+    public boolean isSquidSpecialUPbThExpression();
+
+    /**
+     * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
+     */
+    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
+
+    /**
+     * @return the squidSwitchConcentrationReferenceMaterialCalculation
+     */
+    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
+
+    /**
+     * @param squidSwitchConcentrationReferenceMaterialCalculation the
+     *                                                             squidSwitchConcentrationReferenceMaterialCalculation to set
+     */
+    public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
+
+    /**
+     * @param uncertaintyDirective the uncertaintyDirective to set
+     */
+    public void setUncertaintyDirective(String uncertaintyDirective);
+
+    /**
+     * @param index the index to set
+     */
+    public void setIndex(int index);
 
     public default int argumentCount() {
         int retVal = 0;

@@ -286,7 +286,7 @@ public class ExpressionParser {
                                     if (((ExpressionTree) retExpTreeKnown).isSquidSwitchSCSummaryCalculation()) {
                                         retExpTree = new VariableNodeForSummary(baseExpressionName, index, usesArrayIndex);
                                     } else {
-                                        retExpTree = new VariableNodeForPerSpotTaskExpressions(baseExpressionName,  "", index,  usesArrayIndex);
+                                        retExpTree = new VariableNodeForPerSpotTaskExpressions(baseExpressionName, "", index, usesArrayIndex);
                                     }
                                     retExpTree.copySettings(retExpTreeKnown);
                                 }

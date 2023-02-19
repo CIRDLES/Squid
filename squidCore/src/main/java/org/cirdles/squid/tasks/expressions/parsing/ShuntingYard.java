@@ -254,6 +254,14 @@ public class ShuntingYard {
     }
 
     /**
+     * @param string
+     * @return
+     */
+    public static boolean isNumber(String string) {
+        return (string != null) && (NUMBER_PATTERN.matcher(string).matches() || NUMBER_SCIENTIFIC_PATTERN.matcher(string).matches());
+    }
+
+    /**
      *
      */
     public enum TokenTypes {
@@ -347,13 +355,5 @@ public class ShuntingYard {
 
             return retVal;
         }
-    }
-
-    /**
-     * @param string
-     * @return
-     */
-    public static boolean isNumber(String string) {
-        return (string != null) && (NUMBER_PATTERN.matcher(string).matches() || NUMBER_SCIENTIFIC_PATTERN.matcher(string).matches());
     }
 }

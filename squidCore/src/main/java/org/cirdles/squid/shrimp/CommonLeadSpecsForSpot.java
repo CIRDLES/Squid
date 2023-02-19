@@ -32,11 +32,10 @@ import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.
  */
 public class CommonLeadSpecsForSpot implements Serializable {
 
-    private static final long serialVersionUID = -3180471908770010857L;
-
     public static final int METHOD_COMMON_LEAD_MODEL = 1;
     public static final int METHOD_STACEY_KRAMER = 0;
     public static final int METHOD_STACEY_KRAMER_BY_GROUP = 2;
+    private static final long serialVersionUID = -3180471908770010857L;
     public static int DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = METHOD_STACEY_KRAMER;
 
     private double com_206Pb204Pb;
@@ -75,7 +74,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
         this.commonLeadModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         // Issue #714
-        switch (this.methodSelected){
+        switch (this.methodSelected) {
             case METHOD_COMMON_LEAD_MODEL:
             case METHOD_STACEY_KRAMER:
                 updateCommonLeadRatiosFromModel();
@@ -268,7 +267,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
      */
     public void setCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;
-        if ((methodSelected == METHOD_COMMON_LEAD_MODEL)||(methodSelected == METHOD_STACEY_KRAMER)) {
+        if ((methodSelected == METHOD_COMMON_LEAD_MODEL) || (methodSelected == METHOD_STACEY_KRAMER)) {
             updateCommonLeadRatiosFromModel();
         }
     }
@@ -277,7 +276,7 @@ public class CommonLeadSpecsForSpot implements Serializable {
     public void setRMCommonLeadModel(ParametersModel commonPbModel) {
         this.commonLeadModel = commonPbModel;
         methodSelected = METHOD_COMMON_LEAD_MODEL;
-            updateCommonLeadRatiosFromModel();
+        updateCommonLeadRatiosFromModel();
     }
 
     public void updateCommonLeadRatiosFromModel() {

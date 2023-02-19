@@ -26,9 +26,9 @@ public interface ShrimpDataFileInterface {
 
     public int extractCountOfRuns();
 
-    public void setSoftwareVersion(String value);
-
     public String getSoftwareVersion();
+
+    public void setSoftwareVersion(String value);
 
     public List<PrawnFile.Run> getRun();
 

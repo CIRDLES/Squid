@@ -25,14 +25,14 @@ import java.util.List;
 public interface ExpressionTreeBuilderInterface {
 
     /**
-     * @param operation the operation to set
-     */
-    public void setOperation(OperationOrFunctionInterface operation);
-
-    /**
      * @return the operation
      */
     public OperationOrFunctionInterface getOperation();
+
+    /**
+     * @param operation the operation to set
+     */
+    public void setOperation(OperationOrFunctionInterface operation);
 
     /**
      * @return the leftET

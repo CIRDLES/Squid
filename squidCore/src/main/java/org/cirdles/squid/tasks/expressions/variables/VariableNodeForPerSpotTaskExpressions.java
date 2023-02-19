@@ -165,7 +165,8 @@ public class VariableNodeForPerSpotTaskExpressions extends VariableNodeForSummar
                     retVal[i] = convertArrayToObjects(values);
                 }
 
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException |
+                     NullPointerException methodException) {
                 throw new SquidException("Could not find variable " + name);
             }
         } else {

@@ -3372,7 +3372,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
     /**
      * @param useCalculatedAvParentElementConcenConst the
-     *                                                  useCalculatedAvParentElementConcenConst to set
+     *                                                useCalculatedAvParentElementConcenConst to set
      */
     @Override
     public void setUseCalculatedAvParentElementConcenConst(boolean useCalculatedAvParentElementConcenConst) {

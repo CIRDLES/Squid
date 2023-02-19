@@ -29,9 +29,8 @@ import java.util.Objects;
  */
 public class ConstantNode extends ExpressionTree {
 
-    private static final long serialVersionUID = -2914393295564269277L;
     public static final String MISSING_EXPRESSION_STRING = "Missing_Expression";
-
+    private static final long serialVersionUID = -2914393295564269277L;
     private Object value;
 
     /**

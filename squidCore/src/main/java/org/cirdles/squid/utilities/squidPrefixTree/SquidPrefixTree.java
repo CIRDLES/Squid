@@ -30,17 +30,16 @@ public class SquidPrefixTree {
 
     private final static Character ROOT = "/".toCharArray()[0];
     private final static Character LEAF = "\\".toCharArray()[0];
-
-    private SquidPrefixTree parent;
     private final List<SquidPrefixTree> children;
     private final SquidPrefixTreeNode node;
+    private final Map<Integer, Integer> mapOfSpeciesFrequencies;
+    private final Map<Integer, Integer> mapOfScansFrequencies;
+    private SquidPrefixTree parent;
     private String stringValue;
     private int countOfSpecies;
     private int countOfScans;
     private int countOfDups;
     private int countOfLeaves;
-    private final Map<Integer, Integer> mapOfSpeciesFrequencies;
-    private final Map<Integer, Integer> mapOfScansFrequencies;
 
     public SquidPrefixTree() {
         this(new SquidPrefixTreeNode(ROOT));

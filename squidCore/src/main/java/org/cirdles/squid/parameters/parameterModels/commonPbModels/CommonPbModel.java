@@ -29,6 +29,37 @@ public class CommonPbModel extends ParametersModel {
         generateDefaultValueModels();
     }
 
+    public static List<ParametersModel> getDefaultModels() {
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidCommonPbModels");
+        List<ParametersModel> models = new ArrayList<>();
+        if (folder.exists()) {
+            File[] files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".xml");
+                }
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add((ParametersModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
+            }
+        }
+
+        return models;
+    }
+
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
+        for (int i = 0; i < models.size() && retVal == null; i++) {
+            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
+                retVal = models.get(i);
+            }
+        }
+        if (retVal == null) {
+            retVal = new CommonPbModel();
+        }
+        return retVal;
+    }
+
     private void generateDefaultValueModels() {
         values = new ValueModel[5];
         values[0] = new ValueModel("r206_204b");
@@ -69,37 +100,6 @@ public class CommonPbModel extends ParametersModel {
         }
 
         return model;
-    }
-
-    public static List<ParametersModel> getDefaultModels() {
-        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidCommonPbModels");
-        List<ParametersModel> models = new ArrayList<>();
-        if (folder.exists()) {
-            File[] files = folder.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.toLowerCase().endsWith(".xml");
-                }
-            });
-            for (int i = 0; i < files.length; i++) {
-                models.add((ParametersModel) (new CommonPbModel()).readXMLObject(files[i].getAbsolutePath(), false));
-            }
-        }
-
-        return models;
-    }
-
-    public static ParametersModel getDefaultModel(String modelName, String version) {
-        ParametersModel retVal = null;
-        List<ParametersModel> models = getDefaultModels();
-        for (int i = 0; i < models.size() && retVal == null; i++) {
-            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
-                retVal = models.get(i);
-            }
-        }
-        if (retVal == null) {
-            retVal = new CommonPbModel();
-        }
-        return retVal;
     }
 
 }

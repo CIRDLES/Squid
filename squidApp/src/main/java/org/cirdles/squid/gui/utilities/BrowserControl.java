@@ -16,8 +16,8 @@
 package org.cirdles.squid.gui.utilities;
 
 import javafx.stage.Window;
-import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.gui.SquidUI;
+import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 
 import java.io.File;
 import java.io.IOException;

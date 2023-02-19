@@ -92,6 +92,7 @@ import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.extractZipped
  */
 public class SquidUIController implements Initializable {
 
+    public static File fileToLoad;
     public static SquidLabData squidLabData = null;
     public static SquidPersistentState squidPersistentState = null;
     public static SquidProject squidProject;
@@ -245,6 +246,24 @@ public class SquidUIController implements Initializable {
         textArea.setContextMenu(contextMenu);
     }
 
+    private void loadSquidFile(File fileToLoad) {
+        try {
+            if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".squid")) {
+                openProject(fileToLoad.getAbsolutePath());
+            } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".xml")) {
+                processPrawnXMLFile(fileToLoad);
+            } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".zip")) {
+                Path prawnFilePathParent = fileToLoad.toPath().getParent();
+                Path prawnFilePath = extractZippedFile(fileToLoad, prawnFilePathParent.toFile());
+                File prawnSourceFileNew = prawnFilePath.toFile();
+                processPrawnXMLFile(prawnSourceFileNew);
+            }
+        } catch (IOException | SquidException | JAXBException | SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * Initializes the controller class.
      *
@@ -254,27 +273,27 @@ public class SquidUIController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // June 2022 implement drag n drop of files
+        // Tuned for issue #745
         mainPane.setOnDragOver(event -> {
-            event.acceptTransferModes(TransferMode.MOVE);
+            ObservableList<Node> children = mainPane.getChildren();
+            boolean proceed = true;
+            for (Node child : children) {
+                if (child.idProperty().toString().contains("ExpressionBuilder")
+                        || child.idProperty().toString().contains("SquidReportSettings")
+                        || child.idProperty().toString().contains("MassesAudit")) {
+                    proceed = false;
+                    break;
+                }
+            }
+            if (proceed) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
         });
         mainPane.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             if (event.getDragboard().hasFiles()) {
                 File fileToLoad = db.getFiles().get(0);
-                try {
-                    if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".squid")) {
-                        openProject(fileToLoad.getAbsolutePath());
-                    } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".xml")) {
-                        processPrawnXMLFile(fileToLoad);
-                    } else if (fileToLoad.getName().toLowerCase(Locale.ROOT).endsWith(".zip")) {
-                        Path prawnFilePathParent = fileToLoad.toPath().getParent();
-                        Path prawnFilePath = extractZippedFile(fileToLoad, prawnFilePathParent.toFile());
-                        File prawnSourceFileNew = prawnFilePath.toFile();
-                        processPrawnXMLFile(prawnSourceFileNew);
-                    }
-                } catch (IOException | SquidException | JAXBException | SAXException e) {
-                    e.printStackTrace();
-                }
+                loadSquidFile(fileToLoad);
             }
         });
 
@@ -323,6 +342,11 @@ public class SquidUIController implements Initializable {
 
         parametersLauncher = new ParametersLauncher(primaryStage);
         squidReportTableLauncher = new SquidReportTableLauncher(primaryStage);
+
+        // check for file from command line
+        if ((fileToLoad != null) && fileToLoad.exists()) {
+            loadSquidFile(fileToLoad);
+        }
     }
 
     private void initSaveMenuItemDisabling() {

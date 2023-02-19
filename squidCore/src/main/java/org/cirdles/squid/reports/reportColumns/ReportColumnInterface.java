@@ -35,255 +35,6 @@ import java.math.RoundingMode;
 public interface ReportColumnInterface extends Comparable<ReportColumnInterface>, ReportListItemI, Serializable {
 
     /**
-     * @param reportColumn
-     * @return
-     * @throws ClassCastException
-     */
-    @Override
-    public default int compareTo(ReportColumnInterface reportColumn)
-            throws ClassCastException {
-        String reportColumnFullName
-                = ((ReportColumnInterface) reportColumn).getDisplayName();
-        return this.getDisplayName().trim().//
-                compareToIgnoreCase(reportColumnFullName.trim());
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public default String getDisplayName() {
-        if (getAlternateDisplayName().equals("")) {
-            return getDisplayName1() + getDisplayName2() + getDisplayName3() + getDisplayName4();
-        } else {
-            return getAlternateDisplayName();
-        }
-    }
-
-    /**
-     *
-     */
-    @Override
-    public default void ToggleIsVisible() {
-        setVisible(!isVisible());
-    }
-
-    /**
-     * @param reportColumn
-     * @return
-     */
-    @Override
-    boolean equals(Object reportColumn);
-
-    /**
-     * @return the alternateDisplayName
-     */
-    String getAlternateDisplayName();
-
-    /**
-     * @return
-     */
-    int getCountOfSignificantDigits();
-
-    /**
-     * @return
-     */
-    String getDisplayName1();
-
-    /**
-     * @return
-     */
-    String getDisplayName2();
-
-    /**
-     * @return the displayName3
-     */
-    String getDisplayName3();
-
-    /**
-     * @return the displayName3
-     */
-    String getDisplayName4();
-
-    /**
-     * @return
-     */
-    String getFootnoteSpec();
-
-    /**
-     * @return
-     */
-    int getPositionIndex();
-
-    /**
-     * @return
-     */
-    String getRetrieveMethodName();
-
-    /**
-     * @return
-     */
-    String getRetrieveVariableName();
-
-    /**
-     * @return
-     */
-    ReportColumnInterface getUncertaintyColumn();
-
-    /**
-     * @return
-     */
-    String getUncertaintyType();
-
-    /**
-     * @return
-     */
-    String getUnits();
-
-    /**
-     * @return
-     */
-    public default String getUnitsFoxXML() {
-        String retVal = ReportSpecificationsUPbSamples.unicodeConversionsToXML.get(getUnits());
-        if (retVal == null) {
-            retVal = getUnits();
-        }
-        return retVal;
-    }
-
-    boolean hasUncertaintyColumn();
-
-    // http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
-
-    /**
-     * @return
-     */
-    int hashCode();
-
-    /**
-     * @return the amUncertaintyColumn
-     */
-    boolean isAmUncertaintyColumn();
-
-    /**
-     * @return
-     */
-    boolean isDisplayedWithArbitraryDigitCount();
-
-    /**
-     * @return the legacyData
-     */
-    boolean isLegacyData();
-
-    /**
-     * @return the needsPb
-     */
-    boolean isNeedsPb();
-
-    /**
-     * @return the needsU
-     */
-    boolean isNeedsU();
-
-    /**
-     * @return
-     */
-    @Override
-    boolean isVisible();
-
-    /**
-     * @param alternateDisplayName the alternateDisplayName to set
-     */
-    void setAlternateDisplayName(String alternateDisplayName);
-
-    /**
-     * @param countOfSignificantDigits
-     */
-    void setCountOfSignificantDigits(int countOfSignificantDigits);
-
-    /**
-     * @param displayName1
-     */
-    void setDisplayName1(String displayName1);
-
-    /**
-     * @param displayName2
-     */
-    void setDisplayName2(String displayName2);
-
-    /**
-     * @param displayName3 the displayName3 to set
-     */
-    void setDisplayName3(String displayName3);
-
-    /**
-     * @param displayedWithArbitraryDigitCount
-     */
-    void setDisplayedWithArbitraryDigitCount(boolean displayedWithArbitraryDigitCount);
-
-    /**
-     * @param footnoteSpec
-     */
-    void setFootnoteSpec(String footnoteSpec);
-
-    /**
-     * @param legacyData the legacyData to set
-     */
-    void setLegacyData(boolean legacyData);
-
-    /**
-     * @param needsPb the needsPb to set
-     */
-    void setNeedsPb(boolean needsPb);
-
-    /**
-     * @param needsU the needsU to set
-     */
-    void setNeedsU(boolean needsU);
-
-    /**
-     * @param positionIndex
-     */
-    @Override
-    void setPositionIndex(int positionIndex);
-
-    /**
-     * @param retrieveMethodName
-     */
-    void setRetrieveMethodName(String retrieveMethodName);
-
-    /**
-     * @param retrieveVariableName
-     */
-    void setRetrieveVariableName(String retrieveVariableName);
-
-    /**
-     * @param uncertaintyColumn
-     */
-    void setUncertaintyColumn(ReportColumnInterface uncertaintyColumn);
-
-    /**
-     * @param uncertaintyType
-     */
-    void setUncertaintyType(String uncertaintyType);
-
-    /**
-     * @param units
-     */
-    void setUnits(String units);
-
-    /**
-     * @param xmlCode
-     */
-    void setUnitsFromXML(String xmlCode);
-
-    /**
-     * @param visible
-     */
-    @Override
-    void setVisible(boolean visible);
-
-    /**
      * @param aNumericString
      * @return
      */
@@ -322,248 +73,6 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             retVal = retVal.substring(0, totalStringLength - 1);
             ////System.out.println("RETVAL " + retVal);
         }
-        return retVal;
-    }
-
-    /**
-     * @param fraction
-     * @param isNumeric
-     * @return
-     */
-    public default String[] getReportRecordByColumnSpec(ShrimpFractionExpressionInterface fraction, boolean isNumeric) {
-        // returns an entry for the value and one for the uncertainty if it exists
-        // there are two possible modes : sigfig and arbitrary
-        // if sigfig, the string contains only the sig digits forced to length
-        // 20 with the decimal point at position 9 (0-based index) with space fillers
-        // if arbitrary, the string is the bigdecimal number with getCountOfSignificantDigits() places after the
-        // decimal
-        // these "raw" strings will be post-processed by the report engine
-        String[] retVal = new String[2];
-
-        // default for value column
-        retVal[0] = "NOT FOUND";
-        // default for uncertainty column
-        retVal[1] = "";
-
-        if (!getRetrieveMethodName().equals("")) {
-            // get fraction field by using reflection
-            //String retrieveVariableName = getRetrieveVariableName();
-            try {
-                Class<?> fractionClass
-                        = Class.forName(ShrimpFractionExpressionInterface.class.getCanonicalName());
-
-                // this is the case of fractionID, the only string returned
-                if (getRetrieveVariableName().length() == 0) {
-                    try {
-                        Method meth
-                                = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
-
-                        Object o = meth.invoke(fraction, new Object[0]);
-
-                        retVal[0] = o.toString();
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println(e);
-                    }
-                } else if (getRetrieveVariableName().compareToIgnoreCase("<DATE>") == 0) {
-                    try {
-                        Method meth
-                                = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
-
-                        long milliseconds = (long) meth.invoke(fraction, new Object[0]);
-
-                        retVal[0] = CalamariReportsEngine.getFormattedDate(milliseconds);
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println(e);
-                    }
-                } else if (getRetrieveVariableName().compareToIgnoreCase("<INT>") == 0) {
-                    try {
-                        Method meth
-                                = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
-
-                        int intValue = (int) meth.invoke(fraction, new Object[0]);
-
-                        retVal[0] = String.valueOf(intValue);
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println(e);
-                    }
-                } else if (getRetrieveVariableName().compareToIgnoreCase("<DOUBLE>") == 0) {
-                    try {
-                        Method meth
-                                = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
-
-                        double doubleValue = (double) meth.invoke(fraction, new Object[0]);
-                        if (!Double.isFinite(doubleValue)) {
-                            retVal[0] = "NaN";
-                        }
-                        if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
-                        } else if (isDisplayedWithArbitraryDigitCount()) {
-                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
-                                    new BigDecimal(doubleValue),
-                                    getCountOfSignificantDigits());
-                        } else {
-                            // value is in sigfig mode = two flavors
-                            // if there is no uncertainty column, then show the value with
-                            // normal sigfig formatting
-                            // if there is an uncertainty column and it is in arbitrary mode, then
-                            // also show value with normal sigfig formatting
-
-                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
-                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
-                                    getCountOfSignificantDigits());
-                        }
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println(e);
-                    }
-                } else if (getRetrieveVariableName().startsWith("<INDEX>")) {
-                    int index = Integer.parseInt(getRetrieveVariableName().split(">")[1]);
-                    try {
-                        Method meth
-                                = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
-
-                        double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
-                        if (!Double.isFinite(doubleValue)) {
-                            retVal[0] = "NaN";
-                        }
-                        if (isNumeric) {
-                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
-                        } else if (isDisplayedWithArbitraryDigitCount()) {
-                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
-                                    new BigDecimal(doubleValue),
-                                    getCountOfSignificantDigits());
-                        } else {
-                            // value is in sigfig mode = two flavors
-                            // if there is no uncertainty column, then show the value with
-                            // normal sigfig formatting
-                            // if there is an uncertainty column and it is in arbitrary mode, then
-                            // also show value with normal sigfig formatting
-
-                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
-                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
-                                    getCountOfSignificantDigits());
-                        }
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println(e);
-                    }
-                } else {
-                    try {
-                        Method meth = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[]{String.class});
-
-                        double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
-
-                        if (!Double.isFinite(vm[0])) {
-                            retVal[0] = "NaN";
-                        } else {
-
-                            if (isNumeric) {
-                                retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
-                            } else if (isDisplayedWithArbitraryDigitCount()) {
-                                retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
-                                        getValueInUnits(vm[0], getUnits()),
-                                        getCountOfSignificantDigits());
-                            } else {
-                                // value is in sigfig mode = two flavors
-                                // if there is no uncertainty column, then show the value with
-                                // normal sigfig formatting
-                                // if there is an uncertainty column and it is in arbitrary mode, then
-                                // also show value with normal sigfig formatting
-
-                                retVal[0] = formatBigDecimalForPublicationSigDigMode(
-                                        new BigDecimal(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
-                                        getCountOfSignificantDigits());
-
-                                // however, if uncertainty column is in sigfig mode, then
-                                // use special algorithm to format value per the digits of
-                                // the formatted uncertainty column
-                                if (getUncertaintyColumn() != null) {
-                                    // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
-                                    if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
-                                        // uncertainty column is in sigfig mode
-                                        retVal[0] = "0";
-                                        try {
-                                            retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
-                                                    vm[0], vm[1],
-                                                    getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
-                                                    getUncertaintyColumn().getCountOfSignificantDigits());
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                }
-//                            // in either case, we have a sigfig mode for the value
-//                            retVal[0] = FormatNumericStringAlignDecimalPoint(retVal[0]);
-                            }
-                            // in nonnumeric case, we need to format string
-                            if (!isNumeric) {
-                                retVal[0] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[0]);
-                            }
-
-                            // report 1-sigma uncertainty
-                            if (getUncertaintyColumn() != null) {
-                                if (getUncertaintyColumn().isVisible()) {
-                                    // check for reporting mode
-
-//                                if ((vm[0] > 0.0) && (vm[0] < 10e-20)) {
-//                                    // may 2013 for tiny numbers due to below detection
-//                                    retVal[1] = " bd "; // below detection
-//
-//                                } else
-//                                    if (vm[0] == 0.0) {//oct 2014
-//                                    retVal[1] = " - ";
-//
-//                                } else 
-                                    if (isNumeric) {
-                                        try {
-                                            // check on size of vm[1] - if already rounded, then preserve for output
-                                            int countDigits = countSigDigits(String.valueOf(vm[1]));
-                                            int roundingCount = getCountOfSignificantDigits();
-                                            // this is needed for test cases where 15 digit rounding is specified
-                                            if ((roundingCount >= 12) && (countDigits <= 12)) {
-                                                roundingCount = 12;
-                                            }
-
-                                            retVal[1] = String.valueOf(Utilities.roundedToSize(
-                                                    getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).doubleValue(), roundingCount));
-                                        } catch (Exception e) {
-                                        }
-                                    } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
-                                        retVal[1]
-                                                = formatBigDecimalForPublicationArbitraryMode(//
-                                                getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
-                                                getUncertaintyColumn().getCountOfSignificantDigits());
-                                    } else {
-                                        retVal[1] = formatOneSigmaForPublicationSigDigMode(//
-                                                vm[0],
-                                                vm[1],
-                                                getUncertaintyType(),
-                                                Squid3Constants.getUnitConversionMoveCount(getUnits()),
-                                                getUncertaintyColumn().getCountOfSignificantDigits());
-                                    }
-                                    retVal[1] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[1]);
-                                    // }
-                                }
-                            }
-                        }
-                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        System.err.println("problem formatting " + getRetrieveVariableName() + " for " + fraction.getFractionID() + " >> " + e);
-                    }
-                }
-
-            } catch (ClassNotFoundException classNotFoundException) {
-            }
-        }
-
         return retVal;
     }
 
@@ -745,5 +254,502 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
             digits = digits.replaceFirst("0", "");
         }
         return digits.length();
+    }
+
+    /**
+     * @param reportColumn
+     * @return
+     * @throws ClassCastException
+     */
+    @Override
+    public default int compareTo(ReportColumnInterface reportColumn)
+            throws ClassCastException {
+        String reportColumnFullName
+                = ((ReportColumnInterface) reportColumn).getDisplayName();
+        return this.getDisplayName().trim().//
+                compareToIgnoreCase(reportColumnFullName.trim());
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public default String getDisplayName() {
+        if (getAlternateDisplayName().equals("")) {
+            return getDisplayName1() + getDisplayName2() + getDisplayName3() + getDisplayName4();
+        } else {
+            return getAlternateDisplayName();
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public default void ToggleIsVisible() {
+        setVisible(!isVisible());
+    }
+
+    /**
+     * @param reportColumn
+     * @return
+     */
+    @Override
+    boolean equals(Object reportColumn);
+
+    /**
+     * @return the alternateDisplayName
+     */
+    String getAlternateDisplayName();
+
+    /**
+     * @param alternateDisplayName the alternateDisplayName to set
+     */
+    void setAlternateDisplayName(String alternateDisplayName);
+
+    /**
+     * @return
+     */
+    int getCountOfSignificantDigits();
+
+    // http://www.javaworld.com/javaworld/jw-01-1999/jw-01-object.html?page=4
+
+    /**
+     * @param countOfSignificantDigits
+     */
+    void setCountOfSignificantDigits(int countOfSignificantDigits);
+
+    /**
+     * @return
+     */
+    String getDisplayName1();
+
+    /**
+     * @param displayName1
+     */
+    void setDisplayName1(String displayName1);
+
+    /**
+     * @return
+     */
+    String getDisplayName2();
+
+    /**
+     * @param displayName2
+     */
+    void setDisplayName2(String displayName2);
+
+    /**
+     * @return the displayName3
+     */
+    String getDisplayName3();
+
+    /**
+     * @param displayName3 the displayName3 to set
+     */
+    void setDisplayName3(String displayName3);
+
+    /**
+     * @return the displayName3
+     */
+    String getDisplayName4();
+
+    /**
+     * @return
+     */
+    String getFootnoteSpec();
+
+    /**
+     * @param footnoteSpec
+     */
+    void setFootnoteSpec(String footnoteSpec);
+
+    /**
+     * @return
+     */
+    int getPositionIndex();
+
+    /**
+     * @param positionIndex
+     */
+    @Override
+    void setPositionIndex(int positionIndex);
+
+    /**
+     * @return
+     */
+    String getRetrieveMethodName();
+
+    /**
+     * @param retrieveMethodName
+     */
+    void setRetrieveMethodName(String retrieveMethodName);
+
+    /**
+     * @return
+     */
+    String getRetrieveVariableName();
+
+    /**
+     * @param retrieveVariableName
+     */
+    void setRetrieveVariableName(String retrieveVariableName);
+
+    /**
+     * @return
+     */
+    ReportColumnInterface getUncertaintyColumn();
+
+    /**
+     * @param uncertaintyColumn
+     */
+    void setUncertaintyColumn(ReportColumnInterface uncertaintyColumn);
+
+    /**
+     * @return
+     */
+    String getUncertaintyType();
+
+    /**
+     * @param uncertaintyType
+     */
+    void setUncertaintyType(String uncertaintyType);
+
+    /**
+     * @return
+     */
+    String getUnits();
+
+    /**
+     * @param units
+     */
+    void setUnits(String units);
+
+    /**
+     * @return
+     */
+    public default String getUnitsFoxXML() {
+        String retVal = ReportSpecificationsUPbSamples.unicodeConversionsToXML.get(getUnits());
+        if (retVal == null) {
+            retVal = getUnits();
+        }
+        return retVal;
+    }
+
+    boolean hasUncertaintyColumn();
+
+    /**
+     * @return
+     */
+    int hashCode();
+
+    /**
+     * @return the amUncertaintyColumn
+     */
+    boolean isAmUncertaintyColumn();
+
+    /**
+     * @return
+     */
+    boolean isDisplayedWithArbitraryDigitCount();
+
+    /**
+     * @param displayedWithArbitraryDigitCount
+     */
+    void setDisplayedWithArbitraryDigitCount(boolean displayedWithArbitraryDigitCount);
+
+    /**
+     * @return the legacyData
+     */
+    boolean isLegacyData();
+
+    /**
+     * @param legacyData the legacyData to set
+     */
+    void setLegacyData(boolean legacyData);
+
+    /**
+     * @return the needsPb
+     */
+    boolean isNeedsPb();
+
+    /**
+     * @param needsPb the needsPb to set
+     */
+    void setNeedsPb(boolean needsPb);
+
+    /**
+     * @return the needsU
+     */
+    boolean isNeedsU();
+
+    /**
+     * @param needsU the needsU to set
+     */
+    void setNeedsU(boolean needsU);
+
+    /**
+     * @return
+     */
+    @Override
+    boolean isVisible();
+
+    /**
+     * @param visible
+     */
+    @Override
+    void setVisible(boolean visible);
+
+    /**
+     * @param xmlCode
+     */
+    void setUnitsFromXML(String xmlCode);
+
+    /**
+     * @param fraction
+     * @param isNumeric
+     * @return
+     */
+    public default String[] getReportRecordByColumnSpec(ShrimpFractionExpressionInterface fraction, boolean isNumeric) {
+        // returns an entry for the value and one for the uncertainty if it exists
+        // there are two possible modes : sigfig and arbitrary
+        // if sigfig, the string contains only the sig digits forced to length
+        // 20 with the decimal point at position 9 (0-based index) with space fillers
+        // if arbitrary, the string is the bigdecimal number with getCountOfSignificantDigits() places after the
+        // decimal
+        // these "raw" strings will be post-processed by the report engine
+        String[] retVal = new String[2];
+
+        // default for value column
+        retVal[0] = "NOT FOUND";
+        // default for uncertainty column
+        retVal[1] = "";
+
+        if (!getRetrieveMethodName().equals("")) {
+            // get fraction field by using reflection
+            //String retrieveVariableName = getRetrieveVariableName();
+            try {
+                Class<?> fractionClass
+                        = Class.forName(ShrimpFractionExpressionInterface.class.getCanonicalName());
+
+                // this is the case of fractionID, the only string returned
+                if (getRetrieveVariableName().length() == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[0]);
+
+                        Object o = meth.invoke(fraction, new Object[0]);
+
+                        retVal[0] = o.toString();
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<DATE>") == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[0]);
+
+                        long milliseconds = (long) meth.invoke(fraction, new Object[0]);
+
+                        retVal[0] = CalamariReportsEngine.getFormattedDate(milliseconds);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<INT>") == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[0]);
+
+                        int intValue = (int) meth.invoke(fraction, new Object[0]);
+
+                        retVal[0] = String.valueOf(intValue);
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().compareToIgnoreCase("<DOUBLE>") == 0) {
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[0]);
+
+                        double doubleValue = (double) meth.invoke(fraction, new Object[0]);
+                        if (!Double.isFinite(doubleValue)) {
+                            retVal[0] = "NaN";
+                        }
+                        if (isNumeric) {
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
+                        } else if (isDisplayedWithArbitraryDigitCount()) {
+                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                    new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        } else {
+                            // value is in sigfig mode = two flavors
+                            // if there is no uncertainty column, then show the value with
+                            // normal sigfig formatting
+                            // if there is an uncertainty column and it is in arbitrary mode, then
+                            // also show value with normal sigfig formatting
+
+                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
+                                    getCountOfSignificantDigits());
+                        }
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else if (getRetrieveVariableName().startsWith("<INDEX>")) {
+                    int index = Integer.parseInt(getRetrieveVariableName().split(">")[1]);
+                    try {
+                        Method meth
+                                = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[0]);
+
+                        double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
+                        if (!Double.isFinite(doubleValue)) {
+                            retVal[0] = "NaN";
+                        }
+                        if (isNumeric) {
+                            retVal[0] = String.valueOf(Utilities.roundedToSize(doubleValue, getCountOfSignificantDigits()));//doubleValue);
+                        } else if (isDisplayedWithArbitraryDigitCount()) {
+                            retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                    new BigDecimal(doubleValue),
+                                    getCountOfSignificantDigits());
+                        } else {
+                            // value is in sigfig mode = two flavors
+                            // if there is no uncertainty column, then show the value with
+                            // normal sigfig formatting
+                            // if there is an uncertainty column and it is in arbitrary mode, then
+                            // also show value with normal sigfig formatting
+
+                            retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                    new BigDecimal(doubleValue).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
+                                    getCountOfSignificantDigits());
+                        }
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println(e);
+                    }
+                } else {
+                    try {
+                        Method meth = fractionClass.getMethod(//
+                                getRetrieveMethodName(),
+                                new Class[]{String.class});
+
+                        double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
+
+                        if (!Double.isFinite(vm[0])) {
+                            retVal[0] = "NaN";
+                        } else {
+
+                            if (isNumeric) {
+                                retVal[0] = String.valueOf(Utilities.roundedToSize(getValueInUnits(vm[0], getUnits()).doubleValue(), getCountOfSignificantDigits()));//   .toPlainString().trim();
+                            } else if (isDisplayedWithArbitraryDigitCount()) {
+                                retVal[0] = formatBigDecimalForPublicationArbitraryMode(//
+                                        getValueInUnits(vm[0], getUnits()),
+                                        getCountOfSignificantDigits());
+                            } else {
+                                // value is in sigfig mode = two flavors
+                                // if there is no uncertainty column, then show the value with
+                                // normal sigfig formatting
+                                // if there is an uncertainty column and it is in arbitrary mode, then
+                                // also show value with normal sigfig formatting
+
+                                retVal[0] = formatBigDecimalForPublicationSigDigMode(
+                                        new BigDecimal(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
+                                        getCountOfSignificantDigits());
+
+                                // however, if uncertainty column is in sigfig mode, then
+                                // use special algorithm to format value per the digits of
+                                // the formatted uncertainty column
+                                if (getUncertaintyColumn() != null) {
+                                    // added July 2017 to disable uncert column effect if it is not visible (making it behave as if arbitrary)
+                                    if (getUncertaintyColumn().isVisible() && !getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
+                                        // uncertainty column is in sigfig mode
+                                        retVal[0] = "0";
+                                        try {
+                                            retVal[0] = formatValueFromOneSigmaForPublicationSigDigMode(//
+                                                    vm[0], vm[1],
+                                                    getUncertaintyType(), Squid3Constants.getUnitConversionMoveCount(getUnits()),//
+                                                    getUncertaintyColumn().getCountOfSignificantDigits());
+                                        } catch (Exception e) {
+                                        }
+                                    }
+                                }
+//                            // in either case, we have a sigfig mode for the value
+//                            retVal[0] = FormatNumericStringAlignDecimalPoint(retVal[0]);
+                            }
+                            // in nonnumeric case, we need to format string
+                            if (!isNumeric) {
+                                retVal[0] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[0]);
+                            }
+
+                            // report 1-sigma uncertainty
+                            if (getUncertaintyColumn() != null) {
+                                if (getUncertaintyColumn().isVisible()) {
+                                    // check for reporting mode
+
+//                                if ((vm[0] > 0.0) && (vm[0] < 10e-20)) {
+//                                    // may 2013 for tiny numbers due to below detection
+//                                    retVal[1] = " bd "; // below detection
+//
+//                                } else
+//                                    if (vm[0] == 0.0) {//oct 2014
+//                                    retVal[1] = " - ";
+//
+//                                } else
+                                    if (isNumeric) {
+                                        try {
+                                            // check on size of vm[1] - if already rounded, then preserve for output
+                                            int countDigits = countSigDigits(String.valueOf(vm[1]));
+                                            int roundingCount = getCountOfSignificantDigits();
+                                            // this is needed for test cases where 15 digit rounding is specified
+                                            if ((roundingCount >= 12) && (countDigits <= 12)) {
+                                                roundingCount = 12;
+                                            }
+
+                                            retVal[1] = String.valueOf(Utilities.roundedToSize(
+                                                    getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()).doubleValue(), roundingCount));
+                                        } catch (Exception e) {
+                                        }
+                                    } else if (getUncertaintyColumn().isDisplayedWithArbitraryDigitCount()) {
+                                        retVal[1]
+                                                = formatBigDecimalForPublicationArbitraryMode(//
+                                                getOneSigma(vm[0], vm[1], getUncertaintyType(), getUnits()),
+                                                getUncertaintyColumn().getCountOfSignificantDigits());
+                                    } else {
+                                        retVal[1] = formatOneSigmaForPublicationSigDigMode(//
+                                                vm[0],
+                                                vm[1],
+                                                getUncertaintyType(),
+                                                Squid3Constants.getUnitConversionMoveCount(getUnits()),
+                                                getUncertaintyColumn().getCountOfSignificantDigits());
+                                    }
+                                    retVal[1] = ReportColumnInterface.FormatNumericStringAlignDecimalPoint(retVal[1]);
+                                    // }
+                                }
+                            }
+                        }
+                    } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
+                             IllegalArgumentException | InvocationTargetException e) {
+                        System.err.println("problem formatting " + getRetrieveVariableName() + " for " + fraction.getFractionID() + " >> " + e);
+                    }
+                }
+
+            } catch (ClassNotFoundException classNotFoundException) {
+            }
+        }
+
+        return retVal;
     }
 }

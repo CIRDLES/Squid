@@ -122,7 +122,6 @@ public class ProjectManagerController implements Initializable {
     private CheckBox useCommonPbModelForUnknownsCheckBox;
 
 
-
     private TaskInterface task;
     private TaskDesign taskDesign;
 
@@ -170,7 +169,6 @@ public class ProjectManagerController implements Initializable {
         isotopeHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeansHBox.setVisible(squidProject.isTypeGeochron());
         weightedMeanRefMatLabel.setVisible(squidProject.isTypeGeochron());
-
 
 
         setupListeners();

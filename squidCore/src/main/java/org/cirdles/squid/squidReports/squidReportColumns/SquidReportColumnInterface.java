@@ -30,6 +30,20 @@ import java.math.RoundingMode;
 
 public interface SquidReportColumnInterface extends XMLSerializerInterface {
 
+    static String formatBigDecimalForPublicationSigDigMode(
+            BigDecimal number,
+            int uncertaintySigDigits) {
+
+        if ((number.compareTo(BigDecimal.ZERO) == 0)//
+                || // jan 2011 to trap for absurdly small uncertainties
+                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
+            return "0";
+        } else {
+            return number.round(new MathContext(//
+                    uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
+        }
+    }
+
     public void initReportColumn(TaskInterface task);
 
     public String cellEntryForSpot(ShrimpFractionExpressionInterface spot);
@@ -50,9 +64,19 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
     public String[] getColumnHeaders();
 
     /**
+     * @param columnHeaders the columnHeaders to set
+     */
+    public void setColumnHeaders(String[] columnHeaders);
+
+    /**
      * @return the footnoteSpec
      */
     public String getFootnoteSpec();
+
+    /**
+     * @param footnoteSpec the footnoteSpec to set
+     */
+    public void setFootnoteSpec(String footnoteSpec);
 
     public boolean hasVisibleUncertaintyColumn();
 
@@ -60,6 +84,11 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
      * @return the uncertaintyColumn
      */
     public SquidReportColumnInterface getUncertaintyColumn();
+
+    /**
+     * @param uncertaintyColumn the uncertaintyColumn to set
+     */
+    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
 
     /**
      * @return the uncertaintyDirective
@@ -87,39 +116,19 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
     public String getUnits();
 
     /**
-     * @return the visible
-     */
-    public boolean isVisible();
-
-    /**
-     * @param columnHeaders the columnHeaders to set
-     */
-    public void setColumnHeaders(String[] columnHeaders);
-
-    /**
-     * @param countOfSignificantDigits the countOfSignificantDigits to set
-     */
-    public void setCountOfSignificantDigits(int countOfSignificantDigits);
-
-    /**
-     * @param footnoteSpec the footnoteSpec to set
-     */
-    public void setFootnoteSpec(String footnoteSpec);
-
-    /**
      * @param units the units to set
      */
     public void setUnits(String units);
 
     /**
+     * @return the visible
+     */
+    public boolean isVisible();
+
+    /**
      * @param visible the visible to set
      */
     public void setVisible(boolean visible);
-
-    /**
-     * @param uncertaintyColumn the uncertaintyColumn to set
-     */
-    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
 
     /**
      * @param amIsotopicRatio the amIsotopicRatio to set
@@ -131,19 +140,10 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
      */
     public int getCountOfSignificantDigits();
 
-    static String formatBigDecimalForPublicationSigDigMode(
-            BigDecimal number,
-            int uncertaintySigDigits) {
-
-        if ((number.compareTo(BigDecimal.ZERO) == 0)//
-                || // jan 2011 to trap for absurdly small uncertainties
-                (number.abs().doubleValue() < StrictMath.pow(10, -1 * 15))) {
-            return "0";
-        } else {
-            return number.round(new MathContext(//
-                    uncertaintySigDigits, RoundingMode.HALF_UP)).toPlainString();
-        }
-    }
+    /**
+     * @param countOfSignificantDigits the countOfSignificantDigits to set
+     */
+    public void setCountOfSignificantDigits(int countOfSignificantDigits);
 
     public SquidReportColumn clone();
 

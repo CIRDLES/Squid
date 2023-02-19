@@ -36,22 +36,12 @@ import static org.cirdles.squid.utilities.conversionUtilities.RoundingUtilities.
  */
 public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
 
+    public final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION = "getIsotopicRatioValuesByStringName";
     private static final long serialVersionUID = -2296889996415038672L;
+    private final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE = "getOriginalIsotopicRatioValuesByStringName";
+    private static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
     private ShrimpSpeciesNode numerator;
     private ShrimpSpeciesNode denominator;
-
-    public final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION = "getIsotopicRatioValuesByStringName";
-    private final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE = "getOriginalIsotopicRatioValuesByStringName";
-
-    private static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
-
-    public static void switchToOrigValue() {
-        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE;
-    }
-
-    public static void switchToUsedValue() {
-        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
-    }
 
     /**
      *
@@ -80,6 +70,14 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
         if (uncertaintyDirective.length() > 0) {
             this.index = 1;
         }
+    }
+
+    public static void switchToOrigValue() {
+        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE;
+    }
+
+    public static void switchToUsedValue() {
+        LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
     }
 
     @Override
@@ -141,7 +139,8 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
                 retVal[i] = convertArrayToObjects(values);
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException |
+                 NullPointerException methodException) {
         }
 
         return retVal;

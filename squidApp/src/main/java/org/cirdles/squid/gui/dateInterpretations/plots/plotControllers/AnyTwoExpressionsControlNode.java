@@ -45,13 +45,13 @@ import static org.cirdles.topsoil.plot.PlotOption.MCLEAN_REGRESSION_ENVELOPE;
  */
 public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInterface {
 
-    private Map<String, ExpressionTreeInterface> mapOfNamedExpressions;
+    private static boolean plotExcluded = true;
     private final ComboBox<String> xAxisExpressionComboBox;
     private final ComboBox<String> yAxisExpressionComboBox;
-    private PlotRefreshInterface plotsController;
     protected boolean hasData;
+    private Map<String, ExpressionTreeInterface> mapOfNamedExpressions;
+    private PlotRefreshInterface plotsController;
     private CheckBox regressionCheckBox;
-    private static boolean plotExcluded = true;
 
     /**
      * @param plotsController the value of plotsController
@@ -111,7 +111,10 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         xAxisExpressionComboBox.setValue(PlotsController.xAxisExpressionName);
 
         xAxisExpressionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            try{plotsController.setXAxisExpressionName(newValue);}catch(SquidException squidException){}
+            try {
+                plotsController.setXAxisExpressionName(newValue);
+            } catch (SquidException squidException) {
+            }
         });
 
         Label yAxisChooseLabel = new Label(" Choose Y-axis expression:");
@@ -122,7 +125,10 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         yAxisExpressionComboBox.setValue(PlotsController.yAxisExpressionName);
 
         yAxisExpressionComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            try{plotsController.setYAxisExpressionName(newValue);}catch(SquidException squidException){}
+            try {
+                plotsController.setYAxisExpressionName(newValue);
+            } catch (SquidException squidException) {
+            }
         });
 
         getChildren().addAll(yAxisChooseLabel, yAxisExpressionComboBox,

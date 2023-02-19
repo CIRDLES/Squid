@@ -5,16 +5,16 @@ import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.c
 public class OPFraction {
     //in 2d arrays the columns are scans and the rows are measurements
 
-    private String name; //fractionID
-    private long dateTimeMilliseconds;
-    private int sets;
-    private int scans;
-    private int measurements; //number of species, no variable
     double[] countTimeSec; //countTimeSec
     double[][] timeStampSec; //timeStampSec
     double[][] totalCounts; //totalCounts
     int sbmZeroCPS; //sbmZeroCps
     double[][] totalSBM; //totalCountsSBM
+    private String name; //fractionID
+    private long dateTimeMilliseconds;
+    private int sets;
+    private int scans;
+    private int measurements; //number of species, no variable
 
     public OPFraction() {
         name = "";

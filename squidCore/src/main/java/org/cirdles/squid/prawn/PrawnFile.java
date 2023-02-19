@@ -478,6 +478,11 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
         return this.run;
     }
 
+    @Override
+    public int extractCountOfRuns() {
+        return run.size();
+    }
+
     /**
      * <p>
      * Java class for anonymous complex type.
@@ -1676,11 +1681,6 @@ public class PrawnFile implements ShrimpDataFileInterface, Serializable {
 
         }
 
-    }
-
-    @Override
-    public int extractCountOfRuns() {
-        return run.size();
     }
 
 }

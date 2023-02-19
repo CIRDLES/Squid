@@ -94,14 +94,14 @@ public interface ShrimpFractionExpressionInterface {
     public double[] getNscansTimesCountTimeSec();
 
     /**
-     * @param taskExpressionsEvaluated the taskExpressionsEvaluated to set
-     */
-    public void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated);
-
-    /**
      * @return the taskExpressionsForScansEvaluated
      */
     public List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> getTaskExpressionsForScansEvaluated();
+
+    /**
+     * @param taskExpressionsEvaluated the taskExpressionsEvaluated to set
+     */
+    public void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated);
 
     /**
      * @return the taskExpressionsEvaluationsPerSpot
@@ -303,6 +303,7 @@ public interface ShrimpFractionExpressionInterface {
 
     /**
      * Used in custom reports per issue # 701.
+     *
      * @return
      * @throws SquidException
      */

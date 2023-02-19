@@ -31,8 +31,8 @@ import static org.cirdles.squid.gui.dateInterpretations.plots.plotControllers.Pl
 public class WeightedMeanSpotNode implements SampleTreeNodeInterface {
 
     private final ShrimpFractionExpressionInterface shrimpFraction;
-    private SimpleBooleanProperty selectedProperty;
     private final int indexOfSpot;
+    private SimpleBooleanProperty selectedProperty;
 
     public WeightedMeanSpotNode(ShrimpFractionExpressionInterface shrimpFraction, int indexOfSpot) {
         this.shrimpFraction = shrimpFraction;

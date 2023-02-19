@@ -30,8 +30,6 @@ public interface SpeciesGraphInterface {
 
     void setTimesOfMeasuredTrimMasses(List<Double> timesOfMeasuredTrimMasses);
 
-    void setPrawnFileRuns(List<PrawnFile.Run> prawnFileRuns);
-
     /**
      * @return the indicesOfScansAtMeasurementTimes
      */
@@ -40,4 +38,6 @@ public interface SpeciesGraphInterface {
     void setIndicesOfScansAtMeasurementTimes(List<Integer> indicesOfScansAtMeasurementTimes);
 
     public List<PrawnFile.Run> getPrawnFileRuns();
+
+    void setPrawnFileRuns(List<PrawnFile.Run> prawnFileRuns);
 }

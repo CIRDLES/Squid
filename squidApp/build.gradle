@@ -48,9 +48,9 @@ project(":squidApp") {
 }
 
 task fatAppJar(type: Jar) {
-    dependsOn(squidCore:build)
+    dependsOn(squidCore: build)
     manifest {
-        attributes ('Main-Class': mainClass)
+        attributes('Main-Class': mainClass)
     }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }

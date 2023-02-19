@@ -57,26 +57,12 @@ public enum Lambdas {
     /**
      * @return
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return
-     */
     public static String[] getNames() {
         String[] retVal = new String[Lambdas.values().length];
         for (int i = 0; i < Lambdas.values().length; i++) {
             retVal[i] = Lambdas.values()[i].getName();
         }
         return retVal;
-    }
-
-    /**
-     * @return
-     */
-    public String getDisplayName() {
-        return displayName;
     }
 
     /**
@@ -92,5 +78,19 @@ public enum Lambdas {
         }
 
         return retVal;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 }
