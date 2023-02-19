@@ -35,17 +35,16 @@ import java.util.function.Predicate;
  */
 public class RunsViewModel {
 
-    public RunsViewModel() {
-    }
-
     private final ObservableList<PrawnFile.Run> shrimpRuns
             = FXCollections.observableArrayList();
+    private final FilteredList<PrawnFile.Run> viewableShrimpRuns = new FilteredList<>(shrimpRuns);
+
+    public RunsViewModel() {
+    }
 
     public ReadOnlyObjectProperty<ObservableList<PrawnFile.Run>> shrimpRunsProperty() {
         return new SimpleObjectProperty<>(shrimpRuns);
     }
-
-    private final FilteredList<PrawnFile.Run> viewableShrimpRuns = new FilteredList<>(shrimpRuns);
 
     public ReadOnlyObjectProperty<ObservableList<PrawnFile.Run>> viewableShrimpRunsProperty() {
         return new SimpleObjectProperty<>(viewableShrimpRuns);
@@ -77,6 +76,18 @@ public class RunsViewModel {
         return " : " + viewableShrimpRuns.size() + " / " + shrimpRuns.size() + " shown";
     }
 
+    /**
+     * @return the viewableShrimpRuns
+     */
+    public ObservableList<PrawnFile.Run> getViewableShrimpRuns() {
+        List<PrawnFile.Run> viewableShrimpRunsCopy = new ArrayList<>();
+        for (int i = 0; i < viewableShrimpRuns.size(); i++) {
+            viewableShrimpRunsCopy.add(viewableShrimpRuns.get(i));
+        }
+
+        return FXCollections.observableArrayList(viewableShrimpRunsCopy);
+    }
+
     static class SpotNameMatcher implements Predicate<PrawnFile.Run> {
 
         private final String spotName;
@@ -90,6 +101,8 @@ public class RunsViewModel {
             return run.getPar().get(0).getValue().toUpperCase(Locale.ENGLISH).trim().startsWith(spotName);
         }
     }
+
+    ;
 
     static class ShrimpFractionListCell extends ListCell<PrawnFile.Run> {
 
@@ -125,19 +138,5 @@ public class RunsViewModel {
                                 + String.format("%1$-" + 12 + "s", run.getSet().getPar().get(1).getValue()));
             }
         }
-    }
-
-    ;
-
-    /**
-     * @return the viewableShrimpRuns
-     */
-    public ObservableList<PrawnFile.Run> getViewableShrimpRuns() {
-        List<PrawnFile.Run> viewableShrimpRunsCopy = new ArrayList<>();
-        for (int i = 0; i < viewableShrimpRuns.size(); i++) {
-            viewableShrimpRunsCopy.add(viewableShrimpRuns.get(i));
-        }
-
-        return FXCollections.observableArrayList(viewableShrimpRunsCopy);
     }
 }

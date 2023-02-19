@@ -148,13 +148,6 @@ public enum RunTableEntryParameterNames implements Serializable {
     }
 
     /**
-     * @return
-     */
-    public String value() {
-        return value;
-    }
-
-    /**
      * @param v
      * @return
      */
@@ -165,6 +158,13 @@ public enum RunTableEntryParameterNames implements Serializable {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    /**
+     * @return
+     */
+    public String value() {
+        return value;
     }
 
 }

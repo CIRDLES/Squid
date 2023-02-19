@@ -73,6 +73,20 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
         this.active = false;
     }
 
+    public static SquidRatiosModel findSquidRatiosModelByName(SortedSet<SquidRatiosModel> isotopicRatios, String ratioName) {
+        SquidRatiosModel retVal = null;
+        Iterator<SquidRatiosModel> iterator = isotopicRatios.iterator();
+        while (iterator.hasNext()) {
+            SquidRatiosModel model = iterator.next();
+            if (model.getRatioName().equals(ratioName)) {
+                retVal = model;
+                break;
+            }
+        }
+
+        return retVal;
+    }
+
     @Override
     public int compareTo(SquidRatiosModel squidRatiosModel) {
         return Integer.compare(reportingOrderIndex, squidRatiosModel.getReportingOrderIndex());
@@ -97,20 +111,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     public SquidRatiosModel copy() {
         SquidRatiosModel copy = new SquidRatiosModel(numerator, denominator, reportingOrderIndex);
         return copy;
-    }
-
-    public static SquidRatiosModel findSquidRatiosModelByName(SortedSet<SquidRatiosModel> isotopicRatios, String ratioName) {
-        SquidRatiosModel retVal = null;
-        Iterator<SquidRatiosModel> iterator = isotopicRatios.iterator();
-        while (iterator.hasNext()) {
-            SquidRatiosModel model = iterator.next();
-            if (model.getRatioName().equals(ratioName)) {
-                retVal = model;
-                break;
-            }
-        }
-
-        return retVal;
     }
 
     /**
@@ -234,14 +234,6 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     }
 
     /**
-     * @return the ratioFractErr
-     */
-    public double getRatioFractErrUsedAsOneSigmaPercent() {
-        // use of getters provides backward compatibility
-        return StrictMath.abs(getRatioFractErrUsed() / getRatioValUsed() * 100.0);
-    }
-
-    /**
      * @param ratioFractErr the ratioFractErr to set
      */
     public void setRatioFractErr(double ratioFractErr) {
@@ -255,6 +247,14 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
 
         this.ratioFractErr = ratioFraErrFiltered * ratioVal;
         this.ratioFractErrUsed = ratioFraErrFiltered * ratioVal;
+    }
+
+    /**
+     * @return the ratioFractErr
+     */
+    public double getRatioFractErrUsedAsOneSigmaPercent() {
+        // use of getters provides backward compatibility
+        return StrictMath.abs(getRatioFractErrUsed() / getRatioValUsed() * 100.0);
     }
 
     /**

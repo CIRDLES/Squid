@@ -66,6 +66,37 @@ public abstract class AbstractMatrixModel implements Serializable {
     }
 
     /**
+     * @param rowMap
+     * @return
+     */
+    public static Map<String, Integer> invertRowMap(Map<Integer, String> rowMap) {
+        Map<String, Integer> myCols = new HashMap<String, Integer>();
+        Iterator<Entry<Integer, String>> entries = rowMap.entrySet().iterator();
+        while (entries.hasNext()) {
+            Entry<Integer, String> entry = entries.next();
+            myCols.put(entry.getValue(), entry.getKey());
+        }
+        return myCols;
+    }
+
+    /**
+     * Inverts column map (Name, col number) to row map (number, Name).
+     *
+     * @param colMap
+     * @return
+     */
+    public static Map<Integer, String> invertColMap(Map<String, Integer> colMap) {
+        Map<Integer, String> myRows = new HashMap<>();
+        Iterator<String> keys = colMap.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            myRows.put(colMap.get(key), key);
+        }
+
+        return myRows;
+    }
+
+    /**
      * @return
      */
     public abstract AbstractMatrixModel copy();
@@ -174,38 +205,6 @@ public abstract class AbstractMatrixModel implements Serializable {
      */
     public void setCols(Map<Integer, String> rowMap) {
         this.cols = invertRowMap(rowMap);
-    }
-
-
-    /**
-     * @param rowMap
-     * @return
-     */
-    public static Map<String, Integer> invertRowMap(Map<Integer, String> rowMap) {
-        Map<String, Integer> myCols = new HashMap<String, Integer>();
-        Iterator<Entry<Integer, String>> entries = rowMap.entrySet().iterator();
-        while (entries.hasNext()) {
-            Entry<Integer, String> entry = entries.next();
-            myCols.put(entry.getValue(), entry.getKey());
-        }
-        return myCols;
-    }
-
-    /**
-     * Inverts column map (Name, col number) to row map (number, Name).
-     *
-     * @param colMap
-     * @return
-     */
-    public static Map<Integer, String> invertColMap(Map<String, Integer> colMap) {
-        Map<Integer, String> myRows = new HashMap<>();
-        Iterator<String> keys = colMap.keySet().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            myRows.put(colMap.get(key), key);
-        }
-
-        return myRows;
     }
 
     /**

@@ -16,225 +16,280 @@
   limitations under the License.
  -->
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-
-<AnchorPane maxWidth="-Infinity" minWidth="1250.0" prefHeight="750.0" prefWidth="1250.0" style="-fx-background-color: white;" stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxWidth="-Infinity" minWidth="1250.0" prefHeight="750.0"
+            prefWidth="1250.0" style="-fx-background-color: white;"
+            stylesheets="@../css/projectManager.css" xmlns="http://javafx.com/javafx/17"
+            fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportSettingsController">
     <children>
-        <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox fx:id="buttonHBox" alignment="CENTER_LEFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+              AnchorPane.topAnchor="0.0">
             <children>
-                <Label text="Manage Report Templates" />
-                <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New" HBox.hgrow="ALWAYS">
+                <Label text="Manage Report Templates"/>
+                <Button fx:id="newButton" minWidth="85.0" mnemonicParsing="false" onAction="#newOnAction" text="New"
+                        HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="copyButton" minWidth="85.0" mnemonicParsing="false" onAction="#copyOnAction" text="Copy" HBox.hgrow="ALWAYS">
+                <Button fx:id="copyButton" minWidth="85.0" mnemonicParsing="false" onAction="#copyOnAction" text="Copy"
+                        HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="saveButton" minWidth="85.0" mnemonicParsing="false" onAction="#saveOnAction" text="Save" HBox.hgrow="ALWAYS">
+                <Button fx:id="saveButton" minWidth="85.0" mnemonicParsing="false" onAction="#saveOnAction" text="Save"
+                        HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction" text="Cancel / Undo" HBox.hgrow="ALWAYS">
+                <Button fx:id="restoreButton" minWidth="95.0" mnemonicParsing="false" onAction="#restoreOnAction"
+                        text="Cancel / Undo" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="renameButton" minWidth="105.0" mnemonicParsing="false" onAction="#renameOnAction" text="Rename">
+                <Button fx:id="renameButton" minWidth="105.0" mnemonicParsing="false" onAction="#renameOnAction"
+                        text="Rename">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
 
-                <Button fx:id="deleteButton" minWidth="95.0" mnemonicParsing="false" onAction="#deleteOnAction" text="Delete" HBox.hgrow="ALWAYS">
+                <Button fx:id="deleteButton" minWidth="95.0" mnemonicParsing="false" onAction="#deleteOnAction"
+                        text="Delete" HBox.hgrow="ALWAYS">
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="exportButton" minWidth="95.0" mnemonicParsing="false" onAction="#exportOnAction" text="Export" HBox.hgrow="ALWAYS">
+                <Button fx:id="exportButton" minWidth="95.0" mnemonicParsing="false" onAction="#exportOnAction"
+                        text="Export" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets left="20.0" right="20.0" />
+                        <Insets left="20.0" right="20.0"/>
                     </padding>
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
-                <Button fx:id="importButton" minWidth="95.0" mnemonicParsing="false" onAction="#importOnAction" text="Import" HBox.hgrow="ALWAYS">
+                <Button fx:id="importButton" minWidth="95.0" mnemonicParsing="false" onAction="#importOnAction"
+                        text="Import" HBox.hgrow="ALWAYS">
                     <padding>
-                        <Insets left="20.0" right="20.0" />
+                        <Insets left="20.0" right="20.0"/>
                     </padding>
                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                     </HBox.margin>
                 </Button>
             </children>
             <opaqueInsets>
-                <Insets />
+                <Insets/>
             </opaqueInsets>
             <padding>
-                <Insets left="20.0" />
+                <Insets left="20.0"/>
             </padding>
         </HBox>
-        <SplitPane fx:id="mainPane" dividerPositions="0.4559" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity" styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0">
+        <SplitPane fx:id="mainPane" dividerPositions="0.4559" layoutY="53.0" maxHeight="-Infinity" maxWidth="-Infinity"
+                   styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css"
+                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                   AnchorPane.topAnchor="55.0">
             <items>
                 <VBox maxWidth="480.0" minWidth="480.0" prefWidth="480.0" styleClass="backgroundCalamari">
                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="114.0" prefWidth="470.0" spacing="10.0" style="-fx-background-color: #eefbfb;">
+                        <HBox alignment="CENTER_LEFT" prefHeight="114.0" prefWidth="470.0" spacing="10.0"
+                              style="-fx-background-color: #eefbfb;">
                             <children>
-                                <VBox alignment="CENTER_LEFT" maxHeight="87.0" maxWidth="138.0" minHeight="62.0" prefHeight="74.0" prefWidth="138.0" spacing="5.0" HBox.hgrow="NEVER">
+                                <VBox alignment="CENTER_LEFT" maxHeight="87.0" maxWidth="138.0" minHeight="62.0"
+                                      prefHeight="74.0" prefWidth="138.0" spacing="5.0" HBox.hgrow="NEVER">
                                     <children>
-                                        <Label style="-fx-font-size: 14;" text="Choose Target:" />
-                                        <RadioButton fx:id="refMatRadioButton" minWidth="85.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" prefHeight="18.0" prefWidth="85.0" text="Ref Mat" translateX="10.0" translateY="-4.0">
+                                        <Label style="-fx-font-size: 14;" text="Choose Target:"/>
+                                        <RadioButton fx:id="refMatRadioButton" minWidth="85.0" mnemonicParsing="false"
+                                                     onAction="#toggleRefMatUnknownsAction" prefHeight="18.0"
+                                                     prefWidth="85.0" text="Ref Mat" translateX="10.0"
+                                                     translateY="-4.0">
                                             <toggleGroup>
-                                                <ToggleGroup fx:id="refMatUnknownsToggleGroup" />
+                                                <ToggleGroup fx:id="refMatUnknownsToggleGroup"/>
                                             </toggleGroup>
                                         </RadioButton>
-                                        <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false" onAction="#toggleRefMatUnknownsAction" selected="true" text="Unknown" toggleGroup="$refMatUnknownsToggleGroup" translateX="10.0" />
-                                        <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" translateX="8.0" />
+                                        <RadioButton fx:id="unknownsRadioButton" minWidth="50.0" mnemonicParsing="false"
+                                                     onAction="#toggleRefMatUnknownsAction" selected="true"
+                                                     text="Unknown" toggleGroup="$refMatUnknownsToggleGroup"
+                                                     translateX="10.0"/>
+                                        <ChoiceBox fx:id="spotsChoiceBox" maxWidth="100.0" minWidth="100.0"
+                                                   prefWidth="100.0" translateX="8.0"/>
                                     </children>
                                 </VBox>
-                                <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                <Separator orientation="VERTICAL" prefHeight="200.0"/>
                                 <VBox alignment="CENTER" prefHeight="74.0" prefWidth="387.0">
                                     <children>
-                                        <Label style="-fx-font-size: 14;" text="Choose Report Template for Target:" />
-                                        <HBox fx:id="settingsAndSpotsCB" alignment="CENTER_LEFT" prefWidth="420.0" translateX="5.0">
+                                        <Label style="-fx-font-size: 14;" text="Choose Report Template for Target:"/>
+                                        <HBox fx:id="settingsAndSpotsCB" alignment="CENTER_LEFT" prefWidth="420.0"
+                                              translateX="5.0">
                                             <children>
-                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0" prefHeight="23.0" prefWidth="345.0" translateX="-5.0" HBox.hgrow="ALWAYS">
+                                                <ChoiceBox fx:id="reportTableCB" maxWidth="-Infinity" minWidth="300.0"
+                                                           prefHeight="23.0" prefWidth="345.0" translateX="-5.0"
+                                                           HBox.hgrow="ALWAYS">
                                                     <HBox.margin>
-                                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                                                        <Insets bottom="10.0" left="5.0" right="5.0" top="10.0"/>
                                                     </HBox.margin>
                                                 </ChoiceBox>
                                             </children>
                                         </HBox>
-                                        <HBox alignment="CENTER" minHeight="31.0" prefHeight="31.0" prefWidth="420.0" VBox.vgrow="NEVER">
+                                        <HBox alignment="CENTER" minHeight="31.0" prefHeight="31.0" prefWidth="420.0"
+                                              VBox.vgrow="NEVER">
                                             <children>
-                                                <Button fx:id="makeDefaultButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#makeDefaultAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="Make Default" />
-                                                <Button fx:id="viewButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#viewOnAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="View">
+                                                <Button fx:id="makeDefaultButton" alignment="CENTER" maxHeight="25.0"
+                                                        minHeight="25.0" minWidth="110.0" mnemonicParsing="false"
+                                                        onAction="#makeDefaultAction" prefHeight="25.0"
+                                                        prefWidth="110.0" style="-fx-padding: 0 0 0 0;"
+                                                        text="Make Default"/>
+                                                <Button fx:id="viewButton" alignment="CENTER" maxHeight="25.0"
+                                                        minHeight="25.0" minWidth="110.0" mnemonicParsing="false"
+                                                        onAction="#viewOnAction" prefHeight="25.0" prefWidth="110.0"
+                                                        style="-fx-padding: 0 0 0 0;" text="View">
 
                                                 </Button>
-                                                <Button fx:id="exportCSVButton" alignment="CENTER" maxHeight="25.0" minHeight="25.0" minWidth="110.0" mnemonicParsing="false" onAction="#exportCSVOnAction" prefHeight="25.0" prefWidth="110.0" style="-fx-padding: 0 0 0 0;" text="Create CSV">
+                                                <Button fx:id="exportCSVButton" alignment="CENTER" maxHeight="25.0"
+                                                        minHeight="25.0" minWidth="110.0" mnemonicParsing="false"
+                                                        onAction="#exportCSVOnAction" prefHeight="25.0"
+                                                        prefWidth="110.0" style="-fx-padding: 0 0 0 0;"
+                                                        text="Create CSV">
 
                                                 </Button>
                                             </children>
                                             <VBox.margin>
-                                                <Insets left="5.0" right="5.0" />
+                                                <Insets left="5.0" right="5.0"/>
                                             </VBox.margin>
                                         </HBox>
                                     </children>
                                 </VBox>
                             </children>
                             <padding>
-                                <Insets bottom="10.0" left="5.0" />
+                                <Insets bottom="10.0" left="5.0"/>
                             </padding>
                         </HBox>
                         <Accordion fx:id="expressionsAccordion" prefHeight="585.0" VBox.vgrow="SOMETIMES">
                             <panes>
-                                <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Custom Expressions">
+                                <TitledPane fx:id="customExpressionsTitledPane" alignment="TOP_LEFT" animated="false"
+                                            layoutY="1.0"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="Custom Expressions">
                                     <content>
-                                        <ListView fx:id="customExpressionsListView" />
+                                        <ListView fx:id="customExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="NU-switched Expressions with Uncts">
+                                <TitledPane fx:id="nuSwitchedExpressionsTitledPane" animated="false" layoutY="1.0"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="NU-switched Expressions with Uncts">
                                     <content>
-                                        <ListView fx:id="nuSwitchedExpressionsListView" />
+                                        <ListView fx:id="nuSwitchedExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0" layoutY="1.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Built-In Expressions">
+                                <TitledPane fx:id="builtInExpressionsTitledPane" animated="false" layoutX="10.0"
+                                            layoutY="1.0"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="Built-In Expressions">
                                     <content>
-                                        <ListView fx:id="builtInExpressionsListView" />
+                                        <ListView fx:id="builtInExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Ratios with Uncertainties">
+                                <TitledPane animated="false"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="Ratios with Uncertainties">
                                     <content>
-                                        <ListView fx:id="ratioExpressionsListView" />
+                                        <ListView fx:id="ratioExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="79.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Isotopes (Data Isotope Labels)">
+                                <TitledPane animated="false" layoutX="10.0" layoutY="79.0"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="Isotopes (Data Isotope Labels)">
                                     <content>
-                                        <ListView fx:id="isotopesExpressionsListView" />
+                                        <ListView fx:id="isotopesExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0" style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;" text="Spot Metadata Fields &amp; Common Lead Specs">
+                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0"
+                                            style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
+                                            text="Spot Metadata Fields &amp; Common Lead Specs">
                                     <content>
-                                        <ListView fx:id="spotMetaDataExpressionsListView" />
+                                        <ListView fx:id="spotMetaDataExpressionsListView"/>
                                     </content>
                                 </TitledPane>
                             </panes>
                             <opaqueInsets>
-                                <Insets />
+                                <Insets/>
                             </opaqueInsets>
                         </Accordion>
                     </children>
                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
                     </padding>
                 </VBox>
-                <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="693.0" prefWidth="777.0">
+                <SplitPane dividerPositions="0.3333, 0.6667" orientation="VERTICAL" prefHeight="693.0"
+                           prefWidth="777.0">
                     <items>
-                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" text="Categories - use to organize template columns.  Drag to re-order. Right click to rename or delete." textFill="#0f0fd1">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0"
+                                    text="Categories - use to organize template columns.  Drag to re-order. Right click to rename or delete."
+                                    textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>
                                         <HBox alignment="CENTER_LEFT" maxHeight="700.0" VBox.vgrow="NEVER">
                                             <children>
-                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0" promptText="Type a new category name here, then click &quot;Create Category&quot; button." style="-fx-font-weight: bold; -fx-background-color: aqua;" HBox.hgrow="ALWAYS" />
-                                                <Button fx:id="createCategoryButton" mnemonicParsing="false" onAction="#createCategoryOnAction" prefHeight="31.0" prefWidth="221.0" text="&lt;&lt;&lt;  Create Category" />
+                                                <TextField fx:id="categoryTextField" prefHeight="27.0" prefWidth="540.0"
+                                                           promptText="Type a new category name here, then click &quot;Create Category&quot; button."
+                                                           style="-fx-font-weight: bold; -fx-background-color: aqua;"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button fx:id="createCategoryButton" mnemonicParsing="false"
+                                                        onAction="#createCategoryOnAction" prefHeight="31.0"
+                                                        prefWidth="221.0" text="&lt;&lt;&lt;  Create Category"/>
                                             </children>
                                             <opaqueInsets>
-                                                <Insets />
+                                                <Insets/>
                                             </opaqueInsets>
                                             <padding>
-                                                <Insets right="5.0" />
+                                                <Insets right="5.0"/>
                                             </padding>
                                         </HBox>
-                                        <ListView fx:id="categoryListView" maxHeight="700.0" prefHeight="700.0" prefWidth="585.0" />
+                                        <ListView fx:id="categoryListView" maxHeight="700.0" prefHeight="700.0"
+                                                  prefWidth="585.0"/>
                                     </children>
                                 </VBox>
                             </content>
                             <padding>
-                                <Insets right="5.0" />
+                                <Insets right="5.0"/>
                             </padding>
                         </TitledPane>
-                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" maxHeight="700.0" text="Columns - for a category, drag 'n drop expression(s) from the the lists on left and then drag to re-order them.  Right click to delete." textFill="#0f0fd1">
+                        <TitledPane fx:id="colunmnsTitledPane" animated="false" collapsible="false" maxHeight="700.0"
+                                    text="Columns - for a category, drag 'n drop expression(s) from the the lists on left and then drag to re-order them.  Right click to delete."
+                                    textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>
-                                        <ListView fx:id="columnListView" maxHeight="700.0" prefHeight="700.0" prefWidth="704.0" />
+                                        <ListView fx:id="columnListView" maxHeight="700.0" prefHeight="700.0"
+                                                  prefWidth="704.0"/>
                                     </children>
                                 </VBox>
                             </content>
                             <padding>
-                                <Insets right="5.0" />
+                                <Insets right="5.0"/>
                             </padding>
                         </TitledPane>
-                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" prefHeight="208.0" prefWidth="687.0" text="Column Details - peek at the values in each column." textFill="#0f0fd1">
+                        <TitledPane animated="false" collapsible="false" maxHeight="700.0" prefHeight="208.0"
+                                    prefWidth="687.0" text="Column Details - peek at the values in each column."
+                                    textFill="#0f0fd1">
                             <content>
                                 <VBox>
                                     <children>
-                                        <TextArea id="squidReportSettingsColumnDetailsTextArea" fx:id="columnDetailsTextArea" editable="false" maxHeight="700.0" prefHeight="700.0" />
+                                        <TextArea id="squidReportSettingsColumnDetailsTextArea"
+                                                  fx:id="columnDetailsTextArea" editable="false" maxHeight="700.0"
+                                                  prefHeight="700.0"/>
                                     </children>
                                 </VBox>
                             </content>
                             <padding>
-                                <Insets right="5.0" />
+                                <Insets right="5.0"/>
                             </padding>
                         </TitledPane>
                     </items>

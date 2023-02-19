@@ -29,9 +29,16 @@ public interface Squid3ProjectParametersAPI {
     ParametersModel getCommonPbModel() throws SquidException;
 
     /**
+     * @param commonPbModel the commonPbModel to set
+     */
+    void setCommonPbModel(ParametersModel commonPbModel);
+
+    /**
      * @return the concentrationReferenceMaterialModel
      */
     ParametersModel getConcentrationReferenceMaterialModel();
+
+    void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel);
 
     /**
      * @return the physicalConstantsModel
@@ -39,21 +46,14 @@ public interface Squid3ProjectParametersAPI {
     ParametersModel getPhysicalConstantsModel() throws SquidException;
 
     /**
-     * @return the referenceMaterialModel
-     */
-    ParametersModel getReferenceMaterialModel();
-
-    /**
-     * @param commonPbModel the commonPbModel to set
-     */
-    void setCommonPbModel(ParametersModel commonPbModel);
-
-    void setConcentrationReferenceMaterialModel(ParametersModel concentrationReferenceMaterialModel);
-
-    /**
      * @param physicalConstantsModel the physicalConstantsModel to set
      */
     void setPhysicalConstantsModel(ParametersModel physicalConstantsModel);
+
+    /**
+     * @return the referenceMaterialModel
+     */
+    ParametersModel getReferenceMaterialModel();
 
     void setReferenceMaterialModel(ParametersModel referenceMaterialModel);
 

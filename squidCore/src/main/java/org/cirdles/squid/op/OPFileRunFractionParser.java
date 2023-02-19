@@ -14,7 +14,7 @@ public class OPFileRunFractionParser {
     public static List<OPFraction> parseOPFile(File file) throws IOException {
         List<OPFraction> opList = new ArrayList<>();
         Scanner scanner = null;
-        InputStreamReader fis =null;
+        InputStreamReader fis = null;
         try {
             fis = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             scanner = new Scanner(fis);
@@ -105,10 +105,10 @@ public class OPFileRunFractionParser {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (fis != null){
+            if (fis != null) {
                 fis.close();
             }
-            if (scanner != null){
+            if (scanner != null) {
                 scanner.close();
             }
         }

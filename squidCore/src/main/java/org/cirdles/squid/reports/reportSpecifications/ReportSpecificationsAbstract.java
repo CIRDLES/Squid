@@ -146,6 +146,14 @@ public abstract class ReportSpecificationsAbstract {
      *
      */
     public final static Map<String, String> unitsType = new HashMap<>();
+    /**
+     *
+     */
+    public final static Map<String, String> unicodeConversionsToXML = new HashMap<String, String>();
+    /**
+     *
+     */
+    public final static Map<String, String> unicodeConversionsFromXML = new HashMap<String, String>();
 
     static {
         unitsType.put("g", "mass");
@@ -171,21 +179,11 @@ public abstract class ReportSpecificationsAbstract {
 
     }
 
-    /**
-     *
-     */
-    public final static Map<String, String> unicodeConversionsToXML = new HashMap<String, String>();
-
     static {
         unicodeConversionsToXML.put("\u03bcg", "MICROg");
         unicodeConversionsToXML.put("\u0025", "PERCENT");
         unicodeConversionsToXML.put("\u2030", "PERMILLE");
     }
-
-    /**
-     *
-     */
-    public final static Map<String, String> unicodeConversionsFromXML = new HashMap<String, String>();
 
     static {
         unicodeConversionsFromXML.put("MICROg", "\u03bcg");

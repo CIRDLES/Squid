@@ -125,15 +125,6 @@ public enum RadDates {
     /**
      * @return
      */
-    public String getName() {
-        return name;
-    }
-
-    //*************************
-
-    /**
-     * @return
-     */
     public static String[] getNamesSorted() {
         String[] retVal = new String[RadDates.values().length];
         for (int i = 0; i < RadDates.values().length; i++) {
@@ -141,6 +132,15 @@ public enum RadDates {
         }
         Arrays.sort(retVal);
         return retVal;
+    }
+
+    //*************************
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
     }
     //*************************
 }

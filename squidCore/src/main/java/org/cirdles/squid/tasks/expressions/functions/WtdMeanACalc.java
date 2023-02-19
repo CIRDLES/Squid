@@ -122,68 +122,6 @@ public class WtdMeanACalc extends Function {
     }
 
     /**
-     * Requires that child 0 and 1 are VariableNodes that evaluate to double
-     * arrays each with one column and a row for each member of shrimpFractions
-     * and that child 2, 3 are ConstantNodes that evaluate to true or false
-     * denoting uncertaintiesInPercent, noUPbConstAutoReject.
-     *
-     * @param childrenET      list containing child 0, child 1, child 2, child 3,
-     *                        child 4
-     * @param shrimpFractions a list of shrimpFractions
-     * @param task
-     * @return the double[3][n] where [0] is array of intMean, intSigmaMean,
-     * MSWD, probability, intErr68, intMeanErr95, extMean, extSigma,
-     * extMeanErr68, extMeanErr95}, [1] is array of large rejection indices, and
-     * [2] is array of weighted mean additional rejected indices.
-     * @throws org.cirdles.squid.exceptions.SquidException
-     */
-    @Override
-    public Object[][] eval(
-            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
-
-        Object[][] retVal;
-        try {
-            Object[][] values = childrenET.get(0).eval(shrimpFractions, task);
-            double[] variableValues = transposeColumnVectorOfDoubles(values, 0);
-
-            // it is required that uncertainties supplied to this method are in percent
-            Object[][] oneSigmaPercentUncertainties = childrenET.get(1).eval(shrimpFractions, task);
-            double[] oneSigmaPercentUncertaintyValues = transposeColumnVectorOfDoubles(oneSigmaPercentUncertainties, 0);
-
-            Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, task)[0][0];
-            boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
-
-            Object pbCanDriftCorrO = childrenET.get(3).eval(shrimpFractions, task)[0][0];
-            boolean pbCanDriftCorr = (boolean) pbCanDriftCorrO;
-
-            double[][] weightedAverage = wtdMeanAcalc(variableValues, oneSigmaPercentUncertaintyValues, noUPbConstAutoReject, pbCanDriftCorr);
-            retVal = new Object[][]{convertArrayToObjects(weightedAverage[0]), convertArrayToObjects(weightedAverage[1]), convertArrayToObjects(weightedAverage[2])};
-        } catch (ArithmeticException | NullPointerException e) {
-            retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {}, {}};
-        }
-
-        return retVal;
-    }
-
-    /**
-     * @param childrenET the value of childrenET
-     * @return
-     */
-    @Override
-    public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
-        String retVal
-                = "<mrow>"
-                + "<mi>" + name + "</mi>"
-                + "<mfenced>";
-
-        retVal += buildChildrenToMathML(childrenET);
-
-        retVal += "</mfenced></mrow>\n";
-
-        return retVal;
-    }
-
-    /**
      * Evaluates, for the Standard Reference Material, the weighted mean (and
      * associated parameters) of a set of common-Pb corrected calibration
      * constant values. This mean is the value to which all spot-by-spot
@@ -225,7 +163,7 @@ public class WtdMeanACalc extends Function {
         double[] largeErrRejIndexArray;
         double[] wmErrRejIndexArray;
 
-        // first get fdNmad of uncertainty column 
+        // first get fdNmad of uncertainty column
         double medianEr = org.cirdles.ludwig.squid25.Utilities.median(oneSigmaPctUnct);
         double nMadd = fdNmad(oneSigmaPctUnct)[0];
 
@@ -243,7 +181,7 @@ public class WtdMeanACalc extends Function {
         } // test noReject
 
         if (pbCanDriftCorr) {
-            // [out-of-scope stuff] 
+            // [out-of-scope stuff]
             retVal = new double[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {}, {}};
         } else {
             /**
@@ -312,6 +250,68 @@ public class WtdMeanACalc extends Function {
 
         return retVal;
 
+    }
+
+    /**
+     * Requires that child 0 and 1 are VariableNodes that evaluate to double
+     * arrays each with one column and a row for each member of shrimpFractions
+     * and that child 2, 3 are ConstantNodes that evaluate to true or false
+     * denoting uncertaintiesInPercent, noUPbConstAutoReject.
+     *
+     * @param childrenET      list containing child 0, child 1, child 2, child 3,
+     *                        child 4
+     * @param shrimpFractions a list of shrimpFractions
+     * @param task
+     * @return the double[3][n] where [0] is array of intMean, intSigmaMean,
+     * MSWD, probability, intErr68, intMeanErr95, extMean, extSigma,
+     * extMeanErr68, extMeanErr95}, [1] is array of large rejection indices, and
+     * [2] is array of weighted mean additional rejected indices.
+     * @throws org.cirdles.squid.exceptions.SquidException
+     */
+    @Override
+    public Object[][] eval(
+            List<ExpressionTreeInterface> childrenET, List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException {
+
+        Object[][] retVal;
+        try {
+            Object[][] values = childrenET.get(0).eval(shrimpFractions, task);
+            double[] variableValues = transposeColumnVectorOfDoubles(values, 0);
+
+            // it is required that uncertainties supplied to this method are in percent
+            Object[][] oneSigmaPercentUncertainties = childrenET.get(1).eval(shrimpFractions, task);
+            double[] oneSigmaPercentUncertaintyValues = transposeColumnVectorOfDoubles(oneSigmaPercentUncertainties, 0);
+
+            Object noUPbConstAutoRejectO = childrenET.get(2).eval(shrimpFractions, task)[0][0];
+            boolean noUPbConstAutoReject = (boolean) noUPbConstAutoRejectO;
+
+            Object pbCanDriftCorrO = childrenET.get(3).eval(shrimpFractions, task)[0][0];
+            boolean pbCanDriftCorr = (boolean) pbCanDriftCorrO;
+
+            double[][] weightedAverage = wtdMeanAcalc(variableValues, oneSigmaPercentUncertaintyValues, noUPbConstAutoReject, pbCanDriftCorr);
+            retVal = new Object[][]{convertArrayToObjects(weightedAverage[0]), convertArrayToObjects(weightedAverage[1]), convertArrayToObjects(weightedAverage[2])};
+        } catch (ArithmeticException | NullPointerException e) {
+            retVal = new Object[][]{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, {}, {}};
+        }
+
+        return retVal;
+    }
+
+    /**
+     * @param childrenET the value of childrenET
+     * @return
+     */
+    @Override
+    public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
+        String retVal
+                = "<mrow>"
+                + "<mi>" + name + "</mi>"
+                + "<mfenced>";
+
+        retVal += buildChildrenToMathML(childrenET);
+
+        retVal += "</mfenced></mrow>\n";
+
+        return retVal;
     }
 
 }

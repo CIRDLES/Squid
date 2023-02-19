@@ -111,6 +111,14 @@ public class CalamariReportsEngine implements Serializable {
         this.doWriteReportFiles = true;
     }
 
+    public static String getFormattedDate(long milliseconds) {
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTimeInMillis(milliseconds);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        return dateFormat.format(calendar.getTime());
+    }
+
     public void clearReports() {
         refMatFractionsNuclideCPS_PerSpot = new StringBuilder();
         unknownFractionsNuclideCPS_PerSpot = new StringBuilder();
@@ -923,21 +931,6 @@ public class CalamariReportsEngine implements Serializable {
         }
     }
 
-    public static String getFormattedDate(long milliseconds) {
-        GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTimeInMillis(milliseconds);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        return dateFormat.format(calendar.getTime());
-    }
-
-    public enum CalamariReportFlavors {
-        MEAN_RATIOS_PER_SPOT_UNKNOWNS,
-        MEAN_RATIOS_PER_SPOT_REFERENCEMAT,
-        WITHIN_SPOT_RATIOS_UNKNOWNS,
-        WITHIN_SPOT_RATIOS_REFERENCEMAT
-    }
-
     public String produceCalamariReportByFlavor(CalamariReportFlavors flavor) {
         StringBuilder report = new StringBuilder();
 
@@ -1209,18 +1202,18 @@ public class CalamariReportsEngine implements Serializable {
     }
 
     /**
+     * @return the folderToWriteCalamariReports
+     */
+    public File getFolderToWriteCalamariReports() {
+        return folderToWriteCalamariReports;
+    }
+
+    /**
      * @param aFolderToWriteCalamariReports the folderToWriteCalamariReports to
      *                                      set
      */
     public void setFolderToWriteCalamariReports(File aFolderToWriteCalamariReports) {
         folderToWriteCalamariReports = aFolderToWriteCalamariReports;
-    }
-
-    /**
-     * @return the folderToWriteCalamariReports
-     */
-    public File getFolderToWriteCalamariReports() {
-        return folderToWriteCalamariReports;
     }
 
     /**
@@ -1256,6 +1249,13 @@ public class CalamariReportsEngine implements Serializable {
      */
     public SquidProject getSquidProject() {
         return squidProject;
+    }
+
+    public enum CalamariReportFlavors {
+        MEAN_RATIOS_PER_SPOT_UNKNOWNS,
+        MEAN_RATIOS_PER_SPOT_REFERENCEMAT,
+        WITHIN_SPOT_RATIOS_UNKNOWNS,
+        WITHIN_SPOT_RATIOS_REFERENCEMAT
     }
 
 }

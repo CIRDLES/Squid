@@ -106,6 +106,13 @@ public class SquidSessionModel implements Serializable {
     }
 
     /**
+     * @param squidSpeciesModelList the squidSpeciesModelList to set
+     */
+    public void setSquidSpeciesModelList(List<SquidSpeciesModel> squidSpeciesModelList) {
+        this.squidSpeciesModelList = squidSpeciesModelList;
+    }
+
+    /**
      * @return the squidSpeciesModelList
      */
     public String[] getSquidSpeciesMassStationNames() {
@@ -115,13 +122,6 @@ public class SquidSessionModel implements Serializable {
         }
 
         return squidSpeciesNames;
-    }
-
-    /**
-     * @param squidSpeciesModelList the squidSpeciesModelList to set
-     */
-    public void setSquidSpeciesModelList(List<SquidSpeciesModel> squidSpeciesModelList) {
-        this.squidSpeciesModelList = squidSpeciesModelList;
     }
 
     /**

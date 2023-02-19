@@ -118,9 +118,9 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
         expTree = task.findNamedExpression(expressionName);
 
         // nov 2021 handle aliased expressions
-        expTree = ((Task)task).retrieveAliasedExpression(expTree);
+        expTree = ((Task) task).retrieveAliasedExpression(expTree);
 
-        if ((expTree instanceof SpotFieldNode) ||(expTree instanceof SpotTaskMetaDataNode)){
+        if ((expTree instanceof SpotFieldNode) || (expTree instanceof SpotTaskMetaDataNode)) {
             ((Task) task).evaluateTaskExpression(expTree);
         } else if (expTree instanceof ShrimpSpeciesNode) {
             // default view of species nodes
@@ -372,6 +372,14 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     }
 
     /**
+     * @param uncertaintyColumn the uncertaintyColumn to set
+     */
+    @Override
+    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn) {
+        this.uncertaintyColumn = uncertaintyColumn;
+    }
+
+    /**
      * @return the uncertaintyDirective
      */
     @Override
@@ -396,6 +404,14 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     }
 
     /**
+     * @param countOfSignificantDigits the countOfSignificantDigits to set
+     */
+    @Override
+    public void setCountOfSignificantDigits(int countOfSignificantDigits) {
+        this.countOfSignificantDigits = countOfSignificantDigits;
+    }
+
+    /**
      * @return the amUncertaintyColumn
      */
     @Override
@@ -409,14 +425,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     @Override
     public void setAmUncertaintyColumn(boolean amUncertaintyColumn) {
         this.amUncertaintyColumn = amUncertaintyColumn;
-    }
-
-    /**
-     * @param countOfSignificantDigits the countOfSignificantDigits to set
-     */
-    @Override
-    public void setCountOfSignificantDigits(int countOfSignificantDigits) {
-        this.countOfSignificantDigits = countOfSignificantDigits;
     }
 
     /**
@@ -456,14 +464,6 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
      */
     public void setAmIsotopicRatio(boolean amIsotopicRatio) {
         this.amIsotopicRatio = amIsotopicRatio;
-    }
-
-    /**
-     * @param uncertaintyColumn the uncertaintyColumn to set
-     */
-    @Override
-    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn) {
-        this.uncertaintyColumn = uncertaintyColumn;
     }
 
     @Override

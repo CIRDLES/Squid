@@ -52,10 +52,8 @@ import static org.cirdles.squid.tasks.expressions.functions.Function.replaceAlia
  */
 public class Expression implements Comparable<Expression>, XMLSerializerInterface, Serializable {
 
-    private static final long serialVersionUID = 2614344042503810733L;
-
     public static final String MSG_POORLY_FORMED_EXPRESSION = "Expression missing or poorly formed.";
-
+    private static final long serialVersionUID = 2614344042503810733L;
     private String name;
     private String excelExpressionString;
     private boolean squidSwitchNU;
@@ -99,6 +97,35 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
         this.notes = "";
         this.sourceModelNameAndVersion = "";
+    }
+
+    /**
+     * @param expressionName      the value of expressionName
+     * @param expressionString    the value of expressionString
+     * @param namedExpressionsMap the value of namedExpressionsMap
+     * @return
+     */
+    public static Expression makeExpressionForAudit(
+            String expressionName, final String expressionString, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
+        Expression exp = new Expression(expressionName, expressionString);
+
+        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
+
+        ExpressionTreeInterface expTree = exp.getExpressionTree();
+
+        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
+        expTree.setSquidSwitchSAUnknownCalculation(true);
+        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
+        expTree.setSquidSwitchSCSummaryCalculation(false);
+        expTree.setSquidSpecialUPbThExpression(true);
+        expTree.setUnknownsGroupSampleName(UNKNOWN.getSpotTypeName());
+
+        // to detect ratios of interest
+        if (expTree instanceof BuiltInExpressionInterface) {
+            ((BuiltInExpressionInterface) expTree).buildExpression();
+        }
+
+        return exp;
     }
 
     @Override
@@ -212,35 +239,6 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
         if (excelExpressionString != null) {
             expressionTree = expressionParser.parseExpressionStringAndBuildExpressionTree(this);
         }
-    }
-
-    /**
-     * @param expressionName      the value of expressionName
-     * @param expressionString    the value of expressionString
-     * @param namedExpressionsMap the value of namedExpressionsMap
-     * @return
-     */
-    public static Expression makeExpressionForAudit(
-            String expressionName, final String expressionString, Map<String, ExpressionTreeInterface> namedExpressionsMap) {
-        Expression exp = new Expression(expressionName, expressionString);
-
-        exp.parseOriginalExpressionStringIntoExpressionTree(namedExpressionsMap);
-
-        ExpressionTreeInterface expTree = exp.getExpressionTree();
-
-        expTree.setSquidSwitchSTReferenceMaterialCalculation(true);
-        expTree.setSquidSwitchSAUnknownCalculation(true);
-        expTree.setSquidSwitchConcentrationReferenceMaterialCalculation(false);
-        expTree.setSquidSwitchSCSummaryCalculation(false);
-        expTree.setSquidSpecialUPbThExpression(true);
-        expTree.setUnknownsGroupSampleName(UNKNOWN.getSpotTypeName());
-
-        // to detect ratios of interest
-        if (expTree instanceof BuiltInExpressionInterface) {
-            ((BuiltInExpressionInterface) expTree).buildExpression();
-        }
-
-        return exp;
     }
 
     public String produceExpressionTreeAudit() {

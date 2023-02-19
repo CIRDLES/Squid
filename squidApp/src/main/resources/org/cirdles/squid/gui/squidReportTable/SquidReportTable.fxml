@@ -16,28 +16,34 @@
   limitations under the License.
  -->
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidReportTable.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportTableController">
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<VBox xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      minWidth="-Infinity"
+      prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidReportTable.css"
+      xmlns="http://javafx.com/javafx/17"
+      fx:controller="org.cirdles.squid.gui.squidReportTable.SquidReportTableController">
     <children>
-        <AnchorPane fx:id="root" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="root" maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0"
+                    VBox.vgrow="ALWAYS">
             <children>
-                <Label id="sortHint" layoutX="50" text="Click on column headers to sort" AnchorPane.topAnchor="30" />
-                <ScrollBar fx:id="scrollBar" prefWidth="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="47" />
-                <TableView fx:id="reportsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="164.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="47.0">
+                <Label id="sortHint" layoutX="50" text="Click on column headers to sort" AnchorPane.topAnchor="30"/>
+                <ScrollBar fx:id="scrollBar" prefWidth="25.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                           AnchorPane.topAnchor="47"/>
+                <TableView fx:id="reportsTable" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="164.0"
+                           AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="47.0">
                     <stylesheets>
-                        <URL value="@tableviewverticalscrollhider.css" />
+                        <URL value="@tableviewverticalscrollhider.css"/>
                     </stylesheets>
                 </TableView>
-                <TableView fx:id="boundCol" layoutX="14.0" prefWidth="160" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="47.0">
+                <TableView fx:id="boundCol" layoutX="14.0" prefWidth="160" AnchorPane.bottomAnchor="5.0"
+                           AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="47.0">
                     <stylesheets>
-                        <URL value="@tableviewhorizontalscrollhider.css" />
-                        <URL value="@tableviewverticalscrollhider.css" />
+                        <URL value="@tableviewhorizontalscrollhider.css"/>
+                        <URL value="@tableviewverticalscrollhider.css"/>
                     </stylesheets>
                 </TableView>
             </children>

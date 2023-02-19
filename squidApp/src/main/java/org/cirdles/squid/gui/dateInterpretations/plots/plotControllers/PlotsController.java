@@ -746,8 +746,7 @@ public class PlotsController implements Initializable, PlotRefreshInterface {
         }
     }
 
-    private void removePlotWhenNull()
-    {
+    private void removePlotWhenNull() {
         plotAndConfigAnchorPane.getChildren().clear();
         plotToolBar.getItems().clear();
         plotVBox.getChildren().remove(plotToolBar);

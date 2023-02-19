@@ -45,11 +45,11 @@ public class TopsoilPlotAnyTwo extends AbstractTopsoilPlot {
     private String xAxisExpressionName;
     private String yAxisExpressionName;
 
-    public TopsoilPlotAnyTwo() throws SquidException{
+    public TopsoilPlotAnyTwo() throws SquidException {
         this("placeholder");
     }
 
-    public TopsoilPlotAnyTwo(String title)throws SquidException {
+    public TopsoilPlotAnyTwo(String title) throws SquidException {
         this(title,
                 new ArrayList<ShrimpFractionExpressionInterface>(),
                 SquidLabData.getExistingSquidLabData().getPhysConstDefault(),

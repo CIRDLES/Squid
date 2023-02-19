@@ -290,21 +290,6 @@ public abstract class ParametersModel implements
         this.covModel = covModel;
     }
 
-    protected class DataValueModelNameComparator implements Comparator<ValueModel> {
-
-        public DataValueModelNameComparator() {
-        }
-
-        @Override
-        public int compare(ValueModel vm1, ValueModel vm2) {
-            if (vm1.getName().substring(0, 1).equalsIgnoreCase(vm2.getName().substring(0, 1))) {
-                return vm1.compareTo(vm2);
-            } else {
-                return vm2.compareTo(vm1);
-            }
-        }
-    }
-
     public Map<String, BigDecimal> getRhos() {
         return rhos;
     }
@@ -326,5 +311,20 @@ public abstract class ParametersModel implements
         int result = Objects.hash(getModelName(), getLabName(), getVersion(), getDateCertified(), getComments(), getReferences(), getCorrModel(), getCovModel(), getRhos(), isEditable());
         result = 31 * result + Arrays.hashCode(getValues());
         return result;
+    }
+
+    protected class DataValueModelNameComparator implements Comparator<ValueModel> {
+
+        public DataValueModelNameComparator() {
+        }
+
+        @Override
+        public int compare(ValueModel vm1, ValueModel vm2) {
+            if (vm1.getName().substring(0, 1).equalsIgnoreCase(vm2.getName().substring(0, 1))) {
+                return vm1.compareTo(vm2);
+            } else {
+                return vm2.compareTo(vm1);
+            }
+        }
     }
 }

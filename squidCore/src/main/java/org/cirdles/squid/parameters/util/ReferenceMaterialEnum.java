@@ -55,13 +55,6 @@ public enum ReferenceMaterialEnum {
     /**
      * @return
      */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return
-     */
     public static String[] getNames() {
         String[] retVal = new String[ReferenceMaterialEnum.values().length];
         for (int i = 0; i < ReferenceMaterialEnum.values().length; i++) {
@@ -83,5 +76,12 @@ public enum ReferenceMaterialEnum {
         }
 
         return retVal;
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
     }
 }

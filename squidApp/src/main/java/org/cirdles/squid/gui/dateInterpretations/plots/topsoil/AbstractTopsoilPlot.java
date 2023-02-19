@@ -31,12 +31,18 @@ import static org.cirdles.topsoil.Variable.SIGMA_Y;
 
 public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
 
+    protected final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ReadOnlyMapProperty<PlotOption<?>, Object> options
+            = new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
     protected PlotView plot;
     protected PlotOptions plotOptions;
     protected boolean hasUncertainties;
     protected boolean hasData;
 
-    protected final ReadOnlyListProperty<DataEntry> dataEntries = new SimpleListProperty<>(FXCollections.observableArrayList());
+    public AbstractTopsoilPlot() {
+        this.hasUncertainties = true;
+        this.hasData = false;
+    }
 
     public final ObservableList<DataEntry> getData() {
         return dataEntries.get();
@@ -65,9 +71,6 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         this.dataEntries.setAll(dataEntries);
     }
 
-    protected final ReadOnlyMapProperty<PlotOption<?>, Object> options
-            = new SimpleMapProperty<>(FXCollections.observableMap(PlotOptions.defaultOptions()));
-
     public final Map<PlotOption<?>, Object> getPlotOptions() {
         return options.get();
     }
@@ -80,11 +83,6 @@ public abstract class AbstractTopsoilPlot implements PlotDisplayInterface {
         for (Map.Entry<String, Object> entry : options.entrySet()) {
             setProperty(entry.getKey(), entry.getValue());
         }
-    }
-
-    public AbstractTopsoilPlot() {
-        this.hasUncertainties = true;
-        this.hasData = false;
     }
 
     protected abstract void setupPlot(String title, ParametersModel physicalConstantsModel);

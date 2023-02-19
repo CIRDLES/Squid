@@ -36,8 +36,8 @@ import static org.cirdles.squid.utilities.conversionUtilities.DivisionUtilities.
 public class VariableNodeForSummary extends ExpressionTree {
 
     private static final long serialVersionUID = -868256637199178058L;
-    protected boolean usesArrayIndex;
     private final boolean showIndex;
+    protected boolean usesArrayIndex;
 
     /**
      *
