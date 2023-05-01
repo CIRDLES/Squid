@@ -61,6 +61,26 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         this.squidSwitchSAUnknownCalculation = true;
     }
 
+    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
+        ShrimpSpeciesNode retVal = null;
+        if (squidSpeciesModel != null) {
+            retVal = new ShrimpSpeciesNode(squidSpeciesModel, methodNameForShrimpFraction);
+        }
+        return retVal;
+    }
+
+    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel) {
+        ShrimpSpeciesNode retVal = null;
+        if (squidSpeciesModel != null) {
+            retVal = new ShrimpSpeciesNode(squidSpeciesModel, "");
+        }
+        return retVal;
+    }
+
+    public static ShrimpSpeciesNode buildEmptyShrimpSpeciesNode() {
+        return new ShrimpSpeciesNode();
+    }
+
     @Override
     public boolean equals(Object obj) {
         boolean retVal = false;
@@ -80,26 +100,6 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         hash = 37 * hash + Objects.hashCode(this.squidSpeciesModel);
         hash = 37 * hash + Objects.hashCode(this.methodNameForShrimpFraction);
         return hash;
-    }
-
-    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel, String methodNameForShrimpFraction) {
-        ShrimpSpeciesNode retVal = null;
-        if (squidSpeciesModel != null) {
-            retVal = new ShrimpSpeciesNode(squidSpeciesModel, methodNameForShrimpFraction);
-        }
-        return retVal;
-    }
-
-    public static ShrimpSpeciesNode buildShrimpSpeciesNode(SquidSpeciesModel squidSpeciesModel) {
-        ShrimpSpeciesNode retVal = null;
-        if (squidSpeciesModel != null) {
-            retVal = new ShrimpSpeciesNode(squidSpeciesModel, "");
-        }
-        return retVal;
-    }
-
-    public static ShrimpSpeciesNode buildEmptyShrimpSpeciesNode() {
-        return new ShrimpSpeciesNode();
     }
 
     @Override
@@ -179,7 +179,8 @@ public class ShrimpSpeciesNode extends ExpressionTree {
                             retVala = isotopeValues[index];
                         }
                         retVal[i] = convertArrayToObjects(new double[]{retVala});
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SquidException ignored) {
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException |
+                             SquidException ignored) {
                     }
                 }
             }
@@ -195,18 +196,18 @@ public class ShrimpSpeciesNode extends ExpressionTree {
     public String toStringMathML() {
 
         return "<msubsup>\n"
-        + "<mstyle mathsize='90%'>\n"
-        + "<mtext>\n"
-        + squidSpeciesModel.getIsotopeName()
-        + "\n</mtext>\n"
-        + "</mstyle>\n"
-        + "<mstyle  mathsize='150%'>\n"
-        + "<mtext>\n"
-        + squidSpeciesModel.getElementName()//.split("2")[0]
-        + "\n</mtext>\n"
-        + "</mstyle>\n"
-        + "<mtext/>"
-        + "</msubsup>\n";
+                + "<mstyle mathsize='90%'>\n"
+                + "<mtext>\n"
+                + squidSpeciesModel.getIsotopeName()
+                + "\n</mtext>\n"
+                + "</mstyle>\n"
+                + "<mstyle  mathsize='150%'>\n"
+                + "<mtext>\n"
+                + squidSpeciesModel.getElementName()//.split("2")[0]
+                + "\n</mtext>\n"
+                + "</mstyle>\n"
+                + "<mtext/>"
+                + "</msubsup>\n";
     }
 
     /**

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- SQUIDREPORTTABLE_DATA_FILE -->
-<SquidReportTable xmlns="https://raw.githubusercontent.com"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<SquidReportTable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="https://raw.githubusercontent.com"
                   xsi:schemaLocation="https://raw.githubusercontent.com
                                 ../schema/SquidReportTable.xsd">
     <reportTableName>Example</reportTableName>

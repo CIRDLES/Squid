@@ -43,7 +43,7 @@ import static org.cirdles.topsoil.plot.PlotOption.*;
  */
 public class TopsoilPlotTeraWasserburg extends AbstractTopsoilPlot {
 
-    public TopsoilPlotTeraWasserburg()throws SquidException {
+    public TopsoilPlotTeraWasserburg() throws SquidException {
         this("placeholder");
     }
 

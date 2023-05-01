@@ -50,13 +50,14 @@ public class ReportSettings implements
      * report models upon opening in ET_Redux.
      */
     private static final transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 4;
+    private final TaskInterface task;
+    private final boolean referenceMaterial;
     protected ArrayList<ReportCategoryInterface> reportCategories;
     //private static final long serialVersionUID = 3742875572117123821L;
     private transient String reportSettingsXMLSchemaURL;
     // Fields
     private String name;
     private int version;
-    private final TaskInterface task;
     private ReportCategoryInterface fractionCategory;
     // for reference materials
     private ReportCategoryInterface spotFundamentalsCategory;
@@ -74,7 +75,6 @@ public class ReportSettings implements
     private ReportCategoryInterface pb208CorrectedCategory;
     private ReportCategoryInterface fractionCategory2;
     private String reportSettingsComment;
-    private final boolean referenceMaterial;
 
     /**
      * Creates a new instance of ReportSettings

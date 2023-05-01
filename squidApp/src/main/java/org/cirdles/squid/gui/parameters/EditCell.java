@@ -14,10 +14,25 @@ import javafx.util.StringConverter;
 
 public class EditCell<S, T> extends TableCell<S, T> {
 
+    /**
+     * Convenience converter that does nothing (converts Strings to themselves and vice-versa...).
+     */
+    public static final StringConverter<String> IDENTITY_CONVERTER = new StringConverter<String>() {
+
+        @Override
+        public String toString(String object) {
+            return object;
+        }
+
+        @Override
+        public String fromString(String string) {
+            return string;
+        }
+
+    };
     // Text field for editing
     // TODO: allow this to be a plugable control.
     private final TextField textField = new TextField();
-
     // Converter for converting the text in the text field to the user type, and vice-versa:
     private final StringConverter<T> converter;
 
@@ -60,23 +75,6 @@ public class EditCell<S, T> extends TableCell<S, T> {
             }
         });
     }
-
-    /**
-     * Convenience converter that does nothing (converts Strings to themselves and vice-versa...).
-     */
-    public static final StringConverter<String> IDENTITY_CONVERTER = new StringConverter<String>() {
-
-        @Override
-        public String toString(String object) {
-            return object;
-        }
-
-        @Override
-        public String fromString(String string) {
-            return string;
-        }
-
-    };
 
     /**
      * Convenience method for creating an EditCell for a String value.

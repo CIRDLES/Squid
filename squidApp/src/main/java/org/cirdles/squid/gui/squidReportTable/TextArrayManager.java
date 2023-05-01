@@ -23,13 +23,13 @@ import java.util.List;
  */
 public class TextArrayManager {
 
+    private static final double characterSize = 9.5;
+    private static final double columnHeaderCharacterSize = 11;
+    private static final RowComparator comparator = new RowComparator();
     private static TableView<ObservableList<String>> table;
     private static TableView<ObservableList<String>> boundCol;
     private static String[][] array;
     private static ObservableList<ObservableList<String>> data;
-    private static final double characterSize = 9.5;
-    private static final double columnHeaderCharacterSize = 11;
-    private static final RowComparator comparator = new RowComparator();
     private static List<String> aliquots;
     private static SquidReportTableLauncher.ReportTableTab controllerType;
 

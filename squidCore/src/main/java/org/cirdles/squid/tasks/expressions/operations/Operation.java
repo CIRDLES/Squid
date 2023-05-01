@@ -38,71 +38,11 @@ public abstract class Operation
         Serializable,
         XMLSerializerInterface {
 
-    private static final long serialVersionUID = 7752181552732562245L;
-
-    /**
-     *
-     */
-    protected String name;
-
-    /**
-     *
-     */
-    protected int argumentCount;
-
-    /**
-     *
-     */
-    protected int precedence;
-    // establish size of array resulting from evaluation
-
-    /**
-     *
-     */
-    protected int rowCount;
-
-    /**
-     *
-     */
-    protected int colCount;
-
-    /**
-     *
-     */
-    protected String[][] labelsForOutputValues = new String[][]{{}};
-
-    /**
-     *
-     */
-    protected String[] labelsForInputValues = new String[]{};
-
-    protected String definition;
-
-    protected boolean summaryCalc;
-
-    /**
-     *
-     */
-    public Operation() {
-        this.name = "no-op";
-        this.argumentCount = 1;
-        this.precedence = 1;
-        this.rowCount = 1;
-        this.colCount = 1;
-    }
-
-    /**
-     * @param xstream
-     */
-    @Override
-    public void customizeXstream(XStream xstream) {
-        xstream.registerConverter(new OperationXMLConverter());
-    }
-
     /**
      *
      */
     public final static Map<String, String> OPERATIONS_MAP = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final long serialVersionUID = 7752181552732562245L;
 
     static {
 
@@ -117,6 +57,49 @@ public abstract class Operation
         OPERATIONS_MAP.put(">", greaterThan().getName());
         OPERATIONS_MAP.put(">=", greaterThanEqual().getName());
         OPERATIONS_MAP.put("$$", value().getName());
+    }
+
+    /**
+     *
+     */
+    protected String name;
+    // establish size of array resulting from evaluation
+    /**
+     *
+     */
+    protected int argumentCount;
+    /**
+     *
+     */
+    protected int precedence;
+    /**
+     *
+     */
+    protected int rowCount;
+    /**
+     *
+     */
+    protected int colCount;
+    /**
+     *
+     */
+    protected String[][] labelsForOutputValues = new String[][]{{}};
+    /**
+     *
+     */
+    protected String[] labelsForInputValues = new String[]{};
+    protected String definition;
+    protected boolean summaryCalc;
+
+    /**
+     *
+     */
+    public Operation() {
+        this.name = "no-op";
+        this.argumentCount = 1;
+        this.precedence = 1;
+        this.rowCount = 1;
+        this.colCount = 1;
     }
 
     /**
@@ -216,13 +199,21 @@ public abstract class Operation
                         operationName,
                         new Class[0]);
                 retVal = (Operation) method.invoke(null, new Object[0]);
-            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException noSuchMethodException) {
+            } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException |
+                     InvocationTargetException noSuchMethodException) {
                 // do nothing for now
             }
         }
         return retVal;
     }
 
+    /**
+     * @param xstream
+     */
+    @Override
+    public void customizeXstream(XStream xstream) {
+        xstream.registerConverter(new OperationXMLConverter());
+    }
 
     /**
      * @return the name

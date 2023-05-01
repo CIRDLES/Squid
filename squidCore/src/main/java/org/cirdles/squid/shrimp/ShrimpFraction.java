@@ -962,7 +962,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         }
 
         // issue #714
-        if (isReferenceMaterial()){
+        if (isReferenceMaterial()) {
             commonLeadSpecsForSpot.setRMCommonLeadModel(commonLeadModel);
         } else {
             commonLeadSpecsForSpot.setCommonLeadModel(commonLeadModel);

@@ -37,6 +37,57 @@ public class PhysicalConstantsModel extends ParametersModel {
         setUpDefaultMolarMasses();
     }
 
+    public static List<ParametersModel> getDefaultModels() {
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidPhysicalConstantsModels");
+        File[] files = new File[0];
+        List<ParametersModel> models = new ArrayList<>();
+        if (folder.exists()) {
+            files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".xml");
+                }
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add((ParametersModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
+            }
+        }
+
+        return models;
+    }
+
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
+        for (int i = 0; i < models.size() && retVal == null; i++) {
+            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
+                retVal = models.get(i);
+            }
+        }
+        if (retVal == null) {
+            retVal = new PhysicalConstantsModel();
+        }
+        return retVal;
+    }
+
+    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(String input) {
+        XStream xstream = getETReduxXStream();
+        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
+        return model;
+    }
+
+    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(File input) {
+        XStream xstream = getETReduxXStream();
+        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
+        return model;
+    }
+
+    public static XStream getETReduxXStream() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(new ETReduxPhysConstConverter());
+        xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
+        return xstream;
+    }
+
     @Override
     public PhysicalConstantsModel clone() {
         PhysicalConstantsModel model = new PhysicalConstantsModel();
@@ -90,38 +141,6 @@ public class PhysicalConstantsModel extends ParametersModel {
         values[6] = new ValueModel("lambda238");
     }
 
-    public static List<ParametersModel> getDefaultModels() {
-        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidPhysicalConstantsModels");
-        File[] files = new File[0];
-        List<ParametersModel> models = new ArrayList<>();
-        if (folder.exists()) {
-            files = folder.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.toLowerCase().endsWith(".xml");
-                }
-            });
-            for (int i = 0; i < files.length; i++) {
-                models.add((ParametersModel) (new PhysicalConstantsModel()).readXMLObject(files[i].getAbsolutePath(), false));
-            }
-        }
-
-        return models;
-    }
-
-    public static ParametersModel getDefaultModel(String modelName, String version) {
-        ParametersModel retVal = null;
-        List<ParametersModel> models = getDefaultModels();
-        for (int i = 0; i < models.size() && retVal == null; i++) {
-            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
-                retVal = models.get(i);
-            }
-        }
-        if (retVal == null) {
-            retVal = new PhysicalConstantsModel();
-        }
-        return retVal;
-    }
-
     public void setUpDefaultMolarMasses() {
         molarMasses.clear();
         String[][] masses = DataDictionary.AtomicMolarMasses;
@@ -136,25 +155,6 @@ public class PhysicalConstantsModel extends ParametersModel {
 
     public void setMolarMasses(Map<String, BigDecimal> molarMasses) {
         this.molarMasses = molarMasses;
-    }
-
-    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(String input) {
-        XStream xstream = getETReduxXStream();
-        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
-        return model;
-    }
-
-    public static PhysicalConstantsModel getPhysicalConstantsModelFromETReduxXML(File input) {
-        XStream xstream = getETReduxXStream();
-        PhysicalConstantsModel model = (PhysicalConstantsModel) xstream.fromXML(input);
-        return model;
-    }
-
-    public static XStream getETReduxXStream() {
-        XStream xstream = new XStream();
-        xstream.registerConverter(new ETReduxPhysConstConverter());
-        xstream.alias("PhysicalConstantsModel", PhysicalConstantsModel.class);
-        return xstream;
     }
 
     @Override

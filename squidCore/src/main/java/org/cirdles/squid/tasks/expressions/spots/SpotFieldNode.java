@@ -51,7 +51,6 @@ public class SpotFieldNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param methodNameForShrimpFraction
      * @return SpotFieldNode using getter name with leading get removed as name
      */
@@ -106,7 +105,8 @@ public class SpotFieldNode extends ExpressionTree {
                 retVal[i] = new Object[]{method.invoke(shrimpFractions.get(i))};
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException |
+                 NullPointerException methodException) {
             throw new SquidException("Could not find field name: " + fieldName);
         }
 

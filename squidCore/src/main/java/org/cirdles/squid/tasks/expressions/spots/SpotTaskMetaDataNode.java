@@ -28,6 +28,7 @@ import java.util.List;
 /**
  * This class is a helper class in the guise of an expression to retrieve task meta data for reports.
  * It does not need to support serialization.
+ *
  * @author James F. Bowring
  */
 public class SpotTaskMetaDataNode extends ExpressionTree {
@@ -51,7 +52,6 @@ public class SpotTaskMetaDataNode extends ExpressionTree {
     }
 
     /**
-     *
      * @param methodNameForTask
      * @return SpotFieldNode using getter name with leading get removed as name
      */
@@ -105,7 +105,8 @@ public class SpotTaskMetaDataNode extends ExpressionTree {
                 retVal[i] = new Object[]{method.invoke(task)};
             }
 
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException | NullPointerException methodException) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException |
+                 NullPointerException methodException) {
             throw new SquidException("Could not find Task field name: " + fieldName);
         }
 

@@ -88,7 +88,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return table;
     }
 
-    public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task)throws SquidException {
+    public static SquidReportTable createDefaultSquidReportTableRefMat(TaskInterface task) throws SquidException {
         String reportTableName = "Builtin Report Table for Reference Materials";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesRefMat(task);
         SquidReportTable table = new SquidReportTable(reportTableName, reportCategories, true);
@@ -96,7 +96,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return table;
     }
 
-    public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) throws SquidException{
+    public static SquidReportTable createDefaultSquidReportTableUnknown(TaskInterface task) throws SquidException {
         String reportTableName = "Builtin Report Table for Unknowns";
         LinkedList<SquidReportCategoryInterface> reportCategories = createDefaultReportCategoriesUnknown(task);
         SquidReportTable table = new SquidReportTable(reportTableName, reportCategories, true);
@@ -118,7 +118,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return table;
     }
 
-    public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) throws SquidException{
+    public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesRefMat(TaskInterface task) throws SquidException {
         LinkedList<SquidReportCategoryInterface> reportCategoriesRefMat = new LinkedList<>();
 
         SquidReportCategoryInterface spotFundamentals = createDefaultSpotFundamentalsCategory();
@@ -179,7 +179,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return reportCategoriesRefMat;
     }
 
-    public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesUnknown(TaskInterface task)throws SquidException {
+    public static LinkedList<SquidReportCategoryInterface> createDefaultReportCategoriesUnknown(TaskInterface task) throws SquidException {
         LinkedList<SquidReportCategoryInterface> reportCategoriesUnknown = new LinkedList<>();
 
         SquidReportCategoryInterface spotFundamentals = createDefaultSpotFundamentalsCategory();
@@ -291,7 +291,7 @@ public class SquidReportTable implements Serializable, SquidReportTableInterface
         return spotFundamentals;
     }
 
-    private static SquidReportCategoryInterface createDefaultCountsPerSecondCategory(TaskInterface task)throws SquidException {
+    private static SquidReportCategoryInterface createDefaultCountsPerSecondCategory(TaskInterface task) throws SquidException {
         SquidReportCategoryInterface countsPerSecond = createReportCategory("CPS");
         // special case of generation
         String[] isotopeLabels = new String[task.getSquidSpeciesModelList().size()];

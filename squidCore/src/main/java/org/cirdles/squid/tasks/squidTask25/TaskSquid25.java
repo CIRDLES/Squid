@@ -216,7 +216,7 @@ public class TaskSquid25 implements Serializable {
             }
         } catch (IOException ignored) {
         } finally {
-            if (inputStream != null){
+            if (inputStream != null) {
                 inputStream.close();
             }
         }

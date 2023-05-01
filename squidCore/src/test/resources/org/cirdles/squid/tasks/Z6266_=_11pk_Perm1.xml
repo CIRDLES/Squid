@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!-- SQUID3_TASK_SPECIFICATION_FILE -->
-<Task xmlns="https://raw.githubusercontent.com"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<Task xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns="https://raw.githubusercontent.com"
       xsi:schemaLocation="https://raw.githubusercontent.com
                           ../schema/SquidTask_XMLSchema.xsd">
     <name>Z6266_=_11pk_Perm1</name>

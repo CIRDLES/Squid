@@ -293,8 +293,7 @@ public class SpotManagerController implements Initializable {
         shrimpConcentrationRefMatList.setContextMenu(createConcRefMatSpotsViewContextMenu());
     }
 
-    private ContextMenu createAllSpotsViewContextMenu()
-             {
+    private ContextMenu createAllSpotsViewContextMenu() {
         ContextMenu contextMenu = new ContextMenu();
         spotContextRemoveSpotsMenuItem = new MenuItem();
         spotContextRemoveSpotsMenuItem.setOnAction((evt) -> {
@@ -450,10 +449,11 @@ public class SpotManagerController implements Initializable {
                     if ((oldValue != null) && (newValue != null) && (newValue.compareTo(oldValue) != 0)) {
                         squidProject.setReferenceMaterialModel(newValue);
                         squidProject.getTask().setChanged(true);
-                        try{
+                        try {
                             squidProject.getTask().refreshParametersFromModels(false, false, true);
+                        } catch (SquidException squidException) {
+                            SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                         }
-                           catch(SquidException squidException){ SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);}
                         alertForZeroNaturalUranium();
                     }
 
@@ -509,7 +509,7 @@ public class SpotManagerController implements Initializable {
                         squidProject.getTask().setChanged(true);
                         try {
                             squidProject.getTask().refreshParametersFromModels(false, false, true);
-                        }catch(SquidException squidException){
+                        } catch (SquidException squidException) {
                             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                         }
                     }
@@ -577,13 +577,13 @@ public class SpotManagerController implements Initializable {
             squidProject.getTask().setChanged(true);
             // issue #714
             // update ref mat spots to be model-based common lead
-            for (ShrimpFractionExpressionInterface spot : squidProject.getTask().getReferenceMaterialSpots()){
+            for (ShrimpFractionExpressionInterface spot : squidProject.getTask().getReferenceMaterialSpots()) {
                 spot.getCommonLeadSpecsForSpot().setMethodSelected(METHOD_COMMON_LEAD_MODEL);
                 spot.getCommonLeadSpecsForSpot().updateCommonLeadRatiosFromModel();
             }
             try {
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
-            }catch(SquidException squidException){
+            } catch (SquidException squidException) {
                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
         }
@@ -625,7 +625,7 @@ public class SpotManagerController implements Initializable {
             squidProject.getTask().setChanged(true);
             try {
                 squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
-            }catch(SquidException squidException){
+            } catch (SquidException squidException) {
                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
         }
@@ -673,7 +673,7 @@ public class SpotManagerController implements Initializable {
             squidProject.getTask().refreshParametersFromModels(false, false, true);
             refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
             concRefMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroConcentrations()));
-        }catch (SquidException squidException){
+        } catch (SquidException squidException) {
             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
         }
     }
@@ -700,11 +700,12 @@ public class SpotManagerController implements Initializable {
                     MenuItem restoreAllSpotMenuItem = new MenuItem("Restore ALL");
                     spotRestoreMenu.getItems().add(restoreAllSpotMenuItem);
                     restoreAllSpotMenuItem.setOnAction((evt) -> {
-                                try {squidProject.restoreAllRunsToPrawnFile();
+                        try {
+                            squidProject.restoreAllRunsToPrawnFile();
 
 
                             setUpDataFile(true);
-                        } catch (SquidException squidException){
+                        } catch (SquidException squidException) {
                             SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
                         }
 
@@ -717,7 +718,8 @@ public class SpotManagerController implements Initializable {
                         spotRestoreMenu.getItems().add(restoreSpotMenuItem);
                         restoreSpotMenuItem.setOnAction((evt) -> {
 
-                            try {squidProject.restoreRunToPrawnFile(run);
+                            try {
+                                squidProject.restoreRunToPrawnFile(run);
                                 setUpDataFile(true);
                             } catch (SquidException squidException) {
                                 SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);

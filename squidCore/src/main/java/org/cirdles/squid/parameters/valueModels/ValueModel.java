@@ -32,7 +32,7 @@ public class ValueModel implements Comparable<ValueModel>, Serializable {
     }
 
     public ValueModel(String name, String uncertaintyType) {
-        this(name, uncertaintyType,BigDecimal.ZERO, BigDecimal.ZERO);
+        this(name, uncertaintyType, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public ValueModel(String name, String uncertaintyType, BigDecimal value,

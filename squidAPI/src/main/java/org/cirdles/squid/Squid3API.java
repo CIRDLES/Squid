@@ -61,7 +61,6 @@ public interface Squid3API {
             throws IOException, JAXBException, SAXException, SquidException;
 
     /**
-     *
      * @param dataFileOPSourcePath
      * @throws IOException
      * @throws JAXBException
@@ -122,15 +121,23 @@ public interface Squid3API {
 
     // Sample UI management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     String[] getArrayOfSampleNames();
+
     String[][] getArrayOfSpotSummariesFromSample(String sampleName);
+
     String getReferenceMaterialSampleName();
-    String getConcReferenceMaterialSampleName();
+
     void setReferenceMaterialSampleName(String refMatSampleName);
+
+    String getConcReferenceMaterialSampleName();
+
     void setConcReferenceMaterialSampleName(String concRefMatSampleName);
+
     void updateSpotName(String oldSpotName, String spotName);
 
     void updateRefMatModelChoice(ParametersModel refMatModel) throws SquidException;
+
     void updateConcRefMatModelChoice(ParametersModel concRefMatModel) throws SquidException;
+
     /**
      * Produces 2 element array where [0] is three flags separated by semicolons with one for each of
      * dates 206_238; 207_206; 208_232 where flags are 0 = no change; 1 = change; F = bad Model.
@@ -144,28 +151,33 @@ public interface Squid3API {
      * @return
      */
     String[] produceAuditOfRefMatModel(ReferenceMaterialModel curRefMatModel);
+
     String get206_238DateMa(ReferenceMaterialModel curRefMatModel);
+
     String get207_206DateMa(ReferenceMaterialModel curRefMatModel);
+
     String get208_232DateMa(ReferenceMaterialModel curRefMatModel);
+
     String get238_235Abundance(ReferenceMaterialModel curRefMatModel);
+
     String getU_ppm(ReferenceMaterialModel curConcRefMatModel);
+
     String getTh_ppm(ReferenceMaterialModel curConcRefMatModel);
 
     /**
      * Squid3 maintains a list of removed spots so that they can be recovered at anytime
+     *
      * @param spotNames
      */
     void removeSpotsFromDataFile(List<String> spotNames) throws SquidException;
+
     List<String> getRemovedSpotsByName();
+
     void restoreSpotToDataFile(String spotName) throws SquidException;
+
     void restoreAllSpotsToDataFile() throws SquidException;
 
     // Task management +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-
-
-
-
 
 
     // reports management ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

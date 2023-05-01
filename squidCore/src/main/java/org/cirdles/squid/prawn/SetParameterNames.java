@@ -145,13 +145,6 @@ public enum SetParameterNames implements Serializable {
     }
 
     /**
-     * @return
-     */
-    public String value() {
-        return value;
-    }
-
-    /**
      * @param v
      * @return
      */
@@ -162,6 +155,13 @@ public enum SetParameterNames implements Serializable {
             }
         }
         throw new IllegalArgumentException(v);
+    }
+
+    /**
+     * @return
+     */
+    public String value() {
+        return value;
     }
 
 }

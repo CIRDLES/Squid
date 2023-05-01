@@ -51,6 +51,58 @@ public class ReferenceMaterialModel extends ParametersModel {
         initializeDefaultConcentrations();
     }
 
+    public static List<ParametersModel> getDefaultModels() {
+        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidReferenceMaterialModels");
+        File[] files;
+        List<ParametersModel> models = new ArrayList<>();
+        if (folder.exists()) {
+            files = folder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".xml");
+                }
+            });
+            for (int i = 0; i < files.length; i++) {
+                models.add((ParametersModel) (new ReferenceMaterialModel()).readXMLObject(files[i].getAbsolutePath(), false));
+            }
+        }
+
+        return models;
+    }
+
+    public static ParametersModel getDefaultModel(String modelName, String version) {
+        ParametersModel retVal = null;
+        List<ParametersModel> models = getDefaultModels();
+        for (int i = 0; i < models.size() && retVal == null; i++) {
+            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
+                retVal = models.get(i);
+            }
+        }
+        if (retVal == null) {
+            retVal = new ReferenceMaterialModel();
+        }
+        return retVal;
+    }
+
+    public static XStream getETReduxXStream() {
+        XStream xstream = new XStream();
+        xstream.registerConverter(new ETReduxRefMatConverter());
+        xstream.alias("ReferenceMaterial", ReferenceMaterialModel.class);
+        xstream.alias("MineralStandardUPbModel", ReferenceMaterialModel.class);
+        return xstream;
+    }
+
+    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(String input) {
+        XStream xstream = getETReduxXStream();
+        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
+        return model;
+    }
+
+    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(File input) {
+        XStream xstream = getETReduxXStream();
+        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
+        return model;
+    }
+
     private void initializeDefaultConcentrations() {
         concentrations = new ValueModel[2];
         concentrations[0] = new ValueModel("concU", "ABS", BigDecimal.ZERO, BigDecimal.ZERO);
@@ -119,7 +171,7 @@ public class ReferenceMaterialModel extends ParametersModel {
             // if 7/6 and/or 8/32 = 0, use the 6/38 age for both/either
             // if 6/38 AND 7/6 = 0, use 8/32 age
             // if 7/6 = 0, use 6/38 age
-            //     
+            //
             if (dates[0].hasPositiveValue()) {
                 flagsArray[0] = "0;";
                 if (!dates[1].hasPositiveValue()) {
@@ -214,38 +266,6 @@ public class ReferenceMaterialModel extends ParametersModel {
         Arrays.sort(values, new DataValueModelNameComparator());
 
         buildRhosMap();
-    }
-
-    public static List<ParametersModel> getDefaultModels() {
-        File folder = new File(SQUID_PARAMETER_MODELS_FOLDER.getAbsolutePath() + File.separator + "SquidReferenceMaterialModels");
-        File[] files;
-        List<ParametersModel> models = new ArrayList<>();
-        if (folder.exists()) {
-            files = folder.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.toLowerCase().endsWith(".xml");
-                }
-            });
-            for (int i = 0; i < files.length; i++) {
-                models.add((ParametersModel) (new ReferenceMaterialModel()).readXMLObject(files[i].getAbsolutePath(), false));
-            }
-        }
-
-        return models;
-    }
-
-    public static ParametersModel getDefaultModel(String modelName, String version) {
-        ParametersModel retVal = null;
-        List<ParametersModel> models = getDefaultModels();
-        for (int i = 0; i < models.size() && retVal == null; i++) {
-            if (models.get(i).getModelName().equals(modelName) && models.get(i).getVersion().equals(version)) {
-                retVal = models.get(i);
-            }
-        }
-        if (retVal == null) {
-            retVal = new ReferenceMaterialModel();
-        }
-        return retVal;
     }
 
     public boolean isReferenceDates() {
@@ -470,26 +490,6 @@ public class ReferenceMaterialModel extends ParametersModel {
 
     public void setDataMeasured(boolean[] dataMeasured) {
         this.dataMeasured = dataMeasured;
-    }
-
-    public static XStream getETReduxXStream() {
-        XStream xstream = new XStream();
-        xstream.registerConverter(new ETReduxRefMatConverter());
-        xstream.alias("ReferenceMaterial", ReferenceMaterialModel.class);
-        xstream.alias("MineralStandardUPbModel", ReferenceMaterialModel.class);
-        return xstream;
-    }
-
-    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(String input) {
-        XStream xstream = getETReduxXStream();
-        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
-        return model;
-    }
-
-    public static ReferenceMaterialModel getReferenceMaterialFromETReduxXML(File input) {
-        XStream xstream = getETReduxXStream();
-        ReferenceMaterialModel model = (ReferenceMaterialModel) xstream.fromXML(input);
-        return model;
     }
 
 //    @Override

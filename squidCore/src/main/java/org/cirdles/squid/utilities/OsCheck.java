@@ -13,13 +13,6 @@ package org.cirdles.squid.utilities;
 import java.util.Locale;
 
 public final class OsCheck {
-    /**
-     * types of Operating Systems
-     */
-    public enum OSType {
-        Windows, MacOS, Linux, Other
-    }
-
     // cached result of OS detection
     protected static OSType detectedOS;
 
@@ -43,5 +36,12 @@ public final class OsCheck {
             }
         }
         return detectedOS;
+    }
+
+    /**
+     * types of Operating Systems
+     */
+    public enum OSType {
+        Windows, MacOS, Linux, Other
     }
 }

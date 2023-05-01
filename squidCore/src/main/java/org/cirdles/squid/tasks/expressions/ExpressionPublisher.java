@@ -229,7 +229,7 @@ public class ExpressionPublisher {
             } catch (IOException e) {
                 worked = false;
             } finally {
-                if (writer != null){
+                if (writer != null) {
                     writer.close();
                 }
             }
@@ -320,7 +320,7 @@ public class ExpressionPublisher {
             } catch (IOException e) {
                 worked = false;
             } finally {
-                if (writer != null){
+                if (writer != null) {
                     writer.close();
                 }
             }

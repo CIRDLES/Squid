@@ -88,31 +88,15 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     ReportColumnInterface[] getCategoryColumns();
 
     /**
+     * @param categoryColumns
+     */
+    void setCategoryColumns(ReportColumnInterface[] categoryColumns);
+
+    /**
      * @return
      */
     @Override
     String getDisplayName();
-
-    /**
-     * @return
-     */
-    int getPositionIndex();
-
-    /**
-     * @return the legacyData
-     */
-    boolean isLegacyData();
-
-    /**
-     * @return
-     */
-    @Override
-    boolean isVisible();
-
-    /**
-     * @param categoryColumns
-     */
-    void setCategoryColumns(ReportColumnInterface[] categoryColumns);
 
     /**
      * @param displayName
@@ -120,15 +104,31 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     void setDisplayName(String displayName);
 
     /**
-     * @param legacyData the legacyData to set
+     * @return
      */
-    void setLegacyData(boolean legacyData);
+    int getPositionIndex();
 
     /**
      * @param positionIndex
      */
     @Override
     void setPositionIndex(int positionIndex);
+
+    /**
+     * @return the legacyData
+     */
+    boolean isLegacyData();
+
+    /**
+     * @param legacyData the legacyData to set
+     */
+    void setLegacyData(boolean legacyData);
+
+    /**
+     * @return
+     */
+    @Override
+    boolean isVisible();
 
     /**
      * @param visible

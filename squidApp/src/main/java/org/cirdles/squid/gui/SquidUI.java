@@ -27,8 +27,11 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author James F. Bowring
@@ -157,6 +160,13 @@ public final class SquidUI extends Application {
             Platform.exit();
             System.exit(0);
         });
+
+        List<String> getParametersRaw = getParameters().getRaw();
+        for (String param : getParametersRaw) {
+            if (param.toLowerCase(Locale.getDefault()).contains(".squid")) {
+                SquidUIController.fileToLoad = new File(param);
+            }
+        }
 
         // postpone loading to allow for stage creation and use in controller
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SquidUIController.fxml"));

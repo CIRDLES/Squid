@@ -41,9 +41,9 @@ import static org.cirdles.topsoil.plot.PlotOption.*;
 /**
  * @author James F. Bowring
  */
-public class TopsoilPlotWetherill extends AbstractTopsoilPlot{
+public class TopsoilPlotWetherill extends AbstractTopsoilPlot {
 
-    public TopsoilPlotWetherill() throws SquidException{
+    public TopsoilPlotWetherill() throws SquidException {
         this("placeholder");
     }
 

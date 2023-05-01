@@ -678,7 +678,7 @@ public class SquidReportSettingsController implements Initializable {
         String[][] resultLabels;
 
         // nov 2021 handle aliased expressions
-        expTree = ((Task)task).retrieveAliasedExpression(expTree);
+        expTree = ((Task) task).retrieveAliasedExpression(expTree);
 
         if (((ExpressionTree) expTree).getOperation() != null) {
             if ((((ExpressionTree) expTree).getOperation().getName().compareToIgnoreCase("Value") == 0)) {

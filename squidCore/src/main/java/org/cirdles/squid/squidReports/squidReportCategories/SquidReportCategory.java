@@ -33,11 +33,10 @@ import java.util.*;
 
 public class SquidReportCategory implements Serializable, SquidReportCategoryInterface {
 
-    private static final long serialVersionUID = 8741573410884399160L;
-
     public static final List<SquidReportCategory> defaultSampleWMSortingCategories = new ArrayList<>();
     public static final List<SquidReportCategory> defaultRefMatWMSortingCategories = new ArrayList<>();
     public static final List<SquidReportCategory> defaultRefMatCalibrationConstantSortingCategories = new ArrayList<>();
+    private static final long serialVersionUID = 8741573410884399160L;
 
     static {
 
@@ -153,6 +152,14 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         return categoryColumns;
     }
 
+    /**
+     * @param categoryColumns the categoryColumns to set
+     */
+    @Override
+    public void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns) {
+        this.categoryColumns = categoryColumns;
+    }
+
     @Override
     public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted() {
         @SuppressWarnings("unchecked") LinkedList<SquidReportColumnInterface> sortedColumns
@@ -169,14 +176,6 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         }
 
         return sortedColumns;
-    }
-
-    /**
-     * @param categoryColumns the categoryColumns to set
-     */
-    @Override
-    public void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns) {
-        this.categoryColumns = categoryColumns;
     }
 
     /**
