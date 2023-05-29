@@ -317,7 +317,7 @@ public class TaskEditorController implements Initializable {
             updateAddButton();
         });
 
-        updateAddButton();
+//        updateAddButton();
 
         numLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
         divLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
@@ -376,6 +376,8 @@ public class TaskEditorController implements Initializable {
                     break;
             }
             amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
+
+            updateAddButton();
 
             initTaskDesign();
         } catch (SquidException ignored) {

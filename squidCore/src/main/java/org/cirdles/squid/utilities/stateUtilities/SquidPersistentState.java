@@ -387,7 +387,7 @@ public class SquidPersistentState implements Serializable {
     }
 
     public void removeFileNameFromPrawnFileListMRU(String mruPrawnFileName) {
-        MRUProjectList.remove(mruPrawnFileName);
+        MRUPrawnFileList.remove(mruPrawnFileName);
     }
 
     public void cleanPrawnFileListMRU() {
