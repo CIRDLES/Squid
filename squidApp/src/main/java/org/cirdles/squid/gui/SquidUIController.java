@@ -889,10 +889,12 @@ public class SquidUIController implements Initializable {
             alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
+                    File projectFile = null;
                     try {
-                        File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                        projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
                     } catch (IOException iOException) {
-                        SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
+                        SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n"
+                                + ((projectFile != null)?  projectFile.getAbsolutePath() : ""),
                                 null);
                     }
                 }

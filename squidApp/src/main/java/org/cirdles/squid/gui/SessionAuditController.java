@@ -69,9 +69,6 @@ public class SessionAuditController implements Initializable {
     private ComboBox<String> delimiterComboBox;
     private String sampleNameDelimiter;
 
-    public SessionAuditController() {
-    }
-
     /**
      * Initializes the controller class.
      *

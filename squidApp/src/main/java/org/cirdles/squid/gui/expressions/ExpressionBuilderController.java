@@ -1148,7 +1148,7 @@ public class ExpressionBuilderController implements Initializable {
 
     //CREATE EDIT DELETE SAVE CANCEL ACTIONS
     @FXML
-    private void newCustomExpressionAction(ActionEvent ignoredActionEvent) {
+    private void newCustomExpressionAction() {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
             Expression exp = new Expression("", "");
@@ -1161,7 +1161,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void copyIntoCustomExpressionAction(ActionEvent ignoredActionEvent) {
+    private void copyIntoCustomExpressionAction() {
         if (currentMode.get().equals(Mode.VIEW)) {
             selectedBeforeCreateOrCopy = selectedExpression.get();
             Expression exp = copySelectedExpression();
@@ -1174,7 +1174,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void editCustomExpressionAction(ActionEvent ignoredActionEvent) {
+    private void editCustomExpressionAction() {
         if (selectedExpressionIsEditable.get() && currentMode.get().equals(Mode.VIEW)) {
             currentMode.set(Mode.EDIT);
             if (!editAsText.get()) {
@@ -1185,7 +1185,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void cancelAction(ActionEvent ignoredActionEvent) {
+    private void cancelAction() {
         if (!currentMode.get().equals(Mode.EDIT)) {
             currentMode.set(Mode.VIEW);
             selectedExpression.set(null);
@@ -1204,7 +1204,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void saveAction(ActionEvent ignoredActionEvent) {
+    private void saveAction() {
 
         boolean nameExists = task.expressionExists(new Expression(expressionNameTextField.getText(), ""));
 
@@ -1238,7 +1238,7 @@ public class ExpressionBuilderController implements Initializable {
 
     //EXPRESSION ACTIONS
     @FXML
-    private void expressionClearAction(ActionEvent ignoredActionEvent) {
+    private void expressionClearAction() {
         //Clear the textflow
         if (!currentMode.get().equals(Mode.VIEW)) {
             expressionString.set("");
@@ -1246,7 +1246,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void expressionCopyAction(ActionEvent ignoredActionEvent) {
+    private void expressionCopyAction() {
         //Copy in clipboard
         String fullText = expressionString.get();
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -1256,7 +1256,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void expressionPasteAction(ActionEvent ignoredActionEvent) {
+    private void expressionPasteAction() {
         //Build textflow from clipboard
         if (!currentMode.get().equals(Mode.VIEW)) {
             Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -1266,7 +1266,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void expressionUndoAction(ActionEvent ignoredActionEvent) {
+    private void expressionUndoAction() {
         //Try to restore the last saved state
         String last = undoListForExpression.get(undoListForExpression.size() - 1);
         redoListForExpression.add(expressionString.get());
@@ -1276,7 +1276,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void expressionRedoAction(ActionEvent ignoredActionEvent) {
+    private void expressionRedoAction() {
         String last = redoListForExpression.get(redoListForExpression.size() - 1);
         undoListForExpression.add(expressionString.get());
         changeFromUndoRedo = true;
@@ -1344,27 +1344,27 @@ public class ExpressionBuilderController implements Initializable {
 
     //CHECKBOX ACTIONS
     @FXML
-    private void referenceMaterialCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void referenceMaterialCheckBoxAction() {
         concRefMatSwitchCheckBox.setSelected(false);
         updateEditor();
         refreshSaved();
     }
 
     @FXML
-    private void unknownSamplesCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void unknownSamplesCheckBoxAction() {
         concRefMatSwitchCheckBox.setSelected(false);
         updateEditor();
         refreshSaved();
     }
 
     @FXML
-    private void unknownGroupsComboBoxAction(ActionEvent ignoredActionEvent) {
+    private void unknownGroupsComboBoxAction() {
         updateEditor();
         refreshSaved();
     }
 
     @FXML
-    private void concRefMatCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void concRefMatCheckBoxAction() {
         unknownsSwitchCheckBox.setSelected(false);
         refMatSwitchCheckBox.setSelected(false);
         updateEditor();
@@ -1372,25 +1372,25 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void summaryCalculationCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void summaryCalculationCheckBoxAction() {
         NUSwitchCheckBox.setSelected(false);
         updateEditor();
         refreshSaved();
     }
 
     @FXML
-    private void specialUPbThCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void specialUPbThCheckBoxAction() {
         refreshSaved();
     }
 
     @FXML
-    private void NUSwitchCheckBoxAction(ActionEvent ignoredActionEvent) {
+    private void NUSwitchCheckBoxAction() {
         summaryCalculationSwitchCheckBox.setSelected(false);
         refreshSaved();
     }
 
     @FXML
-    private void fontMinusAction(ActionEvent ignoredActionEvent) {
+    private void fontMinusAction() {
         if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier > EXPRESSION_BUILDER_MIN_FONTSIZE) {
             this.fontSizeModifier -= 1;
             expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE + fontSizeModifier));
@@ -1409,7 +1409,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void fontPlusAction(ActionEvent ignoredActionEvent) {
+    private void fontPlusAction() {
         if (EXPRESSION_BUILDER_DEFAULT_FONTSIZE + this.fontSizeModifier < EXPRESSION_BUILDER_MAX_FONTSIZE) {
             this.fontSizeModifier += 1;
             expressionAsTextArea.setFont(Font.font(expressionAsTextArea.getFont().getFamily(), EXPRESSION_BUILDER_DEFAULT_FONTSIZE + fontSizeModifier));
@@ -1428,7 +1428,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    private void toggleWhiteSpacesAction(ActionEvent ignoredActionEvent) {
+    private void toggleWhiteSpacesAction() {
         whiteSpaceVisible.set(!whiteSpaceVisible.get());
         if (whiteSpaceVisible.get()) {
             toggleWhiteSpacesBtn.setText("Hide white spaces tokens");

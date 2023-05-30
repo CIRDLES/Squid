@@ -255,6 +255,7 @@ public class ProjectManagerController implements Initializable {
             case PB_208:
                 pb208RadioButton.setSelected(true);
                 break;
+            default:
         }
 
         autoExcludeSpotsCheckBox.setSelected(squidProject.isSquidAllowsAutoExclusionOfSpots());

@@ -700,6 +700,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                     confirmedExists = true;
                                 }
                                 break;
+                            default:
                         }
                     }
                     if (writeReport.getValue()) {
@@ -781,8 +782,8 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                     }
                 }
                 if (writeReport.getValue()) {
-                    if (reportFileSVG.exists()) {
-                        if (!confirmedExists) {
+                    if (reportFileSVG.exists() && !confirmedExists) {
+
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                                     "It appears that a weighted means report already exists. "
                                             + "Would you like to overwrite it?");
@@ -792,7 +793,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                     writeReport.setValue(false);
                                 }
                             });
-                        }
+
                     }
                     if (writeReport.getValue()) {
                         myPlot.outputToSVG(reportFileSVG);

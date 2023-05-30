@@ -21,8 +21,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -402,12 +400,9 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private CheckBox showExcludedSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Plot rejects");
         autoExcludeSpotsCheckBox.setSelected(WeightedMeanPlot.doPlotRejectedSpots);
-        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
-                plotsController.refreshPlot();
-            }
+        autoExcludeSpotsCheckBox.setOnAction(event -> {
+            WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
+            plotsController.refreshPlot();
         });
         formatNode(autoExcludeSpotsCheckBox, 85);
         return autoExcludeSpotsCheckBox;
@@ -484,28 +479,22 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         Button saveToNewFileButton = new Button("New");
         formatNode(saveToNewFileButton, 50);
         saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    writeWeightedMeanReport(false);
-                } catch (IOException ex) {
-                    Logger.getLogger(RefMatWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        saveToNewFileButton.setOnAction(e -> {
+            try {
+                writeWeightedMeanReport(false);
+            } catch (IOException ex) {
+                Logger.getLogger(RefMatWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
         Button appendToFileButton = new Button("Append");
         formatNode(appendToFileButton, 75);
         appendToFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        appendToFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    writeWeightedMeanReport(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(RefMatWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        appendToFileButton.setOnAction(e -> {
+            try {
+                writeWeightedMeanReport(true);
+            } catch (IOException ex) {
+                Logger.getLogger(RefMatWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
@@ -524,15 +513,12 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         showInExpressionsButton.setWrapText(true);
         showInExpressionsButton.setTextAlignment(TextAlignment.CENTER);
         showInExpressionsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        showInExpressionsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
-                            sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
-                } catch (SquidException squidException) {
-                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-                }
+        showInExpressionsButton.setOnAction(e -> {
+            try {
+                ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
+                        sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
         });
 
@@ -639,7 +625,7 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
     private void writeWeightedMeanSVG() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             WeightedMeanPlot myPlot = (WeightedMeanPlot) sampleNode.getSamplePlotWM();
-            String expressionName = myPlot.getAgeOrValueLookupString();
+
             String reportFileNameSVG = sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName().replace("/", "_") + ".svg";
 
             try {

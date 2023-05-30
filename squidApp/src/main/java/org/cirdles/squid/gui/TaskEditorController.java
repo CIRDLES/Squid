@@ -374,6 +374,7 @@ public class TaskEditorController implements Initializable {
                 case EDIT_EXISTING_TASK:
                     existingTaskToEdit.updateTaskDesignFromTask(taskEditor, true);
                     break;
+                default:
             }
             amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
 

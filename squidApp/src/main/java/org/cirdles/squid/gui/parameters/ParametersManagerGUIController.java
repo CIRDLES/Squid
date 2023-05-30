@@ -11,7 +11,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -516,7 +515,7 @@ public class ParametersManagerGUIController implements Initializable {
         ValueModel[] models = refMatModel.getValues();
         if (models != null) {
             for (int i = 0; !hasNonZero && i < models.length; i++) {
-                hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
+                hasNonZero = (models[i].getValue().doubleValue() != 0.0);
             }
         }
         refMatReferenceDatesCheckbox.setVisible(!hasNonZero);
@@ -1255,7 +1254,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstImpXMLAction(ActionEvent event) {
+    private void physConstImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
@@ -1398,7 +1397,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstExpXMLAction(ActionEvent event) {
+    private void physConstExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(physConstModel, squidLabDataWindow);
@@ -1985,7 +1984,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void physConstRemoveCurrMod() throws SquidException {
         physConstModels.remove(physConstModel);
         physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
@@ -1996,7 +1995,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditCurrMod(ActionEvent event) {
+    private void physConstEditCurrMod() {
         physConstHolder = physConstModel.clone();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, physConstModel.isEditable());
@@ -2005,7 +2004,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditCopy(ActionEvent event) {
+    private void physConstEditCopy() {
         physConstModel = physConstModel.clone();
         physConstModel.setModelName(physConstModel.getModelName() + " - copy");
         physConstModel.setIsEditable(true);
@@ -2016,7 +2015,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditEmptyMod(ActionEvent event) {
+    private void physConstEditEmptyMod() {
         physConstModel = new PhysicalConstantsModel();
         setUpPhysConst();
         physConstEditable(true);
@@ -2025,7 +2024,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCancelEdit(ActionEvent event) {
+    private void physConstCancelEdit() {
         if (isEditingCurrPhysConst) {
             isEditingCurrPhysConst = false;
             physConstModel = physConstHolder;
@@ -2039,7 +2038,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void physConstSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = physConstModelName.getText();
         String version = physConstVersion.getText();
@@ -2092,7 +2091,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void refMatSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = refMatModelName.getText();
         String version = refMatVersion.getText();
@@ -2141,7 +2140,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void refMatRemoveCurrMod() throws SquidException {
         refMatModels.remove(refMatModel);
         refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
@@ -2152,7 +2151,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCancelEdit(ActionEvent event) {
+    private void refMatCancelEdit() {
         if (isEditingCurrRefMat) {
             isEditingCurrRefMat = false;
             refMatModel = refMatHolder;
@@ -2166,7 +2165,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMateEditEmptyMod(ActionEvent event) {
+    private void refMateEditEmptyMod() {
         refMatModel = new ReferenceMaterialModel();
         ((ReferenceMaterialModel) refMatModel).generateBaseDates();
         refMatReferenceDatesCheckbox.setSelected(false);
@@ -2177,7 +2176,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatEditCopy(ActionEvent event) {
+    private void refMatEditCopy() {
         refMatModel = refMatModel.clone();
         refMatModel.setModelName(refMatModel.getModelName() + " - copy");
         refMatModel.setIsEditable(true);
@@ -2188,7 +2187,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatEditCurrMod(ActionEvent event) {
+    private void refMatEditCurrMod() {
         refMatHolder = refMatModel.clone();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -2197,7 +2196,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstDataNotationOnAction(ActionEvent event) {
+    private void physConstDataNotationOnAction() {
         if (physConstDataNotation.equals(scientificNotation)) {
             physConstDataNotation = standardNotation;
             physConstDataNotationButton.setText("Use Scientific Notation");
@@ -2229,7 +2228,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatDataNotationOnAction(ActionEvent event) {
+    private void refMatDataNotationOnAction() {
         if (refMatDataNotation.equals(scientificNotation)) {
             refMatDataNotation = standardNotation;
             refMatDataNotationButton.setText("Use Scientific Notation");
@@ -2287,7 +2286,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatConcentrationsNotationOnAction(ActionEvent event) {
+    private void refMatConcentrationsNotationOnAction() {
         if (refMatConcentrationsNotation.equals(scientificNotation)) {
             refMatConcentrationsNotation = standardNotation;
             refMatConcentrationsNotationButton.setText("Use Scientific Notation");
@@ -2317,7 +2316,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCorrNotationOnAction(ActionEvent event) {
+    private void physConstCorrNotationOnAction() {
         if (physConstCorrNotation.equals(scientificNotation)) {
             physConstCorrNotation = standardNotation;
             physConstCorrNotationButton.setText("Use Scientific Notation");
@@ -2329,7 +2328,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCovNotationOnAction(ActionEvent event) {
+    private void physConstCovNotationOnAction() {
         if (physConstCovNotation.equals(scientificNotation)) {
             physConstCovNotation = standardNotation;
             physConstCovNotationButton.setText("Use Scientific Notation");
@@ -2341,7 +2340,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCorrNotationOnAction(ActionEvent event) {
+    private void refMatCorrNotationOnAction() {
         if (refMatCorrNotation.equals(scientificNotation)) {
             refMatCorrNotation = standardNotation;
             refMatCorrNotationButton.setText("Use Scientific Notation");
@@ -2353,7 +2352,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCovNotationOnAction(ActionEvent event) {
+    private void refMatCovNotationOnAction() {
         if (refMatCovNotation.equals(scientificNotation)) {
             refMatCovNotation = standardNotation;
             refMatCovNotationButton.setText("Use Scientific Notation");
@@ -2478,7 +2477,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbImpXMLAction(ActionEvent event) {
+    private void commonPbImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectCommonPbModelXMLFile(squidLabDataWindow);
@@ -2625,7 +2624,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbExpXMLAction(ActionEvent event) {
+    private void commonPbExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSaveCommonPbModelXMLFile(commonPbModel, squidLabDataWindow);
@@ -2640,7 +2639,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void commonPbSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = commonPbModelName.getText();
         String version = commonPbVersion.getText();
@@ -2679,7 +2678,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCancelEdit(ActionEvent event) {
+    private void commonPbCancelEdit() {
         if (isEditingCurrCommonPbModel) {
             isEditingCurrCommonPbModel = false;
             commonPbModel = commonPbModelHolder;
@@ -2693,7 +2692,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void commonPbRemoveCurrMod() throws SquidException {
         commonPbModels.remove(commonPbModel);
         commonPbModels.sort(new ParametersModelComparator());
         setUpCommonPbCBItems();
@@ -2704,7 +2703,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditCurrMod(ActionEvent event) {
+    private void commonPbEditCurrMod() {
         isEditingCommonPb = true;
         commonPbModelHolder = commonPbModel.clone();
         commonPbModelEditable(true);
@@ -2713,7 +2712,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditCopy(ActionEvent event) {
+    private void commonPbEditCopy() {
         isEditingCommonPb = true;
         commonPbModel = commonPbModel.clone();
         commonPbModel.setIsEditable(true);
@@ -2724,7 +2723,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditEmptyMod(ActionEvent event) {
+    private void commonPbEditEmptyMod() {
         isEditingCommonPb = true;
         commonPbModel = new CommonPbModel();
         setUpCommonPb();

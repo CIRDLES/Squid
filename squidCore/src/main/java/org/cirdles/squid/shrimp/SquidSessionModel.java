@@ -75,7 +75,7 @@ public class SquidSessionModel implements Serializable {
             retVal = !(this.userLinFits == userLinFits);
         }
         if (!retVal) {
-            retVal = !(this.indexOfBackgroundSpecies == indexOfBackgroundSpecies);
+            retVal = (this.indexOfBackgroundSpecies != indexOfBackgroundSpecies);
         }
         if (!retVal) {
             retVal = !(this.referenceMaterialNameFilter.compareToIgnoreCase(referenceMaterialNameFilter) == 0);

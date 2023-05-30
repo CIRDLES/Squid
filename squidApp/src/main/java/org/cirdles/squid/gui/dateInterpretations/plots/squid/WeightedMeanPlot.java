@@ -786,7 +786,7 @@ public class WeightedMeanPlot extends AbstractDataView implements PlotDisplayInt
         }
 
         // plot data
-        g2d.setStroke(new java.awt.BasicStroke((float) 2.0));
+        g2d.setStroke(new BasicStroke((float) 2.0));
         for (int i = 0; i < myOnPeakData.length; i++) {
             if (rejectedIndices[i]) {
                 g2d.setPaint(java.awt.Color.BLUE);

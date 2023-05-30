@@ -526,7 +526,7 @@ public class TaskFolderBrowserController implements Initializable {
     @FXML
     private void saveThisTaskAsXMLFileAction() {
         try {
-            FileHandler.saveTaskFileXML(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue(), SquidUI.primaryStageWindow);
+            FileHandler.saveTaskFileXML(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue(), primaryStageWindow);
             taskNameTextField.setText(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue().getName());
         } catch (IOException iOException) {
         }
