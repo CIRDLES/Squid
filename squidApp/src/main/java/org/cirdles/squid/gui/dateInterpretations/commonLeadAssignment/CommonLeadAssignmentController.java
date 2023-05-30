@@ -18,7 +18,6 @@ package org.cirdles.squid.gui.dateInterpretations.commonLeadAssignment;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -223,7 +222,7 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     @FXML
-    private void correctionNoneAction(ActionEvent event) throws SquidException {
+    private void correctionNoneAction() throws SquidException {
         try {
             OvercountCorrection.correctionNone(squidProject.getTask());
         } catch (SquidException squidException) {
@@ -233,13 +232,13 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     @FXML
-    private void correction207Action(ActionEvent event) throws SquidException {
+    private void correction207Action() throws SquidException {
         OvercountCorrection.correction207(squidProject.getTask());
         init();
     }
 
     @FXML
-    private void correction208Action(ActionEvent event) throws SquidException {
+    private void correction208Action() throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
         init();
     }
@@ -356,7 +355,7 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     @FXML
-    private void viewDetailsOnAction(ActionEvent actionEvent) throws SquidException {
+    private void viewDetailsOnAction() throws SquidException {
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchCountCorrections();
     }

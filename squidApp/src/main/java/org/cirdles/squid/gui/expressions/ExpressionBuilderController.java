@@ -518,7 +518,7 @@ public class ExpressionBuilderController implements Initializable {
     }
 
     @FXML
-    public void showExpressionDetailsOnAction(ActionEvent ignoredActionEvent) {
+    public void showExpressionDetailsOnAction() {
         File expressionFile = new File("Expression_Details.html");
         ExpressionPublisher.createHTMLDocumentFromExpression(expressionFile, selectedExpression.getValue(), squidProject);
         BrowserControl.showURI(expressionFile.getAbsolutePath());

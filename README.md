@@ -12,50 +12,77 @@ Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
 [***Click to View New Sustainable Software Development Video***](https://www.youtube.com/watch?v=mC5eNrMjfk4)
 
-
 We encourage you to download and evaluate the latest Squid3 release, the ".jar" file
-found <a href="https://github.com/CIRDLES/Squid/releases/latest" target="_blank">here</a>.  
+found <a href="https://github.com/CIRDLES/Squid/releases/latest" target="_blank">here</a>.
 
 Squid3 requires
 Oracle's <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">
 Java 1.8</a>. It will not run on later versions of Java EXCEPT as explained below:
 
-With the current release of version 1.9.0, Squid3 is now compatible with the three LTS (long-term support) versions of Java - 8, 11, and 17.  You can read [here](https://en.wikipedia.org/wiki/Java_version_history)
-about the history of Java versions.  Squid3 release ".jar"s are built using Java SE8 to run correctly on 8, 11 and 17.  There is an important caveat, however, that the Squid3 graphical user interface is built using JavaFX.  JavaFX is included in most releases of Java 8, but has been separated into a different project in all later Java versions.  The result is that, in general,  a different Squid3 "jar" file must be created for each flavor of operating system - Win, Mac, and Linux, since JavaFX is coupled to the underlying environment. There are various ways to automate this process, but the most elegant and time-saving solution for us is to depend on the <a href="https://bell-sw.com/pages/downloads/#/java-8-lts" target="_blank">Liberica family of Java JDKs and JREs</a>, which provide a "full" version that automatically brokers the JavaFX environment needed for the operating system and only requires one version of the Squid3 "jar" that will run on any system using Liberica's full JDK or JRE 8, 11, or 17.
+With the current release of version 1.9.0, Squid3 is now compatible with the three LTS (long-term support) versions of
+Java - 8, 11, and 17. You can read [here](https://en.wikipedia.org/wiki/Java_version_history)
+about the history of Java versions. Squid3 release ".jar"s are built using Java SE8 to run correctly on 8, 11 and 17.
+There is an important caveat, however, that the Squid3 graphical user interface is built using JavaFX. JavaFX is
+included in most releases of Java 8, but has been separated into a different project in all later Java versions. The
+result is that, in general, a different Squid3 "jar" file must be created for each flavor of operating system - Win,
+Mac, and Linux, since JavaFX is coupled to the underlying environment. There are various ways to automate this process,
+but the most elegant and time-saving solution for us is to depend on
+the <a href="https://bell-sw.com/pages/downloads/#/java-8-lts" target="_blank">Liberica family of Java JDKs and
+JREs</a>, which provide a "full" version that automatically brokers the JavaFX environment needed for the operating
+system and only requires one version of the Squid3 "jar" that will run on any system using Liberica's full JDK or JRE 8,
+11, or 17.
 
-If you are successfully running Squid3 using Oracle's <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">
+If you are successfully running Squid3 using
+Oracle's <a href="http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html" target="_blank">
 Java 1.8</a>, the following paragraph is for information only.
 
-The Liberica full JDK or JRE for 8, 11, or 17 for your operating system can be downloaded as a compressed archive and expanded anywhere you choose.  If you want to make this version the default on your operating system, there are many online tutorials to follow. The Java executable is in the "bin" folder and is named "java"  for Mac and Linux, and "java.exe" for Windows.  To run the Squid3 "jar" file, open a terminal window and paste in the path to the java executable, followed by a space character and the flag "-jar" followed by a space character and the path to the Squid3 "jar" file.  
+The Liberica full JDK or JRE for 8, 11, or 17 for your operating system can be downloaded as a compressed archive and
+expanded anywhere you choose. If you want to make this version the default on your operating system, there are many
+online tutorials to follow. The Java executable is in the "bin" folder and is named "java"  for Mac and Linux, and "
+java.exe" for Windows. To run the Squid3 "jar" file, open a terminal window and paste in the path to the java
+executable, followed by a space character and the flag "-jar" followed by a space character and the path to the Squid3 "
+jar" file.
 
 Windows example assuming terminal is currently in folder containing Squid3 "jar":
+
 ```text
 C:\MYJAVA\jdk8u302-full\bin\java.exe -jar Squid3-1.9.0.jar
 ```
+
 Mac or Linux example assuming terminal is currently in folder containing Squid3 "jar":
+
 ```text
 /Users/yourName/Documents/MYJAVA/jdk8u302-full/bin/java -jar Squid3-1.9.0.jar
 ```
-If you need to have a copy of Squid3 that runs on a specific OS and a Java JDK or JRE that does not include JavaFX, we can provide one or provide instructions for you to build one from the source code.
+
+If you need to have a copy of Squid3 that runs on a specific OS and a Java JDK or JRE that does not include JavaFX, we
+can provide one or provide instructions for you to build one from the source code.
 
 ***Note to Developers***
 
-Squid3 can be compiled from the source code by using Gradle 7.2 running Java 8, and it will run on any of the Liberica full JDKs or JREs 8, 11, 17.  If Gradle 7.2 is set to use a higher version of Java (Liberica), then Squid3 will not run on lower numbered versions of Java.
+Squid3 can be compiled from the source code by using Gradle 7.2 running Java 8, and it will run on any of the Liberica
+full JDKs or JREs 8, 11, 17. If Gradle 7.2 is set to use a higher version of Java (Liberica), then Squid3 will not run
+on lower numbered versions of Java.
+
 ```text
 gradle clean build 
 ```
+
 Squid3 "jar" file can then be built:
+
 ```text
 gradle fatappjar
 ```
 
 ***Addendum***
 
-Azul also provides JDKs and JREs for Java 8, 11, and 17 pre-packaged with JavaFX <a href="https://www.azul.com/downloads/?package=jdk-fx" target="_blank">here</a>.
+Azul also provides JDKs and JREs for Java 8, 11, and 17 pre-packaged with
+JavaFX <a href="https://www.azul.com/downloads/?package=jdk-fx" target="_blank">here</a>.
 
 ***Note to Users***
 
-Thank you for using Squid3.  We depend on your feedback to keep Squid3 up-to-date and useful to you.  To contribute issues and feedback, please join GitHub <a href="https://github.com/" target="_blank">here</a>. While
+Thank you for using Squid3. We depend on your feedback to keep Squid3 up-to-date and useful to you. To contribute issues
+and feedback, please join GitHub <a href="https://github.com/" target="_blank">here</a>. While
 using Squid3, the help menu provides a link that initializes a new GitHub issue for you - please use freely.
 
 The current versions - Squid3-**1.9.n.jar** - provide full workflow support for processing and interpreting Shrimp data
@@ -81,36 +108,42 @@ window in the Expressions manager provides additional info about each model valu
 with the Squid3 Project (.squid) file so if anyone opens a .squid file, the included models will be added to the local
 store of models available to Squid3, if not already present.
 
-The **Data** menu: 1) _Manage Sample Names_, 2) _Manage Spots and Reference Materials_, and 3) _Audit Raw Data_ for all data files. For Prawn data files, it also
-   provides for saving and swapping out data files.  '_Manage Sample Names_' automates with overrides the naming of
-   samples based on delimiters or leading character counts.  '_Manage Spots and Reference Materials_' supports editing
-   spot names, filtering spots by name, and setting both the project's reference material spots and concentration
-   reference material spots by using the same filtering feature. The reference material models are selected here as
-   well. The context menu on the left-side list is accessed by a right-mouse click and has items for removing a spot and
-   splitting the data file into two files. Any modifications to the data file can be saved to a new file if needed. Note
-   that saving the project preserves the changes to the data within the project file but without changing the source
-   data file.  '_Audit masses_' provides time-based views of masses and is configurable to show mass differences as well.
+The **Data** menu: 1) _Manage Sample Names_, 2) _Manage Spots and Reference Materials_, and 3) _Audit Raw Data_ for all
+data files. For Prawn data files, it also
+provides for saving and swapping out data files.  '_Manage Sample Names_' automates with overrides the naming of
+samples based on delimiters or leading character counts.  '_Manage Spots and Reference Materials_' supports editing
+spot names, filtering spots by name, and setting both the project's reference material spots and concentration
+reference material spots by using the same filtering feature. The reference material models are selected here as
+well. The context menu on the left-side list is accessed by a right-mouse click and has items for removing a spot and
+splitting the data file into two files. Any modifications to the data file can be saved to a new file if needed. Note
+that saving the project preserves the changes to the data within the project file but without changing the source
+data file.  '_Audit masses_' provides time-based views of masses and is configurable to show mass differences as well.
 
-The **Task** menu - 
+The **Task** menu -
+
 1) '_View Current Task_' provides for the user to configure the metadata about a task including
-choosing directives for daughter/parent ratios. Additional editing of the task is available via the '_Edit Current
-Task_' button at the bottom of the view task page. The task editor provides for editing the masses, the index of the
-background mass, the ratios using these masses, the directives, and the four special expressions: **
-Uncor_206Pb238U_CalibConst**, **Uncor_208Pb232Th_CalibConst**, **232Th238U_RM**, and **ParentElement_ConcenConst**.
-Please note that Squid3 in _GEOCHRON Mode_ requires mass labels 204, 206, 207, 208 and ratios 204/206, 207/206, and
-208/206 as they inhabit the built-in expressions engine. In order to use this task with the current data file, the count
-of masses must match and Squid3 will alert the user if they do not.  The 'Directives' allow switching between using the primary ages of 206/Pb/238U or 208Pb/232Th
-and whether to directly calculate 208Pb/232Th - these are the pair of choices that Squid2.5 also makes available. These
-choices interact with the list of preferred index isotopes shown - '208Pb' is only available when the primary age is
-206Pb/238U and the calculation of 208Pb/232Th is indirect. Also, if '208Pb' is selected, the directives cannot be
-changed.
+   choosing directives for daughter/parent ratios. Additional editing of the task is available via the '_Edit Current
+   Task_' button at the bottom of the view task page. The task editor provides for editing the masses, the index of the
+   background mass, the ratios using these masses, the directives, and the four special expressions: **
+   Uncor_206Pb238U_CalibConst**, **Uncor_208Pb232Th_CalibConst**, **232Th238U_RM**, and **ParentElement_ConcenConst**.
+   Please note that Squid3 in _GEOCHRON Mode_ requires mass labels 204, 206, 207, 208 and ratios 204/206, 207/206, and
+   208/206 as they inhabit the built-in expressions engine. In order to use this task with the current data file, the
+   count
+   of masses must match and Squid3 will alert the user if they do not. The 'Directives' allow switching between using
+   the primary ages of 206/Pb/238U or 208Pb/232Th
+   and whether to directly calculate 208Pb/232Th - these are the pair of choices that Squid2.5 also makes available.
+   These
+   choices interact with the list of preferred index isotopes shown - '208Pb' is only available when the primary age is
+   206Pb/238U and the calculation of 208Pb/232Th is indirect. Also, if '208Pb' is selected, the directives cannot be
+   changed.
 
 2) '_New Task from ...' a) current task without custom expressions, b) current task including
-custom expressions, c) empty task_ - will each open the task editor. 
+   custom expressions, c) empty task_ - will each open the task editor.
 3) '_Browse, load, or edit task files ...' a) from
-Squid3 Built-In Tasks Library, b) Squid3 Custom Tasks Folder, c) Squid2.5 Custom Tasks Folder_ - each provide access to
-a list of tasks with their details, which can then be edited or used directly in the current task, provided the mass
-counts align.
+   Squid3 Built-In Tasks Library, b) Squid3 Custom Tasks Folder, c) Squid2.5 Custom Tasks Folder_ - each provide access
+   to
+   a list of tasks with their details, which can then be edited or used directly in the current task, provided the mass
+   counts align.
 
 The **Isotopes** menu:  1) '_Map Isotopes from Data to Task_' provides for mapping the isotope or mass labels provided
 by the data file for each mass station to the task's isotope or mass labels. Tasks generally refer to masses using
@@ -127,7 +160,9 @@ expressions have been named in a consistent fashion per issue [#164](https://git
 discussions and have explanatory text in their 'notes' panel provided by [@sbodorkos](https://github.com/sbodorkos) . Of
 particular note (idea thanks to [@NicoleRayner](https://github.com/NicoleRayner) ) is that the expressions targeting
 reference materials only are suffixed by "\_RM". The tab for 'Unhealthy Expressions / Mismatched Targets' will appear in
-red ![red](https://placehold.it/15/f03c15/000000?text=+) if any are present. Squid3 supports the assignment of a sample (a group of unknowns) as the target of custom expressions - see the drop-down box populated with the sample names to
+red ![red](https://placehold.it/15/f03c15/000000?text=+) if any are present. Squid3 supports the assignment of a
+sample (a group of unknowns) as the target of custom expressions - see the drop-down box populated with the sample names
+to
 the right of the unknown samples checkbox. The drop down only appears if unknowns is checked and reference material is
 not checked.
 
@@ -149,23 +184,24 @@ Squid3 handles common Pb for Unknowns.
 Concordia diagrams produced by [Topsoil](https://github.com/CIRDLES/Topsoil), customizable weighted means with plots,
 and a generic plotting function for any two expressions using reference materials.
 
-**Reports** menu - 
+**Reports** menu -
+
 1) '_Custom Report Builder_' provides built-in reports for Reference Materials, Unknowns, and
-Weighted Means. The report builder supports custom categories with drag and drop columns from the left-side list of
-available expressions and drag and drop ordering of categories and columns. Reports can be viewed or saved as '.csv'
-files into the project's ```Squid3ProjectReports``` folder that is created in the same folder in which the current
-Squid3 project is saved. 
+   Weighted Means. The report builder supports custom categories with drag and drop columns from the left-side list of
+   available expressions and drag and drop ordering of categories and columns. Reports can be viewed or saved as '.csv'
+   files into the project's ```Squid3ProjectReports``` folder that is created in the same folder in which the current
+   Squid3 project is saved.
 2) '_Summary Expressions and Values_' creates reports for Reference Materials and Unknowns
-detailing the summary expressions defined for each. 
+   detailing the summary expressions defined for each.
 3) '_Project Audit_' and '_Task Audit_' produce meta-data reports
-for each. 
+   for each.
 5) '_Generate all Reports_' produces all reports into the project's ```Squid3ProjectReports``` folder
-mentioned above. 
+   mentioned above.
 6) '_Miscellaneous Reports_' provides a variety of reports of interest.
 
 **Archiving** menu is not yet active. We seek input from the community as to how archiving might be implemented.
 
-**Parameters** menu - 
+**Parameters** menu -
 '_Reference Material Models_',  '_Common Pb Models_', and '_Physical Constants Models_'
 each open the Parameters Manager to the appropriate tab. Squid3 provides several documented default models in each
 category. Models can be created, imported from 'xml' files, and exported as 'xml' files. Parameter models used in a
@@ -174,28 +210,32 @@ Note that reference material models can be based on TIMS-generated ratios with c
 simplified approach to support the transition from Squid2.5 that provides the requisite "Reference Dates", inspired by
 input from [@NicoleRayner](https://github.com/NicoleRayner).
 
-**About** menu - 
+**About** menu -
+
 1) '_About Squid3_' summarizes Squid3's purpose and identifies collaborators and financial supporters.
 2) '_How to cite Squid3_' provides a [link](https://ecat.ga.gov.au/geonetwork/srv/eng/catalog.search#/metadata/133870)
-to our latest publication. 
-3) '_Squid3 GitHub Repository_' provides a link to this repository. 
+   to our latest publication.
+3) '_Squid3 GitHub Repository_' provides a link to this repository.
 4) '_Squid3 Development
-Notes_' links to a [wiki](https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Intro) documenting the porting of Squid2.5 to
-Squid3. 
+   Notes_' links to a [wiki](https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Intro) documenting the porting of Squid2.5
+   to
+   Squid3.
 5) '_CIRDLES.org_' links [here](https://cirdles.org/), the home of the College of Charleston development team.
-6) '_Topsoil GitHub Repository_' links to [Topsoil](https://github.com/CIRDLES/Topsoil), used to provide Concordia diagrams in Squid3.
+6) '_Topsoil GitHub Repository_' links to [Topsoil](https://github.com/CIRDLES/Topsoil), used to provide Concordia
+   diagrams in Squid3.
 
-**Help** menu - 
+**Help** menu -
+
 1) 'Video Intro to Sustainable Software Development' shows video introduction.
-2) '_Introduction and Guide to Menu_' opens this document. 
-3) '_Video Tutorials on YouTube_' features 
-videos produced by [@NicoleRayner](https://github.com/NicoleRayner) and
-found [here](https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists). 
+2) '_Introduction and Guide to Menu_' opens this document.
+3) '_Video Tutorials on YouTube_' features
+   videos produced by [@NicoleRayner](https://github.com/NicoleRayner) and
+   found [here](https://www.youtube.com/channel/UCC6iRpem2LkdozahaIphXTg/playlists).
 4) '_Video Tutorials on Google Drive_' features the same
    videos and
    found [here](https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX).
 5) '_Contribute an Issue on GitHub_'
-is a shortcut to creating a new issue with key runtime environment metadata automatically supplied.
+   is a shortcut to creating a new issue with key runtime environment metadata automatically supplied.
 
 Thank you in advance for any suggestions you contribute. We are available for walk-throughs, etc. if needed to help
 convince you to participate and contribute.

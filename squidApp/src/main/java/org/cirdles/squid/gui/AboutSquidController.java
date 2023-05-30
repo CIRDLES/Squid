@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.cirdles.squid.Squid;
@@ -53,12 +52,12 @@ public class AboutSquidController {
     }
 
     @FXML
-    private void visitSquidOnCirdlesAction(ActionEvent event) {
+    private void visitSquidOnCirdlesAction() {
         BrowserControl.showURI("http://cirdles.org/projects/squid/");
     }
 
     @FXML
-    private void visitUsOnGithubAction(ActionEvent event) {
+    private void visitUsOnGithubAction() {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid");
     }
 

@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -223,25 +222,25 @@ public class CountCorrectionsController implements Initializable {
     }
 
     @FXML
-    private void correctionNoneAction(ActionEvent event) throws SquidException {
+    private void correctionNoneAction() throws SquidException {
         OvercountCorrection.correctionNone(squidProject.getTask());
         updateColumnBold(true, false, false);
     }
 
     @FXML
-    private void correction207Action(ActionEvent event) throws SquidException {
+    private void correction207Action() throws SquidException {
         OvercountCorrection.correction207(squidProject.getTask());
         updateColumnBold(false, true, false);
     }
 
     @FXML
-    private void correction208Action(ActionEvent event) throws SquidException {
+    private void correction208Action() throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
         updateColumnBold(false, false, true);
     }
 
     @FXML
-    private void returnOnAction(ActionEvent actionEvent) throws SquidException {
+    private void returnOnAction() throws SquidException {
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchCommonLeadAssignment();
     }

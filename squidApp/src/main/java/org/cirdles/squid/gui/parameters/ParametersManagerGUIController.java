@@ -1413,7 +1413,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatExpXMLAction(ActionEvent event) {
+    private void refMatExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(refMatModel, squidLabDataWindow);
@@ -1428,7 +1428,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatImpXMLAction(ActionEvent event) {
+    private void refMatImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
@@ -1571,7 +1571,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void importETReduxPhysicalConstantsModel(ActionEvent event) {
+    private void importETReduxPhysicalConstantsModel() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
@@ -1714,7 +1714,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void importETReduxReferenceMaterial(ActionEvent event) {
+    private void importETReduxReferenceMaterial() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
@@ -2258,7 +2258,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void UUNotationOnAction(ActionEvent actionEvent) {
+    public void UUNotationOnAction() {
         if (UUNotation.equals(scientificNotation)) {
             UUNotation = standardNotation;
             UUNotationButton.setText("Use Scientific Notation");
@@ -2733,7 +2733,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbDataNotationOnAction(ActionEvent event) {
+    private void commonPbDataNotationOnAction() {
         if (commonPbDataNotation.equals(scientificNotation)) {
             commonPbDataNotation = standardNotation;
             commonPbDataNotationButton.setText("Use Scientific Notation");
@@ -2762,7 +2762,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCorrNotationOnAction(ActionEvent event) {
+    private void commonPbCorrNotationOnAction() {
         if (commonPbCorrNotation.equals(scientificNotation)) {
             commonPbCorrNotation = standardNotation;
             commonPbCorrNotationButton.setText("Use Scientific Notation");
@@ -2775,7 +2775,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCovNotationOnAction(ActionEvent event) {
+    private void commonPbCovNotationOnAction() {
         if (commonPbCovNotation.equals(scientificNotation)) {
             commonPbCovNotation = standardNotation;
             commonPbCovNotationButton.setText("Use Scientific Notation");
@@ -2796,7 +2796,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refMatReferenceDatesCheckBoxOnAction(ActionEvent actionEvent) {
+    public void refMatReferenceDatesCheckBoxOnAction() {
         ((ReferenceMaterialModel) refMatModel).setReferenceDates(refMatReferenceDatesCheckbox.isSelected());
         setUpRefMatDatesSelection();
     }
@@ -2834,7 +2834,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refDatesNotationAction(ActionEvent actionEvent) {
+    public void refDatesNotationAction() {
         if (refDatesNotation.equals(standardNotation)) {
             refDatesNotationButton.setText("Use Standard Notation");
             refDatesNotation = scientificNotation;
@@ -2861,53 +2861,53 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refDatesKARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesKARadioButtonOnAction() {
         refDatesUnits = Units.ka;
         setUpRefDates();
     }
 
     @FXML
-    public void refDatesMARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesMARadioButtonOnAction() {
         refDatesUnits = Units.ma;
         setUpRefDates();
     }
 
     @FXML
-    public void refDatesARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesARadioButtonOnAction() {
         refDatesUnits = Units.a;
         setUpRefDates();
     }
 
     @FXML
-    public void physConstDataARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataARadioButtonOnAction() {
         physConstDataUnits = Units.a;
         setUpPhysConstData();
     }
 
     @FXML
-    public void physConstDataKARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataKARadioButtonOnAction() {
         physConstDataUnits = Units.ka;
         setUpPhysConstData();
     }
 
     @FXML
-    public void physConstDataMARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataMARadioButtonOnAction() {
         physConstDataUnits = Units.ma;
         setUpPhysConstData();
     }
 
     @FXML
-    private void refMatExportAllAction(ActionEvent event) throws SquidException {
+    private void refMatExportAllAction() throws SquidException {
         exportAllRefMatFiles(refMatModels);
     }
 
     @FXML
-    private void commonPbExportAllAction(ActionEvent event) throws SquidException {
+    private void commonPbExportAllAction() throws SquidException {
         exportAllRefMatFiles(commonPbModels);
     }
 
     @FXML
-    private void phyConstExportAllAction(ActionEvent event) throws SquidException {
+    private void phyConstExportAllAction() throws SquidException {
         exportAllRefMatFiles(physConstModels);
     }
 

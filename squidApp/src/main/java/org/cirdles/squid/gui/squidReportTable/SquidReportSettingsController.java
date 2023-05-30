@@ -12,7 +12,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
@@ -1077,7 +1076,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    public void viewOnAction(ActionEvent actionEvent) {
+    public void viewOnAction() {
         SquidReportTableInterface table = createCopyOfUpdatedSquidReportTable();
         SquidReportTableLauncher.ReportTableTab tab;
         if (isRefMat) {
@@ -1090,7 +1089,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void newOnAction(ActionEvent event) {
+    private void newOnAction() {
         TextInputDialog dialog = new TextInputDialog("name goes here");
         dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model");
@@ -1122,7 +1121,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void copyOnAction(ActionEvent event) {
+    private void copyOnAction() {
         TextInputDialog dialog = new TextInputDialog("name goes here");
         dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a name for the Report Model Copy");
@@ -1144,7 +1143,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void renameOnAction(ActionEvent event) {
+    private void renameOnAction() {
         TextInputDialog dialog = new TextInputDialog("new name goes here");
         dialog.setTitle("Squid3 Report Model Name");
         dialog.setHeaderText("Enter a new name for the Report Model");
@@ -1162,20 +1161,20 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void restoreOnAction(ActionEvent event) {
+    private void restoreOnAction() {
         populateCategoryListView();
         isEditing.setValue(false);
     }
 
     @FXML
-    private void deleteOnAction(ActionEvent event) {
+    private void deleteOnAction() {
         getTables().remove(reportTableCB.getSelectionModel().getSelectedItem());
         populateSquidReportTableChoiceBox();
         reportTableCB.getSelectionModel().selectFirst();
     }
 
     @FXML
-    private void exportOnAction(ActionEvent event) {
+    private void exportOnAction() {
         try {
             SquidReportTable table = (SquidReportTable) createCopyOfUpdatedSquidReportTable();
             File file = FileHandler.saveSquidReportModelXMLFile(table, primaryStageWindow);
@@ -1189,7 +1188,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void importOnAction(ActionEvent event) {
+    private void importOnAction() {
         File file = null;
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
@@ -1299,7 +1298,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void saveOnAction(ActionEvent event) throws SquidException {
+    private void saveOnAction() throws SquidException {
         SquidReportTableInterface currTable = reportTableCB.getSelectionModel().getSelectedItem();
 
         if (currTable.isDefault()) {
@@ -1367,7 +1366,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    public void toggleRefMatUnknownsAction(ActionEvent actionEvent) {
+    public void toggleRefMatUnknownsAction() {
 
         isRefMat = !unknownsRadioButton.isSelected();
         spotsChoiceBox.setVisible(!isRefMat);
@@ -1381,7 +1380,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    public void exportCSVOnAction(ActionEvent actionEvent) throws IOException, SquidException {
+    public void exportCSVOnAction() throws IOException, SquidException {
 
         if (isEditing.getValue()) {
             SquidMessageDialog.showInfoDialog(
@@ -1406,7 +1405,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void makeDefaultAction(ActionEvent event) {
+    private void makeDefaultAction() {
         SquidReportTableInterface defaultReportTableSpec = reportTableCB.getSelectionModel().getSelectedItem();
         if (!defaultReportTableSpec.isIsLabDataDefault()
                 && !defaultReportTableSpec.isDefault()) {
@@ -1451,7 +1450,7 @@ public class SquidReportSettingsController implements Initializable {
     }
 
     @FXML
-    private void createCategoryOnAction(ActionEvent event) {
+    private void createCategoryOnAction() {
         createCategory();
     }
 

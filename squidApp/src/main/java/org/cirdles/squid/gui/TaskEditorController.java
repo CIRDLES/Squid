@@ -568,12 +568,12 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void geochronTaskTypeRadioButtonAction(ActionEvent event) {
+    private void geochronTaskTypeRadioButtonAction() {
         taskEditor.setTaskType(TaskTypeEnum.valueOf(geochronTaskTypeRadioButton.getId()));
     }
 
     @FXML
-    private void generalTaskTypeRadioButtonAction(ActionEvent event) {
+    private void generalTaskTypeRadioButtonAction() {
         taskEditor.setTaskType(TaskTypeEnum.valueOf(generalTaskTypeRadioButton.getId()));
     }
 
@@ -707,11 +707,11 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void chooseMassesAction(ActionEvent event) {
+    private void chooseMassesAction() {
     }
 
     @FXML
-    private void chooseRatiosAction(ActionEvent event) {
+    private void chooseRatiosAction() {
     }
 
     private RadioButton makeMassRadioButton(String mass, ToggleGroup tg) {
@@ -826,7 +826,7 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) throws SquidException {
+    private void updateCurrentTaskWithThisTaskAction() throws SquidException {
         if (squidProject.getTask().getTaskType().equals(taskEditor.getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
@@ -868,7 +868,7 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void saveThisTaskAsXMLFileAction(ActionEvent event) {
+    private void saveThisTaskAsXMLFileAction() {
         try {
             TaskInterface task = new Task();
             task.updateTaskFromTaskDesign(taskEditor, true);
@@ -881,7 +881,7 @@ public class TaskEditorController implements Initializable {
     }
 
     @FXML
-    private void viewCurrentTaskAction(ActionEvent event) {
+    private void viewCurrentTaskAction() {
         MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                 .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
         menuItemTaskManager.fire();

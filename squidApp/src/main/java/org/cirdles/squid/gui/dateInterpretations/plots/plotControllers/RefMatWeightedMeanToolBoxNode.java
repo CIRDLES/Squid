@@ -543,18 +543,15 @@ public class RefMatWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeIn
         exportToSVGButton.setWrapText(true);
         exportToSVGButton.setTextAlignment(TextAlignment.CENTER);
         exportToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        exportToSVGButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        exportToSVGButton.setOnAction(e -> {
+            try {
                 try {
-                    try {
-                        writeWeightedMeanSVG();
-                    } catch (SquidException squidException) {
-                    }
-                } catch (IOException ex) {
-                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
-                    ex.printStackTrace();
+                    writeWeightedMeanSVG();
+                } catch (SquidException squidException) {
                 }
+            } catch (IOException ex) {
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                ex.printStackTrace();
             }
         });
 

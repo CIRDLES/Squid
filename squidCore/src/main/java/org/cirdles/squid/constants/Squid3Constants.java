@@ -222,6 +222,7 @@ public final class Squid3Constants {
     static public int getUnitConversionMoveCount(String unit) {
         return UnitConversions.get(unit);
     }
+
     /**
      * Misspelling is sticky because of serialization.
      */
@@ -350,6 +351,7 @@ public final class Squid3Constants {
             return number;
         }
     }
+
     public static enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),
         UNKNOWN("UNKNOWNS"),
