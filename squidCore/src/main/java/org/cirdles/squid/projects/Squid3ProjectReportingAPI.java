@@ -15,13 +15,13 @@ import java.nio.file.Path;
  */
 public interface Squid3ProjectReportingAPI {
 
-    public default boolean generateReportsValid() {
+    default boolean generateReportsValid() {
         return (!((SquidProject) this).getTask().getNominalMasses().isEmpty())
                 && ((SquidProject) this).hasReportsFolder()
                 && ((SquidProject) this).prawnFileExists();
     }
 
-    public default Path generateReferenceMaterialSummaryExpressionsReport() throws IOException {
+    default Path generateReferenceMaterialSummaryExpressionsReport() throws IOException {
         Path summaryFilePath = null;
         if (generateReportsValid()) {
             summaryFilePath
@@ -34,7 +34,7 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public default Path generateUnknownsSummaryExpressionsReport() throws IOException {
+    default Path generateUnknownsSummaryExpressionsReport() throws IOException {
         Path summaryFilePath = null;
         if (generateReportsValid()) {
             summaryFilePath
@@ -47,7 +47,7 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public default Path generateTaskSummaryReport() throws IOException {
+    default Path generateTaskSummaryReport() throws IOException {
         Path taskAuditFilePath = null;
         if (generateReportsValid()) {
             taskAuditFilePath = ((SquidProject) this).getPrawnFileHandler().getReportsEngine().writeTaskAudit().toPath();
@@ -59,7 +59,7 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public default Path generateProjectAuditReport() throws IOException {
+    default Path generateProjectAuditReport() throws IOException {
         Path projectAuditFilePath = null;
         if (generateReportsValid()) {
             projectAuditFilePath = ((SquidProject) this).getPrawnFileHandler().getReportsEngine().writeProjectAudit().toPath();
@@ -71,7 +71,7 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public default Path generatePerScanReports() throws IOException {
+    default Path generatePerScanReports() throws IOException {
         Path projectScanReportsPath = null;
         if (generateReportsValid()) {
             projectScanReportsPath = ((SquidProject) this).getTask().producePerScanReportsToFiles().toPath();
@@ -83,6 +83,6 @@ public interface Squid3ProjectReportingAPI {
         }
     }
 
-    public Path generateAllReports() throws IOException, SquidException;
+    Path generateAllReports() throws IOException, SquidException;
 
 }

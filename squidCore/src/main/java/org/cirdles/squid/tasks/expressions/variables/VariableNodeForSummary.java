@@ -154,9 +154,8 @@ public class VariableNodeForSummary extends ExpressionTree {
             if (index > 0) {
                 // we have a call to retrieve into [0][0] another output of this expression, such as 1-sigma abs
                 values = new double[1][valuesAll[0].length - index];
-                for (int i = index; i < valuesAll[0].length; i++) {
-                    values[0][i - index] = valuesAll[0][i];
-                }
+                if (valuesAll[0].length - index >= 0)
+                    System.arraycopy(valuesAll[0], index, values[0], index - index, valuesAll[0].length - index);
             }
         } else {
             values = new double[][]{{0.0, 0.0}, {0.0, 0.0}};

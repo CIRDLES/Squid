@@ -160,8 +160,8 @@ public class ShrimpSpeciesNode extends ExpressionTree {
         if (methodNameForShrimpFraction != null) {
             try {
                 method = ShrimpFractionExpressionInterface.class.getMethod(//
-                        methodNameForShrimpFraction,
-                        new Class[0]);
+                        methodNameForShrimpFraction
+                );
             } catch (NoSuchMethodException | SecurityException ignored) {
             }
         }

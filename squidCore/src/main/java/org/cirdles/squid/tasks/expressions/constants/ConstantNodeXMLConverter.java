@@ -117,7 +117,7 @@ public class ConstantNodeXMLConverter implements Converter {
         ExpressionTreeInterface constantNode = new ConstantNode();
 
         reader.moveDown();
-        ((ConstantNode) constantNode).setName(reader.getValue());
+        constantNode.setName(reader.getValue());
         reader.moveUp();
 
         reader.moveDown();

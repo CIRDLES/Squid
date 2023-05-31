@@ -95,11 +95,11 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public RadioButton physConstDataMARadioButton;
     @FXML
-    public TableView<RefMatDataModel> UUTable;
+    public TableView<RefMatDataModel> uuTable;
     @FXML
-    public Button UUNotationButton;
+    public Button uuNotationButton;
     @FXML
-    public Spinner<Integer> UUSigFigSpinner;
+    public Spinner<Integer> uuSigFigSpinner;
     @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
@@ -284,7 +284,7 @@ public class ParametersManagerGUIController implements Initializable {
     private DecimalFormat physConstCorrNotation;
     private DecimalFormat physConstCovNotation;
     private DecimalFormat refMatDataNotation;
-    private DecimalFormat UUNotation;
+    private DecimalFormat uuNotation;
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
@@ -410,7 +410,7 @@ public class ParametersManagerGUIController implements Initializable {
         physConstCovNotation = scientificNotation;
 
         refMatDataNotation = scientificNotation;
-        UUNotation = scientificNotation;
+        uuNotation = scientificNotation;
         refMatConcentrationsNotation = scientificNotation;
         refMatCorrNotation = scientificNotation;
         refMatCovNotation = scientificNotation;
@@ -799,8 +799,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpUUData() {
-        UUTable.getColumns().setAll(getRefMatDataModelColumns(UUTable, UUNotation, UUSigFigSpinner));
-        int precision = UUSigFigSpinner.getValue();
+        uuTable.getColumns().setAll(getRefMatDataModelColumns(uuTable, uuNotation, uuSigFigSpinner));
+        int precision = uuSigFigSpinner.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel valMod = refMatModel.getValues()[4];
         boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[4];
@@ -810,8 +810,8 @@ public class ParametersManagerGUIController implements Initializable {
         RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
                 oneSigmaABS, oneSigmaPCT, isMeasured);
         obList.add(mod);
-        UUTable.setItems(obList);
-        UUTable.refresh();
+        uuTable.setItems(obList);
+        uuTable.refresh();
     }
 
     private void setUpConcentrations() {
@@ -1908,10 +1908,10 @@ public class ParametersManagerGUIController implements Initializable {
             }
         }
 
-        UUTable.setEditable(isEditable);
-        UUTable.getColumns().get(0).setEditable(false);
-        ObservableList<RefMatDataModel> UUData = UUTable.getItems();
-        for (RefMatDataModel mod : UUData) {
+        uuTable.setEditable(isEditable);
+        uuTable.getColumns().get(0).setEditable(false);
+        ObservableList<RefMatDataModel> uuData = uuTable.getItems();
+        for (RefMatDataModel mod : uuData) {
             if (isEditable) {
                 mod.getIsMeasured().setDisable(false);
             } else {
@@ -2108,7 +2108,7 @@ public class ParametersManagerGUIController implements Initializable {
             refMatModel.setDateCertified(refMatDateCertified.getText());
 
             ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
-            dataModels.addAll(UUTable.getItems());
+            dataModels.addAll(uuTable.getItems());
             boolean[] isMeasures = new boolean[dataModels.size()];
             for (int i = 0; i < isMeasures.length; i++) {
                 RefMatDataModel mod = dataModels.get(i);
@@ -2257,32 +2257,32 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void UUNotationOnAction() {
-        if (UUNotation.equals(scientificNotation)) {
-            UUNotation = standardNotation;
-            UUNotationButton.setText("Use Scientific Notation");
+    public void uuNotationonaction() {
+        if (uuNotation.equals(scientificNotation)) {
+            uuNotation = standardNotation;
+            uuNotationButton.setText("Use Scientific Notation");
         } else {
-            UUNotation = scientificNotation;
-            UUNotationButton.setText("Use Standard Notation");
+            uuNotation = scientificNotation;
+            uuNotationButton.setText("Use Standard Notation");
         }
-        ObservableList<RefMatDataModel> models = UUTable.getItems();
-        int precision = UUSigFigSpinner.getValue();
+        ObservableList<RefMatDataModel> models = uuTable.getItems();
+        int precision = uuSigFigSpinner.getValue();
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
 
             bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(UUNotation.format(round(bigDec, precision)));
+            mod.setValue(uuNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(UUNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaABS(uuNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(UUNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaPCT(uuNotation.format(round(bigDec, precision)));
         }
-        UUTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, UUNotation, UUSigFigSpinner));
+        uuTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, uuNotation, uuSigFigSpinner));
 
-        UUTable.refresh();
+        uuTable.refresh();
     }
 
     @FXML
@@ -2372,8 +2372,8 @@ public class ParametersManagerGUIController implements Initializable {
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
-        UUSigFigSpinner.setValueFactory(valueFactory);
-        UUSigFigSpinner.valueProperty().addListener(value
+        uuSigFigSpinner.setValueFactory(valueFactory);
+        uuSigFigSpinner.valueProperty().addListener(value
                 -> setUpUUData()
         );
 

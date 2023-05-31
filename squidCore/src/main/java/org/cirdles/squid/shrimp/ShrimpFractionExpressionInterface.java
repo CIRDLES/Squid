@@ -32,81 +32,81 @@ public interface ShrimpFractionExpressionInterface {
     /**
      * @return the referenceMaterial
      */
-    public boolean isReferenceMaterial();
+    boolean isReferenceMaterial();
 
     /**
      * @return
      */
-    public boolean isConcentrationReferenceMaterial();
+    boolean isConcentrationReferenceMaterial();
 
     /**
      * @return the pkInterp
      */
-    public double[][] getReducedPkHt();
+    double[][] getReducedPkHt();
 
     /**
      * @return the pkInterpFerr
      */
-    public double[][] getReducedPkHtFerr();
+    double[][] getReducedPkHtFerr();
 
     /**
      * @return
      */
-    public String getFractionID();
+    String getFractionID();
 
     /**
      * @return the spotNumber
      */
-    public int getSpotNumber();
+    int getSpotNumber();
 
     /**
      * @return the timeStampSec
      */
-    public double[][] getTimeStampSec();
+    double[][] getTimeStampSec();
 
     /**
      * @return the userLinFits
      */
-    public boolean isUserLinFits();
+    boolean isUserLinFits();
 
     // getters used by reflection - change names carefully
 
     /**
      * @return the pkInterpScanArray
      */
-    public double[] getPkInterpScanArray();
+    double[] getPkInterpScanArray();
 
     /**
      * @param pkInterpScanArray the pkInterpScanArray to set
      */
-    public void setPkInterpScanArray(double[] pkInterpScanArray);
+    void setPkInterpScanArray(double[] pkInterpScanArray);
 
     /**
      * @return the totalCps
      */
-    public double[] getTotalCps();
+    double[] getTotalCps();
 
     /**
      * @param totalCps the totalCps to set
      */
-    public void setTotalCps(double[] totalCps);
+    void setTotalCps(double[] totalCps);
 
-    public double[] getNscansTimesCountTimeSec();
+    double[] getNscansTimesCountTimeSec();
 
     /**
      * @return the taskExpressionsForScansEvaluated
      */
-    public List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> getTaskExpressionsForScansEvaluated();
+    List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> getTaskExpressionsForScansEvaluated();
 
     /**
      * @param taskExpressionsEvaluated the taskExpressionsEvaluated to set
      */
-    public void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated);
+    void setTaskExpressionsForScansEvaluated(List<TaskExpressionEvaluatedPerSpotPerScanModelInterface> taskExpressionsEvaluated);
 
     /**
      * @return the taskExpressionsEvaluationsPerSpot
      */
-    public Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();
+    Map<ExpressionTreeInterface, double[][]> getTaskExpressionsEvaluationsPerSpot();
 
     /**
      * Used by Reflection in
@@ -115,9 +115,9 @@ public interface ShrimpFractionExpressionInterface {
      * @param fieldName
      * @return
      */
-    public double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
+    double[][] getTaskExpressionsEvaluationsPerSpotByField(String fieldName);
 
-    public Map<ExpressionTreeInterface, String> getTaskExpressionsMetaDataPerSpot();
+    Map<ExpressionTreeInterface, String> getTaskExpressionsMetaDataPerSpot();
 
     /**
      * Used by reflection in expression evaluations by VariableNode, for example
@@ -125,181 +125,181 @@ public interface ShrimpFractionExpressionInterface {
      * @param name
      * @return double [1][2] containing ratio value and 1-sigma abs uncertainty
      */
-    public double[][] getIsotopicRatioValuesByStringName(String name);
+    double[][] getIsotopicRatioValuesByStringName(String name);
 
-    public double[][] getOriginalIsotopicRatioValuesByStringName(String name);
+    double[][] getOriginalIsotopicRatioValuesByStringName(String name);
 
     // May 2017 for temp backward comp with ET_Redux
 
     /**
      * @return the nameOfMount
      */
-    public String getNameOfMount();
+    String getNameOfMount();
 
-    public long getDateTimeMillisecondsLong();
+    long getDateTimeMillisecondsLong();
 
     /**
      * @return the dateTimeMilliseconds
      */
-    public String getDateTimeMilliseconds();
+    String getDateTimeMilliseconds();
 
-    public String getDateTime();
+    String getDateTime();
 
     /**
      * @return the totalCounts
      */
-    public double[][] getTotalCounts();
+    double[][] getTotalCounts();
 
     /**
      * @return the totalCountsOneSigmaAbs
      */
-    public double[][] getTotalCountsOneSigmaAbs();
+    double[][] getTotalCountsOneSigmaAbs();
 
     /**
      * @return the namesOfSpecies
      */
-    public String[] getNamesOfSpecies();
+    String[] getNamesOfSpecies();
 
     /**
      * @return the netPkCps
      */
-    public double[][] getNetPkCps();
+    double[][] getNetPkCps();
 
     /**
      * @return the pkFerr
      */
-    public double[][] getPkFerr();
+    double[][] getPkFerr();
 
-    public double getHours();
+    double getHours();
 
-    public int getSpotIndex();
+    int getSpotIndex();
 
     /**
      * @return the primaryBeam
      */
-    public double getPrimaryBeam();
+    double getPrimaryBeam();
 
     /**
      * @return the stageX
      */
-    public int getStageX();
+    int getStageX();
 
     /**
      * @return the stageY
      */
-    public int getStageY();
+    int getStageY();
 
     /**
      * @return the stageZ
      */
-    public int getStageZ();
+    int getStageZ();
 
     /**
      * @return the qt1Y
      */
-    public int getQt1Y();
+    int getQt1Y();
 
     /**
      * @return the qt1Z
      */
-    public int getQt1Z();
+    int getQt1Z();
 
     /**
      * @return the selected
      */
-    public boolean isSelected();
+    boolean isSelected();
 
     /**
      * @param selected the selected to set
      */
-    public void setSelected(boolean selected);
+    void setSelected(boolean selected);
 
     /**
      * @return the com_64
      */
-    public double getCom_206Pb204Pb() throws SquidException;
+    double getCom_206Pb204Pb() throws SquidException;
 
     /**
      * @param com_64 the com_64 to set
      */
-    public void setCom_206Pb204Pb(double com_64) throws SquidException;
+    void setCom_206Pb204Pb(double com_64) throws SquidException;
 
     /**
      * @return the com_207Pb206Pb
      */
-    public double getCom_207Pb206Pb() throws SquidException;
+    double getCom_207Pb206Pb() throws SquidException;
 
     /**
      * @param com_207Pb206Pb the com_207Pb206Pb to set
      */
-    public void setCom_207Pb206Pb(double com_207Pb206Pb) throws SquidException;
+    void setCom_207Pb206Pb(double com_207Pb206Pb) throws SquidException;
 
     /**
      * @return the com_208Pb206Pb
      */
-    public double getCom_208Pb206Pb() throws SquidException;
+    double getCom_208Pb206Pb() throws SquidException;
 
     /**
      * @param com_208Pb206Pb the com_208Pb206Pb to set
      */
-    public void setCom_208Pb206Pb(double com_208Pb206Pb) throws SquidException;
+    void setCom_208Pb206Pb(double com_208Pb206Pb) throws SquidException;
 
     /**
      * @return the com_206Pb208Pb
      */
-    public double getCom_206Pb208Pb() throws SquidException;
+    double getCom_206Pb208Pb() throws SquidException;
 
     /**
      * @param com_206Pb208Pb the com_206Pb208Pb to set
      */
-    public void setCom_206Pb208Pb(double com_206Pb208Pb) throws SquidException;
+    void setCom_206Pb208Pb(double com_206Pb208Pb) throws SquidException;
 
     /**
      * @return the com_207Pb204Pb
      */
-    public double getCom_207Pb204Pb() throws SquidException;
+    double getCom_207Pb204Pb() throws SquidException;
 
     /**
      * @param com_207Pb204Pb the com_207Pb204Pb to set
      */
-    public void setCom_207Pb204Pb(double com_207Pb204Pb) throws SquidException;
+    void setCom_207Pb204Pb(double com_207Pb204Pb) throws SquidException;
 
     /**
      * @return the com_208Pb204Pb
      */
-    public double getCom_208Pb204Pb() throws SquidException;
+    double getCom_208Pb204Pb() throws SquidException;
 
     /**
      * @param com_208Pb204Pb the com_208Pb204Pb to set
      */
-    public void setCom_208Pb204Pb(double com_208Pb204Pb) throws SquidException;
+    void setCom_208Pb204Pb(double com_208Pb204Pb) throws SquidException;
 
-    public ParametersModel getCommonLeadModel() throws SquidException;
+    ParametersModel getCommonLeadModel() throws SquidException;
 
-    public void setCommonLeadModel(ParametersModel commonLeadModel) throws SquidException;
+    void setCommonLeadModel(ParametersModel commonLeadModel) throws SquidException;
 
     /**
      * @return the commonLeadSpecsForSpot
      */
-    public CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() throws SquidException;
+    CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() throws SquidException;
 
     /**
      * @return the overcountCorrectionIsotope
      */
-    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException;
+    Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException;
 
     /**
      * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
      */
-    public void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope);
+    void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope);
 
-    public String getOverCtCorr();
+    String getOverCtCorr();
 
-    public String getCommonPbCorrMetaData();
+    String getCommonPbCorrMetaData();
 
-    public String getComPbCorrSKTargetAge();
+    String getComPbCorrSKTargetAge();
 
-    public String getSelectedAgeExpressionName() throws SquidException;
+    String getSelectedAgeExpressionName() throws SquidException;
 
     /**
      * Used in custom reports per issue # 701.
@@ -307,5 +307,5 @@ public interface ShrimpFractionExpressionInterface {
      * @return
      * @throws SquidException
      */
-    public String getComPbSelectedAgeType() throws SquidException;
+    String getComPbSelectedAgeType() throws SquidException;
 }

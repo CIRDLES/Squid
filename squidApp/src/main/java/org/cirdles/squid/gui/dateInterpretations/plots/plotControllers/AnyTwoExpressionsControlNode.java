@@ -48,8 +48,8 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
     private static boolean plotExcluded = true;
     private final ComboBox<String> xAxisExpressionComboBox;
     private final ComboBox<String> yAxisExpressionComboBox;
-    protected boolean hasData;
     private final PlotRefreshInterface plotsController;
+    protected boolean hasData;
     private CheckBox regressionCheckBox;
 
     /**

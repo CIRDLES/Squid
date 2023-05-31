@@ -33,7 +33,7 @@ public class SquidRatiosModel implements Serializable, Comparable<SquidRatiosMod
     private String ratioName;
     private SquidSpeciesModel numerator;
     private SquidSpeciesModel denominator;
-    private int reportingOrderIndex;
+    private final int reportingOrderIndex;
 
     private List<Double> ratEqTime;
     private List<Double> ratEqVal;

@@ -707,14 +707,6 @@ public class TaskEditorController implements Initializable {
         expressionText.setStyle((player ? playerStyle : notPlayerStyle) + (unhealthy ? UNHEALTHY_EXPRESSION_STYLE : HEALTHY_EXPRESSION_STYLE));
     }
 
-    @FXML
-    private void chooseMassesAction() {
-    }
-
-    @FXML
-    private void chooseRatiosAction() {
-    }
-
     private RadioButton makeMassRadioButton(String mass, ToggleGroup tg) {
         RadioButton nrb = new RadioButton(mass);
         nrb.setToggleGroup(tg);

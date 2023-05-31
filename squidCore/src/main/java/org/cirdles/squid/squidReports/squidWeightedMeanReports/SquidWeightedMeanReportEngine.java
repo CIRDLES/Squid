@@ -68,10 +68,8 @@ public class SquidWeightedMeanReportEngine {
     }
 
     public static String makeWeightedMeanReportHeaderAsCSV() {
-        StringBuilder header = new StringBuilder();
-        header.append("SampleName, WeightedMeanName, WeightedMean, 2sigma abs unct, 95% conf, n, N (total), MSWD, Prob of Fit, Min Prob, Spots");
 
-        return header.toString();
+        return "SampleName, WeightedMeanName, WeightedMean, 2sigma abs unct, 95% conf, n, N (total), MSWD, Prob of Fit, Min Prob, Spots";
     }
 
 }

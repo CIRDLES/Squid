@@ -243,7 +243,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
     public String produceExpressionTreeAudit() {
         StringBuilder auditReport = new StringBuilder();
-        if (!((ExpressionTreeInterface) expressionTree).isValid()) {
+        if (!expressionTree.isValid()) {
             if (((ExpressionTree) expressionTree).getOperation() == null) {
                 auditReport.append(MSG_POORLY_FORMED_EXPRESSION);
             } else {
@@ -255,8 +255,8 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
 
             int match = haveMatchedTargetSpots();
 
-            auditReport.append("Target Spots: ").append((String) ((match == -1) ? "MISSING - Please select" : ((match == 1))
-                    ? "NOT MATCHED" : "MATCHED")).append("\n");
+            auditReport.append("Target Spots: ").append((match == -1) ? "MISSING - Please select" : ((match == 1))
+                    ? "NOT MATCHED" : "MATCHED").append("\n");
             if (targetAudit.size() > 0) {
                 auditReport.append("Target Spots Audit:\n");
                 for (String audit : targetAudit) {
@@ -275,7 +275,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
                 // case of no arguments = ConstantNode, ShrimpSpeciesNode or SpotFieldNode ALL Default if missing to ConstantNode with name "Missing Expression"
                 auditReport.append("\n  ").append(expressionTree.amHealthy() ? "Found " : "").append(expressionTree.getName());
                 if ((expressionTree instanceof ConstantNode) && expressionTree.amHealthy()) {
-                    auditReport.append(", value = ").append(String.valueOf((double) ((ConstantNode) expressionTree).getValue()));
+                    auditReport.append(", value = ").append((double) ((ConstantNode) expressionTree).getValue());
                 }
             }
         }
@@ -302,7 +302,7 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String buildSignatureString() {
         StringBuilder signature = new StringBuilder();
         if (expressionTree.isValid()) {
-            signature.append(((ExpressionTree) expressionTree).hasRatiosOfInterest() ? "  " + String.valueOf(((ExpressionTree) expressionTree).getRatiosOfInterest().size()) : "  -");
+            signature.append(((ExpressionTree) expressionTree).hasRatiosOfInterest() ? "  " + ((ExpressionTree) expressionTree).getRatiosOfInterest().size() : "  -");
             signature.append(expressionTree.isSquidSwitchSCSummaryCalculation() ? "  +" : "  -");
             signature.append(expressionTree.isSquidSwitchSTReferenceMaterialCalculation() ? "  +" : "  -");
             signature.append(expressionTree.isSquidSwitchSAUnknownCalculation() ? "  +" : "  -");

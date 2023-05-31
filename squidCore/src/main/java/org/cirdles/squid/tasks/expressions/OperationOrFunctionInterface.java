@@ -27,7 +27,7 @@ import java.util.List;
  */
 public interface OperationOrFunctionInterface {
 
-    public static final String DEF_TAB = "           ";
+    String DEF_TAB = "           ";
 
     /**
      * @param childrenET      the value of childrenET
@@ -36,7 +36,7 @@ public interface OperationOrFunctionInterface {
      * @return the double[][]
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public abstract Object[][] eval(
+    Object[][] eval(
             List<ExpressionTreeInterface> childrenET,
             List<ShrimpFractionExpressionInterface> shrimpFractions,
             TaskInterface task)
@@ -45,36 +45,36 @@ public interface OperationOrFunctionInterface {
     /**
      * @return the precedence
      */
-    public int getPrecedence();
+    int getPrecedence();
 
     /**
      * @return the argumentCount
      */
-    public int getArgumentCount();
+    int getArgumentCount();
 
     /**
      * @param childrenET the value of childrenET
      * @return
      */
-    public abstract String toStringMathML(
+    String toStringMathML(
             List<ExpressionTreeInterface> childrenET);
 
     /**
      * @return the name
      */
-    public String getName();
+    String getName();
 
     /**
      * @return the labelsForOutputValues
      */
-    public String[][] getLabelsForOutputValues();
+    String[][] getLabelsForOutputValues();
 
     /**
      * @return the labelsForInputValues
      */
-    public String[] getLabelsForInputValues();
+    String[] getLabelsForInputValues();
 
-    public default String printOutputValues() {
+    default String printOutputValues() {
         String retVal = "None Specified";
         String[] outputArray = getLabelsForOutputValues()[0];
 
@@ -83,7 +83,7 @@ public interface OperationOrFunctionInterface {
             builder.append(" [");
 
             for (int i = 0; i < outputArray.length; i++) {
-                builder.append(outputArray[i]).append((String) (i < (outputArray.length - 1) ? ", " : ""));
+                builder.append(outputArray[i]).append(i < (outputArray.length - 1) ? ", " : "");
             }
             builder.append("]");
             retVal = builder.toString();
@@ -92,7 +92,7 @@ public interface OperationOrFunctionInterface {
         return retVal;
     }
 
-    public default String printInputValues() {
+    default String printInputValues() {
         String retVal = "None Specified";
         String[] inputArray = getLabelsForInputValues();
 
@@ -101,7 +101,7 @@ public interface OperationOrFunctionInterface {
             builder.append(" [");
 
             for (int i = 0; i < inputArray.length; i++) {
-                builder.append(inputArray[i]).append((String) (i < (inputArray.length - 1) ? ", " : ""));
+                builder.append(inputArray[i]).append(i < (inputArray.length - 1) ? ", " : "");
             }
             builder.append("]");
             retVal = builder.toString();
@@ -114,7 +114,7 @@ public interface OperationOrFunctionInterface {
      * @param expression
      * @return
      */
-    public default String toStringAnotherExpression(ExpressionTreeInterface expression) {
+    default String toStringAnotherExpression(ExpressionTreeInterface expression) {
 
         String retVal = "<mtext>\nNot a valid expression</mtext>\n";
 
@@ -125,7 +125,7 @@ public interface OperationOrFunctionInterface {
         return retVal;
     }
 
-    public default String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
+    default String buildChildrenToMathML(List<ExpressionTreeInterface> childrenET) {
         StringBuilder retVal = new StringBuilder();
         for (int i = 0; i < childrenET.size(); i++) {
             retVal.append(toStringAnotherExpression(childrenET.get(i))).append("&nbsp;\n");
@@ -137,12 +137,12 @@ public interface OperationOrFunctionInterface {
     /**
      * @return the rowCount
      */
-    public int getRowCount();
+    int getRowCount();
 
     /**
      * @return the colCount
      */
-    public int getColCount();
+    int getColCount();
 
     /**
      * Determines is this function/operation is "NU-switched" if
@@ -150,14 +150,14 @@ public interface OperationOrFunctionInterface {
      *
      * @return
      */
-    public default boolean isScalarResult() {
+    default boolean isScalarResult() {
         return (getRowCount() == 1) && (getColCount() == 1);
     }
 
-    public String getDefinition();
+    String getDefinition();
 
     /**
      * @return the summaryCalc
      */
-    public boolean isSummaryCalc();
+    boolean isSummaryCalc();
 }

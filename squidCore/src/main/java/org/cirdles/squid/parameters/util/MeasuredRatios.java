@@ -91,9 +91,9 @@ public enum MeasuredRatios {
     r233_236m("r233_236m");
 
 
-    private String name;
+    private final String name;
 
-    private MeasuredRatios(String name) {
+    MeasuredRatios(String name) {
         this.name = name;
     }
 

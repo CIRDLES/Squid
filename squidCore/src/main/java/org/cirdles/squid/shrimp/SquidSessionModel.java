@@ -32,7 +32,7 @@ public class SquidSessionModel implements Serializable {
     private int indexOfBackgroundSpecies;
     private String referenceMaterialNameFilter;
     private String concentrationReferenceMaterialNameFilter;
-    private Map<String, Integer> filtersForUnknownNames;
+    private final Map<String, Integer> filtersForUnknownNames;
 
     public SquidSessionModel(
             List<SquidSpeciesModel> squidSpeciesSpecsList,

@@ -78,7 +78,7 @@ public class PrawnFileRunFractionParser {
      *
      */
     public PrawnFileRunFractionParser() {
-        this.dateTimeMilliseconds = 0l;
+        this.dateTimeMilliseconds = 0L;
     }
 
     /**

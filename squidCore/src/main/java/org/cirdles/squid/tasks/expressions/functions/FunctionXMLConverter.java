@@ -79,7 +79,7 @@ public class FunctionXMLConverter implements Converter {
         OperationOrFunctionInterface function = (Function) value;
 
         writer.startNode("name");
-        writer.setValue(((Function) function).getName());
+        writer.setValue(function.getName());
         writer.endNode();
     }
 

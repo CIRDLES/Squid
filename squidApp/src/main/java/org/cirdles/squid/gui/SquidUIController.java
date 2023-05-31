@@ -77,8 +77,7 @@ import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
@@ -885,16 +884,16 @@ public class SquidUIController implements Initializable {
                     ButtonType.YES,
                     ButtonType.NO
             );
-            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            alert.setX(SquidUI.primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
                     File projectFile = null;
                     try {
-                        projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                        projectFile = FileHandler.saveProjectFile(squidProject, primaryStageWindow);
                     } catch (IOException iOException) {
                         SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n"
-                                + ((projectFile != null)?  projectFile.getAbsolutePath() : ""),
+                                        + ((projectFile != null) ? projectFile.getAbsolutePath() : ""),
                                 null);
                     }
                 }
@@ -932,7 +931,7 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void aboutSquidAction() {
-        SquidUI.squidAboutWindow.loadAboutWindow();
+        squidAboutWindow.loadAboutWindow();
     }
 
     @FXML
@@ -1253,8 +1252,8 @@ public class SquidUIController implements Initializable {
                             rename,
                             ButtonType.CANCEL
                     );
-                    alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                    alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                    alert.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                    alert.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                     alert.showAndWait().ifPresent((t) -> {
                         if (t.equals(replace)) {
                             try {
@@ -1279,8 +1278,8 @@ public class SquidUIController implements Initializable {
                                     okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
                                 });
                             }
-                            dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                            dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            dialog.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                            dialog.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                             Optional<String> result = dialog.showAndWait();
                             if (result.isPresent()) {
                                 exp.setName(result.get());
@@ -1312,25 +1311,25 @@ public class SquidUIController implements Initializable {
 
     @FXML
     private void showWithinSpotRatiosReferenceMatMenutItemAction() throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
     private void showWithinSpotRatiosUnknownsMenutItemAction() throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
     @FXML
     private void showMeanRatiosReferenceMatMenutItemAction() throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
     private void showMeanRatiosUnknownMenutItemAction() throws SquidException {
-        SquidUI.calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
+        calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
@@ -1782,8 +1781,8 @@ public class SquidUIController implements Initializable {
                                                 okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
                                             });
                                         }
-                                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                                        dialog.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                                        dialog.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                                         Optional<String> result = dialog.showAndWait();
                                         if (result.isPresent()) {
                                             exp.setName(result.get());

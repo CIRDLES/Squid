@@ -784,15 +784,15 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                 if (writeReport.getValue()) {
                     if (reportFileSVG.exists() && !confirmedExists) {
 
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "It appears that a weighted means report already exists. "
-                                            + "Would you like to overwrite it?");
-                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                            alert.showAndWait().ifPresent(action -> {
-                                if (action.equals(ButtonType.CANCEL)) {
-                                    writeReport.setValue(false);
-                                }
-                            });
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
+                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                        alert.showAndWait().ifPresent(action -> {
+                            if (action.equals(ButtonType.CANCEL)) {
+                                writeReport.setValue(false);
+                            }
+                        });
 
                     }
                     if (writeReport.getValue()) {

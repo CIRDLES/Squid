@@ -230,7 +230,7 @@
         <HBox alignment="CENTER_LEFT" prefHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <children>
                 <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false"
-                        onAction="#chooseMassesAction" prefHeight="27.0" prefWidth="86.0"
+                        prefHeight="27.0" prefWidth="86.0"
                         style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses"/>
                 <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
                     <content>
@@ -244,7 +244,7 @@
         <HBox alignment="CENTER_LEFT" prefHeight="90.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
             <children>
                 <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false"
-                        onAction="#chooseRatiosAction" prefHeight="27.0" prefWidth="86.0"
+                        prefHeight="27.0" prefWidth="86.0"
                         style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore"/>
                 <ScrollPane HBox.hgrow="ALWAYS">
                     <content>

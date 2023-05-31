@@ -31,7 +31,7 @@ public interface XMLSerializationI {
     /**
      * @param filename
      */
-    abstract void serializeXMLObject(String filename);
+    void serializeXMLObject(String filename);
 
     /**
      * @param filename
@@ -41,7 +41,7 @@ public interface XMLSerializationI {
      * @throws ETException
      * @throws BadOrMissingXMLSchemaException
      */
-    public Object readXMLObject(String filename, boolean doValidate)
-            throws FileNotFoundException, FileNotFoundException;
+    Object readXMLObject(String filename, boolean doValidate)
+            throws FileNotFoundException;
 
 }

@@ -51,7 +51,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
     // provides for multi-row column headers
     private transient String[] columnHeaders;
 
-    private String expressionName;
+    private final String expressionName;
 
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
@@ -302,7 +302,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
                         } else {
                             if (Double.isFinite(results[0][0])) {
                                 retVal = formatBigDecimalForPublicationSigDigMode(
-                                        new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                        BigDecimal.valueOf(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
                                         countOfSignificantDigits);
                             } else {
                                 retVal = "NaN";

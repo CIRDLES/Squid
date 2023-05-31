@@ -169,7 +169,7 @@ public final class Squid3Constants {
     private static final Map<String, Integer> UnitConversions = new HashMap<>();
     // http://science.sciencemag.org/content/335/6076/1610
     // however during discussions with users set to old Ludwig value 137.88
-    public static double REF_238U235U_DEFAULT = (new BigDecimal(137.88)).setScale(2, RoundingMode.HALF_UP).doubleValue();   // 137.88;//137.818;
+    public static double REF_238U235U_DEFAULT = (new BigDecimal("137.88")).setScale(2, RoundingMode.HALF_UP).doubleValue();   // 137.88;//137.818;
 
     // key = units, value = points to shift right
     static {
@@ -234,7 +234,7 @@ public final class Squid3Constants {
         private final String name;
         private final String isotope;
 
-        private IndexIsoptopesEnum(String name, String isotope) {
+        IndexIsoptopesEnum(String name, String isotope) {
             this.name = name;
             this.isotope = isotope;
         }
@@ -254,7 +254,7 @@ public final class Squid3Constants {
         }
 
         public String getIsotopeCorrectionPrefixString() {
-            return isotope.substring(2, 3) + COR_PREFIX;
+            return isotope.charAt(2) + COR_PREFIX;
         }
     }
 
@@ -265,7 +265,7 @@ public final class Squid3Constants {
         private final String name;
         private final String projectName;
 
-        private TaskTypeEnum(String name, String projectName) {
+        TaskTypeEnum(String name, String projectName) {
             this.name = name;
             this.projectName = projectName;
         }
@@ -289,7 +289,7 @@ public final class Squid3Constants {
 
         private final String name;
 
-        private ConcentrationTypeEnum(String name) {
+        ConcentrationTypeEnum(String name) {
             this.name = name;
         }
 
@@ -298,7 +298,7 @@ public final class Squid3Constants {
         }
     }
 
-    public static enum SampleNameDelimitersEnum {
+    public enum SampleNameDelimitersEnum {
 
         HYPHEN("-", false),
         DOT(".", false),
@@ -317,7 +317,7 @@ public final class Squid3Constants {
         private final String name;
         private final boolean number;
 
-        private SampleNameDelimitersEnum(String name, boolean isNumeric) {
+        SampleNameDelimitersEnum(String name, boolean isNumeric) {
             this.name = name;
             this.number = isNumeric;
         }
@@ -352,14 +352,14 @@ public final class Squid3Constants {
         }
     }
 
-    public static enum SpotTypes {
+    public enum SpotTypes {
         REFERENCE_MATERIAL("REFERENCE MATERIALS"),
         UNKNOWN("UNKNOWNS"),
         NONE("NONE");
 
-        private String spotTypeName;
+        private final String spotTypeName;
 
-        private SpotTypes(String spotType) {
+        SpotTypes(String spotType) {
             this.spotTypeName = spotType;
         }
 
@@ -368,10 +368,10 @@ public final class Squid3Constants {
         }
     }
 
-    public static enum OvercountCorrectionTypes {
+    public enum OvercountCorrectionTypes {
         NONE,
         FR_207,
-        FR_208;
+        FR_208
     }
 
     public enum TaskEditTypeEnum {
@@ -383,7 +383,7 @@ public final class Squid3Constants {
 
         private final String name;
 
-        private TaskEditTypeEnum(String name) {
+        TaskEditTypeEnum(String name) {
             this.name = name;
         }
 

@@ -46,10 +46,10 @@ public enum Lambdas {
      *
      */
     LAMBDA_238("lambda238", "lambda 238");
-    private String name;
-    private String displayName;
+    private final String name;
+    private final String displayName;
 
-    private Lambdas(String name, String displayName) {
+    Lambdas(String name, String displayName) {
         this.name = name;
         this.displayName = displayName;
     }

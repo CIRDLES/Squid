@@ -106,7 +106,7 @@ public class Age208_232r extends ValueModel implements
             // oct 2014 to handle common lead
             String partialDerivativeNameAge__Lambda = "dA" + name.substring(1) + "__dLambda232";//dAge208_232r__dLambda232
             try {
-                BigDecimal dAge208_232r__dLambda232 = new BigDecimal(StrictMath.log1p(r208_232r.getValue().doubleValue())).//
+                BigDecimal dAge208_232r__dLambda232 = BigDecimal.valueOf(StrictMath.log1p(r208_232r.getValue().doubleValue())).//
                         divide(lambda232.getValue().pow(2), new MathContext(15, RoundingMode.HALF_UP)).negate();
                 parDerivTerms.put(partialDerivativeNameAge__Lambda, dAge208_232r__dLambda232);
             } catch (Exception e) {

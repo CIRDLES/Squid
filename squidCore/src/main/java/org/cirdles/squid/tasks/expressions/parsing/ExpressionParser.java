@@ -283,7 +283,7 @@ public class ExpressionParser {
                                 retExpTreeKnown = namedExpressionsMap.get(baseExpressionName);
                                 if (retExpTreeKnown != null) {
                                     usesArrayIndex = true;
-                                    if (((ExpressionTree) retExpTreeKnown).isSquidSwitchSCSummaryCalculation()) {
+                                    if (retExpTreeKnown.isSquidSwitchSCSummaryCalculation()) {
                                         retExpTree = new VariableNodeForSummary(baseExpressionName, index, usesArrayIndex);
                                     } else {
                                         retExpTree = new VariableNodeForPerSpotTaskExpressions(baseExpressionName, "", index, usesArrayIndex);
