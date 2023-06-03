@@ -3,6 +3,7 @@
 Squid3
 =======
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d058bc8f04384a2080fbad9431100871)](https://app.codacy.com/gh/CIRDLES/Squid?utm_source=github.com&utm_medium=referral&utm_content=CIRDLES/Squid&utm_campaign=Badge_Grade)
 [![Build Status](https://app.travis-ci.com/CIRDLES/Squid.svg?branch=master)](https://app.travis-ci.com/CIRDLES/Squid)
 [![Known Vulnerabilities](https://snyk.io/test/github/CIRDLES/Squid/badge.svg)](https://snyk.io/test/github/CIRDLES/Squid)
 
