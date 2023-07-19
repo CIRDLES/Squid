@@ -116,9 +116,9 @@ public class TaskDesign implements Serializable {
         this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
 
         // Default to blank
-        this.nominalMasses = new ArrayList<>(Arrays.asList(DEFAULT_BACKGROUND_MASS_LABEL));
+        this.nominalMasses = new ArrayList<>(Collections.singletonList(DEFAULT_BACKGROUND_MASS_LABEL));
 
-        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
+        this.ratioNames = new ArrayList<>(Collections.emptyList());
 
         indexOfBackgroundSpecies = 5;
 

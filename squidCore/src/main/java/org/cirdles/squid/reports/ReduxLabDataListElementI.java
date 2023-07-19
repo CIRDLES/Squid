@@ -28,11 +28,11 @@ public interface ReduxLabDataListElementI {
     /**
      * @return
      */
-    abstract String getReduxLabDataElementName();
+    String getReduxLabDataElementName();
 
     /**
      *
      */
-    abstract public void removeSelf();
+    void removeSelf();
 
 }

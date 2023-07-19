@@ -58,7 +58,7 @@ public class PrawnXMLFileHandler implements Serializable {
             = new PrawnFileRunFractionParser();
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-    private SquidProject squidProject;
+    private final SquidProject squidProject;
     private CalamariReportsEngine reportsEngine;
     private String currentPrawnSourceFileLocation;
 

@@ -312,7 +312,7 @@ public class ShuntingYard {
         COMMA,
         FORMATTER;
 
-        private TokenTypes() {
+        TokenTypes() {
         }
 
         /**

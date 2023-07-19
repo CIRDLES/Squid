@@ -94,7 +94,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
         this.spotNumber = -1;
         this.spotIndex = 1;
         this.nameOfMount = "NONE";
-        this.dateTimeMilliseconds = 0l;
+        this.dateTimeMilliseconds = 0L;
         this.hours = 0.0;
         this.deadTimeNanoseconds = 0;
         this.sbmZeroCps = 0;
@@ -978,17 +978,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
             this.commonLeadSpecsForSpot = new CommonLeadSpecsForSpot();
         }
         return commonLeadSpecsForSpot;
-    }
-
-    /**
-     * @return the overcountCorrectionIsotope
-     */
-    @Override
-    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException {
-        if (overcountCorrectionIsotope == null) {
-            overcountCorrectionIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
-        }
-        return overcountCorrectionIsotope;
     }
 
     /**

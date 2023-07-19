@@ -21,7 +21,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -498,12 +497,9 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
     private CheckBox showExcludedSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Plot rejects");
         autoExcludeSpotsCheckBox.setSelected(WeightedMeanPlot.doPlotRejectedSpots);
-        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
-                plotsController.refreshPlot();
-            }
+        autoExcludeSpotsCheckBox.setOnAction(event -> {
+            WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
+            plotsController.refreshPlot();
         });
         formatNode(autoExcludeSpotsCheckBox, 85);
         return autoExcludeSpotsCheckBox;
@@ -599,28 +595,22 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         Button saveToNewFileButton = new Button("New");
         formatNode(saveToNewFileButton, 50);
         saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    writeWeightedMeanReport(false);
-                } catch (IOException ex) {
-                    Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        saveToNewFileButton.setOnAction(e -> {
+            try {
+                writeWeightedMeanReport(false);
+            } catch (IOException ex) {
+                Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
         Button appendToFileButton = new Button("Append");
         formatNode(appendToFileButton, 75);
         appendToFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        appendToFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    writeWeightedMeanReport(true);
-                } catch (IOException ex) {
-                    Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        appendToFileButton.setOnAction(e -> {
+            try {
+                writeWeightedMeanReport(true);
+            } catch (IOException ex) {
+                Logger.getLogger(SamplesWeightedMeanToolBoxNode.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
@@ -641,15 +631,12 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         showInExpressionsButton.setWrapText(true);
         showInExpressionsButton.setTextAlignment(TextAlignment.CENTER);
         showInExpressionsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        showInExpressionsButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                try {
-                    ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
-                            sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
-                } catch (SquidException squidException) {
-                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-                }
+        showInExpressionsButton.setOnAction(e -> {
+            try {
+                ((Task) squidProject.getTask()).includeCustomWMExpressionByName(
+                        sampleNode.getSpotSummaryDetailsWM().getExpressionTree().getName());
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
             }
         });
 
@@ -661,18 +648,15 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
         exportToSVGButton.setWrapText(true);
         exportToSVGButton.setTextAlignment(TextAlignment.CENTER);
         exportToSVGButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        exportToSVGButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        exportToSVGButton.setOnAction(e -> {
+            try {
                 try {
-                    try {
-                        writeWeightedMeanSVG();
-                    } catch (SquidException squidException) {
-                    }
-                } catch (IOException ex) {
-                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
-                    ex.printStackTrace();
+                    writeWeightedMeanSVG();
+                } catch (SquidException squidException) {
                 }
+            } catch (IOException ex) {
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                ex.printStackTrace();
             }
         });
 
@@ -716,6 +700,7 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                                     confirmedExists = true;
                                 }
                                 break;
+                            default:
                         }
                     }
                     if (writeReport.getValue()) {
@@ -797,18 +782,18 @@ public class SamplesWeightedMeanToolBoxNode extends HBox implements ToolBoxNodeI
                     }
                 }
                 if (writeReport.getValue()) {
-                    if (reportFileSVG.exists()) {
-                        if (!confirmedExists) {
-                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
-                                    "It appears that a weighted means report already exists. "
-                                            + "Would you like to overwrite it?");
-                            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
-                            alert.showAndWait().ifPresent(action -> {
-                                if (action.equals(ButtonType.CANCEL)) {
-                                    writeReport.setValue(false);
-                                }
-                            });
-                        }
+                    if (reportFileSVG.exists() && !confirmedExists) {
+
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
+                                "It appears that a weighted means report already exists. "
+                                        + "Would you like to overwrite it?");
+                        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+                        alert.showAndWait().ifPresent(action -> {
+                            if (action.equals(ButtonType.CANCEL)) {
+                                writeReport.setValue(false);
+                            }
+                        });
+
                     }
                     if (writeReport.getValue()) {
                         myPlot.outputToSVG(reportFileSVG);

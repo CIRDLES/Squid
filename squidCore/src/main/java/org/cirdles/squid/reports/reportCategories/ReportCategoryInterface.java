@@ -33,7 +33,7 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     /**
      * @return
      */
-    public default int getCountOfCategoryColumns() {
+    default int getCountOfCategoryColumns() {
         int retVal = 0;
         if (isVisible()) {
             for (int i = 0; i < getCategoryColumns().length; i++) {
@@ -55,7 +55,7 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
      * @param columnName
      * @param isVisible
      */
-    public default void setVisibleCategoryColumn(String columnName, boolean isVisible) {
+    default void setVisibleCategoryColumn(String columnName, boolean isVisible) {
         for (int i = 0; i < getCategoryColumns().length; i++) {
             if (getCategoryColumns()[i].getRetrieveVariableName().compareToIgnoreCase(columnName) == 0) {
                 getCategoryColumns()[i].setVisible(isVisible);
@@ -66,7 +66,7 @@ public interface ReportCategoryInterface extends ReportListItemI, Serializable {
     /**
      * @return
      */
-    public default Map<Integer, ReportColumnInterface> getCategoryColumnOrder() {
+    default Map<Integer, ReportColumnInterface> getCategoryColumnOrder() {
         Map<Integer, ReportColumnInterface> retVal = new HashMap<>();
 
         for (int i = 0; i < getCategoryColumns().length; i++) {

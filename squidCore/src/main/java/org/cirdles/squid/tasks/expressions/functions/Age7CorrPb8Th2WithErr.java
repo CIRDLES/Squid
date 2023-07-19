@@ -132,15 +132,13 @@ public class Age7CorrPb8Th2WithErr extends Function {
     @Override
     public String toStringMathML(List<ExpressionTreeInterface> childrenET) {
 
-        StringBuilder retVal = new StringBuilder();
-        retVal.append("<mrow>");
-        retVal.append("<mi>").append(name).append("</mi>");
-        retVal.append("<mfenced>");
-        retVal.append(buildChildrenToMathML(childrenET));
+        String retVal = "<mrow>" +
+                "<mi>" + name + "</mi>" +
+                "<mfenced>" +
+                buildChildrenToMathML(childrenET) +
+                "</mfenced></mrow>\n";
 
-        retVal.append("</mfenced></mrow>\n");
-
-        return retVal.toString();
+        return retVal;
     }
 
 }

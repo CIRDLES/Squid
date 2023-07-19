@@ -35,7 +35,7 @@ public interface ExpressionTreeInterface {
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
+    static double[] convertObjectArrayToDoubles(Object[] objects) throws SquidException {
         if (objects == null) {
             throw new SquidException("Failed to retrieve data at convertObjectArrayToDoubles.");
         }
@@ -61,7 +61,7 @@ public interface ExpressionTreeInterface {
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
+    static double[][] convertObjectArrayToDoubles(Object[][] objects) throws SquidException {
         if (objects == null) {
             throw new SquidException("Failed to retrieve data.");
         }
@@ -77,13 +77,13 @@ public interface ExpressionTreeInterface {
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static Object[] convertArrayToObjects(double[] types) throws SquidException {
+    static Object[] convertArrayToObjects(double[] types) throws SquidException {
         if (types == null) {
             throw new SquidException("Failed to retrieve data.");
         }
         Object[] retVal = new Object[types.length];
         for (int i = 0; i < types.length; i++) {
-            retVal[i] = (Object) types[i];
+            retVal[i] = types[i];
         }
 
         return retVal;
@@ -94,7 +94,7 @@ public interface ExpressionTreeInterface {
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
+    static Object[][] convertArrayToObjects(double[][] types) throws SquidException {
         if (types == null) {
             throw new SquidException("Failed to retrieve data.");
         }
@@ -110,7 +110,7 @@ public interface ExpressionTreeInterface {
      * @return
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
+    static boolean[] convertObjectArrayToBooleans(Object[] objects) throws SquidException {
         if (objects == null) {
             throw new SquidException("Failed to retrieve data.");
         }
@@ -130,143 +130,144 @@ public interface ExpressionTreeInterface {
      * @return the double[][]
      * @throws org.cirdles.squid.exceptions.SquidException
      */
-    public Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
+    Object[][] eval(List<ShrimpFractionExpressionInterface> shrimpFractions, TaskInterface task) throws SquidException;
 
     /**
      * @return
      */
-    public String getName();
+    String getName();
 
     /**
      * @param name the name to set
      */
-    public void setName(String name);
+    void setName(String name);
 
     /**
      * @return the parentET
      */
-    public ExpressionTreeInterface getParentET();
+    ExpressionTreeInterface getParentET();
 
     /**
      * @param parentET the parentET to set
      */
-    public void setParentET(ExpressionTreeInterface parentET);
+    void setParentET(ExpressionTreeInterface parentET);
 
     /**
      * @return the rootExpressionTree
      */
-    public boolean isRootExpressionTree();
+    boolean isRootExpressionTree();
 
     /**
      * @param rootExpressionTree the rootExpressionTree to set
      */
-    public void setRootExpressionTree(boolean rootExpressionTree);
+    void setRootExpressionTree(boolean rootExpressionTree);
 
     /**
      * @return
      */
-    public String toStringMathML();
+    String toStringMathML();
 
     /**
      * @return
      */
-    public boolean isTypeFunction();
+    boolean isTypeFunction();
 
     /**
      * @return
      */
-    public boolean isTypeFunctionOrOperation();
+    boolean isTypeFunctionOrOperation();
 
-    public boolean builtAsValueModel();
+    boolean builtAsValueModel();
 
-    public boolean amHealthy();
+    boolean amHealthy();
 
-    public boolean isValid();
+    boolean isValid();
+    public boolean isValueModel();
 
-    public boolean usesAnotherExpression(ExpressionTreeInterface exp);
+    boolean usesAnotherExpression(ExpressionTreeInterface exp);
 
-    public boolean usesOtherExpression();
+    boolean usesOtherExpression();
 
     /**
      * @return the squidSwitchSTReferenceMaterialCalculation
      */
-    public boolean isSquidSwitchSTReferenceMaterialCalculation();
+    boolean isSquidSwitchSTReferenceMaterialCalculation();
 
     /**
      * @param squidSwitchSTReferenceMaterialCalculation the
      *                                                  squidSwitchSTReferenceMaterialCalculation to set
      */
-    public void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
+    void setSquidSwitchSTReferenceMaterialCalculation(boolean squidSwitchSTReferenceMaterialCalculation);
 
     /**
      * @param origin
      */
-    public void copySettings(ExpressionTreeInterface origin);
+    void copySettings(ExpressionTreeInterface origin);
 
     /**
      * @return the squidSwitchSAUnknownCalculation
      */
-    public boolean isSquidSwitchSAUnknownCalculation();
+    boolean isSquidSwitchSAUnknownCalculation();
 
     /**
      * @param squidSwitchSAUnknownCalculation the
      *                                        squidSwitchSAUnknownCalculation to set
      */
-    public void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
+    void setSquidSwitchSAUnknownCalculation(boolean squidSwitchSAUnknownCalculation);
 
     /**
      * @return the unknownsGroupSampleName
      */
-    public String getUnknownsGroupSampleName();
+    String getUnknownsGroupSampleName();
 
     /**
      * @param unknownsGroupSampleName the unknownsGroupSampleName to set
      */
-    public void setUnknownsGroupSampleName(String unknownsGroupSampleName);
+    void setUnknownsGroupSampleName(String unknownsGroupSampleName);
 
     /**
      * @return the squidSwitchSCSummaryCalculation
      */
-    public boolean isSquidSwitchSCSummaryCalculation();
+    boolean isSquidSwitchSCSummaryCalculation();
 
     /**
      * @param squidSwitchSCSummaryCalculation the
      *                                        squidSwitchSCSummaryCalculation to set
      */
-    public void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
+    void setSquidSwitchSCSummaryCalculation(boolean squidSwitchSCSummaryCalculation);
 
     /**
      * @return the squidSpecialUPbThExpression
      */
-    public boolean isSquidSpecialUPbThExpression();
+    boolean isSquidSpecialUPbThExpression();
 
     /**
      * @param squidSpecialUPbThExpression the squidSpecialUPbThExpression to set
      */
-    public void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
+    void setSquidSpecialUPbThExpression(boolean squidSpecialUPbThExpression);
 
     /**
      * @return the squidSwitchConcentrationReferenceMaterialCalculation
      */
-    public boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
+    boolean isSquidSwitchConcentrationReferenceMaterialCalculation();
 
     /**
      * @param squidSwitchConcentrationReferenceMaterialCalculation the
      *                                                             squidSwitchConcentrationReferenceMaterialCalculation to set
      */
-    public void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
+    void setSquidSwitchConcentrationReferenceMaterialCalculation(boolean squidSwitchConcentrationReferenceMaterialCalculation);
 
     /**
      * @param uncertaintyDirective the uncertaintyDirective to set
      */
-    public void setUncertaintyDirective(String uncertaintyDirective);
+    void setUncertaintyDirective(String uncertaintyDirective);
 
     /**
      * @param index the index to set
      */
-    public void setIndex(int index);
+    void setIndex(int index);
 
-    public default int argumentCount() {
+    default int argumentCount() {
         int retVal = 0;
 
         if (this instanceof ExpressionTreeBuilderInterface && ((ExpressionTreeBuilderInterface) this).getOperation() != null) {
@@ -276,7 +277,7 @@ public interface ExpressionTreeInterface {
         return retVal;
     }
 
-    public default void auditExpressionTreeDependencies(List<String> argumentAudit) {
+    default void auditExpressionTreeDependencies(List<String> argumentAudit) {
         argumentAudit.add(((ExpressionTreeBuilderInterface) this).auditOperationArgumentCount());
         for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             // SpotFieldNode is an ExpressionTree without Children
@@ -289,7 +290,7 @@ public interface ExpressionTreeInterface {
         }
     }
 
-    public default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
+    default void auditExpressionTreeTargetMatching(List<String> argumentAudit) {
         if (!amAnonymous()
                 && !(this instanceof ConstantNode)
                 && !(this instanceof VariableNodeForIsotopicRatios)) {
@@ -298,19 +299,19 @@ public interface ExpressionTreeInterface {
                 argumentAudit.add(audit);
             }
         }
-        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             child.auditExpressionTreeTargetMatching(argumentAudit);
         }
     }
 
-    public default int auditTargetMatchingII(int targetBits) {
+    default int auditTargetMatchingII(int targetBits) {
         int audit = targetBits;
         if (!amAnonymous()
                 && !(this instanceof ConstantNode)
                 && !(this instanceof VariableNodeForIsotopicRatios)) {
             audit = audit & this.makeTargetBits();
         }
-        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) ((ExpressionTree) this)).getChildrenET()) {
+        for (ExpressionTreeInterface child : ((ExpressionTreeBuilderInterface) this).getChildrenET()) {
             audit = audit & child.auditTargetMatchingII(audit);
         }
 
@@ -320,7 +321,7 @@ public interface ExpressionTreeInterface {
     /**
      * @return targetBits = 2 for both (11), 1 for RM (01), 2 for U (10)
      */
-    public default int makeTargetBits() {
+    default int makeTargetBits() {
         int targetBits
                 = ((isSquidSwitchSTReferenceMaterialCalculation() || isSquidSwitchConcentrationReferenceMaterialCalculation()) ? 1 : 0)
                 + (isSquidSwitchSAUnknownCalculation() ? 2 : 0);
@@ -329,5 +330,5 @@ public interface ExpressionTreeInterface {
         return targetBits;
     }
 
-    public boolean amAnonymous();
+    boolean amAnonymous();
 }

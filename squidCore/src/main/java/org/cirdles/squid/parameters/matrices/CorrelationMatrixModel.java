@@ -100,8 +100,8 @@ public class CorrelationMatrixModel extends AbstractMatrixModel {
         Integer left = getCols().get(leftSide);
         Integer right = getCols().get(rightSide);
         if ((left != null) && (right != null)) {
-            matrix.set((int) left, (int) right, rho);
-            matrix.set((int) right, (int) left, rho);
+            matrix.set(left, right, rho);
+            matrix.set(right, left, rho);
             retval = true;
         }
         return retval;
@@ -135,7 +135,7 @@ public class CorrelationMatrixModel extends AbstractMatrixModel {
         Integer right = getCols().get(rightSide);
 
         if ((left != null) && (right != null)) {
-            return matrix.get((int) left, (int) right);
+            return matrix.get(left, right);
         }
         return retval;
     }

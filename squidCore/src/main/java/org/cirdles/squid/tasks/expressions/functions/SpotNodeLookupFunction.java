@@ -72,7 +72,7 @@ public class SpotNodeLookupFunction extends Function {
         if (task.getRatioNames().contains(childrenET.get(0).getName())) {
             spotNode = new VariableNodeForIsotopicRatios(childrenET.get(0).getName());
         } else {
-            spotNode = ((SpotFieldNode) childrenET.get(0));
+            spotNode = childrenET.get(0);
             methodNameForShrimpFraction = ((SpotFieldNode) spotNode).getMethodNameForShrimpFraction();
         }
 

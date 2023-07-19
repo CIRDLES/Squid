@@ -38,7 +38,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @param aNumericString
      * @return
      */
-    public static String FormatNumericStringAlignDecimalPoint(String aNumericString) {
+    static String FormatNumericStringAlignDecimalPoint(String aNumericString) {
         // precondition: can fit within 123456789.0123456789
         String numericString = aNumericString;
         if (aNumericString.length() > 25) {
@@ -176,11 +176,11 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
         // if value == 0, use second method to generate "0"
         if ((value != 0.0) && (uncertaintyType.equalsIgnoreCase("PCT"))) {
             return formatBigDecimalForPublicationSigDigMode(//
-                    new BigDecimal(StrictMath.abs(oneSigmaAbs / value * 100.0)).movePointRight(movePointRightCount),//
+                    BigDecimal.valueOf(StrictMath.abs(oneSigmaAbs / value * 100.0)).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
         } else {
             return formatBigDecimalForPublicationSigDigMode(//
-                    new BigDecimal(oneSigmaAbs * 1.0).movePointRight(movePointRightCount),//
+                    new BigDecimal(oneSigmaAbs).movePointRight(movePointRightCount),//
                     uncertaintySigDigits);
         }
     }
@@ -224,7 +224,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @return
      */
     static BigDecimal getOneSigmaPct(double value, double oneSigmaAbs) {
-        return new BigDecimal(StrictMath.abs(oneSigmaAbs / value * 100.0));
+        return BigDecimal.valueOf(StrictMath.abs(oneSigmaAbs / value * 100.0));
 //        TODO: Redo tests with this math return (new BigDecimal(oneSigmaAbs)).divide((new BigDecimal(value)),new MathContext(15, RoundingMode.HALF_EVEN)).movePointRight(2);
     }
 
@@ -243,7 +243,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
 
     }
 
-    public static int countSigDigits(String number) {
+    static int countSigDigits(String number) {
         String digits = number.replaceFirst("\\.", "");
         int index = digits.lastIndexOf("E");
         if (index > 0) {
@@ -262,10 +262,10 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @throws ClassCastException
      */
     @Override
-    public default int compareTo(ReportColumnInterface reportColumn)
+    default int compareTo(ReportColumnInterface reportColumn)
             throws ClassCastException {
         String reportColumnFullName
-                = ((ReportColumnInterface) reportColumn).getDisplayName();
+                = reportColumn.getDisplayName();
         return this.getDisplayName().trim().//
                 compareToIgnoreCase(reportColumnFullName.trim());
     }
@@ -274,7 +274,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @return
      */
     @Override
-    public default String getDisplayName() {
+    default String getDisplayName() {
         if (getAlternateDisplayName().equals("")) {
             return getDisplayName1() + getDisplayName2() + getDisplayName3() + getDisplayName4();
         } else {
@@ -286,7 +286,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      *
      */
     @Override
-    public default void ToggleIsVisible() {
+    default void ToggleIsVisible() {
         setVisible(!isVisible());
     }
 
@@ -428,7 +428,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
     /**
      * @return
      */
-    public default String getUnitsFoxXML() {
+    default String getUnitsFoxXML() {
         String retVal = ReportSpecificationsUPbSamples.unicodeConversionsToXML.get(getUnits());
         if (retVal == null) {
             retVal = getUnits();
@@ -510,7 +510,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
      * @param isNumeric
      * @return
      */
-    public default String[] getReportRecordByColumnSpec(ShrimpFractionExpressionInterface fraction, boolean isNumeric) {
+    default String[] getReportRecordByColumnSpec(ShrimpFractionExpressionInterface fraction, boolean isNumeric) {
         // returns an entry for the value and one for the uncertainty if it exists
         // there are two possible modes : sigfig and arbitrary
         // if sigfig, the string contains only the sig digits forced to length
@@ -537,10 +537,10 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
+                                getRetrieveMethodName()
+                        );
 
-                        Object o = meth.invoke(fraction, new Object[0]);
+                        Object o = meth.invoke(fraction);
 
                         retVal[0] = o.toString();
                     } catch (NoSuchMethodException | SecurityException | IllegalAccessException |
@@ -551,8 +551,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
+                                getRetrieveMethodName()
+                        );
 
                         long milliseconds = (long) meth.invoke(fraction, new Object[0]);
 
@@ -565,8 +565,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
+                                getRetrieveMethodName()
+                        );
 
                         int intValue = (int) meth.invoke(fraction, new Object[0]);
 
@@ -579,8 +579,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
+                                getRetrieveMethodName()
+                        );
 
                         double doubleValue = (double) meth.invoke(fraction, new Object[0]);
                         if (!Double.isFinite(doubleValue)) {
@@ -612,8 +612,8 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth
                                 = fractionClass.getMethod(//
-                                getRetrieveMethodName(),
-                                new Class[0]);
+                                getRetrieveMethodName()
+                        );
 
                         double doubleValue = ((double[]) meth.invoke(fraction, new Object[0]))[index];
                         if (!Double.isFinite(doubleValue)) {
@@ -644,7 +644,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                     try {
                         Method meth = fractionClass.getMethod(//
                                 getRetrieveMethodName(),
-                                new Class[]{String.class});
+                                String.class);
 
                         double[] vm = ((double[][]) meth.invoke(fraction, new Object[]{getRetrieveVariableName()}))[0].clone();
 
@@ -666,7 +666,7 @@ public interface ReportColumnInterface extends Comparable<ReportColumnInterface>
                                 // also show value with normal sigfig formatting
 
                                 retVal[0] = formatBigDecimalForPublicationSigDigMode(
-                                        new BigDecimal(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
+                                        BigDecimal.valueOf(vm[0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(getUnits())),//
                                         getCountOfSignificantDigits());
 
                                 // however, if uncertainty column is in sigfig mode, then

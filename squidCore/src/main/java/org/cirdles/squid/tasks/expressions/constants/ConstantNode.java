@@ -68,7 +68,7 @@ public class ConstantNode extends ExpressionTree {
                 retVal = (name.compareTo(((ConstantNode) obj).getName()) == 0);
                 if (retVal) {
                     if (value instanceof Integer) {
-                        retVal = (Integer.compare((int) value, (int) ((ConstantNode) obj).getValue()) == 0);
+                        retVal = ((int) value == (int) ((ConstantNode) obj).getValue());
                     } else if (value instanceof Double) {
                         retVal = (Double.compare((double) value, (double) ((ConstantNode) obj).getValue()) == 0);
                     } else if (value instanceof String) {

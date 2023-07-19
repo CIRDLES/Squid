@@ -116,9 +116,9 @@ public enum RadDates {
     dateCorrBP("dateCorrBP");
 
 
-    private String name;
+    private final String name;
 
-    private RadDates(String name) {
+    RadDates(String name) {
         this.name = name;
     }
 

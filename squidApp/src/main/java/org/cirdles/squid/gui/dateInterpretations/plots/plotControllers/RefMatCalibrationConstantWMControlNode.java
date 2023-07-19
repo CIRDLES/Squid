@@ -20,8 +20,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -122,20 +120,17 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
     private CheckBox autoExcludeSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Auto-reject spots");
         autoExcludeSpotsCheckBox.setSelected(squidProject.getTask().isSquidAllowsAutoExclusionOfSpots());
-        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
-                // this will cause weighted mean expressions to be changed with boolean flag
-                try {
-                    squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
-                } catch (SquidException squidException) {
-                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-                }
-                try {
-                    plotsController.showActivePlot();
-                } catch (SquidException squidException) {
-                }
+        autoExcludeSpotsCheckBox.setOnAction(event -> {
+            squidProject.getTask().setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
+            // this will cause weighted mean expressions to be changed with boolean flag
+            try {
+                squidProject.getTask().updateRefMatCalibConstWMeanExpressions(autoExcludeSpotsCheckBox.isSelected());
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
+            try {
+                plotsController.showActivePlot();
+            } catch (SquidException squidException) {
             }
         });
         formatNode(autoExcludeSpotsCheckBox, 110);
@@ -145,12 +140,9 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
     private CheckBox showExcludedSpotsCheckBox() {
         CheckBox autoExcludeSpotsCheckBox = new CheckBox("Plot rejects");
         autoExcludeSpotsCheckBox.setSelected(WeightedMeanPlot.doPlotRejectedSpots);
-        autoExcludeSpotsCheckBox.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
-                plotsController.showRefMatCalibrationConstantPlot();
-            }
+        autoExcludeSpotsCheckBox.setOnAction(event -> {
+            WeightedMeanPlot.doPlotRejectedSpots = !WeightedMeanPlot.doPlotRejectedSpots;
+            plotsController.showRefMatCalibrationConstantPlot();
         });
         formatNode(autoExcludeSpotsCheckBox, 80);
         return autoExcludeSpotsCheckBox;
@@ -239,18 +231,15 @@ public class RefMatCalibrationConstantWMControlNode extends HBox implements Tool
         Button saveToNewFileButton = new Button("To SVG");
         formatNode(saveToNewFileButton, 50);
         saveToNewFileButton.setStyle("-fx-font-size: 11px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+        saveToNewFileButton.setOnAction(e -> {
+            try {
                 try {
-                    try {
-                        writeWeightedMeanSVG();
-                    } catch (SquidException squidException) {
-                    }
-                } catch (IOException ex) {
-                    SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
-                    ex.printStackTrace();
+                    writeWeightedMeanSVG();
+                } catch (SquidException squidException) {
                 }
+            } catch (IOException ex) {
+                SquidMessageDialog.showWarningDialog(ex.getMessage(), primaryStageWindow);
+                ex.printStackTrace();
             }
         });
 

@@ -49,7 +49,7 @@ public class ReportSettings implements
      * version number is advanced so that any existing analysis will update its
      * report models upon opening in ET_Redux.
      */
-    private static final transient int CURRENT_VERSION_REPORT_SETTINGS_UPB = 4;
+    private static final int CURRENT_VERSION_REPORT_SETTINGS_UPB = 4;
     private final TaskInterface task;
     private final boolean referenceMaterial;
     protected ArrayList<ReportCategoryInterface> reportCategories;

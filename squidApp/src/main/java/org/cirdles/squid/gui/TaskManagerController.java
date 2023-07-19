@@ -135,14 +135,14 @@ public class TaskManagerController implements Initializable {
     }
 
     @FXML
-    private void editCurrentTaskAction(ActionEvent event) {
+    private void editCurrentTaskAction() {
         MenuItem menuItemTaskEditorHidden = ((MenuBar) SquidUI.primaryStage.getScene()
                 .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(1);
         menuItemTaskEditorHidden.fire();
     }
 
     @FXML
-    private void saveCurrentTaskAction(ActionEvent event) {
+    private void saveCurrentTaskAction() {
         try {
             FileHandler.saveTaskFileXML(squidProject.getTask(), SquidUI.primaryStageWindow);
         } catch (IOException iOException) {

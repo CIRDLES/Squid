@@ -35,7 +35,7 @@ public class SquidSpeciesModel implements
     private int massStationIndex;
     private String massStationSpeciesName;
     private String isotopeName;
-    private String prawnFileIsotopeName;
+    private final String prawnFileIsotopeName;
     private String elementName;
     private boolean isBackground;
     private String uThBearingName;

@@ -48,9 +48,8 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
     private static boolean plotExcluded = true;
     private final ComboBox<String> xAxisExpressionComboBox;
     private final ComboBox<String> yAxisExpressionComboBox;
+    private final PlotRefreshInterface plotsController;
     protected boolean hasData;
-    private Map<String, ExpressionTreeInterface> mapOfNamedExpressions;
-    private PlotRefreshInterface plotsController;
     private CheckBox regressionCheckBox;
 
     /**
@@ -79,7 +78,7 @@ public class AnyTwoExpressionsControlNode extends HBox implements ToolBoxNodeInt
         setFillHeight(true);
         setAlignment(Pos.CENTER);
 
-        mapOfNamedExpressions = squidProject.getTask().getNamedExpressionsMap();
+        Map<String, ExpressionTreeInterface> mapOfNamedExpressions = squidProject.getTask().getNamedExpressionsMap();
         List<String> sortedAvailableExpressions = new ArrayList<>();
         for (Entry<String, ExpressionTreeInterface> entry : mapOfNamedExpressions.entrySet()) {
             if (entry.getValue().amHealthy()

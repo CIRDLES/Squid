@@ -25,5 +25,5 @@ public interface ExpressionTreeWithRatiosInterface {
     /**
      * @return the ratiosOfInterest
      */
-    public List<String> getRatiosOfInterest();
+    List<String> getRatiosOfInterest();
 }

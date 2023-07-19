@@ -265,7 +265,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void normalizeTimeAxisCheckBoxAction(ActionEvent event) {
+    private void normalizeTimeAxisCheckBoxAction() {
         showTimeNormalized = normalizeTimeAxisCheckBox.isSelected();
         squidProject.getTask().setShowTimeNormalized(showTimeNormalized);
         try {
@@ -275,7 +275,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void showPrimaryBeamCheckBoxAction(ActionEvent event) {
+    private void showPrimaryBeamCheckBoxAction() {
         showPrimaryBeam = showPrimaryBeamCheckBox.isSelected();
         squidProject.getTask().setShowPrimaryBeam(showPrimaryBeam);
         try {
@@ -285,7 +285,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void showQt1yCheckBoxAction(ActionEvent event) {
+    private void showQt1yCheckBoxAction() {
         showQt1y = showQt1yCheckBox.isSelected();
         squidProject.getTask().setShowQt1y(showQt1y);
         try {
@@ -295,7 +295,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void showQt1zCheckBoxAction(ActionEvent event) {
+    private void showQt1zCheckBoxAction() {
         showQt1z = showQt1zCheckBox.isSelected();
         squidProject.getTask().setShowQt1z(showQt1z);
         try {
@@ -324,7 +324,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void displaySpotLabelsCheckBoxAction(ActionEvent event) {
+    private void displaySpotLabelsCheckBoxAction() {
         showSpotLabels = displaySpotLabelsCheckBox.isSelected();
         squidProject.getTask().setShowSpotLabels(showSpotLabels);
         try {
@@ -411,7 +411,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void displayMassesAction(ActionEvent actionEvent) {
+    private void displayMassesAction() {
         countsRadioButtonChoice = 0b00;
         try {
             displayMassStationsForReview();
@@ -420,7 +420,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void displayTotalCountsAction(ActionEvent actionEvent) {
+    private void displayTotalCountsAction() {
         countsRadioButtonChoice = 0b10;
         try {
             displayMassStationsForReview();
@@ -429,7 +429,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void displayTotalSBMAction(ActionEvent actionEvent) {
+    private void displayTotalSBMAction() {
         countsRadioButtonChoice = 0b01;
         try {
             displayMassStationsForReview();
@@ -438,7 +438,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void displayBothCountsAction(ActionEvent actionEvent) {
+    private void displayBothCountsAction() {
         countsRadioButtonChoice = 0b11;
         try {
             displayMassStationsForReview();
@@ -1010,7 +1010,7 @@ public class MassesAuditController implements Initializable, MassAuditRefreshInt
     }
 
     @FXML
-    private void resetMassesAuditGraphs(ActionEvent actionEvent) throws SquidException {
+    private void resetMassesAuditGraphs() throws SquidException {
         ((Task) squidProject.getTask()).resetMassStationGraphViews();
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchMassesAudit();

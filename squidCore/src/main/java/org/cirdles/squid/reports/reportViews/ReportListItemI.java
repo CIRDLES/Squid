@@ -29,26 +29,26 @@ public interface ReportListItemI {
     /**
      * @return
      */
-    abstract String getDisplayName();
+    String getDisplayName();
 
     /**
      * @return
      */
-    abstract boolean isVisible();
+    boolean isVisible();
 
     /**
      * @param visible
      */
-    abstract void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
     /**
      *
      */
-    abstract void ToggleIsVisible();
+    void ToggleIsVisible();
 
     /**
      * @param positionIndex
      */
-    abstract void setPositionIndex(int positionIndex);
+    void setPositionIndex(int positionIndex);
 
 }

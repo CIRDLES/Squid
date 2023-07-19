@@ -4,7 +4,7 @@
  * Created on September 3, 2008, 9:38 AM
  *
  *
- * Copyright 2006-2018 James F. Bowring, CIRDLES.org, and Earth-Time.org
+ * Copyright 2008 James F. Bowring, CIRDLES.org, and Earth-Time.org
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.

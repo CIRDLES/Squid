@@ -9,7 +9,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -468,7 +467,7 @@ public class TaskFolderBrowserController implements Initializable {
     }
 
     @FXML
-    private void editTaskAction(ActionEvent event) {
+    private void editTaskAction() {
         TaskEditorController.existingTaskToEdit = listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue();
         MenuItem menuItemExistingTaskEditorHidden = ((MenuBar) SquidUI.primaryStage.getScene()
                 .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(2);
@@ -476,7 +475,7 @@ public class TaskFolderBrowserController implements Initializable {
     }
 
     @FXML
-    private void updateCurrentTaskWithThisTaskAction(ActionEvent event) throws SquidException {
+    private void updateCurrentTaskWithThisTaskAction() throws SquidException {
 
         TaskInterface chosenTask = listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue();
         TaskDesign taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
@@ -525,9 +524,9 @@ public class TaskFolderBrowserController implements Initializable {
     }
 
     @FXML
-    private void saveThisTaskAsXMLFileAction(ActionEvent event) {
+    private void saveThisTaskAsXMLFileAction() {
         try {
-            FileHandler.saveTaskFileXML(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue(), SquidUI.primaryStageWindow);
+            FileHandler.saveTaskFileXML(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue(), primaryStageWindow);
             taskNameTextField.setText(listViewOfTasksInFolder.getSelectionModel().selectedItemProperty().getValue().getName());
         } catch (IOException iOException) {
         }

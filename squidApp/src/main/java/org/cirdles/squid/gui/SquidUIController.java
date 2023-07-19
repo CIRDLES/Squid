@@ -77,8 +77,7 @@ import static org.cirdles.squid.constants.Squid3Constants.TaskEditTypeEnum.EDIT_
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GENERAL;
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import static org.cirdles.squid.core.CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_UNKNOWNS;
-import static org.cirdles.squid.gui.SquidUI.primaryStage;
-import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
+import static org.cirdles.squid.gui.SquidUI.*;
 import static org.cirdles.squid.gui.utilities.BrowserControl.urlEncode;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.PARENT_ELEMENT_CONC_CONST;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.REF_238U235U_RM_MODEL_NAME;
@@ -541,7 +540,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidProjectFromOPFileAction(ActionEvent actionEvent) {
+    private void newSquidProjectFromOPFileAction() {
         try {
             openOPFile(FileHandler.selectOPFile(primaryStageWindow));
         } catch (IOException | SquidException iOException) {
@@ -587,7 +586,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidProjectFromZippedPrawnAction(ActionEvent event) {
+    private void newSquidProjectFromZippedPrawnAction() {
         try {
             prepareForNewProject(GEOCHRON);
             File prawnZippedSourceFile = FileHandler.selectZippedPrawnXMLFile(primaryStageWindow);
@@ -630,7 +629,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidProjectAction(ActionEvent event) {
+    private void newSquidProjectAction() {
         try {
 //            prepareForNewProject(GEOCHRON);
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
@@ -688,7 +687,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidRatioProjectAction(ActionEvent event) {
+    private void newSquidRatioProjectAction() {
         try {
             prepareForNewProject(GENERAL);
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
@@ -729,7 +728,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void newSquidProjectByJoinAction(ActionEvent event) {
+    private void newSquidProjectByJoinAction() {
         try {
             prepareForNewProject(GEOCHRON);
 
@@ -774,7 +773,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void saveAsSquidProjectMenuItemAction(ActionEvent event) {
+    private void saveAsSquidProjectMenuItemAction() {
         if (squidProject != null) {
             saveAsSquidProject();
         }
@@ -799,7 +798,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void openSquidProjectMenuItemAction(ActionEvent event) {
+    private void openSquidProjectMenuItemAction() {
         confirmSaveOnProjectClose();
         removeAllManagers();
 
@@ -858,7 +857,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void closeSquidProjectMenuItemClose(ActionEvent event) {
+    private void closeSquidProjectMenuItemClose() {
         confirmSaveOnProjectClose();
         removeAllManagers();
         SquidUI.updateStageTitle("");
@@ -866,7 +865,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void saveSquidProjectMenuItemAction(ActionEvent event) {
+    private void saveSquidProjectMenuItemAction() {
         if (squidProject != null) {
             try {
                 ProjectFileUtilities.serializeSquidProject(squidProject, squidPersistentState.getMRUProjectFile().getCanonicalPath());
@@ -885,14 +884,16 @@ public class SquidUIController implements Initializable {
                     ButtonType.YES,
                     ButtonType.NO
             );
-            alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-            alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+            alert.setX(SquidUI.primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+            alert.setY(SquidUI.primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
             alert.showAndWait().ifPresent((t) -> {
                 if (t.equals(ButtonType.YES)) {
+                    File projectFile = null;
                     try {
-                        File projectFile = FileHandler.saveProjectFile(squidProject, SquidUI.primaryStageWindow);
+                        projectFile = FileHandler.saveProjectFile(squidProject, primaryStageWindow);
                     } catch (IOException iOException) {
-                        SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n",
+                        SquidMessageDialog.showWarningDialog("Squid3 cannot access the target file.\n"
+                                        + ((projectFile != null) ? projectFile.getAbsolutePath() : ""),
                                 null);
                     }
                 }
@@ -904,7 +905,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void quitAction(ActionEvent event) {
+    private void quitAction() {
         try {
             SquidPersistentState.getExistingPersistentState().updateSquidPersistentState();
         } catch (SquidException squidException) {
@@ -919,33 +920,32 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    void sustainableVideoAction(ActionEvent event) {
+    void sustainableVideoAction() {
         BrowserControl.showURI("https://www.youtube.com/watch?v=mC5eNrMjfk4");
     }
 
     @FXML
-    private void onlineHelpAction(ActionEvent event) {
+    private void onlineHelpAction() {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid#readme"); //"http://cirdles.org/projects/squid/#Development");
     }
 
     @FXML
-    private void aboutSquidAction(ActionEvent event) {
-        SquidUI.squidAboutWindow.loadAboutWindow();
+    private void aboutSquidAction() {
+        squidAboutWindow.loadAboutWindow();
     }
 
     @FXML
-    private void contributeIssueOnGitHubAction(ActionEvent event) {
+    private void contributeIssueOnGitHubAction() {
         String version = "Squid3 Version: " + Squid.VERSION;
         String javaVersion = "Java Version: " + System.getProperties().getProperty("java.version");
         String javaFXVersion = "JavaFX Version: " + System.getProperties().getProperty("javafx.runtime.version");
         String operatingSystem = "OS: " + System.getProperties().getProperty("os.name") + " " + System.getProperties().getProperty("os.version");
 
-        StringBuilder issueBody = new StringBuilder();
-        issueBody.append(urlEncode(version + "\n"));
-        issueBody.append(urlEncode(javaVersion + "\n"));
-        issueBody.append(urlEncode(javaFXVersion + "\n"));
-        issueBody.append(urlEncode(operatingSystem + "\n"));
-        issueBody.append(urlEncode("\nIssue details:\n"));
+        String issueBody = urlEncode(version + "\n") +
+                urlEncode(javaVersion + "\n") +
+                urlEncode(javaFXVersion + "\n") +
+                urlEncode(operatingSystem + "\n") +
+                urlEncode("\nIssue details:\n");
 
         BrowserControl.showURI("https://github.com/CIRDLES/Squid/issues/new?body=" + issueBody);
     }
@@ -1170,7 +1170,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void projectManagerMenuItemAction(ActionEvent event) {
+    private void projectManagerMenuItemAction() {
         launchProjectManager();
     }
 
@@ -1188,26 +1188,26 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void auditSessionMenuItemAction(ActionEvent event) throws SquidException {
+    private void auditSessionMenuItemAction() throws SquidException {
         mainPane.getChildren().remove(sessionAuditUI);
         launchSessionAudit();
         showUI(sessionAuditUI);
     }
 
     @FXML
-    private void manageSpotsMenuItemAction(ActionEvent event) throws SquidException {
+    private void manageSpotsMenuItemAction() throws SquidException {
         mainPane.getChildren().remove(spotManagerUI);
         launchSpotManager();
         showUI(spotManagerUI);
     }
 
     @FXML
-    private void auditMassesMenuItemAction(ActionEvent event) throws SquidException {
+    private void auditMassesMenuItemAction() throws SquidException {
         launchMassesAudit();
     }
 
     @FXML
-    private void specifyIsotopesMenuItemAction(ActionEvent event) throws SquidException {
+    private void specifyIsotopesMenuItemAction() throws SquidException {
         mainPane.getChildren().remove(isotopesManagerUI);
         squidProject.getTask().buildSquidSpeciesModelList();
         launchIsotopesManager();
@@ -1215,7 +1215,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void savePrawnFileCopyMenuItemAction(ActionEvent event) {
+    private void savePrawnFileCopyMenuItemAction() {
         try {
             File prawnXMLFileNew = FileHandler.savePrawnXMLFile(squidProject, primaryStageWindow);
             if (prawnXMLFileNew != null) {
@@ -1227,7 +1227,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void loadExpressionFromXMLFileMenuItemAction(ActionEvent event) {
+    private void loadExpressionFromXMLFileMenuItemAction() {
         try {
             File expressionFileXML = FileHandler.selectExpressionXMLFile(primaryStageWindow);
             loadExpressionFromXMLFile(expressionFileXML);
@@ -1252,8 +1252,8 @@ public class SquidUIController implements Initializable {
                             rename,
                             ButtonType.CANCEL
                     );
-                    alert.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                    alert.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                    alert.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                    alert.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                     alert.showAndWait().ifPresent((t) -> {
                         if (t.equals(replace)) {
                             try {
@@ -1278,8 +1278,8 @@ public class SquidUIController implements Initializable {
                                     okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
                                 });
                             }
-                            dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                            dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                            dialog.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                            dialog.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                             Optional<String> result = dialog.showAndWait();
                             if (result.isPresent()) {
                                 exp.setName(result.get());
@@ -1310,26 +1310,26 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void showWithinSpotRatiosReferenceMatMenutItemAction(ActionEvent event) throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
+    private void showWithinSpotRatiosReferenceMatMenutItemAction() throws SquidException {
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showWithinSpotRatiosUnknownsMenutItemAction(ActionEvent event) throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
+    private void showWithinSpotRatiosUnknownsMenutItemAction() throws SquidException {
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.WITHIN_SPOT_RATIOS_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showMeanRatiosReferenceMatMenutItemAction(ActionEvent event) throws SquidException {
-        SquidUI.calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
+    private void showMeanRatiosReferenceMatMenutItemAction() throws SquidException {
+        calamariReportFlavor = CalamariReportsEngine.CalamariReportFlavors.MEAN_RATIOS_PER_SPOT_REFERENCEMAT;
         launchReducedDataReportManager();
     }
 
     @FXML
-    private void showMeanRatiosUnknownMenutItemAction(ActionEvent event) throws SquidException {
-        SquidUI.calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
+    private void showMeanRatiosUnknownMenutItemAction() throws SquidException {
+        calamariReportFlavor = MEAN_RATIOS_PER_SPOT_UNKNOWNS;
         launchReducedDataReportManager();
     }
 
@@ -1339,27 +1339,27 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void visitCIRDLESAction(ActionEvent event) {
+    private void visitCIRDLESAction() {
         BrowserControl.showURI("https://CIRDLES.org");
     }
 
     @FXML
-    private void showSquid3GithubRepo(ActionEvent event) {
+    private void showSquid3GithubRepo() {
         BrowserControl.showURI("https://github.com/CIRDLES/Squid");
     }
 
     @FXML
-    private void showSquid3DevNotes(ActionEvent event) {
+    private void showSquid3DevNotes() {
         BrowserControl.showURI("https://github.com/CIRDLES/ET_Redux/wiki/SHRIMP:-Intro");
     }
 
     @FXML
-    private void showTopsoilGithubRepo(ActionEvent event) {
+    private void showTopsoilGithubRepo() {
         BrowserControl.showURI("https://github.com/CIRDLES/Topsoil");
     }
 
     @FXML
-    private void showLudwigLibraryGithubRepo(ActionEvent event) {
+    private void showLudwigLibraryGithubRepo() {
         BrowserControl.showURI("https://github.com/CIRDLES/LudwigLibrary");
     }
 
@@ -1382,24 +1382,24 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void expressionBuilderMenuItemAction(ActionEvent event) throws SquidException {
+    private void expressionBuilderMenuItemAction() throws SquidException {
         mainPane.getChildren().remove(expressionBuilderUI);
         launchExpressionBuilder();
         showUI(expressionBuilderUI);
     }
 
     @FXML
-    private void ludwigLibraryJavaDocAction(ActionEvent event) {
+    private void ludwigLibraryJavaDocAction() {
         BrowserControl.showURI(LUDWIGLIBRARY_JAVADOC_FOLDER + File.separator + "index.html");
     }
 
     @FXML
-    private void videoTutorialsMenuItemAction(ActionEvent event) {
+    private void videoTutorialsMenuItemAction() {
         BrowserControl.showURI("https://www.youtube.com/playlist?list=PLfF8bcNRe2WTWx2IuDaHW_XpLh36bWkUc");
     }
 
     @FXML
-    private void producePerScanReportsAction(ActionEvent event) {
+    private void producePerScanReportsAction() {
         if (squidProject.getTask().getRatioNames().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
                     primaryStageWindow);
@@ -1413,7 +1413,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialsReportTableAction(ActionEvent event) throws IOException, SquidException {
+    private void referenceMaterialsReportTableAction() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             File reportTableFile = squidProject.produceReferenceMaterialPerSquid25CSV(true);
             if (reportTableFile != null) {
@@ -1427,7 +1427,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void unknownsReportTableAction(ActionEvent event) throws IOException, SquidException {
+    private void unknownsReportTableAction() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             File reportTableFile = squidProject.produceUnknownsPerSquid25CSV(true);
             if (reportTableFile != null) {
@@ -1443,7 +1443,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void unknownsBySampleReportTableAction(ActionEvent event) throws IOException, SquidException {
+    private void unknownsBySampleReportTableAction() throws IOException, SquidException {
         if (squidProject.hasReportsFolder()) {
             File reportTableFile = squidProject.produceUnknownsBySampleForETReduxCSV(true);
             if (reportTableFile != null) {
@@ -1459,7 +1459,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
+    private void referenceMaterialSummaryReportOnAction() throws IOException {
         if (squidProject.hasReportsFolder()) {
             File summaryFile
                     = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForReferenceMaterials();
@@ -1470,7 +1470,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void unknownsSummaryReportOnAction(ActionEvent actionEvent) throws IOException {
+    private void unknownsSummaryReportOnAction() throws IOException {
         if (squidProject.hasReportsFolder()) {
             File summaryFile = squidProject.getPrawnFileHandler().getReportsEngine().writeSummaryReportsForUnknowns();
             SquidMessageDialog.showSavedAsDialog(summaryFile, primaryStageWindow);
@@ -1480,7 +1480,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void produceTaskSummaryReportAction(ActionEvent actionEvent) throws IOException {
+    private void produceTaskSummaryReportAction() throws IOException {
         if (squidProject.hasReportsFolder()) {
             File taskAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeTaskAudit();
             SquidMessageDialog.showSavedAsDialog(taskAuditFile, primaryStageWindow);
@@ -1490,7 +1490,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void produceProjectAuditReportAction(ActionEvent actionEvent) throws IOException {
+    public void produceProjectAuditReportAction() throws IOException {
         if (squidProject.hasReportsFolder()) {
             File projectAuditFile = squidProject.getPrawnFileHandler().getReportsEngine().writeProjectAudit();
             SquidMessageDialog.showSavedAsDialog(projectAuditFile, primaryStageWindow);
@@ -1500,7 +1500,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void generateAllReportsAction(ActionEvent actionEvent) throws IOException, SquidException {
+    public void generateAllReportsAction() throws IOException, SquidException {
         if (squidProject.getTask().getRatioNames().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
                     primaryStageWindow);
@@ -1629,7 +1629,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialConcordiaAction(ActionEvent event) {
+    private void referenceMaterialConcordiaAction() {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.CONCORDIA;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1641,7 +1641,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialCalibrationConstAction(ActionEvent event) {
+    private void referenceMaterialCalibrationConstAction() {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.CALIBRATION_CONSTANT;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1653,7 +1653,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void referenceMaterialWMAction(ActionEvent event) {
+    private void referenceMaterialWMAction() {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_RM;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1665,7 +1665,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void unknownConcordiaAction(ActionEvent event) {
+    private void unknownConcordiaAction() {
         PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotsController.PlotTypes.CONCORDIA;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1677,7 +1677,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void weightedMeansAction(ActionEvent event) {
+    private void weightedMeansAction() {
         PlotsController.fractionTypeSelected = SpotTypes.UNKNOWN;
         PlotsController.plotTypeSelected = PlotTypes.WEIGHTED_MEAN_SAMPLE;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1689,7 +1689,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void plotAnyTwoExpressionsAction(ActionEvent event) {
+    private void plotAnyTwoExpressionsAction() {
         PlotsController.fractionTypeSelected = SpotTypes.REFERENCE_MATERIAL;
         PlotsController.plotTypeSelected = PlotTypes.ANY_TWO;
         PlotsController.currentlyPlottedSampleTreeNode = null;
@@ -1701,17 +1701,17 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void openParametersManagerPhysConst(ActionEvent event) {
+    private void openParametersManagerPhysConst() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.physConst);
     }
 
     @FXML
-    private void openParametersManagerRefMat(ActionEvent event) {
+    private void openParametersManagerRefMat() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
     }
 
     @FXML
-    private void openParametersManagerCommonPbModels(ActionEvent event) {
+    private void openParametersManagerCommonPbModels() {
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.commonPb);
     }
 
@@ -1720,7 +1720,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void importCustomExpressionsOnAction(ActionEvent actionEvent) throws SquidException {
+    public void importCustomExpressionsOnAction() throws SquidException {
         File folder = FileHandler.getCustomExpressionFolder(primaryStageWindow);
         if (folder != null && folder.exists()) {
             SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -1781,8 +1781,8 @@ public class SquidUIController implements Initializable {
                                                 okBtn.setDisable(squidProject.getTask().expressionExists(exp) || newValue.isEmpty());
                                             });
                                         }
-                                        dialog.setX(SquidUI.primaryStageWindow.getX() + (SquidUI.primaryStageWindow.getWidth() - 200) / 2);
-                                        dialog.setY(SquidUI.primaryStageWindow.getY() + (SquidUI.primaryStageWindow.getHeight() - 150) / 2);
+                                        dialog.setX(primaryStageWindow.getX() + (primaryStageWindow.getWidth() - 200) / 2);
+                                        dialog.setY(primaryStageWindow.getY() + (primaryStageWindow.getHeight() - 150) / 2);
                                         Optional<String> result = dialog.showAndWait();
                                         if (result.isPresent()) {
                                             exp.setName(result.get());
@@ -1835,7 +1835,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void exportCustomExpressionsOnAction(ActionEvent actionEvent) throws SquidException {
+    public void exportCustomExpressionsOnAction() throws SquidException {
         File folder = FileHandler.setCustomExpressionFolder(primaryStageWindow);
         if (folder != null) {
             folder.mkdirs();
@@ -1853,7 +1853,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void choosePrawnFileMenuItemAction(ActionEvent event) {
+    private void choosePrawnFileMenuItemAction() {
         try {
             File prawnXMLFileNew = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnXMLFileNew != null) {
@@ -1934,7 +1934,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void enjoySquidMenuItemAction(ActionEvent event) {
+    private void enjoySquidMenuItemAction() {
         List<String> enjoyImageRotationList = new ArrayList<>();
         enjoyImageRotationList.add("https://www.popsci.com/uploads/2019/06/24/E33YQCRIFLE3TWYBFO5J5ASLL4.png");
         enjoyImageRotationList.add("https://www.marinespecies.org/carms/photogallery.php?album=2003&pic=34970");
@@ -1944,7 +1944,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    public void reportLayoutManagerOnAction(ActionEvent actionEvent) throws SquidException {
+    public void reportLayoutManagerOnAction() throws SquidException {
         mainPane.getChildren().remove(squidReportSettingsUI);
         launchReportLayoutManager();
         showUI(squidReportSettingsUI);
@@ -1971,17 +1971,17 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void assignCommonLeadRatiosAction(ActionEvent event) throws SquidException {
+    private void assignCommonLeadRatiosAction() throws SquidException {
         launchCommonLeadAssignment();
     }
 
     @FXML
-    private void citeSquidAction(ActionEvent event) {
+    private void citeSquidAction() {
         BrowserControl.showURI("https://doi.org/10.11636/133870");
     }
 
     @FXML
-    private void openDemoSquiProjectAction(ActionEvent event) {
+    private void openDemoSquiProjectAction() {
         try {
             openProject(DEMO_SQUID_PROJECTS_FOLDER.getAbsolutePath() + File.separator + "SQUID3_demo_file.squid");
         } catch (IOException | SquidException ignored) {
@@ -1990,14 +1990,14 @@ public class SquidUIController implements Initializable {
 
     // Task actions ************************************************************
     @FXML
-    private void browseSquidTasksLibrary(ActionEvent event) throws SquidException {
+    private void browseSquidTasksLibrary() throws SquidException {
         TaskFolderBrowserController.tasksBrowserTarget = SQUID_TASK_LIBRARY_FOLDER;
         TaskFolderBrowserController.tasksBrowserType = ".xml";
         launchTaskFolderBrowser();
     }
 
     @FXML
-    private void browseTaskFolderTaskMenuItemAction(ActionEvent event) throws SquidException {
+    private void browseTaskFolderTaskMenuItemAction() throws SquidException {
         File tasksBrowserTarget = FileHandler.selectSquid3TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
@@ -2007,7 +2007,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void browseSquid25TaskFolderMenuItemAction(ActionEvent event) throws SquidException {
+    private void browseSquid25TaskFolderMenuItemAction() throws SquidException {
         File tasksBrowserTarget = FileHandler.selectSquid25TasksFolderForBrowsing(primaryStageWindow);
         if (tasksBrowserTarget != null) {
             TaskFolderBrowserController.tasksBrowserTarget = tasksBrowserTarget;
@@ -2017,37 +2017,37 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void viewTaskMenuItemAction(ActionEvent event) throws SquidException {
+    private void viewTaskMenuItemAction() throws SquidException {
         launchTaskViewer();
     }
 
     @FXML
-    private void editTaskMenuItemAction(ActionEvent event) throws SquidException {
+    private void editTaskMenuItemAction() throws SquidException {
         launchTaskEditor(EDIT_CURRENT);
     }
 
     @FXML
-    private void editEmptyTaskAction(ActionEvent event) throws SquidException {
+    private void editEmptyTaskAction() throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EMPTY);
     }
 
     @FXML
-    private void editCopyCurrentTaskAction(ActionEvent event) throws SquidException {
+    private void editCopyCurrentTaskAction() throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT);
     }
 
     @FXML
-    private void editCopyCurrentTaskNoExpAction(ActionEvent event) throws SquidException {
+    private void editCopyCurrentTaskNoExpAction() throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_COPY_CURRENT_NO_EXP);
     }
 
     @FXML
-    private void editExistingTaskMenuItemAction(ActionEvent event) throws SquidException {
+    private void editExistingTaskMenuItemAction() throws SquidException {
         launchTaskEditor(TaskEditTypeEnum.EDIT_EXISTING_TASK);
     }
 
     @FXML
-    private void videoTutorialsGoogleDriveMenuItemAction(ActionEvent event) {
+    private void videoTutorialsGoogleDriveMenuItemAction() {
         BrowserControl.showURI("https://drive.google.com/drive/folders/1PnGhJENKeN6lLJyruc8mGewiUp1DAeCX?usp=sharing");
     }
 

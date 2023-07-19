@@ -214,7 +214,7 @@
                                             <content>
                                                 <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                                     <children>
-                                                        <TableView fx:id="UUTable" layoutX="14.0" layoutY="22.0"
+                                                        <TableView fx:id="uuTable" layoutX="14.0" layoutY="22.0"
                                                                    prefHeight="170.0" prefWidth="200.0"
                                                                    AnchorPane.bottomAnchor="5.0"
                                                                    AnchorPane.leftAnchor="5.0"
@@ -224,14 +224,14 @@
                                                               spacing="15.0" AnchorPane.leftAnchor="10.0"
                                                               AnchorPane.topAnchor="0.0">
                                                             <children>
-                                                                <Button fx:id="UUNotationButton" maxHeight="30.0"
+                                                                <Button fx:id="uuNotationButton" maxHeight="30.0"
                                                                         minHeight="30.0" mnemonicParsing="false"
-                                                                        onAction="#UUNotationOnAction" prefHeight="30.0"
+                                                                        onAction="#uuNotationonaction" prefHeight="30.0"
                                                                         prefWidth="200" text="Use Standard Notation"/>
                                                                 <HBox alignment="CENTER_LEFT" spacing="5.0">
                                                                     <children>
                                                                         <Label text="SigFigs:"/>
-                                                                        <Spinner fx:id="UUSigFigSpinner"
+                                                                        <Spinner fx:id="uuSigFigSpinner"
                                                                                  prefWidth="80.0"/>
                                                                     </children>
                                                                 </HBox>

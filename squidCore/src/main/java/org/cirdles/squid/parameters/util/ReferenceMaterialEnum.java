@@ -46,9 +46,9 @@ public enum ReferenceMaterialEnum {
      *
      */
     r238_235s("r238_235s");
-    private String name;
+    private final String name;
 
-    private ReferenceMaterialEnum(String name) {
+    ReferenceMaterialEnum(String name) {
         this.name = name;
     }
 

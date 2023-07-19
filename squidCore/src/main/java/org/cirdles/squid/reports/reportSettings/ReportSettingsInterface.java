@@ -522,13 +522,10 @@ public interface ReportSettingsInterface extends Comparable<ReportSettingsInterf
             // write full text of footnote with variables replaced with values
 
             Map<String, String> reportTableFootnotes;
-            switch (retVal[1][0]) {
-                case "UPb":
-                    reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
-                    break;
-
-                default:
-                    reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
+            if (retVal[1][0].equals("UPb")) {
+                reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
+            } else {
+                reportTableFootnotes = ReportSpecificationsUPbSamples.reportTableFootnotes;
             }
 
             for (int i = 0;
