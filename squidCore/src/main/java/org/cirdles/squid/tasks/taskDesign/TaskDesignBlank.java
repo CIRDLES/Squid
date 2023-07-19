@@ -18,7 +18,6 @@ package org.cirdles.squid.tasks.taskDesign;
 import org.cirdles.squid.exceptions.SquidException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;

@@ -182,6 +182,7 @@ public interface ExpressionTreeInterface {
     boolean amHealthy();
 
     boolean isValid();
+
     public boolean isValueModel();
 
     boolean usesAnotherExpression(ExpressionTreeInterface exp);

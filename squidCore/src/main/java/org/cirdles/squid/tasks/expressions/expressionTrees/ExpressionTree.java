@@ -349,7 +349,7 @@ public class ExpressionTree
         return (operation != null);
     }
 
-    public boolean isValueModel(){
+    public boolean isValueModel() {
         return (operation instanceof ValueModel);
     }
 
