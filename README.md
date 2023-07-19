@@ -5,6 +5,7 @@ Squid3
 
 [![Build Status](https://app.travis-ci.com/CIRDLES/Squid.svg?branch=master)](https://app.travis-ci.com/CIRDLES/Squid)
 [![Known Vulnerabilities](https://snyk.io/test/github/CIRDLES/Squid/badge.svg)](https://snyk.io/test/github/CIRDLES/Squid)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6b3bbbc766bc440cbba565b9d4dbe579)](https://app.codacy.com/gh/CIRDLES/Squid/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 Please visit [wiki](https://github.com/CIRDLES/Squid/wiki).
 
