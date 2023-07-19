@@ -981,17 +981,6 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
     }
 
     /**
-     * @return the overcountCorrectionIsotope
-     */
-    @Override
-    public Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException {
-        if (overcountCorrectionIsotope == null) {
-            overcountCorrectionIsotope = Squid3Constants.IndexIsoptopesEnum.PB_204;
-        }
-        return overcountCorrectionIsotope;
-    }
-
-    /**
      * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
      */
     @Override

@@ -284,11 +284,6 @@ public interface ShrimpFractionExpressionInterface {
     CommonLeadSpecsForSpot getCommonLeadSpecsForSpot() throws SquidException;
 
     /**
-     * @return the overcountCorrectionIsotope
-     */
-    Squid3Constants.IndexIsoptopesEnum getOvercountCorrectionIsotope() throws SquidException;
-
-    /**
      * @param overcountCorrectionIsotope the overcountCorrectionIsotope to set
      */
     void setOvercountCorrectionIsotope(Squid3Constants.IndexIsoptopesEnum overcountCorrectionIsotope);

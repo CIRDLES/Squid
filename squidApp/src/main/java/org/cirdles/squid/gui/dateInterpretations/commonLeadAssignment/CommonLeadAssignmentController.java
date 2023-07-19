@@ -73,6 +73,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
     private static boolean suppressChangeAction = false;
     private final TreeView<CommonLeadSampleTreeInterface> spotsTreeViewCommonLeadTools = new TreeView<>();
+    public Label customSWAPLabel;
+    public RadioButton customSWAPRB;
     @FXML
     private RadioButton correctionNoneRB;
     @FXML
@@ -161,6 +163,8 @@ public class CommonLeadAssignmentController implements Initializable {
 
         showUnknownsWithOvercountCorrections();
 
+        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
+        customSWAPRB.setDisable((customExpression == null) || !customExpression.isValueModel());
         switch (squidProject.getTask().getOvercountCorrectionType()) {
             case NONE:
                 correctionNoneRB.setSelected(true);
@@ -170,6 +174,9 @@ public class CommonLeadAssignmentController implements Initializable {
                 break;
             case FR_208:
                 correction208RB.setSelected(true);
+                break;
+            case FR_Custom:
+                customSWAPRB.setSelected(true);
         }
 
         setUpHeader();
@@ -205,7 +212,7 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter);
+        biweight207Label.setText("biWgt 204 ovrCnts:  " + formatter);
 
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
@@ -216,7 +223,9 @@ public class CommonLeadAssignmentController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter);
+        biweight208Label.setText("biWgt 204 ovrCnts:  " + formatter);
+
+        customSWAPLabel.setText("SWAPCustomCorrection204");
 
         viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
@@ -240,6 +249,12 @@ public class CommonLeadAssignmentController implements Initializable {
     @FXML
     private void correction208Action() throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
+        init();
+    }
+
+    @FXML
+    private void customCorrectionAction() throws SquidException {
+        OvercountCorrection.correctionCustom(squidProject.getTask());
         init();
     }
 

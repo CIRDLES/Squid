@@ -229,7 +229,8 @@ public final class Squid3Constants {
     public enum IndexIsoptopesEnum {
         PB_204("PB_204", "204"),
         PB_207("PB_207", "207"),
-        PB_208("PB_208", "208");
+        PB_208("PB_208", "208"),
+        CUSTOM("CUSTOM", "CUSTOM");
 
         private final String name;
         private final String isotope;
@@ -371,7 +372,8 @@ public final class Squid3Constants {
     public enum OvercountCorrectionTypes {
         NONE,
         FR_207,
-        FR_208
+        FR_208,
+        FR_Custom
     }
 
     public enum TaskEditTypeEnum {
