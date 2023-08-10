@@ -662,7 +662,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
             taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
-            if (!namedExpressionsMap.containsKey("SWAPCustomCorrection204")){
+            if (!namedExpressionsMap.containsKey("SWAPCustomCorrection204")) {
                 Expression customExp = buildCountCorrectionCustomExpression();
                 namedExpressionsMap.put("SWAPCustomCorrection204", customExp.getExpressionTree());
                 taskExpressionsOrdered.add(customExp);

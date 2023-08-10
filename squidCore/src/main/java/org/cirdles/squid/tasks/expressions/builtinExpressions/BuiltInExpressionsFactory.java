@@ -723,6 +723,7 @@ public abstract class BuiltInExpressionsFactory {
 
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom207());
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom208());
+        overCountExpressionsOrdered.add(buildCountCorrectionCustomExpression());
 
         return overCountExpressionsOrdered;
     }

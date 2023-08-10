@@ -31,11 +31,10 @@ public class SquidSpeciesModel implements
         XMLSerializerInterface {
 
     private static final long serialVersionUID = 3001823455775925098L;
-
+    private final String prawnFileIsotopeName;
     private int massStationIndex;
     private String massStationSpeciesName;
     private String isotopeName;
-    private final String prawnFileIsotopeName;
     private String elementName;
     private boolean isBackground;
     private String uThBearingName;

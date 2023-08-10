@@ -417,6 +417,7 @@ public interface TaskInterface {
         // special temporary case Sep 2019
         customExpressions.remove(buildCountCorrectionExpressionFrom207());
         customExpressions.remove(buildCountCorrectionExpressionFrom208());
+        customExpressions.remove(buildCountCorrectionCustomExpression());
 
         getTaskExpressionsOrdered().clear();
 
