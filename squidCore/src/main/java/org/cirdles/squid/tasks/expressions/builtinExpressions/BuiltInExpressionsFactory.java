@@ -37,8 +37,7 @@ import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
 import static org.cirdles.squid.parameters.util.Lambdas.*;
 import static org.cirdles.squid.parameters.util.RadDates.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.*;
 import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import static org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode.buildTaskMetaDataNode;
 
@@ -724,6 +723,7 @@ public abstract class BuiltInExpressionsFactory {
 
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom207());
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom208());
+        overCountExpressionsOrdered.add(buildCountCorrectionCustomExpression());
 
         return overCountExpressionsOrdered;
     }

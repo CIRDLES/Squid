@@ -110,7 +110,7 @@ public class BuiltinExpressionsCountCorrection204 {
                 "SWAPCustomCorrection204",
                 "ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)", false, true, false);
 
-        countCorrectionCustom.getExpressionTree().setSquidSpecialUPbThExpression(false);
+        countCorrectionCustom.getExpressionTree().setSquidSpecialUPbThExpression(true);
         countCorrectionCustom.setNotes(
                 "Edit this expression to calculate a custom corrected value "
                         + "for 204/206 as per Squid2.5 'column swapping' and invoke it from the Common Pb menu "

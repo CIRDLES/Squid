@@ -1000,6 +1000,9 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
             case PB_208:
                 retVal.append("Corrected from 208");
                 break;
+            case CUSTOM:
+                retVal.append("SWAPCustomCorrection204");
+                break;
         }
         return retVal.toString();
     }
