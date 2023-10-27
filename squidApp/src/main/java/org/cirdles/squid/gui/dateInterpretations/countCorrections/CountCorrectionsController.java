@@ -109,6 +109,11 @@ public class CountCorrectionsController implements Initializable {
                 break;
             case FR_Custom:
                 customSWAPRB.setSelected(true);
+                try {
+                    OvercountCorrection.correctionCustom(squidProject.getTask());
+                } catch (SquidException e) {
+//                    throw new RuntimeException(e);
+                }
         }
 
         setUpHeader();

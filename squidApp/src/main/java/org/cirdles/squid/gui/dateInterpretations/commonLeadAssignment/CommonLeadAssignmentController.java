@@ -161,7 +161,7 @@ public class CommonLeadAssignmentController implements Initializable {
             mapOfWeightedMeansBySampleNames.put(entry.getKey(), spotSummaryDetails);
         }
 
-        showUnknownsWithOvercountCorrections();
+//        showUnknownsWithOvercountCorrections();
 
         ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
         customSWAPRB.setDisable((customExpression == null) || !customExpression.isValueModel());
@@ -177,7 +177,10 @@ public class CommonLeadAssignmentController implements Initializable {
                 break;
             case FR_Custom:
                 customSWAPRB.setSelected(true);
+                OvercountCorrection.correctionCustom(squidProject.getTask());
         }
+
+        showUnknownsWithOvercountCorrections();
 
         setUpHeader();
         setUpFooter();
