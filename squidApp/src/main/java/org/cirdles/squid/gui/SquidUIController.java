@@ -1549,6 +1549,7 @@ public class SquidUIController implements Initializable {
         } else if (!((ReferenceMaterialModel) squidProject.getTask().getReferenceMaterialModel()).hasAtLeastOneNonZeroApparentDate()) {
             showManageRefMatModelWarning();
         } else {
+
             try {
                 countCorrectionsUI = FXMLLoader.load(getClass().getResource("dateInterpretations/countCorrections/CountCorrections.fxml"));
                 countCorrectionsUI.setId("Count Corrections");
