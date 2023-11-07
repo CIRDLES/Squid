@@ -20,6 +20,6 @@ package org.cirdles.squid.tasks.expressions.expressionTrees;
  */
 public interface BuiltInExpressionInterface {
 
-    public void buildExpression();
+    void buildExpression();
 
 }

@@ -11,7 +11,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -96,11 +95,11 @@ public class ParametersManagerGUIController implements Initializable {
     @FXML
     public RadioButton physConstDataMARadioButton;
     @FXML
-    public TableView<RefMatDataModel> UUTable;
+    public TableView<RefMatDataModel> uuTable;
     @FXML
-    public Button UUNotationButton;
+    public Button uuNotationButton;
     @FXML
-    public Spinner<Integer> UUSigFigSpinner;
+    public Spinner<Integer> uuSigFigSpinner;
     @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
@@ -285,7 +284,7 @@ public class ParametersManagerGUIController implements Initializable {
     private DecimalFormat physConstCorrNotation;
     private DecimalFormat physConstCovNotation;
     private DecimalFormat refMatDataNotation;
-    private DecimalFormat UUNotation;
+    private DecimalFormat uuNotation;
     private DecimalFormat refMatConcentrationsNotation;
     private DecimalFormat refMatCorrNotation;
     private DecimalFormat refMatCovNotation;
@@ -411,7 +410,7 @@ public class ParametersManagerGUIController implements Initializable {
         physConstCovNotation = scientificNotation;
 
         refMatDataNotation = scientificNotation;
-        UUNotation = scientificNotation;
+        uuNotation = scientificNotation;
         refMatConcentrationsNotation = scientificNotation;
         refMatCorrNotation = scientificNotation;
         refMatCovNotation = scientificNotation;
@@ -516,7 +515,7 @@ public class ParametersManagerGUIController implements Initializable {
         ValueModel[] models = refMatModel.getValues();
         if (models != null) {
             for (int i = 0; !hasNonZero && i < models.length; i++) {
-                hasNonZero = !(models[i].getValue().doubleValue() == 0.0);
+                hasNonZero = (models[i].getValue().doubleValue() != 0.0);
             }
         }
         refMatReferenceDatesCheckbox.setVisible(!hasNonZero);
@@ -800,8 +799,8 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     private void setUpUUData() {
-        UUTable.getColumns().setAll(getRefMatDataModelColumns(UUTable, UUNotation, UUSigFigSpinner));
-        int precision = UUSigFigSpinner.getValue();
+        uuTable.getColumns().setAll(getRefMatDataModelColumns(uuTable, uuNotation, uuSigFigSpinner));
+        int precision = uuSigFigSpinner.getValue();
         final ObservableList<RefMatDataModel> obList = FXCollections.observableArrayList();
         ValueModel valMod = refMatModel.getValues()[4];
         boolean isMeasured = ((ReferenceMaterialModel) refMatModel).getDataMeasured()[4];
@@ -811,8 +810,8 @@ public class ParametersManagerGUIController implements Initializable {
         RefMatDataModel mod = new RefMatDataModel(getRatioVisibleName(valMod.getName()), value,
                 oneSigmaABS, oneSigmaPCT, isMeasured);
         obList.add(mod);
-        UUTable.setItems(obList);
-        UUTable.refresh();
+        uuTable.setItems(obList);
+        uuTable.refresh();
     }
 
     private void setUpConcentrations() {
@@ -1255,7 +1254,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstImpXMLAction(ActionEvent event) {
+    private void physConstImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
@@ -1398,7 +1397,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstExpXMLAction(ActionEvent event) {
+    private void physConstExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSavePhysicalConstantsXMLFile(physConstModel, squidLabDataWindow);
@@ -1413,7 +1412,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatExpXMLAction(ActionEvent event) {
+    private void refMatExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSaveReferenceMaterialXMLFile(refMatModel, squidLabDataWindow);
@@ -1428,7 +1427,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatImpXMLAction(ActionEvent event) {
+    private void refMatImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
@@ -1571,7 +1570,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void importETReduxPhysicalConstantsModel(ActionEvent event) {
+    private void importETReduxPhysicalConstantsModel() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectPhysicalConstantsXMLFile(squidLabDataWindow);
@@ -1714,7 +1713,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void importETReduxReferenceMaterial(ActionEvent event) {
+    private void importETReduxReferenceMaterial() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectReferenceMaterialXMLFile(squidLabDataWindow);
@@ -1909,10 +1908,10 @@ public class ParametersManagerGUIController implements Initializable {
             }
         }
 
-        UUTable.setEditable(isEditable);
-        UUTable.getColumns().get(0).setEditable(false);
-        ObservableList<RefMatDataModel> UUData = UUTable.getItems();
-        for (RefMatDataModel mod : UUData) {
+        uuTable.setEditable(isEditable);
+        uuTable.getColumns().get(0).setEditable(false);
+        ObservableList<RefMatDataModel> uuData = uuTable.getItems();
+        for (RefMatDataModel mod : uuData) {
             if (isEditable) {
                 mod.getIsMeasured().setDisable(false);
             } else {
@@ -1985,7 +1984,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void physConstRemoveCurrMod() throws SquidException {
         physConstModels.remove(physConstModel);
         physConstModels.sort(new ParametersModelComparator());
         setUpPhysConstCBItems();
@@ -1996,7 +1995,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditCurrMod(ActionEvent event) {
+    private void physConstEditCurrMod() {
         physConstHolder = physConstModel.clone();
         physConstEditable(true);
         setUpPhysConstMenuItems(true, physConstModel.isEditable());
@@ -2005,7 +2004,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditCopy(ActionEvent event) {
+    private void physConstEditCopy() {
         physConstModel = physConstModel.clone();
         physConstModel.setModelName(physConstModel.getModelName() + " - copy");
         physConstModel.setIsEditable(true);
@@ -2016,7 +2015,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstEditEmptyMod(ActionEvent event) {
+    private void physConstEditEmptyMod() {
         physConstModel = new PhysicalConstantsModel();
         setUpPhysConst();
         physConstEditable(true);
@@ -2025,7 +2024,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCancelEdit(ActionEvent event) {
+    private void physConstCancelEdit() {
         if (isEditingCurrPhysConst) {
             isEditingCurrPhysConst = false;
             physConstModel = physConstHolder;
@@ -2039,7 +2038,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void physConstSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = physConstModelName.getText();
         String version = physConstVersion.getText();
@@ -2092,7 +2091,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void refMatSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = refMatModelName.getText();
         String version = refMatVersion.getText();
@@ -2109,7 +2108,7 @@ public class ParametersManagerGUIController implements Initializable {
             refMatModel.setDateCertified(refMatDateCertified.getText());
 
             ObservableList<RefMatDataModel> dataModels = refMatDataTable.getItems();
-            dataModels.addAll(UUTable.getItems());
+            dataModels.addAll(uuTable.getItems());
             boolean[] isMeasures = new boolean[dataModels.size()];
             for (int i = 0; i < isMeasures.length; i++) {
                 RefMatDataModel mod = dataModels.get(i);
@@ -2141,7 +2140,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void refMatRemoveCurrMod() throws SquidException {
         refMatModels.remove(refMatModel);
         refMatModels.sort(new ParametersModelComparator());
         setUpRefMatCBItems();
@@ -2152,7 +2151,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCancelEdit(ActionEvent event) {
+    private void refMatCancelEdit() {
         if (isEditingCurrRefMat) {
             isEditingCurrRefMat = false;
             refMatModel = refMatHolder;
@@ -2166,7 +2165,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMateEditEmptyMod(ActionEvent event) {
+    private void refMateEditEmptyMod() {
         refMatModel = new ReferenceMaterialModel();
         ((ReferenceMaterialModel) refMatModel).generateBaseDates();
         refMatReferenceDatesCheckbox.setSelected(false);
@@ -2177,7 +2176,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatEditCopy(ActionEvent event) {
+    private void refMatEditCopy() {
         refMatModel = refMatModel.clone();
         refMatModel.setModelName(refMatModel.getModelName() + " - copy");
         refMatModel.setIsEditable(true);
@@ -2188,7 +2187,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatEditCurrMod(ActionEvent event) {
+    private void refMatEditCurrMod() {
         refMatHolder = refMatModel.clone();
         refMatEditable(true);
         setUpRefMatMenuItems(true, true);
@@ -2197,7 +2196,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstDataNotationOnAction(ActionEvent event) {
+    private void physConstDataNotationOnAction() {
         if (physConstDataNotation.equals(scientificNotation)) {
             physConstDataNotation = standardNotation;
             physConstDataNotationButton.setText("Use Scientific Notation");
@@ -2229,7 +2228,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatDataNotationOnAction(ActionEvent event) {
+    private void refMatDataNotationOnAction() {
         if (refMatDataNotation.equals(scientificNotation)) {
             refMatDataNotation = standardNotation;
             refMatDataNotationButton.setText("Use Scientific Notation");
@@ -2258,36 +2257,36 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void UUNotationOnAction(ActionEvent actionEvent) {
-        if (UUNotation.equals(scientificNotation)) {
-            UUNotation = standardNotation;
-            UUNotationButton.setText("Use Scientific Notation");
+    public void uuNotationonaction() {
+        if (uuNotation.equals(scientificNotation)) {
+            uuNotation = standardNotation;
+            uuNotationButton.setText("Use Scientific Notation");
         } else {
-            UUNotation = scientificNotation;
-            UUNotationButton.setText("Use Standard Notation");
+            uuNotation = scientificNotation;
+            uuNotationButton.setText("Use Standard Notation");
         }
-        ObservableList<RefMatDataModel> models = UUTable.getItems();
-        int precision = UUSigFigSpinner.getValue();
+        ObservableList<RefMatDataModel> models = uuTable.getItems();
+        int precision = uuSigFigSpinner.getValue();
         for (int i = 0; i < models.size(); i++) {
             DataModel mod = models.get(i);
             BigDecimal bigDec;
 
             bigDec = new BigDecimal(mod.getValue());
-            mod.setValue(UUNotation.format(round(bigDec, precision)));
+            mod.setValue(uuNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaABS());
-            mod.setOneSigmaABS(UUNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaABS(uuNotation.format(round(bigDec, precision)));
 
             bigDec = new BigDecimal(mod.getOneSigmaPCT());
-            mod.setOneSigmaPCT(UUNotation.format(round(bigDec, precision)));
+            mod.setOneSigmaPCT(uuNotation.format(round(bigDec, precision)));
         }
-        UUTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, UUNotation, UUSigFigSpinner));
+        uuTable.getColumns().setAll(getRefMatDataModelColumns(refMatDataTable, uuNotation, uuSigFigSpinner));
 
-        UUTable.refresh();
+        uuTable.refresh();
     }
 
     @FXML
-    private void refMatConcentrationsNotationOnAction(ActionEvent event) {
+    private void refMatConcentrationsNotationOnAction() {
         if (refMatConcentrationsNotation.equals(scientificNotation)) {
             refMatConcentrationsNotation = standardNotation;
             refMatConcentrationsNotationButton.setText("Use Scientific Notation");
@@ -2317,7 +2316,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCorrNotationOnAction(ActionEvent event) {
+    private void physConstCorrNotationOnAction() {
         if (physConstCorrNotation.equals(scientificNotation)) {
             physConstCorrNotation = standardNotation;
             physConstCorrNotationButton.setText("Use Scientific Notation");
@@ -2329,7 +2328,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void physConstCovNotationOnAction(ActionEvent event) {
+    private void physConstCovNotationOnAction() {
         if (physConstCovNotation.equals(scientificNotation)) {
             physConstCovNotation = standardNotation;
             physConstCovNotationButton.setText("Use Scientific Notation");
@@ -2341,7 +2340,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCorrNotationOnAction(ActionEvent event) {
+    private void refMatCorrNotationOnAction() {
         if (refMatCorrNotation.equals(scientificNotation)) {
             refMatCorrNotation = standardNotation;
             refMatCorrNotationButton.setText("Use Scientific Notation");
@@ -2353,7 +2352,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void refMatCovNotationOnAction(ActionEvent event) {
+    private void refMatCovNotationOnAction() {
         if (refMatCovNotation.equals(scientificNotation)) {
             refMatCovNotation = standardNotation;
             refMatCovNotationButton.setText("Use Scientific Notation");
@@ -2373,8 +2372,8 @@ public class ParametersManagerGUIController implements Initializable {
         );
 
         valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 20, 6);
-        UUSigFigSpinner.setValueFactory(valueFactory);
-        UUSigFigSpinner.valueProperty().addListener(value
+        uuSigFigSpinner.setValueFactory(valueFactory);
+        uuSigFigSpinner.valueProperty().addListener(value
                 -> setUpUUData()
         );
 
@@ -2478,7 +2477,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbImpXMLAction(ActionEvent event) {
+    private void commonPbImpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSelectCommonPbModelXMLFile(squidLabDataWindow);
@@ -2625,7 +2624,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbExpXMLAction(ActionEvent event) {
+    private void commonPbExpXMLAction() {
         File file = null;
         try {
             file = FileHandler.parametersManagerSaveCommonPbModelXMLFile(commonPbModel, squidLabDataWindow);
@@ -2640,7 +2639,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbSaveAndRegisterEdit(ActionEvent event) throws SquidException {
+    private void commonPbSaveAndRegisterEdit() throws SquidException {
         boolean hasModelWithSameNameAndVersion = false;
         String name = commonPbModelName.getText();
         String version = commonPbVersion.getText();
@@ -2679,7 +2678,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCancelEdit(ActionEvent event) {
+    private void commonPbCancelEdit() {
         if (isEditingCurrCommonPbModel) {
             isEditingCurrCommonPbModel = false;
             commonPbModel = commonPbModelHolder;
@@ -2693,7 +2692,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbRemoveCurrMod(ActionEvent event) throws SquidException {
+    private void commonPbRemoveCurrMod() throws SquidException {
         commonPbModels.remove(commonPbModel);
         commonPbModels.sort(new ParametersModelComparator());
         setUpCommonPbCBItems();
@@ -2704,7 +2703,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditCurrMod(ActionEvent event) {
+    private void commonPbEditCurrMod() {
         isEditingCommonPb = true;
         commonPbModelHolder = commonPbModel.clone();
         commonPbModelEditable(true);
@@ -2713,7 +2712,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditCopy(ActionEvent event) {
+    private void commonPbEditCopy() {
         isEditingCommonPb = true;
         commonPbModel = commonPbModel.clone();
         commonPbModel.setIsEditable(true);
@@ -2724,7 +2723,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbEditEmptyMod(ActionEvent event) {
+    private void commonPbEditEmptyMod() {
         isEditingCommonPb = true;
         commonPbModel = new CommonPbModel();
         setUpCommonPb();
@@ -2733,7 +2732,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbDataNotationOnAction(ActionEvent event) {
+    private void commonPbDataNotationOnAction() {
         if (commonPbDataNotation.equals(scientificNotation)) {
             commonPbDataNotation = standardNotation;
             commonPbDataNotationButton.setText("Use Scientific Notation");
@@ -2762,7 +2761,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCorrNotationOnAction(ActionEvent event) {
+    private void commonPbCorrNotationOnAction() {
         if (commonPbCorrNotation.equals(scientificNotation)) {
             commonPbCorrNotation = standardNotation;
             commonPbCorrNotationButton.setText("Use Scientific Notation");
@@ -2775,7 +2774,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    private void commonPbCovNotationOnAction(ActionEvent event) {
+    private void commonPbCovNotationOnAction() {
         if (commonPbCovNotation.equals(scientificNotation)) {
             commonPbCovNotation = standardNotation;
             commonPbCovNotationButton.setText("Use Scientific Notation");
@@ -2796,7 +2795,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refMatReferenceDatesCheckBoxOnAction(ActionEvent actionEvent) {
+    public void refMatReferenceDatesCheckBoxOnAction() {
         ((ReferenceMaterialModel) refMatModel).setReferenceDates(refMatReferenceDatesCheckbox.isSelected());
         setUpRefMatDatesSelection();
     }
@@ -2834,7 +2833,7 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refDatesNotationAction(ActionEvent actionEvent) {
+    public void refDatesNotationAction() {
         if (refDatesNotation.equals(standardNotation)) {
             refDatesNotationButton.setText("Use Standard Notation");
             refDatesNotation = scientificNotation;
@@ -2861,53 +2860,53 @@ public class ParametersManagerGUIController implements Initializable {
     }
 
     @FXML
-    public void refDatesKARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesKARadioButtonOnAction() {
         refDatesUnits = Units.ka;
         setUpRefDates();
     }
 
     @FXML
-    public void refDatesMARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesMARadioButtonOnAction() {
         refDatesUnits = Units.ma;
         setUpRefDates();
     }
 
     @FXML
-    public void refDatesARadioButtonOnAction(ActionEvent actionEvent) {
+    public void refDatesARadioButtonOnAction() {
         refDatesUnits = Units.a;
         setUpRefDates();
     }
 
     @FXML
-    public void physConstDataARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataARadioButtonOnAction() {
         physConstDataUnits = Units.a;
         setUpPhysConstData();
     }
 
     @FXML
-    public void physConstDataKARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataKARadioButtonOnAction() {
         physConstDataUnits = Units.ka;
         setUpPhysConstData();
     }
 
     @FXML
-    public void physConstDataMARadioButtonOnAction(ActionEvent actionEvent) {
+    public void physConstDataMARadioButtonOnAction() {
         physConstDataUnits = Units.ma;
         setUpPhysConstData();
     }
 
     @FXML
-    private void refMatExportAllAction(ActionEvent event) throws SquidException {
+    private void refMatExportAllAction() throws SquidException {
         exportAllRefMatFiles(refMatModels);
     }
 
     @FXML
-    private void commonPbExportAllAction(ActionEvent event) throws SquidException {
+    private void commonPbExportAllAction() throws SquidException {
         exportAllRefMatFiles(commonPbModels);
     }
 
     @FXML
-    private void phyConstExportAllAction(ActionEvent event) throws SquidException {
+    private void phyConstExportAllAction() throws SquidException {
         exportAllRefMatFiles(physConstModels);
     }
 

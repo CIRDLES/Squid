@@ -42,7 +42,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
     /**
      * @param analystName the analystName to set
      */
-    public void setAnalystName(String analystName);
+    void setAnalystName(String analystName);
 
     /**
      * @return the commonPbModel
@@ -105,13 +105,13 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     List<PrawnFile.Run> getPrawnFileRuns();
 
-    public void removeSpotsFromDataFile(List<String> spotNames) throws SquidException;
+    void removeSpotsFromDataFile(List<String> spotNames) throws SquidException;
 
-    public List<String> retrieveRemovedSpotsByName();
+    List<String> retrieveRemovedSpotsByName();
 
-    public void restoreSpotToDataFile(String spotName) throws SquidException;
+    void restoreSpotToDataFile(String spotName) throws SquidException;
 
-    public void restoreAllRunsToPrawnFile() throws SquidException;
+    void restoreAllRunsToPrawnFile() throws SquidException;
 
     String getPrawnFileShrimpSoftwareVersionName();
 
@@ -119,7 +119,7 @@ public interface Squid3ProjectBasicAPI extends Serializable {
 
     String getPrawnSourceFilePath();
 
-    public boolean setupPrawnOPFile(File opFileNew)
+    boolean setupPrawnOPFile(File opFileNew)
             throws IOException, SquidException;
 
     /**

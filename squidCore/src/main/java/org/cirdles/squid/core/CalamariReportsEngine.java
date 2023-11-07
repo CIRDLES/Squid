@@ -279,14 +279,14 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
             dataLine.append(shrimpFraction.getDateTime()).append(", ");
-            dataLine.append(String.valueOf(scanNum + 1)).append(", ");
+            dataLine.append(scanNum + 1).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
-            dataLine.append(String.valueOf(shrimpFraction.getDeadTimeNanoseconds()));
+            dataLine.append(shrimpFraction.getDeadTimeNanoseconds());
 
             double[] countTimeSec = shrimpFraction.getCountTimeSec();
             for (int i = 0; i < rawPeakData[scanNum].length; i++) {
                 if ((i % countOfPeaks) == 0) {
-                    dataLine.append(", ").append(String.valueOf(countTimeSec[i / countOfPeaks]));
+                    dataLine.append(", ").append(countTimeSec[i / countOfPeaks]);
                 }
                 dataLine.append(", ").append(rawPeakData[scanNum][i]);
             }
@@ -329,13 +329,13 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
             dataLine.append(shrimpFraction.getDateTime()).append(", ");
-            dataLine.append(String.valueOf(scanNum + 1)).append(", ");
+            dataLine.append(scanNum + 1).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown").append(", ");
-            dataLine.append(String.valueOf(shrimpFraction.getSbmZeroCps()));
+            dataLine.append(shrimpFraction.getSbmZeroCps());
 
             for (int i = 0; i < rawSBMData[scanNum].length; i++) {
                 if ((i % countOfPeaks) == 0) {
-                    dataLine.append(", ").append(String.valueOf(countTimeSec[i / countOfPeaks]));
+                    dataLine.append(", ").append(countTimeSec[i / countOfPeaks]);
                 }
                 dataLine.append(", ").append(rawSBMData[scanNum][i]);
             }
@@ -391,7 +391,7 @@ public class CalamariReportsEngine implements Serializable {
             StringBuilder dataLine = new StringBuilder();
             dataLine.append(shrimpFraction.getFractionID()).append(", ");
             dataLine.append(shrimpFraction.getDateTime()).append(", ");
-            dataLine.append(String.valueOf(scanNum + 1)).append(", ");
+            dataLine.append(scanNum + 1).append(", ");
             dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
 
             for (int i = 0; i < timeStampSec[scanNum].length; i++) {
@@ -474,14 +474,14 @@ public class CalamariReportsEngine implements Serializable {
             if (doWriteReportFiles) {
                 dataLine.append(shrimpFraction.getFractionID()).append(", ");
                 dataLine.append(shrimpFraction.getDateTime()).append(", ");
-                dataLine.append(String.valueOf(nDodNum + 1)).append(", ");
+                dataLine.append(nDodNum + 1).append(", ");
                 dataLine.append(shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown");
             } else {
                 // format for GUI
                 dataLine
                         .append(String.format("%1$-" + 20 + "s", shrimpFraction.getFractionID()))
                         .append(String.format("%1$-" + 20 + "s", shrimpFraction.getDateTime()))
-                        .append(String.format("%1$-" + 10 + "s", String.valueOf(nDodNum + 1)))
+                        .append(String.format("%1$-" + 10 + "s", nDodNum + 1))
                         .append(String.format("%1$-" + 15 + "s", shrimpFraction.isReferenceMaterial() ? "ref mat" : "unknown"));
             }
 
@@ -517,7 +517,7 @@ public class CalamariReportsEngine implements Serializable {
                 for (TaskExpressionEvaluatedPerSpotPerScanModelInterface taskExpressionEval : taskExpressionsEvaluated) {
                     if (doWriteReportFiles) {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
-                            dataLine.append(", ").append(String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum]));
+                            dataLine.append(", ").append(taskExpressionEval.getRatEqTime()[nDodNum]);
                             dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15));
                             dataLine.append(", ").append(squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15));
                         } else {
@@ -527,7 +527,7 @@ public class CalamariReportsEngine implements Serializable {
                         }
                     } else {
                         if (nDodNum < taskExpressionEval.getRatEqTime().length) {
-                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", String.valueOf(taskExpressionEval.getRatEqTime()[nDodNum])));
+                            dataLine.append(", ").append(String.format("%1$-" + 20 + "s", taskExpressionEval.getRatEqTime()[nDodNum]));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqVal()[nDodNum], 15)));
                             dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(taskExpressionEval.getRatEqErr()[nDodNum], 15)));
                         } else {
@@ -583,11 +583,11 @@ public class CalamariReportsEngine implements Serializable {
             if (isotopeRatioModel.isActive()) {
                 // April 2017 rounding was performed on calculated numbers
                 if (doWriteReportFiles) {
-                    dataLine.append(", ").append(String.valueOf(isotopeRatioModel.getMinIndex()));
+                    dataLine.append(", ").append(isotopeRatioModel.getMinIndex());
                     dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12));
                     dataLine.append(", ").append(squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12));
                 } else {
-                    dataLine.append(", ").append(String.format("%1$-" + 12 + "s", String.valueOf(isotopeRatioModel.getMinIndex())));
+                    dataLine.append(", ").append(String.format("%1$-" + 12 + "s", isotopeRatioModel.getMinIndex()));
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioVal(), 12)));
                     dataLine.append(", ").append(String.format("%1$-" + 20 + "s", squid3RoundedToSize(isotopeRatioModel.getRatioFractErrUsedAsOneSigmaPercent(), 12)));
                 }
@@ -640,7 +640,7 @@ public class CalamariReportsEngine implements Serializable {
         for (String nameOfSpecies : namesOfSpecies) {
             header.append(", ").append(nameOfSpecies).append(".count_time_sec");
             for (int i = 0; i < countOfIntegrations; i++) {
-                header.append(", ").append(nameOfSpecies).append(".").append(String.valueOf(i + 1));
+                header.append(", ").append(nameOfSpecies).append(".").append(i + 1);
             }
         }
         header.append("\n");
@@ -659,7 +659,7 @@ public class CalamariReportsEngine implements Serializable {
         for (String nameOfSpecies : namesOfSpecies) {
             header.append(", ").append(nameOfSpecies).append(".count_time_sec");
             for (int i = 0; i < countOfIntegrations; i++) {
-                header.append(", ").append(nameOfSpecies).append(".SBM.").append(String.valueOf(i + 1));
+                header.append(", ").append(nameOfSpecies).append(".SBM.").append(i + 1);
             }
         }
         header.append("\n");
@@ -754,7 +754,7 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         refMatHeaderWithinSpotRatios_PerScanMinus1.append(unknownHeaderWithinSpotRatios_PerScanMinus1.toString());
-        refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(unknownHeaderWithinSpotRatios_PerScanMinus1_2.toString());
+        refMatHeaderWithinSpotRatios_PerScanMinus1_2.append(unknownHeaderWithinSpotRatios_PerScanMinus1_2);
 
         if (doWriteReportFiles) {
             unknownHeaderWithinSpotRatios_PerScanMinus1.append("\n");
@@ -851,7 +851,7 @@ public class CalamariReportsEngine implements Serializable {
             }
         }
         refMatHeaderMeanRatios_PerSpot.append(unknownHeaderMeanRatios_PerSpot.toString());
-        refMatHeaderMeanRatios_PerSpot_2.append(unknownHeaderMeanRatios_PerSpot_2.toString());
+        refMatHeaderMeanRatios_PerSpot_2.append(unknownHeaderMeanRatios_PerSpot_2);
 
         if (doWriteReportFiles) {
             unknownHeaderMeanRatios_PerSpot.append("\n");

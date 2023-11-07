@@ -19,7 +19,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -543,14 +542,14 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void setFilteredSpotsToRefMatAction(ActionEvent event) throws SquidException {
+    private void setFilteredSpotsToRefMatAction() throws SquidException {
         squidProject.updateFilterForRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateReferenceMaterialsList(true);
     }
 
     @FXML
-    private void setFilteredSpotsToConcRefMatAction(ActionEvent event) {
+    private void setFilteredSpotsToConcRefMatAction() {
         squidProject.updateFilterForConcRefMatSpotNames(
                 filterSpotNameText.getText().toUpperCase(Locale.ENGLISH).trim());
         updateConcReferenceMaterialsList(true);
@@ -634,7 +633,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void saveSpotNameAction(ActionEvent event) {
+    private void saveSpotNameAction() {
         if (saveSpotNameButton.getUserData() != null) {
             ((PrawnFile.Run) saveSpotNameButton.getUserData()).getPar().get(0).setValue(selectedSpotNameText.getText().trim());
             squidProject.processPrawnSessionForDuplicateSpotNames();
@@ -652,7 +651,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void viewRMmodelButton(ActionEvent event) {
+    private void viewRMmodelButton() {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
@@ -660,7 +659,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void viewCMmodelButton(ActionEvent event) {
+    private void viewCMmodelButton() {
         ParametersManagerGUIController.selectedReferenceMaterialModel = squidProject.getConcentrationReferenceMaterialModel();
         parametersLauncher.launchParametersManager(ParametersLauncher.ParametersTab.refMat);
         refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));
@@ -668,7 +667,7 @@ public class SpotManagerController implements Initializable {
     }
 
     @FXML
-    private void refreshRMmodelButton(ActionEvent event) {
+    private void refreshRMmodelButton() {
         try {
             squidProject.getTask().refreshParametersFromModels(false, false, true);
             refMatModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getReferenceMaterialsWithNonZeroDate()));

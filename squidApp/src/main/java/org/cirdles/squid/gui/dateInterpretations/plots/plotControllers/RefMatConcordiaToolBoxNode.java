@@ -17,8 +17,6 @@ package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -54,16 +52,13 @@ public class RefMatConcordiaToolBoxNode extends HBox {
         Button saveToNewFileButton = new Button("Synch Selected Spots with Weighted Mean");
         formatNode(saveToNewFileButton, 250);
         saveToNewFileButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
-        saveToNewFileButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = true;
-                try {
-                    plotsController.showActivePlot();
-                } catch (SquidException squidException) {
-                }
-                PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = false;
+        saveToNewFileButton.setOnAction(e -> {
+            PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = true;
+            try {
+                plotsController.showActivePlot();
+            } catch (SquidException squidException) {
             }
+            PlotsController.doSynchIncludedSpotsBetweenConcordiaAndWM = false;
         });
 
         Label isotopeChoiceLabel = new Label("Index Isotope:");

@@ -94,15 +94,15 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("childrenET");
-        context.convertAnother(((ExpressionTree) expressionTree).getChildrenET());
+        context.convertAnother(expressionTree.getChildrenET());
         writer.endNode();
 
         writer.startNode("operation");
-        context.convertAnother(((ExpressionTree) expressionTree).getOperation());
+        context.convertAnother(expressionTree.getOperation());
         writer.endNode();
 
         writer.startNode("ratiosOfInterest");
-        context.convertAnother(((ExpressionTree) expressionTree).getRatiosOfInterest());
+        context.convertAnother(expressionTree.getRatiosOfInterest());
         writer.endNode();
 
         writer.startNode("squidSwitchSCSummaryCalculation");
@@ -130,11 +130,11 @@ public class ExpressionTreeXMLConverter implements Converter {
         writer.endNode();
 
         writer.startNode("uncertaintyDirective");
-        writer.setValue(((ExpressionTree) expressionTree).getUncertaintyDirective());
+        writer.setValue(expressionTree.getUncertaintyDirective());
         writer.endNode();
 
         writer.startNode("index");
-        writer.setValue(Integer.toString(((ExpressionTree) expressionTree).getIndex()));
+        writer.setValue(Integer.toString(expressionTree.getIndex()));
         writer.endNode();
     }
 

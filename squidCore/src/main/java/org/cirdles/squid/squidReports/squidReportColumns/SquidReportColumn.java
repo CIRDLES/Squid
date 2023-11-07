@@ -44,15 +44,12 @@ import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.
 public class SquidReportColumn implements Serializable, SquidReportColumnInterface {
 
     private static final long serialVersionUID = -4256285353332428810L;
-
+    private final String expressionName;
     // source of spot-specific data for this column
     private transient ExpressionTreeInterface expTree;
     private transient boolean amIsotopicRatio;
     // provides for multi-row column headers
     private transient String[] columnHeaders;
-
-    private String expressionName;
-
     // used to calculate shiftPointRightCount = Squid3Constants.getUnitConversionMoveCount(units)
     private String units;
 
@@ -302,7 +299,7 @@ public class SquidReportColumn implements Serializable, SquidReportColumnInterfa
                         } else {
                             if (Double.isFinite(results[0][0])) {
                                 retVal = formatBigDecimalForPublicationSigDigMode(
-                                        new BigDecimal(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
+                                        BigDecimal.valueOf(results[0][0]).movePointRight(Squid3Constants.getUnitConversionMoveCount(units)),
                                         countOfSignificantDigits);
                             } else {
                                 retVal = "NaN";

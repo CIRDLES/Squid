@@ -37,8 +37,7 @@ import static org.cirdles.squid.constants.Squid3Constants.REF_238U235U_DEFAULT;
 import static org.cirdles.squid.parameters.util.Lambdas.*;
 import static org.cirdles.squid.parameters.util.RadDates.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom207;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionExpressionFrom208;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.*;
 import static org.cirdles.squid.tasks.expressions.spots.SpotFieldNode.buildSpotNode;
 import static org.cirdles.squid.tasks.expressions.spots.SpotTaskMetaDataNode.buildTaskMetaDataNode;
 
@@ -191,21 +190,21 @@ public abstract class BuiltInExpressionsFactory {
         expressionslambda238.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionslambda238);
 
-        Expression expressionsNUKEMASS206PB = buildExpression(NUKEMASS206PB, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+        Expression expressionsNUKEMASS206PB = buildExpression(NUKEMASS206PB, String.valueOf(physicalConstantsModel
                         .getMolarMasses().get("gmol206").doubleValue()),
                 true, true, true);
         expressionsNUKEMASS206PB.setParameterValue(true);
         expressionsNUKEMASS206PB.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsNUKEMASS206PB);
 
-        Expression expressionsNUKEMASS232TH = buildExpression(NUKEMASS232TH, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+        Expression expressionsNUKEMASS232TH = buildExpression(NUKEMASS232TH, String.valueOf(physicalConstantsModel
                         .getMolarMasses().get("gmol232").doubleValue()),
                 true, true, true);
         expressionsNUKEMASS232TH.setParameterValue(true);
         expressionsNUKEMASS232TH.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsNUKEMASS232TH);
 
-        Expression expressionsNUKEMASS238U = buildExpression(NUKEMASS238U, String.valueOf(((PhysicalConstantsModel) physicalConstantsModel)
+        Expression expressionsNUKEMASS238U = buildExpression(NUKEMASS238U, String.valueOf(physicalConstantsModel
                         .getMolarMasses().get("gmol238").doubleValue()),
                 true, true, true);
         expressionsNUKEMASS238U.setParameterValue(true);
@@ -251,7 +250,7 @@ public abstract class BuiltInExpressionsFactory {
         parameterValues.add(expressionsComm_86);
 
         Expression expressionsComm_68 = buildExpression(DEFCOM_68,
-                "1.0/" + String.valueOf(commonPbModel.getDatumByName(R208_206B).getValue().doubleValue()), true, true, true);
+                "1.0/" + commonPbModel.getDatumByName(R208_206B).getValue().doubleValue(), true, true, true);
         expressionsComm_68.setParameterValue(true);
         expressionsComm_68.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         parameterValues.add(expressionsComm_68);
@@ -264,20 +263,20 @@ public abstract class BuiltInExpressionsFactory {
 
         String sourceModelNameAndVersion = concReferenceMaterialModel.getModelNameWithVersion();
 
-        if (((ReferenceMaterialModel) concReferenceMaterialModel)
+        if (concReferenceMaterialModel
                 .getConcentrationByName("concU").getValue().doubleValue() > 0.0) {
             Expression expressionStdUConcPpm = buildExpression(REF_U_CONC_PPM,
-                    String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                    String.valueOf(concReferenceMaterialModel
                             .getConcentrationByName("concU").getValue().doubleValue()), true, true, true);
             expressionStdUConcPpm.setReferenceMaterialValue(true);
             expressionStdUConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
             parameterValues.add(expressionStdUConcPpm);
         }
 
-        if (((ReferenceMaterialModel) concReferenceMaterialModel)
+        if (concReferenceMaterialModel
                 .getConcentrationByName("concTh").getValue().doubleValue() > 0.0) {
             Expression expressionStdThConcPpm = buildExpression(REF_TH_CONC_PPM,
-                    String.valueOf(((ReferenceMaterialModel) concReferenceMaterialModel)
+                    String.valueOf(concReferenceMaterialModel
                             .getConcentrationByName("concTh").getValue().doubleValue()), true, true, true);
             expressionStdThConcPpm.setReferenceMaterialValue(true);
             expressionStdThConcPpm.setSourceModelNameAndVersion(sourceModelNameAndVersion);
@@ -293,27 +292,27 @@ public abstract class BuiltInExpressionsFactory {
         String sourceModelNameAndVersion = referenceMaterialModel.getModelNameWithVersion();
 
         Expression expressionStdAgeUPb = buildExpression(REFRAD_AGE_U_PB,
-                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                String.valueOf(referenceMaterialModel
                         .getDateByName(age206_238r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeUPb.setReferenceMaterialValue(true);
         expressionStdAgeUPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgeUPb);
 
         Expression expressionStdAgeThPb = buildExpression(REFRAD_AGE_TH_PB,
-                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                String.valueOf(referenceMaterialModel
                         .getDateByName(age208_232r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgeThPb.setReferenceMaterialValue(true);
         expressionStdAgeThPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgeThPb);
 
         Expression expressionStdAgePbPb = buildExpression(REFRAD_AGE_PB_PB,
-                String.valueOf(((ReferenceMaterialModel) referenceMaterialModel)
+                String.valueOf(referenceMaterialModel
                         .getDateByName(age207_206r.getName()).getValue().doubleValue()), true, true, true);
         expressionStdAgePbPb.setReferenceMaterialValue(true);
         expressionStdAgePbPb.setSourceModelNameAndVersion(sourceModelNameAndVersion);
         referenceMaterialValues.add(expressionStdAgePbPb);
 
-        double lookup238U235U = ((ReferenceMaterialModel) referenceMaterialModel)
+        double lookup238U235U = referenceMaterialModel
                 .getDatumByName(REF_238U235U_RM_MODEL_NAME).getValue().doubleValue();
         boolean usedDefaultValue = false;
         if (lookup238U235U == 0.0) {
@@ -724,6 +723,7 @@ public abstract class BuiltInExpressionsFactory {
 
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom207());
         overCountExpressionsOrdered.add(buildCountCorrectionExpressionFrom208());
+        overCountExpressionsOrdered.add(buildCountCorrectionCustomExpression());
 
         return overCountExpressionsOrdered;
     }

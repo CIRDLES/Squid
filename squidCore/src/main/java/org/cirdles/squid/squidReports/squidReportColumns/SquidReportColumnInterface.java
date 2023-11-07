@@ -44,107 +44,107 @@ public interface SquidReportColumnInterface extends XMLSerializerInterface {
         }
     }
 
-    public void initReportColumn(TaskInterface task);
+    void initReportColumn(TaskInterface task);
 
-    public String cellEntryForSpot(ShrimpFractionExpressionInterface spot);
+    String cellEntryForSpot(ShrimpFractionExpressionInterface spot);
 
     /**
      * @param expTree the expTree to set
      */
-    public void setExpTree(ExpressionTreeInterface expTree);
+    void setExpTree(ExpressionTreeInterface expTree);
 
     /**
      * @return the expressionName
      */
-    public String getExpressionName();
+    String getExpressionName();
 
     /**
      * @return the columnHeaders
      */
-    public String[] getColumnHeaders();
+    String[] getColumnHeaders();
 
     /**
      * @param columnHeaders the columnHeaders to set
      */
-    public void setColumnHeaders(String[] columnHeaders);
+    void setColumnHeaders(String[] columnHeaders);
 
     /**
      * @return the footnoteSpec
      */
-    public String getFootnoteSpec();
+    String getFootnoteSpec();
 
     /**
      * @param footnoteSpec the footnoteSpec to set
      */
-    public void setFootnoteSpec(String footnoteSpec);
+    void setFootnoteSpec(String footnoteSpec);
 
-    public boolean hasVisibleUncertaintyColumn();
+    boolean hasVisibleUncertaintyColumn();
 
     /**
      * @return the uncertaintyColumn
      */
-    public SquidReportColumnInterface getUncertaintyColumn();
+    SquidReportColumnInterface getUncertaintyColumn();
 
     /**
      * @param uncertaintyColumn the uncertaintyColumn to set
      */
-    public void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
+    void setUncertaintyColumn(SquidReportColumnInterface uncertaintyColumn);
 
     /**
      * @return the uncertaintyDirective
      */
-    public String getUncertaintyDirective();
+    String getUncertaintyDirective();
 
     /**
      * @param uncertaintyDirective the uncertaintyDirective to set
      */
-    public void setUncertaintyDirective(String uncertaintyDirective);
+    void setUncertaintyDirective(String uncertaintyDirective);
 
     /**
      * @return the amUncertaintyColumn
      */
-    public boolean isAmUncertaintyColumn();
+    boolean isAmUncertaintyColumn();
 
     /**
      * @param amUncertaintyColumn the amUncertaintyColumn to set
      */
-    public void setAmUncertaintyColumn(boolean amUncertaintyColumn);
+    void setAmUncertaintyColumn(boolean amUncertaintyColumn);
 
     /**
      * @return the units
      */
-    public String getUnits();
+    String getUnits();
 
     /**
      * @param units the units to set
      */
-    public void setUnits(String units);
+    void setUnits(String units);
 
     /**
      * @return the visible
      */
-    public boolean isVisible();
+    boolean isVisible();
 
     /**
      * @param visible the visible to set
      */
-    public void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
     /**
      * @param amIsotopicRatio the amIsotopicRatio to set
      */
-    public void setAmIsotopicRatio(boolean amIsotopicRatio);
+    void setAmIsotopicRatio(boolean amIsotopicRatio);
 
     /**
      * @return the countOfSignificantDigits
      */
-    public int getCountOfSignificantDigits();
+    int getCountOfSignificantDigits();
 
     /**
      * @param countOfSignificantDigits the countOfSignificantDigits to set
      */
-    public void setCountOfSignificantDigits(int countOfSignificantDigits);
+    void setCountOfSignificantDigits(int countOfSignificantDigits);
 
-    public SquidReportColumn clone();
+    SquidReportColumn clone();
 
 }

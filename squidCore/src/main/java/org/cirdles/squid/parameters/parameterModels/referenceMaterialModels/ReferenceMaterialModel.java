@@ -160,8 +160,8 @@ public class ReferenceMaterialModel extends ParametersModel {
 
     public String auditAndTempUpdateRefMatModel() {
         if (flags == null) {
-            flags = new StringBuilder("");
-            StringBuilder audit = new StringBuilder("");
+            flags = new StringBuilder();
+            StringBuilder audit = new StringBuilder();
 
             String[] flagsArray = new String[]{"F;", "F;", "F;"};
             // flags will be of form 0;1;F;* denoting dates[0,1,3] as 0 = no change; 1 = change; F = bad Model
@@ -362,7 +362,7 @@ public class ReferenceMaterialModel extends ParametersModel {
 
                 double varianceR207_235r = V.times(covModel.getMatrix()).times(V.transpose()).get(0, 0);
 
-                r207_235r.setOneSigma(new BigDecimal(StrictMath.sqrt(varianceR207_235r)));
+                r207_235r.setOneSigma(BigDecimal.valueOf(StrictMath.sqrt(varianceR207_235r)));
 
             } catch (Exception e) {
             }

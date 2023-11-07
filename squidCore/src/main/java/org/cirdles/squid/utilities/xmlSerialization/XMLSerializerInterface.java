@@ -36,7 +36,7 @@ public interface XMLSerializerInterface {
      *
      * @param filename
      */
-    public default void serializeXMLObject(String filename) {
+    default void serializeXMLObject(String filename) {
         OutputStreamWriter outFile = null;
         try {
             XStream xstream = new XStream(new DomDriver());
@@ -69,7 +69,7 @@ public interface XMLSerializerInterface {
      * @param doValidate
      * @return
      */
-    public default Object readXMLObject(String filename, boolean doValidate) {
+    default Object readXMLObject(String filename, boolean doValidate) {
 
         Object myModelClassInstance = null;
 
@@ -92,13 +92,13 @@ public interface XMLSerializerInterface {
     /**
      * @param xstream
      */
-    public void customizeXstream(XStream xstream);
+    void customizeXstream(XStream xstream);
 
     /**
      * @param xml
      * @return
      */
-    public default String customizeXML(String xml) {
+    default String customizeXML(String xml) {
         return xml;
     }
 }

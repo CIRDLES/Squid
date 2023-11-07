@@ -104,4 +104,22 @@ public class BuiltinExpressionsCountCorrection204 {
         return countCorrectionExpression204From208;
     }
 
+    public static Expression buildCountCorrectionCustomExpression() {
+
+        Expression countCorrectionCustom = buildExpression(
+                "SWAPCustomCorrection204",
+                "ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)", false, true, false);
+
+        countCorrectionCustom.getExpressionTree().setSquidSpecialUPbThExpression(true);
+        countCorrectionCustom.setNotes(
+                "Edit this expression to calculate a custom corrected value "
+                        + "for 204/206 as per Squid2.5 'column swapping' and invoke it from the Common Pb menu "
+                        + "window for overcounts of 204.  \n\n"
+                        + "REQUIRED: Use the expression name 'SWAPCustomCorrection204' and define a ValueModel.  \n"
+                        + "The default definition is: 'ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)'. \n\n"
+                        + " NOTE:  Use the 'Orig' function to retrieve the unmutable value of a ratio.  Otherwise, "
+                        + "a circular logic obtains.");
+
+        return countCorrectionCustom;
+    }
 }

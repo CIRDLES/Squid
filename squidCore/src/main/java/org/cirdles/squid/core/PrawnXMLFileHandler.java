@@ -56,9 +56,9 @@ public class PrawnXMLFileHandler implements Serializable {
     private static final long serialVersionUID = -581339876224458493L;
     private static final PrawnFileRunFractionParser PRAWN_FILE_RUN_FRACTION_PARSER
             = new PrawnFileRunFractionParser();
+    private final SquidProject squidProject;
     private transient Unmarshaller jaxbUnmarshaller;
     private transient Marshaller jaxbMarshaller;
-    private SquidProject squidProject;
     private CalamariReportsEngine reportsEngine;
     private String currentPrawnSourceFileLocation;
 

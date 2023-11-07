@@ -32,7 +32,7 @@ public class ShrimpSpeciesNodeFunction extends Function {
 
     private static final long serialVersionUID = -7371492154923797766L;
 
-    private String methodNameForShrimpFraction;
+    private final String methodNameForShrimpFraction;
     private ShrimpSpeciesNode shrimpSpeciesNode;
 
     public ShrimpSpeciesNodeFunction(String methodNameForShrimpFraction) {

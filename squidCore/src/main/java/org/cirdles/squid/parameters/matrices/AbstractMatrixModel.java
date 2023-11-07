@@ -147,7 +147,7 @@ public abstract class AbstractMatrixModel implements Serializable {
         }
 
         for (int i = 0; i < tempCols.size(); i++) {
-            retVal += String.format(formatCell, (String) tempCols.get(i));
+            retVal += String.format(formatCell, tempCols.get(i));
         }
 
         retVal += "\n";
@@ -155,7 +155,7 @@ public abstract class AbstractMatrixModel implements Serializable {
         NumberFormat formatter = new DecimalFormat("0.000000000E00");
 
         for (int row = 0; row < rows.size(); row++) {
-            retVal += String.format(formatCell, (String) rows.get(row));
+            retVal += String.format(formatCell, rows.get(row));
             try {
                 for (int col = 0; col < matrix.getColumnDimension(); col++) {
                     retVal += String.format(formatCell, formatter.format(matrix.get(row, col)));
@@ -181,7 +181,7 @@ public abstract class AbstractMatrixModel implements Serializable {
     public void setRows(String[] rowNames) {
         Map<Integer, String> myRows = new HashMap<Integer, String>();
         for (int i = 0; i < rowNames.length; i++) {
-            myRows.put((Integer) i, rowNames[i]);
+            myRows.put(i, rowNames[i]);
         }
         this.rows = myRows;
     }
@@ -283,7 +283,7 @@ public abstract class AbstractMatrixModel implements Serializable {
                 Integer col = getCols().get(colName);
                 if (col != null) {
                     //copy values from this column
-                    matrix.setMatrix(0, matrix.getRowDimension() - 1, new int[]{(int) col}, parentModel.matrix.getMatrix(0, matrix.getRowDimension() - 1, new int[]{parentModel.getCols().get(colName)}));
+                    matrix.setMatrix(0, matrix.getRowDimension() - 1, new int[]{col}, parentModel.matrix.getMatrix(0, matrix.getRowDimension() - 1, new int[]{parentModel.getCols().get(colName)}));
                 }
             }
         }

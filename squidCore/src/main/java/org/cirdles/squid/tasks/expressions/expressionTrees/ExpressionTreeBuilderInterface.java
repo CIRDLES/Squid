@@ -27,51 +27,51 @@ public interface ExpressionTreeBuilderInterface {
     /**
      * @return the operation
      */
-    public OperationOrFunctionInterface getOperation();
+    OperationOrFunctionInterface getOperation();
 
     /**
      * @param operation the operation to set
      */
-    public void setOperation(OperationOrFunctionInterface operation);
+    void setOperation(OperationOrFunctionInterface operation);
 
     /**
      * @return the leftET
      */
-    public ExpressionTreeInterface getLeftET();
+    ExpressionTreeInterface getLeftET();
 
     /**
      * @return the rightET
      */
-    public ExpressionTreeInterface getRightET();
+    ExpressionTreeInterface getRightET();
 
     /**
      * @param childET
      */
-    public void addChild(ExpressionTreeInterface childET);
+    void addChild(ExpressionTreeInterface childET);
 
     /**
      * @param index
      * @param childET
      */
-    public void addChild(int index, ExpressionTreeInterface childET);
+    void addChild(int index, ExpressionTreeInterface childET);
 
     /**
      * @return
      */
-    public int getCountOfChildren();
+    int getCountOfChildren();
 
     /**
      * @return
      */
-    public int getOperationPrecedence();
+    int getOperationPrecedence();
 
     /**
      * @return the childrenET
      */
-    public List<ExpressionTreeInterface> getChildrenET();
+    List<ExpressionTreeInterface> getChildrenET();
 
-    public String auditOperationArgumentCount();
+    String auditOperationArgumentCount();
 
-    public String auditTargetCompatibility();
+    String auditTargetCompatibility();
 
 }

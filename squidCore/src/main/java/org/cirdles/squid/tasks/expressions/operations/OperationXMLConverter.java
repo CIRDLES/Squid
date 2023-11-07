@@ -79,7 +79,7 @@ public class OperationXMLConverter implements Converter {
         OperationOrFunctionInterface operation = (Operation) value;
 
         writer.startNode("name");
-        writer.setValue(((Operation) operation).getName());
+        writer.setValue(operation.getName());
         writer.endNode();
     }
 

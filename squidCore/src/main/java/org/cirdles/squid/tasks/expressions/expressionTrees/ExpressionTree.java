@@ -349,6 +349,10 @@ public class ExpressionTree
         return (operation != null);
     }
 
+    public boolean isValueModel() {
+        return (operation instanceof ValueModel);
+    }
+
     @Override
     public String auditOperationArgumentCount() {
         StringBuilder audit = new StringBuilder();

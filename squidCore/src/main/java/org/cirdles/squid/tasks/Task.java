@@ -88,6 +88,7 @@ import static org.cirdles.squid.squidReports.squidReportTables.SquidReportTable.
 import static org.cirdles.squid.tasks.expressions.ExpressionSpec.specifyExpression;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionCustomExpression;
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
@@ -150,7 +151,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     protected List<Expression> taskExpressionsOrdered;
     protected SortedSet<Expression> taskExpressionsRemoved;
     protected Map<String, ExpressionTreeInterface> namedExpressionsMap;
-    protected Map<String, ExpressionTreeInterface> namedOvercountExpressionsMap;
     protected Map<String, ExpressionTreeInterface> namedConstantsMap;
     protected Map<String, ExpressionTreeInterface> namedParametersMap;
     protected List<ShrimpFractionExpressionInterface> shrimpFractions;
@@ -264,7 +264,6 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         this.taskExpressionsOrdered = new ArrayList<>();
         this.taskExpressionsRemoved = new TreeSet<>();
         this.namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        this.namedOvercountExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedConstantsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.namedParametersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         this.taskExpressionsEvaluationsPerSpotSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -663,6 +662,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
             taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
+            if (!namedExpressionsMap.containsKey("SWAPCustomCorrection204")) {
+                Expression customExp = buildCountCorrectionCustomExpression();
+                namedExpressionsMap.put("SWAPCustomCorrection204", customExp.getExpressionTree());
+                taskExpressionsOrdered.add(customExp);
+            }
 
             SortedSet<Expression> experimentalExpressions = generateExperimentalExpressions();
             taskExpressionsOrdered.addAll(experimentalExpressions);
@@ -1066,6 +1070,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             ratio204_206.setRatioValUsed(r204_206_207[0][0]);
             ratio204_206.setRatioFractErrUsed(r204_206_207[0][1]);
             spot.setOvercountCorrectionIsotope(IndexIsoptopesEnum.PB_208);
+        }
+    }
+
+    public void updateAllUnknownSpotsWithCustomCorrection() {
+        ExpressionTreeInterface customExp = namedExpressionsMap.get("SWAPCustomCorrection204");
+        if ((null != customExp) && customExp.isValueModel()) {
+            for (ShrimpFractionExpressionInterface spot : unknownSpots) {
+                SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");
+                double[][] custom204 = spot.getTaskExpressionsEvaluationsPerSpot().get(customExp);
+                ratio204_206.setRatioValUsed(custom204[0][0]);
+                ratio204_206.setRatioFractErrUsed(custom204[0][1]);
+                spot.setOvercountCorrectionIsotope(IndexIsoptopesEnum.CUSTOM);
+            }
         }
     }
 
@@ -3859,7 +3876,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 filterForConcRefMatSpotNames, filtersForUnknownNames, nominalMasses, ratioNames,
                 mapOfIndexToMassStationDetails, squidSessionModel, squidSpeciesModelList,
                 squidRatiosModelList, taskExpressionsOrdered, taskExpressionsRemoved,
-                namedExpressionsMap, namedOvercountExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions,
+                namedExpressionsMap, namedConstantsMap, namedParametersMap, namedSpotLookupFieldsMap, shrimpFractions,
                 referenceMaterialSpots, concentrationReferenceMaterialSpots, unknownSpots,
                 mapOfUnknownsBySampleNames, prawnChanged, taskExpressionsEvaluationsPerSpotSet,
                 prawnFile, reportsEngine, changed, useCalculatedAvParentElementConcenConst,

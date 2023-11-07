@@ -17,7 +17,6 @@ package org.cirdles.squid.gui;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -256,6 +255,7 @@ public class ProjectManagerController implements Initializable {
             case PB_208:
                 pb208RadioButton.setSelected(true);
                 break;
+            default:
         }
 
         autoExcludeSpotsCheckBox.setSelected(squidProject.isSquidAllowsAutoExclusionOfSpots());
@@ -329,7 +329,7 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void yesSBMRadioButtonAction(ActionEvent event) {
+    private void yesSBMRadioButtonAction() {
         squidProject.setUseSBM(true);
         SquidProject.setProjectChanged(true);
         task.setUseSBM(true);
@@ -345,7 +345,7 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void noSBMRadioButtonActions(ActionEvent event) {
+    private void noSBMRadioButtonActions() {
         squidProject.setUseSBM(false);
         SquidProject.setProjectChanged(true);
         task.setUseSBM(false);
@@ -358,7 +358,7 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void linearRegressionRatioCalcRadioButtonAction(ActionEvent event) {
+    private void linearRegressionRatioCalcRadioButtonAction() {
         squidProject.setUserLinFits(true);
         SquidProject.setProjectChanged(true);
         task.setUserLinFits(true);
@@ -371,7 +371,7 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void spotAverageRatioCalcRadioButtonAction(ActionEvent event) {
+    private void spotAverageRatioCalcRadioButtonAction() {
         squidProject.setUserLinFits(false);
         SquidProject.setProjectChanged(true);
         task.setUserLinFits(false);
@@ -384,28 +384,28 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void pb204RadioButtonAction(ActionEvent event) throws SquidException {
+    private void pb204RadioButtonAction() throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_204);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);
     }
 
     @FXML
-    private void pb207RadioButtonAction(ActionEvent event) throws SquidException {
+    private void pb207RadioButtonAction() throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_207);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);
     }
 
     @FXML
-    private void pb208RadioButtonAction(ActionEvent event) throws SquidException {
+    private void pb208RadioButtonAction() throws SquidException {
         squidProject.setSelectedIndexIsotope(Squid3Constants.IndexIsoptopesEnum.PB_208);
         SquidProject.setProjectChanged(true);
         task.setChanged(true);
     }
 
     @FXML
-    private void autoExcludeSpotsCheckBoxAction(ActionEvent event) {
+    private void autoExcludeSpotsCheckBoxAction() {
         // this will cause weighted mean expressions to be changed with boolean flag
         squidProject.setSquidAllowsAutoExclusionOfSpots(autoExcludeSpotsCheckBox.isSelected());
         SquidProject.setProjectChanged(true);
@@ -417,7 +417,7 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    private void parametersSetDefaultsOnAction(ActionEvent actionEvent) {
+    private void parametersSetDefaultsOnAction() {
         taskDesign.setUseSBM(yesSBMRadioButton.isSelected());
 
         taskDesign.setUserLinFits(linearRegressionRatioCalcRadioButton.isSelected());
@@ -448,13 +448,13 @@ public class ProjectManagerController implements Initializable {
     }
 
     @FXML
-    void useCommonPbModelForUnkownsAction(ActionEvent event) {
+    void useCommonPbModelForUnkownsAction() {
         squidProject.setCommonLeadForUnknownsMethodSelected(useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER);
         DEFAULT_COMMON_LEAD_METHOD_FOR_UNKNOWNS = useCommonPbModelForUnknownsCheckBox.isSelected() ? METHOD_COMMON_LEAD_MODEL : METHOD_STACEY_KRAMER;
     }
 
     @FXML
-    private void refreshModelsAction(ActionEvent event) {
+    private void refreshModelsAction() {
         try {
             task.refreshParametersFromModels(squidProject.isTypeGeochron(), true, false);
             physConstModelComboBox.setItems(FXCollections.observableArrayList(squidLabData.getPhysicalConstantsModels()));

@@ -15,7 +15,6 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.countCorrections;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -31,6 +30,7 @@ import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.gui.SquidUIController;
 import org.cirdles.squid.gui.dialogs.SquidMessageDialog;
 import org.cirdles.squid.shrimp.ShrimpFractionExpressionInterface;
+import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.expressions.spots.SpotSummaryDetails;
 import org.cirdles.squid.tasks.taskUtilities.OvercountCorrection;
 
@@ -56,6 +56,8 @@ public class CountCorrectionsController implements Initializable {
 
     private static final int fontSize = 12;
     private final TreeView<TextFlow> spotsTreeViewTextFlow = new TreeView<>();
+    public Label customSwapLabel;
+    public RadioButton customSWAPRB;
     @FXML
     private VBox vboxMaster;
     @FXML
@@ -93,6 +95,8 @@ public class CountCorrectionsController implements Initializable {
         spotsTreeViewTextFlow.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight()));
 
+        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
+        customSWAPRB.setDisable((customExpression == null) || !customExpression.isValueModel());
         switch (squidProject.getTask().getOvercountCorrectionType()) {
             case NONE:
                 correctionNoneRB.setSelected(true);
@@ -102,6 +106,14 @@ public class CountCorrectionsController implements Initializable {
                 break;
             case FR_208:
                 correction208RB.setSelected(true);
+                break;
+            case FR_Custom:
+                customSWAPRB.setSelected(true);
+                try {
+                    OvercountCorrection.correctionCustom(squidProject.getTask());
+                } catch (SquidException e) {
+//                    throw new RuntimeException(e);
+                }
         }
 
         setUpHeader();
@@ -118,7 +130,7 @@ public class CountCorrectionsController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight207Label.setText("biWeight 204 ovrCnts:  " + formatter);
+        biweight207Label.setText("biWgt 204 ovrCnts:  " + formatter);
 
         spotSummaryDetails
                 = squidProject.getTask().getTaskExpressionsEvaluationsPerSpotSet().get(BIWT_204_OVR_CTS_FROM_208);
@@ -129,7 +141,7 @@ public class CountCorrectionsController implements Initializable {
         formatter.format("%5.5f", biWeight);
         formatter.format(" " + ABS_UNCERTAINTY_DIRECTIVE + "%2.5f", conf95).toString();
 
-        biweight208Label.setText("biWeight 204 ovrCnts:  " + formatter);
+        biweight208Label.setText("biWgt 204 ovrCnts:  " + formatter);
 
         returnToCommonLeadButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }
@@ -168,10 +180,16 @@ public class CountCorrectionsController implements Initializable {
                         .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From207"));
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From208"));
+                double[][] custom204 = new double[r204_206_208.length][r204_206_208[0].length];
+                ExpressionTreeInterface customExp = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
+                if ((null != customExp) && customExp.isValueModel()) {
+                    custom204 = spot.getTaskExpressionsEvaluationsPerSpot()
+                            .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204"));
+                }
 
                 TextFlow textFlowI = new TextFlow();
 
-                Text textSampleName = new Text(String.format("%1$-" + 40 + "s", spot.getFractionID()));
+                Text textSampleName = new Text(String.format("%1$-" + 23 + "s", spot.getFractionID()));
                 textSampleName.setFont(Font.font("Monospaced", FontWeight.BOLD, fontSize));
                 textFlowI.getChildren().add(textSampleName);
 
@@ -196,6 +214,13 @@ public class CountCorrectionsController implements Initializable {
                 text208.setFont(Font.font("Monospaced", correction208RB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 textFlowI.getChildren().add(text208);
 
+                // custom correction
+                formatter = new Formatter();
+                formatter.format("% 12.6E   % 12.3f         ", custom204[0][0], StrictMath.abs(custom204[0][1] / custom204[0][0] * 100.0));
+                Text textCustom = new Text(formatter.toString());
+                textCustom.setFont(Font.font("Monospaced", customSWAPRB.isSelected() ? FontWeight.BOLD : FontWeight.THIN, fontSize));
+                textFlowI.getChildren().add(textCustom);
+
                 TreeItem<TextFlow> treeItemSampleI = new TreeItem<>(textFlowI);
                 treeItemSampleInfo.getChildren().add(treeItemSampleI);
             }
@@ -206,7 +231,7 @@ public class CountCorrectionsController implements Initializable {
         sampleTreeAnchorPane.getChildren().add(spotsTreeViewTextFlow);
     }
 
-    private void updateColumnBold(boolean isOrig, boolean is207, boolean is208) {
+    private void updateColumnBold(boolean isOrig, boolean is207, boolean is208, boolean isCustom) {
         TreeItem<TextFlow> rootItemSamples = spotsTreeViewTextFlow.getRoot();
         for (TreeItem<TextFlow> treeItemSampleI : rootItemSamples.getChildren()) {
             List<TreeItem<TextFlow>> treeSampleItems = treeItemSampleI.getChildren();
@@ -218,31 +243,40 @@ public class CountCorrectionsController implements Initializable {
                 text.setFont(Font.font("Monospaced", is207 ? FontWeight.BOLD : FontWeight.THIN, fontSize));
                 text = (Text) textFlow.getChildren().get(3);
                 text.setFont(Font.font("Monospaced", is208 ? FontWeight.BOLD : FontWeight.THIN, fontSize));
+                text = (Text) textFlow.getChildren().get(4);
+                text.setFont(Font.font("Monospaced", isCustom ? FontWeight.BOLD : FontWeight.THIN, fontSize));
             }
         }
     }
 
     @FXML
-    private void correctionNoneAction(ActionEvent event) throws SquidException {
+    private void correctionNoneAction() throws SquidException {
         OvercountCorrection.correctionNone(squidProject.getTask());
-        updateColumnBold(true, false, false);
+        updateColumnBold(true, false, false, false);
     }
 
     @FXML
-    private void correction207Action(ActionEvent event) throws SquidException {
+    private void correction207Action() throws SquidException {
         OvercountCorrection.correction207(squidProject.getTask());
-        updateColumnBold(false, true, false);
+        updateColumnBold(false, true, false, false);
     }
 
     @FXML
-    private void correction208Action(ActionEvent event) throws SquidException {
+    private void correction208Action() throws SquidException {
         OvercountCorrection.correction208(squidProject.getTask());
-        updateColumnBold(false, false, true);
+        updateColumnBold(false, false, true, false);
     }
 
     @FXML
-    private void returnOnAction(ActionEvent actionEvent) throws SquidException {
+    private void customCorrectionAction() throws SquidException {
+        OvercountCorrection.correctionCustom(squidProject.getTask());
+        updateColumnBold(false, false, false, true);
+    }
+
+    @FXML
+    private void returnOnAction() throws SquidException {
         SquidUIController primaryStageController = (SquidUIController) primaryStageWindow.getScene().getUserData();
         primaryStageController.launchCommonLeadAssignment();
     }
+
 }

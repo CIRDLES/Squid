@@ -63,6 +63,6 @@ public interface ExpressionSpecInterface {
     /**
      * @return the notes
      */
-    public String getNotes();
+    String getNotes();
 
 }

@@ -18,7 +18,7 @@ package org.cirdles.squid.tasks.taskDesign;
 import org.cirdles.squid.exceptions.SquidException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
@@ -29,9 +29,9 @@ public class TaskDesignBlank extends TaskDesign {
 
     public TaskDesignBlank() throws SquidException {
 
-        this.nominalMasses = new ArrayList<>(Arrays.asList(new String[]{}));
+        this.nominalMasses = new ArrayList<>(Collections.emptyList());
 
-        this.ratioNames = new ArrayList<>(Arrays.asList(new String[]{}));
+        this.ratioNames = new ArrayList<>(Collections.emptyList());
 
         this.name = "New empty Geochron task";
 

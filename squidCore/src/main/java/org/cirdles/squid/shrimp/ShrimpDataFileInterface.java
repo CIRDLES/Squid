@@ -24,14 +24,14 @@ import java.util.List;
  */
 public interface ShrimpDataFileInterface {
 
-    public int extractCountOfRuns();
+    int extractCountOfRuns();
 
-    public String getSoftwareVersion();
+    String getSoftwareVersion();
 
-    public void setSoftwareVersion(String value);
+    void setSoftwareVersion(String value);
 
-    public List<PrawnFile.Run> getRun();
+    List<PrawnFile.Run> getRun();
 
-    public void setRuns(short value);
+    void setRuns(short value);
 
 }

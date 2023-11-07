@@ -21,7 +21,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -228,63 +227,57 @@ public class IsotopesManagerController implements Initializable {
                 final TableRow<MassStationDetail> row = new TableRow<>();
                 final ContextMenu contextMenu = new ContextMenu();
                 final MenuItem selectAsBackgroundMenuItem = new MenuItem("Select as Background Isotope");
-                selectAsBackgroundMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (!row.getItem().getIsBackground()) {
-                            task.setIndexOfBackgroundSpecies(row.getItem().getMassStationIndex());
-                            task.setIndexOfTaskBackgroundMass(row.getItem().getMassStationIndex());
+                selectAsBackgroundMenuItem.setOnAction(event -> {
+                    if (!row.getItem().getIsBackground()) {
+                        task.setIndexOfBackgroundSpecies(row.getItem().getMassStationIndex());
+                        task.setIndexOfTaskBackgroundMass(row.getItem().getMassStationIndex());
 
-                            row.getItem().setIsBackground(true);
-                            row.getItem().setIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
-                            row.getItem().updateTaskIsotopeLabelForBackground(((Task) task).findNominalMassOfTaskBackgroundMass());
-                            row.getItem().setNumeratorRole(false);
-                            row.getItem().setDenominatorRole(false);
+                        row.getItem().setIsBackground(true);
+                        row.getItem().setIsotopeLabel(DEFAULT_BACKGROUND_MASS_LABEL);
+                        row.getItem().updateTaskIsotopeLabelForBackground(((Task) task).findNominalMassOfTaskBackgroundMass());
+                        row.getItem().setNumeratorRole(false);
+                        row.getItem().setDenominatorRole(false);
 
-                            SquidSpeciesModel ssm
-                                    = task.getSquidSpeciesModelList()
-                                    .get(row.getItem().getMassStationIndex());
-                            int previousIndex = task.selectBackgroundSpeciesReturnPreviousIndex(ssm);
-                            if (previousIndex >= 0) {
-                                MassStationDetail previousMassStationDetail = massStationsData.get(previousIndex);
-                                previousMassStationDetail.setIsotopeLabel(
-                                        task.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
-                                previousMassStationDetail.setTaskIsotopeLabel(task.getNominalMasses().get(previousIndex));
-                                previousMassStationDetail.setNumeratorRole(false);
-                                previousMassStationDetail.setDenominatorRole(false);
+                        SquidSpeciesModel ssm
+                                = task.getSquidSpeciesModelList()
+                                .get(row.getItem().getMassStationIndex());
+                        int previousIndex = task.selectBackgroundSpeciesReturnPreviousIndex(ssm);
+                        if (previousIndex >= 0) {
+                            MassStationDetail previousMassStationDetail = massStationsData.get(previousIndex);
+                            previousMassStationDetail.setIsotopeLabel(
+                                    task.getSquidSpeciesModelList().get(previousIndex).getIsotopeName());
+                            previousMassStationDetail.setTaskIsotopeLabel(task.getNominalMasses().get(previousIndex));
+                            previousMassStationDetail.setNumeratorRole(false);
+                            previousMassStationDetail.setDenominatorRole(false);
 
-                                SquidSpeciesModel previousSsm = task.getSquidSpeciesModelList().get(previousIndex);
-                                previousSsm.setIsBackground(false);
-                                //previousSsm.setNumeratorRole(false);
-                                //previousSsm.setDenominatorRole(false);
-                            }
-                            task.setChanged(true);
-                            isotopesTableView.refresh();
-                            updateBackgroundStatusLabel();
+                            SquidSpeciesModel previousSsm = task.getSquidSpeciesModelList().get(previousIndex);
+                            previousSsm.setIsBackground(false);
+                            //previousSsm.setNumeratorRole(false);
+                            //previousSsm.setDenominatorRole(false);
                         }
+                        task.setChanged(true);
+                        isotopesTableView.refresh();
+                        updateBackgroundStatusLabel();
                     }
                 });
                 contextMenu.getItems().add(selectAsBackgroundMenuItem);
 
                 final MenuItem deSelectAsBackgroundMenuItem = new MenuItem("De-select as Background Isotope");
-                deSelectAsBackgroundMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (row.getItem().getIsBackground()) {
-                            SquidSpeciesModel ssm
-                                    = task.getSquidSpeciesModelList()
-                                    .get(row.getItem().getMassStationIndex());
-                            task.setIndexOfBackgroundSpecies(-1);
-                            task.setIndexOfTaskBackgroundMass(-1);
-                            task.setChanged(true);
-                            ssm.setIsBackground(false);
-                            row.getItem().setIsBackground(false);
-                            row.getItem().setIsotopeLabel(ssm.getIsotopeName());
-                            row.getItem().setTaskIsotopeLabel(task.getNominalMasses().get(row.getItem().getMassStationIndex()));
+                deSelectAsBackgroundMenuItem.setOnAction(event -> {
+                    if (row.getItem().getIsBackground()) {
+                        SquidSpeciesModel ssm
+                                = task.getSquidSpeciesModelList()
+                                .get(row.getItem().getMassStationIndex());
+                        task.setIndexOfBackgroundSpecies(-1);
+                        task.setIndexOfTaskBackgroundMass(-1);
+                        task.setChanged(true);
+                        ssm.setIsBackground(false);
+                        row.getItem().setIsBackground(false);
+                        row.getItem().setIsotopeLabel(ssm.getIsotopeName());
+                        row.getItem().setTaskIsotopeLabel(task.getNominalMasses().get(row.getItem().getMassStationIndex()));
 
-                            isotopesTableView.refresh();
-                            updateBackgroundStatusLabel();
-                        }
+                        isotopesTableView.refresh();
+                        updateBackgroundStatusLabel();
                     }
                 });
                 contextMenu.getItems().add(deSelectAsBackgroundMenuItem);
@@ -306,7 +299,7 @@ public class IsotopesManagerController implements Initializable {
     }
 
     @FXML
-    private void applyTaskIsotopeLabelsAction(ActionEvent event) {
+    private void applyTaskIsotopeLabelsAction() {
         try {
             task.applyTaskIsotopeLabelsToMassStationsAndUpdateTask();
         } catch (SquidException squidException) {
@@ -316,7 +309,7 @@ public class IsotopesManagerController implements Initializable {
     }
 
     @FXML
-    private void applyMassStationIsotopeLabelsAction(ActionEvent event) {
+    private void applyMassStationIsotopeLabelsAction() {
         try {
             task.applyMassStationLabelsToTask();
         } catch (SquidException squidException) {

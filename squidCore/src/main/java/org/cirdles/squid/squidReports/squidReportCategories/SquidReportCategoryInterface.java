@@ -28,38 +28,38 @@ public interface SquidReportCategoryInterface extends XMLSerializerInterface {
     /**
      * @return the displayName
      */
-    public String getDisplayName();
+    String getDisplayName();
 
     /**
      * @param displayName the displayName to set
      */
-    public void setDisplayName(String displayName);
+    void setDisplayName(String displayName);
 
     /**
      * @return the categoryColumns
      */
-    public LinkedList<SquidReportColumnInterface> getCategoryColumns();
+    LinkedList<SquidReportColumnInterface> getCategoryColumns();
 
     /**
      * @param categoryColumns the categoryColumns to set
      */
-    public void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns);
+    void setCategoryColumns(LinkedList<SquidReportColumnInterface> categoryColumns);
 
-    public LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted();
+    LinkedList<SquidReportColumnInterface> getCategoryColumnsSorted();
 
     /**
      * @return the visible
      */
-    public boolean isVisible();
+    boolean isVisible();
 
     /**
      * @param visible the visible to set
      */
-    public void setVisible(boolean visible);
+    void setVisible(boolean visible);
 
-    public SquidReportCategory clone();
+    SquidReportCategory clone();
 
-    public default SquidReportColumnInterface findColumnByName(String columnName) {
+    default SquidReportColumnInterface findColumnByName(String columnName) {
         SquidReportColumnInterface retVal = null;
         for (SquidReportColumnInterface src : getCategoryColumns()) {
             if (src.getExpressionName().compareToIgnoreCase(columnName) == 0) {

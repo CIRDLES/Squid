@@ -46,4 +46,11 @@ public class OvercountCorrection {
         SquidProject.setProjectChanged(true);
         ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
     }
+
+    public static void correctionCustom(TaskInterface task) throws SquidException {
+        task.setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.FR_Custom);
+        ((Task) task).updateAllUnknownSpotsWithCustomCorrection();
+        SquidProject.setProjectChanged(true);
+        ((Task) task).evaluateUnknownsWithChangedParameters(task.getUnknownSpots());
+    }
 }

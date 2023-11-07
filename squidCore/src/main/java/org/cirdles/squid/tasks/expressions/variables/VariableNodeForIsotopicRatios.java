@@ -40,8 +40,8 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
     private static final long serialVersionUID = -2296889996415038672L;
     private final static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_ORIG_VALUE = "getOriginalIsotopicRatioValuesByStringName";
     private static String LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE = LOOKUP_METHODNAME_FOR_SHRIMPFRACTION;
-    private ShrimpSpeciesNode numerator;
-    private ShrimpSpeciesNode denominator;
+    private final ShrimpSpeciesNode numerator;
+    private final ShrimpSpeciesNode denominator;
 
     /**
      *
@@ -119,7 +119,7 @@ public class VariableNodeForIsotopicRatios extends VariableNodeForSummary {
         try {
             Method method = ShrimpFractionExpressionInterface.class.getMethod(//
                     LOOKUP_METHODNAME_FOR_SHRIMPFRACTION_CHOICE,
-                    new Class[]{String.class});
+                    String.class);
             for (int i = 0; i < shrimpFractions.size(); i++) {
                 double[] values = ((double[][]) method.invoke(shrimpFractions.get(i), new Object[]{name}))[0].clone();
                 if (values.length > 1) {

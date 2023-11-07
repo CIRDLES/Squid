@@ -25,31 +25,31 @@ public interface TaskExpressionEvaluatedPerSpotPerScanModelInterface {
     /**
      * @return the expression
      */
-    public ExpressionTreeInterface getExpression();
+    ExpressionTreeInterface getExpression();
 
     /**
      * @return the ratEqVal
      */
-    public double[] getRatEqVal();
+    double[] getRatEqVal();
 
     /**
      * @return the ratEqTime
      */
-    public double[] getRatEqTime();
+    double[] getRatEqTime();
 
     /**
      * @return the ratEqErr
      */
-    public double[] getRatEqErr();
+    double[] getRatEqErr();
 
     /**
      * @return the ratioVal
      */
-    public double getRatioVal();
+    double getRatioVal();
 
     /**
      * @return the ratioFractErr
      */
-    public double getRatioFractErr();
+    double getRatioFractErr();
 
 }

@@ -196,8 +196,8 @@ public abstract class Operation
         if (operationName != null) {
             try {
                 method = Operation.class.getMethod(//
-                        operationName,
-                        new Class[0]);
+                        operationName
+                );
                 retVal = (Operation) method.invoke(null, new Object[0]);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException |
                      InvocationTargetException noSuchMethodException) {

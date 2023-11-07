@@ -93,8 +93,8 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
         if (retVal) {
             Iterator<String> covKeys = coVariances.keySet().iterator();
             while (covKeys.hasNext()) {
-                String covName = (String) covKeys.next();
-                BigDecimal covariance = (BigDecimal) coVariances.get(covName);
+                String covName = covKeys.next();
+                BigDecimal covariance = coVariances.get(covName);
                 setCovarianceCells(covName, covariance.doubleValue());
             }
         }
@@ -129,8 +129,8 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
         Integer left = getCols().get(leftSide);
         Integer right = getCols().get(rightSide);
         if ((left != null) && (right != null)) {
-            matrix.set((int) left, (int) right, coVariance);
-            matrix.set((int) right, (int) left, coVariance);
+            matrix.set(left, right, coVariance);
+            matrix.set(right, left, coVariance);
             retval = true;
         }
         return retval;
@@ -290,7 +290,7 @@ public class CovarianceMatrixModel extends AbstractMatrixModel {
         Integer right = getCols().get(rightSide);
 
         if ((left != null) && (right != null)) {
-            return matrix.get((int) left, (int) right);
+            return matrix.get(left, right);
         }
         return retval;
     }

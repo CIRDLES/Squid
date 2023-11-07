@@ -26,8 +26,8 @@ public class DescriptiveErrorListener extends BaseErrorListener {
 
     // public static DescriptiveErrorListener INSTANCE = new DescriptiveErrorListener();
 
+    private final boolean reportSyntaxErrors;
     private String syntaxErrors;
-    private boolean reportSyntaxErrors;
 
     public DescriptiveErrorListener(boolean reportSyntaxErrors) {
         syntaxErrors = "";

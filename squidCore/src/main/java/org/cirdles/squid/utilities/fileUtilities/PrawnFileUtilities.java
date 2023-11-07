@@ -45,7 +45,7 @@ public final class PrawnFileUtilities {
                 + (Integer.parseInt(run.getSet().getPar().get(1).getValue().substring(0, 2)) < 12 ? " AM" : " PM");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss aa");
-        long milliseconds = 0l;
+        long milliseconds = 0L;
         try {
             milliseconds = dateFormat.parse(startDateTime).getTime();
         } catch (ParseException parseException) {
@@ -119,7 +119,7 @@ public final class PrawnFileUtilities {
                         try {
                             double trimMass = Double.parseDouble(measurement.getPar().get(1).getValue());
                             double timeStampSec = Double.parseDouble(measurement.getPar().get(2).getValue());
-                            long measurementTime = runStartTime + (long) timeStampSec * 1000l;
+                            long measurementTime = runStartTime + (long) timeStampSec * 1000L;
 
                             MassStationDetail massStationDetail = mapOfIndexToMassStationDetails.get(index);
                             massStationDetail.getMeasuredTrimMasses().add(trimMass);

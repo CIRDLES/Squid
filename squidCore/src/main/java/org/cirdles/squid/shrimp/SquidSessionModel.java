@@ -24,7 +24,7 @@ import java.util.*;
 public class SquidSessionModel implements Serializable {
 
     private static final long serialVersionUID = -2969849117024998190L;
-
+    private final Map<String, Integer> filtersForUnknownNames;
     private List<SquidSpeciesModel> squidSpeciesModelList;
     private List<SquidRatiosModel> squidRatiosModelList;
     private boolean useSBM;
@@ -32,7 +32,6 @@ public class SquidSessionModel implements Serializable {
     private int indexOfBackgroundSpecies;
     private String referenceMaterialNameFilter;
     private String concentrationReferenceMaterialNameFilter;
-    private Map<String, Integer> filtersForUnknownNames;
 
     public SquidSessionModel(
             List<SquidSpeciesModel> squidSpeciesSpecsList,
@@ -75,7 +74,7 @@ public class SquidSessionModel implements Serializable {
             retVal = !(this.userLinFits == userLinFits);
         }
         if (!retVal) {
-            retVal = !(this.indexOfBackgroundSpecies == indexOfBackgroundSpecies);
+            retVal = (this.indexOfBackgroundSpecies != indexOfBackgroundSpecies);
         }
         if (!retVal) {
             retVal = !(this.referenceMaterialNameFilter.compareToIgnoreCase(referenceMaterialNameFilter) == 0);
