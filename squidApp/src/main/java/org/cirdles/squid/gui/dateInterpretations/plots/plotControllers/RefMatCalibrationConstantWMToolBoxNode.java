@@ -15,9 +15,10 @@
  */
 package org.cirdles.squid.gui.dateInterpretations.plots.plotControllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.*;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
@@ -122,59 +123,54 @@ public class RefMatCalibrationConstantWMToolBoxNode extends HBox {
         getChildren().addAll(corrChoiceLabel, pb204RadioButton, pb207RadioButton, pb208RadioButton, separator1, typeChoiceLabel, type1RadioButton, type2RadioButton);
 
         // add listener after initial choice
-        isotopeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                correction = ((String) isotopeGroup.getSelectedToggle().getUserData());
-                switch (correction.substring(0, 1)) {
-                    case "4":
-                        try {
-                            squidProject.setSelectedIndexIsotope(PB_204);
-                        } catch (SquidException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    case "7":
-                        try {
-                            squidProject.setSelectedIndexIsotope(PB_207);
-                        } catch (SquidException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    default: // case 8
-                        try {
-                            squidProject.setSelectedIndexIsotope(PB_208);
-                        } catch (SquidException e) {
-                            e.printStackTrace();
-                        }
-                }
-                squidProject.getTask().setChanged(true);
+        isotopeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            correction = ((String) isotopeGroup.getSelectedToggle().getUserData());
+            switch (correction.substring(0, 1)) {
+                case "4":
+                    try {
+                        squidProject.setSelectedIndexIsotope(PB_204);
+                    } catch (SquidException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "7":
+                    try {
+                        squidProject.setSelectedIndexIsotope(PB_207);
+                    } catch (SquidException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default: // case 8
+                    try {
+                        squidProject.setSelectedIndexIsotope(PB_208);
+                    } catch (SquidException e) {
+                        e.printStackTrace();
+                    }
+            }
+            squidProject.getTask().setChanged(true);
 
-                try {
-                    plotsController.showActivePlot();
-                } catch (SquidException squidException) {
-                }
+            try {
+                plotsController.showActivePlot();
+            } catch (SquidException squidException) {
             }
         });
 
         // add listener after initial choice
-        typeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
-                PlotsController.calibrConstAgeBaseName = flavor;
-                // updated dec 2021 to change task and recalculate all - somehow this got dropped and not noticed.
-                squidProject.getTask().setParentNuclide(flavor.contains("238") ? "238" : "232");
-                try {
-                    squidProject.getTask().applyDirectives(false);
-                } catch (SquidException squidException) {
-                    SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
-                }
+        typeGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            String flavor = ((String) typeGroup.getSelectedToggle().getUserData());
+            PlotsController.calibrConstAgeBaseName = flavor;
+            // updated dec 2021 to change task and recalculate all - somehow this got dropped and not noticed.
+            squidProject.getTask().setParentNuclide(flavor.contains("238") ? "238" : "232");
+            try {
+                // see Issue #756 needs customize = true
+                squidProject.getTask().applyDirectives(true);
+            } catch (SquidException squidException) {
+                SquidMessageDialog.showWarningDialog(squidException.getMessage(), primaryStageWindow);
+            }
 
-                try {
-                    plotsController.showActivePlot();
-                } catch (SquidException squidException) {
-                }
+            try {
+                plotsController.showActivePlot();
+            } catch (SquidException squidException) {
             }
         });
 
