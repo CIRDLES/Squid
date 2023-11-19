@@ -63,7 +63,7 @@ public class PrawnXMLFileHandler implements Serializable {
     private String currentPrawnSourceFileLocation;
 
     /**
-     * Creates a new {@link PrawnFileHandler} using a new reports engine.
+     * Creates a new {@link PrawnXMLFileHandler} using a new reports engine.
      *
      * @param squidProject
      */
@@ -72,7 +72,7 @@ public class PrawnXMLFileHandler implements Serializable {
     }
 
     /**
-     * Creates a new {@link PrawnFileHandler}.
+     * Creates a new {@link PrawnXMLFileHandler}.
      *
      * @param squidProject
      * @param reportsEngine the reports engine to use

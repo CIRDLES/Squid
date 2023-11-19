@@ -190,7 +190,8 @@ public class CalamariReportsEngine implements Serializable {
         if (doWriteReportFiles) {
             folderToWriteCalamariReportsPath
                     = makeReportFolderStructure()
-                    + squidProject.getProjectName().replaceAll("\\s", "_") + "_PerScan"
+                    // issue #757
+//                    + squidProject.getProjectName().replaceAll("\\s", "_") + "_PerScan"
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;

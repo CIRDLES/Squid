@@ -55,6 +55,10 @@
                 <xs:element minOccurs="0" name="mount" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
                 <xs:element minOccurs="0" name="login_comment" type="xs:string"/>
+                <!-- From SHRIMP SW v4.0 SHR 2-->
+                <xs:element minOccurs="0" name="project_number" type="xs:string"/>
+                <!-- From SHRIMP SW v4.0 SHR 2-->
+                <xs:element minOccurs="0" name="session_number" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
                 <xs:element minOccurs="0" name="stdZrU" type="xs:string"/>
                 <!-- From SHRIMP SW v3.51 SHR 2-->
