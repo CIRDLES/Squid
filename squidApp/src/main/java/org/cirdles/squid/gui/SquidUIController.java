@@ -635,21 +635,6 @@ public class SquidUIController implements Initializable {
             File prawnSourceFile = FileHandler.selectPrawnXMLFile(primaryStageWindow);
             if (prawnSourceFile != null) {
                 processPrawnXMLFile(prawnSourceFile);
-//                prepareForNewProject(GEOCHRON);
-//                if (squidProject.setupPrawnXMLFile(prawnSourceFile)) {
-//                    squidProject.autoDivideSamples();
-//                    squidPersistentState.updatePrawnFileListMRU(prawnSourceFile);
-//                    SquidUI.updateStageTitle("");
-//                    launchProjectManager();
-//                    saveSquidProjectMenuItem.setDisable(true);
-//                    customizeDataMenu();
-//                    squidPersistentState.setMRUProjectFolderPath(prawnSourceFile.getParent());
-//                    saveAsSquidProject();
-//                } else {
-//                    SquidMessageDialog.showWarningDialog(
-//                            "Squid3 encountered an error while trying to open the selected data file.",
-//                            primaryStageWindow);
-//                }
             } else {
                 squidProject.getTask().setChanged(false);
                 SquidProject.setProjectChanged(false);
