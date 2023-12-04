@@ -17,6 +17,7 @@
 package org.cirdles.squid.tasks;
 
 import com.thoughtworks.xstream.XStream;
+import org.apache.commons.io.FileUtils;
 import org.cirdles.squid.Squid;
 import org.cirdles.squid.constants.Squid3Constants;
 import org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum;
@@ -66,16 +67,20 @@ import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 import org.cirdles.squid.utilities.xmlSerialization.XMLSerializerInterface;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import java.util.zip.ZipOutputStream;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.THORIUM;
 import static org.cirdles.squid.constants.Squid3Constants.ConcentrationTypeEnum.URANIUM;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
@@ -92,6 +97,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpr
 import static org.cirdles.squid.tasks.expressions.constants.ConstantNode.MISSING_EXPRESSION_STRING;
 import static org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface.convertObjectArrayToDoubles;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
+import static org.cirdles.squid.utilities.fileUtilities.ZipUtility.zipFile;
 
 /**
  * @author James F. Bowring
@@ -1208,7 +1214,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
      * The original Calamari Reports
      */
     @Override
-    public File producePerScanReportsToFiles() {
+    public File producePerScanReportsToFiles() throws IOException {
         File retVal = null;
         if (unknownSpots.size() > 0) {
             try {
@@ -1220,7 +1226,23 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             } catch (IOException iOException) {
             }
         }
-        return retVal;
+
+        // Dec 2023 to solve problemof too long paths at Canada GS
+        FileOutputStream fos = new FileOutputStream(retVal + ".zip");
+        ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+        File fileToZip = retVal;
+        zipFile(fileToZip, fileToZip.getName(), zipOut);
+        zipOut.close();
+        fos.close();
+
+        String reportsFolder = reportsEngine.makeReportFolderStructure();
+        (new File(reportsFolder)).mkdirs();
+        File zippedSpotReports = new File(retVal + ".zip");
+        File targetZip = new File(reportsFolder + zippedSpotReports.getName());
+        Files.move(zippedSpotReports.toPath(), targetZip.toPath(), REPLACE_EXISTING);
+        FileUtils.deleteDirectory(retVal);
+        return targetZip;
     }
 
     private void reorderExpressions() {
