@@ -1384,7 +1384,7 @@ public class SquidUIController implements Initializable {
     }
 
     @FXML
-    private void producePerScanReportsAction() {
+    private void producePerScanReportsAction() throws IOException {
         if (squidProject.getTask().getRatioNames().isEmpty()) {
             SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
                     primaryStageWindow);

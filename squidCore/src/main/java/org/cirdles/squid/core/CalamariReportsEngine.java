@@ -82,6 +82,8 @@ public class CalamariReportsEngine implements Serializable {
 
     private boolean doWriteReportFiles;
 
+    private String folderForScansToZip;
+
     /**
      * @param squidProject
      */
@@ -109,6 +111,7 @@ public class CalamariReportsEngine implements Serializable {
         this.unknownMeanRatios_PerSpot = new StringBuilder();
 
         this.doWriteReportFiles = true;
+        folderForScansToZip = "SCANStoZIP" + File.separator;
     }
 
     public static String getFormattedDate(long milliseconds) {
@@ -195,15 +198,15 @@ public class CalamariReportsEngine implements Serializable {
                     + File.separator + sdfTime.format(new Date())
                     + reportParameterValues
                     + File.separator;
-            File reportsFolder = new File(folderToWriteCalamariReportsPath);
-            if (!reportsFolder.mkdirs()) {
-                throw new IOException("Failed to delete reports folder '" + folderToWriteCalamariReportsPath + "'");
-            }
+            File reportsFolder = new File(sdfTime.format(new Date()) + reportParameterValues);
+            reportsFolder.mkdirs();
+            folderForScansToZip = reportsFolder.getAbsolutePath() + File.separator;
+
             retVal = reportsFolder;
 
             // get docs for folder
             Path resourcePath = Squid.SQUID_RESOURCE_EXTRACTOR.extractResourceAsPath("/org/cirdles/squid/docs/SquidPerScanReportsDocumentation.pdf");
-            Path newFile = Paths.get(folderToWriteCalamariReportsPath, "SquidPerScanReportsDocumentation.pdf");
+            Path newFile = Paths.get(folderForScansToZip, "SquidPerScanReportsDocumentation.pdf");
             try (OutputStream os = new FileOutputStream(newFile.toFile())) {
 
                 Files.copy(resourcePath, os);
@@ -633,7 +636,7 @@ public class CalamariReportsEngine implements Serializable {
         int countOfIntegrations = shrimpFraction.getPeakMeasurementsCount();
 
         if (doWriteReportFiles) {
-            ionIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_01_IonIntegrations_PerScan.csv");
+            ionIntegrations_PerScan = new File(folderForScansToZip + reportNamePrefix + "Check_01_IonIntegrations_PerScan.csv");
         }
         StringBuilder header = new StringBuilder();
         header.append("Title, Date, Scan, Type, Dead_time_ns");
@@ -651,7 +654,10 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         if (doWriteReportFiles) {
-            sBMIntegrations_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "Check_02_SBMIntegrations_PerScan.csv");
+//                File scansToZip = new File("SCANStoZIP");
+//                scansToZip.mkdirs();
+//                folderForScansToZip = scansToZip.getAbsolutePath() + File.separator;
+            sBMIntegrations_PerScan = new File(folderForScansToZip + reportNamePrefix + "Check_02_SBMIntegrations_PerScan.csv");
         }
 
         header = new StringBuilder();
@@ -670,7 +676,7 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         if (doWriteReportFiles) {
-            totalCounts_IonsAndSBM_PerScan = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_01_TotalCounts_IonsAndSBM_PerScan.csv");
+            totalCounts_IonsAndSBM_PerScan = new File(folderForScansToZip + reportNamePrefix + "SQUID_01_TotalCounts_IonsAndSBM_PerScan.csv");
         }
         header = new StringBuilder();
         header.append("Title, Date, Scan, Type");
@@ -689,7 +695,7 @@ public class CalamariReportsEngine implements Serializable {
         }
 
         if (doWriteReportFiles) {
-            nuclideCPS_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_02_NuclideCPS_PerSpot.csv");
+            nuclideCPS_PerSpot = new File(folderForScansToZip + reportNamePrefix + "SQUID_02_NuclideCPS_PerSpot.csv");
         }
         header = new StringBuilder();
         header.append("Title, Date, Type");
@@ -710,7 +716,7 @@ public class CalamariReportsEngine implements Serializable {
     private void prepRatiosReportFiles(ShrimpFraction shrimpFractionUnknown, ShrimpFraction shrimpFractionRefMat) throws IOException {
         // report Squid_03 headers
         if (doWriteReportFiles) {
-            withinSpotRatios_PerScanMinus1 = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_03_WithinSpotRatios_PerScanMinus1.csv");
+            withinSpotRatios_PerScanMinus1 = new File(folderForScansToZip + reportNamePrefix + "SQUID_03_WithinSpotRatios_PerScanMinus1.csv");
         }
 
         unknownHeaderWithinSpotRatios_PerScanMinus1 = new StringBuilder();
@@ -810,7 +816,7 @@ public class CalamariReportsEngine implements Serializable {
 
         // report squid_04 headers *********************************************
         if (doWriteReportFiles) {
-            meanRatios_PerSpot = new File(folderToWriteCalamariReportsPath + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
+            meanRatios_PerSpot = new File(folderForScansToZip + reportNamePrefix + "SQUID_04_MeanRatios_PerSpot.csv");
         }
 
         unknownHeaderMeanRatios_PerSpot = new StringBuilder();

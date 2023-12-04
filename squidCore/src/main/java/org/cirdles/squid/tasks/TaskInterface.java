@@ -32,6 +32,7 @@ import org.cirdles.squid.tasks.taskDesign.TaskDesign;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -344,7 +345,7 @@ public interface TaskInterface {
      *
      * @return
      */
-    File producePerScanReportsToFiles();
+    File producePerScanReportsToFiles() throws IOException;
 
     void updateRatioNames(String[] ratioNames) throws SquidException;
 
