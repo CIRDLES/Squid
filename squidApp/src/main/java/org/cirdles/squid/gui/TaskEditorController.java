@@ -235,7 +235,7 @@ public class TaskEditorController implements Initializable {
         String den = denLabel.getText();
         boolean valid = (num.compareTo(den) != 0)
                 && !taskEditor.getRatioNames().contains(num + "/" + den)
-                && !REQUIRED_RATIO_NAMES.contains(num + "/" + den)
+                && !taskEditor.getTaskType().getRequiredRatioNames().contains(num + "/" + den)
                 && num.length() > 0 && den.length() > 0;
         addBtn.setDisable(!valid);
     }
@@ -246,7 +246,7 @@ public class TaskEditorController implements Initializable {
         int count = 1;
 
         if (amGeochronMode) {
-            for (String ratioName : REQUIRED_RATIO_NAMES) {
+            for (String ratioName : taskEditor.getTaskType().getRequiredRatioNames()) {
                 VBox ratio = makeRatioVBox(ratioName);
                 ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
                 ratio.setTranslateX(count++);
@@ -458,8 +458,8 @@ public class TaskEditorController implements Initializable {
 
             if (newValue == 0) {
                 taskEditor.setIndexOfBackgroundSpecies(-1);
-            } else if (newValue > taskEditor.getNominalMasses().size() + REQUIRED_NOMINAL_MASSES.size()) {
-                taskEditor.setIndexOfBackgroundSpecies(taskEditor.getNominalMasses().size() + REQUIRED_NOMINAL_MASSES.size() - 1);
+            } else if (newValue > taskEditor.getNominalMasses().size() + taskEditor.getTaskType().getRequiredNominalMasses().size()) {
+                taskEditor.setIndexOfBackgroundSpecies(taskEditor.getNominalMasses().size() + taskEditor.getTaskType().getRequiredNominalMasses().size() - 1);
             } else {
                 taskEditor.setIndexOfBackgroundSpecies(newValue - 1);
             }
@@ -495,7 +495,7 @@ public class TaskEditorController implements Initializable {
         defaultMassesListTextFlow.setMaxHeight(30);
         List<String> allMasses = new ArrayList<>();
         if (amGeochronMode) {
-            allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+            allMasses.addAll(taskEditor.getTaskType().getRequiredNominalMasses());
         }
         allMasses.addAll(taskEditor.getNominalMasses());
 
@@ -506,7 +506,7 @@ public class TaskEditorController implements Initializable {
             StackPane massText;
             if (count == taskEditor.getIndexOfBackgroundSpecies() + 1) {
                 massText = makeMassStackPane(mass, "Aquamarine");
-            } else if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+            } else if (taskEditor.getTaskType().getRequiredNominalMasses().contains(mass)) {
                 massText = makeMassStackPane(mass, "pink");
             } else {
                 massText = makeMassStackPane(mass, "white");
@@ -726,11 +726,13 @@ public class TaskEditorController implements Initializable {
                 denLabel.setText("");
                 addBtn.setDisable(true);
                 List<String> masses = new ArrayList<>();
-                masses.addAll(REQUIRED_NOMINAL_MASSES);
+                masses.addAll(taskEditor.getTaskType().getRequiredNominalMasses());
                 masses.addAll(taskEditor.getNominalMasses());
                 //                 DEFAULT_BACKGROUND_MASS_LABEL);
                 masses.sort(new IntuitiveStringComparator<>());
-                masses.remove(taskEditor.getIndexOfBackgroundSpecies());
+                if (taskEditor.getIndexOfBackgroundSpecies() >= 0) {
+                    masses.remove(taskEditor.getIndexOfBackgroundSpecies());
+                }
                 addNumeratorVBox.getChildren().clear();
                 addDenominatorVBox.getChildren().clear();
                 for (String mass : masses) {
@@ -824,7 +826,7 @@ public class TaskEditorController implements Initializable {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
                     == (taskEditor.getNominalMasses().size()
-                    + (amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0)));
+                    + (amGeochronMode ? taskEditor.getTaskType().getRequiredNominalMasses().size() : 0)));
             if (valid) {
                 // detect if masses or ratios have changed before reconstruction
                 boolean noChange = ((Task) squidProject.getTask()).taskDesignDiffersFromTask(taskEditor);
@@ -846,7 +848,7 @@ public class TaskEditorController implements Initializable {
             } else {
                 SquidMessageDialog.showInfoDialog("The data file has " + squidProject.getTask().getSquidSpeciesModelList().size()
                                 + " masses, but the Task Editor specifies "
-                                + ((amGeochronMode ? REQUIRED_NOMINAL_MASSES.size() : 0) + taskEditor.getNominalMasses().size())
+                                + ((amGeochronMode ? taskEditor.getTaskType().getRequiredNominalMasses().size() : 0) + taskEditor.getNominalMasses().size())
                                 + ".",
                         primaryStageWindow);
             }

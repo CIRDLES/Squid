@@ -18,8 +18,7 @@ package org.cirdles.squid.constants;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.COR_PREFIX;
 
@@ -260,15 +259,19 @@ public final class Squid3Constants {
     }
 
     public enum TaskTypeEnum {
-        GEOCHRON("GEOCHRON", "Geochron"),
-        GENERAL("GENERAL", "Ratio");
+        GEOCHRON("GEOCHRON", "Geochron", new ArrayList<>(Arrays.asList("204", "206", "207", "208")), new ArrayList<>(Arrays.asList("204/206", "207/206", "208/206"))),
+        GENERAL("GENERAL", "Ratio", new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList()));
 
         private final String name;
         private final String projectName;
+        private final List<String> requiredNominalMasses;
+        private final List<String> requiredRatioNames;
 
-        TaskTypeEnum(String name, String projectName) {
+        TaskTypeEnum(String name, String projectName, List<String> requiredNominalMasses, List<String> requiredRatioNames) {
             this.name = name;
             this.projectName = projectName;
+            this.requiredNominalMasses = requiredNominalMasses;
+            this.requiredRatioNames = requiredRatioNames;
         }
 
         public String getName() {
@@ -280,6 +283,14 @@ public final class Squid3Constants {
          */
         public String getProjectName() {
             return projectName;
+        }
+
+        public List<String> getRequiredNominalMasses() {
+            return requiredNominalMasses;
+        }
+
+        public List<String> getRequiredRatioNames() {
+            return requiredRatioNames;
         }
     }
 

@@ -16,7 +16,6 @@
 package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,10 +26,10 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  REQUIRED   **************************************
     public static final String DEFAULT_BACKGROUND_MASS_LABEL = "BKG";
 
-    public static final List<String> REQUIRED_NOMINAL_MASSES
-            = new ArrayList<>(Arrays.asList("204", "206", "207", "208"));
-    public static final List<String> REQUIRED_RATIO_NAMES
-            = new ArrayList<>(Arrays.asList("204/206", "207/206", "208/206"));
+//    public static final List<String> REQUIRED_NOMINAL_MASSES
+//            = new ArrayList<>(Arrays.asList("204", "206", "207", "208"));
+//    public static final List<String> REQUIRED_RATIO_NAMES
+//            = new ArrayList<>(Arrays.asList("204/206", "207/206", "208/206"));
 
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
@@ -102,8 +101,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB4COR207_206AGE = PB4CORR + "207Pb206Pb_Age";
     public static final String PB4COR_DISCORDANCE = PB4CORR + "Discord_Pct";
-    public static final String BIWT_PRE = "BiWt_";
     public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
+    public static final String BIWT_PRE = "BiWt_";
     public static final String PB7CORR = "7" + COR_PREFIX;
     public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
     public static final String PB7COR206_238AGE = PB7CORR + "206Pb238U_Age";

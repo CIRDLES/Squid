@@ -470,7 +470,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         boolean amGeochronMode = (taskType.equals(TaskTypeEnum.GEOCHRON));
         List<String> allMasses = new ArrayList<>();
         if (amGeochronMode) {
-            allMasses.addAll(REQUIRED_NOMINAL_MASSES);
+            allMasses.addAll(taskType.getRequiredNominalMasses());
         }
         allMasses.addAll(nominalMasses);
         nominalMasses = allMasses;
@@ -481,7 +481,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         List<String> allRatios = new ArrayList<>();
         if (amGeochronMode) {
-            allRatios.addAll(REQUIRED_RATIO_NAMES);
+            allRatios.addAll(taskType.getRequiredRatioNames());
         }
         allRatios.addAll(ratioNames);
         ratioNames = allRatios;
@@ -556,11 +556,11 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
         // housekeeping
         List<String> myNominalMasses = new ArrayList<>(nominalMasses);
-        myNominalMasses.removeAll(REQUIRED_NOMINAL_MASSES);
+        myNominalMasses.removeAll(taskType.getRequiredNominalMasses());
         taskDesign.setNominalMasses(myNominalMasses);
 
         List<String> myRatioNames = new ArrayList<>(ratioNames);
-        myRatioNames.removeAll(REQUIRED_RATIO_NAMES);
+        myRatioNames.removeAll(taskType.getRequiredRatioNames());
         taskDesign.setRatioNames(myRatioNames);
 
         if (includeCustomExp) {
@@ -575,12 +575,12 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
         boolean noChange = false;
         List<String> taskMasses = getNominalMasses();
         List<String> designerMasses = taskDesign.getNominalMasses();
-        designerMasses.addAll(REQUIRED_NOMINAL_MASSES);
+        designerMasses.addAll(taskType.getRequiredNominalMasses());
         noChange = taskMasses.containsAll(designerMasses) && designerMasses.containsAll(taskMasses);
 
         List<String> taskRatios = getRatioNames();
         List<String> designerRatios = taskDesign.getRatioNames();
-        designerRatios.addAll(REQUIRED_RATIO_NAMES);
+        designerRatios.addAll(taskType.getRequiredRatioNames());
         noChange = noChange && taskRatios.containsAll(designerRatios) && designerRatios.containsAll(taskRatios);
         noChange = noChange && (getIndexOfBackgroundSpecies() == taskDesign.getIndexOfBackgroundSpecies());
 
@@ -2426,7 +2426,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
             singleSpot.add(spot);
             try {
                 Object[][] objects = expressionTree.eval(singleSpot, this);
-                if (objects[0][0] instanceof String) {
+                if (objects[0] == null) {
+                    // Case of bad expression - will be "BKG" when it is missing
+                    spot.getTaskExpressionsEvaluationsPerSpot().put(expressionTree, new double[][]{{0.0}});
+                } else if (objects[0][0] instanceof String) {
                     // Case of meta data
                     spot.getTaskExpressionsMetaDataPerSpot().put(expressionTree, (String) objects[0][0]);
                 } else {

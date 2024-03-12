@@ -137,10 +137,10 @@ public class TaskDesign implements Serializable {
 
     private void buildShrimpSpeciesNodeMap() {
         shrimpSpeciesNodeMap = new TreeMap<>();
-        for (int i = 0; i < REQUIRED_NOMINAL_MASSES.size(); i++) {
+        for (int i = 0; i < taskType.getRequiredNominalMasses().size(); i++) {
             shrimpSpeciesNodeMap.put(
-                    REQUIRED_NOMINAL_MASSES.get(i),
-                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(REQUIRED_NOMINAL_MASSES.get(i)), "getPkInterpScanArray"));
+                    taskType.getRequiredNominalMasses().get(i),
+                    ShrimpSpeciesNode.buildShrimpSpeciesNode(new SquidSpeciesModel(taskType.getRequiredNominalMasses().get(i)), "getPkInterpScanArray"));
         }
         for (int i = 0; i < nominalMasses.size(); i++) {
             shrimpSpeciesNodeMap.put(
@@ -151,16 +151,16 @@ public class TaskDesign implements Serializable {
 
     public Map<String, ExpressionTreeInterface> buildNamedExpressionsMap() {
         Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        for (int i = 0; i < REQUIRED_RATIO_NAMES.size(); i++) {
-            String[] numDem = REQUIRED_RATIO_NAMES.get(i).split("/");
+        for (int i = 0; i < taskType.getRequiredRatioNames().size(); i++) {
+            String[] numDem = taskType.getRequiredRatioNames().get(i).split("/");
             ExpressionTreeInterface ratio = new ExpressionTree(
-                    REQUIRED_RATIO_NAMES.get(i),
+                    taskType.getRequiredRatioNames().get(i),
                     shrimpSpeciesNodeMap.get(numDem[0]),
                     shrimpSpeciesNodeMap.get(numDem[1]),
                     Operation.divide());
             ratio.setSquidSwitchSAUnknownCalculation(true);
             ratio.setSquidSwitchSTReferenceMaterialCalculation(true);
-            namedExpressionsMap.put(REQUIRED_RATIO_NAMES.get(i), ratio);
+            namedExpressionsMap.put(taskType.getRequiredRatioNames().get(i), ratio);
         }
         for (int i = 0; i < ratioNames.size(); i++) {
             String[] numDem = ratioNames.get(i).split("/");
