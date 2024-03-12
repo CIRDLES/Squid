@@ -15,8 +15,6 @@
  */
 package org.cirdles.squid.gui;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -219,40 +217,15 @@ public class TaskManagerController implements Initializable {
     }
 
     private void setupListeners() {
-        taskNameTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                task.setName(newValue);
-            }
-        });
+        taskNameTextField.textProperty().addListener((observable, oldValue, newValue) -> task.setName(newValue));
 
-        taskDescriptionTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                task.setDescription(newValue);
-            }
-        });
+        taskDescriptionTextField.textProperty().addListener((observable, oldValue, newValue) -> task.setDescription(newValue));
 
-        authorsNameTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                task.setAuthorName(newValue);
-            }
-        });
+        authorsNameTextField.textProperty().addListener((observable, oldValue, newValue) -> task.setAuthorName(newValue));
 
-        labNameTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                task.setLabName(newValue);
-            }
-        });
+        labNameTextField.textProperty().addListener((observable, oldValue, newValue) -> task.setLabName(newValue));
 
-        provenanceTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                task.setProvenance(newValue);
-            }
-        });
+        provenanceTextField.textProperty().addListener((observable, oldValue, newValue) -> task.setProvenance(newValue));
     }
 
     @FXML

@@ -21,8 +21,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.WebView?>
-<SplitPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity"
-           maxWidth="-Infinity"
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity" maxWidth="-Infinity"
            minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0"
            styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css"
            xmlns="http://javafx.com/javafx/17"
@@ -95,7 +94,8 @@
                                         <ListView fx:id="isotopesExpressionsListView"/>
                                     </content>
                                 </TitledPane>
-                                <TitledPane animated="false" layoutX="10.0" layoutY="102.0"
+                                <TitledPane fx:id="spotMetaDataFieldsTitledPane" animated="false" layoutX="10.0"
+                                            layoutY="102.0"
                                             style="-fx-font-family: SansSerif; -fx-font-size: 12; -fx-font-weight: bold;"
                                             text="Spot Metadata Fields &amp; Common Lead Specs">
                                     <content>

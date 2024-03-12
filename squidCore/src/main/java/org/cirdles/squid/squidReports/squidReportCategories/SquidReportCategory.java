@@ -72,10 +72,10 @@ public class SquidReportCategory implements Serializable, SquidReportCategoryInt
         // raw ratios will be populated on the fly from task with the exception of the required ratios
         SquidReportCategory rawRatios = createReportCategory("Raw Ratios");
         categoryColumns = new LinkedList<>();
-        for (String ratioName : BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES) {
-            column = SquidReportColumn.createSquidReportColumn(ratioName);
-            categoryColumns.add(column);
-        }
+//        for (String ratioName : BuiltInExpressionsDataDictionary.REQUIRED_RATIO_NAMES) {
+//            column = SquidReportColumn.createSquidReportColumn(ratioName);
+//            categoryColumns.add(column);
+//        }
         rawRatios.setCategoryColumns(categoryColumns);
         defaultSampleWMSortingCategories.add(rawRatios);
         defaultRefMatWMSortingCategories.add(rawRatios);

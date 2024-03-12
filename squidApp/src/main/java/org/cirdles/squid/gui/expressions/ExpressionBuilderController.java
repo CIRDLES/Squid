@@ -147,6 +147,8 @@ public class ExpressionBuilderController implements Initializable {
     private final Map<String, Tooltip> tooltipsMap = new HashMap<>();
     private final Map<KeyCode, Boolean> keyMap = new HashMap<>();
     private final ObservableList<ExpressionTextNode> selectedNodes = FXCollections.observableArrayList();
+    @FXML
+    public TitledPane spotMetaDataFieldsTitledPane;
     //RADIOS
     ToggleGroup toggleGroup;
     //List of all the expressions
@@ -358,6 +360,9 @@ public class ExpressionBuilderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         task = squidProject.getTask();
+        nuSwitchedExpressionsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
+        builtInExpressionsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
+        spotMetaDataFieldsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
 
         initPropertyBindings();
         initListViews();

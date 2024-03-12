@@ -371,7 +371,7 @@ public class TaskFolderBrowserController implements Initializable {
             StackPane massText;
             if (count == task.getIndexOfBackgroundSpecies() + 1) {
                 massText = makeMassStackPane(mass, "Aquamarine");
-            } else if (REQUIRED_NOMINAL_MASSES.contains(mass)) {
+            } else if (task.getTaskType().getRequiredNominalMasses().contains(mass)) {
                 massText = makeMassStackPane(mass, "pink");
             } else {
                 massText = makeMassStackPane(mass, "white");
@@ -394,7 +394,7 @@ public class TaskFolderBrowserController implements Initializable {
         List<String> ratioNames = task.getRatioNames();
         for (String ratioName : ratioNames) {
             VBox ratio = TaskEditorController.makeRatioVBox(ratioName);
-            if (REQUIRED_RATIO_NAMES.contains(ratioName)) {
+            if (task.getTaskType().getRequiredNominalMasses().contains(ratioName)) {
                 ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;-fx-background-color: pink;");
             } else {
                 ratio.setStyle(ratio.getStyle() + "-fx-border-color: black;");

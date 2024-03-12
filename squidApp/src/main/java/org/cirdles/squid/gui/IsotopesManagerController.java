@@ -196,14 +196,14 @@ public class IsotopesManagerController implements Initializable {
             public void handle(TableColumn.CellEditEvent<MassStationDetail, String> editEvent) {
                 String editIsotopeName = editEvent.getNewValue();
                 if (editIsotopeName.compareToIgnoreCase(DEFAULT_BACKGROUND_MASS_LABEL) != 0) {
-                    ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
+                    editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow())
                             .setIsotopeLabel(editIsotopeName);
                     SquidSpeciesModel ssm
                             = task.getSquidSpeciesModelList()
                             .get(editEvent.getTablePosition().getRow());
                     ssm.setIsotopeName(editIsotopeName);
                 } else {
-                    ((MassStationDetail) editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow()))
+                    editEvent.getTableView().getItems().get(editEvent.getTablePosition().getRow())
                             .setIsotopeLabel(editEvent.getOldValue());
                 }
                 task.setChanged(true);

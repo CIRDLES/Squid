@@ -51,7 +51,7 @@ public class ReducedDataReportManagerController implements Initializable {
                     squidProject.getPrawnFileHandler().getReportsEngine()
                             .produceCalamariReportByFlavor(SquidUI.calamariReportFlavor).replaceAll(",", ""));
         } else {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes to initialize expressions.\n",
+            SquidMessageDialog.showInfoDialog("Please be sure to Map Isotopes from Tasks to Data (Isotopes Menu) to initialize expressions.\n",
                     primaryStageWindow);
         }
     }

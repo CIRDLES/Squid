@@ -1109,7 +1109,7 @@ public class SquidUIController implements Initializable {
 
         // present warning if needed
         if (squidProject.isTypeGeochron() && !squidProject.projectIsHealthyGeochronMode()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes (press red button) to initialize expressions\n"
+            SquidMessageDialog.showInfoDialog("Please be sure to Map Isotopes from Tasks to Data (Isotopes Menu) to initialize expressions\n"
                             + " and confirm the ratios in ParentElement_ConcenConst = \n"
                             + "\t\t" + squidProject.getTask().getExpressionByName(PARENT_ELEMENT_CONC_CONST).getExcelExpressionString(),
                     primaryStageWindow);
@@ -1386,7 +1386,7 @@ public class SquidUIController implements Initializable {
     @FXML
     private void producePerScanReportsAction() throws IOException {
         if (squidProject.getTask().getRatioNames().isEmpty()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
+            SquidMessageDialog.showInfoDialog("Please be sure to Map Isotopes from Tasks to Data (Isotopes Menu) to initialize expressions.\n",
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {
@@ -1487,7 +1487,7 @@ public class SquidUIController implements Initializable {
     @FXML
     public void generateAllReportsAction() throws IOException, SquidException {
         if (squidProject.getTask().getRatioNames().isEmpty()) {
-            SquidMessageDialog.showInfoDialog("Please be sure to Manage Isotopes and Ratios to initialize expressions.\n",
+            SquidMessageDialog.showInfoDialog("Please be sure to Map Isotopes from Tasks to Data (Isotopes Menu) to initialize expressions.\n",
                     primaryStageWindow);
         } else {
             if (squidProject.hasReportsFolder()) {

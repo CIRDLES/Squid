@@ -44,12 +44,11 @@
                                           text="By Joining two Prawn XML files"/>
                                 <SeparatorMenuItem/>
                                 <MenuItem fx:id="newSquidProjectFromOPFileMenuItem" mnemonicParsing="false"
-                                          onAction="#newSquidProjectFromOPFileAction" text="(Beta) From OP File"/>
-                                <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false"
-                                      text="(Beta) From Recent OP File"/>
+                                          onAction="#newSquidProjectFromOPFileAction" text="From OP File"/>
+                                <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="From Recent OP File"/>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="New Squid3 RATIO Project &lt;BETA&gt;">
+                        <Menu mnemonicParsing="false" text="New Squid3 RATIO Project ">
                             <items>
                                 <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false"
                                           onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file"/>
@@ -125,7 +124,7 @@
                 <Menu fx:id="manageRatiosMenu" mnemonicParsing="false" text="Isotopes">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#specifyIsotopesMenuItemAction"
-                                  text="Map Isotopes from Data to Task"/>
+                                  text="Map Isotopes from Task to Data"/>
                     </items>
                 </Menu>
                 <Menu fx:id="manageExpressionsMenu" mnemonicParsing="false" text="Expressions">
