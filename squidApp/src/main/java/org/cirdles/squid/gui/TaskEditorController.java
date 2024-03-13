@@ -93,6 +93,7 @@ public class TaskEditorController implements Initializable {
     private static Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private static boolean amGeochronMode;
     private final List<StackPane> undoMassesList = new ArrayList<>();
+    public Text pinkMassesWarningText;
     EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
@@ -377,6 +378,10 @@ public class TaskEditorController implements Initializable {
                 default:
             }
             amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
+
+            if (taskEditor.getTaskType().equals(TaskTypeEnum.GENERAL)) {
+                pinkMassesWarningText.setText("");
+            }
 
             updateAddButton();
 
