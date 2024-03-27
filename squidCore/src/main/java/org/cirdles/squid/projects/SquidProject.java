@@ -225,6 +225,7 @@ public final class SquidProject implements Squid3ProjectBasicAPI, Squid3ProjectR
         this.task = new Task(
                 "New Task", prawnFile, prawnFileHandler.getNewReportsEngine());
 
+        this.task.setTaskType(projectType);
         this.task.setDelimiterForUnknownNames(delimiterForUnknownNames);
         this.task.setFilterForConcRefMatSpotNames(filterForConcRefMatSpotNames);
         this.task.setFilterForRefMatSpotNames(filterForRefMatSpotNames);
