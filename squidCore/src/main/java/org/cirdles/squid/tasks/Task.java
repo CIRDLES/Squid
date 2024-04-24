@@ -650,19 +650,19 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     @Override
     public void generateBuiltInExpressions() {
 
-        SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel((ReferenceMaterialModel) referenceMaterialModel);
-        taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
-
-        SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
-        taskExpressionsOrdered.addAll(generateConcReferenceMaterialValues);
-
-        SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
-        taskExpressionsOrdered.addAll(generateCommonLeadParameterValues);
-
         SortedSet<Expression> generatePhysicalConstantsValues = updatePhysicalConstantsParameterValuesFromModel((PhysicalConstantsModel) physicalConstantsModel);
         taskExpressionsOrdered.addAll(generatePhysicalConstantsValues);
 
         if (taskType.equals(GEOCHRON)) {
+            SortedSet<Expression> generateReferenceMaterialValues = updateReferenceMaterialValuesFromModel((ReferenceMaterialModel) referenceMaterialModel);
+            taskExpressionsOrdered.addAll(generateReferenceMaterialValues);
+
+            SortedSet<Expression> generateConcReferenceMaterialValues = updateConcReferenceMaterialValuesFromModel((ReferenceMaterialModel) concentrationReferenceMaterialModel);
+            taskExpressionsOrdered.addAll(generateConcReferenceMaterialValues);
+
+            SortedSet<Expression> generateCommonLeadParameterValues = updateCommonLeadParameterValuesFromModel(commonPbModel);
+            taskExpressionsOrdered.addAll(generateCommonLeadParameterValues);
+
             SortedSet<Expression> generatePlaceholderExpressions = generatePlaceholderExpressions(parentNuclide, isDirectAltPD());
             taskExpressionsOrdered.addAll(generatePlaceholderExpressions);
 

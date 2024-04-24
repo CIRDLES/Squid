@@ -26,11 +26,6 @@ public class BuiltInExpressionsDataDictionary {
     // **********************  REQUIRED   **************************************
     public static final String DEFAULT_BACKGROUND_MASS_LABEL = "BKG";
 
-//    public static final List<String> REQUIRED_NOMINAL_MASSES
-//            = new ArrayList<>(Arrays.asList("204", "206", "207", "208"));
-//    public static final List<String> REQUIRED_RATIO_NAMES
-//            = new ArrayList<>(Arrays.asList("204/206", "207/206", "208/206"));
-
     // **********************  SPECIAL CONSTANTS ******************************
     // holding spot until models are implemented
     public static final String REF_238U235U_RM_MODEL_NAME = "r238_235s";

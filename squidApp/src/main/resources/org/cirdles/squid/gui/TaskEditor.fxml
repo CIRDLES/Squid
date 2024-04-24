@@ -21,8 +21,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Ellipse?>
 <?import javafx.scene.text.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0"
-          minWidth="1250.0"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="taskManagerGridPane" hgap="15.0" minHeight="660.0" minWidth="1250.0"
           prefHeight="660.0" prefWidth="1250.0" styleClass="backgroundCalamari" stylesheets="@css/projectManager.css"
           vgap="10.0" xmlns="http://javafx.com/javafx/17"
           fx:controller="org.cirdles.squid.gui.TaskEditorController">
@@ -229,9 +228,9 @@
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Mass Labels:" GridPane.rowIndex="6"/>
         <HBox alignment="CENTER_LEFT" prefHeight="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
             <children>
-                <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false"
-                        prefHeight="27.0" prefWidth="86.0"
-                        style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add Masses"/>
+                <Button fx:id="chooseMassesButton" minWidth="86.0" mnemonicParsing="false" prefHeight="27.0"
+                        prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;"
+                        text="Add Masses"/>
                 <ScrollPane prefHeight="50.0" prefWidth="1035.0" HBox.hgrow="ALWAYS">
                     <content>
                         <TextFlow fx:id="defaultMassesListTextFlow" minHeight="30.0" minWidth="997.0"
@@ -243,9 +242,9 @@
         <Label style="-fx-text-fill: #3c77c9; -fx-font-weight: bold;" text="Ratios:" GridPane.rowIndex="8"/>
         <HBox alignment="CENTER_LEFT" prefHeight="90.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
             <children>
-                <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false"
-                        prefHeight="27.0" prefWidth="86.0"
-                        style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;" text="Add / Restore"/>
+                <Button fx:id="chooseRatiosButton" minWidth="86.0" mnemonicParsing="false" prefHeight="27.0"
+                        prefWidth="86.0" style="-fx-padding: 0 0 0 0; -fx-font-size: 10; -fx-font-weight: bold;"
+                        text="Add / Restore"/>
                 <ScrollPane HBox.hgrow="ALWAYS">
                     <content>
                         <TextFlow fx:id="defaultRatiosListTextFlow" minHeight="35.0" minWidth="997.0"
@@ -268,7 +267,7 @@
                 </Text>
                 <Spinner fx:id="backgroundIndexSpinner" maxHeight="25.0" minHeight="25.0" prefHeight="25.0"
                          prefWidth="54.0" style="-fx-scale-y: 0.9; -fx-background-color: AQUAMARINE;"/>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;"
+                <Text fx:id="pinkMassesWarningText" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-fill: red;"
                       text="Note: Pink masses and ratios are required.  Hint: To remove mass or ratio, click its oval in the displayed list."
                       textAlignment="RIGHT" wrappingWidth="578.55224609375">
                     <font>

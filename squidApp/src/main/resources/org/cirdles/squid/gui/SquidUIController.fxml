@@ -48,7 +48,7 @@
                                 <Menu fx:id="openRecentOPFileMenu" mnemonicParsing="false" text="From Recent OP File"/>
                             </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="New Squid3 RATIO Project ">
+                        <Menu mnemonicParsing="false" text="New Squid3 GENERAL (Ratio) Project ">
                             <items>
                                 <MenuItem fx:id="newSquidRatioProjectMenuItem" mnemonicParsing="false"
                                           onAction="#newSquidRatioProjectAction" text="From a single Prawn XML file"/>

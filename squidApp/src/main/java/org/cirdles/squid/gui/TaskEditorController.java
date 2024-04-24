@@ -79,11 +79,13 @@ public class TaskEditorController implements Initializable {
     private static final Label instructions = new Label("   Choose numerator and denominator");
     private static final Button addBtn = new Button("Add ratio");
     private static final HBox addBtnHBox = new HBox(addBtn);
+    private static final Button closeBtn = new Button("Close");
+    private static final HBox closeBtnHBox = new HBox(closeBtn);
     private static final Label numLabel = new Label("");
     private static final Label divLabel = new Label("/");
     private static final Label denLabel = new Label("");
     private static final HBox infoLabelHBox = new HBox(numLabel, divLabel, denLabel);
-    private static final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox);
+    private static final VBox addInfo = new VBox(infoLabelHBox, addBtnHBox, closeBtnHBox);
     private static final VBox menuVBox = new VBox(instructions, numDemHBox, addInfo);
     private static final Map<String, Tooltip> tooltipsMap = new HashMap<>();
     private static final ToggleGroup numTG = new ToggleGroup();
@@ -93,6 +95,7 @@ public class TaskEditorController implements Initializable {
     private static Map<String, ExpressionTreeInterface> namedExpressionsMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private static boolean amGeochronMode;
     private final List<StackPane> undoMassesList = new ArrayList<>();
+    public Text pinkMassesWarningText;
     EventHandler<MouseEvent> mouseEnteredExpressionEventHandler = new EventHandler<MouseEvent>() {
         @Override
         public void handle(MouseEvent event) {
@@ -317,7 +320,21 @@ public class TaskEditorController implements Initializable {
             updateAddButton();
         });
 
-//        updateAddButton();
+        closeBtnHBox.setAlignment(Pos.CENTER);
+        closeBtn.setStyle(
+                "-fx-padding: 5 22 5 22;\n"
+                        + "    -fx-border-color: #e2e2e2;"
+                        + "    -fx-border-width: 2;"
+                        + "    -fx-background-radius: 0;"
+                        + "    -fx-background-color: #FB6D42;"
+                        + "    -fx-font-family: SansSerif;"
+                        + "    -fx-font-size: 11pt;"
+                        + "    -fx-text-fill: whitesmoke;"
+                        + "    -fx-background-insets: 0 0 0 0, 0, 1, 2;");
+
+        closeBtn.setOnMouseClicked((event) -> {
+            ADD_RATIOS_STAGE.hide();
+        });
 
         numLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
         divLabel.setStyle("-fx-font-family: SansSerif bold;-fx-font-size: 18");
@@ -377,6 +394,10 @@ public class TaskEditorController implements Initializable {
                 default:
             }
             amGeochronMode = taskEditor.getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0;
+
+            if (taskEditor.getTaskType().equals(TaskTypeEnum.GENERAL)) {
+                pinkMassesWarningText.setText("");
+            }
 
             updateAddButton();
 
@@ -822,6 +843,7 @@ public class TaskEditorController implements Initializable {
 
     @FXML
     private void updateCurrentTaskWithThisTaskAction() throws SquidException {
+        ADD_RATIOS_STAGE.hide();
         if (squidProject.getTask().getTaskType().equals(taskEditor.getTaskType())) {
             // check the mass count
             boolean valid = (squidProject.getTask().getSquidSpeciesModelList().size()
@@ -864,6 +886,7 @@ public class TaskEditorController implements Initializable {
 
     @FXML
     private void saveThisTaskAsXMLFileAction() {
+        ADD_RATIOS_STAGE.hide();
         try {
             TaskInterface task = new Task();
             task.updateTaskFromTaskDesign(taskEditor, true);
@@ -877,6 +900,7 @@ public class TaskEditorController implements Initializable {
 
     @FXML
     private void viewCurrentTaskAction() {
+        ADD_RATIOS_STAGE.hide();
         MenuItem menuItemTaskManager = ((MenuBar) SquidUI.primaryStage.getScene()
                 .getRoot().getChildrenUnmodifiable().get(0)).getMenus().get(2).getItems().get(0);
         menuItemTaskManager.fire();

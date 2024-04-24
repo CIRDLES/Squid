@@ -51,6 +51,7 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
  */
 public class ProjectManagerController implements Initializable {
 
+    public Label parametersModelLabel;
     @FXML
     private TextField originalPrawnFileName;
     @FXML
@@ -230,6 +231,8 @@ public class ProjectManagerController implements Initializable {
         } else {
             specifyDefaultCommonPbLabel.setVisible(false);
             commonPbModelComboBox.setVisible(false);
+            parametersModelLabel.setVisible(false);
+            useCommonPbModelForUnknownsCheckBox.setVisible(false);
         }
     }
 
