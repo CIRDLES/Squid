@@ -96,8 +96,8 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB4COR207_206AGE = PB4CORR + "207Pb206Pb_Age";
     public static final String PB4COR_DISCORDANCE = PB4CORR + "Discord_Pct";
-    public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
     public static final String BIWT_PRE = "BiWt_";
+    public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
     public static final String PB7CORR = "7" + COR_PREFIX;
     public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
     public static final String PB7COR206_238AGE = PB7CORR + "206Pb238U_Age";
