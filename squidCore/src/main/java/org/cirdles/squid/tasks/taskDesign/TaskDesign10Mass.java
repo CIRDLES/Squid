@@ -25,11 +25,12 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class TaskDesign10Mass extends TaskDesign {
+public class TaskDesign10Mass extends TaskDesignGeochronBlank {
 
     public TaskDesign10Mass() throws SquidException {
+        super();
 
-        this.nominalMasses = new ArrayList<>(Arrays.asList(//            DEFAULT_BACKGROUND_MASS_LABEL, "196", "238", "248", "254", "270"}));
+        this.nominalMasses = new ArrayList<>(Arrays.asList(
                 "204.1", "196", "238", "248", "254", "270"));
 
         this.ratioNames = new ArrayList<>(Arrays.asList("238/196", "206/238", "208/248", "254/238", "248/254", "206/254", "206/270", "270/254"));

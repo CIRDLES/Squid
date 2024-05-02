@@ -205,6 +205,7 @@ public class SquidPersistentState implements Serializable {
      */
     public void setTaskDesign(TaskDesign taskDesign) {
         this.taskDesign = taskDesign;
+        updateSquidPersistentState();
     }
 
     // General methods *********************************************************

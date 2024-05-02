@@ -17,7 +17,6 @@ package org.cirdles.squid.gui;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,7 +48,8 @@ import org.cirdles.squid.tasks.TaskInterface;
 import org.cirdles.squid.tasks.expressions.Expression;
 import org.cirdles.squid.tasks.expressions.expressionTrees.ExpressionTreeInterface;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
-import org.cirdles.squid.tasks.taskDesign.TaskDesignBlank;
+import org.cirdles.squid.tasks.taskDesign.TaskDesignGeneralBlank;
+import org.cirdles.squid.tasks.taskDesign.TaskDesignGeochronBlank;
 import org.cirdles.squid.utilities.IntuitiveStringComparator;
 import org.cirdles.squid.utilities.stateUtilities.SquidPersistentState;
 
@@ -347,22 +347,18 @@ public class TaskEditorController implements Initializable {
         AnchorPane.setRightAnchor(menuVBox, 0.0);
         AnchorPane.setLeftAnchor(menuVBox, 0.0);
 
-        numTG.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            public void changed(ObservableValue<? extends Toggle> ob, Toggle o, Toggle n) {
-                RadioButton rb = (RadioButton) numTG.getSelectedToggle();
-                if (rb != null) {
-                    numLabel.setText(rb.getText());
-                    updateAddButton();
-                }
+        numTG.selectedToggleProperty().addListener((ob, o, n) -> {
+            RadioButton rb1 = (RadioButton) numTG.getSelectedToggle();
+            if (rb1 != null) {
+                numLabel.setText(rb1.getText());
+                updateAddButton();
             }
         });
-        denTG.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            public void changed(ObservableValue<? extends Toggle> ob, Toggle o, Toggle n) {
-                RadioButton rb = (RadioButton) denTG.getSelectedToggle();
-                if (rb != null) {
-                    denLabel.setText(rb.getText());
-                    updateAddButton();
-                }
+        denTG.selectedToggleProperty().addListener((ob, o, n) -> {
+            RadioButton rb12 = (RadioButton) denTG.getSelectedToggle();
+            if (rb12 != null) {
+                denLabel.setText(rb12.getText());
+                updateAddButton();
             }
         });
 
@@ -385,7 +381,11 @@ public class TaskEditorController implements Initializable {
                     taskEditor.setName("COPY_OF_" + taskEditor.getName());
                     break;
                 case EDIT_EMPTY:
-                    SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignBlank());
+                    if (squidProject.getTask().getTaskType().compareTo(TaskTypeEnum.GEOCHRON) == 0) {
+                        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignGeochronBlank());
+                    } else {
+                        SquidPersistentState.getExistingPersistentState().setTaskDesign(new TaskDesignGeneralBlank());
+                    }
                     taskEditor = SquidPersistentState.getExistingPersistentState().getTaskDesign();
                     break;
                 case EDIT_EXISTING_TASK:
