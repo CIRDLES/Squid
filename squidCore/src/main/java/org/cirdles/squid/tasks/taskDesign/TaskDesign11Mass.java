@@ -25,9 +25,10 @@ import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpr
 /**
  * @author James F. Bowring, CIRDLES.org, and Earth-Time.org
  */
-public class TaskDesign11Mass extends TaskDesign {
+public class TaskDesign11Mass extends TaskDesignGeochronBlank {
 
     public TaskDesign11Mass() throws SquidException {
+        super();
 
         this.nominalMasses = new ArrayList<>(Arrays.asList("204.1", "190", "195.8", "195.9", "238", "248", "254"));
 

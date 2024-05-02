@@ -96,8 +96,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String PB4COR207_206AGE_RM = PB4CORR + "207Pb206Pb_Age_RM";
     public static final String PB4COR207_206AGE = PB4CORR + "207Pb206Pb_Age";
     public static final String PB4COR_DISCORDANCE = PB4CORR + "Discord_Pct";
-    public static final String BIWT_PRE = "BiWt_";
-    public static final String BIWT_4COR_207_206_AGE = BIWT_PRE + PB4CORR + "207Pb206Pb_Age";
+    public static final String BIWT__PRE = "BiWt_"; // extra underscore to prevent autofix out of order
+    public static final String BIWT_4COR_207_206_AGE = BIWT__PRE + PB4CORR + "207Pb206Pb_Age";
+
     public static final String PB7CORR = "7" + COR_PREFIX;
     public static final String PB7COR206_238AGE_RM = PB7CORR + "206Pb238U_Age_RM";
     public static final String PB7COR206_238AGE = PB7CORR + "206Pb238U_Age";
@@ -151,11 +152,11 @@ public class BuiltInExpressionsDataDictionary {
     public static final String OVER_COUNTS_PERSEC_4_8 = "204OvCts_From208Pb";
     public static final String OVER_COUNTS_PERSEC_4_7 = "204OvCts_From207Pb";
     public static final String CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT = "7cor_PrimaryCalibConstDelta_Pct";
-    public static final String BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
-    public static final String BIWT_204_OVR_CTS_FROM_207 = BIWT_PRE + "204OvCts_From207Pb";
+    public static final String BIWT_7COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT__PRE + CORR_7_PRIMARY_CALIB_CONST_DELTA_PCT;
+    public static final String BIWT_204_OVR_CTS_FROM_207 = BIWT__PRE + "204OvCts_From207Pb";
     public static final String CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT = "8cor_PrimaryCalibConstDelta_Pct";
-    public static final String BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT_PRE + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
-    public static final String BIWT_204_OVR_CTS_FROM_208 = BIWT_PRE + "204OvCts_From208Pb";
+    public static final String BIWT_8COR_PRIMARY_CALIB_CONST_DELTA_PCT = BIWT__PRE + CORR_8_PRIMARY_CALIB_CONST_DELTA_PCT;
+    public static final String BIWT_204_OVR_CTS_FROM_208 = BIWT__PRE + "204OvCts_From208Pb";
     // ********************** INTERNAL EXPRESSIONS *****************************
     // names for Squid2.5 Primary (-1) and Secondary (-2) are interchangeable based on U or Th in Primary
     public static final String UNCOR206PB238U_CALIB_CONST = "Uncor_206Pb238U_CalibConst";

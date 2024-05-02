@@ -35,7 +35,6 @@ import java.io.Serializable;
 import java.util.*;
 
 import static org.cirdles.squid.shrimp.CommonLeadSpecsForSpot.METHOD_STACEY_KRAMER;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  * @author James F. Bowring
@@ -86,56 +85,17 @@ public class TaskDesign implements Serializable {
         this.name = "";
         this.description = "";
         this.provenance = "";
-
-        this.taskType = TaskTypeEnum.GEOCHRON;
         this.authorName = "";
         this.labName = "";
-
-        this.useSBM = true;
-        this.userLinFits = false;
-
-        this.selectedIndexIsotope = IndexIsoptopesEnum.PB_204;
-
-        this.squidAllowsAutoExclusionOfSpots = true;
-
-        this.extPErrU = 0.75;
-        this.extPErrTh = 0.75;
-
-        this.delimiterForUnknownNames = Squid3Constants.SampleNameDelimitersEnum.HYPHEN.getName().trim();
-
-        this.parentNuclide = "238";
-        this.directAltPD = false;
-
-        this.specialSquidFourExpressionsMap = new TreeMap<>();
-        this.specialSquidFourExpressionsMap.put(UNCOR206PB238U_CALIB_CONST, UNCOR206PB238U_CALIB_CONST_DEFAULT_EXPRESSION);
-        this.specialSquidFourExpressionsMap.put(UNCOR208PB232TH_CALIB_CONST, UNCOR208PB232TH_CALIB_CONST_DEFAULT_EXPRESSION);
-        this.specialSquidFourExpressionsMap.put(TH_U_EXP_DEFAULT, TH_U_EXP_DEFAULT_EXPRESSION);
-        this.specialSquidFourExpressionsMap.put(PARENT_ELEMENT_CONC_CONST, PARENT_ELEMENT_CONC_CONST_DEFAULT_EXPRESSION);
-
-        this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
-        this.commonPbModel = SquidLabData.getExistingSquidLabData().getCommonPbDefault();
-
-        // Default to blank
-        this.nominalMasses = new ArrayList<>(Collections.singletonList(DEFAULT_BACKGROUND_MASS_LABEL));
-
-        this.ratioNames = new ArrayList<>(Collections.emptyList());
-
-        indexOfBackgroundSpecies = 5;
+        this.commonLeadForUnknownsMethodSelected = METHOD_STACEY_KRAMER;
 
         this.analystName = "";
 
         this.customTaskExpressions = new ArrayList<>();
-
-        this.commonLeadForUnknownsMethodSelected = METHOD_STACEY_KRAMER;
-
-        buildShrimpSpeciesNodeMap();
+        this.physicalConstantsModel = SquidLabData.getExistingSquidLabData().getPhysConstDefault();
     }
 
-    public boolean isPbU() {
-        return (parentNuclide.contains("238"));
-    }
-
-    private void buildShrimpSpeciesNodeMap() {
+    void buildShrimpSpeciesNodeMap() {
         shrimpSpeciesNodeMap = new TreeMap<>();
         for (int i = 0; i < taskType.getRequiredNominalMasses().size(); i++) {
             shrimpSpeciesNodeMap.put(
