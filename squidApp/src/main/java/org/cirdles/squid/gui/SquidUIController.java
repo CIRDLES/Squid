@@ -138,6 +138,7 @@ public class SquidUIController implements Initializable {
     }
 
     public boolean runSaveMenuDisableCheck;
+    public MenuItem builtInTasksMenuItem;
     @FXML
     private Label chinese;
     @FXML
@@ -458,6 +459,7 @@ public class SquidUIController implements Initializable {
 
             managePrawnFileMenu.setDisable(false);
             manageTasksMenu.setDisable(false);
+            builtInTasksMenuItem.setDisable(squidProject.getTask().getTaskType().compareTo(GENERAL) == 0);
             manageRatiosMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
             manageExpressionsMenu.setDisable(squidProject.getTask().getNominalMasses().isEmpty());
             commonPbMenu.setDisable(!squidProject.isTypeGeochron() || squidProject.getTask().getNominalMasses().isEmpty());
@@ -515,7 +517,6 @@ public class SquidUIController implements Initializable {
         managePrawnFileMenu.setDisable(true);
         manageTasksMenu.setDisable(true);
         manageRatiosMenu.setDisable(true);
-        manageTasksMenu.setDisable(true);
         manageReportsMenu.setDisable(true);
         manageInterpretationsMenu.setDisable(true);
 

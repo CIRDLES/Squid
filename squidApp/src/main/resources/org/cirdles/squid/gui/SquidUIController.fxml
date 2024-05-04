@@ -109,8 +109,8 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="Browse, Load, or Edit Task files">
                             <items>
-                                <MenuItem mnemonicParsing="false" onAction="#browseSquidTasksLibrary"
-                                          text="Squid3 Built-in Tasks Library"/>
+                                <MenuItem fx:id="builtInTasksMenuItem" mnemonicParsing="false"
+                                          onAction="#browseSquidTasksLibrary" text="Squid3 Built-in Tasks Library"/>
                                 <MenuItem fx:id="browseTaskFolderTaskMenuItem" mnemonicParsing="false"
                                           onAction="#browseTaskFolderTaskMenuItemAction"
                                           text="Squid3 Custom Tasks Folder"/>

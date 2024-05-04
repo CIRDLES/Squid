@@ -260,7 +260,7 @@ public final class Squid3Constants {
 
     public enum TaskTypeEnum {
         GEOCHRON("GEOCHRON", "Geochron", new ArrayList<>(Arrays.asList("204", "206", "207", "208")), new ArrayList<>(Arrays.asList("204/206", "207/206", "208/206"))),
-        GENERAL("GENERAL", "General (Ratio)", new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList()));
+        GENERAL("GENERAL", "General", new ArrayList<>(Arrays.asList()), new ArrayList<>(Arrays.asList()));
 
         private final String name;
         private final String projectName;
