@@ -21,7 +21,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.web.WebView?>
-<SplitPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity" maxWidth="-Infinity"
+<SplitPane xmlns:fx="http://javafx.com/fxml/1" fx:id="mainPane" dividerPositions="0.25" maxHeight="-Infinity"
+           maxWidth="-Infinity"
            minHeight="660.0" minWidth="1250.0" prefHeight="660.0" prefWidth="1250.0"
            styleClass="backgroundCalamari" stylesheets="@../css/projectManager.css"
            xmlns="http://javafx.com/javafx/17"

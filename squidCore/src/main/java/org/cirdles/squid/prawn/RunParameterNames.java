@@ -280,7 +280,14 @@ public enum RunParameterNames implements Serializable {
     @XmlEnumValue("raster_time_sec")
     raster_time_sec("raster_time_sec"),
     @XmlEnumValue("raster_after_burn_time_sec")
-    raster_after_burn_time_sec("raster_after_burn_time_sec");
+    raster_after_burn_time_sec("raster_after_burn_time_sec"),
+
+    @XmlEnumValue("pressure_names")
+    pressure_names("pressure_names"),
+
+    @XmlEnumValue("pressures")
+    pressures("pressures");
+
 
     private final String value;
 

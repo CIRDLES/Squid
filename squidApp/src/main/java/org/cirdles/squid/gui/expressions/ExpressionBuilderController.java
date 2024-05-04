@@ -360,7 +360,7 @@ public class ExpressionBuilderController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         task = squidProject.getTask();
-        nuSwitchedExpressionsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
+//        nuSwitchedExpressionsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
         builtInExpressionsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
         spotMetaDataFieldsTitledPane.setDisable(task.getTaskType().equals(TaskTypeEnum.GENERAL));
 
