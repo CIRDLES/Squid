@@ -11,6 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -100,6 +101,31 @@ public class ParametersManagerGUIController implements Initializable {
     public Button uuNotationButton;
     @FXML
     public Spinner<Integer> uuSigFigSpinner;
+    public Tab generalRefMatTab;
+    public Menu generalRefMatFileMenu;
+    public MenuItem editCopyOfGeneralRefMat;
+    public MenuItem editNewEmptyGeneralRefMat;
+    public MenuItem remCurrGeneralRefMat;
+    public MenuItem editCurrGeneralRefMat;
+    public MenuItem cancelEditOfGeneralRefMat;
+    public MenuItem saveAndRegGeneralRefMatMenuItem;
+    public TableView generalRefMatDataTable;
+    public Button generalRefMatDataNotationButton;
+    public Spinner generalRefMatDataSigFigs;
+    public TableView generalRefMatTable;
+    public Button generalRefMatNotationButton;
+    public Spinner generalRefMatSigFigs;
+    public TableView generalRefMatCovTable;
+    public Button generalRefMatCovNotationButton;
+    public Spinner generalRefMatCovSigFigs;
+    public TextArea generalRefMatReferencesArea;
+    public TextArea generalRefMatCommentsArea;
+    public TextField generalRefMatModelName;
+    public TextField generalRefMatVersion;
+    public Label generalRefMatIsEditableLabel;
+    public TextField generalRefMatLabName;
+    public TextField generalRefMatDateCertified;
+    public ChoiceBox generalRefMatCB;
     @FXML
     private MenuItem editCopyOfCurrPhysConst;
     @FXML
@@ -2930,6 +2956,42 @@ public class ParametersManagerGUIController implements Initializable {
                 parameterModel.serializeXMLObject(parameterModelFile.getAbsolutePath());
             }
         }
+    }
+
+    public void generalRefMatEditCopy(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatEditEmptyMod(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatImpXMLAction(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatExpXMLAction(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatExportAllAction(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatRemoveCurrMod(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatEditCurrMod(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatCancelEdit(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatSaveAndRegisterEdit(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatDataNotationOnAction(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatCorrNotationOnAction(ActionEvent actionEvent) {
+    }
+
+    public void generalRefMatCovNotationOnAction(ActionEvent actionEvent) {
     }
 
     public enum Units {

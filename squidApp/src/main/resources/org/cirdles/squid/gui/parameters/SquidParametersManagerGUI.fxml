@@ -18,8 +18,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0"
-            minWidth="900.0"
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="900.0"
             prefHeight="600.0" prefWidth="900.0" stylesheets="@../css/squidLabData.css"
             xmlns="http://javafx.com/javafx/17"
             fx:controller="org.cirdles.squid.gui.parameters.ParametersManagerGUIController">
@@ -28,7 +27,7 @@
                  tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0"
                  AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="4.0">
             <tabs>
-                <Tab fx:id="refMatTab" text="Reference Material Models">
+                <Tab fx:id="refMatTab" closable="false" text="Reference Material Models">
                     <content>
                         <AnchorPane prefHeight="200.0" prefWidth="200.0">
                             <children>
@@ -380,7 +379,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab fx:id="commonPbTab" text="Common Pb Models">
+                <Tab fx:id="commonPbTab" closable="false" text="Common Pb Models">
                     <content>
                         <AnchorPane prefHeight="416.0" prefWidth="658.0">
                             <children>
@@ -604,7 +603,7 @@
                         </AnchorPane>
                     </content>
                 </Tab>
-                <Tab fx:id="physConstTab" text="Physical Constants Models">
+                <Tab fx:id="physConstTab" closable="false" text="Physical Constants Models">
                     <content>
                         <AnchorPane prefHeight="416.0" prefWidth="658.0">
                             <children>
@@ -889,6 +888,225 @@
                                     <children>
                                         <Label text="Choose Physical Constants Model:"/>
                                         <ChoiceBox fx:id="physConstCB" prefHeight="27.0" prefWidth="406.0"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="generalRefMatTab" closable="false" text="General Reference Material Models">
+                    <content>
+                        <AnchorPane prefHeight="416.0" prefWidth="658.0">
+                            <children>
+                                <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <menus>
+                                        <Menu fx:id="generalRefMatFileMenu" mnemonicParsing="false" text="File">
+                                            <items>
+                                                <MenuItem fx:id="editCopyOfGeneralRefMat" mnemonicParsing="false"
+                                                          onAction="#generalRefMatEditCopy"
+                                                          text="New Common Pb Model from Copy of Current Model"/>
+                                                <MenuItem fx:id="editNewEmptyGeneralRefMat" mnemonicParsing="false"
+                                                          onAction="#generalRefMatEditEmptyMod"
+                                                          text="New Empty Common Pb Model"/>
+                                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                                <MenuItem mnemonicParsing="false" onAction="#generalRefMatImpXMLAction"
+                                                          text="Import Common Pb Model from XML File"/>
+                                                <MenuItem mnemonicParsing="false" onAction="#generalRefMatExpXMLAction"
+                                                          text="Export Current Common Pb Model as XML File"/>
+                                                <MenuItem mnemonicParsing="false"
+                                                          onAction="#generalRefMatExportAllAction"
+                                                          text="Export All Common Pb Models to Folder as XML Files"/>
+                                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                                <MenuItem fx:id="remCurrGeneralRefMat" mnemonicParsing="false"
+                                                          onAction="#generalRefMatRemoveCurrMod"
+                                                          text="Remove Current Common Pb Model from Lab Data (for editable models only)"/>
+                                            </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="Edit">
+                                            <items>
+                                                <MenuItem fx:id="editCurrGeneralRefMat" mnemonicParsing="false"
+                                                          onAction="#generalRefMatEditCurrMod"
+                                                          text="Edit Current Common Pb Model (for editable models only)"/>
+                                                <MenuItem fx:id="cancelEditOfGeneralRefMat" mnemonicParsing="false"
+                                                          onAction="#generalRefMatCancelEdit"
+                                                          text="Cancel Edit of Common Pb Model"/>
+                                                <MenuItem fx:id="saveAndRegGeneralRefMatMenuItem"
+                                                          mnemonicParsing="false"
+                                                          onAction="#generalRefMatSaveAndRegisterEdit"
+                                                          text="Save and Register Current Edit of Common Pb Model"/>
+                                            </items>
+                                        </Menu>
+                                    </menus>
+                                </MenuBar>
+                                <TabPane layoutX="14.0" layoutY="120.0" prefHeight="240.0" prefWidth="658.0"
+                                         tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="5.0"
+                                         AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0"
+                                         AnchorPane.topAnchor="130.0">
+                                    <tabs>
+                                        <Tab text="Data">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="generalRefMatDataTable" layoutX="14.0"
+                                                                   layoutY="26.0" prefHeight="336.0" prefWidth="871.0"
+                                                                   AnchorPane.bottomAnchor="5.0"
+                                                                   AnchorPane.leftAnchor="5.0"
+                                                                   AnchorPane.rightAnchor="5.0"
+                                                                   AnchorPane.topAnchor="30.4"/>
+                                                        <HBox alignment="CENTER_LEFT" layoutX="103.0" layoutY="-34.0"
+                                                              spacing="15.0" AnchorPane.leftAnchor="10.0"
+                                                              AnchorPane.topAnchor="0.0">
+                                                            <children>
+                                                                <Button fx:id="generalRefMatDataNotationButton"
+                                                                        maxHeight="30.0" minHeight="30.0"
+                                                                        mnemonicParsing="false"
+                                                                        onAction="#generalRefMatDataNotationOnAction"
+                                                                        prefHeight="30.0" prefWidth="200"
+                                                                        text="Use Standard Notation"/>
+                                                                <HBox alignment="CENTER" spacing="5.0">
+                                                                    <children>
+                                                                        <Label text="SigFigs:"/>
+                                                                        <Spinner fx:id="generalRefMatDataSigFigs"
+                                                                                 prefHeight="26.0" prefWidth="80.0"/>
+                                                                    </children>
+                                                                </HBox>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Correlations">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="generalRefMatTable"
+                                                                   AnchorPane.bottomAnchor="5.0"
+                                                                   AnchorPane.leftAnchor="5.0"
+                                                                   AnchorPane.rightAnchor="5.0"
+                                                                   AnchorPane.topAnchor="30.4"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
+                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                            <children>
+                                                                <Button fx:id="generalRefMatNotationButton"
+                                                                        maxHeight="30.0" minHeight="30.0"
+                                                                        mnemonicParsing="false"
+                                                                        onAction="#generalRefMatCorrNotationOnAction"
+                                                                        prefHeight="30.0" prefWidth="200"
+                                                                        text="Use Standard Notation"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                                    <children>
+                                                                        <Label text="SigFigs:"/>
+                                                                        <Spinner fx:id="generalRefMatSigFigs"
+                                                                                 prefWidth="80.0"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <Label text="Correlations | Note: correlation matrix is positive definite"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Covariances">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TableView fx:id="generalRefMatCovTable"
+                                                                   AnchorPane.bottomAnchor="5.0"
+                                                                   AnchorPane.leftAnchor="5.0"
+                                                                   AnchorPane.rightAnchor="5.0"
+                                                                   AnchorPane.topAnchor="30.4"/>
+                                                        <HBox alignment="CENTER_LEFT" spacing="15.0"
+                                                              AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                            <children>
+                                                                <Button fx:id="generalRefMatCovNotationButton"
+                                                                        maxHeight="30.0" minHeight="30.0"
+                                                                        mnemonicParsing="false"
+                                                                        onAction="#generalRefMatCovNotationOnAction"
+                                                                        prefHeight="30.0" prefWidth="200"
+                                                                        text="Use Standard Notation"/>
+                                                                <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                                                    <children>
+                                                                        <Label text="SigFigs:"/>
+                                                                        <Spinner fx:id="generalRefMatCovSigFigs"
+                                                                                 prefWidth="80.0"/>
+                                                                    </children>
+                                                                </HBox>
+                                                                <Label text="Covariances | Note: covariance matrix is positive definite"/>
+                                                            </children>
+                                                        </HBox>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                        <Tab text="Comment and Ref">
+                                            <content>
+                                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                                    <children>
+                                                        <TextArea fx:id="generalRefMatReferencesArea" layoutX="430.0"
+                                                                  prefHeight="200.0" prefWidth="400.0"
+                                                                  promptText="add references here" wrapText="true"
+                                                                  AnchorPane.bottomAnchor="5.0"
+                                                                  AnchorPane.topAnchor="20.0"/>
+                                                        <TextArea fx:id="generalRefMatCommentsArea" layoutX="4.0"
+                                                                  layoutY="104.0" prefHeight="200.0" prefWidth="336.0"
+                                                                  promptText="add comments here" wrapText="true"
+                                                                  AnchorPane.bottomAnchor="5.0"
+                                                                  AnchorPane.topAnchor="20.0"/>
+                                                        <Label layoutX="10.0" layoutY="5.0" text="Comments"
+                                                               AnchorPane.topAnchor="0.0"/>
+                                                        <Label layoutX="430.0" layoutY="245.0" text="References"
+                                                               AnchorPane.topAnchor="0.0"/>
+                                                    </children>
+                                                </AnchorPane>
+                                            </content>
+                                        </Tab>
+                                    </tabs>
+                                </TabPane>
+                                <GridPane hgap="5" vgap="10" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="50">
+                                    <columnConstraints>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                        <ColumnConstraints/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints/>
+                                        <RowConstraints/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Model Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                               GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="generalRefMatModelName" prefHeight="26.0" prefWidth="400.0"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <Label text="Version:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                               GridPane.halignment="RIGHT" GridPane.rowIndex="0"/>
+                                        <HBox spacing="15" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                            <children>
+                                                <TextField fx:id="generalRefMatVersion" prefHeight="26.0"
+                                                           prefWidth="75.0"/>
+                                                <Label fx:id="generalRefMatIsEditableLabel" textFill="RED"/>
+                                            </children>
+                                        </HBox>
+                                        <Label prefWidth="10" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                        <Label text="Lab Name:" textAlignment="RIGHT" GridPane.columnIndex="0"
+                                               GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="generalRefMatLabName" prefHeight="26.0" prefWidth="400.0"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Date Certified:" textAlignment="RIGHT" GridPane.columnIndex="3"
+                                               GridPane.halignment="RIGHT" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="generalRefMatDateCertified" prefWidth="200"
+                                                   GridPane.columnIndex="4" GridPane.halignment="RIGHT"
+                                                   GridPane.rowIndex="1"/>
+                                    </children>
+                                </GridPane>
+                                <HBox alignment="CENTER_LEFT" layoutX="53.0" layoutY="-35.0" spacing="5.0"
+                                      AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="5.0">
+                                    <children>
+                                        <Label text="Choose General Reference Material Model:"/>
+                                        <ChoiceBox fx:id="generalRefMatCB" prefHeight="27.0" prefWidth="439.0"/>
                                     </children>
                                 </HBox>
                             </children>
