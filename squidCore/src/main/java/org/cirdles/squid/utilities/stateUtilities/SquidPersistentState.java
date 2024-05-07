@@ -19,6 +19,7 @@ package org.cirdles.squid.utilities.stateUtilities;
 
 import org.cirdles.squid.exceptions.SquidException;
 import org.cirdles.squid.tasks.taskDesign.TaskDesign;
+import org.cirdles.squid.tasks.taskDesign.TaskDesignGeochronBlank;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,15 +144,15 @@ public class SquidPersistentState implements Serializable {
             }
             myInstance = new SquidPersistentState();
             myInstance.serializeSelf();
-            myInstance.setTaskDesign(new TaskDesign());
+            myInstance.setTaskDesign(new TaskDesignGeochronBlank());
 
             // check to update TaskDesign
             TaskDesign taskDesign = myInstance.getTaskDesign();
             if (taskDesign == null) {
-                taskDesign = new TaskDesign();
+                taskDesign = new TaskDesignGeochronBlank();
                 myInstance.setTaskDesign(taskDesign);
             } else if (taskDesign.getRatioNames() == null) {
-                taskDesign = new TaskDesign();
+                taskDesign = new TaskDesignGeochronBlank();
                 myInstance.setTaskDesign(taskDesign);
             }
 
