@@ -546,5 +546,14 @@ public class BuiltInExpressionsNotes {
                         + " (i.e. the third element of the WtdAv vector output) calculated from "
                         + "any RM dataset of WtdAv_Xcor_208Pb232Th_CalibConst values. In this context, "
                         + "Xcor denotes the index isotope used for the common Pb correction in the RM (i.e. 204Pb or 207Pb).");
+
+        BUILTIN_EXPRESSION_NOTES.put(SWAP_CUSTOM_CORRECTION_204,
+                "Edit this expression to calculate a custom corrected value "
+                        + "for 204/206 as per Squid2.5 'column swapping' and invoke it from the Common Pb menu "
+                        + "window for overcounts of 204.  \n\n"
+                        + "REQUIRED: Use the expression name '" + SWAP_CUSTOM_CORRECTION_204 + "' and define a ValueModel.  \n"
+                        + "The default definition is: 'ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)'. \n\n"
+                        + " NOTE:  Use the 'Orig' function to retrieve the unmutable value of a ratio.  Otherwise, "
+                        + "a circular logic obtains.");
     }
 }

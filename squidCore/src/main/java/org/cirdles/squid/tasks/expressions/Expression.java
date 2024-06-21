@@ -45,6 +45,7 @@ import java.util.Map;
 
 import static org.cirdles.squid.constants.Squid3Constants.*;
 import static org.cirdles.squid.constants.Squid3Constants.SpotTypes.UNKNOWN;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SWAP_CUSTOM_CORRECTION_204;
 import static org.cirdles.squid.tasks.expressions.functions.Function.replaceAliasedFunctionNamesInExpressionString;
 
 /**
@@ -349,6 +350,9 @@ public class Expression implements Comparable<Expression>, XMLSerializerInterfac
     public String getNotes() {
         if (this.expressionTree.isSquidSpecialUPbThExpression()) {
             notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(name);
+        }
+        if (this.expressionTree.getName().compareToIgnoreCase(SWAP_CUSTOM_CORRECTION_204) == 0) {
+            notes = BuiltInExpressionsNotes.BUILTIN_EXPRESSION_NOTES.get(SWAP_CUSTOM_CORRECTION_204);
         }
         if (this.isParameterValue()
                 || this.isReferenceMaterialValue()) {

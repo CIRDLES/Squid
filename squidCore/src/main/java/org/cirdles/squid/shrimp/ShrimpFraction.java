@@ -28,6 +28,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.*;
 
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.SWAP_CUSTOM_CORRECTION_204;
 import static org.cirdles.squid.utilities.conversionUtilities.CloningUtilities.clone2dArray;
 
 /**
@@ -1001,7 +1002,7 @@ public class ShrimpFraction implements Serializable, ShrimpFractionExpressionInt
                 retVal.append("Corrected from 208");
                 break;
             case CUSTOM:
-                retVal.append("SWAPCustomCorrection204");
+                retVal.append(SWAP_CUSTOM_CORRECTION_204);
                 break;
         }
         return retVal.toString();

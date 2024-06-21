@@ -125,6 +125,10 @@ public class CommonLeadAssignmentController implements Initializable {
     }
 
     private void init() throws SquidException {
+        if (squidProject.getTask().getOvercountCorrectionType().equals(Squid3Constants.OvercountCorrectionTypes.FR_Custom))
+        {
+            OvercountCorrection.correctionCustom(squidProject.getTask());
+        }
         // update
         try {
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
@@ -161,10 +165,13 @@ public class CommonLeadAssignmentController implements Initializable {
             mapOfWeightedMeansBySampleNames.put(entry.getKey(), spotSummaryDetails);
         }
 
-//        showUnknownsWithOvercountCorrections();
+        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get(SWAP_CUSTOM_CORRECTION_204);
+        if ((customExpression == null) || !customExpression.isValueModel()){
+            customSWAPRB.setDisable(true);
+            squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
+            correctionNoneRB.setSelected(true);
+        }
 
-        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
-        customSWAPRB.setDisable((customExpression == null) || !customExpression.isValueModel());
         switch (squidProject.getTask().getOvercountCorrectionType()) {
             case NONE:
                 correctionNoneRB.setSelected(true);
@@ -177,7 +184,6 @@ public class CommonLeadAssignmentController implements Initializable {
                 break;
             case FR_Custom:
                 customSWAPRB.setSelected(true);
-                OvercountCorrection.correctionCustom(squidProject.getTask());
         }
 
         showUnknownsWithOvercountCorrections();
@@ -228,7 +234,7 @@ public class CommonLeadAssignmentController implements Initializable {
 
         biweight208Label.setText("biWgt 204 ovrCnts:  " + formatter);
 
-        customSWAPLabel.setText("SWAPCustomCorrection204");
+        customSWAPLabel.setText(SWAP_CUSTOM_CORRECTION_204);
 
         viewDetailsButton.setStyle("-fx-font-size: 12px;-fx-font-weight: bold; -fx-padding: 0 0 0 0;");
     }

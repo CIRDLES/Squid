@@ -193,6 +193,9 @@ public class BuiltInExpressionsDataDictionary {
     public static final String RAD_206PB204PB_FACTOR = "Rad_206Pb204Pb_Factor";
     public static final String RAD_208PB204PB_FACTOR = "Rad_208Pb204Pb_Factor";
     public static final List<String> COMPOSITION_EXPRESSION_NAMES = new ArrayList<>();
+    // ************************ CUSTOM SWAPPING *********************
+    public static final String SWAP_CUSTOM_CORRECTION_204 = "SWAPCustomCorrection204";
+    // ************************ MISC CONSTANTS *********************
     private static final String R206_238CALIB_CONST = CALIB_CONST_206_238_ROOT + "_CalibConst";
     public static final String PB4COR206_238CALIB_CONST = PB4CORR + R206_238CALIB_CONST;
     public static final String PB4COR206_238CALIB_CONST_WM = WTDAV_PREFIX + PB4COR206_238CALIB_CONST;
