@@ -44,8 +44,7 @@ import static org.cirdles.squid.constants.Squid3Constants.ABS_UNCERTAINTY_DIRECT
 import static org.cirdles.squid.gui.SquidUI.PIXEL_OFFSET_FOR_MENU;
 import static org.cirdles.squid.gui.SquidUI.primaryStageWindow;
 import static org.cirdles.squid.gui.SquidUIController.squidProject;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 
 /**
  * FXML Controller class
@@ -84,6 +83,13 @@ public class CountCorrectionsController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        if (squidProject.getTask().getOvercountCorrectionType().equals(Squid3Constants.OvercountCorrectionTypes.FR_Custom)) {
+            try {
+                OvercountCorrection.correctionCustom(squidProject.getTask());
+            } catch (SquidException e) {
+//                    throw new RuntimeException(e);
+            }
+        }
         // update 
         try {
             squidProject.getTask().setupSquidSessionSpecsAndReduceAndReport(false);
@@ -95,8 +101,12 @@ public class CountCorrectionsController implements Initializable {
         spotsTreeViewTextFlow.prefHeightProperty().bind(primaryStageWindow.getScene().heightProperty()
                 .subtract(PIXEL_OFFSET_FOR_MENU + headerHBox.getPrefHeight()));
 
-        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
-        customSWAPRB.setDisable((customExpression == null) || !customExpression.isValueModel());
+        ExpressionTreeInterface customExpression = squidProject.getTask().getNamedExpressionsMap().get(SWAP_CUSTOM_CORRECTION_204);
+        if ((customExpression == null) || !customExpression.isValueModel()) {
+            customSWAPRB.setDisable(true);
+            squidProject.getTask().setOvercountCorrectionType(Squid3Constants.OvercountCorrectionTypes.NONE);
+        }
+
         switch (squidProject.getTask().getOvercountCorrectionType()) {
             case NONE:
                 correctionNoneRB.setSelected(true);
@@ -109,11 +119,6 @@ public class CountCorrectionsController implements Initializable {
                 break;
             case FR_Custom:
                 customSWAPRB.setSelected(true);
-                try {
-                    OvercountCorrection.correctionCustom(squidProject.getTask());
-                } catch (SquidException e) {
-//                    throw new RuntimeException(e);
-                }
         }
 
         setUpHeader();
@@ -181,10 +186,10 @@ public class CountCorrectionsController implements Initializable {
                 double[][] r204_206_208 = spot.getTaskExpressionsEvaluationsPerSpot()
                         .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCountCorrectionExpression204From208"));
                 double[][] custom204 = new double[r204_206_208.length][r204_206_208[0].length];
-                ExpressionTreeInterface customExp = squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204");
+                ExpressionTreeInterface customExp = squidProject.getTask().getNamedExpressionsMap().get(SWAP_CUSTOM_CORRECTION_204);
                 if ((null != customExp) && customExp.isValueModel()) {
                     custom204 = spot.getTaskExpressionsEvaluationsPerSpot()
-                            .get(squidProject.getTask().getNamedExpressionsMap().get("SWAPCustomCorrection204"));
+                            .get(squidProject.getTask().getNamedExpressionsMap().get(SWAP_CUSTOM_CORRECTION_204));
                 }
 
                 TextFlow textFlowI = new TextFlow();

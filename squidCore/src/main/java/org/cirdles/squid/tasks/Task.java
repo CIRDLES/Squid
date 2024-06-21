@@ -503,6 +503,9 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
                 String targetSampleName = customExp.getName().split("_WM_")[1].trim();
                 customExp.getExpressionTree().setUnknownsGroupSampleName(targetSampleName);
             }
+            if (taskExpressionsOrdered.contains(customExp)) {
+                taskExpressionsOrdered.remove(customExp);
+            }
             taskExpressionsOrdered.add(customExp);
         }
 
@@ -668,9 +671,10 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
 
             SortedSet<Expression> overCountExpressionsOrdered = generateOverCountExpressions(isDirectAltPD());
             taskExpressionsOrdered.addAll(overCountExpressionsOrdered);
-            if (!namedExpressionsMap.containsKey("SWAPCustomCorrection204")) {
+            if (!namedExpressionsMap.containsKey(SWAP_CUSTOM_CORRECTION_204)) {
                 Expression customExp = buildCountCorrectionCustomExpression();
-                namedExpressionsMap.put("SWAPCustomCorrection204", customExp.getExpressionTree());
+                namedExpressionsMap.put(SWAP_CUSTOM_CORRECTION_204, customExp.getExpressionTree());
+                taskExpressionsOrdered.remove(customExp);
                 taskExpressionsOrdered.add(customExp);
             }
 
@@ -1080,7 +1084,7 @@ public class Task implements TaskInterface, Serializable, XMLSerializerInterface
     }
 
     public void updateAllUnknownSpotsWithCustomCorrection() {
-        ExpressionTreeInterface customExp = namedExpressionsMap.get("SWAPCustomCorrection204");
+        ExpressionTreeInterface customExp = namedExpressionsMap.get(SWAP_CUSTOM_CORRECTION_204);
         if ((null != customExp) && customExp.isValueModel()) {
             for (ShrimpFractionExpressionInterface spot : unknownSpots) {
                 SquidRatiosModel ratio204_206 = ((ShrimpFraction) spot).getRatioByName("204/206");

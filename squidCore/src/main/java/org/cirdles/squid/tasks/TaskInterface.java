@@ -40,7 +40,7 @@ import java.util.TreeMap;
 
 import static org.cirdles.squid.constants.Squid3Constants.TaskTypeEnum.GEOCHRON;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.*;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltinExpressionsCountCorrection204.buildCountCorrectionCustomExpression;
 
 /**
  * @author James F. Bowring
@@ -415,10 +415,6 @@ public interface TaskInterface {
         }
 
         List<Expression> customExpressions = getCustomTaskExpressions();
-        // special temporary case Sep 2019
-        customExpressions.remove(buildCountCorrectionExpressionFrom207());
-        customExpressions.remove(buildCountCorrectionExpressionFrom208());
-        customExpressions.remove(buildCountCorrectionCustomExpression());
 
         getTaskExpressionsOrdered().clear();
 
@@ -495,6 +491,14 @@ public interface TaskInterface {
 
         if (getTaskType().equals(GEOCHRON) && (parentPPM != null)) {
             getTaskExpressionsOrdered().add(parentPPM);
+        }
+
+
+        Expression defaultCustomExp = buildCountCorrectionCustomExpression();
+        if (customExpressions.contains(defaultCustomExp)) {
+            Expression customExp = customExpressions.get(customExpressions.indexOf(defaultCustomExp));
+            getNamedExpressionsMap().put(SWAP_CUSTOM_CORRECTION_204, customExp.getExpressionTree());
+            getTaskExpressionsOrdered().remove(defaultCustomExp);
         }
 
         getTaskExpressionsOrdered().addAll(customExpressions);

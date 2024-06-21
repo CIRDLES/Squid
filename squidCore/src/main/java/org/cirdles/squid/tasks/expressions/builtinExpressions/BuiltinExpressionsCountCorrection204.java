@@ -17,8 +17,7 @@ package org.cirdles.squid.tasks.expressions.builtinExpressions;
 
 import org.cirdles.squid.tasks.expressions.Expression;
 
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_207;
-import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.BIWT_204_OVR_CTS_FROM_208;
+import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsDataDictionary.*;
 import static org.cirdles.squid.tasks.expressions.builtinExpressions.BuiltInExpressionsFactory.buildExpression;
 
 /**
@@ -28,7 +27,7 @@ public class BuiltinExpressionsCountCorrection204 {
 
     /**
      * @return
-     * @see https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
+     * @see <a href="https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)">...</a>
      */
     public static Expression buildCountCorrectionExpressionFrom207() {
 
@@ -67,7 +66,7 @@ public class BuiltinExpressionsCountCorrection204 {
 
     /**
      * @return
-     * @see https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)
+     * @see <a href="https://github.com/CIRDLES/ET_Redux/wiki/SQ2.50-Procedural-Framework:-Part-7a-(204-overcounts)">...</a>
      */
     public static Expression buildCountCorrectionExpressionFrom208() {
 
@@ -107,18 +106,10 @@ public class BuiltinExpressionsCountCorrection204 {
     public static Expression buildCountCorrectionCustomExpression() {
 
         Expression countCorrectionCustom = buildExpression(
-                "SWAPCustomCorrection204",
+                SWAP_CUSTOM_CORRECTION_204,
                 "ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)", false, true, false);
 
-        countCorrectionCustom.getExpressionTree().setSquidSpecialUPbThExpression(true);
-        countCorrectionCustom.setNotes(
-                "Edit this expression to calculate a custom corrected value "
-                        + "for 204/206 as per Squid2.5 'column swapping' and invoke it from the Common Pb menu "
-                        + "window for overcounts of 204.  \n\n"
-                        + "REQUIRED: Use the expression name 'SWAPCustomCorrection204' and define a ValueModel.  \n"
-                        + "The default definition is: 'ValueModel(Orig([\"204/206\"]),Orig([±\"204/206\"]),true)'. \n\n"
-                        + " NOTE:  Use the 'Orig' function to retrieve the unmutable value of a ratio.  Otherwise, "
-                        + "a circular logic obtains.");
+        countCorrectionCustom.getExpressionTree().setSquidSpecialUPbThExpression(false);
 
         return countCorrectionCustom;
     }
